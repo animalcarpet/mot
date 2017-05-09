@@ -34,31 +34,30 @@ use SiteApi\Factory\Controller\SiteTestingFacilitiesControllerFactory;
 return [
     'controllers' => [
         'invokables' => [
-            VehicleTestingStationAuthorisedClassesController::class =>
-                VehicleTestingStationAuthorisedClassesController::class,
-            SiteRoleController::class                 => SiteRoleController::class,
-            SitePositionController::class             => SitePositionController::class,
-            EquipmentController::class                => EquipmentController::class,
+            VehicleTestingStationAuthorisedClassesController::class => VehicleTestingStationAuthorisedClassesController::class,
+            SiteRoleController::class => SiteRoleController::class,
+            SitePositionController::class => SitePositionController::class,
+            EquipmentController::class => EquipmentController::class,
             SiteTestingDailyScheduleController::class => SiteTestingDailyScheduleController::class,
-            DefaultBrakeTestsController::class        => DefaultBrakeTestsController::class,
-            SiteContactController::class              => SiteContactController::class,
-            SitePositionValidateController::class     => SitePositionValidateController::class,
+            DefaultBrakeTestsController::class => DefaultBrakeTestsController::class,
+            SiteContactController::class => SiteContactController::class,
+            SitePositionValidateController::class => SitePositionValidateController::class,
         ],
         'factories' => [
-            EnforcementSiteAssessmentController::class          => EnforcementSiteAssessmentControllerFactory::class,
-            EnforcementSiteAssessmentValidateController::class  => EnforcementSiteAssessmentValidateControllerFactory::class,
-            MotTestLogController::class                         => MotTestLogControllerFactory::class,
-            SiteSearchController::class                         => SiteSearchControllerFactory::class,
-            SiteController::class                               => SiteControllerFactory::class,
-            SiteNameController::class                           => SiteNameControllerFactory::class,
-            SiteOrganisationNameController::class               => SiteOrganisationNameControllerFactory::class,
-            SiteTestingFacilitiesController::class              => SiteTestingFacilitiesControllerFactory::class,
-            SiteDetailsController::class                        => SiteDetailsControllerFactory::class,
-            MotTestInProgressController::class                  => MotTestInProgressControllerFactory::class,
-            SiteEventController::class                          => SiteEventControllerFactory::class
+            EnforcementSiteAssessmentController::class => EnforcementSiteAssessmentControllerFactory::class,
+            EnforcementSiteAssessmentValidateController::class => EnforcementSiteAssessmentValidateControllerFactory::class,
+            MotTestLogController::class => MotTestLogControllerFactory::class,
+            SiteSearchController::class => SiteSearchControllerFactory::class,
+            SiteController::class => SiteControllerFactory::class,
+            SiteNameController::class => SiteNameControllerFactory::class,
+            SiteOrganisationNameController::class => SiteOrganisationNameControllerFactory::class,
+            SiteTestingFacilitiesController::class => SiteTestingFacilitiesControllerFactory::class,
+            SiteDetailsController::class => SiteDetailsControllerFactory::class,
+            MotTestInProgressController::class => MotTestInProgressControllerFactory::class,
+            SiteEventController::class => SiteEventControllerFactory::class,
         ],
     ],
-    'router'      => [
+    'router' => [
         'routes' => [
             'site-manual-event' => [
                 'type' => 'segment',
@@ -70,40 +69,40 @@ return [
                 ],
                 'may_terminate' => true,
             ],
-            'site-role'               => [
-                'type'    => 'Segment',
+            'site-role' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/site/:siteId/person/:personId/role',
+                    'route' => '/site/:siteId/person/:personId/role',
                     'constraints' => [
-                        'siteId'   => '[0-9]+',
+                        'siteId' => '[0-9]+',
                         'personId' => '[a-zA-Z]?[a-zA-Z0-9\.-_@]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteRoleController::class,
                     ],
                 ],
             ],
-            'site-position'           => [
-                'type'    => 'Segment',
+            'site-position' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/site/:siteId/position[/:positionId]',
+                    'route' => '/site/:siteId/position[/:positionId]',
                     'constraints' => [
-                        'siteId'     => '[0-9]+',
+                        'siteId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SitePositionController::class,
                     ],
                 ],
             ],
-            'site-position-validate'           => [
-                'type'    => 'Segment',
+            'site-position-validate' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/site/:siteId/position-validate',
+                    'route' => '/site/:siteId/position-validate',
                     'constraints' => [
-                        'siteId'     => '[0-9]+',
+                        'siteId' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SitePositionValidateController::class,
                     ],
                 ],
@@ -120,27 +119,27 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'vts-organisation-name'           => [
-                        'type'    => 'Segment',
+                'child_routes' => [
+                    'vts-organisation-name' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/organisation/name',
+                            'route' => '/organisation/name',
                             'constraints' => [
-                                'id'     => '[0-9]+',
+                                'id' => '[0-9]+',
                             ],
-                            'defaults'    => [
-                                'controller' => SiteOrganisationNameController::class
+                            'defaults' => [
+                                'controller' => SiteOrganisationNameController::class,
                             ],
                         ],
                     ],
-                    'vts-name'           => [
-                        'type'    => 'Segment',
+                    'vts-name' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/name',
+                            'route' => '/name',
                             'constraints' => [
-                                'id'     => '[0-9]+',
+                                'id' => '[0-9]+',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => SiteNameController::class,
                             ],
                         ],
@@ -154,101 +153,101 @@ return [
                             ],
                         ],
                     ],
-                    'equipment'     => [
-                        'type'    => 'Segment',
+                    'equipment' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/equipment',
-                            'defaults'    => [
+                            'route' => '/equipment',
+                            'defaults' => [
                                 'controller' => EquipmentController::class,
                             ],
-                        ]
+                        ],
                     ],
                     'default-brake-tests' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/default-brake-tests',
+                            'route' => '/default-brake-tests',
                             'constraints' => [
                                 'id' => '[0-9]+',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => DefaultBrakeTestsController::class,
                             ],
-                        ]
+                        ],
                     ],
                     'opening-hours' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/opening-hours',
+                            'route' => '/opening-hours',
                             'defaults' => [
-                                'controller' => SiteTestingDailyScheduleController::class
-                            ]
+                                'controller' => SiteTestingDailyScheduleController::class,
+                            ],
                         ],
                     ],
                     'testing-facilities' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/testing-facilities',
+                            'route' => '/testing-facilities',
                             'defaults' => [
-                                'controller' => SiteTestingFacilitiesController::class
-                            ]
+                                'controller' => SiteTestingFacilitiesController::class,
+                            ],
                         ],
                     ],
                     'site-details' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/site-details',
+                            'route' => '/site-details',
                             'defaults' => [
-                                'controller' => SiteDetailsController::class
-                            ]
+                                'controller' => SiteDetailsController::class,
+                            ],
                         ],
                     ],
                     'test-in-progress' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/test-in-progress',
-                            'defaults'    => [
+                            'route' => '/test-in-progress',
+                            'defaults' => [
                                 'controller' => MotTestInProgressController::class,
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'update' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
                                     'route' => '/count',
                                     'defaults' => [
                                         'controller' => MotTestInProgressController::class,
-                                        'action'     => 'count',
+                                        'action' => 'count',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'risk-assessment'      => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/risk-assessment',
+                    'risk-assessment' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/risk-assessment',
                             'defaults' => [
-                                'controller' => EnforcementSiteAssessmentController::class
+                                'controller' => EnforcementSiteAssessmentController::class,
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'risk-assessment-validate' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
                                     'route' => '/validate',
                                     'defaults' => [
-                                        'controller' => EnforcementSiteAssessmentValidateController::class
+                                        'controller' => EnforcementSiteAssessmentValidateController::class,
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'contact'      => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/contact[/:contactId]',
+                    'contact' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/contact[/:contactId]',
                             'constraints' => [
                                 'contactId' => '[0-9]+',
                             ],
@@ -257,9 +256,9 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'update' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
                                     'route' => '/update',
                                     'defaults' => [
@@ -269,10 +268,10 @@ return [
                             ],
                         ],
                     ],
-                    'contact-only'      => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/contact',
+                    'contact-only' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/contact',
                             'defaults' => [
                                 'controller' => SiteContactController::class,
                             ],
@@ -280,23 +279,23 @@ return [
                         'may_terminate' => true,
                     ],
                     'mot-test-log' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/mot-test-log',
+                            'route' => '/mot-test-log',
                             'defaults' => [
                                 'controller' => MotTestLogController::class,
-                                'action'     => 'logData',
+                                'action' => 'logData',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'summary' => [
-                                'type'    => 'Literal',
+                                'type' => 'Literal',
                                 'options' => [
-                                    'route'    => '/summary',
+                                    'route' => '/summary',
                                     'defaults' => [
                                         'controller' => MotTestLogController::class,
-                                        'action'     => 'summary',
+                                        'action' => 'summary',
                                     ],
                                 ],
                             ],
@@ -305,9 +304,9 @@ return [
                 ],
             ],
             'vehicle-testing-station-search' => [
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => [
-                    'route'    => '/vehicle-testing-station/search',
+                    'route' => '/vehicle-testing-station/search',
                     'defaults' => [
                         'controller' => SiteSearchController::class,
                     ],
@@ -315,9 +314,9 @@ return [
                 'may_terminate' => true,
                 'child_routes' => [
                     'search-by-vts-number' => [
-                      'type'    => 'Segment',
+                      'type' => 'Segment',
                         'options' => [
-                            'route'    => '/number[/:id]',
+                            'route' => '/number[/:id]',
                             'defaults' => [
                                 'controller' => SiteSearchController::class,
                             ],

@@ -9,7 +9,6 @@ namespace VehicleApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
-use DvsaAuthentication\Service\OtpService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Database\Transaction;
 use DvsaCommon\Obfuscate\ParamObfuscator;
@@ -26,12 +25,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaEntities\Entity\DvlaMakeModelMap;
 
 /**
- * Class VehicleServiceFactory
+ * Class VehicleServiceFactory.
  */
 class VehicleServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return VehicleService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

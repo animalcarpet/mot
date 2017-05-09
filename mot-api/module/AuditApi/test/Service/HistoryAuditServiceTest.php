@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\AuditApiTest\Service;
 
 use Doctrine\DBAL\Connection;
@@ -9,11 +10,10 @@ use PHPUnit_Framework_MockObject_MockObject;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class KDD069ServiceTest
+ * Class KDD069ServiceTest.
  */
 class HistoryAuditServiceTest extends AbstractServiceTestCase
 {
-
     /**
      * @var EntityManager|PHPUnit_Framework_MockObject_MockObject
      */
@@ -23,7 +23,7 @@ class HistoryAuditServiceTest extends AbstractServiceTestCase
 
     public function setUp()
     {
-        $this->em =  $this->getMockEntityManager();
+        $this->em = $this->getMockEntityManager();
     }
 
     public function testExecuteInvokesDoctrineExecuteQueryWithCorrectValue()
@@ -45,7 +45,7 @@ class HistoryAuditServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * When you pass in a NULL param for the Person object and attempt to execute() it should bail out
+     * When you pass in a NULL param for the Person object and attempt to execute() it should bail out.
      *
      * @expectedException \LogicException
      */
@@ -53,7 +53,6 @@ class HistoryAuditServiceTest extends AbstractServiceTestCase
     {
         $service = new HistoryAuditService($this->em, null);
         $service->execute();
-
     }
 
     public function testCreateQuery()
@@ -75,10 +74,11 @@ class HistoryAuditServiceTest extends AbstractServiceTestCase
 
     protected function getPerson()
     {
-        $user = new Person;
+        $user = new Person();
         $user->setId(self::TESTING_USER_ID);
         $user->setFamilyName('Testing Surname');
         $user->setFirstName('Testing Firstname');
+
         return $user;
     }
 
@@ -86,6 +86,7 @@ class HistoryAuditServiceTest extends AbstractServiceTestCase
     {
         $em = $this->getMockEntityManager();
         $person = $this->getPerson();
+
         return new HistoryAuditService($em, $person);
     }
 }

@@ -38,14 +38,13 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
     ];
     const USER_ID = 105;
 
-
-    /** @var  ComponentFailRateApiResource */
+    /** @var ComponentFailRateApiResource */
     protected $componentFailRateApiResource;
 
-    /** @var  NationalComponentStatisticApiResource */
+    /** @var NationalComponentStatisticApiResource */
     private $nationalComponentStatisticApiResource;
 
-    /** @var  ContextProvider */
+    /** @var ContextProvider */
     private $contextProvider;
 
     /** @var PersonProfileRoutes */
@@ -54,10 +53,10 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
     /** @var TesterGroupAuthorisationMapper */
     private $testerGroupAuthorisationMapper;
 
-    /** @var  ViewTesterTestQualityAssertion */
+    /** @var ViewTesterTestQualityAssertion */
     private $assertion;
 
-    /** @var  Url */
+    /** @var Url */
     private $urlPluginMock;
 
     private $requestParams = [];
@@ -82,12 +81,12 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
 
         $this->testerGroupAuthorisationMapper = XMock::of(TesterGroupAuthorisationMapper::class);
         $this->testerGroupAuthorisationMapper->expects($this->once())
-            ->method("getAuthorisation")
+            ->method('getAuthorisation')
             ->willReturn(new TesterAuthorisation());
 
         $this->assertion = XMock::of(ViewTesterTestQualityAssertion::class);
         $this->assertion->expects($this->once())
-            ->method("assertGranted")
+            ->method('assertGranted')
             ->willReturn(null);
 
         $this->urlPluginMock = XMock::of(Url::class);
@@ -98,7 +97,7 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
         $this
             ->testerTqiBreadcrumbs
             ->expects($this->any())
-            ->method("getBreadcrumbs")
+            ->method('getBreadcrumbs')
             ->willReturn($this->breadcrumbs);
     }
 
@@ -147,7 +146,7 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($result->layout()->getTemplate());
 
         $this->assertSame(
-            ["Test quality information" => null],
+            ['Test quality information' => null],
             $result->layout()->getBreadcrumbs()
         );
     }

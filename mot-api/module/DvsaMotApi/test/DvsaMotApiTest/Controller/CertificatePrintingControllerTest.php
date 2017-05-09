@@ -20,21 +20,17 @@ use DvsaMotApi\Service\CertificateCreationService;
 use DvsaReport\Service\Report\ReportService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Authentication\AuthenticationService;
-use Zend\Http\Client\Exception\RuntimeException;
 use Zend\Http\Headers;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Log\Logger;
 use Zend\Stdlib\Parameters;
-use Zend\Uri\Http;
-
 
 class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
 {
-
     const SITE_ID = 5;
 
-    /** @var  \DvsaMotApi\Service\MotTestService|MockObj */
+    /** @var \DvsaMotApi\Service\MotTestService|MockObj */
     private $mockedTestService;
     /** @var ReportService|MockObj */
     private $mockedReportService;
@@ -44,7 +40,7 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
     private $mockedAuthService;
     /** @var CertificateCreationService|MockObj */
     private $mockedCertificateCreationService;
-    /** @var  AuthenticationService */
+    /** @var AuthenticationService */
     private $mockedDvsaAuthenticationService;
 
     protected function setUp()
@@ -58,15 +54,15 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $this->mockedReportService = $this->getMockReportService();
 
         $this->mockedCertificateCreationService = $this->getMockCertificateCreationService();
-        $this->mockedDvsaAuthenticationService =  $this->getMockAuthenticationService();
+        $this->mockedDvsaAuthenticationService = $this->getMockAuthenticationService();
 
         $mockLogger = XMock::of(Logger::class);
 
         $config = [
-            "pdf" => [
+            'pdf' => [
                 'invalidWatermarkText' => 'NOT VALID',
-                'invalidWatermark' => true
-            ]
+                'invalidWatermark' => true,
+            ],
         ];
         $this->serviceManager->setService('Application/Logger', $mockLogger);
         $this->serviceManager->setService('config', $config);
@@ -76,11 +72,11 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
     {
         $authorisationService = Xmock::of(AbstractMotAuthorisationService::class);
         $authorisationService
-            ->method("getRolesAsArray")
+            ->method('getRolesAsArray')
             ->willReturn([SiteBusinessRoleCode::TESTER]);
 
         $authorisationService
-            ->method("isGrantedAtSite")
+            ->method('isGrantedAtSite')
             ->willReturnCallback(function ($permission, $vtsId) {
                 return $vtsId === self::SITE_ID;
             });
@@ -90,11 +86,11 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         return new CertificatePrintingController($this->mockedDocumentService, $this->mockedAuthService);
     }
 
-
     private function getMockReportService()
     {
         $mock = $this->getMockWithDisabledConstructor(ReportService::class);
         $this->serviceManager->setService('ReportService', $mock);
+
         return $mock;
     }
 
@@ -102,12 +98,14 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
     {
         $mock = $this->getMockWithDisabledConstructor(CertificateCreationService::class);
         $this->serviceManager->setService(CertificateCreationService::class, $mock);
+
         return $mock;
     }
 
     private function setMockAuthService($mock)
     {
         $this->serviceManager->setService('DvsaAuthorisationService', $mock);
+
         return $mock;
     }
 
@@ -116,7 +114,7 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $mock = $this->getMockWithDisabledConstructor(AuthenticationService::class);
         $this->serviceManager->setService('DvsaAuthenticationService', $mock);
 
-        $mock->expects($this->any())->method('getIdentity')->willReturn(new Identity(new Person));
+        $mock->expects($this->any())->method('getIdentity')->willReturn(new Identity(new Person()));
 
         return $mock;
     }
@@ -146,40 +144,40 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
 
         $result = $this->getResultForAction(null, 'printContingency', ['id' => 99999]);
 
-        /** @var \Zend\Http\PhpEnvironment\Response $response */
+        /* @var \Zend\Http\PhpEnvironment\Response $response */
         $this->assertEquals(self::HTTP_ERR_400, $result->getStatusCode());
     }
 
     public function testContingencyFailsIfNoTestStationGiven()
     {
         $this->request->setHeaders(Headers::fromString('Accept: application/pdf'));
-        $this->request->setQuery(new Parameters(['name'=>'CT32', 'inspAuthority' => 'here']));
+        $this->request->setQuery(new Parameters(['name' => 'CT32', 'inspAuthority' => 'here']));
         $result = $this->getResultForAction(
             null,
             'printContingency', [
-                'id'   => 99999,
+                'id' => 99999,
                 'name' => 'CT32',
             ]
         );
 
-        /** @var \Zend\Http\PhpEnvironment\Response $response */
+        /* @var \Zend\Http\PhpEnvironment\Response $response */
         $this->assertEquals(self::HTTP_ERR_400, $result->getStatusCode());
     }
 
     public function testContingencyFailsIfNoInspectionAuthorityGiven()
     {
         $this->request->setHeaders(Headers::fromString('Accept: application/pdf'));
-        $this->request->setQuery(new Parameters(['name'=>'CT32', 'testStation'=>'still here']));
+        $this->request->setQuery(new Parameters(['name' => 'CT32', 'testStation' => 'still here']));
 
         $result = $this->getResultForAction(
             null,
             'printContingency', [
-                'id'   => 99999,
+                'id' => 99999,
                 'name' => 'CT32',
             ]
         );
 
-        /** @var \Zend\Http\PhpEnvironment\Response $response */
+        /* @var \Zend\Http\PhpEnvironment\Response $response */
         $this->assertEquals(self::HTTP_ERR_400, $result->getStatusCode());
     }
 
@@ -189,8 +187,8 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setQuery(
             new Parameters(
                 [
-                 'testStation'   => 'still here',
-                 'inspAuthority' => 'us'
+                 'testStation' => 'still here',
+                 'inspAuthority' => 'us',
                 ]
             )
         );
@@ -198,12 +196,12 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $result = $this->getResultForAction(
             null,
             'printContingency', [
-                'id'   => 99999,
+                'id' => 99999,
                 'name' => 'rubbish-name',
             ]
         );
 
-        /** @var \Zend\Http\PhpEnvironment\Response $response */
+        /* @var \Zend\Http\PhpEnvironment\Response $response */
         $this->assertEquals(self::HTTP_ERR_400, $result->getStatusCode());
     }
 
@@ -220,9 +218,9 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
             ->with(
                 'MOT/CT32.pdf',
                 [
-                    'Vts'                 => 'sesame street',
+                    'Vts' => 'sesame street',
                     'InspectionAuthority' => 'the cookie monster',
-                    'Watermark'           => 'NOT VALID',
+                    'Watermark' => 'NOT VALID',
                 ]
             )->willReturn($theReport);
 
@@ -231,8 +229,8 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setQuery(
             new Parameters(
                 [
-                    'testStation'   => 'sesame street',
-                    'inspAuthority' => 'the cookie monster'
+                    'testStation' => 'sesame street',
+                    'inspAuthority' => 'the cookie monster',
                 ]
             )
         );
@@ -240,12 +238,12 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $result = $this->getResultForAction(
             null,
             'printContingency', [
-                'id'   => 99999,
+                'id' => 99999,
                 'name' => 'CT32',
             ]
         );
 
-        /** @var \Zend\Http\PhpEnvironment\Response $response */
+        /* @var \Zend\Http\PhpEnvironment\Response $response */
         $this->assertEquals(self::HTTP_OK_CODE, $result->getStatusCode());
     }
 
@@ -282,7 +280,6 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
 
     public function testSetsRuntimeParametersForDuplicateIssueModeWelshVersion()
     {
-
         $motTestNr = 9999;
         $motTestId = 7777;
 
@@ -295,7 +292,7 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $motTestDto
             ->setId($motTestId)
             ->setMotTestNumber($motTestNr)
-            ->setVehicleTestingStation(['id'=>self::SITE_ID, 'siteNumber' => $siteNr, "dualLanguage" => true])
+            ->setVehicleTestingStation(['id' => self::SITE_ID, 'siteNumber' => $siteNr, 'dualLanguage' => true])
             ->setDocument($jasperDocumentId)
             ->setTester(
                 (new PersonDto())
@@ -348,10 +345,10 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
             ->method('getStatusCode')
             ->willReturn(self::HTTP_OK_CODE);
 
-        $date = DateUtils::nowAsUserDateTime()->format("d F Y");
+        $date = DateUtils::nowAsUserDateTime()->format('d F Y');
         $issuerInfo = sprintf(
             CertificatePrintingController::ISSUER_INFO_ENG,
-            "Duplicate",
+            'Duplicate',
             $sessionPerson->getDisplayShortName(),
             $date
         );
@@ -359,23 +356,23 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $date = datefmt_format_object(
             DateUtils::nowAsUserDateTime(), 'dd MMMM Y', 'cy_GB'
         );
-        $issuerInfo .= " / " . sprintf(
+        $issuerInfo .= ' / '.sprintf(
             CertificatePrintingController::ISSUER_INFO_WEL,
-            "Dyblyg",
+            'Dyblyg',
             $sessionPerson->getDisplayShortName(),
             $date
             );
 
         $reportArgs = [
             [
-                'documentId'    => $jasperDocumentId,
-                'reportName'    => $jasperReportName,
+                'documentId' => $jasperDocumentId,
+                'reportName' => $jasperReportName,
                 'runtimeParams' => [
-                    'Watermark'   => 'NOT VALID',
+                    'Watermark' => 'NOT VALID',
                     CertificatePrintingController::JREPORT_PRM_ISSUER => $issuerInfo,
-                    'snapshotData' => ['TestNumber' => $motTestNr]
-                ]
-            ]
+                    'snapshotData' => ['TestNumber' => $motTestNr],
+                ],
+            ],
         ];
 
         $this->mockedReportService->expects($this->once())
@@ -435,14 +432,13 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
 
     /**
      * An unauthorised exception should be thrown if we fail the permission
-     * check
-     *
+     * check.
      */
     public function testUnauthExceptionWhenPrintingWithoutAuthorisation()
     {
         $this->setMockAuthService(new AuthorisationServiceMock());
         $motTestDto = self::createMotTestDto();
-        $motTestDto->setVehicleTestingStation(["id" => 123321]);
+        $motTestDto->setVehicleTestingStation(['id' => 123321]);
 
         $this->mockedTestService->expects($this->once())
             ->method('getMotTestData')

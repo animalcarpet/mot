@@ -8,12 +8,10 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class OrganisationNominationServiceFactory
- * @package OrganisationApi\Factory\Service
+ * Class OrganisationNominationServiceFactory.
  */
 class OrganisationNominationServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new OrganisationNominationNotificationService(

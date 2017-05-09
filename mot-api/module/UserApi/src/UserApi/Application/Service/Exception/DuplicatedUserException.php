@@ -5,9 +5,7 @@ namespace UserApi\Application\Service\Exception;
 use DvsaCommonApi\Service\Exception\ServiceException;
 
 /**
- * Class DuplicatedUserException
- *
- * @package UserApi\Application\Service\Exception
+ * Class DuplicatedUserException.
  */
 class DuplicatedUserException extends ServiceException
 {

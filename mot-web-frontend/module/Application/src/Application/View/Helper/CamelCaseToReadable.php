@@ -15,6 +15,6 @@ class CamelCaseToReadable extends AbstractHelper
             return null;
         }
 
-        return ucwords(preg_replace('/([a-z0-9])([A-Z])/', "$1 $2", trim($string)));
+        return ucwords(preg_replace('/([a-z0-9])([A-Z])/', '$1 $2', trim($string)));
     }
 }

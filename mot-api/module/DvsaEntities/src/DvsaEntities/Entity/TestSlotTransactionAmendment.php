@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * TestSlotTransactionAmendment
+ * TestSlotTransactionAmendment.
  *
  * @ORM\Table(name="test_slot_transaction_amendment")
  * @ORM\Entity
@@ -52,7 +52,7 @@ class TestSlotTransactionAmendment extends Entity
     private $reason;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="slots", type="integer", nullable=false)
      */
@@ -66,7 +66,7 @@ class TestSlotTransactionAmendment extends Entity
     private $previousReceiptReference;
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param \DvsaEntities\Entity\Organisation $organisation
      *
@@ -80,7 +80,7 @@ class TestSlotTransactionAmendment extends Entity
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return \DvsaEntities\Entity\Organisation
      */

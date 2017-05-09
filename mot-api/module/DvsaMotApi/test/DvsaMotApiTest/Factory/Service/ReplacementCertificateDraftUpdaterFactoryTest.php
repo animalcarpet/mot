@@ -13,13 +13,11 @@ use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftUpdater
 use DataCatalogApi\Service\VehicleCatalogService;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class ReplacementCertificateDraftUpdaterFactoryTest
- *
+ * Class ReplacementCertificateDraftUpdaterFactoryTest.
  */
 class ReplacementCertificateDraftUpdaterFactoryTest extends AbstractServiceTestCase
 {

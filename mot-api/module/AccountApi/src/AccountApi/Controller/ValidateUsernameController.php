@@ -2,16 +2,13 @@
 
 namespace AccountApi\Controller;
 
-use AccountApi\Service\TokenService;
 use Doctrine\ORM\EntityManager;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\PersonService;
 
 /**
- *
- * Class ValidateUsernameController
- * @package AccountApi\Controller
+ * Class ValidateUsernameController.
  */
 class ValidateUsernameController extends AbstractDvsaRestfulController
 {
@@ -28,14 +25,16 @@ class ValidateUsernameController extends AbstractDvsaRestfulController
     }
 
     /**
-     * This function validate if the username that the user gave is valid
+     * This function validate if the username that the user gave is valid.
      *
      * @return \Zend\View\Model\JsonModel
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getList()
     {
         $login = $this->getRequest()->getQuery(self::QUERY_USERNAME, '');
+
         return ApiResponse::jsonOk($this->personService->assertUsernameIsValidAndHasAnEmail($login));
     }
 }

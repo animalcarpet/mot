@@ -2,7 +2,6 @@
 
 namespace Organisation\Presenter;
 
-
 use Core\ViewModel\Badge\Badge;
 
 class StatusPresenterData

@@ -21,13 +21,11 @@ use DvsaEntities\Entity\VehicleClass;
 use SiteApi\Service\Mapper\VtsMapper;
 
 /**
- * Test functionality of VtsMapper class
- *
- * @package OrganisationApiTest\Mapper
+ * Test functionality of VtsMapper class.
  */
 class VtsMapperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  VtsMapper */
+    /** @var VtsMapper */
     private $mapper;
 
     public function setUp()
@@ -59,7 +57,6 @@ class VtsMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(VehicleTestingStationDto::class, $result[0]);
     }
 
-
     public static function getVtsEntity()
     {
         //  --  Auth    --
@@ -88,17 +85,17 @@ class VtsMapperTest extends \PHPUnit_Framework_TestCase
             ->setCloseTime(new Time(23, 58, 59));
 
         //  --  roles   --
-        $position1 = new SiteBusinessRoleMap;
+        $position1 = new SiteBusinessRoleMap();
         $position1
-            ->setValidFrom(new \DateTime)
-            ->setExpiryDate(new \DateTime)
-            ->setStatusChangedOn(new \DateTime)
+            ->setValidFrom(new \DateTime())
+            ->setExpiryDate(new \DateTime())
+            ->setStatusChangedOn(new \DateTime())
             ->setPerson(new Person())
             ->setBusinessRoleStatus(new BusinessRoleStatus())
             ->setSiteBusinessRole(new SiteBusinessRole());
 
         //  --  assemble    --
-        /** @var  $site */
+        /** @var $site */
         $site = SiteMapperTest::getSiteEntity();
         $site
             ->addAuthorisationsForTestingMotAtSite($authForMot1)

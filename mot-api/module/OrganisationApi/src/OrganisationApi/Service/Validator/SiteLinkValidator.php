@@ -23,9 +23,10 @@ class SiteLinkValidator extends AbstractValidator
 
     /**
      * @param Organisation $organisation
-     * @param Site $site
-     * @param int $orgId
-     * @param string $siteNumber
+     * @param Site         $site
+     * @param int          $orgId
+     * @param string       $siteNumber
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function validateLink($organisation, $site, $orgId, $siteNumber)
@@ -50,7 +51,7 @@ class SiteLinkValidator extends AbstractValidator
             $this->errors->add(
                 sprintf(
                     self::ERR_SITE_NOT_AVAILABLE,
-                    $site->getOrganisation()->getAuthorisedExaminer()->getNumber() . ' ' .
+                    $site->getOrganisation()->getAuthorisedExaminer()->getNumber().' '.
                     $site->getOrganisation()->getName()
                 ),
                 self::FIELD_SITE_NUMBER

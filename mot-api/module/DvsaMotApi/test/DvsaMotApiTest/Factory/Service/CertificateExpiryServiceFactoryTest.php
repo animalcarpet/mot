@@ -6,7 +6,6 @@ use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\ConfigurationRepository;
-use DvsaEntities\Repository\DvlaVehicleRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\VehicleRepository;
 use DvsaMotApi\Factory\Service\CertificateExpiryServiceFactory;

@@ -2,9 +2,7 @@
 
 namespace DvsaEntitiesTest\Entity;
 
-use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleHistory;
-use DvsaEntities\Entity\VehicleInterface;
 
 /**
  * Class VehicleHistoryTest.
@@ -22,18 +20,17 @@ class VehicleHistoryTest extends \PHPUnit_Framework_TestCase
 
         $reflection = new \ReflectionClass($vehicleHistory);
 
-        $methods   = $reflection->getMethods();
+        $methods = $reflection->getMethods();
 
         $setters = [];
-        $allowed = ['setCreatedBy','setCreatedOn','setLastUpdatedBy','setLastUpdatedOn','setVersion'];
+        $allowed = ['setCreatedBy', 'setCreatedOn', 'setLastUpdatedBy', 'setLastUpdatedOn', 'setVersion'];
 
         foreach ($methods as $method) {
-
             if (in_array($method->getName(), $allowed)) {
                 continue;
             }
 
-            if ('set' == substr($method->getName(),0,3)) {
+            if ('set' == substr($method->getName(), 0, 3)) {
                 $setters[] = $method->getName();
             }
         }

@@ -1,8 +1,8 @@
 <?php
+
 namespace OrganisationApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Auth\Assertion\RemovePositionAtAeAssertion;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -28,7 +28,7 @@ use DvsaEntities\Entity\EventPersonMap;
 use NotificationApi\Service\PositionRemovalNotificationService;
 
 /**
- * Class OrganisationPositionService
+ * Class OrganisationPositionService.
  */
 class OrganisationPositionService implements TransactionAwareInterface
 {
@@ -43,7 +43,7 @@ class OrganisationPositionService implements TransactionAwareInterface
     private $authorisationService;
     private $entityManager;
     private $eventService;
-    /** @var PositionRemovalNotificationService  */
+    /** @var PositionRemovalNotificationService */
     private $positionRemovalNotificationService;
 
     public function __construct(
@@ -58,16 +58,16 @@ class OrganisationPositionService implements TransactionAwareInterface
         PositionRemovalNotificationService $positionRemovalNotificationService,
         UserOrganisationNotificationService $userOrganisationNotificationService
     ) {
-        $this->organisationRepository                = $organisationRepository;
+        $this->organisationRepository = $organisationRepository;
         $this->organisationBusinessRoleMapRepository = $organisationBusinessRoleMapRepository;
         $this->organisationPositionHistoryRepository = $organisationPositionHistoryRepository;
-        $this->positionMapper                        = $positionMapper;
-        $this->motIdentityProvider                   = $motIdentityProvider;
-        $this->authorisationService                  = $authorisationService;
-        $this->entityManager                         = $entityManager;
-        $this->eventService                          = $eventService;
-        $this->positionRemovalNotificationService    = $positionRemovalNotificationService;
-        $this->userOrganisationNotificationService   = $userOrganisationNotificationService;
+        $this->positionMapper = $positionMapper;
+        $this->motIdentityProvider = $motIdentityProvider;
+        $this->authorisationService = $authorisationService;
+        $this->entityManager = $entityManager;
+        $this->eventService = $eventService;
+        $this->positionRemovalNotificationService = $positionRemovalNotificationService;
+        $this->userOrganisationNotificationService = $userOrganisationNotificationService;
     }
 
     public function getListForOrganisation($organisationId)
@@ -94,7 +94,7 @@ class OrganisationPositionService implements TransactionAwareInterface
      * + asserts valid OrganisationBusinessRoleMap
      * + removes physical OrganisationBusinessRoleMap entity
      * + adds OrganisationPositionHistory entity in REMOVED status
-     * + sends removal notification
+     * + sends removal notification.
      *
      * @param int $organisationId
      * @param int $positionId
@@ -106,16 +106,15 @@ class OrganisationPositionService implements TransactionAwareInterface
         $position = $this->organisationBusinessRoleMapRepository->find($positionId);
 
         if (!$position) {
-            ErrorSchema::throwError("This role has already been removed");
+            ErrorSchema::throwError('This role has already been removed');
         }
 
         $this->assertCanRemovePosition($position);
         $this->assertValidPositionInOrganisation($position, $organisationId);
         $this->submitEvent($position);
-        if($this->motIdentityProvider->getIdentity()->getUserId() == $position->getPerson()->getId()) {
+        if ($this->motIdentityProvider->getIdentity()->getUserId() == $position->getPerson()->getId()) {
             $this->userOrganisationNotificationService->notifyOrganisationAboutRoleRemoval($position);
-        }
-        else {
+        } else {
             $this->userOrganisationNotificationService->sendNotificationToUserAboutOrganisationRoleRemoval($position);
         }
 
@@ -127,13 +126,14 @@ class OrganisationPositionService implements TransactionAwareInterface
     {
         if ($position->getOrganisation()->getId() !== $organisationId) {
             throw new NotFoundException(
-                "Invalid relation between organisation and position"
+                'Invalid relation between organisation and position'
             );
         }
     }
 
     /**
-     * @param  OrganisationBusinessRoleMap $position
+     * @param OrganisationBusinessRoleMap $position
+     *
      * @throws UnauthorisedException
      */
     private function assertCanRemovePosition($position)
@@ -194,5 +194,4 @@ class OrganisationPositionService implements TransactionAwareInterface
         $this->entityManager->persist($eventSiteMap);
         $this->entityManager->flush();
     }
-
 }

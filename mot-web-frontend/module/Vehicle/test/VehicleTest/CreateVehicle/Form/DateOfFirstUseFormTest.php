@@ -79,7 +79,8 @@ class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::ERROR_DATE_IS_IN_FUTURE, $form->getMessages()[DateOfFirstUseForm::FIELD_DAY][0]);
     }
 
-    public function validDataProvider() {
+    public function validDataProvider()
+    {
         return [
             ['day' => '14', 'month' => '11', 'year' => '2010'],
             ['day' => '01', 'month' => '12', 'year' => '1990'],
@@ -89,7 +90,8 @@ class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function emptyDataProvider() {
+    public function emptyDataProvider()
+    {
         return [
             ['day' => '', 'month' => '', 'year' => ''],
             ['day' => '', 'month' => '12', 'year' => '1990'],
@@ -98,7 +100,8 @@ class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function nonNumericDataProvider() {
+    public function nonNumericDataProvider()
+    {
         return [
             ['day' => 'a', 'month' => 'b', 'year' => 'c'],
             ['day' => 'a', 'month' => '12', 'year' => '1990'],
@@ -108,7 +111,8 @@ class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function invalidDataProvider() {
+    public function invalidDataProvider()
+    {
         return [
             ['day' => '144', 'month' => '11', 'year' => '2010'],
             ['day' => '01', 'month' => '13', 'year' => '1990'],
@@ -121,8 +125,8 @@ class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function futureDataProvider() {
-
+    public function futureDataProvider()
+    {
         $futureByOneDayDate = new \DateTime();
         $futureByOneDayDate->modify('+1 day');
 
@@ -146,7 +150,7 @@ class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
         return [
             DateOfFirstUseForm::FIELD_DAY => $day,
             DateOfFirstUseForm::FIELD_MONTH => $month,
-            DateOfFirstUseForm::FIELD_YEAR => $year
+            DateOfFirstUseForm::FIELD_YEAR => $year,
         ];
     }
 

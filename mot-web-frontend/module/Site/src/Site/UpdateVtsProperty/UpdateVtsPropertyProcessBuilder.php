@@ -8,8 +8,7 @@ use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class UpdateVtsPropertyProcessBuilder
- * @package Site\UpdateVtsProperty
+ * Class UpdateVtsPropertyProcessBuilder.
  *
  * @deprecated remove this class
  */

@@ -20,7 +20,7 @@ class LostOrForgottenSecurityQuestionFormTest extends \PHPUnit_Framework_TestCas
     {
         $form = new LostOrForgottenSecurityQuestionForm(self::QUESTION_LABEL);
 
-        $data = ['answer' => '',];
+        $data = ['answer' => ''];
         $form->setData($data);
         $isvalid = $form->isValid();
 
@@ -34,7 +34,7 @@ class LostOrForgottenSecurityQuestionFormTest extends \PHPUnit_Framework_TestCas
     {
         $form = new LostOrForgottenSecurityQuestionForm(self::QUESTION_LABEL);
 
-        $data = ['answer' => self::TEXT_EXCEEDING_MAX,];
+        $data = ['answer' => self::TEXT_EXCEEDING_MAX];
         $form->setData($data);
         $isvalid = $form->isValid();
 
@@ -48,7 +48,7 @@ class LostOrForgottenSecurityQuestionFormTest extends \PHPUnit_Framework_TestCas
     {
         $form = new LostOrForgottenSecurityQuestionForm(self::QUESTION_LABEL);
 
-        $data = ['answer' => 'Valid answer',];
+        $data = ['answer' => 'Valid answer'];
         $form->setData($data);
         $isvalid = $form->isValid();
 

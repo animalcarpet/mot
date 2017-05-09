@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\Factory\Security;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
-use Core\Service\MotFrontendIdentityProvider;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;

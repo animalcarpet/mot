@@ -21,32 +21,33 @@ use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Entity\WeightSource;
 
 /**
- * Class VehicleObjectsFactory
+ * Class VehicleObjectsFactory.
  */
 class VehicleObjectsFactory
 {
-    const EXAMPLE_VIN = "1HGCM82633A004352";
-    const EXAMPLE_VRM = "YK02OML";
+    const EXAMPLE_VIN = '1HGCM82633A004352';
+    const EXAMPLE_VRM = 'YK02OML';
 
-    public static function make($id = 4, $code = 'BB', $name = "Mini")
+    public static function make($id = 4, $code = 'BB', $name = 'Mini')
     {
         return (new Make())->setId($id)->setCode($code)->setName($name);
     }
 
-    public static function model($id = 5, $code = 'COOPER', $name = "Cooper", $make = null)
+    public static function model($id = 5, $code = 'COOPER', $name = 'Cooper', $make = null)
     {
         if (!$make) {
             $make = self::make();
         }
+
         return (new Model())->setId($id)->setCode($code)->setName($name)->setMake($make);
     }
 
-    public static function countryOfRegistration($id = 1, $name = "UK")
+    public static function countryOfRegistration($id = 1, $name = 'UK')
     {
         return (new CountryOfRegistration())->setId($id)->setName($name);
     }
 
-    public static function colour($id = 11, $code = "R", $name = "Red")
+    public static function colour($id = 11, $code = 'R', $name = 'Red')
     {
         return (new Colour())->setId($id)->setCode($code)->setName($name);
     }
@@ -55,8 +56,7 @@ class VehicleObjectsFactory
         $id = VehicleClassId::CLASS_4,
         $code = VehicleClassCode::CLASS_4,
         $name = VehicleClassCode::CLASS_4
-    )
-    {
+    ) {
         return (new VehicleClass($code, $name))->setId($id);
     }
 
@@ -76,12 +76,12 @@ class VehicleObjectsFactory
             ->setTransmissionType(self::transmissionType());
 
         return (new Vehicle())->setId($id)
-            ->setColour(self::colour(1, "R", "Red"))
-            ->setSecondaryColour(self::colour(2, "G", "Green"))
+            ->setColour(self::colour(1, 'R', 'Red'))
+            ->setSecondaryColour(self::colour(2, 'G', 'Green'))
             ->setModelDetail($modelDetail)
-            ->setManufactureDate(DateUtils::toDate("2004-04-23"))
-            ->setFirstRegistrationDate(DateUtils::toDate("2007-08-09"))
-            ->setFirstUsedDate(DateUtils::toDate("2000-12-12"))
+            ->setManufactureDate(DateUtils::toDate('2004-04-23'))
+            ->setFirstRegistrationDate(DateUtils::toDate('2007-08-09'))
+            ->setFirstUsedDate(DateUtils::toDate('2000-12-12'))
             ->setCountryOfRegistration(self::countryOfRegistration())
             ->setYear(2000)
             ->setRegistration(self::EXAMPLE_VRM)
@@ -99,15 +99,15 @@ class VehicleObjectsFactory
 
         $dvlaVehicle
             ->setId($id)
-            ->setPrimaryColour("G")
-            ->setSecondaryColour("R")
+            ->setPrimaryColour('G')
+            ->setSecondaryColour('R')
             ->setCylinderCapacity(123)
-            ->setManufactureDate(DateUtils::toDate("2000-12-12"))
-            ->setFirstRegistrationDate(DateUtils::toDate("2000-12-12"))
-            ->setFuelType("PE")
+            ->setManufactureDate(DateUtils::toDate('2000-12-12'))
+            ->setFirstRegistrationDate(DateUtils::toDate('2000-12-12'))
+            ->setFuelType('PE')
             ->setMake(self::make())
             ->setModel(self::model())
-            ->setBodyType("SE")
+            ->setBodyType('SE')
             ->setRegistration(self::EXAMPLE_VRM)
             ->setVin(self::EXAMPLE_VIN)
             ->setUnladenWeight(1000)
@@ -119,7 +119,8 @@ class VehicleObjectsFactory
     }
 
     /**
-     * this is new vehicle model as the result of Java vehicle-service
+     * this is new vehicle model as the result of Java vehicle-service.
+     *
      * @param int $id
      *
      * @return VehicleFromDvla
@@ -137,18 +138,18 @@ class VehicleObjectsFactory
                     'emptyVinReason' => null,
                     'make' => 'PORSCHE',
                     'model' => 'BOXSTER',
-                    'colour'                 => [
-                        'code'   => 'C',
+                    'colour' => [
+                        'code' => 'C',
                         'name' => 'Red',
                     ],
-                    'colourSecondary'                 => [
-                        'code'   => 'W',
+                    'colourSecondary' => [
+                        'code' => 'W',
                         'name' => 'Not Stated',
                     ],
-                    'vehicleClass' => [ 'code' => '4', 'name' => '4'],
-                    'fuelType'              => [
+                    'vehicleClass' => ['code' => '4', 'name' => '4'],
+                    'fuelType' => [
                         'code' => FuelTypeCode::PETROL,
-                        'name' => "Petrol",
+                        'name' => 'Petrol',
                     ],
                     'bodyType' => '2 Door Saloon',
                     'cylinderCapacity' => 1700,
@@ -157,7 +158,7 @@ class VehicleObjectsFactory
                     'firstUsedDate' => '2001-03-02',
                     'manufactureDate' => '2001-03-02',
                     'isNewAtFirstReg' => false,
-                    'weight' => null
+                    'weight' => null,
                 ]
             )
         );
@@ -176,7 +177,7 @@ class VehicleObjectsFactory
         return (new ModelDetail())->setModel($model);
     }
 
-    public static function transmissionType($id = 1, $name = "Manual", $code = "M")
+    public static function transmissionType($id = 1, $name = 'Manual', $code = 'M')
     {
         return (new TransmissionType())->setId($id)->setName($name)->setCode($code);
     }
@@ -186,7 +187,7 @@ class VehicleObjectsFactory
         return (new FuelType())->setId($id)->setCode($code)->setName($name);
     }
 
-    public static function bodyType($id = "1", $code = 'SE', $name = 'Sedan')
+    public static function bodyType($id = '1', $code = 'SE', $name = 'Sedan')
     {
         return (new BodyType())->setId($id)->setCode($code)->setName($name);
     }

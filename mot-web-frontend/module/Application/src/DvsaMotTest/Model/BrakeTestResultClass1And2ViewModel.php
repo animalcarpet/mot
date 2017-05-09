@@ -2,7 +2,6 @@
 
 namespace DvsaMotTest\Model;
 
-use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResult;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
@@ -10,7 +9,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Data for brake test result class 1 and 2 view
+ * Data for brake test result class 1 and 2 view.
  */
 class BrakeTestResultClass1And2ViewModel
 {
@@ -56,8 +55,8 @@ class BrakeTestResultClass1And2ViewModel
 
     /**
      * @param BrakeTestConfigurationClass1And2Dto $brakeTestConfigurationClass1And2Dto
-     * @param BrakeTestResultClass1And2 $brakeTestResult
-     * @param array|null $postData
+     * @param BrakeTestResultClass1And2           $brakeTestResult
+     * @param array|null                          $postData
      */
     public function __construct(BrakeTestConfigurationClass1And2Dto $brakeTestConfigurationClass1And2Dto,
                                 BrakeTestResultClass1And2 $brakeTestResult = null, $postData)
@@ -67,44 +66,43 @@ class BrakeTestResultClass1And2ViewModel
 
             $this->effortFront1 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_FRONT
+                self::ID_CONTROL_1_EFFORT_FRONT
             );
-            $this->lockFront1 = ArrayUtils::tryGet($postData, BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_FRONT);
+            $this->lockFront1 = ArrayUtils::tryGet($postData, self::ID_CONTROL_1_LOCK_FRONT);
             $this->effortRear1 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_REAR
+                self::ID_CONTROL_1_EFFORT_REAR
             );
-            $this->lockRear1 = ArrayUtils::tryGet($postData, BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_REAR);
+            $this->lockRear1 = ArrayUtils::tryGet($postData, self::ID_CONTROL_1_LOCK_REAR);
             $this->effortSidecar1 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_SIDECAR
+                self::ID_CONTROL_1_EFFORT_SIDECAR
             );
             $this->efficiency1 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_BRAKE_EFFICIENCY
+                self::ID_CONTROL_1_BRAKE_EFFICIENCY
             );
-            $this->gradient1 = ArrayUtils::tryGet($postData, BrakeTestResultClass1And2ViewModel::NAME_GRADIENT_CONTROL_1);
+            $this->gradient1 = ArrayUtils::tryGet($postData, self::NAME_GRADIENT_CONTROL_1);
 
             $this->effortFront2 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_FRONT
+                self::ID_CONTROL_2_EFFORT_FRONT
             );
-            $this->lockFront2 = ArrayUtils::tryGet($postData, BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_FRONT);
+            $this->lockFront2 = ArrayUtils::tryGet($postData, self::ID_CONTROL_2_LOCK_FRONT);
             $this->effortRear2 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_REAR
+                self::ID_CONTROL_2_EFFORT_REAR
             );
-            $this->lockRear2 = ArrayUtils::tryGet($postData, BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_REAR);
+            $this->lockRear2 = ArrayUtils::tryGet($postData, self::ID_CONTROL_2_LOCK_REAR);
             $this->effortSidecar2 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_SIDECAR
+                self::ID_CONTROL_2_EFFORT_SIDECAR
             );
             $this->efficiency2 = ArrayUtils::tryGet(
                 $postData,
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_BRAKE_EFFICIENCY
+                self::ID_CONTROL_2_BRAKE_EFFICIENCY
             );
-            $this->gradient2 = ArrayUtils::tryGet($postData, BrakeTestResultClass1And2ViewModel::NAME_GRADIENT_CONTROL_2);
-
+            $this->gradient2 = ArrayUtils::tryGet($postData, self::NAME_GRADIENT_CONTROL_2);
         } else {
             $this->effortFront1 = $brakeTestResult->getControl1EffortFront();
             $this->lockFront1 = $brakeTestResult->getControl1LockFront();
@@ -141,8 +139,8 @@ class BrakeTestResultClass1And2ViewModel
     private function getDecelerometerArray()
     {
         return $this->brakeTestConfiguration->isDecelerometerTypeTest() ? [
-            self::ID_CONTROL_1_BRAKE_EFFICIENCY => (int)$this->efficiency1,
-            self::ID_CONTROL_2_BRAKE_EFFICIENCY => (int)$this->efficiency2
+            self::ID_CONTROL_1_BRAKE_EFFICIENCY => (int) $this->efficiency1,
+            self::ID_CONTROL_2_BRAKE_EFFICIENCY => (int) $this->efficiency2,
         ] : [];
     }
 
@@ -152,12 +150,12 @@ class BrakeTestResultClass1And2ViewModel
     private function getLocalArray()
     {
         return [
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_FRONT => $this->getEffortFront1(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_REAR => $this->getEffortRear1(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_SIDECAR => $this->getEffortSidecar1(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_FRONT => $this->getEffortFront2(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_REAR => $this->getEffortRear2(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_SIDECAR => $this->getEffortSidecar2(),
+            self::ID_CONTROL_1_EFFORT_FRONT => $this->getEffortFront1(),
+            self::ID_CONTROL_1_EFFORT_REAR => $this->getEffortRear1(),
+            self::ID_CONTROL_1_EFFORT_SIDECAR => $this->getEffortSidecar1(),
+            self::ID_CONTROL_2_EFFORT_FRONT => $this->getEffortFront2(),
+            self::ID_CONTROL_2_EFFORT_REAR => $this->getEffortRear2(),
+            self::ID_CONTROL_2_EFFORT_SIDECAR => $this->getEffortSidecar2(),
         ];
     }
 
@@ -170,10 +168,10 @@ class BrakeTestResultClass1And2ViewModel
 
         if ($this->brakeTestConfiguration->locksApplicableToTestType()) {
             $locks = [
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_FRONT => $this->getLockFront1(),
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_REAR => $this->getLockRear1(),
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_FRONT => $this->getLockFront2(),
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_REAR => $this->getLockRear2(),
+                self::ID_CONTROL_1_LOCK_FRONT => $this->getLockFront1(),
+                self::ID_CONTROL_1_LOCK_REAR => $this->getLockRear1(),
+                self::ID_CONTROL_2_LOCK_FRONT => $this->getLockFront2(),
+                self::ID_CONTROL_2_LOCK_REAR => $this->getLockRear2(),
             ];
         }
 
@@ -195,15 +193,15 @@ class BrakeTestResultClass1And2ViewModel
                 'gradientControl2BelowMinimum' => false,
             ];
 
-            if (BrakeTestResultClass1And2ViewModel::EFFICIENCY_ABOVE_30 === $this->gradient1) {
+            if (self::EFFICIENCY_ABOVE_30 === $this->gradient1) {
                 $gradientResults['gradientControl1AboveUpperMinimum'] = true;
-            } elseif (BrakeTestResultClass1And2ViewModel::EFFICIENCY_BELOW_25 === $this->gradient1) {
+            } elseif (self::EFFICIENCY_BELOW_25 === $this->gradient1) {
                 $gradientResults['gradientControl1BelowMinimum'] = true;
             }
 
-            if (BrakeTestResultClass1And2ViewModel::EFFICIENCY_ABOVE_30 === $this->gradient2) {
+            if (self::EFFICIENCY_ABOVE_30 === $this->gradient2) {
                 $gradientResults['gradientControl2AboveUpperMinimum'] = true;
-            } elseif (BrakeTestResultClass1And2ViewModel::EFFICIENCY_BELOW_25 === $this->gradient2) {
+            } elseif (self::EFFICIENCY_BELOW_25 === $this->gradient2) {
                 $gradientResults['gradientControl2BelowMinimum'] = true;
             }
         }
@@ -264,7 +262,7 @@ class BrakeTestResultClass1And2ViewModel
      */
     public function getLockFront1()
     {
-        return (bool)($this->lockFront1);
+        return (bool) ($this->lockFront1);
     }
 
     /**
@@ -272,7 +270,7 @@ class BrakeTestResultClass1And2ViewModel
      */
     public function getLockFront2()
     {
-        return (bool)($this->lockFront2);
+        return (bool) ($this->lockFront2);
     }
 
     /**
@@ -280,7 +278,7 @@ class BrakeTestResultClass1And2ViewModel
      */
     public function getLockRear1()
     {
-        return (bool)($this->lockRear1);
+        return (bool) ($this->lockRear1);
     }
 
     /**
@@ -288,7 +286,7 @@ class BrakeTestResultClass1And2ViewModel
      */
     public function getLockRear2()
     {
-        return (bool)($this->lockRear2);
+        return (bool) ($this->lockRear2);
     }
 
     /**
@@ -317,7 +315,7 @@ class BrakeTestResultClass1And2ViewModel
 
     /**
      * This is to inject the brake test result data-set, coming from mot-test-service to the existing model, until a
-     * proper refactoring is possible
+     * proper refactoring is possible.
      *
      * @param MotTest $motTest
      */

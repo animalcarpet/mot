@@ -6,8 +6,7 @@ use Core\Action\ActionResultLayout;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaMotTest\Form\VehicleSearch\DuplicateCertificateVinSearchForm;
 
-class DuplicateCertificateSearchByVinAction extends AbstractDuplicateCertificateSearchAction
-    implements AutoWireableInterface
+class DuplicateCertificateSearchByVinAction extends AbstractDuplicateCertificateSearchAction implements AutoWireableInterface
 {
     const PAGE_TITLE = 'Search by VIN';
     const TEMPLATE_NAME = 'dvsa-mot-test/vehicle-search/search-for-duplicate-by-vin.phtml';

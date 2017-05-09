@@ -43,8 +43,8 @@ class SiteNominationEventHelperTest extends \PHPUnit_Framework_TestCase
     {
         $person = (new Person())
             ->setId(1)
-            ->setFirstName("John")
-            ->setFamilyName("Rambo");
+            ->setFirstName('John')
+            ->setFamilyName('Rambo');
 
         $this->person = $person;
 
@@ -52,15 +52,15 @@ class SiteNominationEventHelperTest extends \PHPUnit_Framework_TestCase
         $this->eventService = $this->createEventService($eventType);
 
         $site = new Site();
-        $site->setName("Garage");
-        $site->setSiteNumber("NUMBER13");
+        $site->setName('Garage');
+        $site->setSiteNumber('NUMBER13');
 
         $this->site = $site;
 
         $siteRepository = XMock::of(SiteRepository::class);
         $siteRepository
             ->expects($this->any())
-            ->method("getBySiteNumber")
+            ->method('getBySiteNumber')
             ->willReturn($site);
 
         $this->siteEventHelper = new SiteNominationEventHelper(

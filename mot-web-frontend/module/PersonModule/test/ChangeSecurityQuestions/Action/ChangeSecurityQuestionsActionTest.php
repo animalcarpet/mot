@@ -20,16 +20,16 @@ class ChangeSecurityQuestionsActionTest extends \PHPUnit_Framework_TestCase
     const TEST_STEP_TWO = 'step-two';
     const TEST_REDIRECT_TO_QUESTION = 'mock-question-one';
 
-    /** @var  ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService */
+    /** @var ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService */
     private $changeSecurityQuestionsSessionService;
 
-    /** @var  ChangeSecurityQuestionsStepService $changeSecurityQuestionsStepService */
+    /** @var ChangeSecurityQuestionsStepService $changeSecurityQuestionsStepService */
     private $changeSecurityQuestionsStepService;
 
     /** @var Request $request */
     private $request;
 
-    /** @var  PasswordValidationService $passwordValidationService */
+    /** @var PasswordValidationService $passwordValidationService */
     private $passwordValidationService;
 
     public function setUp()
@@ -101,6 +101,7 @@ class ChangeSecurityQuestionsActionTest extends \PHPUnit_Framework_TestCase
             $this->changeSecurityQuestionsSessionService,
             $this->passwordValidationService
         );
+
         return $action;
     }
 

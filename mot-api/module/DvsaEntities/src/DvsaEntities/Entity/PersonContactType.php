@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * PersonContactType
+ * PersonContactType.
  *
  * @ORM\Table(name="person_contact_type")
  * @ORM\Entity(readOnly=true)
@@ -27,7 +27,7 @@ class PersonContactType
     private $name;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -41,7 +41,7 @@ class PersonContactType
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */

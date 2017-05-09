@@ -66,7 +66,7 @@ class ValidatorKeyConverter
      */
     public static function stepToInputFilter($stepName)
     {
-        $inputFilterName = self:: INPUT_FILTER_PREFIX . self::stripName($stepName) . self::INPUT_FILTER_SUFFIX;
+        $inputFilterName = self:: INPUT_FILTER_PREFIX.self::stripName($stepName).self::INPUT_FILTER_SUFFIX;
 
         return $inputFilterName;
     }
@@ -81,7 +81,7 @@ class ValidatorKeyConverter
      */
     public static function inputFilterToStep($inputFilterName)
     {
-        $stepName = self::STEP_NAME_PREFIX . self::stripName($inputFilterName);
+        $stepName = self::STEP_NAME_PREFIX.self::stripName($inputFilterName);
 
         return $stepName;
     }

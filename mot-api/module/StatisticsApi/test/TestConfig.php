@@ -1,4 +1,5 @@
 <?php
+
 return [
     'modules' => [
         'DvsaFeature',
@@ -15,6 +16,6 @@ return [
         'Dvsa\Mot\Api\StatisticsApi',
     ],
     'test_namespaces' => [
-        'Dvsa\Mot\Api\StatisticsApiTest' => __DIR__ . '/' . 'Dvsa\Mot\Api\StatisticsApiTest',
-    ]
+        'Dvsa\Mot\Api\StatisticsApiTest' => __DIR__.'/'.'Dvsa\Mot\Api\StatisticsApiTest',
+    ],
 ];

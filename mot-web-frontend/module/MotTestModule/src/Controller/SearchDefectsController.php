@@ -232,7 +232,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
     /**
      * @param DefectCollection $defects
-     * @param VehicleClass           $vehicleClassCode
+     * @param VehicleClass     $vehicleClassCode
      *
      * @return DefectCollection
      */

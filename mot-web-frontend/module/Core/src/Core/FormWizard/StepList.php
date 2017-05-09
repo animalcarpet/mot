@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\FormWizard;
 
 use Core\Collection\Collection;
@@ -7,6 +8,7 @@ class StepList extends Collection
 {
     /**
      * StepList constructor.
+     *
      * @param AbstractStep[] $data
      */
     public function __construct(array $data = [])

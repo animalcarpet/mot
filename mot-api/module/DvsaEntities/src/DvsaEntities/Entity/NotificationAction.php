@@ -1,12 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * NotificationAction
+ * NotificationAction.
  *
  * @ORM\Table(name="notification_action_map", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_notification_action_1", columns={"notification_id"}), @ORM\Index(name="fk_notification_action_2", columns={"action_id"})})
  * @ORM\Entity

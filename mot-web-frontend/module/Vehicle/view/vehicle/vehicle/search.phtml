@@ -17,10 +17,10 @@ echo $this->partial('infoMessages', array('getFromFlash' => true));
             <?php
             echo $this->partial(
                 'selectElement', [
-                    'id'      => 'type',
+                    'id' => 'type',
                     'options' => [
                         'registration' => 'Registration (VRM)',
-                        'vin'          => 'VIN/Chassis',
+                        'vin' => 'VIN/Chassis',
                     ],
                     'value' => $this->searchParams->get('type'),
                 ]
@@ -37,10 +37,10 @@ echo $this->partial('infoMessages', array('getFromFlash' => true));
                     <?php
                     echo $this->partial(
                         'inputElement', [
-                            'id'          => 'vehicle-search',
-                            'name'        => 'search',
-                            'size'        => 92,
-                            'maxlength'   => 60,
+                            'id' => 'vehicle-search',
+                            'name' => 'search',
+                            'size' => 92,
+                            'maxlength' => 60,
                             'placeholder' => 'eg. BD51 SMR',
                             'value' => $this->searchParams->get('search'),
                         ]

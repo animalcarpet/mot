@@ -2,7 +2,6 @@
 
 namespace TestSupport\Controller;
 
-
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\Stdlib\RequestInterface;
@@ -11,7 +10,6 @@ use Zend\Log\Logger;
 
 abstract class BaseTestSupportRestfulController extends AbstractRestfulController
 {
-
     /**
      * @return Logger
      */
@@ -24,11 +22,9 @@ abstract class BaseTestSupportRestfulController extends AbstractRestfulControlle
     {
         $a = parent::dispatch($request, $response);
         $tokenManager = $this->getServiceLocator()->get(TestSupportAccessTokenManager::class);
-        /** @var TestSupportAccessTokenManager $tokenManager */
+        /* @var TestSupportAccessTokenManager $tokenManager */
         // TODO to be considered after ldap update is reworked to be faster
         //$tokenManager->invalidateTokens();
         return $a;
     }
-
 }
- 

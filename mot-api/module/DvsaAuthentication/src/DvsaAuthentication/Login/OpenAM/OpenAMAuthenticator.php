@@ -4,7 +4,6 @@ namespace DvsaAuthentication\Login\OpenAM;
 
 use Dvsa\OpenAM\Exception\InvalidPasswordException;
 use Dvsa\OpenAM\Exception\OpenAMClientException;
-use Dvsa\OpenAM\Exception\OpenAMUnauthorisedException;
 use Dvsa\OpenAM\Exception\TooManyAuthenticationAttemptsException;
 use Dvsa\OpenAM\Exception\UserInactiveException;
 use Dvsa\OpenAM\Exception\UserLockedException;
@@ -23,7 +22,7 @@ use DvsaAuthentication\Login\UsernamePasswordAuthenticator;
 use Zend\Log\LoggerInterface;
 
 /**
- * Authenticates a user identified by username and password with OpenAM
+ * Authenticates a user identified by username and password with OpenAM.
  */
 class OpenAMAuthenticator implements UsernamePasswordAuthenticator
 {
@@ -48,11 +47,11 @@ class OpenAMAuthenticator implements UsernamePasswordAuthenticator
         $this->logger = $logger;
     }
 
-
     public function authenticate($username, $password)
     {
         if (false === $this->checkCredentials($username, $password)) {
             $this->logger->debug('Empty username or/and password', [$username]);
+
             return new InvalidCredentialsAuthenticationFailure();
         }
 
@@ -61,7 +60,6 @@ class OpenAMAuthenticator implements UsernamePasswordAuthenticator
         try {
             $this->logger->debug(sprintf('Authenticating user "%s"', $username));
             $token = $this->openAMClient->authenticate($loginDetails);
-
         } catch (OpenAMClientException $ex) {
             return $this->translateExceptionToAuthenticationResult($ex, $username);
         }
@@ -93,26 +91,19 @@ class OpenAMAuthenticator implements UsernamePasswordAuthenticator
     private function translateExceptionToAuthenticationResult(OpenAMClientException $ex, $username)
     {
         if ($ex instanceof InvalidPasswordException) {
-
             $this->logger->info(sprintf('User: %s failed to authenticate due to invalid password', $username));
             $failure = new InvalidCredentialsAuthenticationFailure();
-
         } elseif ($ex instanceof UserInactiveException || $ex instanceof UserLockedException) {
-
             $this->logger->info(sprintf('Account locked for user: %s', $username));
             $failure = new AccountLockedAuthenticationFailure();
-
         } elseif ($ex instanceof TooManyAuthenticationAttemptsException) {
-
             $opt = $this->openAMOptions;
             $attemptsLeft = $opt->getLoginFailureLockoutCount() - $opt->getWarnUserAfterNFailures();
             $attemptsLeft = $attemptsLeft > 0 ? $attemptsLeft : 0;
             $this->logger->info(sprintf('Lockout warning for user: %s', $username, $attemptsLeft));
 
             $failure = new LockoutWarningAuthenticationFailure($attemptsLeft);
-
         } else {
-
             $this->logger->err(
                 sprintf('Generic authentication failure for user: %s, message: %s', $username, $ex->getMessage())
             );

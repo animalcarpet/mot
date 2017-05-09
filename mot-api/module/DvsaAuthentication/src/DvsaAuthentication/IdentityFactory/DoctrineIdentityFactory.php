@@ -31,9 +31,9 @@ class DoctrineIdentityFactory implements IdentityFactory
     }
 
     /**
-     * @param string $username
-     * @param string $token
-     * @param string $uuid
+     * @param string    $username
+     * @param string    $token
+     * @param string    $uuid
      * @param \DateTime $passwordExpiryDate
      *
      * @return Identity
@@ -48,7 +48,7 @@ class DoctrineIdentityFactory implements IdentityFactory
 
         $identity = (new Identity($person))->setToken($token)->setUuid($uuid)->setPasswordExpiryDate($passwordExpiryDate);
 
-        if(!$this->featureToggles->isEnabled(FeatureToggle::TWO_FA)) {
+        if (!$this->featureToggles->isEnabled(FeatureToggle::TWO_FA)) {
             $identity->setIsSecondFactorRequired(false);
         }
 

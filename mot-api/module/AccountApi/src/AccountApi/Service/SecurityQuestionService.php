@@ -20,8 +20,7 @@ use DvsaEntities\Repository\PersonSecurityAnswerRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
 
 /**
- * Class SecurityQuestionService
- * @package UserApi\SecurityQuestion\Service
+ * Class SecurityQuestionService.
  */
 class SecurityQuestionService extends AbstractPersistableService
 {
@@ -29,7 +28,7 @@ class SecurityQuestionService extends AbstractPersistableService
 
     const ERR_TYPE_PERSON_ID = 'personId must be a positive number, received %s';
 
-    const ERR_MSG_INVALID_ARGUMENT = 'Questions and answers must be passed as an array ' .
+    const ERR_MSG_INVALID_ARGUMENT = 'Questions and answers must be passed as an array '.
     'containing question id and answer pairs, received : %s';
 
     /** @var SecurityQuestionRepository */
@@ -59,23 +58,25 @@ class SecurityQuestionService extends AbstractPersistableService
     private $hashFunction;
 
     /**
-     * the delay in second which we will cause on each fail attempt
-     * @var integer
+     * the delay in second which we will cause on each fail attempt.
+     *
+     * @var int
      */
     private $delay;
 
     /**
      * SecurityQuestionService constructor.
-     * @param SecurityQuestionRepository $securityQuestionRepository
-     * @param SecurityQuestionMapper $mapper
-     * @param PersonSecurityAnswerRecorder $personSecurityAnswerRecorder
-     * @param PersonRepository $personRepository
+     *
+     * @param SecurityQuestionRepository     $securityQuestionRepository
+     * @param SecurityQuestionMapper         $mapper
+     * @param PersonSecurityAnswerRecorder   $personSecurityAnswerRecorder
+     * @param PersonRepository               $personRepository
      * @param PersonSecurityAnswerRepository $personSecurityAnswerRepository
-     * @param PersonSecurityAnswerValidator $personSecurityAnswerValidator
-     * @param ParamObfuscator $obfuscator
-     * @param EntityManager $entityManager
-     * @param SecurityAnswerHashFunction $securityAnswerHashFunction
-     * @param integer $delayOnFailedVerification
+     * @param PersonSecurityAnswerValidator  $personSecurityAnswerValidator
+     * @param ParamObfuscator                $obfuscator
+     * @param EntityManager                  $entityManager
+     * @param SecurityAnswerHashFunction     $securityAnswerHashFunction
+     * @param int                            $delayOnFailedVerification
      */
     public function __construct(
         SecurityQuestionRepository $securityQuestionRepository,
@@ -88,8 +89,7 @@ class SecurityQuestionService extends AbstractPersistableService
         EntityManager $entityManager,
         SecurityAnswerHashFunction $securityAnswerHashFunction,
         $delayOnFailedVerification
-    )
-    {
+    ) {
         parent::__construct($entityManager);
 
         $this->securityQuestionRepository = $securityQuestionRepository;
@@ -104,20 +104,21 @@ class SecurityQuestionService extends AbstractPersistableService
     }
 
     /**
-     *
      * @return SecurityQuestionDto[]
      */
     public function getAll()
     {
         $questions = $this->securityQuestionRepository->findAll();
+
         return $this->mapper->manyToDto($questions);
     }
 
     /**
-     * @param integer $personId the database id of the user on the phone
-     * @param array $questionsAndAnswers contains the candidate answer as submitted.
+     * @param int   $personId            the database id of the user on the phone
+     * @param array $questionsAndAnswers contains the candidate answer as submitted
      *
      * @return bool[]
+     *
      * @throws \InvalidArgumentException
      */
     public function verifySecurityAnswersForPerson($personId, $questionsAndAnswers)
@@ -151,10 +152,11 @@ class SecurityQuestionService extends AbstractPersistableService
 
     /**
      * @param int $questionNumber The zero based question number (0 => question1; 1 => question2)
-     * @param int $userId integer the database id of the user on the phone
+     * @param int $userId         integer the database id of the user on the phone
      *
-     * @return SecurityQuestionDto The security question of a person.
-     * @throws \Exception when required for duff data etc.
+     * @return SecurityQuestionDto The security question of a person
+     *
+     * @throws \Exception when required for duff data etc
      */
     public function findQuestionByQuestionNumber($questionNumber, $userId)
     {
@@ -172,8 +174,10 @@ class SecurityQuestionService extends AbstractPersistableService
     }
 
     /**
-     * @param integer $personId
+     * @param int $personId
+     *
      * @return SecurityQuestionDto[]
+     *
      * @throws \InvalidArgumentException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \DvsaCommonApi\Service\Exception\TooFewResultsException
@@ -214,10 +218,13 @@ class SecurityQuestionService extends AbstractPersistableService
     /**
      * @deprecated we will going to remove this method, once we played upcoming stories to combine security answer pages
      *             in the "lost or forgotten card" journey
+     *
      * @param $questionId
      * @param $userId
      * @param $answer
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     public function isAnswerCorrect($questionId, $userId, $answer)
@@ -231,6 +238,7 @@ class SecurityQuestionService extends AbstractPersistableService
 
     /**
      * @param array $questionsAndAnswers
+     *
      * @return bool
      */
     private function areQuestionsAndAnswersTypeValid($questionsAndAnswers)

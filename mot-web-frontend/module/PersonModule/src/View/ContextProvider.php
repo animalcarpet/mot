@@ -96,11 +96,11 @@ class ContextProvider implements AutoWireableInterface
 
     public function isYourProfileContext()
     {
-        return (self::YOUR_PROFILE_CONTEXT === $this->getContext());
+        return self::YOUR_PROFILE_CONTEXT === $this->getContext();
     }
 
     public function isUserSearchContext()
     {
-        return (self::USER_SEARCH_CONTEXT === $this->getContext());
+        return self::USER_SEARCH_CONTEXT === $this->getContext();
     }
 }

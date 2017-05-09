@@ -8,8 +8,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class DataCatalogServiceFactory
- * @package DataCatalogApi\Factory\Service
+ * Class DataCatalogServiceFactory.
  */
 class DataCatalogServiceFactory implements FactoryInterface
 {

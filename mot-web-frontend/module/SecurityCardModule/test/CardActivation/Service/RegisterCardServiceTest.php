@@ -10,12 +10,9 @@ use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardService;
 use DvsaCommonTest\TestUtils\XMock;
-use GuzzleHttp\Exception\RequestException;
-use Zend\Authentication\AuthenticationService;
 
 class RegisterCardServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     private $authorisationServiceClient;
 
     private $identityProvider;
@@ -33,8 +30,8 @@ class RegisterCardServiceTest extends \PHPUnit_Framework_TestCase
     {
         $identity = (new Identity())->setSecondFactorRequired(false);
         $this->withCurrentIdentity($identity);
-        $serialNumber = "STTA12345678";
-        $pin = "123456";
+        $serialNumber = 'STTA12345678';
+        $pin = '123456';
         $this->withActivateRequestSuccessful($serialNumber, $pin);
 
         $this->createService()->registerCard($serialNumber, $pin);
@@ -51,7 +48,8 @@ class RegisterCardServiceTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->createService()->registerCard('any', 'any');
-        } catch(ResourceNotFoundException $e) {}
+        } catch (ResourceNotFoundException $e) {
+        }
 
         $this->assertFalse($identity->isSecondFactorRequired());
         $this->assertFalse($identity->isAuthenticatedWith2FA());
@@ -70,7 +68,7 @@ class RegisterCardServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->authorisationServiceClient->expects($this->any())
             ->method('activatePersonSecurityCard')
-            ->willThrowException(new $exceptionClass);
+            ->willThrowException(new $exceptionClass());
     }
 
     public function test_givenSecondFactorIsNotSetRequired_iAmNotRegistered()
@@ -88,7 +86,6 @@ class RegisterCardServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->createService()->isUserRegistered());
     }
-
 
     private function withCurrentIdentity($identity)
     {

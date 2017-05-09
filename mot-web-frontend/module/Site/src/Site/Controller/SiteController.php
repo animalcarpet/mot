@@ -43,8 +43,6 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Class SiteController.
- *
- * @package DvsaMotTest\Controller
  */
 class SiteController extends AbstractAuthActionController
 {
@@ -173,7 +171,7 @@ class SiteController extends AbstractAuthActionController
         // Get ref page
         $refSession = new Container('referralSession');
         if ($isEnforcementUser && !empty($refSession->url)) {
-            $escRefPage = '/mot-test-search/vrm?' . http_build_query($refSession->url);
+            $escRefPage = '/mot-test-search/vrm?'.http_build_query($refSession->url);
         } else {
             $escRefPage = null;
         }
@@ -211,9 +209,9 @@ class SiteController extends AbstractAuthActionController
 
         $viewModel = new ViewModel(
             [
-                'viewModel'     => $view,
-                'searchString'  => $searchString,
-                'escRefPage'    => $escRefPage,
+                'viewModel' => $view,
+                'searchString' => $searchString,
+                'escRefPage' => $escRefPage,
                 'siteStatusMap' => $siteStatusMap,
                 'ragClassifier' => $ragClassifier,
                 'isVtsRiskEnabled' => $this->isFeatureEnabled(FeatureToggle::VTS_RISK_SCORE),
@@ -384,7 +382,7 @@ class SiteController extends AbstractAuthActionController
 
         // Logical block - prepare view model
         $viewModel = new ViewModel([
-            'form'      => $form,
+            'form' => $form,
             'cancelUrl' => $vtsViewUrl,
         ]);
 
@@ -393,7 +391,7 @@ class SiteController extends AbstractAuthActionController
         ];
         $breadcrumbs = $this->prependBreadcrumbsWithAeLink($form->getVtsDto(), $breadcrumbs);
 
-        $subTitle = self::EDIT_SUBTITLE . ' - ' . $form->getVtsDto()->getSiteNumber();
+        $subTitle = self::EDIT_SUBTITLE.' - '.$form->getVtsDto()->getSiteNumber();
 
         $this->layout()->setVariable(
             'pageTertiaryTitle',
@@ -456,7 +454,7 @@ class SiteController extends AbstractAuthActionController
             ->queryParam(self::SESSION_KEY, $sessionKey);
 
         $viewModel = new ViewModel([
-            'form'      => $form,
+            'form' => $form,
             'cancelUrl' => $cancelUrl,
         ]);
 
@@ -682,7 +680,7 @@ class SiteController extends AbstractAuthActionController
         }
 
         $vtsViewUrl = VehicleTestingStationUrlBuilderWeb::byId($siteId)->toString();
-        $cancelUrl  = VehicleTestingStationUrlBuilderWeb::cancelSiteRiskAssessment($siteId)->toString();
+        $cancelUrl = VehicleTestingStationUrlBuilderWeb::cancelSiteRiskAssessment($siteId)->toString();
 
         $viewModel = new ViewModel(
             [

@@ -5,12 +5,12 @@ namespace DvsaMotApiTest\Generator;
 use DvsaMotApi\Generator\MotTestNumberGenerator;
 
 /**
- * unit tests for DvsaMotApiTest\Generator
+ * unit tests for DvsaMotApiTest\Generator.
  */
 class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Can generate a MOT Test Number
+     * Can generate a MOT Test Number.
      *
      * Check the following:
      * - the number generated is eleven characters long.
@@ -74,7 +74,7 @@ class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Can generate the same MOT Test Number
+     * Can generate the same MOT Test Number.
      *
      * As the number is pseudorandom, check that the same seed (DB MOT Test Id) produces the same MOT Test Number
      */
@@ -88,7 +88,7 @@ class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Can generate a MOT Test Number checksum digit
+     * Can generate a MOT Test Number checksum digit.
      */
     public function testGenerateMotTestNumberChecksumDigit()
     {
@@ -118,7 +118,7 @@ class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Can generate a MOT Test Number and the checksum digit
+     * Can generate a MOT Test Number and the checksum digit.
      */
     public function testGenerateMotTestNumberAndChecksumDigit()
     {
@@ -127,7 +127,7 @@ class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
         $motTestNumberBase = '43651139692';
 
         $motTestNumber = MotTestNumberGenerator::generateMotTestNumber($motTestId);
-        $this->assertEquals($motTestNumberBase . $checksumDigit, $motTestNumber);
+        $this->assertEquals($motTestNumberBase.$checksumDigit, $motTestNumber);
     }
 
     /**
@@ -153,7 +153,7 @@ class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * TEST HELPERS
+     * TEST HELPERS.
      */
     private function assertCorrectCharacterLength($data)
     {
@@ -179,7 +179,7 @@ class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * DATA PROVIDERS
+     * DATA PROVIDERS.
      */
     public function incorrectMotLengthCharactersProvider()
     {
@@ -193,7 +193,7 @@ class MotTestNumberGeneratorTest extends \PHPUnit_Framework_TestCase
             ['01234567891'],
             [null],
             [true],
-            [""],
+            [''],
             [new \stdClass()],
         ];
     }

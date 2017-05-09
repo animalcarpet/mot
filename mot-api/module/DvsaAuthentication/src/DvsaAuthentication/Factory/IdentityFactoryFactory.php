@@ -7,8 +7,6 @@ use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\IdentityFactory\CacheableIdentityFactory;
 use DvsaAuthentication\IdentityFactory\DoctrineIdentityFactory;
 use DvsaEntities\Entity\Person;
-use DvsaEntities\Repository\PersonRepository;
-use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

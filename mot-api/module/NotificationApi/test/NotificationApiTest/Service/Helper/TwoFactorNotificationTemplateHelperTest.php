@@ -122,7 +122,7 @@ class TwoFactorNotificationTemplateHelperTest extends PHPUnit_Framework_TestCase
             [TwoFactorStatus::AWAITING_CARD_ORDER, self::DIRECT_NOMINATION],
             [TwoFactorStatus::ACTIVE, self::INDIRECT_NOMINATION],
             [TwoFactorStatus::AWAITING_CARD_ACTIVATION, self::INDIRECT_NOMINATION],
-            [TwoFactorStatus::AWAITING_CARD_ORDER, self::INDIRECT_NOMINATION]
+            [TwoFactorStatus::AWAITING_CARD_ORDER, self::INDIRECT_NOMINATION],
         ];
     }
 }

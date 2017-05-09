@@ -6,7 +6,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderReviewAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller\CardOrderReviewController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
 use DvsaCommon\Auth\MotIdentityProvider;
-use Zend\Http\Request;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

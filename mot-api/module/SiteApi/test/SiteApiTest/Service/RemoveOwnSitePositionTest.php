@@ -39,7 +39,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
      */
     private $authorisationService;
     private $notificationService;
-    /** @var  \PHPUnit_Framework_MockObject_MockObject | SiteBusinessRoleMapRepository */
+    /** @var \PHPUnit_Framework_MockObject_MockObject | SiteBusinessRoleMapRepository */
     private $siteBusinessRoleMapRepository;
     private $eventService;
     private $entityManager;
@@ -57,10 +57,10 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
     /** @var Site */
     private $vtsB;
 
-    /** @var  \PHPUnit_Framework_MockObject_MockObject | MotTestRepository */
+    /** @var \PHPUnit_Framework_MockObject_MockObject | MotTestRepository */
     private $motTestRepository;
 
-    /** @var  MethodSpy */
+    /** @var MethodSpy */
     private $submitEventSpy;
 
     public function setUp()
@@ -112,7 +112,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
         $removeEntitySpy = new MethodSpy($this->entityManager, 'remove');
 
         // GIVEN I have a position in a VTS
-        $notificationRecipient = rand(1,10000);
+        $notificationRecipient = rand(1, 10000);
         $position = $this->createMySitePosition($this->vtsA, SiteBusinessRoleCode::TESTER, $notificationRecipient, RoleCode::SITE_MANAGER);
         $this->siteBusinessRoleMapRepository->expects($this->any())
             ->method('findOneBy')
@@ -144,7 +144,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
         $removeEntitySpy = new MethodSpy($this->entityManager, 'remove');
 
         // GIVEN I have a position in a VTS
-        $notificationRecipient = rand(1,10000);
+        $notificationRecipient = rand(1, 10000);
         $position = $this->createMySitePosition($this->vtsA, SiteBusinessRoleCode::TESTER, $notificationRecipient, RoleCode::SITE_MANAGER);
         $this->siteBusinessRoleMapRepository->expects($this->any())
             ->method('findOneBy')
@@ -227,7 +227,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
         // WHEN I remove my position
         try {
             $this->buildService()->remove($this->vtsA->getId(), $this->myPositionId);
-            $this->fail("Exception was expected");
+            $this->fail('Exception was expected');
         } catch (BadRequestException $e) {
             // THEN validation exception is thrown with message stating that
             // role couldn't be removed because it doesn't exist anymore
@@ -239,7 +239,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $removeEntitySpy->invocationCount());
 
         // AND no notifications are sent
-        $this->notificationService->expects($this->never())->method("add");
+        $this->notificationService->expects($this->never())->method('add');
 
         // AND no events are sent
         $this->assertEventsWereNotSent();
@@ -271,7 +271,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
         // WHEN I remove my position
         try {
             $this->buildService()->remove($this->vtsA->getId(), $this->myPositionId);
-            $this->fail("Exception was expected");
+            $this->fail('Exception was expected');
         } catch (BadRequestException $e) {
             // THEN validation exception is thrown with message stating that
             // role couldn't be removed because I have a test in progress
@@ -283,7 +283,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $removeEntitySpy->invocationCount());
 
         // AND no notifications are sent
-        $this->notificationService->expects($this->never())->method("add");
+        $this->notificationService->expects($this->never())->method('add');
 
         // AND no events are sent
         $this->assertEventsWereNotSent();
@@ -316,7 +316,7 @@ class RemoveOwnSitePositionTest extends \PHPUnit_Framework_TestCase
     private function notificationSent()
     {
         $capNotification = ArgCapture::create();
-        $this->notificationService->expects($this->atLeastOnce())->method("add")
+        $this->notificationService->expects($this->atLeastOnce())->method('add')
             ->with($capNotification());
 
         return $capNotification;

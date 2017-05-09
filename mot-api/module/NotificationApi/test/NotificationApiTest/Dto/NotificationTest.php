@@ -1,23 +1,22 @@
 <?php
+
 namespace NotificationApiTest\Dto;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use NotificationApi\Dto\Notification;
-use PHPUnit_Framework_TestCase;
 
 /**
- * Class NotificationTest
+ * Class NotificationTest.
  */
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
     public function testToArrayOneFieldShouldReturnCorrectArray()
     {
-        $this->runTestToArrayFieldList(['test1'=>1]);
+        $this->runTestToArrayFieldList(['test1' => 1]);
     }
 
     public function testToArrayTwoFieldsShouldReturnCorrectArray()
     {
-        $this->runTestToArrayFieldList(['test1'=>1, 'test2'=>2]);
+        $this->runTestToArrayFieldList(['test1' => 1, 'test2' => 2]);
     }
 
     public function testToArraySetFieldsShouldReturnCorrectArray()
@@ -51,6 +50,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         $notification
             ->setTemplate(Notification::TEMPLATE_ORGANISATION_NOMINATION)
             ->setRecipient(1);
+
         return $notification;
     }
 

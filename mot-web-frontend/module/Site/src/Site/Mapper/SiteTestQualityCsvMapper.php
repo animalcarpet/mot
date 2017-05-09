@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\Mapper;
 
 use Core\File\CsvFile;
@@ -10,8 +11,8 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 
 class SiteTestQualityCsvMapper
 {
-    const NOT_APPLICABLE = "n/a";
-    const NOT_AVAILABLE = "Not Available";
+    const NOT_APPLICABLE = 'n/a';
+    const NOT_AVAILABLE = 'Not Available';
 
     private $siteGroupPerformance;
     private $nationalGroupPerformance;
@@ -29,8 +30,7 @@ class SiteTestQualityCsvMapper
         $group,
         $month,
         $year
-    )
-    {
+    ) {
         $this->siteGroupPerformance = $siteGroupPerformance;
         $this->isNationalDataAvailable = $isNationalDataAvailable;
         $this->nationalGroupPerformance = $nationalGroupPerformance;
@@ -38,7 +38,6 @@ class SiteTestQualityCsvMapper
         $this->group = $group;
         $this->month = $month;
         $this->year = $year;
-
     }
 
     /**
@@ -72,7 +71,7 @@ class SiteTestQualityCsvMapper
             'Tests done',
             'Average vehicle age',
             'Average test time',
-            'Tests failed'
+            'Tests failed',
         ];
     }
 
@@ -80,8 +79,7 @@ class SiteTestQualityCsvMapper
         SiteGroupPerformanceDto $siteGroupPerformance,
         MotTestingPerformanceDto $nationalGroupPerformance = null,
         $vehicleTestingStation
-    )
-    {
+    ) {
         $content = [];
         $content[] = $this->buildSiteRow($siteGroupPerformance->getTotal(), $vehicleTestingStation);
 
@@ -100,8 +98,7 @@ class SiteTestQualityCsvMapper
     private function buildSiteRow(
         MotTestingPerformanceDto $motTestingPerformance,
         VehicleTestingStationDto $vehicleTestingStation
-    )
-    {
+    ) {
         return [
             $vehicleTestingStation->getName(),
             $vehicleTestingStation->getSiteNumber(),
@@ -111,7 +108,7 @@ class SiteTestQualityCsvMapper
             $motTestingPerformance->getTotal(),
             VehicleAgeFormatter::calculateVehicleAge($motTestingPerformance->getAverageVehicleAgeInMonths()),
             $motTestingPerformance->getAverageTime()->getTotalMinutes(),
-            round($motTestingPerformance->getPercentageFailed()) . "%",
+            round($motTestingPerformance->getPercentageFailed()).'%',
         ];
     }
 
@@ -126,15 +123,14 @@ class SiteTestQualityCsvMapper
             $this->isNationalDataAvailable ? $nationalGroupPerformance->getTotal() : self::NOT_AVAILABLE,
             $this->isNationalDataAvailable ? VehicleAgeFormatter::calculateVehicleAge($nationalGroupPerformance->getAverageVehicleAgeInMonths()) : self::NOT_AVAILABLE,
             $this->isNationalDataAvailable ? $nationalGroupPerformance->getAverageTime()->getTotalMinutes() : self::NOT_AVAILABLE,
-            $this->isNationalDataAvailable ? round($nationalGroupPerformance->getPercentageFailed()) . "%" : self::NOT_AVAILABLE,
+            $this->isNationalDataAvailable ? round($nationalGroupPerformance->getPercentageFailed()).'%' : self::NOT_AVAILABLE,
         ];
     }
 
     private function buildTesterRow(
         EmployeePerformanceDto $employeePerformance,
         VehicleTestingStationDto $vehicleTestingStation
-    )
-    {
+    ) {
         return [
             $vehicleTestingStation->getName(),
             $vehicleTestingStation->getSiteNumber(),
@@ -144,13 +140,13 @@ class SiteTestQualityCsvMapper
             $employeePerformance->getTotal(),
             VehicleAgeFormatter::calculateVehicleAge($employeePerformance->getAverageVehicleAgeInMonths()),
             $employeePerformance->getAverageTime()->getTotalMinutes(),
-            round($employeePerformance->getPercentageFailed()) . "%",
+            round($employeePerformance->getPercentageFailed()).'%',
         ];
     }
 
     private function buildFileName()
     {
-        $pattern = "Test-quality-information_%s_%s_Group-%s_%s.csv";
+        $pattern = 'Test-quality-information_%s_%s_Group-%s_%s.csv';
 
         return sprintf($pattern,
             $this->vehicleTestingStation->getName(),

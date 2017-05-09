@@ -15,12 +15,10 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
 use DvsaEventApi\Service\EventService;
-use Zend\Log\LoggerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ClaimServiceFactoryTest
- * @package AccountApiTest\Factory
+ * Class ClaimServiceFactoryTest.
  */
 class ClaimServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

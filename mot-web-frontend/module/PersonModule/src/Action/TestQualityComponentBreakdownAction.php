@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Action;
 
 use Core\Action\ViewActionResult;
@@ -16,11 +17,10 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\IncorrectDateFormatException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Zend\Mvc\Controller\Plugin\Url;
-use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiBreadcrumbs;
 
 class TestQualityComponentBreakdownAction implements AutoWireableInterface
 {
-    const PAGE_TITLE = "Test quality information";
+    const PAGE_TITLE = 'Test quality information';
 
     private $componentFailRateApiResource;
     private $nationalComponentStatisticApiResource;
@@ -73,7 +73,7 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
                     $nationalBreakdown,
                     $groupCode,
                     $returnUrl,
-                    "Return to test quality information"
+                    'Return to test quality information'
                 ),
                 $this->breadcrumbs->getBreadcrumbs($testerId, $month, $year)
             );
@@ -98,6 +98,7 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
 
     /**
      * @param ComponentBreakdownDto $testerBreakdown
+     *
      * @return bool
      */
     private function checkIfTesterHasTests(ComponentBreakdownDto $testerBreakdown)
@@ -108,7 +109,9 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
     /**
      * @param $month
      * @param $year
+     *
      * @return \DateTime
+     *
      * @throws IncorrectDateFormatException
      */
     private function setMonthAndYear($month, $year)
@@ -118,7 +121,7 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
 
     private function getTertiaryTitle()
     {
-        return "Failures by category at all associated sites in " . $this->viewedDate->format("F Y");
+        return 'Failures by category at all associated sites in '.$this->viewedDate->format('F Y');
     }
 
     private function isYourProfile()
@@ -128,6 +131,6 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
 
     private function getPageSubTitle()
     {
-        return $this->isYourProfile() ? "Your profile" : "User profile";
+        return $this->isYourProfile() ? 'Your profile' : 'User profile';
     }
 }

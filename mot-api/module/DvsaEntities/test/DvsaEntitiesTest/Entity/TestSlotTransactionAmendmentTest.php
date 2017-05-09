@@ -11,9 +11,7 @@ use DvsaEntitiesTest\EntityTrait\EntityTestTrait;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class PaymentTest
- *
- * @package DvsaEntityTest\Entity
+ * Class PaymentTest.
  */
 class TestSlotTransactionAmendmentTest extends PHPUnit_Framework_TestCase
 {
@@ -25,7 +23,7 @@ class TestSlotTransactionAmendmentTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test data for entity
+     * Test data for entity.
      *
      * @return array
      */
@@ -35,14 +33,14 @@ class TestSlotTransactionAmendmentTest extends PHPUnit_Framework_TestCase
             [
                 [
                     [
-                        'organisation'             => new Organisation(),
-                        'testSlotTransaction'      => new TestSlotTransaction(),
-                        'type'                     => new TestSlotTransactionAmendmentType(),
-                        'reason'                   => new TestSlotTransactionAmendmentReason(),
-                        'slots'                    => 100,
+                        'organisation' => new Organisation(),
+                        'testSlotTransaction' => new TestSlotTransaction(),
+                        'type' => new TestSlotTransactionAmendmentType(),
+                        'reason' => new TestSlotTransactionAmendmentReason(),
+                        'slots' => 100,
                         'previousReceiptReference' => 'reference',
-                    ]
-                ]
+                    ],
+                ],
             ];
     }
 }

@@ -25,7 +25,7 @@ class IdentitySessionStateServiceFactoryTest extends \PHPUnit_Framework_TestCase
             [
                 'MotIdentityProvider' => MotIdentityProviderInterface::class,
                 OpenAMClientInterface::class,
-                'tokenService'       => WebAuthenticationCookieService::class,
+                'tokenService' => WebAuthenticationCookieService::class,
                 'Application/Logger' => LoggerInterface::class,
             ]
         );

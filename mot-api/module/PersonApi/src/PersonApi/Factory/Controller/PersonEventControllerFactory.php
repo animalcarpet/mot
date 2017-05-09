@@ -11,11 +11,13 @@ class PersonEventControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return PersonEventController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
+
         return new PersonEventController(
             $serviceLocator->get(PersonEventService::class)
         );

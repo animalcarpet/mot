@@ -1,8 +1,7 @@
 <?php
 /**
- * @var $viewModel \DashBoard\ViewModel\RemoveRoleViewModel
+ * @var \DashBoard\ViewModel\RemoveRoleViewModel
  */
-
 ?>
 
 <div class="text">
@@ -18,7 +17,7 @@
 echo $this->url(null, [
     'id' => $viewModel->getPersonId(),
     'positionId' => $viewModel->getPositionId(),
-    'entityId' => $viewModel->getEntityId()]
+    'entityId' => $viewModel->getEntityId(), ]
 );
 ?>" method="post">
     <?php echo $this->csrfToken(); ?>

@@ -13,11 +13,9 @@ use NotificationApi\Service\Helper\SiteNominationEventHelper;
 use NotificationApi\Service\Helper\OrganisationNominationEventHelper;
 
 /**
- * Class AbstractNotificationActionHandlerTest
+ * Class AbstractNotificationActionHandlerTest.
  *
  * Unit testing AbstractNotificationActionHandler
- *
- * @package NotificationApiTest\Service\BusinessLogic
  */
 class AbstractNotificationActionHandlerTest extends AbstractServiceTestCase
 {
@@ -76,7 +74,7 @@ class AbstractNotificationActionHandlerTest extends AbstractServiceTestCase
                 EntityManager::class,
                 NotificationService::class,
                 SiteNominationEventHelper::class,
-                OrganisationNominationEventHelper::class
+                OrganisationNominationEventHelper::class,
             ]
         );
 
@@ -89,8 +87,8 @@ class AbstractNotificationActionHandlerTest extends AbstractServiceTestCase
     {
         $this->serviceManager
             ->expects($this->any())
-            ->method("get")
-            ->willReturnCallback(function ($service) use ($services){
+            ->method('get')
+            ->willReturnCallback(function ($service) use ($services) {
                 if (in_array($service, $services)) {
                     return $this->getMockWithDisabledConstructor($service);
                 }

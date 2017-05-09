@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Routes;
 
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -14,6 +15,7 @@ class AnnualAssessmentCertificatesRoutes extends PersonProfileRoutes implements 
     public function getRoute()
     {
         $route = parent::getRoute();
+
         return $route.self::ROUTE_INDEX;
     }
 

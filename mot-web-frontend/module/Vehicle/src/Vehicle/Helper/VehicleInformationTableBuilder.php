@@ -22,9 +22,9 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     const EMPTY_VALUE_TEXT = 'Unknown';
 
     protected static $unknownCountriesCodes = [
-        CountryOfRegistrationCode::NON_EU => "Non Eu",
-        CountryOfRegistrationCode::NOT_APPLICABLE => "Not Known",
-        CountryOfRegistrationCode::NOT_KNOWN => "Not Applicable",
+        CountryOfRegistrationCode::NON_EU => 'Non Eu',
+        CountryOfRegistrationCode::NOT_APPLICABLE => 'Not Known',
+        CountryOfRegistrationCode::NOT_KNOWN => 'Not Applicable',
     ];
 
     private $catalogService;
@@ -44,8 +44,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         CatalogService $catalogService,
         MotAuthorisationServiceInterface $authorisationService,
         Url $urlHelper
-    )
-    {
+    ) {
         $this->catalogService = $catalogService;
         $this->authorisationService = $authorisationService;
         $this->urlHelper = $urlHelper;
@@ -53,6 +52,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
 
     /**
      * @param DvsaVehicle $vehicle
+     *
      * @return VehicleInformationTableBuilder
      */
     public function setVehicle($vehicle)
@@ -71,6 +71,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
 
     /**
      * @param VehicleExpiryDto $expiryDateInformation
+     *
      * @return VehicleInformationTableBuilder
      */
     public function setExpiryDateInformation($expiryDateInformation)
@@ -151,7 +152,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         $this->addRowToTable($table, 'VIN', $this->vehicle->getVin());
         $this->addRowToTable($table, 'Country of registration', $this->getCountryCodeById($this->vehicle->getCountryOfRegistrationId()))
             ->addActionLink('Change', $changeCountryLink);
-        $this->addRowToTable($table, 'Declared new', $this->vehicle->getIsNewAtFirstReg() ? "Yes" : "No");
+        $this->addRowToTable($table, 'Declared new', $this->vehicle->getIsNewAtFirstReg() ? 'Yes' : 'No');
         $this->addRowToTable($table, 'Manufacture date', $this->dateFormat($this->vehicle->getManufactureDate()));
         $this->addRowToTable($table, 'First registered', $this->dateFormat($this->vehicle->getFirstRegistrationDate()));
         $table = $this->getFirstUsedDateRow($table);
@@ -169,13 +170,15 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
                 VehicleRoutes::of($this->urlHelper)->changeFirstUsedDate($this->vehicleObfuscatedId)
             );
         }
+
         return $table;
     }
 
     /**
      * @param GdsTable $table
-     * @param string $label
-     * @param string $value
+     * @param string   $label
+     * @param string   $value
+     *
      * @return GdsRow
      */
     private function addRowToTable(GdsTable $table, $label, $value)
@@ -193,6 +196,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
 
     /**
      * @param int $countryId
+     *
      * @return string|null
      */
     private function getCountryCodeById($countryId)
@@ -208,6 +212,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
 
     /**
      * @param DateTime|string $date
+     *
      * @return null|string
      */
     private function dateFormat($date)
@@ -226,14 +231,14 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
      */
     private function getVehicleColourNames()
     {
-        $colourNotStated = in_array($this->vehicle->getColourSecondary()->getCode(),[
-            ColourCode::NOT_STATED, null
+        $colourNotStated = in_array($this->vehicle->getColourSecondary()->getCode(), [
+            ColourCode::NOT_STATED, null,
         ]);
 
         if ($colourNotStated) {
             return $this->vehicle->getColour()->getName();
         } else {
-            return $this->vehicle->getColour()->getName() . ' and ' . $this->vehicle->getColourSecondary()->getName();
+            return $this->vehicle->getColour()->getName().' and '.$this->vehicle->getColourSecondary()->getName();
         }
     }
 
@@ -249,14 +254,13 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         }
     }
 
-
     /**
      * @return string
      */
     private function getMakeAndModel()
     {
         return $this->vehicle->getModel()->getName()
-            ? $this->vehicle->getMake()->getName() . ', ' . $this->vehicle->getModel()->getName()
+            ? $this->vehicle->getMake()->getName().', '.$this->vehicle->getModel()->getName()
             : $this->vehicle->getMake()->getName();
     }
 
@@ -268,7 +272,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         $vehicleWeight = $this->vehicle->getWeight();
 
         if (!is_null($vehicleWeight)) {
-            $vehicleWeight = number_format($vehicleWeight) . ' Kg';
+            $vehicleWeight = number_format($vehicleWeight).' Kg';
         }
 
         return $vehicleWeight;
@@ -283,7 +287,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         $cylinderCapacity = $this->vehicle->getCylinderCapacity();
 
         return !is_null($cylinderCapacity)
-            ? $fuelType . ', ' . number_format($cylinderCapacity) . ' cc'
+            ? $fuelType.', '.number_format($cylinderCapacity).' cc'
             : $fuelType;
     }
 

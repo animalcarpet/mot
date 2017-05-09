@@ -9,7 +9,6 @@ namespace Dashboard\ViewModel;
 
 use Account\AbstractClass\AbstractSecurityQuestionViewModel;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;

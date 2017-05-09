@@ -12,12 +12,12 @@ use VehicleApi\Service\VehicleService;
 $config = [
     'factories' => [
         MysteryShopperVehicleService::class => MysteryShopperVehicleServiceFactory::class,
-        VehicleService::class               => VehicleServiceFactory::class,
-        VehicleSearchService::class         => VehicleSearchServiceFactory::class,
-        VehicleSearchParam::class           => VehicleSearchParamFactory::class,
-        'Zend\Log\Logger'                   => function ($sm) {
+        VehicleService::class => VehicleServiceFactory::class,
+        VehicleSearchService::class => VehicleSearchServiceFactory::class,
+        VehicleSearchParam::class => VehicleSearchParamFactory::class,
+        'Zend\Log\Logger' => function ($sm) {
             $logger = new Zend\Log\Logger();
-            $writer = new Zend\Log\Writer\Stream('./data/log/' . date('Y-m-d') . '-error.log');
+            $writer = new Zend\Log\Writer\Stream('./data/log/'.date('Y-m-d').'-error.log');
             $logger->addWriter($writer);
 
             return $logger;

@@ -10,26 +10,18 @@ use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
-use DvsaCommon\HttpRestJson\Exception\ValidationException;
-use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use Organisation\Traits\OrganisationServicesTrait;
 use Organisation\UpdateAeProperty\UpdateAeContext;
 use Organisation\UpdateAeProperty\UpdateAePropertyProcessBuilder;
 use Organisation\ViewModel\AuthorisedExaminer\AeRemovePrincipalViewModel;
 use Organisation\UpdateAeProperty\UpdateAePropertyAction;
 use Organisation\UpdateAeProperty\UpdateAePropertyReviewAction;
-use SebastianBergmann\Exporter\Exception;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use Zend\Mvc\Controller\Plugin\Url;
 
-
 /**
- * Class AuthorisedExaminerPrincipalController
- *
- * @package Organisation\Controller
+ * Class AuthorisedExaminerPrincipalController.
  */
 class AuthorisedExaminerPrincipalController extends AbstractAuthActionController implements AutoWireableInterface
 {
@@ -49,8 +41,7 @@ class AuthorisedExaminerPrincipalController extends AbstractAuthActionController
         UpdateAePropertyAction $updateAction,
         UpdateAePropertyReviewAction $reviewAction,
         UpdateAePropertyProcessBuilder $processBuilder
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->mapper = $mapper;
         $this->updateAction = $updateAction;
@@ -99,10 +90,11 @@ class AuthorisedExaminerPrincipalController extends AbstractAuthActionController
         if ($request->isPost()) {
             try {
                 $this->mapper->AuthorisedExaminerPrincipal->removePrincipalsForOrganisation($authorisedExaminerId, $principalId);
-                $this->addSuccessMessage('Principal - '. $principal->getDisplayName() . ' has been removed successfully.');
+                $this->addSuccessMessage('Principal - '.$principal->getDisplayName().' has been removed successfully.');
             } catch (RestApplicationException $e) {
                 $this->addErrorMessages($e->getDisplayMessages());
             }
+
             return $this->applyActionResult(new RedirectToRoute(AeRouteList::AE, ['id' => $authorisedExaminerId]));
         }
 
@@ -116,7 +108,7 @@ class AuthorisedExaminerPrincipalController extends AbstractAuthActionController
 
         $breadcrumbs = [$authorisedExaminer->getName() => $urlAE];
 
-        $lede = 'Are you sure you want to remove '. $viewModel->getPrincipalName() .' as an Authorised Examiner Principal?';
+        $lede = 'Are you sure you want to remove '.$viewModel->getPrincipalName().' as an Authorised Examiner Principal?';
 
         return $this->prepareViewModel(
             new ViewModel(['viewModel' => $viewModel]), self::REMOVE_TITLE, 'Authorised Examiner', $lede, $breadcrumbs
@@ -124,7 +116,7 @@ class AuthorisedExaminerPrincipalController extends AbstractAuthActionController
     }
 
     /**
-     * Prepare the view model for all the step of the create ae
+     * Prepare the view model for all the step of the create ae.
      *
      * @param ViewModel $view
      * @param string    $title
@@ -140,7 +132,7 @@ class AuthorisedExaminerPrincipalController extends AbstractAuthActionController
         $lede,
         $breadcrumbs = null
     ) {
-        $breadcrumbs = array_merge($breadcrumbs, [$title => ""]);
+        $breadcrumbs = array_merge($breadcrumbs, [$title => '']);
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('pageTitle', $title)

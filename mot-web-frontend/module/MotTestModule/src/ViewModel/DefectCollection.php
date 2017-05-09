@@ -8,7 +8,6 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use DvsaMotApi\Helper\DefectDescriptionsHelper;
 
 /**
  * A collection of Defect instances belonging to the same category.
@@ -55,7 +54,6 @@ class DefectCollection extends ArrayCollection
         $defects = [];
 
         foreach ($defectsFromApi as $defectFromApi) {
-
             $defect = new Defect(
                 $defectFromApi['rfrId'],
                 $defectFromApi['testItemSelectorId'],
@@ -90,7 +88,6 @@ class DefectCollection extends ArrayCollection
         $defects = [];
 
         foreach ($searchResults['data']['reasonsForRejection'] as $searchResult) {
-
             $defect = new Defect(
                 $searchResult['rfrId'],
                 $searchResult['testItemSelectorId'],

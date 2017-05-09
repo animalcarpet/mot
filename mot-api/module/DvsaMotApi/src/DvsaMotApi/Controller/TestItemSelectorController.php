@@ -1,14 +1,14 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaMotApi\Service\TestItemSelectorService;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class TestItemSelectorController
+ * Class TestItemSelectorController.
  */
 class TestItemSelectorController extends AbstractDvsaRestfulController
 {
@@ -36,7 +36,7 @@ class TestItemSelectorController extends AbstractDvsaRestfulController
         //  --  get items   --
         $items = $this->getTestItemSelectorService()->getTestItemSelectorsData($testItemSelectorId, $vehicleClassCode);
         foreach ($items as $index => $item) {
-            $items[$index] = array_merge($item , ['motTest' => $motTest]);
+            $items[$index] = array_merge($item, ['motTest' => $motTest]);
         }
 
         return ApiResponse::jsonOk($items);

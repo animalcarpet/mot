@@ -13,7 +13,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class AbstractDvsaActionControllerTest extends \PHPUnit_Framework_TestCase
 {
-    const ENABLED_FEATURE  = 'enabledFeature';
+    const ENABLED_FEATURE = 'enabledFeature';
     const DISABLED_FEATURE = 'disabledFeature';
 
     private $controller;

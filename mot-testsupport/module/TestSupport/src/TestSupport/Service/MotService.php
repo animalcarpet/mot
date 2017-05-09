@@ -3,7 +3,6 @@
 namespace TestSupport\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\DBAL\Connection;
 use DvsaEntities\Entity\MotTest;
 
 class MotService
@@ -19,9 +18,9 @@ class MotService
     }
 
     /**
-     * Update the mot_test_current entry with the associated $id with $data
+     * Update the mot_test_current entry with the associated $id with $data.
      *
-     * @param int $id
+     * @param int   $id
      * @param array $data
      */
     public function update($id, $data)
@@ -33,7 +32,8 @@ class MotService
     }
 
     /**
-     * Updates the latest mot_test_current entry associated with $vehicleId with $data
+     * Updates the latest mot_test_current entry associated with $vehicleId with $data.
+     *
      * @param $vehicleId
      * @param array $data
      */
@@ -46,9 +46,10 @@ class MotService
     }
 
     /**
-     * Get the latest mot_test entry's id
+     * Get the latest mot_test entry's id.
      *
      * @param $vehicleId
+     *
      * @return int
      */
     public function getLatestTest($vehicleId)
@@ -70,8 +71,8 @@ class MotService
         $this->entityManager->getConnection()->update(
             'mot_test_current',
             [
-                'started_date' => $startedDate->format("Y-m-d H:i:s"),
-                'completed_date' => $completedDate->format("Y-m-d H:i:s")
+                'started_date' => $startedDate->format('Y-m-d H:i:s'),
+                'completed_date' => $completedDate->format('Y-m-d H:i:s'),
             ],
             ['number' => $motNumber]
         );

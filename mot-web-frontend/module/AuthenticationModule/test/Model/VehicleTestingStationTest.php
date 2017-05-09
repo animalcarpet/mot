@@ -8,10 +8,10 @@
 namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Model;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
-use \PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_TestCase;
 
 /**
- * Class VehicleTestingStationTest
+ * Class VehicleTestingStationTest.
  */
 class VehicleTestingStationTest extends PHPUnit_Framework_TestCase
 {
@@ -56,15 +56,16 @@ class VehicleTestingStationTest extends PHPUnit_Framework_TestCase
     protected function getVtsTestData()
     {
         $data = [
-            'id'    => 1,
-            'name'  => 'Test VTS Station',
+            'id' => 1,
+            'name' => 'Test VTS Station',
             'address' => 'No 1 My Street, My Town, Metropolis',
             'siteNumber' => 'V1234567',
             'slots' => 99,
             'slotsWarning' => 10,
             'slotsInUse' => 9,
-            'aeId' => 1
+            'aeId' => 1,
         ];
+
         return $data;
     }
 }

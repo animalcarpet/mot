@@ -5,8 +5,7 @@ namespace DvsaEntities\DqlBuilder;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 
 /**
- * Class TesterSearchParamDqlBuilder
- * @package DvsaEntities\DqlBuilder
+ * Class TesterSearchParamDqlBuilder.
  */
 class TesterSearchParamDqlBuilder extends SearchParamDqlBuilder
 {
@@ -17,20 +16,20 @@ class TesterSearchParamDqlBuilder extends SearchParamDqlBuilder
     protected $searchWords = [];
 
     /**
-     * Provides an opportunity to initialize and values before processing
+     * Provides an opportunity to initialize and values before processing.
      *
      * @return $this
      */
     public function initialize()
     {
         $search = trim($this->params->getSearch());
-        $this->searchWords = strlen($search) > 0 ? explode(" ", strtoupper($search)) : null;
+        $this->searchWords = strlen($search) > 0 ? explode(' ', strtoupper($search)) : null;
         // todo: make this the default action in the child class.
         return $this;
     }
 
     /**
-     * Build the Dql from the params
+     * Build the Dql from the params.
      *
      * @param bool $totalCount
      *
@@ -38,22 +37,22 @@ class TesterSearchParamDqlBuilder extends SearchParamDqlBuilder
      */
     protected function buildDql($totalCount = false)
     {
-        $dql         = [];
-        $filters     = [];
+        $dql = [];
+        $filters = [];
 
         $dql[] = $this->generateDqlHeader($totalCount);
 
         if ($this->searchWords) {
-            $this->addFiltersByValues($filters, $this->searchWords, "tester.username = :TESTER_USERNAME", "OR");
+            $this->addFiltersByValues($filters, $this->searchWords, 'tester.username = :TESTER_USERNAME', 'OR');
         }
 
-        $dql[] = count($filters) ? join(' OR ', $filters): '1';
+        $dql[] = count($filters) ? implode(' OR ', $filters) : '1';
 
         $this->generateDqlFooter($totalCount, $dql);
     }
 
     /**
-     * Build the Query and add any parameters
+     * Build the Query and add any parameters.
      *
      * @param bool $totalCount
      *
@@ -62,7 +61,7 @@ class TesterSearchParamDqlBuilder extends SearchParamDqlBuilder
     protected function buildQuery($totalCount = false)
     {
         $query = $this->createQuery($totalCount);
-        $searchLength = strlen($this->params->getSearch()) ;
+        $searchLength = strlen($this->params->getSearch());
 
         if ($searchLength) {
             $this->addParametersByValues($query, $this->searchWords, 'TESTER_USERNAME');
@@ -74,7 +73,7 @@ class TesterSearchParamDqlBuilder extends SearchParamDqlBuilder
                 AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 AuthorisationForTestingMotStatusCode::QUALIFIED,
                 AuthorisationForTestingMotStatusCode::REFRESHER_NEEDED,
-                AuthorisationForTestingMotStatusCode::SUSPENDED
+                AuthorisationForTestingMotStatusCode::SUSPENDED,
             ]
         );
 
@@ -92,7 +91,7 @@ class TesterSearchParamDqlBuilder extends SearchParamDqlBuilder
     {
         $select = $totalCount ? 'count(DISTINCT tester)' : ' DISTINCT tester';
 
-        return 'SELECT ' . $select . ' FROM
+        return 'SELECT '.$select.' FROM
                      DvsaEntities\Entity\AuthorisationForTestingMot auth,
                      DvsaEntities\Entity\AuthorisationForTestingMotStatus status,
                      DvsaEntities\Entity\Person tester
@@ -111,16 +110,16 @@ class TesterSearchParamDqlBuilder extends SearchParamDqlBuilder
     protected function generateDqlFooter($totalCount, $dql)
     {
         if ($totalCount) {
-            $this->searchCountDql = join(" ", $dql);
+            $this->searchCountDql = implode(' ', $dql);
         } else {
-            $dql[] = "ORDER BY {$this->getOrderByTable()}.{$this->params->getSortColumnName()} " .
+            $dql[] = "ORDER BY {$this->getOrderByTable()}.{$this->params->getSortColumnName()} ".
                 $this->params->getSortDirection();
-            $this->searchDql = join(" ", $dql);
+            $this->searchDql = implode(' ', $dql);
         }
     }
 
     /**
-     * Returns the current table to order by. Useful in multi join searches
+     * Returns the current table to order by. Useful in multi join searches.
      *
      * @return string
      */

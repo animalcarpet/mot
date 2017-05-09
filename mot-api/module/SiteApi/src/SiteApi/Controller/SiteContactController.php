@@ -2,13 +2,12 @@
 
 namespace SiteApi\Controller;
 
-use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use SiteApi\Service\SiteContactService;
 
 /**
- * Controller which creates/update contact of VTS
+ * Controller which creates/update contact of VTS.
  */
 class SiteContactController extends AbstractDvsaRestfulController
 {
@@ -36,6 +35,5 @@ class SiteContactController extends AbstractDvsaRestfulController
     private function getSiteContactService()
     {
         return $this->getServiceLocator()->get(SiteContactService::class);
-
     }
 }

@@ -28,8 +28,8 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     public function getInvalidYear()
     {
-        $year = $this->getYearInThePast("P1M");
-        $month = $this->getMonthInThePast("P1M");
+        $year = $this->getYearInThePast('P1M');
+        $month = $this->getMonthInThePast('P1M');
 
         return [
             [
@@ -45,16 +45,16 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
                 $month,
             ],
             [
-                "2001",
+                '2001',
                 $month,
 
             ],
             [
-                "MM",
+                'MM',
                 $month,
             ],
             [
-                $this->getFirstOfThisMonth()->format("Y"),
+                $this->getFirstOfThisMonth()->format('Y'),
                 $month,
             ],
         ];
@@ -73,7 +73,7 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     public function getInvalidMonth()
     {
-        $year = $this->getYearInThePast("P1M");
+        $year = $this->getYearInThePast('P1M');
 
         return [
             [
@@ -86,29 +86,30 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 $year,
-                "2",
+                '2',
             ],
             [
                 $year,
-                "XI",
+                'XI',
             ],
             [
                 $this->getCurrentYear(),
                 $this->getCurrentMonth(),
             ],
             [
-                $this->getYearInTheFuture("P1M"),
-                $this->getMonthInTheFuture("P1M"),
+                $this->getYearInTheFuture('P1M'),
+                $this->getMonthInTheFuture('P1M'),
             ],
             [
-                $this->getYearInThePast("P13M"),
-                $this->getMonthInThePast("P13M"),
+                $this->getYearInThePast('P13M'),
+                $this->getMonthInThePast('P13M'),
             ],
         ];
     }
 
     /**
      * @dataProvider getValidData
+     *
      * @param $year
      * @param $month
      */
@@ -121,16 +122,16 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                $this->getYearInThePast("P1M"),
-                $this->getMonthInThePast("P1M"),
+                $this->getYearInThePast('P1M'),
+                $this->getMonthInThePast('P1M'),
             ],
             [
-                $this->getYearInThePast("P6M"),
-                $this->getMonthInThePast("P6M"),
+                $this->getYearInThePast('P6M'),
+                $this->getMonthInThePast('P6M'),
             ],
             [
-                $this->getYearInThePast("P12M"),
-                $this->getMonthInThePast("P12M"),
+                $this->getYearInThePast('P12M'),
+                $this->getMonthInThePast('P12M'),
             ],
         ];
     }
@@ -155,12 +156,12 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     private function getYearInThePast($dateInterval)
     {
-        return (int)$this->getDateInThePast($dateInterval)->format("Y");
+        return (int) $this->getDateInThePast($dateInterval)->format('Y');
     }
 
     private function getMonthInThePast($dateInterval)
     {
-        return (int)$this->getDateInThePast($dateInterval)->format("m");
+        return (int) $this->getDateInThePast($dateInterval)->format('m');
     }
 
     private function getDateInTheFuture($dateInterval)
@@ -170,21 +171,21 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     private function getYearInTheFuture($dateInterval)
     {
-        return (int)$this->getDateInTheFuture($dateInterval)->format("Y");
+        return (int) $this->getDateInTheFuture($dateInterval)->format('Y');
     }
 
     private function getMonthInTheFuture($dateInterval)
     {
-        return (int)$this->getDateInTheFuture($dateInterval)->format("m");
+        return (int) $this->getDateInTheFuture($dateInterval)->format('m');
     }
 
     private function getCurrentMonth()
     {
-        return (int)DateUtils::firstOfThisMonth()->format("m");
+        return (int) DateUtils::firstOfThisMonth()->format('m');
     }
 
     private function getCurrentYear()
     {
-        return (int)DateUtils::firstOfThisMonth()->format("Y");
+        return (int) DateUtils::firstOfThisMonth()->format('Y');
     }
 }

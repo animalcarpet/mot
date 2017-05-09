@@ -12,7 +12,6 @@ use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\Email;
 use DvsaEntities\Entity\EnforcementSiteAssessment;
-use DvsaEntities\Entity\EnforcementVisitOutcome;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\OrganisationType;
 use DvsaEntities\Entity\Person;
@@ -26,13 +25,11 @@ use DvsaEntities\Entity\SiteType;
 use SiteApi\Service\Mapper\SiteMapper;
 
 /**
- * Test functionality of SiteMapper class
- *
- * @package OrganisationApiTest\Mapper
+ * Test functionality of SiteMapper class.
  */
 class SiteMapperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  SiteMapper */
+    /** @var SiteMapper */
     private $mapper;
 
     public function setUp()
@@ -81,7 +78,7 @@ class SiteMapperTest extends \PHPUnit_Framework_TestCase
             )
             ->addEmail(
                 (new Email())
-                    ->setEmail('sitemappertest@' . EmailAddressValidator::TEST_DOMAIN)
+                    ->setEmail('sitemappertest@'.EmailAddressValidator::TEST_DOMAIN)
                     ->setIsPrimary(true)
             );
 
@@ -96,7 +93,7 @@ class SiteMapperTest extends \PHPUnit_Framework_TestCase
             )
             ->addEmail(
                 (new Email())
-                    ->setEmail('sitemappertest@' . EmailAddressValidator::TEST_DOMAIN)
+                    ->setEmail('sitemappertest@'.EmailAddressValidator::TEST_DOMAIN)
                     ->setIsPrimary(true)
             );
 
@@ -114,7 +111,7 @@ class SiteMapperTest extends \PHPUnit_Framework_TestCase
         $orgType = new OrganisationType();
         $orgType->setCode(OrganisationTypeConst::AUTHORISED_EXAMINER);
 
-        $org = new Organisation;
+        $org = new Organisation();
         $org->setId(7777)
             ->setOrganisationType($orgType);
 
@@ -123,7 +120,7 @@ class SiteMapperTest extends \PHPUnit_Framework_TestCase
         $siteAssessment
             ->setId(1234)
             ->setTester(
-                (new Person)
+                (new Person())
                     ->setFirstName('tester')
             )
             ->setRepresentative(

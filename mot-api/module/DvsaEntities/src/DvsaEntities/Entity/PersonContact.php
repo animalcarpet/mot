@@ -4,10 +4,9 @@ namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
-use DvsaEntities\Entity\ContactDetail;
 
 /**
- * PersonContact
+ * PersonContact.
  *
  * @ORM\Table(
  *  name="person_contact_detail_map",
@@ -55,6 +54,7 @@ class PersonContact extends Entity
 
     /**
      * PersonContact constructor.
+     *
      * @param \DvsaEntities\Entity\ContactDetail $contactDetail
      * @param PersonContactType                  $type
      * @param Person                             $person
@@ -68,6 +68,7 @@ class PersonContact extends Entity
 
     /**
      * @param \DvsaEntities\Entity\ContactDetail $contactDetail
+     *
      * @return $this
      */
     public function setDetails(ContactDetail $contactDetail)

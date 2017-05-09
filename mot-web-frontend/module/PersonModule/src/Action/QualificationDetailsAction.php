@@ -19,7 +19,6 @@ use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
-use Zend\Form\Form;
 
 class QualificationDetailsAction extends AbstractAuthActionController implements AutoWireableInterface
 {
@@ -43,8 +42,7 @@ class QualificationDetailsAction extends AbstractAuthActionController implements
         PersonProfileBreadcrumbs $personProfileBreadcrumbs,
         ContextProvider $contextProvider,
         ApiPersonalDetails $personalDetailsService
-    )
-    {
+    ) {
         $this->personProfileUrlGenerator = $personProfileUrlGenerator;
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
         $this->qualificationDetailsMapper = $qualificationDetailsMapper;
@@ -65,8 +63,7 @@ class QualificationDetailsAction extends AbstractAuthActionController implements
             $context
         );
 
-        if (!$personProfileGuard->canViewQualificationDetails())
-        {
+        if (!$personProfileGuard->canViewQualificationDetails()) {
             throw new UnauthorisedException('No identity provided');
         }
 
@@ -74,8 +71,7 @@ class QualificationDetailsAction extends AbstractAuthActionController implements
     }
 
     private function buildActionResult($personId, $context, $controller, PersonProfileGuard $personProfileGuard
-    )
-    {
+    ) {
         $testerAuthorisation = $this->personProfileGuardBuilder->getTesterAuthorisation($personId);
 
         $vm = new QualificationDetailsViewModel(
@@ -125,10 +121,11 @@ class QualificationDetailsAction extends AbstractAuthActionController implements
         return $personProfileGuard->canViewGuidance($vehicleClassGroupACode, $vehicleClassGroupBCode);
     }
 
-    private function getGroupViewModel($personId, $status, $group, AbstractAuthActionController $controller, PersonProfileGuard $personProfileGuard) {
+    private function getGroupViewModel($personId, $status, $group, AbstractAuthActionController $controller, PersonProfileGuard $personProfileGuard)
+    {
         try {
             $qualificationDetails = $this->qualificationDetailsMapper->getQualificationDetails($personId, $group);
-        } catch(NotFoundException $e) {
+        } catch (NotFoundException $e) {
             $qualificationDetails = null;
         }
 
@@ -136,21 +133,21 @@ class QualificationDetailsAction extends AbstractAuthActionController implements
         $addUrl = null;
         $removeUrl = null;
 
-        if(!empty($qualificationDetails)) {
-            if($personProfileGuard->canUpdateQualificationDetails($group)) {
+        if (!empty($qualificationDetails)) {
+            if ($personProfileGuard->canUpdateQualificationDetails($group)) {
                 $changeUrl = $controller->url()->fromRoute($this->qualificationDetailsRoutes->getEditRoute(),
                     $controller->params()->fromRoute() + [self::ROUTE_PARAM_GROUP => strtolower($group)]
                 );
             }
         }
 
-        if($personProfileGuard->canCreateQualificationDetails($group)) {
+        if ($personProfileGuard->canCreateQualificationDetails($group)) {
             $addUrl = $controller->url()->fromRoute($this->qualificationDetailsRoutes->getAddRoute(),
                 $controller->params()->fromRoute() + [self::ROUTE_PARAM_GROUP => strtolower($group)]
             );
         }
-        
-        if($personProfileGuard->canRemoveQualificationDetails($group)) {
+
+        if ($personProfileGuard->canRemoveQualificationDetails($group)) {
             $removeUrl = $controller->url()->fromRoute($this->qualificationDetailsRoutes->getRemoveRoute(),
                 $controller->params()->fromRoute() + [self::ROUTE_PARAM_GROUP => strtolower($group)]
             );
@@ -160,5 +157,4 @@ class QualificationDetailsAction extends AbstractAuthActionController implements
             $removeUrl
         );
     }
-
 }

@@ -8,14 +8,13 @@ use DvsaCommon\Utility\TypeCheck;
 use Zend\Session\Container;
 
 /**
- * Will store form data for forms that span across two screens
+ * Will store form data for forms that span across two screens.
  *
  * Class TwoStepFormContainer
- * @package Core\TwoStepForm
  */
 class TwoStepFormContainer implements AutoWireableInterface
 {
-    const SESSION_CONTAINER_KEY = "FORM_SESSION_CONTAINER";
+    const SESSION_CONTAINER_KEY = 'FORM_SESSION_CONTAINER';
 
     protected $container;
 
@@ -27,6 +26,7 @@ class TwoStepFormContainer implements AutoWireableInterface
     /**
      * @param $sessionKey
      * @param array $formData
+     *
      * @return string uuid of the stored form
      */
     public function store($sessionKey, array $formData)

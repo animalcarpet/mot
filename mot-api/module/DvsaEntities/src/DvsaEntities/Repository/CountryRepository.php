@@ -6,13 +6,12 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\Country;
 
 /**
- * Class CountryRepository
- * @package DvsaEntities\Repository
+ * Class CountryRepository.
+ *
  * @codeCoverageIgnore
  */
 class CountryRepository extends AbstractMutableRepository
 {
-
     public function getAll()
     {
         return $this->findAll();
@@ -22,28 +21,33 @@ class CountryRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return Country
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
     {
         $result = $this->find($id);
         if (empty($result)) {
-            throw new NotFoundException("Country of registration", $id);
+            throw new NotFoundException('Country of registration', $id);
         }
+
         return $result;
     }
 
     /**
      * @param $code
+     *
      * @return Country
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getByCode($code)
     {
         $result = $this->findOneBy(['code' => $code]);
         if (!$result) {
-            throw new NotFoundException("Country of registration[by code]", $code);
+            throw new NotFoundException('Country of registration[by code]', $code);
         }
+
         return $result;
     }
 }

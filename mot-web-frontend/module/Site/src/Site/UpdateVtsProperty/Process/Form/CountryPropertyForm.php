@@ -15,7 +15,7 @@ class CountryPropertyForm extends Form
 {
     const FIELD_COUNTRY = UpdateVtsPropertyAction::VTS_COUNTRY_PROPERTY;
 
-    const COUNTRY_EMPTY_MSG = "you must choose a country";
+    const COUNTRY_EMPTY_MSG = 'you must choose a country';
 
     private $countryElement;
 
@@ -28,9 +28,9 @@ class CountryPropertyForm extends Form
         foreach (CountryOfVts::getPossibleCountryCodes() as $countryCode) {
             $vtsCountry = $countryCatalog->getByCode($countryCode);
             $countryOptions[] = [
-                'label'     => $vtsCountry->getName(),
-                'value'     => $vtsCountry->getCode(),
-                'key'       => $vtsCountry->getName(),
+                'label' => $vtsCountry->getName(),
+                'value' => $vtsCountry->getCode(),
+                'key' => $vtsCountry->getName(),
                 'inputName' => self::FIELD_COUNTRY,
             ];
         }
@@ -40,7 +40,7 @@ class CountryPropertyForm extends Form
             ->setValueOptions($countryOptions)
             ->setName(self::FIELD_COUNTRY)
             ->setLabel('Country')
-            ->setAttribute('id', "vtsCountry")
+            ->setAttribute('id', 'vtsCountry')
             ->setAttribute('required', true)
             ->setAttribute('group', true);
 

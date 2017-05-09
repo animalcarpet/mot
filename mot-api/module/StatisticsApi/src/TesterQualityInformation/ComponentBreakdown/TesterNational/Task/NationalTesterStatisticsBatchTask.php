@@ -10,7 +10,7 @@ class NationalTesterStatisticsBatchTask extends AbstractBatchTask
 {
     private $service;
 
-    function __construct(Month $month, NationalStatisticsService $service)
+    public function __construct(Month $month, NationalStatisticsService $service)
     {
         parent::__construct($month);
         $this->service = $service;
@@ -23,6 +23,6 @@ class NationalTesterStatisticsBatchTask extends AbstractBatchTask
 
     public function getName()
     {
-        return sprintf("National tester performance batch task - %s/%s", $this->getMonth()->getYear(), $this->getMonth()->getMonth());
+        return sprintf('National tester performance batch task - %s/%s', $this->getMonth()->getYear(), $this->getMonth()->getMonth());
     }
 }

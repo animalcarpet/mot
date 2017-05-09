@@ -4,31 +4,31 @@
         echo $this->partial(
             'partial/forms/inputBox.phtml',
             [
-                'id'       => 'username',
-                'label'    => 'Username',
-                'classLabel'    => 'form-label',
+                'id' => 'username',
+                'label' => 'Username',
+                'classLabel' => 'form-label',
                 'required' => true,
-                'value'    => $this->withDefault('')->getValue($username),
+                'value' => $this->withDefault('')->getValue($username),
             ]
         );
         echo $this->partial(
             'partial/forms/inputBox.phtml',
             [
-                'id'       => 'firstName',
-                'label'    => 'First name',
-                'classLabel'    => 'form-label',
+                'id' => 'firstName',
+                'label' => 'First name',
+                'classLabel' => 'form-label',
                 'required' => true,
-                'value'    => $this->withDefault('')->getValue($firstName),
+                'value' => $this->withDefault('')->getValue($firstName),
             ]
         );
         echo $this->partial(
             'partial/forms/inputBox.phtml',
             [
-                'id'       => 'lastName',
-                'label'    => 'Last name',
-                'classLabel'    => 'form-label',
+                'id' => 'lastName',
+                'label' => 'Last name',
+                'classLabel' => 'form-label',
                 'required' => true,
-                'value'    => $this->withDefault('')->getValue($lastName),
+                'value' => $this->withDefault('')->getValue($lastName),
             ]
         );
         ?>
@@ -43,22 +43,22 @@
                 echo $this->partial(
                     'partial/forms/inputBox.phtml',
                     [
-                        'id'       => 'email',
-                        'label'    => 'Email address',
-                        'classLabel'    => 'form-label',
+                        'id' => 'email',
+                        'label' => 'Email address',
+                        'classLabel' => 'form-label',
                         'required' => true,
-                        'value'    => $this->withDefault('')->getValue($email),
+                        'value' => $this->withDefault('')->getValue($email),
                     ]
                 );
 
                 echo $this->partial(
                     'partial/gds/form/datePickerBox.phtml',
                     [
-                        'label'  => 'Date of birth',
-                        'day'    => $this->withDefault('')->getValue($dobDay),
-                        'month'  => $this->withDefault('')->getValue($dobMonth),
-                        'year'   => $this->withDefault('')->getValue($dobYear),
-                        'help'   => 'For example: 02 12 1970',
+                        'label' => 'Date of birth',
+                        'day' => $this->withDefault('')->getValue($dobDay),
+                        'month' => $this->withDefault('')->getValue($dobMonth),
+                        'year' => $this->withDefault('')->getValue($dobYear),
+                        'help' => 'For example: 02 12 1970',
                     ]
                 );
 
@@ -66,11 +66,11 @@
                     echo $this->partial(
                         'partial/forms/inputBox.phtml',
                         [
-                            'id'       => 'town',
-                            'label'    => 'Town',
-                            'classLabel'    => 'form-label',
+                            'id' => 'town',
+                            'label' => 'Town',
+                            'classLabel' => 'form-label',
                             'required' => true,
-                            'value'    => $this->withDefault('')->getValue($town),
+                            'value' => $this->withDefault('')->getValue($town),
                         ]
                     );
                 }
@@ -78,11 +78,11 @@
                 echo $this->partial(
                     'partial/forms/inputBox.phtml',
                     [
-                        'id'       => 'postcode',
-                        'label'    => 'Postcode',
-                        'classLabel'    => 'form-label',
+                        'id' => 'postcode',
+                        'label' => 'Postcode',
+                        'classLabel' => 'form-label',
                         'required' => true,
-                        'value'    => $this->withDefault('')->getValue($postcode),
+                        'value' => $this->withDefault('')->getValue($postcode),
                     ]
                 );
                 ?>
@@ -105,7 +105,7 @@
 </form>
 <?php
 $this->inlineScript()->captureStart();
-echo <<<JS
+echo <<<'JS'
 jQuery(document).ready(function() {
     jQuery("form").submit(function() {
         jQuery("details").find("input:hidden").attr('disabled', 'disabled');

@@ -53,8 +53,6 @@ class WebLogoutService
         $this->logger = $logger;
     }
 
-    /**
-     */
     public function logout()
     {
         $token = $this->cookieService->getToken();

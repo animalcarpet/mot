@@ -9,7 +9,6 @@ use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
 use DvsaCommonTest\TestUtils\XMock;
-use GuzzleHttp\Exception\RequestException;
 use Zend\Authentication\AuthenticationService;
 
 class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
@@ -24,13 +23,11 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $authorisationServiceClient;
 
-
     public function setUp()
     {
         $this->authorisationServiceClient = XMock::of(AuthorisationService::class);
         $this->authenticationService = XMock::of(AuthenticationService::class);
     }
-
 
     public function test_wheniValidatePin_andPinIsValid_iShouldGetTrueAsResponse()
     {
@@ -90,21 +87,21 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($identity->isAuthenticatedWith2FA());
     }
 
-    public function test_givenIWantToRetrieveSecurityCardNumber_whenAuthorisationClientsReturns_iShouldReceiveIsAsResponse() {
-
+    public function test_givenIWantToRetrieveSecurityCardNumber_whenAuthorisationClientsReturns_iShouldReceiveIsAsResponse()
+    {
         $this->withCurrentIdentity(new Identity());
 
         $serialNumber = 'STTA12345678';
         $this->authorisationServiceClient->expects($this->once())->method('getSecurityCardForUser')
-            ->willReturn(new SecurityCard((object)['serialNumber' => $serialNumber]));
+            ->willReturn(new SecurityCard((object) ['serialNumber' => $serialNumber]));
 
         $returnedSerialNumber = $this->createService()->getSerialNumber();
 
         $this->assertEquals($returnedSerialNumber, $serialNumber);
     }
 
-    public function test_givenIWantToRetrieveSecurityCardNumber_whenAuthorisationClientsThrowsRequestException_iShouldReceiveEmptyString() {
-
+    public function test_givenIWantToRetrieveSecurityCardNumber_whenAuthorisationClientsThrowsRequestException_iShouldReceiveEmptyString()
+    {
         $this->withCurrentIdentity(new Identity());
 
         $requestException = XMock::of(ResourceNotFoundException::class);
@@ -113,11 +110,11 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
 
         $returnedSerialNumber = $this->createService()->getSerialNumber();
 
-        $this->assertEquals("", $returnedSerialNumber);
+        $this->assertEquals('', $returnedSerialNumber);
     }
 
-    public function test_whenSecondFactorIsRequiredAndUserHasNotAuthenticatedWith2FA_userIsApplicableFor2FALogin() {
-
+    public function test_whenSecondFactorIsRequiredAndUserHasNotAuthenticatedWith2FA_userIsApplicableFor2FALogin()
+    {
         $identity = new Identity();
         $identity->setAuthenticatedWith2FA(false);
         $identity->setSecondFactorRequired(true);
@@ -127,8 +124,8 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->createService()->is2FALoginApplicableToCurrentUser());
     }
 
-    public function test_whenSecondFactorIsNotRequired_userIsNotApplicableFor2FALogin() {
-
+    public function test_whenSecondFactorIsNotRequired_userIsNotApplicableFor2FALogin()
+    {
         $identity = new Identity();
         $identity->setAuthenticatedWith2FA(false);
         $identity->setSecondFactorRequired(false);
@@ -138,8 +135,8 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->createService()->is2FALoginApplicableToCurrentUser());
     }
 
-    public function test_whenAlreadyAuthenticated_userIsNotApplicableFor2FALogin() {
-
+    public function test_whenAlreadyAuthenticated_userIsNotApplicableFor2FALogin()
+    {
         $identity = new Identity();
         $identity->setAuthenticatedWith2FA(true);
 
@@ -158,7 +155,6 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
         $this->authorisationServiceClient->expects($this->once())->method('validatePersonSecurityCard')
             ->with($pin)->willReturn($response);
     }
-
 
     private function createService()
     {

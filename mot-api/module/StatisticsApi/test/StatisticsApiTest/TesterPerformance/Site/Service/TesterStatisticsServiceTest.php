@@ -30,18 +30,18 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     private $testerId = 19;
 
-    /** @var  AuthorisationServiceMock */
+    /** @var AuthorisationServiceMock */
     private $authorisationService;
 
-    /** @var  ViewTesterTestQualityAssertion */
+    /** @var ViewTesterTestQualityAssertion */
     private $viewTesterTestQualityAssertion;
 
-    /** @var  TesterGroupAuthorisationMapper */
+    /** @var TesterGroupAuthorisationMapper */
     private $testerGroupAuthorisationMapper;
 
     public function setUp()
     {
-        /** @var TesterStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject repository */
+        /* @var TesterStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject repository */
         $this->repository = XMock::of(TesterStatisticsRepository::class);
 
         $this->authorisationService = new AuthorisationServiceMock();
@@ -52,9 +52,8 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         $this->testerGroupAuthorisationMapper = XMock::of(TesterGroupAuthorisationMapper::class);
         $this
             ->testerGroupAuthorisationMapper
-            ->method("getAuthorisation")
+            ->method('getAuthorisation')
             ->willReturn(new TesterAuthorisation());
-
 
         $this->service = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Service\TesterStatisticsService(
             $this->repository,
@@ -84,8 +83,8 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this
             ->viewTesterTestQualityAssertion
-            ->method("assertGranted")
-            ->willThrowException(new \DvsaCommon\Exception\UnauthorisedException(""));
+            ->method('assertGranted')
+            ->willThrowException(new \DvsaCommon\Exception\UnauthorisedException(''));
 
         $this->service->getForTester($this->testerId, $this->getYear(), $this->getPrevMonth());
     }
@@ -114,7 +113,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this
             ->repository
-            ->method("getForSite")
+            ->method('getForSite')
             ->willReturn($results);
 
         $dto = $this->service->getForSite($this->siteId, $this->getYear(), $this->getPrevMonth());
@@ -168,7 +167,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this
             ->repository
-            ->method("getForTester")
+            ->method('getForTester')
             ->willReturn($results);
 
         $dto = $this->service->getForTester($this->siteId, $this->getYear(), $this->getPrevMonth());
@@ -195,18 +194,18 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     public function dataProviderDbResults()
     {
         $results[] = (new TesterPerformanceResult())
-            ->setUsername("tester")
+            ->setUsername('tester')
             ->setPersonId(198)
             ->setTotalCount(10)
             ->setVehicleClassGroup(VehicleClassGroupCode::BIKES)
             ->setFailedCount(10)
             ->setAverageVehicleAgeInMonths(15)
             ->setIsAverageVehicleAgeAvailable(true)
-            ->setTotalTime("60");
+            ->setTotalTime('60');
 
         return [
             [$results],
-            [[]]
+            [[]],
         ];
     }
 
@@ -217,11 +216,11 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     private function getPrevMonth()
     {
-        return (int)$this->getFirstOfCurrentMonth()->sub(new \DateInterval("P1M"))->format("m");
+        return (int) $this->getFirstOfCurrentMonth()->sub(new \DateInterval('P1M'))->format('m');
     }
 
     private function getYear()
     {
-        return (int)$this->getFirstOfCurrentMonth()->sub(new \DateInterval("P1M"))->format("Y");
+        return (int) $this->getFirstOfCurrentMonth()->sub(new \DateInterval('P1M'))->format('Y');
     }
 }

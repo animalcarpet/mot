@@ -18,7 +18,6 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Vehicle\CountryDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -36,15 +35,12 @@ use DvsaMotTest\View\ReplacementMakeViewModel;
 use DvsaMotTest\View\ReplacementSiteViewModel;
 use DvsaMotTest\View\ReplacementVehicleViewModel;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
-use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Vehicle\Helper\ColoursContainer;
 use Vehicle\Service\VehicleCatalogService;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class ReplacementCertificateController
- *
- * @package DvsaMotTest\Controller
+ * Class ReplacementCertificateController.
  */
 class ReplacementCertificateController extends AbstractDvsaMotTestController
 {
@@ -72,16 +68,16 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
     /**
      * ReplacementCertificateController constructor.
-     * @param VehicleCatalogService $vehicleCatalogService
+     *
+     * @param VehicleCatalogService     $vehicleCatalogService
      * @param OdometerReadingViewObject $odometerViewObject
      */
     public function __construct(
         VehicleCatalogService $vehicleCatalogService,
         OdometerReadingViewObject $odometerViewObject
-    )
-    {
+    ) {
         $this->vehicleCatalogService = $vehicleCatalogService;
-        $this->odometerViewObject= $odometerViewObject;
+        $this->odometerViewObject = $odometerViewObject;
     }
 
     /**
@@ -146,7 +142,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                     $testerDto = $motTest->getTester();
                     $isOriginalTester = $this->getIdentity()->getUserId() === $testerDto->getId();
                     if (!$isOriginalTester) {
-                        $diffTesterReasonCode = $this->params()->fromPost("reasonForDifferentTester");
+                        $diffTesterReasonCode = $this->params()->fromPost('reasonForDifferentTester');
                         $data = ['reasonForDifferentTester' => $diffTesterReasonCode];
                         $this->getRestClient()->put(
                             UrlBuilder::replacementCertificateDraft($id, $motTestNumber),
@@ -155,7 +151,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                     }
                 }
 
-                $otp = $this->params()->fromPost("oneTimePassword");
+                $otp = $this->params()->fromPost('oneTimePassword');
                 $data = ['oneTimePassword' => $otp];
                 $this->getRestClient()->post(
                     UrlBuilder::replacementCertificateDraftApply($id, $motTestNumber),
@@ -259,7 +255,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     {
         $this->assertGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
 
-        $motTestNumber = $this->params("motTestNumber");
+        $motTestNumber = $this->params('motTestNumber');
         $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
         $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
@@ -268,7 +264,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             [
                 'motDetails' => $motTest,
                 'motTestNumber' => $motTestNumber,
-                'vehicle' => $vehicle
+                'vehicle' => $vehicle,
             ]
         );
 
@@ -385,7 +381,6 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             }
 
             try {
-
                 if (self::ACTION_UPDATE_ODOMETER === $action) {
                     $odometerReadingParams = $result['odometerReading'];
 
@@ -401,7 +396,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                     if ($odometerReadingParams['resultType'] !== OdometerReadingResultType::OK) {
                         unset($result['odometerReading']['odometer'], $result['odometerReading']['unit']);
                     } else {
-                        $result['odometerReading']['value'] = (int)$result['odometerReading']['odometer'];
+                        $result['odometerReading']['value'] = (int) $result['odometerReading']['odometer'];
                         unset($result['odometerReading']['odometer']);
                     }
                 }
@@ -437,6 +432,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
      * @param string $updateAction
      *
      * @return array
+     *
      * @throws \InvalidArgumentException
      */
     private function getUpdateData($updateAction)
@@ -454,26 +450,26 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             case 'updateColours':
                 return [
                     'primaryColour' => $post['primaryColour'],
-                    'secondaryColour' => $post['secondaryColour'] ?: null
+                    'secondaryColour' => $post['secondaryColour'] ?: null,
                 ];
             case 'updateMake':
                 return [
-                    'make' => $post['make']
+                    'make' => $post['make'],
                 ];
             case 'updateModel':
                 return [
                     'make' => $post['make'],
-                    'model' => $post['model']
+                    'model' => $post['model'],
                 ];
             case 'updateCustomMakeModel':
                 return [
                     'customMake' => $post['make'],
-                    'customModel' => $post['model']
+                    'customModel' => $post['model'],
                 ];
             case 'updateMakeCustomModel':
                 return [
                     'make' => $post['make'],
-                    'customModel' => $post['model']
+                    'customModel' => $post['model'],
                 ];
             case self::ACTION_UPDATE_ODOMETER:
                 list($value, $unit, $resultType)
@@ -484,18 +480,18 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 }
 
                 if ($value === null) {
-                    $value = (int)0;
+                    $value = (int) 0;
                 }
 
                 return [
                     'odometerReading' => [
                         'odometer' => $value,
                         'unit' => $unit,
-                        'resultType' => $resultType
-                    ]
+                        'resultType' => $resultType,
+                    ],
                 ];
             case 'updateCor':
-                return ['countryOfRegistration' => (int)$post['cor']];
+                return ['countryOfRegistration' => (int) $post['cor']];
             case 'updateExpiryDate':
                 $year = $post['expiryDateYear'];
                 $year = str_pad($year, 2, '0', STR_PAD_LEFT);
@@ -507,7 +503,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 $day = str_pad($day, 2, '0', STR_PAD_LEFT);
 
                 return [
-                    'expiryDate' => $year . '-' . $month . '-' . $day
+                    'expiryDate' => $year.'-'.$month.'-'.$day,
                 ];
             default:
                 throw new \InvalidArgumentException("$updateAction action is invalid");
@@ -524,13 +520,13 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     {
         $apiPath = UrlBuilder::replacementCertificateDraft($id, $motTestNumber);
 
-        return ArrayUtils::tryGet($this->getRestClient()->get((string)$apiPath), 'data');
+        return ArrayUtils::tryGet($this->getRestClient()->get((string) $apiPath), 'data');
     }
 
     /**
      * @param string $id
      * @param string $motTestNumber
-     * @param int $makeId
+     * @param int    $makeId
      *
      * @return ViewModel
      */
@@ -543,7 +539,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             $viewData,
             [
                 'isAdmin' => $this->hasAdminRights(),
-                'isTester' => $this->hasTesterRights()
+                'isTester' => $this->hasTesterRights(),
             ]
         );
 
@@ -552,6 +548,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
     /**
      * @param int $makeId
+     *
      * @return array
      */
     private function getStaticData($makeId)
@@ -565,7 +562,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             'colours' => new ColoursContainer($catalogService->getColours()),
             'countryOfRegistrationList' => $catalogService->getCountriesOfRegistration(),
             'makeList' => $this->vehicleCatalogService->findMake(),
-            'modelList' => $this->vehicleCatalogService->findModel(false, $makeId)
+            'modelList' => $this->vehicleCatalogService->findModel(false, $makeId),
         ];
     }
 
@@ -605,8 +602,10 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
     /**
      * @param array $draftData
-     * @param int $makeId
+     * @param int   $makeId
+     *
      * @return array
+     *
      * @throws \Exception
      */
     private function buildViewData($draftData, $makeId)
@@ -649,7 +648,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 'motTest' => $motTest,
                 'dvsaVehicleViewModel' => $dvsaVehicleViewModel,
                 'vts' => new ReplacementSiteViewModel($draftData),
-                'vehicle' => $vehicleViewModel
+                'vehicle' => $vehicleViewModel,
             ],
             $staticData
         );
@@ -658,9 +657,11 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     }
 
     /**
-     * @param int $makeId
+     * @param int   $makeId
      * @param array $makeList
+     *
      * @return bool|ReplacementMakeViewModel
+     *
      * @throws \Exception
      */
     private function getSelectedMakeOption($makeId, array $makeList)

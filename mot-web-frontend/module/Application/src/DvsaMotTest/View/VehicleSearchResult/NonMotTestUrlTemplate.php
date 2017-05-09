@@ -2,7 +2,6 @@
 
 namespace DvsaMotTest\View\VehicleSearchResult;
 
-
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\StartTestConfirmationController;
 use DvsaMotTest\Model\VehicleSearchResult;
@@ -33,9 +32,9 @@ class NonMotTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
         $this->urlHelper = $urlPlugin;
     }
 
-
     /**
      * @param array $vehicle
+     *
      * @return string
      */
     public function getUrl(array $vehicle)
@@ -62,15 +61,16 @@ class NonMotTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
                     'vin' => $vin,
                     'registration' => $registration,
                     'searchVrm' => $searchVrm,
-                    'searchVin' => $searchVin
-                ]
+                    'searchVin' => $searchVin,
+                ],
             ]
         );
     }
 
     /**
      * @param VehicleSearchResult $vehicle
-     * @param array $searchParams
+     * @param array               $searchParams
+     *
      * @return string
      */
     public function getStartMotTestUrl(VehicleSearchResult $vehicle, array $searchParams)
@@ -81,7 +81,6 @@ class NonMotTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
         $registration = $vehicle->getRegistrationNumber();
         $searchVrm = $searchParams['searchVrm'];
         $searchVin = $searchParams['searchVin'];
-
 
         return $this->urlHelper->fromRoute(
             self::START_NON_MOT_TEST_CONFIRMATION_ROUTE,
@@ -98,7 +97,7 @@ class NonMotTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
                     'registration' => $registration,
                     'searchVrm' => $searchVrm,
                     'searchVin' => $searchVin,
-                ]
+                ],
             ]
         );
     }

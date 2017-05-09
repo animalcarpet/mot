@@ -70,7 +70,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     /** @var UserAdminSessionManager|MockObj $mockUserAdminSessionSrv */
     private $mockUserAdminSessionSrv;
 
-    /** @var AuthorisationServiceMock $authorisationService*/
+    /** @var AuthorisationServiceMock $authorisationService */
     private $authorisationService;
 
     /** @var FrontendIdentityProviderStub $identityProvider */
@@ -105,11 +105,11 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $catalogMockSysData = $this->buildPersonSystemCatalog();
 
         $this->mockCatalogSrv->expects($this->any())
-            ->method("getBusinessRoles")
+            ->method('getBusinessRoles')
             ->willReturn($catalogMockOrgData);
 
         $this->mockCatalogSrv->expects($this->any())
-            ->method("getPersonSystemRoles")
+            ->method('getPersonSystemRoles')
             ->willReturn($catalogMockSysData);
 
         $this->authorisationService = new AuthorisationServiceMock();
@@ -149,17 +149,17 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Test has user access to page or not with/out auth and permission
+     * Test has user access to page or not with/out auth and permission.
      *
-     * @param string $action Request action
-     * @param array $params Action parameters
-     * @param boolean $isAuth Can user access page without Auth
-     * @param array $permissions User has permissions
-     * @param boolean $expectCanAccess Expect user has or not access to page
-     * @param null $expectedUrl
+     * @param string $action             Request action
+     * @param array  $params             Action parameters
+     * @param bool   $isAuth             Can user access page without Auth
+     * @param array  $permissions        User has permissions
+     * @param bool   $expectCanAccess    Expect user has or not access to page
+     * @param null   $expectedUrl
      * @param string $expectException
-     * @param null $expectErrMsg
-     * @param bool $isUserPassSecurity
+     * @param null   $expectErrMsg
+     * @param bool   $isUserPassSecurity
      *
      * @dataProvider dataProviderTestCanAccessHasRight
      */
@@ -173,8 +173,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $expectException = 'Exception',
         $expectErrMsg = null,
         $isUserPassSecurity = true
-    )
-    {
+    ) {
         $this->mockMethod(
             $this->mockPersonalDetailsSrv, 'getPersonalDetailsData', null, $this->getPersonalDetailsData()
         );
@@ -210,10 +209,10 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     {
         return [
             [
-                'action'          => 'userHome',
-                'params'          => [],
-                'isAuth'          => true,
-                'permissions'     => [],
+                'action' => 'userHome',
+                'params' => [],
+                'isAuth' => true,
+                'permissions' => [],
                 'expectCanAccess' => true,
             ],
             ['profile', [], true, [], true],
@@ -254,11 +253,11 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $personalDetailsData = $this->getPersonalDetailsData();
 
         $roles = [
-            'system'        => [
-                'roles' => [RoleCode::USER]
+            'system' => [
+                'roles' => [RoleCode::USER],
             ],
             'organisations' => [],
-            'sites'         => [],
+            'sites' => [],
         ];
 
         if ($profileSubjectIsDvsa) {
@@ -267,10 +266,10 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
 
         if ($profileSubjectHasTradeRoles) {
             $roles['organisations'][10] = [
-                'name'    => 'testing',
-                'number'  => 'VTESTING',
+                'name' => 'testing',
+                'number' => 'VTESTING',
                 'address' => '34 Test Road',
-                'roles'   => [RoleCode::AUTHORISED_EXAMINER_DELEGATE],
+                'roles' => [RoleCode::AUTHORISED_EXAMINER_DELEGATE],
             ];
         }
 
@@ -381,17 +380,17 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     {
         return [
             [
-                'id'   => 1,
+                'id' => 1,
                 'code' => 'USER',
                 'name' => 'User',
             ],
             [
-                'id'   => 4,
+                'id' => 4,
                 'code' => RoleCode::AREA_OFFICE_1,
                 'name' => '',
             ],
             [
-                'id'   => 5,
+                'id' => 5,
                 'code' => RoleCode::USER,
                 'name' => '',
             ],
@@ -407,17 +406,17 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     {
         return [
             [
-                'id'   => 1,
+                'id' => 1,
                 'code' => 'TESTER',
                 'name' => 'Tester',
             ],
             [
-                'id'   => 2,
+                'id' => 2,
                 'code' => 'AEDM',
                 'name' => 'Authorised Examiner Designated Manager',
             ],
             [
-                'id'   => 3,
+                'id' => 3,
                 'code' => RoleCode::AUTHORISED_EXAMINER_DELEGATE,
                 'name' => '',
             ],
@@ -436,18 +435,18 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => [],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockRestClient',
+                        'class' => 'mockRestClient',
                         'method' => 'put',
                         'params' => [
                             PersonUrlBuilder::resetPin(self::USER_ID),
-                            null
+                            null,
                         ],
                         'result' => ['data' => ['pin' => $newPin]],
                     ],
                     [
-                        'class'  => 'mockUserAdminSessionSrv',
+                        'class' => 'mockUserAdminSessionSrv',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
@@ -455,10 +454,10 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 ],
                 'expect' => [
                     'result' => [
-                        'pin'      => $newPin,
+                        'pin' => $newPin,
                         'fullName' => 'Mr foo bar baz',
-                        'userId'   => self::USER_ID,
-                        'config'   => self::$CONFIG,
+                        'userId' => self::USER_ID,
+                        'config' => self::$CONFIG,
                     ],
                 ],
             ],
@@ -469,18 +468,18 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => [],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockRestClient',
+                        'class' => 'mockRestClient',
                         'method' => 'put',
                         'params' => [
                             PersonUrlBuilder::resetPin(self::USER_ID),
-                            null
+                            null,
                         ],
                         'result' => new \Exception('/', 10),
                     ],
                     [
-                        'class'  => 'mockUserAdminSessionSrv',
+                        'class' => 'mockUserAdminSessionSrv',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
@@ -489,8 +488,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 'expect' => [
                     'result' => [
                         'fullName' => 'Mr foo bar baz',
-                        'config'   => self::$CONFIG,
-                        'userId'   => self::USER_ID,
+                        'config' => self::$CONFIG,
+                        'userId' => self::USER_ID,
                     ],
                 ],
             ],
@@ -501,18 +500,18 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => [],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockRestClient',
+                        'class' => 'mockRestClient',
                         'method' => 'put',
                         'params' => [
                             PersonUrlBuilder::resetPin(self::USER_ID),
-                            null
+                            null,
                         ],
                         'result' => new GeneralRestException('/', 'post', [], 10, 'Person not found'),
                     ],
                     [
-                        'class'  => 'mockUserAdminSessionSrv',
+                        'class' => 'mockUserAdminSessionSrv',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
@@ -521,8 +520,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 'expect' => [
                     'result' => [
                         'fullName' => 'Mr foo bar baz',
-                        'config'   => self::$CONFIG,
-                        'userId'   => self::USER_ID,
+                        'config' => self::$CONFIG,
+                        'userId' => self::USER_ID,
                     ],
                 ],
             ],
@@ -532,26 +531,26 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     private function getPersonalDetailsData()
     {
         return [
-            'id'                   => 1,
-            'firstName'            => 'foo',
-            'middleName'           => 'bar',
-            'surname'              => 'baz',
-            'username'             => 'tester1',
-            'dateOfBirth'          => '1979-12-20',
-            'title'                => 'Mr',
-            'gender'               => 'male',
-            'addressLine1'         => 'foo',
-            'addressLine2'         => 'foo',
-            'addressLine3'         => 'foo',
-            'town'                 => 'foo',
-            'postcode'             => 'AA11 1AA',
-            'email'                => 'foo',
-            'emailConfirmation'    => null,
-            'phone'                => 1234,
+            'id' => 1,
+            'firstName' => 'foo',
+            'middleName' => 'bar',
+            'surname' => 'baz',
+            'username' => 'tester1',
+            'dateOfBirth' => '1979-12-20',
+            'title' => 'Mr',
+            'gender' => 'male',
+            'addressLine1' => 'foo',
+            'addressLine2' => 'foo',
+            'addressLine3' => 'foo',
+            'town' => 'foo',
+            'postcode' => 'AA11 1AA',
+            'email' => 'foo',
+            'emailConfirmation' => null,
+            'phone' => 1234,
             'drivingLicenceNumber' => 'foo',
             'drivingLicenceRegion' => 'bar',
-            'positions'            => [],
-            'roles'                => $this->setMockRoles(),
+            'positions' => [],
+            'roles' => $this->setMockRoles(),
 
         ];
     }
@@ -559,21 +558,21 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     private function setMockRoles()
     {
         return [
-            'system'        => [
+            'system' => [
                 'roles' => ['USER'],
             ],
             'organisations' => [10 => [
-                'name'    => 'testing',
-                'number'  => 'VTESTING',
+                'name' => 'testing',
+                'number' => 'VTESTING',
                 'address' => '34 Test Road',
-                'roles'   => ['AEDM'],
+                'roles' => ['AEDM'],
             ]],
-            'sites'         => [20 => [
-                'name'    => 'testing',
-                'number'  => 'VTESTING',
+            'sites' => [20 => [
+                'name' => 'testing',
+                'number' => 'VTESTING',
                 'address' => '34 Test Road',
-                'roles'   => ['TESTER'],
-            ]]
+                'roles' => ['TESTER'],
+            ]],
         ];
     }
 
@@ -583,19 +582,19 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     private function getDashboardData()
     {
         return [
-            'hero'                   => null,
-            'permissions'            => null,
-            'specialNotice'          => [
+            'hero' => null,
+            'permissions' => null,
+            'specialNotice' => [
                 'daysLeftToView' => null,
-                'unreadCount'    => null,
-                'overdueCount'   => null,
+                'unreadCount' => null,
+                'overdueCount' => null,
             ],
             'overdueSpecialNotices' => array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0)),
-            'notifications'          => [],
+            'notifications' => [],
             'unreadNotificationsCount' => 0,
-            'inProgressTestNumber'   => null,
+            'inProgressTestNumber' => null,
             'inProgressTestTypeCode' => null,
-            'authorisedExaminers'    => [],
+            'authorisedExaminers' => [],
             'testedVehicleId' => 17,
             'isTechnicalAdvicePresent' => true,
         ];
@@ -615,19 +614,19 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $actual = $this->getResultForAction('profile');
 
         $arrayKeys = array(
-            "personalDetails",
-            "isAllowEdit",
-            "motAuthorisations",
-            "isViewingOwnProfile",
-            "systemRoles",
-            "rolesAndAssociations",
-            "authorisation",
-            "canRead",
-            "canAcknowledge",
-            "canReceiveSpecialNotice",
-            "countries",
-            "roleNiceNameList",
-            "canViewUsername",
+            'personalDetails',
+            'isAllowEdit',
+            'motAuthorisations',
+            'isViewingOwnProfile',
+            'systemRoles',
+            'rolesAndAssociations',
+            'authorisation',
+            'canRead',
+            'canAcknowledge',
+            'canReceiveSpecialNotice',
+            'countries',
+            'roleNiceNameList',
+            'canViewUsername',
         );
 
         foreach ($arrayKeys as $key) {

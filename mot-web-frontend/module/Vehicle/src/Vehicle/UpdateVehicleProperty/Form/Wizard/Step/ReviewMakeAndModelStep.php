@@ -1,4 +1,5 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form\Wizard\Step;
 
 use Core\Action\RedirectToRoute;
@@ -6,12 +7,10 @@ use Core\FormWizard\AbstractStep as AbstractWizardStep;
 use Core\FormWizard\LayoutData;
 use Core\FormWizard\StepResult;
 use Core\FormWizard\WizardContextInterface;
-use Core\Routing\MotTestRouteList;
 use Core\Routing\VehicleRouteList;
 use Core\Routing\VehicleRoutes;
 use Core\ViewModel\Gds\Table\GdsTable;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
@@ -24,19 +23,18 @@ use Vehicle\UpdateVehicleProperty\Form\Wizard\Context;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleEditBreadcrumbsBuilder;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
 use Vehicle\UpdateVehicleProperty\ViewModel\ReviewVehiclePropertyViewModel;
-use Zend\Form\Form;
 use Zend\View\Helper\Url;
 
 class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableInterface
 {
-    const NAME = "review-make-and-model";
+    const NAME = 'review-make-and-model';
 
     private $url;
     private $breadcrumbsBuilder;
     private $tertiaryTitleBuilder;
     private $vehicleService;
     private $formUuid;
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     /**
@@ -52,8 +50,7 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
         VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder,
         VehicleService $vehicleService,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->url = $url;
@@ -76,6 +73,7 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
     public function setContext(WizardContextInterface $context)
     {
         TypeCheck::assertInstance($context, UpdateVehicleContext::class);
+
         return parent::setContext($context);
     }
 
@@ -106,7 +104,8 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
         $table = $this->transformFormDataIntoGdsTable();
         $layoutData = $this->getLayoutData();
         $viewModel = $this->createViewModel($table, $this->formUuid);
-        return new StepResult($layoutData, $viewModel, $errors, "vehicle/update-vehicle-property/review");
+
+        return new StepResult($layoutData, $viewModel, $errors, 'vehicle/update-vehicle-property/review');
     }
 
     private function transformFormDataIntoGdsTable()
@@ -114,13 +113,13 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
         $table = new GdsTable();
 
         $makeStep = $this->getPrevStepWithName(UpdateMakeStep::NAME);
-        $changeMakeUrl = $makeStep->getRoute(["formUuid" => $this->formUuid])->toString($this->url);
+        $changeMakeUrl = $makeStep->getRoute(['formUuid' => $this->formUuid])->toString($this->url);
 
-        $table->newRow()->setLabel('Make')->setValue($this->getMake())->addActionLink("Change", $changeMakeUrl);
+        $table->newRow()->setLabel('Make')->setValue($this->getMake())->addActionLink('Change', $changeMakeUrl);
 
         $modelStep = $this->getPrevStepWithName(UpdateModelStep::NAME);
-        $changeModelUrl = $modelStep->getRoute(["formUuid" => $this->formUuid])->toString($this->url);
-        $table->newRow()->setLabel('Model')->setValue($this->getModel())->addActionLink("Change", $changeModelUrl);
+        $changeModelUrl = $modelStep->getRoute(['formUuid' => $this->formUuid])->toString($this->url);
+        $table->newRow()->setLabel('Model')->setValue($this->getModel())->addActionLink('Change', $changeModelUrl);
 
         return $table;
     }
@@ -132,18 +131,20 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
             return $formData[MakeForm::FIELD_OTHER_MAKE_NAME];
         }
 
-        return $formData["name"];
+        return $formData['name'];
     }
 
     private function getMakeId()
     {
         $formData = $this->getMakeStepStoredData();
+
         return $formData[MakeForm::FIELD_MAKE_NAME];
     }
 
     private function hasOtherMake()
     {
         $formData = $this->getMakeStepStoredData();
+
         return $formData[MakeForm::FIELD_MAKE_NAME] === MakeForm::OTHER_ID;
     }
 
@@ -159,12 +160,13 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
             return $formData[ModelForm::FIELD_OTHER_MODEL_NAME];
         }
 
-        return $formData["name"];
+        return $formData['name'];
     }
 
     private function getModelId()
     {
         $formData = $this->getModelStepStoredData();
+
         return $formData[ModelForm::FIELD_MODEL_NAME];
     }
 
@@ -187,27 +189,27 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
     {
         $breadcrumbs = $this
             ->breadcrumbsBuilder
-            ->getVehicleEditBreadcrumbs("Review changes", $this->context->getObfuscatedVehicleId());
+            ->getVehicleEditBreadcrumbs('Review changes', $this->context->getObfuscatedVehicleId());
 
         $layoutData = new LayoutData();
         $layoutData->setBreadcrumbs($breadcrumbs);
-        $layoutData->setPageSubTitle("Vehicle");
-        $layoutData->setPageTitle("Review make and model changes");
+        $layoutData->setPageSubTitle('Vehicle');
+        $layoutData->setPageTitle('Review make and model changes');
 
         return $layoutData;
     }
 
     protected function createViewModel(GdsTable $table, $formUuid)
     {
-        $formActionUrl = $this->getRoute(["formUuid" => $formUuid])->toString($this->url);
+        $formActionUrl = $this->getRoute(['formUuid' => $formUuid])->toString($this->url);
         $tertiaryTitle = $this->tertiaryTitleBuilder->getTertiaryTitleForVehicle($this->context->getVehicle());
 
         return (new ReviewVehiclePropertyViewModel())
-            ->setSubmitButtonText("Save changes")
+            ->setSubmitButtonText('Save changes')
             ->setFormActionUrl($formActionUrl)
             ->setPageTertiaryTitle($tertiaryTitle)
             ->setSummary($table)
-            ->setCancelLinkLabel("Cancel and return to vehicle")
+            ->setCancelLinkLabel('Cancel and return to vehicle')
             ->setCancelUrl(VehicleRoutes::of($this->url)->vehicleDetails($this->context->getObfuscatedVehicleId()));
     }
 
@@ -242,12 +244,13 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
                 ]
             );
             $route->addSuccessMessage('Vehicle make and model has been successfully changed');
+
             return $route;
         }
 
         return new RedirectToRoute(
             VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,
-            ["id" => $this->context->getObfuscatedVehicleId(), "property" => self::NAME],
+            ['id' => $this->context->getObfuscatedVehicleId(), 'property' => self::NAME],
             $queryParams
         );
     }
@@ -276,8 +279,8 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
 
     private function getNextRoute()
     {
-        $route = new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL, ["id" => $this->context->getObfuscatedVehicleId()]);
-        $route->addSuccessMessage("Vehicle make and model has been successfully changed.");
+        $route = new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL, ['id' => $this->context->getObfuscatedVehicleId()]);
+        $route->addSuccessMessage('Vehicle make and model has been successfully changed.');
 
         return $route;
     }

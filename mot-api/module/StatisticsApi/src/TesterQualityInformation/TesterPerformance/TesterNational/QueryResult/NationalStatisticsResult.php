@@ -28,6 +28,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupATotal($groupATotal)
     {
         $this->groupATotal = $groupATotal;
+
         return $this;
     }
 
@@ -39,6 +40,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupAFailed($groupAFailed)
     {
         $this->groupAFailed = $groupAFailed;
+
         return $this;
     }
 
@@ -50,6 +52,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupACumulativeTestTime($groupACumulativeTestTime)
     {
         $this->groupACumulativeTestTime = $groupACumulativeTestTime;
+
         return $this;
     }
 
@@ -61,6 +64,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupBTotal($groupBTotal)
     {
         $this->groupBTotal = $groupBTotal;
+
         return $this;
     }
 
@@ -72,6 +76,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupBFailed($groupBFailed)
     {
         $this->groupBFailed = $groupBFailed;
+
         return $this;
     }
 
@@ -83,6 +88,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupBCumulativeTestTime($groupBCumulativeTestTime)
     {
         $this->groupBCumulativeTestTime = $groupBCumulativeTestTime;
+
         return $this;
     }
 
@@ -94,6 +100,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setNumberOfGroupATesters($numberOfGroupATesters)
     {
         $this->numberOfGroupATesters = $numberOfGroupATesters;
+
         return $this;
     }
 
@@ -105,6 +112,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setNumberOfGroupBTesters($numberOfGroupBTesters)
     {
         $this->numberOfGroupBTesters = $numberOfGroupBTesters;
+
         return $this;
     }
 
@@ -116,6 +124,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupAAverageVehicleAgeInMonths($groupAAverageVehicleAgeInMonths)
     {
         $this->groupAAverageVehicleAgeInMonths = $groupAAverageVehicleAgeInMonths;
+
         return $this;
     }
 
@@ -127,6 +136,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setGroupBAverageVehicleAgeInMonths($groupBAverageVehicleAgeInMonths)
     {
         $this->groupBAverageVehicleAgeInMonths = $groupBAverageVehicleAgeInMonths;
+
         return $this;
     }
 
@@ -138,6 +148,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setIsGroupAAverageVehicleAgeAvailable($isGroupAAverageVehicleAgeAvailable)
     {
         $this->isGroupAAverageVehicleAgeAvailable = $isGroupAAverageVehicleAgeAvailable;
+
         return $this;
     }
 
@@ -149,6 +160,7 @@ class NationalStatisticsResult implements ReflectiveDtoInterface
     public function setIsGroupBAverageVehicleAgeAvailable($isGroupBAverageVehicleAgeAvailable)
     {
         $this->isGroupBAverageVehicleAgeAvailable = $isGroupBAverageVehicleAgeAvailable;
+
         return $this;
     }
 }

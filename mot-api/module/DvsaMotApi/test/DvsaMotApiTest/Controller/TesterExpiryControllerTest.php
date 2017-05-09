@@ -1,19 +1,15 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaMotApi\Controller\TesterExpiryController;
 use DvsaMotApi\Service\TesterExpiryService;
-use Zend\Http\Header\ContentType;
 use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class TesterExpiryControllerTest
- *
- * @package DvsaMotApiTest\Controller
+ * Class TesterExpiryControllerTest.
  */
 class TesterExpiryControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -62,7 +58,7 @@ class TesterExpiryControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * @expectedException     DvsaCommonApi\Service\Exception\ForbiddenException
+     * @expectedException     \DvsaCommonApi\Service\Exception\ForbiddenException
      * @expectedExceptionCode 403
      */
     public function testCreateGivenInvalidAuthResultsIn403Error()

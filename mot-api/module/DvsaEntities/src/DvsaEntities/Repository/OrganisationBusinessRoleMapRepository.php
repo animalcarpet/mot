@@ -4,18 +4,14 @@ namespace DvsaEntities\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 
 /**
- * OrganisationBusinessRoleMapRepository
+ * OrganisationBusinessRoleMapRepository.
  *
  * Custom Doctrine Repository for reusable DQL queries
+ *
  * @codeCoverageIgnore
  */
 class OrganisationBusinessRoleMapRepository extends EntityRepository
@@ -33,19 +29,19 @@ class OrganisationBusinessRoleMapRepository extends EntityRepository
     private function getUserRoles($personId, $businessRoleStatusCode)
     {
         $qb = $this
-            ->createQueryBuilder("orbm")
+            ->createQueryBuilder('orbm')
             ->addSelect(['p', 'st', 'br', 'org', 'o_cnt', 'cnt_detail', 'addr'])
-            ->innerJoin("orbm.person", "p")
-            ->innerJoin("orbm.businessRoleStatus", "st")
-            ->innerJoin("orbm.organisationBusinessRole", "br")
-            ->innerJoin("orbm.organisation", "org")
-            ->leftJoin("org.contacts", "o_cnt")
-            ->leftJoin("o_cnt.contactDetails", "cnt_detail")
-            ->leftJoin("cnt_detail.address", "addr")
-            ->where("p.id = :personId")
-            ->andWhere("st.code in (:statusCode)")
-            ->setParameter("personId", $personId)
-            ->setParameter("statusCode", $businessRoleStatusCode);
+            ->innerJoin('orbm.person', 'p')
+            ->innerJoin('orbm.businessRoleStatus', 'st')
+            ->innerJoin('orbm.organisationBusinessRole', 'br')
+            ->innerJoin('orbm.organisation', 'org')
+            ->leftJoin('org.contacts', 'o_cnt')
+            ->leftJoin('o_cnt.contactDetails', 'cnt_detail')
+            ->leftJoin('cnt_detail.address', 'addr')
+            ->where('p.id = :personId')
+            ->andWhere('st.code in (:statusCode)')
+            ->setParameter('personId', $personId)
+            ->setParameter('statusCode', $businessRoleStatusCode);
 
         $roles = $qb->getQuery()->getResult();
 
@@ -56,6 +52,7 @@ class OrganisationBusinessRoleMapRepository extends EntityRepository
      * @param $id
      *
      * @return OrganisationBusinessRoleMap
+     *
      * @throws NotFoundException
      */
     public function get($id)
@@ -63,7 +60,7 @@ class OrganisationBusinessRoleMapRepository extends EntityRepository
         $position = $this->find($id);
 
         if ($position === null) {
-            throw new NotFoundException("Organisation business position");
+            throw new NotFoundException('Organisation business position');
         }
 
         return $position;

@@ -1,17 +1,15 @@
 <?php
+
 namespace OrganisationApi\Service;
 
 use Doctrine\ORM\EntityManager;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Repository\OrganisationRepository;
-use DvsaEntities\Repository\OrganisationSiteMapRepository;
 use OrganisationApi\Service\Mapper\OrganisationMapper;
 
 /**
- * Class OrganisationService
- *
- * @package OrganisationApi\Service
+ * Class OrganisationService.
  */
 class OrganisationService extends AbstractService
 {
@@ -35,7 +33,9 @@ class OrganisationService extends AbstractService
 
     /**
      * @param $siteId
+     *
      * @return array of organisation id and name
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function findOrganisationNameBySiteId($siteId)
@@ -47,13 +47,13 @@ class OrganisationService extends AbstractService
 
         return [
             'id' => $organisation->getId(),
-            'name' => $organisation->getName()
+            'name' => $organisation->getName(),
         ];
     }
 
     /**
      * Don't call this within a long-running transaction - it will result in
-     * lock contention
+     * lock contention.
      */
     public function incrementSlotBalance(Organisation $organisation)
     {
@@ -62,7 +62,7 @@ class OrganisationService extends AbstractService
 
     /**
      * Don't call this within a long-running transaction - it will result in
-     * lock contention
+     * lock contention.
      */
     public function decrementSlotBalance(Organisation $organisation)
     {

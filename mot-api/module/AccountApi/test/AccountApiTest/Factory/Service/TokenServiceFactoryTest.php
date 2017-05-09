@@ -1,4 +1,5 @@
 <?php
+
 namespace AccountApiTest\Factory\Service;
 
 use AccountApi\Factory\Service\TokenServiceFactory;
@@ -14,8 +15,7 @@ use DvsaAuthorisation\Service\AuthorisationService;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class TokenServiceFactoryTest
- * @package AccountApiTest\Factory
+ * Class TokenServiceFactoryTest.
  */
 class TokenServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +51,7 @@ class TokenServiceFactoryTest extends \PHPUnit_Framework_TestCase
                 'expireTime' => '',
             ],
             'mailer' => [],
-            'helpdesk' => []
+            'helpdesk' => [],
         ];
     }
 

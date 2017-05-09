@@ -16,10 +16,9 @@ use DvsaEventApi\Service\EventService;
 use MailerApi\Service\MailerService;
 use UserApi\HelpDesk\Service\ResetClaimAccountService;
 use DvsaCommonTest\Bootstrap;
-use DvsaCommonApi\Service\Exception\ServiceException;
 
 /**
- * Unit tests for ResetClaimAccountServiceTest
+ * Unit tests for ResetClaimAccountServiceTest.
  */
 class ResetClaimAccountServiceTest extends AbstractServiceTestCase
 {
@@ -62,7 +61,7 @@ class ResetClaimAccountServiceTest extends AbstractServiceTestCase
         $this->mockConfig = $serviceManager->get('Config');
         $this->mockConfig['helpdesk'] = [
             'name' => 'TEST HELPDESK',
-            'phoneNumber' => '42424242'
+            'phoneNumber' => '42424242',
         ];
 
         //  --  create service instance --
@@ -104,7 +103,6 @@ class ResetClaimAccountServiceTest extends AbstractServiceTestCase
         $this->assertTrue($this->service->resetClaimAccount(self::PERSON_ID, self::PERSON_USERNAME));
     }
 
-
     /**
      * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
      */
@@ -123,7 +121,7 @@ class ResetClaimAccountServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @expectedException AccountApi\Service\Exception\OpenAmChangePasswordException
+     * @expectedException \AccountApi\Service\Exception\OpenAmChangePasswordException
      */
     public function testResetClaimAccountFailPasswordChange()
     {

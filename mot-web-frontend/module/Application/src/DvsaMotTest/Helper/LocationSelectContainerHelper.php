@@ -5,9 +5,7 @@ namespace DvsaMotTest\Helper;
 use Zend\Session\Container as SessionContainer;
 
 /**
- * Class LocationSelectContainerHelper
- *
- * @package DvsaMotTest\Helper
+ * Class LocationSelectContainerHelper.
  */
 class LocationSelectContainerHelper
 {

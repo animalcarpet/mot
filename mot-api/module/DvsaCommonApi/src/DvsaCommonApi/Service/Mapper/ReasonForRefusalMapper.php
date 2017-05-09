@@ -7,8 +7,6 @@ use DvsaEntities\Entity\ReasonForRefusal;
 
 /**
  * Class map data of entity ReasonForRefusal to dto ReasonForRefusal.
- *
- * @package DvsaCommonApi\Service\Mapper
  */
 class ReasonForRefusalMapper extends AbstractApiMapper
 {

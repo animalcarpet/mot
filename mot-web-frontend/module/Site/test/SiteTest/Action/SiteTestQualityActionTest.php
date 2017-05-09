@@ -19,7 +19,6 @@ use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_TestCase;
 use Site\Action\SiteTestQualityAction;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
 use Zend\Mvc\Controller\Plugin\Url;
@@ -36,18 +35,18 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
     const IS_RETURN_TO_AE_TQI = false;
 
     private $breadcrumbs = [
-        'org'                      => 'link',
-        'vts'                      => 'link2',
+        'org' => 'link',
+        'vts' => 'link2',
         'Test quality information' => null,
     ];
 
-    /** @var  SitePerformanceApiResource */
+    /** @var SitePerformanceApiResource */
     private $sitePerformanceApiResourceMock;
 
-    /** @var  NationalPerformanceApiResource */
+    /** @var NationalPerformanceApiResource */
     private $nationalPerformanceApiResourceMock;
 
-    /** @var  SiteTestQualityAction */
+    /** @var SiteTestQualityAction */
     private $siteTestQualityAction;
 
     /** @var SiteMapper */
@@ -100,7 +99,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $url = XMock::of(Url::class);
         $url
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn('http://link');
 
         $this->url = $url;
@@ -190,7 +189,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
     public function testGroupSectionIsVisibleWhenSiteIsAuthorisedForTheGroup($vehicleClasses, $vehicleGroup)
     {
         // GIVEN site isn't allowed to test any classes of vehicles
-        $this->siteDto->setTestClasses($vehicleClasses);;
+        $this->siteDto->setTestClasses($vehicleClasses);
 
         // AND it has tests in the given month
         $groupATests = $vehicleGroup === VehicleClassGroupCode::BIKES ? 10 : 0;
@@ -299,14 +298,14 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
 
         $stats1 = new EmployeePerformanceDto();
 
-        $stats1->setUsername("Tester");
+        $stats1->setUsername('Tester');
         $stats1->setTotal(1);
         $stats1->setAverageTime(new TimeSpan(1, 1, 1, 1));
         $stats1->setPercentageFailed(100);
 
         $stats2 = new EmployeePerformanceDto();
 
-        $stats2->setUsername("Tester 2");
+        $stats2->setUsername('Tester 2');
         $stats2->setTotal(2);
         $stats2->setAverageTime(new TimeSpan(2, 2, 2, 2));
         $stats2->setPercentageFailed(50.00);
@@ -324,7 +323,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
 
         $stats3 = new EmployeePerformanceDto();
 
-        $stats3->setUsername("Tester 3");
+        $stats3->setUsername('Tester 3');
         $stats3->setTotal(200);
         $stats3->setAverageTime(new TimeSpan(2, 2, 2, 2));
         $stats3->setPercentageFailed(33.33);

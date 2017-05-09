@@ -84,7 +84,7 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
             ->getMock();
 
         $this->getController()->setServiceLocator($this->serviceManager);
-        $this->getController()->getPluginManager()->setService("gtmDataLayer", $this->dataLayerPlugin);
+        $this->getController()->getPluginManager()->setService('gtmDataLayer', $this->dataLayerPlugin);
 
         $this->loggedInUserManagerMock = XMock::of(
             LoggedInUserManager::class,

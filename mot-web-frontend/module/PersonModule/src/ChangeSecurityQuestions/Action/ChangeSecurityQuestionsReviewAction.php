@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
-
 
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
@@ -17,9 +15,9 @@ use Zend\Http\Request;
 
 class ChangeSecurityQuestionsReviewAction
 {
-    const CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_TITLE = "Review security question changes";
-    const CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_SUBTITLE = "Your profile";
-    const CHANGE_SECURITY_QUESTIONS_REVIEW_TEMPLATE = "profile/change-security-questions/review";
+    const CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_TITLE = 'Review security question changes';
+    const CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_SUBTITLE = 'Your profile';
+    const CHANGE_SECURITY_QUESTIONS_REVIEW_TEMPLATE = 'profile/change-security-questions/review';
 
     private $changeSecurityQuestionsStepService;
 
@@ -32,7 +30,6 @@ class ChangeSecurityQuestionsReviewAction
         $this->changeSecurityQuestionsService = $changeSecurityQuestionsService;
     }
 
-
     public function execute(Request $request)
     {
         if (!$this->changeSecurityQuestionsStepService->isAllowedOnStep(ChangeSecurityQuestionsStepService::REVIEW_STEP)) {
@@ -43,6 +40,7 @@ class ChangeSecurityQuestionsReviewAction
             // change to submission of security questions when endpoint ready
             $this->changeSecurityQuestionsService->updateSecurityQuestions($this->getSubmittedData());
             $this->changeSecurityQuestionsStepService->updateStepStatus(ChangeSecurityQuestionsStepService::REVIEW_STEP, true);
+
             return new RedirectToRoute(ChangeSecurityQuestionsConfirmationController::ROUTE);
         }
 
@@ -77,6 +75,7 @@ class ChangeSecurityQuestionsReviewAction
         $stepData = $sessionData[ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES];
 
         $model = new ChangeSecurityQuestionsSubmissionModel();
+
         return $model
             ->setQuestionOneId($stepData['questionOneId'])
             ->setQuestionOneAnswer($stepData['questionOneAnswer'])

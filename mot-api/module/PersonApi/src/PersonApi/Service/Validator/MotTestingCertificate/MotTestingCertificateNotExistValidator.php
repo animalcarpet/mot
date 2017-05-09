@@ -8,7 +8,7 @@ use Zend\Validator\AbstractValidator;
 
 class MotTestingCertificateNotExistValidator extends AbstractValidator
 {
-    const MSG_NOT_FOUND = "msgFound";
+    const MSG_NOT_FOUND = 'msgFound';
     const ERROR_NOT_EXISTS = "Mot Testing Certificate for group '%value%' already exist";
 
     private $repository;
@@ -22,8 +22,8 @@ class MotTestingCertificateNotExistValidator extends AbstractValidator
         $this->personId = $personId;
     }
 
-    protected  $messageTemplates = array(
-        self::MSG_NOT_FOUND => self::ERROR_NOT_EXISTS
+    protected $messageTemplates = array(
+        self::MSG_NOT_FOUND => self::ERROR_NOT_EXISTS,
     );
 
     public function isValid($value)
@@ -32,8 +32,7 @@ class MotTestingCertificateNotExistValidator extends AbstractValidator
 
         try {
             $this->repository->getOneByGroupAndPersonId($value, $this->personId);
-        } catch(NotFoundException $e) {
-
+        } catch (NotFoundException $e) {
             return true;
         }
 

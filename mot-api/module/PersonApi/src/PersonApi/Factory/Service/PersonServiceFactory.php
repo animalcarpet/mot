@@ -3,7 +3,6 @@
 namespace PersonApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
-use Dvsa\OpenAM\OpenAMClient;
 use Dvsa\OpenAM\OpenAMClientInterface;
 use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use DvsaEntities\Entity\Person;

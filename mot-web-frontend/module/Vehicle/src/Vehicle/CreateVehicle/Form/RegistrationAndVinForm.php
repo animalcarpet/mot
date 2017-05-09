@@ -28,18 +28,18 @@ class RegistrationAndVinForm extends Form
 
     /**
      * RegistrationAndVinForm constructor.
+     *
      * @param string $registrationFieldValue
-     * @param bool $registrationCheckboxValue
+     * @param bool   $registrationCheckboxValue
      * @param string $vinFieldValue
-     * @param bool $vinCheckboxValue
+     * @param bool   $vinCheckboxValue
      */
     public function __construct(
         $registrationFieldValue = null,
         $registrationCheckboxValue = false,
         $vinFieldValue = null,
         $vinCheckboxValue = false
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->add((new Text())
@@ -87,6 +87,7 @@ class RegistrationAndVinForm extends Form
 
         if ($regCheckboxValue && $vinCheckboxValue && $emptyRegistrationField && $emptyVinField) {
             $this->addErrorMessage('You must enter the registration mark or the VIN');
+
             return false;
         }
 

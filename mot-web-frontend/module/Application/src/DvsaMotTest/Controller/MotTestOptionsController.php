@@ -5,7 +5,6 @@ namespace DvsaMotTest\Controller;
 use DvsaClient\Mapper\VehicleExpiryMapper;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\MotTesting\MotTestOptionsDto;
-use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaMotTest\Service\MotChecklistPdfService;
@@ -63,9 +62,9 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
         $this->getResponse()
             ->setContent($pdf)
             ->getHeaders()->addHeaders([
-                'Content-Length'        =>  strlen($pdf),
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'filename=Mot-checklist_' . $motTestNumber . '.pdf',
+                'Content-Length' => strlen($pdf),
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'filename=Mot-checklist_'.$motTestNumber.'.pdf',
             ]);
 
         return $this->getResponse();
@@ -82,7 +81,7 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
 
         $gtmData['testLate'] = $today > $expiryDate;
 
-        if($gtmData['testLate']) {
+        if ($gtmData['testLate']) {
             $late = $today->diff($expiryDate);
             $gtmData['testLateInDays'] = $late->days;
         }

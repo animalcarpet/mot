@@ -28,7 +28,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class AuthorisedExaminerServiceFactory implements FactoryInterface
 {
     /**
-     * @param  \Zend\ServiceManager\ServiceLocatorInterface       $serviceLocator
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     *
      * @return \OrganisationApi\Service\AuthorisedExaminerService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -26,11 +26,11 @@ class LoginCsrfCookieService
 
     /**
      * @param Response $response
+     *
      * @return string csrf token
      */
     public function addCsrfCookie(Response $response)
     {
-
         $token = Guid::newGuid();
         $cookie = new SetCookie(
             $this->name,
@@ -48,8 +48,10 @@ class LoginCsrfCookieService
     }
 
     /**
-     * Verifies if token attached in cookie is equal to the token POSTed in the login form
+     * Verifies if token attached in cookie is equal to the token POSTed in the login form.
+     *
      * @param Request $request
+     *
      * @return bool
      */
     public function validate(Request $request)
@@ -61,6 +63,7 @@ class LoginCsrfCookieService
         if (isset($cookies[$this->name])) {
             return $cookies[$this->name] === $requestToken;
         }
+
         return false;
     }
 }

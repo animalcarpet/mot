@@ -1,7 +1,8 @@
 <?php
 
 use UserAdmin\Presenter\DrivingLicenceSummaryPresenter;
-/** @var DrivingLicenceSummaryPresenter $presenter */
+
+/* @var DrivingLicenceSummaryPresenter $presenter */
 
 ?>
 <div class="text">
@@ -12,7 +13,7 @@ use UserAdmin\Presenter\DrivingLicenceSummaryPresenter;
     <tr>
         <th scope="col" class="key-value-list__key">User</th>
         <td id="userFullName" class="key-value-list__value">
-            <?php echo $title . ' ' . $fullName?>
+            <?php echo $title.' '.$fullName?>
         </td>
     </tr>
     <tr>
@@ -21,7 +22,7 @@ use UserAdmin\Presenter\DrivingLicenceSummaryPresenter;
             <?php echo $drivingLicenceNumber ?>
             <br>
             <span class="key-value-list__meta">
-                <?php echo $presenter->getCountryDescriptionByCode($drivingLicenceRegion) . ' licence' ?>
+                <?php echo $presenter->getCountryDescriptionByCode($drivingLicenceRegion).' licence' ?>
             </span>
         </td>
     </tr>

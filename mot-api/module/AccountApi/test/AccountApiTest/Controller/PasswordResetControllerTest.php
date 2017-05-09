@@ -12,18 +12,16 @@ use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class TokenControllerTest
- *
- * @package AccountApiTest\Controller
+ * Class TokenControllerTest.
  */
 class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
 {
     const USER_NAME = 'unitUserName';
     const TOKEN = 'unitToken_1234';
 
-    /** @var  TokenService|MockObj */
+    /** @var TokenService|MockObj */
     private $mockTokenSrv;
-    /** @var  EntityManager|MockObj */
+    /** @var EntityManager|MockObj */
     private $mockEntityManager;
 
     protected function setUp()
@@ -68,7 +66,6 @@ class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
         if (!empty($expect['result'])) {
             $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, $expect['result'], $result);
         }
-
     }
 
     public function dataProviderTestActionsResultAndAccess()
@@ -85,7 +82,7 @@ class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
                     'route' => null,
                     'post' => ['userId' => self::MOCK_USER_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'createTokenAndEmailForgottenLink',
                         'params' => [self::MOCK_USER_ID],
@@ -94,9 +91,9 @@ class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
                 ],
                 'expect' => [
                     'exception' => [
-                        'class'   => ServiceException::class,
+                        'class' => ServiceException::class,
                         'message' => $exceptionMessage,
-                        'code'    => ServiceException::DEFAULT_STATUS_CODE,
+                        'code' => ServiceException::DEFAULT_STATUS_CODE,
                     ],
                 ],
             ],
@@ -108,7 +105,7 @@ class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
                     'route' => null,
                     'post' => ['userId' => self::MOCK_USER_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'createTokenAndEmailForgottenLink',
                         'params' => [self::MOCK_USER_ID],
@@ -125,9 +122,9 @@ class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
                 'action' => null,
                 'params' => [
                     'route' => ['token' => self::TOKEN],
-                    'post'  => null,
+                    'post' => null,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'getToken',
                         'params' => self::TOKEN,
@@ -136,9 +133,9 @@ class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
                 ],
                 'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
-                        'message' => 'Message by Token ' . self::TOKEN . ' not found',
-                        'code'    => NotFoundException::ERROR_CODE_NOT_FOUND,
+                        'class' => NotFoundException::class,
+                        'message' => 'Message by Token '.self::TOKEN.' not found',
+                        'code' => NotFoundException::ERROR_CODE_NOT_FOUND,
                     ],
                 ],
             ],
@@ -148,9 +145,9 @@ class PasswordResetControllerTest extends AbstractRestfulControllerTestCase
                 'action' => null,
                 'params' => [
                     'route' => ['token' => self::TOKEN],
-                    'post'  => null,
+                    'post' => null,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'getToken',
                         'params' => self::TOKEN,

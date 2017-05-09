@@ -1,6 +1,6 @@
 <?php
 /**
- * @var array  $defaultBrakeTestClass1And2Options
+ * @var array
  * @var array  $defaultParkingBrakeTestClass3AndAboveOptions
  * @var array  $defaultServiceBrakeTestClass3AndAboveOptions
  * @var string $cancelRoute
@@ -11,9 +11,8 @@
  * @var bool   $canTestClass1Or2
  * @var bool   $canTestAnyOfClass3AndAbove
  */
-
-$sectionName = "Vehicle Testing Station";
-$taskName = "Change default test settings";
+$sectionName = 'Vehicle Testing Station';
+$taskName = 'Change default test settings';
 
 $this->headTitle($taskName);
 $this->layout()->setVariable('pageSubTitle', $sectionName);
@@ -35,12 +34,12 @@ $this->layout()->setVariable('pageTitle', $taskName);
                                 echo $this->partial(
                                     'partial/forms/radioElement.phtml',
                                     [
-                                        'id'            => $option . '-default-brake-test-class-1-and-2',
-                                        'name'          => 'defaultBrakeTestClass1And2',
-                                        'value'         => $option,
-                                        'isChecked'     => $option === $defaultBrakeTestClass1And2,
-                                        'label'         => $brakeTestTypes[$option],
-                                        'labelId'       => $option . '-default-brake-test-class-1-and-2-label',
+                                        'id' => $option.'-default-brake-test-class-1-and-2',
+                                        'name' => 'defaultBrakeTestClass1And2',
+                                        'value' => $option,
+                                        'isChecked' => $option === $defaultBrakeTestClass1And2,
+                                        'label' => $brakeTestTypes[$option],
+                                        'labelId' => $option.'-default-brake-test-class-1-and-2-label',
                                         'labelCssClass' => 'block-label label-clear',
                                     ]
                                 );
@@ -60,13 +59,12 @@ $this->layout()->setVariable('pageTitle', $taskName);
                                 echo $this->partial(
                                     'partial/forms/radioElement.phtml',
                                     [
-                                        'id'            => $option . '-default-service-brake-test-class-3-and-above',
-                                        'name'          => 'defaultServiceBrakeTestClass3AndAbove',
-                                        'value'         => $option,
-                                        'isChecked'     => $option === $defaultServiceBrakeTestClass3AndAbove,
-                                        'label'         => $brakeTestTypes[$option],
-                                        'labelId'       =>
-                                            $option . '-default-service-brake-test-class-3-and-above-label',
+                                        'id' => $option.'-default-service-brake-test-class-3-and-above',
+                                        'name' => 'defaultServiceBrakeTestClass3AndAbove',
+                                        'value' => $option,
+                                        'isChecked' => $option === $defaultServiceBrakeTestClass3AndAbove,
+                                        'label' => $brakeTestTypes[$option],
+                                        'labelId' => $option.'-default-service-brake-test-class-3-and-above-label',
                                         'labelCssClass' => 'block-label label-clear',
                                     ]
                                 );
@@ -80,13 +78,12 @@ $this->layout()->setVariable('pageTitle', $taskName);
                                 echo $this->partial(
                                     'partial/forms/radioElement.phtml',
                                     [
-                                        'id'            => $option . '-default-parking-brake-test-class-3-and-above',
-                                        'name'          => 'defaultParkingBrakeTestClass3AndAbove',
-                                        'value'         => $option,
-                                        'isChecked'     => $option === $defaultParkingBrakeTestClass3AndAbove,
-                                        'label'         => $brakeTestTypes[$option],
-                                        'labelId'       =>
-                                            $option . '-default-parking-brake-test-class-3-and-above-label',
+                                        'id' => $option.'-default-parking-brake-test-class-3-and-above',
+                                        'name' => 'defaultParkingBrakeTestClass3AndAbove',
+                                        'value' => $option,
+                                        'isChecked' => $option === $defaultParkingBrakeTestClass3AndAbove,
+                                        'label' => $brakeTestTypes[$option],
+                                        'labelId' => $option.'-default-parking-brake-test-class-3-and-above-label',
                                         'labelCssClass' => 'block-label label-clear',
                                     ]
                                 );

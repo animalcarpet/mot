@@ -18,5 +18,4 @@ class EditTelephoneControllerFactory implements FactoryInterface
 
         return new EditTelephoneController($telephoneService);
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Constants\Role;
@@ -6,10 +7,9 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Controller\MotTestCompareController;
 use DvsaMotApi\Service\MotTestCompareService;
 use Zend\Http\Request;
-use Zend\Http\Response;
 
 /**
- * Class MotTestCompareControllerTest
+ * Class MotTestCompareControllerTest.
  */
 class MotTestCompareControllerTest extends AbstractMotApiControllerTestCase
 {

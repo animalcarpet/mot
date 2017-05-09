@@ -1,14 +1,13 @@
 <?php
+
 namespace SiteTest\Factory\Service;
 
 use Site\Service\SiteSearchService;
 use Site\Factory\Service\SiteSearchServiceFactory;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SiteSearchServiceFactoryTest
- * @package SiteTest\Factory\Service
+ * Class SiteSearchServiceFactoryTest.
  */
 class SiteSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

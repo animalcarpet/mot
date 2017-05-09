@@ -8,13 +8,12 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * IdentityHelper - helper for view
+ * IdentityHelper - helper for view.
  *
  * accessible by this->identityHelper() in any *.phtml file
  */
 class IdentityHelper extends AbstractHelper implements MotFrontendIdentityInterface
 {
-
     /**
      * @var MotIdentityProviderInterface;
      */
@@ -23,11 +22,11 @@ class IdentityHelper extends AbstractHelper implements MotFrontendIdentityInterf
     public function __construct(MotFrontendIdentityProviderInterface $identityProvider)
     {
         $this->identityProvider = $identityProvider;
-        $this->identity         = $identityProvider->getIdentity();
+        $this->identity = $identityProvider->getIdentity();
     }
 
     /**
-     * Returns the username e.g. user1@example.com
+     * Returns the username e.g. user1@example.com.
      */
     public function getUsername()
     {
@@ -35,7 +34,7 @@ class IdentityHelper extends AbstractHelper implements MotFrontendIdentityInterf
     }
 
     /**
-     * Returns the user ID e.g. 5001
+     * Returns the user ID e.g. 5001.
      */
     public function getUserId()
     {

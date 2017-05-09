@@ -2,19 +2,14 @@
 
 namespace DvsaMotApi\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
-use DvsaMotApi\Model\OutputFormat;
-use Zend\I18n\Validator\DateTime;
 
 /**
- * Class MotTestSearchController
- *
- * @package DvsaMotApi\Controller
+ * Class MotTestSearchController.
  */
 class MotTestSearchController extends AbstractDvsaRestfulController
 {
@@ -26,7 +21,7 @@ class MotTestSearchController extends AbstractDvsaRestfulController
         try {
             $params = $this->buildSearchParams();
 
-            $result  = $this->getService()->findTests($params);
+            $result = $this->getService()->findTests($params);
 
             return ApiResponse::jsonOk($result);
         } catch (\UnexpectedValueException $e) {
@@ -39,7 +34,7 @@ class MotTestSearchController extends AbstractDvsaRestfulController
     }
 
     /**
-     * Build the search params from the current request
+     * Build the search params from the current request.
      *
      * @return mixed
      */

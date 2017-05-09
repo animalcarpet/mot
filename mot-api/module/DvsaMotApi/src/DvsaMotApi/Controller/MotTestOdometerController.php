@@ -20,7 +20,7 @@ use DvsaMotApi\Service\OdometerReadingUpdatingService;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class MotTestOdometerController
+ * Class MotTestOdometerController.
  */
 class MotTestOdometerController extends AbstractDvsaRestfulController implements TransactionAwareInterface
 {
@@ -33,7 +33,7 @@ class MotTestOdometerController extends AbstractDvsaRestfulController implements
 
     /**
      * @param string $motTestNumber
-     * @param array $data
+     * @param array  $data
      *
      * @return JsonModel
      */
@@ -65,12 +65,12 @@ class MotTestOdometerController extends AbstractDvsaRestfulController implements
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         /**
-         * @var MotTestSecurityService $motTestSecurityService
+         * @var MotTestSecurityService
          */
         $motTestSecurityService = $this->getServiceLocator()->get('MotTestSecurityService');
         $canModify = $motTestSecurityService->canModifyOdometerForTest($motTestNumber);
 
-        return ApiResponse::jsonOk(["modifiable" => $canModify]);
+        return ApiResponse::jsonOk(['modifiable' => $canModify]);
     }
 
     /**
@@ -79,7 +79,7 @@ class MotTestOdometerController extends AbstractDvsaRestfulController implements
     public function getNoticesAction()
     {
         /**
-         * @var OdometerReadingQueryService $queryService
+         * @var OdometerReadingQueryService
          */
         $queryService = $this->getServiceLocator()->get('OdometerReadingQueryService');
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
@@ -90,13 +90,16 @@ class MotTestOdometerController extends AbstractDvsaRestfulController implements
 
     /**
      * @param $motTestNumber
+     *
      * @return \DvsaEntities\Entity\MotTest
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     private function getMotTest($motTestNumber)
     {
         /** @var MotTestRepository $motTestRepository */
         $motTestRepository = $this->getServiceLocator()->get(MotTestRepository::class);
+
         return $motTestRepository->getMotTestByNumber($motTestNumber);
     }
 }

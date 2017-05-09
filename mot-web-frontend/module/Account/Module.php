@@ -17,32 +17,32 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 /**
- * Class Module
+ * Class Module.
  */
 class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
+        $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function getServiceConfig()
     {
         return [
             'factories' => [
-                ClaimAccountService::class     => \Account\Factory\Service\ClaimAccountServiceFactory::class,
-                PasswordResetService::class    => \Account\Factory\Service\PasswordResetServiceFactory::class,
+                ClaimAccountService::class => \Account\Factory\Service\ClaimAccountServiceFactory::class,
+                PasswordResetService::class => \Account\Factory\Service\PasswordResetServiceFactory::class,
                 SecurityQuestionService::class => \Account\Factory\Service\SecurityQuestionServiceFactory::class,
                 ParamObfuscatorFactory::class => ParamObfuscatorFactory::class,
                 ExpiredPasswordService::class => ExpiredPasswordServiceFactory::class,
-            ]
+            ],
         ];
     }
 

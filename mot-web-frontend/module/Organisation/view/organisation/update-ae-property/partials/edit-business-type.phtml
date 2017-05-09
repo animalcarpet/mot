@@ -12,9 +12,9 @@ $this->headTitle('Change business type');
     <?php echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getTypeElement()
+            'element' => $form->getTypeElement(),
         ]
-    );?>
+    ); ?>
     <div id="<?php echo BusinessTypePropertyForm::FIELD_COMPANY_NUMBER ?>"
         class="panel-indent
             <?php echo ($form->getTypeElement()->getValue() != CompanyTypeCode::COMPANY) ? 'js-hidden' : '' ?>
@@ -22,8 +22,8 @@ $this->headTitle('Change business type');
         <?php echo $this->partial(
             'partial/gds/form/control',
             [
-                'element' => $form->getCompanyNumberElement()
+                'element' => $form->getCompanyNumberElement(),
             ]
-        );?>
+        ); ?>
     </div>
 </fieldset>

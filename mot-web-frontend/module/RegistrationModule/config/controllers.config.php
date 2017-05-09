@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\ContactDetailsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\ContactDetailsControllerFactory;
@@ -27,17 +26,17 @@ use Dvsa\Mot\Frontend\RegistrationModule\Controller\DuplicateEmailController;
 
 return [
     'invokables' => [
-        DuplicateEmailController::class         => DuplicateEmailController::class,
+        DuplicateEmailController::class => DuplicateEmailController::class,
     ],
     'factories' => [
-        ContactDetailsController::class         => ContactDetailsControllerFactory::class,
-        CompletedController::class              => CompletedControllerFactory::class,
-        CreateAccountController::class          => CreateAccountControllerFactory::class,
-        DetailsController::class                => DetailsControllerFactory::class,
-        IndexController::class                  => IndexControllerFactory::class,
-        PasswordController::class               => PasswordControllerFactory::class,
-        SecurityQuestionsController::class      => SecurityQuestionsControllerFactory::class,
-        SummaryController::class                => SummaryControllerFactory::class,
-        EmailController::class                  => EmailControllerFactory::class,
+        ContactDetailsController::class => ContactDetailsControllerFactory::class,
+        CompletedController::class => CompletedControllerFactory::class,
+        CreateAccountController::class => CreateAccountControllerFactory::class,
+        DetailsController::class => DetailsControllerFactory::class,
+        IndexController::class => IndexControllerFactory::class,
+        PasswordController::class => PasswordControllerFactory::class,
+        SecurityQuestionsController::class => SecurityQuestionsControllerFactory::class,
+        SummaryController::class => SummaryControllerFactory::class,
+        EmailController::class => EmailControllerFactory::class,
     ],
 ];

@@ -2,22 +2,21 @@
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 
 /**
- * @var \Account\ViewModel\SecurityQuestionViewModel  $viewModel
- * @var string $numberOfAttemptMessage
- * @var \Application\Helper\PrgHelper $prgHelper
+ * @var \Account\ViewModel\SecurityQuestionViewModel
+ * @var string                                       $numberOfAttemptMessage
+ * @var \Application\Helper\PrgHelper                $prgHelper
  */
-
 $question = $viewModel->getQuestion();
 $questionNumber = $viewModel->getQuestionNumber();
 $personId = $viewModel->getUserId();
 
-$formAction         = AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion($personId, $questionNumber);
-$legendTitle        = ($questionNumber == 1 ? 'First ' : 'Second ') . ' security question ';
-$labelText          = $question->getText();
-$inputId            = 'question' . $questionNumber;
+$formAction = AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion($personId, $questionNumber);
+$legendTitle = ($questionNumber == 1 ? 'First ' : 'Second ').' security question ';
+$labelText = $question->getText();
+$inputId = 'question'.$questionNumber;
 
-$errorMessages      = $this->layout()->flashMessenger->getErrorMessages();
-$successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
+$errorMessages = $this->layout()->flashMessenger->getErrorMessages();
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
 
 echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
@@ -54,11 +53,11 @@ endif;
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => $inputId,
-                'errorMessage'  => $numberOfAttemptMessage,
-                'label'         => $labelText,
-                'value'         => '',
-                'autoCompleteOff'   => true
+                'id' => $inputId,
+                'errorMessage' => $numberOfAttemptMessage,
+                'label' => $labelText,
+                'value' => '',
+                'autoCompleteOff' => true,
             ]
         );
         ?>
@@ -69,16 +68,16 @@ endif;
     <?php echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'            => 'submitSecurityQuestion',
-            'value'         => 'Continue',
+            'id' => 'submitSecurityQuestion',
+            'value' => 'Continue',
         ]
     ); ?>
     <?php echo $this->partial(
         'partial/gds/general/message',
         [
-            'message'       => [
+            'message' => [
                 ['type' => 'normal', 'm' => 'You must answer both of your security questions correctly before you can reset your password'],
-            ]
+            ],
         ]
     ); ?>
 </form>

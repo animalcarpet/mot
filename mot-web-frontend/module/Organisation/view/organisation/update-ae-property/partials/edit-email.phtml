@@ -1,5 +1,4 @@
 <?php
-use Organisation\UpdateAeProperty\Process\Form\RegisteredEmailPropertyForm;
 use Organisation\UpdateAeProperty\UpdateAePropertyViewModel;
 
 /** @var UpdateAePropertyViewModel $viewModel */
@@ -15,7 +14,7 @@ $this->headTitle($viewModel->getSubmitButtonText());
             echo $this->partial(
                 'partial/gds/form/control',
                 [
-                    'element' => $form->getEmailElement()
+                    'element' => $form->getEmailElement(),
                 ]
             );
             ?>

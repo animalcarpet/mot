@@ -84,13 +84,13 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($dashboardViewModel->getShowYourPerformance());
         $this->assertTrue($dashboardViewModel->getShowContingencyTests());
         $this->assertTrue($dashboardViewModel->getShowFinancialReports());
-        $this->assertObjectHasAttribute("heroActionViewModel", $dashboardViewModel);
-        $this->assertObjectHasAttribute("notificationsViewModel", $dashboardViewModel);
-        $this->assertObjectHasAttribute("trainingTestViewModel", $dashboardViewModel);
-        $this->assertObjectHasAttribute("nonMotTestViewModel", $dashboardViewModel);
-        $this->assertObjectHasAttribute("authorisedExaminersViewModel", $dashboardViewModel);
-        $this->assertObjectHasAttribute("specialNoticesViewModel", $dashboardViewModel);
-        $this->assertObjectHasAttribute("authorisedExaminerManagementViewModel", $dashboardViewModel);
+        $this->assertObjectHasAttribute('heroActionViewModel', $dashboardViewModel);
+        $this->assertObjectHasAttribute('notificationsViewModel', $dashboardViewModel);
+        $this->assertObjectHasAttribute('trainingTestViewModel', $dashboardViewModel);
+        $this->assertObjectHasAttribute('nonMotTestViewModel', $dashboardViewModel);
+        $this->assertObjectHasAttribute('authorisedExaminersViewModel', $dashboardViewModel);
+        $this->assertObjectHasAttribute('specialNoticesViewModel', $dashboardViewModel);
+        $this->assertObjectHasAttribute('authorisedExaminerManagementViewModel', $dashboardViewModel);
     }
 
     public function testInProgressTrainingTestNumberIsPassedToTrainingTestViewModel()
@@ -163,10 +163,10 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
                     'id' => 1,
                     'name' => 'V1234',
                     'siteNumber' => 'V1',
-                    'positions' => [SiteBusinessRoleCode::TESTER]
-                ]
+                    'positions' => [SiteBusinessRoleCode::TESTER],
+                ],
             ],
-            'position' => ''
+            'position' => '',
         ];
 
         return [new AuthorisedExaminer($authorisedExaminerData)];
@@ -197,7 +197,7 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
             'testedVehicleId' => 17,
             'isTechnicalAdvicePresent' => true,
         ];
-        
+
         $dashboard = new Dashboard(array_merge($dashboardDataDefaults, $this->dashboardData));
 
         if ($this->isTesterAtAnySite) {

@@ -1,9 +1,9 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Mapper;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult\ComponentFailRateResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
@@ -16,7 +16,8 @@ class ComponentBreakdownDtoMapper implements AutoWireableInterface
     /**
      * @param $components ComponentFailRateResult[]
      * @param TesterAtSitePerformanceResult $testerPerformance
-     * @param Person $person
+     * @param Person                        $person
+     *
      * @return ComponentBreakdownDto
      */
     public function mapQueryResultsToComponentBreakdownDto($components, $testerPerformance, Person $person)

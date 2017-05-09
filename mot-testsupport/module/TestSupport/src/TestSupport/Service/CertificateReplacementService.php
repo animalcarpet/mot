@@ -2,9 +2,7 @@
 
 namespace TestSupport\Service;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use DvsaEntities\Entity\CertificateReplacement;
 
 class CertificateReplacementService
 {

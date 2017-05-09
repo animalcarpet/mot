@@ -189,7 +189,7 @@ class EventViewModel
             $tempOutcome = $event->getEventOutcomeDescription();
 
             if (!empty($tempOutcome)) {
-                $finalDescription = $tempOutcome . '. ' . $tempDescription;
+                $finalDescription = $tempOutcome.'. '.$tempDescription;
             } else {
                 $finalDescription = $tempDescription;
             }
@@ -200,9 +200,9 @@ class EventViewModel
             $result[] = [
                 'type' => [
                     'type' => $event->getType(),
-                    'url'  => $url,
+                    'url' => $url,
                 ],
-                'date'        => DateTimeDisplayFormat::textDateTimeShort($event->getDate()),
+                'date' => DateTimeDisplayFormat::textDateTimeShort($event->getDate()),
                 'description' => $finalDescription,
             ];
         }
@@ -229,10 +229,10 @@ class EventViewModel
     {
         return new JsonModel(
             [
-                'data'                 => $this->parseEventForJson(),
+                'data' => $this->parseEventForJson(),
                 'iTotalDisplayRecords' => $this->getEventList()->getTotalResult(),
-                'iTotalRecords'        => $this->getEventList()->getTotalResult(),
-                'sEcho'                => $this->getFormModel()->getPageNumber(),
+                'iTotalRecords' => $this->getEventList()->getTotalResult(),
+                'sEcho' => $this->getFormModel()->getPageNumber(),
             ]
         );
     }
@@ -408,11 +408,11 @@ class EventViewModel
         parse_str(isset($urlComponents['query']) ? $urlComponents['query'] : '', $queryParameters);
         $queryParameters = array_replace($queryParameters, is_array($extraQueryParameters) ? $extraQueryParameters : []);
         if (!empty($queryParameters)) {
-            $url .= '?' . http_build_query($queryParameters);
+            $url .= '?'.http_build_query($queryParameters);
         }
 
         if (isset($urlComponents['fragment'])) {
-            $url .= '#' . (string) $urlComponents['fragment'];
+            $url .= '#'.(string) $urlComponents['fragment'];
         }
 
         return $url;

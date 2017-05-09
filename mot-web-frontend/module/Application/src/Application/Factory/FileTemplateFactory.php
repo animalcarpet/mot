@@ -8,7 +8,6 @@ use Dvsa\Mot\Frontend\Template\FileTemplate;
 
 class FileTemplateFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new FileTemplate();

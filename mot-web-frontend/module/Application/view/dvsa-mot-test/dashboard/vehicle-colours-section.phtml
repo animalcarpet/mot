@@ -3,7 +3,7 @@
 use DvsaCommon\Enum\ColourCode;
 
 /**
- * @var string $primaryColourId
+ * @var string
  * @var $primaryColourList
  * @var $secondaryColourId
  * @var $secondaryColourList
@@ -11,7 +11,7 @@ use DvsaCommon\Enum\ColourCode;
 $headerValue = $primaryColourList[$primaryColourId];
 
 if ($secondaryColourId !== null && $secondaryColourId !== ColourCode::NOT_STATED && !empty($secondaryColourList[$secondaryColourId])) {
-    $headerValue .= ' and ' . $secondaryColourList[$secondaryColourId];
+    $headerValue .= ' and '.$secondaryColourList[$secondaryColourId];
 }
 
 ?>
@@ -31,11 +31,11 @@ if ($secondaryColourId !== null && $secondaryColourId !== ColourCode::NOT_STATED
             <div class="row">
                 <div class="form-group col-sm-5">
                     <?php echo $this->partial(
-                        "selectElement", [
-                            "id"      => "select-primary-colour",
-                            "name"    => "primaryColour",
-                            "value"   => $primaryColourId,
-                            "options" => $primaryColourList
+                        'selectElement', [
+                            'id' => 'select-primary-colour',
+                            'name' => 'primaryColour',
+                            'value' => $primaryColourId,
+                            'options' => $primaryColourList,
                         ]
                     ); ?>
                 </div>
@@ -45,11 +45,11 @@ if ($secondaryColourId !== null && $secondaryColourId !== ColourCode::NOT_STATED
                 <div class="form-group col-sm-5">
 
                     <?php echo $this->partial(
-                        "selectElement", [
-                            "id"      => "select-secondary-colour",
-                            "name"    => "secondaryColour",
-                            "value"   => $secondaryColourId,
-                            "options" => $secondaryColourList
+                        'selectElement', [
+                            'id' => 'select-secondary-colour',
+                            'name' => 'secondaryColour',
+                            'value' => $secondaryColourId,
+                            'options' => $secondaryColourList,
                         ]
                     ) ?>
                 </div>
@@ -62,7 +62,7 @@ if ($secondaryColourId !== null && $secondaryColourId !== ColourCode::NOT_STATED
 <?php echo $this->partial(
     'dvsa-mot-test/dashboard/generic-section',
     [
-        'sectionId'  => 'vehicle-colour',
-        'actionName' => 'updateColours'
+        'sectionId' => 'vehicle-colour',
+        'actionName' => 'updateColours',
     ]
 );

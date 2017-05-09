@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationTest\Authorisation;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
@@ -6,19 +7,16 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Organisation\OrganisationPositionDto;
 use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use Organisation\Authorisation\AuthorisedExaminerViewAuthorisation;
-use \PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
- * Class AuthorisedExaminerViewAuthorisationTest
- * @package OrganisationTest\Authorisation
+ * Class AuthorisedExaminerViewAuthorisationTest.
  */
 class AuthorisedExaminerViewAuthorisationTest extends \PHPUnit_Framework_TestCase
 {
@@ -77,6 +75,7 @@ class AuthorisedExaminerViewAuthorisationTest extends \PHPUnit_Framework_TestCas
 
     /**
      * @dataProvider dataProviderPermissions
+     *
      * @param $permissionAtOrganisation
      * @param $expected
      */
@@ -95,11 +94,11 @@ class AuthorisedExaminerViewAuthorisationTest extends \PHPUnit_Framework_TestCas
         return [
             [
                 'permissionAtOrganisation' => true,
-                'expected'                 => true,
+                'expected' => true,
             ],
             [
                 'permissionAtOrganisation' => false,
-                'expected'                 => false,
+                'expected' => false,
             ],
         ];
     }

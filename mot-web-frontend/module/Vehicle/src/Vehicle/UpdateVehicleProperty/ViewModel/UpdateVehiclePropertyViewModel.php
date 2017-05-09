@@ -27,7 +27,7 @@ class UpdateVehiclePropertyViewModel
     /**
      * @var string
      */
-    private $backLinkLabel = "Cancel and return to vehicle";
+    private $backLinkLabel = 'Cancel and return to vehicle';
 
     /**
      * @var string
@@ -89,61 +89,73 @@ class UpdateVehiclePropertyViewModel
 
     /**
      * @param mixed $form
+     *
      * @return UpdateVehiclePropertyViewModel
      */
     public function setForm($form)
     {
         $this->form = $form;
+
         return $this;
     }
 
     /**
      * @param string $submitButtonText
+     *
      * @return UpdateVehiclePropertyViewModel
      */
     public function setSubmitButtonText($submitButtonText)
     {
         $this->submitButtonText = $submitButtonText;
+
         return $this;
     }
 
     /**
      * @param string $partial
+     *
      * @return UpdateVehiclePropertyViewModel
      */
     public function setPartial($partial)
     {
         $this->partial = $partial;
+
         return $this;
     }
 
     /**
      * @param string $backUrl
+     *
      * @return UpdateVehiclePropertyViewModel
      */
     public function setBackUrl($backUrl)
     {
         $this->backUrl = $backUrl;
+
         return $this;
     }
 
     /**
      * @param string $backLinkLabel
+     *
      * @return UpdateVehiclePropertyViewModel
      */
     public function setBackLinkText($backLinkLabel)
     {
         $this->backLinkLabel = $backLinkLabel;
+
         return $this;
     }
 
     /**
      * @param string $formActionUrl
+     *
      * @return UpdateVehiclePropertyViewModel
      */
     public function setFormActionUrl($formActionUrl)
     {
         $this->formActionUrl = $formActionUrl;
+
         return $this;
     }
 
@@ -157,11 +169,13 @@ class UpdateVehiclePropertyViewModel
 
     /**
      * @param HeaderTertiaryList $pageTertiaryTitle
+     *
      * @return UpdateVehiclePropertyViewModel
      */
     public function setPageTertiaryTitle($pageTertiaryTitle)
     {
         $this->pageTertiaryTitle = $pageTertiaryTitle;
+
         return $this;
     }
 }

@@ -4,11 +4,10 @@ use Site\ViewModel\SiteSearchViewModel;
 use DvsaCommon\Dto\Search\SiteSearchParamsDto;
 
 /**
- * @var SiteSearchViewModel $viewModel
+ * @var SiteSearchViewModel
  */
-
-$errorMessages      = $this->layout()->flashMessenger->getErrorMessages();
-$successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
+$errorMessages = $this->layout()->flashMessenger->getErrorMessages();
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
 
 ?>
 <details>
@@ -36,11 +35,11 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => SiteSearchParamsDto::SITE_NUMBER,
-                'help'          => 'For example, V12345',
-                'errorMessage'  => $viewModel->getError(SiteSearchParamsDto::SITE_NUMBER),
-                'label'         => 'Site ID',
-                'value'         => $viewModel->getSiteNumber(),
+                'id' => SiteSearchParamsDto::SITE_NUMBER,
+                'help' => 'For example, V12345',
+                'errorMessage' => $viewModel->getError(SiteSearchParamsDto::SITE_NUMBER),
+                'label' => 'Site ID',
+                'value' => $viewModel->getSiteNumber(),
                 'inputModifier' => '1-4',
             ]
         );
@@ -48,11 +47,11 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => SiteSearchParamsDto::SITE_NAME,
-                'help'          => 'For example, MOT Centre',
-                'errorMessage'  => $viewModel->getError(SiteSearchParamsDto::SITE_NAME),
-                'label'         => 'Trading name (or part name)',
-                'value'         => $viewModel->getSiteName(),
+                'id' => SiteSearchParamsDto::SITE_NAME,
+                'help' => 'For example, MOT Centre',
+                'errorMessage' => $viewModel->getError(SiteSearchParamsDto::SITE_NAME),
+                'label' => 'Trading name (or part name)',
+                'value' => $viewModel->getSiteName(),
                 'inputModifier' => '1-2',
             ]
         );
@@ -60,11 +59,11 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => SiteSearchParamsDto::SITE_TOWN,
-                'help'          => 'For example, Bristol',
-                'errorMessage'  => $viewModel->getError(SiteSearchParamsDto::SITE_TOWN),
-                'label'         => 'City or town',
-                'value'         => $viewModel->getSiteTown(),
+                'id' => SiteSearchParamsDto::SITE_TOWN,
+                'help' => 'For example, Bristol',
+                'errorMessage' => $viewModel->getError(SiteSearchParamsDto::SITE_TOWN),
+                'label' => 'City or town',
+                'value' => $viewModel->getSiteTown(),
                 'inputModifier' => '1-2',
             ]
         );
@@ -72,11 +71,11 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => SiteSearchParamsDto::SITE_POSTCODE,
-                'help'          => 'For example, BS1',
-                'errorMessage'  => $viewModel->getError(SiteSearchParamsDto::SITE_POSTCODE),
-                'label'         => 'Postcode (full or part)',
-                'value'         => $viewModel->getSitePostcode(),
+                'id' => SiteSearchParamsDto::SITE_POSTCODE,
+                'help' => 'For example, BS1',
+                'errorMessage' => $viewModel->getError(SiteSearchParamsDto::SITE_POSTCODE),
+                'label' => 'Postcode (full or part)',
+                'value' => $viewModel->getSitePostcode(),
                 'inputModifier' => '1-4',
             ]
         );
@@ -84,8 +83,8 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         echo $this->partial(
             'partial/gds/form/control-checkbox-group',
             [
-                'label'         => 'Classes of vehicles tested',
-                'options'       => $viewModel->getSiteVehicleClassParameters(),
+                'label' => 'Classes of vehicles tested',
+                'options' => $viewModel->getSiteVehicleClassParameters(),
             ]
         );
 
@@ -95,11 +94,11 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
     <?php echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'            => 'submitSiteSearch',
-            'value'         => 'Search',
-            'navigation'    => [
+            'id' => 'submitSiteSearch',
+            'value' => 'Search',
+            'navigation' => [
                 'Back' => '/',
-            ]
+            ],
         ]
     ); ?>
 </form>

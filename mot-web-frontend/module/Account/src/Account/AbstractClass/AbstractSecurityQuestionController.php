@@ -4,6 +4,7 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
+
 namespace Account\AbstractClass;
 
 use Account\Service\SecurityQuestionService;

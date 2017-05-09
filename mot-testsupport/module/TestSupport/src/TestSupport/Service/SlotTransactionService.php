@@ -2,12 +2,11 @@
 
 namespace TestSupport\Service;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\HttpRestJson\Client;
 use TestSupport\Helper\TestSupportAccessTokenManager as TokenManager;
 
 /**
- * Service to deal with accounts in system
+ * Service to deal with accounts in system.
  */
 class SlotTransactionService
 {
@@ -23,12 +22,12 @@ class SlotTransactionService
 
     public function __construct(Client $restClient, TokenManager $tokenManager)
     {
-        $this->restClient   = $restClient;
+        $this->restClient = $restClient;
         $this->tokenManager = $tokenManager;
     }
 
     /**
-     * Create slot transaction calling the backend API
+     * Create slot transaction calling the backend API.
      *
      * @param $organisation
      * @param $slots
@@ -36,12 +35,13 @@ class SlotTransactionService
      * @param $paymentType
      *
      * @return mixed
+     *
      * @throws \Exception
      */
     public function createSlotTransaction($organisation, $slots, $amount, $paymentType)
     {
         /** @var Client $restClient */
-        $password    = "Password1";
+        $password = 'Password1';
         $accessToken = $this->tokenManager->getToken('schememgt', $password);
 
         $this->restClient->setAccessToken($accessToken);
@@ -49,9 +49,9 @@ class SlotTransactionService
             'slots/transaction',
             [
                 'organisation' => $organisation,
-                'slots'        => $slots,
-                'amount'       => $amount,
-                'paymentType'  => $paymentType
+                'slots' => $slots,
+                'amount' => $amount,
+                'paymentType' => $paymentType,
             ]
         );
 

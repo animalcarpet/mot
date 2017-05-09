@@ -4,10 +4,9 @@ namespace Core\Service;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use Zend\Authentication\AuthenticationService;
 
 /**
- * MotIdentityProviderInterface that delegates to Zend Framework
+ * MotIdentityProviderInterface that delegates to Zend Framework.
  */
 interface MotFrontendIdentityProviderInterface extends MotIdentityProviderInterface
 {

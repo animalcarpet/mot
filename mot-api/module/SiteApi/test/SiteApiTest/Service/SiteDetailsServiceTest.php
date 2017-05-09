@@ -2,17 +2,13 @@
 
 namespace SiteApiTest\Service;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\Assertion\UpdateVtsAssertion;
 use DvsaCommon\Auth\MotIdentityInterface;
-use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommon\Enum\SiteTypeCode;
-use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\Validator\ErrorSchema;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -46,9 +42,9 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
 
     /** @var SiteRepository $siteRepository */
     private $siteRepository;
-    /** @var  AuthorisationServiceInterface $mockAuthService */
+    /** @var AuthorisationServiceInterface $mockAuthService */
     private $mockAuthService;
-    /** @var  UpdateVtsAssertion $updateVtsAssertion */
+    /** @var UpdateVtsAssertion $updateVtsAssertion */
     private $updateVtsAssertion;
     /** @var XssFilter $mockXssFilter */
     private $mockXssFilter;
@@ -56,15 +52,15 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
     private $siteValidator;
     /** @var EventService $eventService */
     private $eventService;
-    /** @var  MotIdentityInterface */
+    /** @var MotIdentityInterface */
     private $mockIdentity;
     /** @var EntityManager $entityManager */
     private $entityManager;
     /** @var SiteTestingDailyScheduleRepository $scheduleRepository */
     private $scheduleRepository;
-    /** @var VehicleClassRepository $vehicleClassRepository  */
+    /** @var VehicleClassRepository $vehicleClassRepository */
     private $vehicleClassRepository;
-    /** @var AuthorisationForTestingMotAtSiteStatusRepository $authForTestingMotStatusRepository*/
+    /** @var AuthorisationForTestingMotAtSiteStatusRepository $authForTestingMotStatusRepository */
     private $authForTestingMotStatusRepository;
     /** @var SiteStatusRepository siteStatusRepository */
     private $siteStatusRepository;
@@ -119,7 +115,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
      */
     public function testPatchingSingleProperty($patchData, $validators, $siteRepositorySave)
     {
-        $patchData['_class'] = "DvsaCommon\\Dto\\Site\\VehicleTestingStationDto";
+        $patchData['_class'] = 'DvsaCommon\\Dto\\Site\\VehicleTestingStationDto';
 
         $this->mockService($this->siteRepository, 'get', $this->getSiteEntityMock());
         $this->mockService($this->siteStatusRepository, 'getByCode', new SiteStatus([
@@ -147,7 +143,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
             $this->assertEquals($count, $spy->invocationCount());
         }
 
-        if($siteRepositorySave) {
+        if ($siteRepositorySave) {
             $this->assertEquals(1, $siteRepositorySpy->invocationCount());
         }
     }
@@ -157,7 +153,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
         return [
             [
                 'patchData' => [
-                    'name' => 'Test Garage'
+                    'name' => 'Test Garage',
                 ],
                 'validators' => [
                     'validateName' => true,
@@ -169,7 +165,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
             ],
             [
                 'patchData' => [
-                    'status' => 'LA'
+                    'status' => 'LA',
                 ],
                 'validators' => [
                     'validateName' => false,
@@ -181,7 +177,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
             ],
             [
                 'patchData' => [
-                    'testClasses' => [1, 2, 3, 4]
+                    'testClasses' => [1, 2, 3, 4],
                 ],
                 'validators' => [
                     'validateName' => false,
@@ -193,7 +189,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
             ],
             [
                 'patchData' => [
-                    'type' => "AO",
+                    'type' => 'AO',
                 ],
                 'validators' => [
                     'validateName' => false,
@@ -205,7 +201,6 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
             ],
         ];
     }
-
 
     private function getSiteEntityMock()
     {
@@ -276,7 +271,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
     public function testIfChangingCountryUpdatesSiteFlagsAndNonWorkingDays($country)
     {
         $patchData = [
-            '_class' => "DvsaCommon\\Dto\\Site\\VehicleTestingStationDto",
+            '_class' => 'DvsaCommon\\Dto\\Site\\VehicleTestingStationDto',
             'country' => $country,
         ];
 
@@ -307,7 +302,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
         $nonWorkingDayCountryRepositoryGetOneByCodeSpyParam =
             $nonWorkingDayCountryRepositoryGetOneByCodeSpy->paramsForLastInvocation()[0];
 
-        switch($country) {
+        switch ($country) {
             case CountryCode::ENGLAND:
             case CountryCode::SCOTLAND:
                 $this->assertEquals(false, $siteSetDualLanguageSpyParam);
@@ -317,7 +312,7 @@ class SiteDetailsServiceTest extends AbstractServiceTestCase
                 break;
         }
 
-        switch($country) {
+        switch ($country) {
             case CountryCode::ENGLAND:
             case CountryCode::WALES:
                 $this->assertEquals(false, $siteSetScottishBankHolidaySpyParam);

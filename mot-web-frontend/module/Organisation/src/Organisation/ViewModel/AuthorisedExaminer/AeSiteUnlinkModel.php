@@ -5,7 +5,7 @@ namespace Organisation\ViewModel\AuthorisedExaminer;
 use DvsaCommon\Dto\Site\SiteDto;
 
 /**
- * Class AeSiteUnlinkModel
+ * Class AeSiteUnlinkModel.
  */
 class AeSiteUnlinkModel extends AeFormViewModel
 {
@@ -28,6 +28,7 @@ class AeSiteUnlinkModel extends AeFormViewModel
     public function setSite(SiteDto $site)
     {
         $this->site = $site;
+
         return $this;
     }
 }

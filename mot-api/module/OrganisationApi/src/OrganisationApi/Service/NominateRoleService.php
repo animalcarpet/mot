@@ -13,13 +13,10 @@ use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\OrganisationBusinessRoleMapRepository;
 use OrganisationApi\Model\Operation\NominateOperationInterface;
-use Zend\Authentication\AuthenticationService;
 use Exception;
 
 /**
- * Class NominateRoleService
- *
- * @package OrganisationApi\Service
+ * Class NominateRoleService.
  */
 class NominateRoleService
 {
@@ -44,14 +41,14 @@ class NominateRoleService
         NominateOperationInterface $nominateOperation,
         Transaction $transaction
     ) {
-        $this->currentUser                           = $currentUser;
-        $this->nominee                               = $nominee;
-        $this->organisation                          = $organisation;
-        $this->organisationBusinessRole              = $organisationBusinessRole;
-        $this->nominateOperation                     = $nominateOperation;
-        $this->transaction                           = $transaction;
-        $this->authorisationService                  = $authorisationService;
-        $this->businessRoleStatusRepository          = $businessRoleStatusRepository;
+        $this->currentUser = $currentUser;
+        $this->nominee = $nominee;
+        $this->organisation = $organisation;
+        $this->organisationBusinessRole = $organisationBusinessRole;
+        $this->nominateOperation = $nominateOperation;
+        $this->transaction = $transaction;
+        $this->authorisationService = $authorisationService;
+        $this->businessRoleStatusRepository = $businessRoleStatusRepository;
         $this->organisationBusinessRoleMapRepository = $organisationBusinessRoleMapRepository;
     }
 
@@ -76,6 +73,7 @@ class NominateRoleService
 
     /**
      * @return OrganisationBusinessRoleMap
+     *
      * @throws Exception
      */
     public function updateRoleNominationNotification()
@@ -123,6 +121,7 @@ class NominateRoleService
      * @param $nomineeId
      * @param $roleId
      * @param $siteId
+     *
      * @return OrganisationBusinessRoleMap
      */
     private function getOrganisationBusinessRoleMap($organisationId, $nomineeId, $roleId)
@@ -133,7 +132,7 @@ class NominateRoleService
                     'organisation' => $organisationId,
                     'person' => $nomineeId,
                     'organisationBusinessRole' => $roleId,
-                    'businessRoleStatus' => $this->getStatus(BusinessRoleStatusCode::PENDING)
+                    'businessRoleStatus' => $this->getStatus(BusinessRoleStatusCode::PENDING),
                 ]
             );
     }

@@ -23,7 +23,6 @@ use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
@@ -100,9 +99,9 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             $this->buildMotTestLogResultItem(
                 [
                     'testTypeName' => self::TEST_TYPE_NAME_NORMAL_TEST,
-                    'number' => $motTestNumber
+                    'number' => $motTestNumber,
                 ]
-            )
+            ),
         ];
 
         $this->motTestRepository
@@ -123,9 +122,9 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             $this->buildMotTestLogResultItem(
                 [
                     'testTypeName' => self::TEST_TYPE_NAME_NORMAL_TEST,
-                    'number' => $motTestNumber
+                    'number' => $motTestNumber,
                 ]
-            )
+            ),
         ];
 
         $this->motTestRepository
@@ -139,7 +138,7 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
 
         $site = new Site();
         $site->setid(1);
-        $site->setName("Site 1");
+        $site->setName('Site 1');
         $site->setOrganisation($organisation);
 
         $this->siteRepository
@@ -161,9 +160,9 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             $this->buildMotTestLogResultItem(
                 [
                     'testTypeName' => self::TEST_TYPE_NAME_MYSTERY_SHOPPER,
-                    'number' => $motTestNumber
+                    'number' => $motTestNumber,
                 ]
-            )
+            ),
         ];
 
         $this->motTestRepository
@@ -190,9 +189,9 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             $this->buildMotTestLogResultItem(
                 [
                     'testTypeName' => self::TEST_TYPE_NAME_MYSTERY_SHOPPER,
-                    'number' => $motTestNumber
+                    'number' => $motTestNumber,
                 ]
-            )
+            ),
         ];
 
         $this->motTestRepository
@@ -217,7 +216,7 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn(MotTestStatusName::ABORTED);
 
         $model = (new Model())->setName('Clio');
@@ -259,7 +258,6 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             ->setMotTestCancelled($motTestCancelled)
             ->setVehicle($vehicle);
 
-
         return $motTest;
     }
 
@@ -280,7 +278,7 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             'siteNumber' => 'V1234',
             'userName' => 'tester1',
             'testTypeName' => self::TEST_TYPE_NAME_NORMAL_TEST,
-            'emLogId' => null
+            'emLogId' => null,
         ];
 
         return array_merge($defaults, $override);

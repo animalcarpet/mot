@@ -5,8 +5,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller;
 use Core\Controller\AbstractDvsaActionController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
-use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 class CardOrderConfirmationController extends AbstractDvsaActionController
@@ -21,8 +19,7 @@ class CardOrderConfirmationController extends AbstractDvsaActionController
     public function __construct(
         OrderNewSecurityCardSessionService $securityCardSessionService,
         Identity $identity
-    )
-    {
+    ) {
         $this->session = $securityCardSessionService;
         $this->identity = $identity;
     }
@@ -38,6 +35,7 @@ class CardOrderConfirmationController extends AbstractDvsaActionController
 
         // As this is the last page of the journey clear the session
         $this->session->clearByGuid($userId);
+
         return (new ViewModel())->setTemplate('2fa/card-order/confirmation');
     }
 

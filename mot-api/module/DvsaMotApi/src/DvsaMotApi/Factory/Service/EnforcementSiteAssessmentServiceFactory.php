@@ -12,7 +12,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class EnforcementSiteAssessmentServiceFactory
+ * Class EnforcementSiteAssessmentServiceFactory.
  */
 class EnforcementSiteAssessmentServiceFactory implements FactoryInterface
 {

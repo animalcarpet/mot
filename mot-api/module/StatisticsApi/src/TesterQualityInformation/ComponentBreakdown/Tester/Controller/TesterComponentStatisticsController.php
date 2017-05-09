@@ -1,29 +1,27 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Controller;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Service\TesterComponentStatisticsService;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaCommonApi\Model\ApiResponse;
 
 class TesterComponentStatisticsController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
-
     private $service;
 
-    function __construct(TesterComponentStatisticsService $service)
+    public function __construct(TesterComponentStatisticsService $service)
     {
         $this->service = $service;
-        $this->setIdentifierName("testerId");
+        $this->setIdentifierName('testerId');
     }
 
     public function get($testerId)
     {
         $testerId = (int) $testerId;
         $group = $this->params()->fromRoute('group');
-        $year = (int)$this->params()->fromRoute("year");
-        $month = (int)$this->params()->fromRoute("month");
+        $year = (int) $this->params()->fromRoute('year');
+        $month = (int) $this->params()->fromRoute('month');
 
         $componentStatisticsDto = $this->service->get($testerId, $group, $year, $month);
 

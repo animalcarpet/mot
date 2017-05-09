@@ -8,15 +8,15 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaElasticSearch\Model\ESDocMotTestLog;
 
 /**
- * Class FbQueryMotTestLog
+ * Class FbQueryMotTestLog.
  *
  * I answer as a fallback for all MotTestLog that match the set search criteria.
  */
 class FbQueryMotTestLog implements IFbQuery
 {
     /**
-     * @param SearchParam|MotTestSearchParam $searchParams     
-     * @param array $optionalMotTestTypes
+     * @param SearchParam|MotTestSearchParam $searchParams
+     * @param array                          $optionalMotTestTypes
      *
      * @return SearchResultDto
      *
@@ -32,14 +32,12 @@ class FbQueryMotTestLog implements IFbQuery
         $repo = $searchParams->getRepository();
 
         if ($searchParams->isApiGetTotalCount()) {
-
             $dbResult = $repo->getMotTestLogsResultCount($searchParams);
 
             $resultDto->setTotalResultCount($dbResult['count']);
         }
 
         if ($searchParams->isApiGetData()) {
-
             $dbResult = $repo->getMotTestLogsResult($searchParams);
 
             $resultDto

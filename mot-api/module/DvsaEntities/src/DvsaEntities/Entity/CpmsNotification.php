@@ -7,7 +7,6 @@
 
 namespace DvsaEntities\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
@@ -95,7 +94,7 @@ class CpmsNotification extends Entity
     private $rawNotification;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="received_count", type="integer", nullable=false)
      */

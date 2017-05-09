@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * @internal We are not extending to Entity superclass.  This is due to a decision of renaming 'Updated' to 'Modified'.
+ * @internal We are not extending to Entity superclass.  This is due to a decision of renaming 'Updated' to 'Modified'
  *
  * @ORM\Table(name="site_status_lookup")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SiteStatusRepository")

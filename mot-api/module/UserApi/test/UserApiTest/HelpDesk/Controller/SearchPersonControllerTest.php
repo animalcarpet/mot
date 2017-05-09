@@ -11,7 +11,7 @@ use UserApi\HelpDesk\Service\HelpDeskPersonService;
 use Zend\Stdlib\Parameters;
 
 /**
- * Unit tests for SearchPersonController
+ * Unit tests for SearchPersonController.
  */
 class SearchPersonControllerTest extends \PHPUnit_Framework_TestCase implements ApiControllerUnitTestInterface
 {

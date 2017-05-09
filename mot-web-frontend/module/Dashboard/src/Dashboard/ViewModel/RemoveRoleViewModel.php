@@ -3,8 +3,7 @@
 namespace Dashboard\ViewModel;
 
 /**
- * Class RemoveRoleViewModel
- * @package Dashboard\ViewModel
+ * Class RemoveRoleViewModel.
  */
 class RemoveRoleViewModel
 {
@@ -20,7 +19,7 @@ class RemoveRoleViewModel
     /** @var $positionId int */
     private $positionId;
 
-    /** @var  $entityId int */
+    /** @var $entityId int */
     private $entityId;
 
     /**
@@ -31,6 +30,7 @@ class RemoveRoleViewModel
     public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
+
         return $this;
     }
 
@@ -50,6 +50,7 @@ class RemoveRoleViewModel
     public function setPositionId($positionId)
     {
         $this->positionId = $positionId;
+
         return $this;
     }
 
@@ -69,6 +70,7 @@ class RemoveRoleViewModel
     public function setRoleName($roleName)
     {
         $this->roleName = $roleName;
+
         return $this;
     }
 
@@ -88,6 +90,7 @@ class RemoveRoleViewModel
     public function setPersonId($personId)
     {
         $this->personId = $personId;
+
         return $this;
     }
 
@@ -109,6 +112,7 @@ class RemoveRoleViewModel
 
     /**
      * @param int $entityId
+     *
      * @return $this
      */
     public function setEntityId($entityId)

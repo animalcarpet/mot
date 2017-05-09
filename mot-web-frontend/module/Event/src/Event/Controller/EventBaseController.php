@@ -25,7 +25,7 @@ class EventBaseController extends AbstractStepController
     /**
      * @var string
      *
-     * Expected values: "ae", site", "person".
+     * Expected values: "ae", site", "person"
      */
     protected $type;
 
@@ -37,7 +37,7 @@ class EventBaseController extends AbstractStepController
     /**
      * @var string
      *
-     * Expected values: "AE", "VTS", "NT".
+     * Expected values: "AE", "VTS", "NT"
      */
     protected $eventCategory;
 
@@ -102,7 +102,7 @@ class EventBaseController extends AbstractStepController
      */
     protected function getAuthorizationService()
     {
-        return $this->serviceLocator->get("AuthorisationService");
+        return $this->serviceLocator->get('AuthorisationService');
     }
 
     /**
@@ -162,7 +162,7 @@ class EventBaseController extends AbstractStepController
      */
     protected function extractRouteParams()
     {
-        $this->id   = $this->params()->fromRoute('id');
+        $this->id = $this->params()->fromRoute('id');
         $this->type = $this->params()->fromRoute('type');
     }
 }

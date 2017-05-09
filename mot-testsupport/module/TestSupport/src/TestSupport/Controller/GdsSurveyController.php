@@ -11,6 +11,7 @@ class GdsSurveyController extends BaseTestSupportRestfulController
     {
         /** @var GdsSurveyService $surveyService */
         $surveyService = $this->getServiceLocator()->get(GdsSurveyService::class);
+
         return TestDataResponseHelper::jsonOk($surveyService->generateSurveyReports());
     }
 }

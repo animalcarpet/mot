@@ -17,7 +17,7 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
     private $process;
     private $vehicleService;
     private $paramObfuscator;
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     protected $template = 'vehicle/update-vehicle-property/edit';
@@ -37,8 +37,7 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
         VehicleService $vehicleService,
         ParamObfuscator $paramObfuscator,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         $this->editStepAction = $editStepAction;
         $this->process = $engineProcess;
         $this->vehicleService = $vehicleService;
@@ -74,6 +73,7 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
      * @param $vehicleId
      *
      * @return \Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle|\Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle
+     *
      * @throws \Exception
      */
     private function getVehicle($vehicleId)
@@ -86,7 +86,7 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
             }
         } catch (\Exception $exception) {
             throw new \Exception(
-                'No vehicle with id ' . $vehicleId . ' found'
+                'No vehicle with id '.$vehicleId.' found'
             );
         }
 

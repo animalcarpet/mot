@@ -8,7 +8,7 @@ use DvsaEntities\Entity\SiteBusinessRole;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapper;
 
 /**
- * Testing that mapper returns array of site roles
+ * Testing that mapper returns array of site roles.
  */
 class SiteRoleMapperTest extends AbstractServiceTestCase
 {

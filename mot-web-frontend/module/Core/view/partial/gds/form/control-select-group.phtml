@@ -4,17 +4,17 @@ $name = (!empty($this->name) ? $this->name : $id);
 $label = $this->label;
 $value = $this->value;
 $options = $this->options;
-$optional= $this->optional;
+$optional = $this->optional;
 $dataTarget = $this->dataTarget;
 $dataTargetValue = $this->dataTargetValue;
 $type = (empty($this->type) ? 'text' : $this->type);
 $defaultValue = $this->defaultValue;
 $formControlClass = $this->formControlClass;
 
-$inputModifier  = isset($inputModifier) ? $inputModifier : '';
-$divModifier    = isset($divModifier) ? $divModifier : '';
+$inputModifier = isset($inputModifier) ? $inputModifier : '';
+$divModifier = isset($divModifier) ? $divModifier : '';
 
-$cssClass = join(
+$cssClass = implode(
     ' ', array_filter(
         [
             (!empty($this->errorMessage) ? 'has-error' : null),
@@ -42,15 +42,15 @@ $cssClass = join(
     <?php echo $this->partial(
         'partial/gds/form/control-select',
         [
-            'id'            => $id,
-            'name'          => $name,
-            'value'         => $value,
-            'optional'      => $optional,
-            'options'       => $options,
-            'dataTarget'    => $dataTarget,
-            'dataTargetValue'=> $dataTargetValue,
+            'id' => $id,
+            'name' => $name,
+            'value' => $value,
+            'optional' => $optional,
+            'options' => $options,
+            'dataTarget' => $dataTarget,
+            'dataTargetValue' => $dataTargetValue,
             'inputModifier' => $inputModifier,
-            'defaultValue'  => $defaultValue,
+            'defaultValue' => $defaultValue,
             'formControlClass' => $formControlClass,
         ]
     ); ?>

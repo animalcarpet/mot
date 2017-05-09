@@ -15,8 +15,7 @@ use Zend\Http\Request;
 use Report\Table\Table;
 
 /**
- * Class SiteSearchController
- * @package Site\Controller
+ * Class SiteSearchController.
  */
 class SiteSearchController extends AbstractDvsaMotTestController
 {
@@ -49,7 +48,7 @@ class SiteSearchController extends AbstractDvsaMotTestController
     protected $breadcrumbResult;
 
     /**
-     * @param MapperFactory $mapper
+     * @param MapperFactory     $mapper
      * @param SiteSearchService $service
      */
     public function __construct(MapperFactory $mapper, SiteSearchService $service)
@@ -68,7 +67,7 @@ class SiteSearchController extends AbstractDvsaMotTestController
     }
 
     /**
-     * This action is the end point to search for a site
+     * This action is the end point to search for a site.
      *
      * @return \Zend\Http\Response|ViewModel
      */
@@ -84,7 +83,7 @@ class SiteSearchController extends AbstractDvsaMotTestController
     /**
      * This action is the end point to the result search of sites
      * If there is no result we display back the search page
-     * If there is only one result we redirect to the detail page
+     * If there is only one result we redirect to the detail page.
      *
      * @return Response|ViewModel
      */
@@ -103,7 +102,7 @@ class SiteSearchController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Get the result of the search from the API
+     * Get the result of the search from the API.
      *
      * @return ViewModel
      */
@@ -118,25 +117,27 @@ class SiteSearchController extends AbstractDvsaMotTestController
 
             /** @var Table $table */
             $table = $this->service->initTable($result);
-
         } catch (\Exception $e) {
             $this->addErrorMessage(self::NO_RESULT_FOUND);
+
             return $this->initViewModelInformation(self::PAGE_TITLE_SEARCH, $this->breadcrumbSearch)
                 ->setTemplate(self::SITE_SEARCH_TEMPLATE);
         }
 
-        /** Show the search page if no result */
-        if (self::NO_RESULT === (int)$result->getTotalResultCount()) {
+        /* Show the search page if no result */
+        if (self::NO_RESULT === (int) $result->getTotalResultCount()) {
             $this->addErrorMessage(self::NO_RESULT_FOUND);
+
             return $this->initViewModelInformation(self::PAGE_TITLE_SEARCH, $this->breadcrumbSearch)
                 ->setTemplate(self::SITE_SEARCH_TEMPLATE);
         }
-        /** Redirect to the detail page if only one result */
-        if (self::ONE_RESULT === (int)$result->getTotalResultCount()) {
+        /* Redirect to the detail page if only one result */
+        if (self::ONE_RESULT === (int) $result->getTotalResultCount()) {
             return $this->redirect()->toUrl(SiteUrlBuilderWeb::of($result->getData()[0]['id']));
         }
 
         $this->viewModel->setTable($table);
+
         return $this->initViewModelInformation(
             sprintf(self::PAGE_TITLE_RESULT, $this->viewModel->displaySearchCriteria()),
             $this->breadcrumbResult
@@ -144,10 +145,11 @@ class SiteSearchController extends AbstractDvsaMotTestController
     }
 
     /**
-     * This function initialise the view model
+     * This function initialise the view model.
      *
      * @param string $title
-     * @param array $breadcrumbs
+     * @param array  $breadcrumbs
+     *
      * @return ViewModel
      */
     private function initViewModelInformation($title, $breadcrumbs)

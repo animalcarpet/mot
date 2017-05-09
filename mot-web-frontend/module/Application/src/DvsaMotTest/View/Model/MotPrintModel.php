@@ -12,9 +12,7 @@ use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class MotPrintModel
- *
- * @package DvsaMotTest\View\Model
+ * Class MotPrintModel.
  */
 class MotPrintModel extends ViewModel
 {
@@ -25,16 +23,16 @@ class MotPrintModel extends ViewModel
         $code = $prsMotTestNumber = null;
 
         /** @var MotTest $motDetails */
-        $motDetails  = $variables['motDetails'];
+        $motDetails = $variables['motDetails'];
         /** @var DvsaVehicle $vehicle */
-        $vehicle     = $variables['vehicle'];
+        $vehicle = $variables['vehicle'];
         $motTestNumber = $motDetails->getMotTestNumber();
 
         if ($motDetails !== null) {
             /** @var MotTest $motTestType */
-            $motTestType        = $motDetails->getTestTypeCode();
-            $prsMotTestNumber   = $motDetails->getPrsMotTestNumber();
-            $code               = $motTestType;
+            $motTestType = $motDetails->getTestTypeCode();
+            $prsMotTestNumber = $motDetails->getPrsMotTestNumber();
+            $code = $motTestType;
         }
 
         $isReinspection = MotTestType::isReinspection($code);
@@ -68,33 +66,33 @@ class MotPrintModel extends ViewModel
         // Title and header
         if ($isDuplicate) {
             $title = self::DUPLICATE_DOCUMENT_AVAILABLE;
-        } else if ($code === MotTestTypeCode::NON_MOT_TEST) {
-            $title = AbstractDvsaMotTestController::getTestName($code) . ' finished successfully';
+        } elseif ($code === MotTestTypeCode::NON_MOT_TEST) {
+            $title = AbstractDvsaMotTestController::getTestName($code).' finished successfully';
         } else {
-            $title = AbstractDvsaMotTestController::getTestName($code) . ' complete';
+            $title = AbstractDvsaMotTestController::getTestName($code).' complete';
         }
 
         if ($isDuplicate) {
-            $printUrl =  MotTestUrlBuilderWeb::printCertificateDuplicate($motTestNumber);
+            $printUrl = MotTestUrlBuilderWeb::printCertificateDuplicate($motTestNumber);
         } else {
-            $printUrl =  MotTestUrlBuilderWeb::printCertificate($motTestNumber);
+            $printUrl = MotTestUrlBuilderWeb::printCertificate($motTestNumber);
         }
 
-        $vtsId =  $motDetails->getSiteId();
+        $vtsId = $motDetails->getSiteId();
 
         $extraVariables = [
-            'passedMotTestId'     => $passedMotTestNumber,
-            'failedMotTestId'     => $failedMotTestNumber,
-            'abandonedMotTestNumber'  => $abandonedMotTestNumber,
-            'isNonMotTest'        => $isNonMotTest,
-            'isReinspection'      => $isReinspection,
-            'isAppeal'            => $isAppeal,
-            'isDuplicate'         => $isDuplicate,
-            'isDemoMotTest'       => $isDemoMotTest,
-            'title'               => $title,
+            'passedMotTestId' => $passedMotTestNumber,
+            'failedMotTestId' => $failedMotTestNumber,
+            'abandonedMotTestNumber' => $abandonedMotTestNumber,
+            'isNonMotTest' => $isNonMotTest,
+            'isReinspection' => $isReinspection,
+            'isAppeal' => $isAppeal,
+            'isDuplicate' => $isDuplicate,
+            'isDemoMotTest' => $isDemoMotTest,
+            'title' => $title,
             'vehicleRegistration' => $vehicle->getRegistration(),
-            'printRoute'          => $printUrl->toString(),
-            'vtsId'               => $vtsId
+            'printRoute' => $printUrl->toString(),
+            'vtsId' => $vtsId,
         ];
 
         $variables = array_merge($variables, $extraVariables);

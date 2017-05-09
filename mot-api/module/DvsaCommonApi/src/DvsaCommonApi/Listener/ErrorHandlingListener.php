@@ -3,19 +3,16 @@
 namespace DvsaCommonApi\Listener;
 
 use DvsaCommon\Exception\UnauthorisedException;
-use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\ServiceException;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Response;
-use Zend\Log\Logger;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\JsonModel;
 
 /**
  * This listener handles MVC errors in ZF2. Since ZF2 is primarily designed for
  * HTML, it expects 404 HTML pages etc., but we want to return JSON in these cases.
- *
  */
 class ErrorHandlingListener extends AbstractListenerAggregate
 {
@@ -27,7 +24,7 @@ class ErrorHandlingListener extends AbstractListenerAggregate
 
     public function handleNotFound(MvcEvent $e)
     {
-        $e->setViewModel(new JsonModel(["error" => "not found"]));
+        $e->setViewModel(new JsonModel(['error' => 'not found']));
     }
 
     public function handleError(MvcEvent $e)
@@ -37,6 +34,7 @@ class ErrorHandlingListener extends AbstractListenerAggregate
         if ($e->getResponse()->getStatusCode() === 404) {
             // This is for incorrect URLs that don't match a ZF route.
             $this->handleNotFound($e);
+
             return null;
         }
 
@@ -51,6 +49,7 @@ class ErrorHandlingListener extends AbstractListenerAggregate
 
         $e->getResponse()->setStatusCode($isServiceException ? $exception->getCode() : Response::STATUS_CODE_500);
         $e->setResult($model);
+
         return $model;
     }
 
@@ -62,17 +61,17 @@ class ErrorHandlingListener extends AbstractListenerAggregate
 
         if ($exception) {
             $exceptionJson = [
-                'class'      => get_class($exception),
-                'file'       => $exception->getFile(),
-                'line'       => $exception->getLine(),
-                'message'    => $exception->getMessage(),
-                'stacktrace' => $exception->getTraceAsString()
+                'class' => get_class($exception),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage(),
+                'stacktrace' => $exception->getTraceAsString(),
             ];
         }
 
         $errorJson = [
-            'message'   => 'An error occurred during execution; please try again later.',
-            'error'     => $error,
+            'message' => 'An error occurred during execution; please try again later.',
+            'error' => $error,
             'exception' => $exceptionJson,
         ];
         if ($error == 'error-router-no-match') {
@@ -91,7 +90,7 @@ class ErrorHandlingListener extends AbstractListenerAggregate
     {
         $error = $e->getError();
         if (!$error) {
-            throw new \LogicException("This listener is only meant to be called on errors");
+            throw new \LogicException('This listener is only meant to be called on errors');
         }
     }
 }

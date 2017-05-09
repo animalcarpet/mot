@@ -2,15 +2,12 @@
 
 namespace DvsaMotApiTest\Factory\Controller;
 
-use AccountApi\Controller\PasswordChangeController;
-use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Controller\MotTestStatusController;
 use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestStatusChangeNotificationService;
 use DvsaMotApi\Service\MotTestStatusChangeService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class MotTestStatusControllerFactoryTest extends \PHPUnit_Framework_TestCase

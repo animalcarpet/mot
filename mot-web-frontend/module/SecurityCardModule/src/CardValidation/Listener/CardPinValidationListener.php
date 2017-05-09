@@ -6,10 +6,8 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use Zend\Mvc\MvcEvent;
-use Zend\View\Helper\Identity;
 use Zend\Authentication\AuthenticationService;
 use Core\Service\LazyMotFrontendAuthorisationService;
-use DvsaFeature\FeatureToggles;
 
 class CardPinValidationListener
 {
@@ -28,7 +26,7 @@ class CardPinValidationListener
         '@account/claim@',
         '@account/claim/(.*)@',
         '@pin-fail-locked@',
-        '@pin-lockout-warn@'
+        '@pin-lockout-warn@',
     ];
 
     /**
@@ -48,23 +46,22 @@ class CardPinValidationListener
 
     /**
      * Validate2FAPinListener constructor.
-     * @param AuthenticationService $authenticationService
-     * @param MotIdentityProviderInterface $motIdentityProviderInterface
+     *
+     * @param AuthenticationService               $authenticationService
+     * @param MotIdentityProviderInterface        $motIdentityProviderInterface
      * @param LazyMotFrontendAuthorisationService $authorisationService
-     * @param TwoFaFeatureToggle $twoFaFeatureToggle
+     * @param TwoFaFeatureToggle                  $twoFaFeatureToggle
      */
-    public function __construct
-    (
+    public function __construct(
         AuthenticationService $authenticationService,
         MotIdentityProviderInterface $motIdentityProviderInterface,
         LazyMotFrontendAuthorisationService $authorisationService,
         TwoFaFeatureToggle $twoFaFeatureToggle
-    )
-    {
+    ) {
         $this->authenticationService = $authenticationService;
         $this->identityProvider = $motIdentityProviderInterface;
         $this->authorisationService = $authorisationService;
-        $this->featureToggle =  $twoFaFeatureToggle;
+        $this->featureToggle = $twoFaFeatureToggle;
     }
 
     public function __invoke(MvcEvent $event)
@@ -100,8 +97,8 @@ class CardPinValidationListener
     }
 
     /**
-     *
      * @param string $routeName
+     *
      * @return bool
      */
     private function isRouteRestricted($routeName)

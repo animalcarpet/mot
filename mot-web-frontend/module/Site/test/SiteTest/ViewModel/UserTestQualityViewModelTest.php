@@ -1,6 +1,6 @@
 <?php
-namespace SiteTest\ViewModel;
 
+namespace SiteTest\ViewModel;
 
 use DateTime;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
@@ -11,7 +11,6 @@ use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsRow;
-use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 
 class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
@@ -27,9 +26,9 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     const CSV_FILE_SIZE = 10000;
     const IS_RETURN_TO_AE_TQI = false;
 
-    /** @var  UserTestQualityViewModel */
+    /** @var UserTestQualityViewModel */
     protected $userTestQualityViewModelB;
-    /** @var  UserTestQualityViewModel */
+    /** @var UserTestQualityViewModel */
     private $userTestQualityViewModelA;
 
     public function setUp()
@@ -60,7 +59,6 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             false
         );
     }
-
 
     public function testTablePopulatesWithRows()
     {
@@ -109,7 +107,6 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
         $brakes->setPercentageFailed(50.123123);
         $brakes->setName('Brakes');
 
-
         $tyres = new ComponentDto();
         $tyres->setId(self::COMPONENT_TWO_ID);
         $tyres->setPercentageFailed(30.5523);
@@ -134,7 +131,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             if ($componentRow->getCategoryId() == self::COMPONENT_USER_EMPTY_ID) {
                 $this->assertEquals($componentRow->getTesterAverage(), 0);
             }
-            $this->assertGreaterThan(0, strpos((string)$componentRow->getTesterAverage(), '.'));
+            $this->assertGreaterThan(0, strpos((string) $componentRow->getTesterAverage(), '.'));
         }
     }
 
@@ -157,10 +154,10 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             $this->userTestQualityViewModelB->getTable()->getGroupDescription());
 
         $this->assertEquals(
-            'Group ' . VehicleClassGroupCode::BIKES,
+            'Group '.VehicleClassGroupCode::BIKES,
             $this->userTestQualityViewModelA->getTable()->getGroupName());
         $this->assertEquals(
-            'Group ' . VehicleClassGroupCode::CARS_ETC,
+            'Group '.VehicleClassGroupCode::CARS_ETC,
             $this->userTestQualityViewModelB->getTable()->getGroupName());
     }
 

@@ -46,14 +46,14 @@ use Zend\Session\Container;
  */
 class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 {
-    const VEHICLE_ID            = 999;
+    const VEHICLE_ID = 999;
     const OBFUSCATED_VEHICLE_ID = '34eT';
     const ACTION_TRAINING = 'training';
     const ACTION_INDEX = 'index';
     const ACTION_RETEST = 'retest';
     const ACTION_NON_MOT = 'nonMotTest';
 
-    /** @var  DvsaVehicleBuilder */
+    /** @var DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
 
     /** VehicleMapper|@var MockObj */
@@ -64,7 +64,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
     private $vehicleService;
 
-    /** @var  MotTestService $mockMotTestServiceClient */
+    /** @var MotTestService $mockMotTestServiceClient */
     protected $mockMotTestServiceClient;
 
     protected function setUp()
@@ -110,9 +110,10 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
     private function getMockMotTestServiceClient()
     {
-        if($this->mockMotTestServiceClient == null) {
+        if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -165,15 +166,15 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             );
 
         //  --  call   --
-        $vehicleId           = 1;
-        $paramObfuscator     = $this->createParamObfuscator();
+        $vehicleId = 1;
+        $paramObfuscator = $this->createParamObfuscator();
         $obfuscatedVehicleId = $paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
 
         $this->getResultForAction2(
             'post',
             self::ACTION_INDEX,
             [
-                StartTestConfirmationController::ROUTE_PARAM_ID     => $obfuscatedVehicleId,
+                StartTestConfirmationController::ROUTE_PARAM_ID => $obfuscatedVehicleId,
                 StartTestConfirmationController::ROUTE_PARAM_SOURCE => VehicleSearchSource::VTR,
             ],
             [],
@@ -190,9 +191,9 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     {
         $this->getMockDvsaVehicle();
         $mock = [
-            'vehicle'    => $this->getTestVehicleResult(),
+            'vehicle' => $this->getTestVehicleResult(),
             'inProgress' => $this->getInProgressTest(),
-            'expire'     => $this->getCertificateExpiryResult(),
+            'expire' => $this->getCertificateExpiryResult(),
         ];
 
         $expect = [
@@ -233,10 +234,10 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $this->getMockDvsaVehicle();
 
         $mock = [
-            'vehicle'           => $this->getTestVehicleResult(),
-            'expire'            => $this->getCertificateExpiryResult(),
+            'vehicle' => $this->getTestVehicleResult(),
+            'expire' => $this->getCertificateExpiryResult(),
             'eligibleForRetest' => isset($mock['resp']) ? $mock['resp'] : null,
-            'ctSess'            => isset($mock['ctSess']) ? $mock['ctSess'] : null,
+            'ctSess' => isset($mock['ctSess']) ? $mock['ctSess'] : null,
         ];
 
         $expect = [
@@ -250,8 +251,8 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
     public function dataProviderTestCheckEligibilityForRetest()
     {
-        $okResp      = $this->getEligibilityforRetestOk();
-        $failResp    = $this->getEligibilityForRetestFail();
+        $okResp = $this->getEligibilityforRetestOk();
+        $failResp = $this->getEligibilityForRetestFail();
         $failNotices = [
             'Vehicle is not eligible for a retest',
             'Not allow retest::Other reason',
@@ -265,7 +266,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             [
                 'action' => self::ACTION_INDEX,
                 'params' => $paramCommon,
-                'mock'   => [
+                'mock' => [
                     'resp' => $okResp,
                 ],
                 'expect' => [
@@ -277,12 +278,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                 'params' => $paramCommon + [
                         StartTestConfirmationController::ROUTE_PARAM_SOURCE => VehicleSearchSource::VTR,
                     ],
-                'mock'   => [
+                'mock' => [
                     'resp' => $okResp,
                 ],
                 'expect' => [
                     'isEligibleForRetest' => true,
-                    'eligibilityNotices'  => null,
+                    'eligibilityNotices' => null,
                 ],
             ],
             [
@@ -290,40 +291,40 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                 'params' => $paramCommon + [
                         StartTestConfirmationController::ROUTE_PARAM_SOURCE => VehicleSearchSource::VTR,
                     ],
-                'mock'   => [
+                'mock' => [
                     'resp' => $failResp,
                 ],
                 'expect' => [
                     'isEligibleForRetest' => false,
-                    'eligibilityNotices'  => $failNotices,
+                    'eligibilityNotices' => $failNotices,
                 ],
             ],
             [
                 'action' => self::ACTION_RETEST,
                 'params' => $paramCommon,
-                'mock'   => [
+                'mock' => [
                     'resp' => $okResp,
                 ],
                 'expect' => [
                     'isEligibleForRetest' => true,
-                    'eligibilityNotices'  => null,
+                    'eligibilityNotices' => null,
                 ],
             ],
             [
                 'action' => self::ACTION_RETEST,
                 'params' => $paramCommon,
-                'mock'   => [
+                'mock' => [
                     'resp' => $failResp,
                 ],
                 'expect' => [
                     'isEligibleForRetest' => false,
-                    'eligibilityNotices'  => $failNotices,
+                    'eligibilityNotices' => $failNotices,
                 ],
             ],
             [
                 'action' => self::ACTION_RETEST,
                 'params' => $paramCommon,
-                'mock'   => [
+                'mock' => [
                     'resp' => $this->getEligibilityForRetestErr(),
                 ],
                 'expect' => [],
@@ -331,22 +332,22 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             [
                 'action' => self::ACTION_TRAINING,
                 'params' => $paramCommon,
-                'mock'   => [],
+                'mock' => [],
                 'expect' => [],
             ],
             [
                 'action' => self::ACTION_RETEST,
                 'params' => $paramCommon,
-                'mock'   => [
+                'mock' => [
                     'ctSess' => (object) [
-                        'formData'      => 'some CT data',
+                        'formData' => 'some CT data',
                         'contingencyId' => 99999,
                     ],
-                    'resp'   => $okResp,
+                    'resp' => $okResp,
                 ],
                 'expect' => [
                     'isEligibleForRetest' => true,
-                    'eligibilityNotices'  => null,
+                    'eligibilityNotices' => null,
                 ],
             ],
         ];
@@ -361,7 +362,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $user = ['permissions' => $permissions];
 
         $params = [
-            StartTestConfirmationController::ROUTE_PARAM_ID     => self::OBFUSCATED_VEHICLE_ID,
+            StartTestConfirmationController::ROUTE_PARAM_ID => self::OBFUSCATED_VEHICLE_ID,
             StartTestConfirmationController::ROUTE_PARAM_NO_REG => VehicleSearchSource::VTR,
         ];
 
@@ -373,14 +374,14 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $motTestNumber = 'ABCD1234';
 
         $mockGet = [
-            'vehicle'    => $this->getTestVehicleResult(),
+            'vehicle' => $this->getTestVehicleResult(),
             'inProgress' => $this->getInProgressTest(),
-            'expire'     => $this->getCertificateExpiryResult(),
+            'expire' => $this->getCertificateExpiryResult(),
         ];
 
         $mockCtSess = [
             'ctSess' => (object) [
-                'formData'      => 'some CT data',
+                'formData' => 'some CT data',
                 'contingencyId' => 99999,
             ],
         ];
@@ -390,28 +391,28 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             ] + $mockGet;
 
         $unauthException = [
-            'class'   => UnauthorisedException::class,
+            'class' => UnauthorisedException::class,
             'message' => 'Asserting permission [MOT-TEST-START] failed.',
         ];
         $unAuthNonMotException = [
-            'class'   => UnauthorisedException::class,
+            'class' => UnauthorisedException::class,
             'message' => 'Asserting permission [ENFORCEMENT-NON-MOT-TEST-PERFORM] failed.',
         ];
 
         return [
             [
-                'method'     => 'get',
-                'action'     => self::ACTION_INDEX,
+                'method' => 'get',
+                'action' => self::ACTION_INDEX,
                 'permission' => [PermissionInSystem::MOT_TEST_START],
-                'mock'       => $mockGet,
-                'expect'     => [
+                'mock' => $mockGet,
+                'expect' => [
                     'status' => self::HTTP_OK_CODE,
                 ],
             ],
             [
                 'get', self::ACTION_INDEX, [], [],
                 [
-                    'status'    => self::HTTP_OK_CODE,
+                    'status' => self::HTTP_OK_CODE,
                     'exception' => $unauthException,
                 ],
             ],
@@ -422,18 +423,18 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             [
                 'get', self::ACTION_RETEST, [], [],
                 [
-                    'status'    => self::HTTP_OK_CODE,
+                    'status' => self::HTTP_OK_CODE,
                     'exception' => $unauthException,
                 ],
             ],
             [
-                'get', self::ACTION_NON_MOT, [PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM ,PermissionInSystem::MOT_TEST_START], $mockGet,
+                'get', self::ACTION_NON_MOT, [PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM, PermissionInSystem::MOT_TEST_START], $mockGet,
                 'expect' => ['status' => self::HTTP_OK_CODE],
             ],
             [
                 'get', self::ACTION_NON_MOT, [], [],
                 [
-                    'status'    => self::HTTP_OK_CODE,
+                    'status' => self::HTTP_OK_CODE,
                     'exception' => $unAuthNonMotException,
                 ],
             ],
@@ -445,7 +446,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             [
                 'post', self::ACTION_INDEX, [], [],
                 [
-                    'status'    => self::HTTP_OK_CODE,
+                    'status' => self::HTTP_OK_CODE,
                     'exception' => $unauthException,
                 ],
             ],
@@ -487,7 +488,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         //  --  mock POST requests  --
         $postIdx = 0;
         if (self::ACTION_TRAINING === $action) {
-            $postIdx--;
+            --$postIdx;
         }
 
         if (!empty($mock['createNew'])) {
@@ -504,7 +505,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         }
 
         //  --  mock GET requests   --
-        $getReqKey    = ['inProgress', 'expire'];
+        $getReqKey = ['inProgress', 'expire'];
         $getReqResult = array_intersect_key($mock, array_flip($getReqKey));
 
         if (!empty($getReqResult)) {
@@ -551,8 +552,8 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     {
         return new ValidationException(
             '/', 'post', [], 10, [
-                ['displayMessage' => "Vehicle is not eligible for a retest"],
-                ['displayMessage' => "Not allow retest::Other reason"],
+                ['displayMessage' => 'Vehicle is not eligible for a retest'],
+                ['displayMessage' => 'Not allow retest::Other reason'],
             ]
         );
     }
@@ -561,7 +562,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     {
         return new RestApplicationException(
             '/', 'post', [], 10, [
-                ['displayMessage' => "Some error happened"],
+                ['displayMessage' => 'Some error happened'],
             ]
         );
     }
@@ -572,7 +573,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             'data' => [
                 'checkResult' => [
                     'previousCertificateExists' => true,
-                    'expiryDate'                => '2014-05-10',
+                    'expiryDate' => '2014-05-10',
                 ],
             ],
         ];
@@ -590,7 +591,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
     protected function getMapperFactoryMock()
     {
-        $factoryMapper           = XMock::of(MapperFactory::class);
+        $factoryMapper = XMock::of(MapperFactory::class);
         $this->mockVehicleMapper = XMock::of(VehicleMapper::class);
 
         $map = [
@@ -657,16 +658,17 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                 $this->assertEquals(
                     $val,
                     $actualVal,
-                    'Assert failure for field "' . $key . '", ' .
-                    ' value ' . var_export($actualVal, true) .
-                    ' expect ' . var_export($val, true)
+                    'Assert failure for field "'.$key.'", '.
+                    ' value '.var_export($actualVal, true).
+                    ' expect '.var_export($val, true)
                 );
             }
         }
     }
 
     /**
-     * Check for double post
+     * Check for double post.
+     *
      * @dataProvider dataProviderTestDoublePost
      */
     public function testDoublePost($action)
@@ -714,7 +716,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     {
         $config = ['security' => ['obfuscate' => ['key' => 'acjdajsd92md09282822', 'entries' => ['vehicleId' => true]]]];
         $paramEncrypter = new ParamEncrypter(new EncryptionKey($config['security']['obfuscate']['key']));
-        $paramEncoder   = new ParamEncoder();
+        $paramEncoder = new ParamEncoder();
 
         return new ParamObfuscator($paramEncrypter, $paramEncoder, $config);
     }
@@ -726,7 +728,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     {
         $fixture = json_decode(
             file_get_contents(
-                __DIR__ . '/../../DvsaMotEnforcementTest/Controller/fixtures/catalog.json'
+                __DIR__.'/../../DvsaMotEnforcementTest/Controller/fixtures/catalog.json'
             ),
             true
         );
@@ -742,6 +744,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $this->service = new CatalogService($appCache, $client);
 
         $catalogService = new CatalogService($appCache, $client);
+
         return new CountryOfRegistrationCatalog($catalogService);
     }
 
@@ -752,7 +755,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             'secondaryColourId' => $isTrainingMotTest ? 'Black' : 2,
             'fuelTypeId' => $isTrainingMotTest ? 'Diesel' : 2,
             'vehicleClassId' => 3,
-            'oneTimePassword' => 'something'
+            'oneTimePassword' => 'something',
         ];
     }
 

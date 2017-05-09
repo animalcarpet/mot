@@ -2,7 +2,7 @@
 use Site\UpdateVtsProperty\Process\Form\PhonePropertyForm;
 use Site\UpdateVtsProperty\UpdateVtsPropertyViewModel;
 
-/** @var UpdateVtsPropertyViewModel $viewModel */
+/* @var UpdateVtsPropertyViewModel $viewModel */
 
 $this->headTitle('Change telephone number');
 
@@ -13,7 +13,7 @@ $form = $viewModel->getForm();
     <?php  echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getPhoneElement()
+            'element' => $form->getPhoneElement(),
         ]
-    );?>
+    ); ?>
 </fieldset>

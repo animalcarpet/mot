@@ -14,8 +14,7 @@ class AuthorisedExaminerStatusService extends AbstractService
      */
     public function __construct(
         SiteRepository $siteRepository
-    )
-    {
+    ) {
         $this->siteRepository = $siteRepository;
     }
 

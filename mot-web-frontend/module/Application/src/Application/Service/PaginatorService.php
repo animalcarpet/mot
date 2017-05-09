@@ -11,7 +11,7 @@ class PaginatorService
 
     public function __construct(array $items, $totalItemsCount, $currentPage, $pageSize = 20)
     {
-        $lastPage = (int) ceil($totalItemsCount/$pageSize);
+        $lastPage = (int) ceil($totalItemsCount / $pageSize);
         $prevPage = null;
         $nextPage = null;
         if ($currentPage > 1 && $currentPage <= $lastPage) {

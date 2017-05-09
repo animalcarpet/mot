@@ -7,7 +7,7 @@ use Report\Table\ColumnOptions;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class SiteLink formatter for Table
+ * Class SiteLink formatter for Table.
  */
 class SiteLink implements FormatterInterface
 {
@@ -20,7 +20,7 @@ class SiteLink implements FormatterInterface
 
         return $view->partial(
             'table/formatter/mot-test-link', [
-                'url'   => SiteUrlBuilderWeb::of($data['id']),
+                'url' => SiteUrlBuilderWeb::of($data['id']),
                 'value' => $data[$field],
             ]
         );

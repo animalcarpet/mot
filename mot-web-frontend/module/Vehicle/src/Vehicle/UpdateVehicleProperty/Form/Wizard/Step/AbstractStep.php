@@ -1,4 +1,5 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form\Wizard\Step;
 
 use Core\FormWizard\LayoutData;
@@ -30,27 +31,28 @@ abstract class AbstractStep extends AbstractWizardStep
 
     /**
      * @param array $formData
+     *
      * @return Form
      */
-    protected abstract function createForm(array $formData = []);
+    abstract protected function createForm(array $formData = []);
 
     /**
      * @return LayoutData
      */
-    protected abstract function getLayoutData();
+    abstract protected function getLayoutData();
 
-    protected abstract function createViewModel(Form $form, $formUuid);
+    abstract protected function createViewModel(Form $form, $formUuid);
 
     /**
      * @return array
      */
-    protected abstract function getPrePopulatedData();
+    abstract protected function getPrePopulatedData();
 
     abstract protected function dataExists($formUuid);
 
     public function executeGet($formUuid = null)
     {
-        $this->formUuid = $formUuid;;
+        $this->formUuid = $formUuid;
         if ($this->dataExists($formUuid)) {
             $formData = $this->getStoredData($formUuid);
         } else {
@@ -84,6 +86,7 @@ abstract class AbstractStep extends AbstractWizardStep
     /**
      * @param Form $formData
      * @param $formUuid
+     *
      * @return string
      */
     protected function saveData(Form $form, $formUuid)
@@ -95,12 +98,14 @@ abstract class AbstractStep extends AbstractWizardStep
     {
         $layoutData = $this->getLayoutData();
         $viewModel = $this->createViewModel($form, $formUuid);
-        return new StepResult($layoutData, $viewModel, $errors, "vehicle/update-vehicle-property/edit");
+
+        return new StepResult($layoutData, $viewModel, $errors, 'vehicle/update-vehicle-property/edit');
     }
 
     public function setContext(WizardContextInterface $context)
     {
         TypeCheck::assertInstance($context, Context::class);
+
         return parent::setContext($context);
     }
 
@@ -137,7 +142,7 @@ abstract class AbstractStep extends AbstractWizardStep
 
     protected function getBackRoute($formUuid = null)
     {
-        return $this->getPrevStep()->getRoute(["formUuid" => $formUuid]);
+        return $this->getPrevStep()->getRoute(['formUuid' => $formUuid]);
     }
 
     protected function getBackUrl($formUuid = null)
@@ -147,7 +152,7 @@ abstract class AbstractStep extends AbstractWizardStep
 
     protected function getNextRoute($formUuid = null)
     {
-        return $this->getNextStep()->getRoute(["formUuid" => $formUuid]);
+        return $this->getNextStep()->getRoute(['formUuid' => $formUuid]);
     }
 
     protected function getNextUrl($formUuid = null)

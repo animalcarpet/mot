@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * OrganisationType
+ * OrganisationType.
  *
  * @ORM\Table(name="organisation_type", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\OrganisationTypeRepository", readOnly=true)
@@ -40,6 +40,7 @@ class OrganisationType extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 }

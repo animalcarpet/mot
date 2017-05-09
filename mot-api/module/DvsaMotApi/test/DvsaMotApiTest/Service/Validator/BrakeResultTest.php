@@ -6,7 +6,7 @@ use DvsaMotApi\Service\Validator\BrakeResult;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class BrakeResultTest
+ * Class BrakeResultTest.
  */
 class BrakeResultTest extends PHPUnit_Framework_TestCase
 {

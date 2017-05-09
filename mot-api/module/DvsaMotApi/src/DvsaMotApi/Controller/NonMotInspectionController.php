@@ -30,17 +30,19 @@ class NonMotInspectionController extends AbstractDvsaRestfulController
 
     /**
      * @param array $data
+     *
      * @return array|\Zend\View\Model\JsonModel
+     *
      * @throws ForbiddenException
      */
     public function create($data)
     {
-        if(!$this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)){
+        if (!$this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)) {
             throw new ForbiddenException('Only VE user can create Non MOT inspection');
         }
 
         $motTest = $this->motTestService->createMotTest($data);
 
-        return ApiResponse::jsonOk(["motTestNumber" => $motTest->getNumber()]);
+        return ApiResponse::jsonOk(['motTestNumber' => $motTest->getNumber()]);
     }
 }

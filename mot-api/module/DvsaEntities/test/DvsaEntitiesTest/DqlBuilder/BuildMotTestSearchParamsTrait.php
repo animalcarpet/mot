@@ -7,7 +7,8 @@ use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 trait BuildMotTestSearchParamsTrait
 {
     /**
-     * Utility function to build Mot Test search param with a site number
+     * Utility function to build Mot Test search param with a site number.
+     *
      * @param $mockEm
      * @param $siteNumber
      *
@@ -21,7 +22,7 @@ trait BuildMotTestSearchParamsTrait
     }
 
     /**
-     * Utility function to build Mot Test search param with a tester id
+     * Utility function to build Mot Test search param with a tester id.
      *
      * @param $mockEm
      * @param $id

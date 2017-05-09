@@ -16,12 +16,10 @@ use SiteApi\Factory\Service\SiteTestingFacilitiesServiceFactory;
 use SiteApi\Service\SiteTestingFacilitiesService;
 use SiteApi\Service\Validator\SiteDetailsValidator;
 use SiteApi\Service\Validator\TestingFacilitiesValidator;
-use Zend\Form\Annotation\Hydrator;
 use Zend\ServiceManager\ServiceManager;
 
 class SiteTestingFacilitiesServiceFactoryTest extends AbstractServiceTestCase
 {
-
     public function testSiteTestingFacilitiesServiceFactoryReturnsService()
     {
         $serviceManager = new ServiceManager();

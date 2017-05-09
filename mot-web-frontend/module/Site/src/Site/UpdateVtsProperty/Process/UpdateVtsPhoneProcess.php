@@ -14,10 +14,10 @@ class UpdateVtsPhoneProcess extends AbstractSingleStepVtsProcess implements Auto
 {
     private $propertyName = UpdateVtsPropertyAction::VTS_PHONE_PROPERTY;
     private $permission = PermissionAtSite::VTS_UPDATE_PHONE;
-    private $submitButtonText = "Change telephone number";
-    private $successfulEditMessage = "Telephone has been successfully changed.";
-    private $formPageTitle = "Change telephone number";
-    private $formPartial = "site/update-vts-property/partials/edit-phone";
+    private $submitButtonText = 'Change telephone number';
+    private $successfulEditMessage = 'Telephone has been successfully changed.';
+    private $formPageTitle = 'Change telephone number';
+    private $formPartial = 'site/update-vts-property/partials/edit-phone';
 
     public function getPropertyName()
     {

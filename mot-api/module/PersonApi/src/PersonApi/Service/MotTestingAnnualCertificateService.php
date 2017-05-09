@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service;
 
 use DvsaCommon\ApiClient\Person\MotTestingAnnualCertificate\Dto\MotTestingAnnualCertificateDto;
@@ -13,7 +14,6 @@ use PersonApi\Assertion\MotTestingAnnualCertificateAssertion;
 use PersonApi\Service\Mapper\MotTestingAnnualCertificateMapper;
 use PersonApi\Service\MotTestingAnnualCertificate\MotTestingAnnualCertificateEventService;
 use PersonApi\Service\Validator\MotTestingAnnualCertificateValidator;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 
 class MotTestingAnnualCertificateService implements AutoWireableInterface
 {
@@ -77,7 +77,7 @@ class MotTestingAnnualCertificateService implements AutoWireableInterface
     public function update($id, $personId, $group, MotTestingAnnualCertificateDto $dto)
     {
         if ($id !== $dto->getId()) {
-            ErrorSchema::throwError("Id does not match");
+            ErrorSchema::throwError('Id does not match');
         }
 
         $person = $this->personRepository->get($personId);

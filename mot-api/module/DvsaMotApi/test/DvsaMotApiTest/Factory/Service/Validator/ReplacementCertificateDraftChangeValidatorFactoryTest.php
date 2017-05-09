@@ -3,17 +3,14 @@
 namespace DvsaMotApiTest\Factory\Service\Validator;
 
 use CensorApi\Service\CensorService;
-use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Factory\Service\Validator\ReplacementCertificateDraftChangeValidatorFactory;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
-use Zend\Log\LoggerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ReplacementCertificateDraftChangeValidatorFactoryTest
- * @package DvsaMotApi\Factory\Service\Factory
+ * Class ReplacementCertificateDraftChangeValidatorFactoryTest.
  */
 class ReplacementCertificateDraftChangeValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {

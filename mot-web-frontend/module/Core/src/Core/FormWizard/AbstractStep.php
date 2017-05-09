@@ -1,8 +1,8 @@
 <?php
+
 namespace Core\FormWizard;
 
 use Core\Action\RedirectToRoute;
-use Zend\Form\Form;
 
 abstract class AbstractStep
 {
@@ -36,21 +36,22 @@ abstract class AbstractStep
         $this->formContainer = new FormContainer();
     }
 
-    public abstract function getName();
+    abstract public function getName();
 
-    public abstract function executeGet($formUuid = null);
+    abstract public function executeGet($formUuid = null);
 
-    public abstract function executePost(array $formData, $formUuid = null);
+    abstract public function executePost(array $formData, $formUuid = null);
 
-    public abstract function isValid($formUuid);
+    abstract public function isValid($formUuid);
 
-    public abstract function getStoredData($formUuid);
+    abstract public function getStoredData($formUuid);
 
     /**
      * @param array $queryParams
+     *
      * @return RedirectToRoute
      */
-    public abstract function getRoute(array $queryParams = []);
+    abstract public function getRoute(array $queryParams = []);
 
     public function getSessionStoreKey()
     {
@@ -60,18 +61,20 @@ abstract class AbstractStep
     public function setSessionStoreKey($sessionStoreKey)
     {
         $this->sessionStoreKey = $sessionStoreKey;
+
         return $this;
     }
 
     public function setContext(WizardContextInterface $context)
     {
         $this->context = $context;
+
         return $this;
     }
 
     public function hasPrevStep()
     {
-        return ($this->prevStep !== null);
+        return $this->prevStep !== null;
     }
 
     public function getPrevStep()
@@ -82,12 +85,13 @@ abstract class AbstractStep
     public function setPrevStep(AbstractStep $step)
     {
         $this->prevStep = $step;
+
         return $this;
     }
 
     public function hasNextStep()
     {
-        return ($this->nextStep !== null);
+        return $this->nextStep !== null;
     }
 
     public function getNextStep()
@@ -98,6 +102,7 @@ abstract class AbstractStep
     public function setNextStep(AbstractStep $step)
     {
         $this->nextStep = $step;
+
         return $this;
     }
 
@@ -105,7 +110,6 @@ abstract class AbstractStep
     {
         $step = $this;
         while ($step->hasPrevStep()) {
-
             if ($step->getPrevStep()->getName() === $name) {
                 return $step->getPrevStep();
             }

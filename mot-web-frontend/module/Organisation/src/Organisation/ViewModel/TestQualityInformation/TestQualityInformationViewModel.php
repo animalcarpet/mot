@@ -12,7 +12,6 @@ use Report\Table\Formatter\Status;
 use Report\Table\Formatter\SubRow;
 use Report\Table\Formatter\UrlPresenterLinkWithParams;
 use Site\Service\RiskAssessmentScoreRagClassifier;
-use Zend\Paginator\Paginator;
 use Report\Table\Table;
 
 class TestQualityInformationViewModel
@@ -35,7 +34,7 @@ class TestQualityInformationViewModel
     const TABULAR_CLASS = 'tabular';
 
     private $returnLink;
-    /** @var  Table */
+    /** @var Table */
     private $table;
 
     /** @var RiskAssessmentScoreRagClassifier $ragClassifier */
@@ -50,8 +49,7 @@ class TestQualityInformationViewModel
         $returnLink,
         RiskAssessmentScoreRagClassifier $ragClassifier,
         SearchParamsDto $searchParams
-    )
-    {
+    ) {
         $this->returnLink = $returnLink;
         $this->ragClassifier = $ragClassifier;
         $this->setTable($authorisedExaminerSitePerformanceDto, $searchParams);
@@ -84,8 +82,7 @@ class TestQualityInformationViewModel
                         self::VTS_VIEW_LINK_TEXT,
                         VtsRouteList::VTS_TEST_QUALITY,
                         ['id' => $site->getId()],
-                        ['query' =>
-                            ['returnToAETQI' => true],
+                        ['query' => ['returnToAETQI' => true],
                         ]
                     ),
                 ];
@@ -159,7 +156,7 @@ class TestQualityInformationViewModel
                         'field' => self::VTS_VIEW_LINK,
                         'formatter' => UrlPresenterLinkWithParams::class,
                     ],
-                ]
+                ],
             ],
         ];
     }

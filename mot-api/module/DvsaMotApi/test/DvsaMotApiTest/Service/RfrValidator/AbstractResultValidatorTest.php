@@ -1,18 +1,14 @@
 <?php
+
 namespace DvsaMotApiTest\Service\RfrValidator;
 
-use PHPUnit_Framework_TestCase;
-use \DvsaMotApi\Service\RfrValidator\BaseValidator;
-use \DvsaMotApi\Service\RfrValidator\CheckDecisionsForCategoryNotApplicable;
+use DvsaMotApi\Service\RfrValidator\BaseValidator;
 
 /**
- * Class AbstractValidatorTest
- *
- * @package DvsaMotApiTest\Service\RfrValidator
+ * Class AbstractValidatorTest.
  */
 abstract class AbstractResultValidatorTest extends AbstractValidatorTest
 {
-
     protected $fixtureCounter = 0;
 
     protected $fixtures = array();
@@ -20,16 +16,14 @@ abstract class AbstractResultValidatorTest extends AbstractValidatorTest
     /**
      * The template pattern for testing a validator, do not override in subclasses
      * All validators will be tested the same, the only thing that changes is
-     * the fixtures in getFixtures and the validator in getValidator
+     * the fixtures in getFixtures and the validator in getValidator.
      *
      * Fixtures are at the result level, so individual mapped rfrs will be in
      * the mappedRfrs element.
-     *
      */
     public function testValidate()
     {
         foreach ($this->getFixtures() as $fixture) {
-
             $mappedRfrId = null;
             $mappedRfrValues = null;
 
@@ -40,7 +34,7 @@ abstract class AbstractResultValidatorTest extends AbstractValidatorTest
             }
 
             if ($mappedRfrId === null) {
-                $this->fail("Fixture did not contain a mappedRfrId");
+                $this->fail('Fixture did not contain a mappedRfrId');
             }
 
             if ($mappedRfrValues === null) {
@@ -52,15 +46,15 @@ abstract class AbstractResultValidatorTest extends AbstractValidatorTest
 
             $name = $this->getFixtureName();
 
-            $msg =  "{$name}:\n".
+            $msg = "{$name}:\n".
                 "mappedRfrId/rfrId {$mappedRfrId}/".
-                (isset($mappedRfrValues['rfrId']) ? "{$mappedRfrValues['rfrId']}: " : ": ").
+                (isset($mappedRfrValues['rfrId']) ? "{$mappedRfrValues['rfrId']}: " : ': ').
                 "caseOutcome: {$fixture['caseOutcome']}, ".
                 "totalScore: {$fixture['totalScore']}, ".
                 "finalJustification: '{$fixture['finalJustification']}'";
 
             if ($fixture['error'] === 1) {
-                $this->assertFalse($validationPassed, "Validation Passed? ".$msg);
+                $this->assertFalse($validationPassed, 'Validation Passed? '.$msg);
                 $error = $validator->getError();
                 $this->assertInstanceOf(\DvsaCommonApi\Error\Message::class, $error, $msg);
                 $this->assertEquals($error->message, $fixture['message'], $msg);
@@ -70,24 +64,25 @@ abstract class AbstractResultValidatorTest extends AbstractValidatorTest
                     $msg
                 );
             } else {
-                $this->assertTrue($validationPassed, "Validation Passed? ".$msg);
+                $this->assertTrue($validationPassed, 'Validation Passed? '.$msg);
             }
         }
     }
 
     /**
-     * @param boolean $debug
+     * @param bool $debug
      *
      * @return AbstractValidatorTest
      */
     public function setDebug($debug)
     {
         $this->debug = $debug;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDebug()
     {
@@ -105,47 +100,47 @@ abstract class AbstractResultValidatorTest extends AbstractValidatorTest
     protected function addPassFixtureWithRfr($score, $decision, $category, $outcome, $totalScore, $fitnesse = false)
     {
         $this->fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"            => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[$this->fixtureCounter] = [
-                    "rfrId"         => $this->validRfrIds[$this->fixtureCounter],
-                    "score"         => $score,
-                    "decision"      => $decision,
-                    "category"      => $category,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rfrId' => $this->validRfrIds[$this->fixtureCounter],
+                    'score' => $score,
+                    'decision' => $decision,
+                    'category' => $category,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => $outcome,
-            "finalJustification"  => "",
-            "totalScore"          => $totalScore,
-            "error"               => 0,
-            "fitnesse"            => (int) $fitnesse
+            'caseOutcome' => $outcome,
+            'finalJustification' => '',
+            'totalScore' => $totalScore,
+            'error' => 0,
+            'fitnesse' => (int) $fitnesse,
 
         ];
-        $this->fixtureCounter++;
+        ++$this->fixtureCounter;
 
         $this->fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"            => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[$this->fixtureCounter] = [
-                    "rfrId"         => $this->validRfrIds[$this->fixtureCounter],
-                    "score"         => $score,
-                    "decision"      => $decision,
-                    "category"      => $category,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rfrId' => $this->validRfrIds[$this->fixtureCounter],
+                    'score' => $score,
+                    'decision' => $decision,
+                    'category' => $category,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => $outcome,
-            "finalJustification"  => "has a value",
-            "totalScore"          => $totalScore,
-            "error"               => 0,
-            "fitnesse"            => (int) $fitnesse
+            'caseOutcome' => $outcome,
+            'finalJustification' => 'has a value',
+            'totalScore' => $totalScore,
+            'error' => 0,
+            'fitnesse' => (int) $fitnesse,
         ];
-        $this->fixtureCounter++;
+        ++$this->fixtureCounter;
     }
 
     /**
@@ -159,48 +154,48 @@ abstract class AbstractResultValidatorTest extends AbstractValidatorTest
     protected function addFailFixtureWithRfr($score, $decision, $category, $outcome, $totalScore, $fitnesse = false)
     {
         $this->fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"            => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[$this->fixtureCounter] = [
-                    "rfrId"         => $this->validRfrIds[$this->fixtureCounter],
-                    "score"         => $score,
-                    "decision"      => $decision,
-                    "category"      => $category,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rfrId' => $this->validRfrIds[$this->fixtureCounter],
+                    'score' => $score,
+                    'decision' => $decision,
+                    'category' => $category,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => $outcome,
-            "finalJustification"  => "",
-            "totalScore"          => $totalScore,
-            "error"               => 1,
-            "message"             => BaseValidator::INVALID_MISSING_REQUIRED_JUSTIFICATION,
-            "failedItem"          => "finalJustification",
-            "fitnesse"            => (int) $fitnesse
+            'caseOutcome' => $outcome,
+            'finalJustification' => '',
+            'totalScore' => $totalScore,
+            'error' => 1,
+            'message' => BaseValidator::INVALID_MISSING_REQUIRED_JUSTIFICATION,
+            'failedItem' => 'finalJustification',
+            'fitnesse' => (int) $fitnesse,
 
         ];
-        $this->fixtureCounter++;
+        ++$this->fixtureCounter;
 
         $this->fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"          => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[$this->fixtureCounter] = [
-                    "rfrId"         => $this->validRfrIds[$this->fixtureCounter],
-                    "score"         => $score,
-                    "decision"      => $decision,
-                    "category"      => $category,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rfrId' => $this->validRfrIds[$this->fixtureCounter],
+                    'score' => $score,
+                    'decision' => $decision,
+                    'category' => $category,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => $outcome,
-            "finalJustification"  => "has a value",
-            "totalScore"          => $totalScore,
-            "error"               => 0,
-            "fitnesse"            => (int) $fitnesse
+            'caseOutcome' => $outcome,
+            'finalJustification' => 'has a value',
+            'totalScore' => $totalScore,
+            'error' => 0,
+            'fitnesse' => (int) $fitnesse,
         ];
-        $this->fixtureCounter++;
+        ++$this->fixtureCounter;
     }
 }

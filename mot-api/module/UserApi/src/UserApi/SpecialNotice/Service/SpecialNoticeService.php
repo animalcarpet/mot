@@ -1,7 +1,7 @@
 <?php
+
 namespace UserApi\SpecialNotice\Service;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -12,7 +12,6 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaEntities\Entity\Person;
-use DvsaEntities\Entity\AuthorisationForTestingMot;
 use DvsaEntities\Entity\SpecialNotice;
 use DvsaEntities\Entity\SpecialNoticeAudience;
 use DvsaEntities\Entity\SpecialNoticeContent;
@@ -21,11 +20,10 @@ use UserApi\SpecialNotice\Service\Validator\SpecialNoticeValidator;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class SpecialNoticeService
+ * Class SpecialNoticeService.
  */
 class SpecialNoticeService extends AbstractService
 {
-
     const ISSUE_NUMBER_FORMAT = '%d-%d';
 
     /** @var \DvsaEntities\Repository\SpecialNoticeRepository */
@@ -43,12 +41,12 @@ class SpecialNoticeService extends AbstractService
     private $dateTimeHolder;
 
     /**
-     * @param EntityManager $entityManager
-     * @param DoctrineObject $objectHydrator
+     * @param EntityManager                 $entityManager
+     * @param DoctrineObject                $objectHydrator
      * @param AuthorisationServiceInterface $authService
-     * @param AuthenticationService $motIdentityProvider
-     * @param SpecialNoticeValidator $validator
-     * @param DateTimeHolderInterface $dateTimeHolder
+     * @param AuthenticationService         $motIdentityProvider
+     * @param SpecialNoticeValidator        $validator
+     * @param DateTimeHolderInterface       $dateTimeHolder
      */
     public function __construct(
         EntityManager $entityManager,
@@ -113,7 +111,7 @@ class SpecialNoticeService extends AbstractService
         $specialNoticeContent = $this->findOrThrowException(SpecialNoticeContent::class, $id, 'Special Notice');
 
         if ($specialNoticeContent->isPublished()) {
-            throw new ForbiddenException("This special notice was already published and cannot be updated");
+            throw new ForbiddenException('This special notice was already published and cannot be updated');
         }
 
         $this->validator->validate($data);
@@ -130,6 +128,7 @@ class SpecialNoticeService extends AbstractService
      * @param int $id
      *
      * @return SpecialNoticeContent
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function publish($id)
@@ -215,7 +214,7 @@ class SpecialNoticeService extends AbstractService
         $issueDate = DateUtils::toDate($data['externalPublishDate']);
         $specialNoticeExpiryDate = DateUtils::toDate($data['externalPublishDate']);
 
-        $specialNoticeExpiryDate->add(new \DateInterval('P' . $data['acknowledgementPeriod'] . 'D'));
+        $specialNoticeExpiryDate->add(new \DateInterval('P'.$data['acknowledgementPeriod'].'D'));
 
         if ($specialNoticeContent == null) {
             $specialNoticeContent = new SpecialNoticeContent();
@@ -248,7 +247,7 @@ class SpecialNoticeService extends AbstractService
             foreach ($specialNotices as $specialNotice) {
                 if (!$specialNotice->getIsAcknowledged()) {
                     if ($this->isExpired($specialNotice)) {
-                        $overdueCount++;
+                        ++$overdueCount;
                     }
 
                     $expiryDate = $specialNotice->getContent()->getExpiryDate();
@@ -256,7 +255,7 @@ class SpecialNoticeService extends AbstractService
                         $acknowledgementDeadline = $expiryDate;
                     }
 
-                    $unreadCount++;
+                    ++$unreadCount;
                 }
             }
 
@@ -266,8 +265,8 @@ class SpecialNoticeService extends AbstractService
         }
 
         return [
-            'overdueCount'            => $overdueCount,
-            'unreadCount'             => $unreadCount,
+            'overdueCount' => $overdueCount,
+            'unreadCount' => $unreadCount,
             'acknowledgementDeadline' => $acknowledgementDeadlineValue,
         ];
     }
@@ -295,17 +294,19 @@ class SpecialNoticeService extends AbstractService
 
     public function getAllCurrentSpecialNotices()
     {
-        if($this->authService->assertGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)){
+        if ($this->authService->assertGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)) {
             return [];
         }
+
         return array_map([$this, 'extractContent'], $this->specialNoticeRepository->getAllCurrentSpecialNotices());
     }
 
     public function getCountAllCurrentSpecialNotices()
     {
-        if($this->authService->assertGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)){
+        if ($this->authService->assertGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)) {
             return [];
         }
+
         return $this->specialNoticeRepository->getCountAllCurrentSpecialNotices();
     }
 
@@ -331,6 +332,7 @@ class SpecialNoticeService extends AbstractService
 
     /**
      * @param string $username
+     *
      * @return \DvsaEntities\Entity\SpecialNotice[]
      */
     protected function getAllCurrentSpecialNoticesForUser($username)
@@ -339,9 +341,11 @@ class SpecialNoticeService extends AbstractService
     }
 
     /**
-     * @param int $id
+     * @param int    $id
      * @param string $username
+     *
      * @return SpecialNotice
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     protected function getCurrentSpecialNoticeForUser($id, $username)
@@ -350,9 +354,11 @@ class SpecialNoticeService extends AbstractService
     }
 
     /**
-     * @param int $contentId
+     * @param int    $contentId
      * @param string $username
+     *
      * @return SpecialNotice
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     protected function getCurrentSpecialNoticeForUserByContentId($contentId, $username)
@@ -385,7 +391,7 @@ class SpecialNoticeService extends AbstractService
 
     public function generateIssueNumber($year = null)
     {
-        if(is_null($year)){
+        if (is_null($year)) {
             $year = $this->dateTimeHolder->getCurrent()->format('Y');
         }
         $latestIssueNumberResult = $this->specialNoticeRepository->getLatestIssueNumber($year);
@@ -402,7 +408,6 @@ class SpecialNoticeService extends AbstractService
     /**
      * This method adds special notices for users based on defined special
      *  notice content roles, user roles and existing special notice rows.
-     *
      */
     public function addNewSpecialNotices()
     {
@@ -449,21 +454,24 @@ class SpecialNoticeService extends AbstractService
      */
     public function getAmountOfOverdueSpecialNoticesForClasses()
     {
-        if(!$this->authService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)){
+        if (!$this->authService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)) {
             return [];
         }
 
         $username = $this->motIdentityProvider->getIdentity()->getUsername();
+
         return $this->specialNoticeRepository->getAmountOfOverdueSpecialNoticesForClasses($username);
     }
 
     /**
      * @param $vehicleClass
+     *
      * @return int
      */
     public function countOverdueSpecialNoticesForClass($vehicleClass)
     {
         $overdueSpecialNotices = $this->getAmountOfOverdueSpecialNoticesForClasses();
+
         return $overdueSpecialNotices[$vehicleClass];
     }
 
@@ -474,6 +482,7 @@ class SpecialNoticeService extends AbstractService
             $specialNoticeContent->setIssueNumber($this->generateIssueNumber($publishYear));
             $specialNoticeContent->setIssueYear($publishYear);
         }
+
         return $specialNoticeContent;
     }
 }

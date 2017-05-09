@@ -10,16 +10,13 @@ use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 
 /**
- * Class SiteTestingDailyScheduleValidator
+ * Class SiteTestingDailyScheduleValidator.
  *
  * Validates the site weekly opening times schedule provided in data array format and throws errors for any invalid
  * scenarios encountered.
- *
- * @package SiteApi\Service\Validator
  */
 class SiteTestingDailyScheduleValidator extends AbstractValidator
 {
-
     private $fieldErrors;
 
     private $days = [
@@ -29,7 +26,7 @@ class SiteTestingDailyScheduleValidator extends AbstractValidator
         4 => 'thursday',
         5 => 'friday',
         6 => 'saturday',
-        7 => 'sunday'
+        7 => 'sunday',
     ];
 
     public function validateOpeningHours($data)
@@ -57,7 +54,7 @@ class SiteTestingDailyScheduleValidator extends AbstractValidator
                 );
             }
 
-            if (false ===  $dailyScheduleData['isClosed']) {
+            if (false === $dailyScheduleData['isClosed']) {
                 $this->validateTime($dailyScheduleData['openTime'], 'openTime', $weekday);
                 $this->validateTime($dailyScheduleData['closeTime'], 'closeTime', $weekday);
             }
@@ -74,19 +71,19 @@ class SiteTestingDailyScheduleValidator extends AbstractValidator
             $this->fieldErrors[] = new ErrorMessage(
                 'Invalid time format provided',
                 BadRequestException::ERROR_CODE_INVALID_DATA,
-                [$this->days[$weekday] . ucfirst($timeField) => null]
+                [$this->days[$weekday].ucfirst($timeField) => null]
             );
         }
 
         if (Time::isValidIso8601($time)) {
             $time = Time::fromIso8601($time);
 
-            if ($time->getMinute() !== "30") {
-                if ($time->getMinute() !== "00") {
+            if ($time->getMinute() !== '30') {
+                if ($time->getMinute() !== '00') {
                     $this->fieldErrors[] = new ErrorMessage(
                         'Invalid time format provided: minutes must be in increments of 30',
                         BadRequestException::ERROR_CODE_INVALID_DATA,
-                        [$this->days[$weekday] . ucfirst($timeField) => null]
+                        [$this->days[$weekday].ucfirst($timeField) => null]
                     );
                 }
             }
@@ -111,7 +108,7 @@ class SiteTestingDailyScheduleValidator extends AbstractValidator
                     $this->fieldErrors[] = new ErrorMessage(
                         'Opening time can not be provided when the site is indicated as closed.',
                         BadRequestException::ERROR_CODE_INVALID_DATA,
-                        [$this->days[$weekday] . 'OpenTime' => null]
+                        [$this->days[$weekday].'OpenTime' => null]
                     );
                 }
 
@@ -119,7 +116,7 @@ class SiteTestingDailyScheduleValidator extends AbstractValidator
                     $this->fieldErrors[] = new ErrorMessage(
                         'Closing time can not be provided when the site is indicated as closed.',
                         BadRequestException::ERROR_CODE_INVALID_DATA,
-                        [$this->days[$weekday] . 'CloseTime' => null]
+                        [$this->days[$weekday].'CloseTime' => null]
                     );
                 }
             } elseif (false === $dailyScheduleData['isClosed']) {
@@ -127,7 +124,7 @@ class SiteTestingDailyScheduleValidator extends AbstractValidator
                     $this->fieldErrors[] = new ErrorMessage(
                         'Opening time must be provided when the site is indicated as open.',
                         BadRequestException::ERROR_CODE_INVALID_DATA,
-                        [$this->days[$weekday] . 'OpenTime' => null]
+                        [$this->days[$weekday].'OpenTime' => null]
                     );
                 }
 
@@ -135,14 +132,14 @@ class SiteTestingDailyScheduleValidator extends AbstractValidator
                     $this->fieldErrors[] = new ErrorMessage(
                         'Closing time must be provided when the site is indicated as open.',
                         BadRequestException::ERROR_CODE_INVALID_DATA,
-                        [$this->days[$weekday] . 'CloseTime' => null]
+                        [$this->days[$weekday].'CloseTime' => null]
                     );
                 }
             } else {
                 $this->fieldErrors[] = new ErrorMessage(
                     'invalid isClosed format provided',
                     BadRequestException::ERROR_CODE_INVALID_DATA,
-                    [$this->days[$weekday] . 'IsClosed' => null]
+                    [$this->days[$weekday].'IsClosed' => null]
                 );
             }
         }

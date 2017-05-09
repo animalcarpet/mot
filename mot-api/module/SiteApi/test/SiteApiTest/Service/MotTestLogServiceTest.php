@@ -16,10 +16,10 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 class MotTestLogServiceTest extends AbstractServiceTestCase
 {
     const SITE_ID = 1;
-    const YEAR  = '1024';
+    const YEAR = '1024';
     const MONTH = '256';
-    const WEEK  = '12';
-    const DAY   = '2';
+    const WEEK = '12';
+    const DAY = '2';
 
     /** @var MotTestLogService */
     private $motTestLogService;
@@ -33,7 +33,7 @@ class MotTestLogServiceTest extends AbstractServiceTestCase
     public function setUp()
     {
         $this->mockAuthSrv = $this->getMockAuthorizationService();
-        $this->mockEm      = XMock::of(EntityManager::class, ['getRepository']);
+        $this->mockEm = XMock::of(EntityManager::class, ['getRepository']);
         $this->mockMotRepo = XMock::of(MotTestRepository::class, ['getCountOfSiteMotTestsSummary']);
 
         $this->motTestLogService = new MotTestLogService(
@@ -67,9 +67,9 @@ class MotTestLogServiceTest extends AbstractServiceTestCase
     protected function getMotTestByAe()
     {
         return [
-            'year'  => self::YEAR,
+            'year' => self::YEAR,
             'month' => self::MONTH,
-            'week'  => self::WEEK,
+            'week' => self::WEEK,
             'today' => self::DAY,
         ];
     }

@@ -24,11 +24,11 @@ class BasePersonService
     protected $personMapper;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param \Doctrine\ORM\EntityManager                      $entityManager
      * @param \PersonApi\Service\Validator\BasePersonValidator $validator
-     * @param \DvsaCommonApi\Service\ContactDetailsService $contactDetailsService
-     * @param \DvsaEntities\Mapper\PersonMapper $personMapper
-     * @param \DvsaCommonApi\Filter\XssFilter $xssFilter
+     * @param \DvsaCommonApi\Service\ContactDetailsService     $contactDetailsService
+     * @param \DvsaEntities\Mapper\PersonMapper                $personMapper
+     * @param \DvsaCommonApi\Filter\XssFilter                  $xssFilter
      */
     public function __construct(
         EntityManager $entityManager,
@@ -46,7 +46,9 @@ class BasePersonService
 
     /**
      * @param $data
+     *
      * @return \DvsaEntities\Entity\Person
+     *
      * @throws \Exception
      */
     public function create($data)

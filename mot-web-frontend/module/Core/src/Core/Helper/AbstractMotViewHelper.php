@@ -17,7 +17,7 @@ class AbstractMotViewHelper extends AbstractHelper implements ServiceLocatorAwar
     /** @return ServiceLocatorInterface */
     protected function getServiceLayerServiceLocator()
     {
-        /**
+        /*
          * This odd method call is required - view helpers don't
          * have the usual ServiceLocator, you need to call getServiceLocator again.
          */

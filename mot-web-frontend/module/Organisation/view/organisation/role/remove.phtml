@@ -1,9 +1,8 @@
 <?php
 use Organisation\Controller\RoleController;
-use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 
 $aeId = $viewModel->getOrganisationId();
-/**
+/*
  * @var $viewModel \Organisation\ViewModel\View\Role\RemoveRoleConfirmationViewModel
  */
 ?>
@@ -31,7 +30,7 @@ $aeId = $viewModel->getOrganisationId();
         <input type="submit" name="submit" class="button" id="confirm" value="Remove role">
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->url('authorised-examiner', [ 'id' => $this->escapeHtml($viewModel->getOrganisationId())]); ?>">
+                <a href="<?php echo $this->url('authorised-examiner', ['id' => $this->escapeHtml($viewModel->getOrganisationId())]); ?>">
                     Cancel and return to <?php echo $this->escapeHtml($viewModel->getOrganisationName()); ?>
                 </a>
             </li>

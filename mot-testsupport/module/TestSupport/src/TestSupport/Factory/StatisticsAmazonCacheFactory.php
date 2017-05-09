@@ -15,11 +15,11 @@ class StatisticsAmazonCacheFactory implements FactoryInterface
 
         $s3Client = new S3Client([
             'credentials' => [
-                'key'    => $awsConfig['accessKeyId'],
+                'key' => $awsConfig['accessKeyId'],
                 'secret' => $awsConfig['secretKey'],
             ],
-            'version'     => 'latest',
-            'region'      => $awsConfig['region'],
+            'version' => 'latest',
+            'region' => $awsConfig['region'],
         ]);
 
         $bucket = $awsConfig['bucket'];
@@ -32,5 +32,4 @@ class StatisticsAmazonCacheFactory implements FactoryInterface
             $env
         );
     }
-
 }

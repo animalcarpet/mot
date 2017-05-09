@@ -5,7 +5,7 @@ namespace DvsaClient\Entity;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 
 /**
- * Class representing position at site (nominated role at site)
+ * Class representing position at site (nominated role at site).
  */
 class SitePosition
 {
@@ -50,6 +50,7 @@ class SitePosition
 
     /**
      * @return string
+     *
      * @see SiteBusinessRoleCode
      */
     public function getRoleCode()

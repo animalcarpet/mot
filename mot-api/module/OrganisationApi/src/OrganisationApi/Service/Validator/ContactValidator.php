@@ -67,7 +67,6 @@ class ContactValidator extends AbstractValidator
     public function validateEmail(ContactDto $contactDto)
     {
         if ($contactDto->getPrimaryEmail()->isSupplied() === true) {
-
             $validator = new EmailAddressValidator();
 
             if ($validator->isValid(trim($contactDto->getPrimaryEmail()->getEmail())) === false) {

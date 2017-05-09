@@ -6,9 +6,7 @@ use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class CheckCategoryPleaseSelectForDefect
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class CheckCategoryPleaseSelectForDefect.
  */
 class CheckCategoryPleaseSelectForDefect extends BaseValidator
 {
@@ -16,7 +14,7 @@ class CheckCategoryPleaseSelectForDefect extends BaseValidator
      * Pattern for validation of an RFR.
      * - Do the relevant check,
      * - set the error if required
-     * - return true if passed
+     * - return true if passed.
      *
      * @return bool|ErrorMessage
      */
@@ -32,6 +30,7 @@ class CheckCategoryPleaseSelectForDefect extends BaseValidator
                 ['mappedRfrs' => [$this->mappedRfrId => ['category' => null]]]
             );
         }
+
         return $this->error === null;
     }
 }

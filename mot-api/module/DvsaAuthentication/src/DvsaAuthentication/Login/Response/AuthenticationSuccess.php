@@ -1,13 +1,12 @@
 <?php
 
-
 namespace DvsaAuthentication\Login\Response;
 
 use DvsaAuthentication\Identity;
 use DvsaCommon\Authn\AuthenticationResultCode;
 
 /**
- * Represents successful authentication with authentication system
+ * Represents successful authentication with authentication system.
  */
 class AuthenticationSuccess extends AuthenticationResponse
 {

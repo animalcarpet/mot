@@ -9,7 +9,7 @@ use DvsaEntities\Entity\EquipmentModel;
 use EquipmentApi\Mapper\EquipmentModelMapper;
 
 /**
- * Class EquipmentModelService
+ * Class EquipmentModelService.
  */
 class EquipmentModelService
 {

@@ -210,7 +210,6 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $this->assertEquals($expectedData, $result);
     }
 
-
     // failing
     public function testSearchReasonsForRejectionDoNotReturnsDisabledRfrs()
     {
@@ -262,7 +261,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
     protected function getTestArrayWithId($motTestId = 17)
     {
-        return ['id' => $motTestId, "parentTestItemSelectorId" => 0];
+        return ['id' => $motTestId, 'parentTestItemSelectorId' => 0];
     }
 
     protected function getExpectedData($tis, $tises, $tisRfrs, $parentTises)

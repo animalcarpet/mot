@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\View;
 
 use DvsaCommon\Date\DateTimeDisplayFormat;
@@ -9,7 +10,6 @@ use PHPUnit_Framework_TestCase;
 
 class ReplacementVehicleViewModelTest extends PHPUnit_Framework_TestCase
 {
-
     public function testDataSetForViewModelReturnsValuesAsRequired()
     {
         $data = $this->getData();
@@ -35,10 +35,10 @@ class ReplacementVehicleViewModelTest extends PHPUnit_Framework_TestCase
     {
         return [
             'primaryColour' => [
-                'code' => 'A'
+                'code' => 'A',
             ],
             'secondaryColour' => [
-                'code' => 'B'
+                'code' => 'B',
             ],
             'make' => [
                 'id' => 1,
@@ -48,14 +48,13 @@ class ReplacementVehicleViewModelTest extends PHPUnit_Framework_TestCase
             'model' => [
                 'id' => 2,
                 'code' => 'M',
-                'name' => 'Mondeo'
+                'name' => 'Mondeo',
             ],
             'countryOfRegistration' => 'GB',
             'expiryDate' => '2015-02-01',
             'vin' => '123',
             'vrm' => '123454',
-            'isLatestPassedMotTest' => true
+            'isLatestPassedMotTest' => true,
         ];
     }
-
 }

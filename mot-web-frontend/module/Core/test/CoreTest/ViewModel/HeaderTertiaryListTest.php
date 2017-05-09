@@ -1,8 +1,6 @@
 <?php
 
-
 namespace CoreTest\ViewModel;
-
 
 use Core\ViewModel\Header\HeaderTertiaryList;
 

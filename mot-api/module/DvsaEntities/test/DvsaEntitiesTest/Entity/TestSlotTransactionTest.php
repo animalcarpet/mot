@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Organisation;
@@ -7,7 +8,7 @@ use DvsaEntities\Entity\TestSlotTransaction;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class TestSlotTransactionTest
+ * Class TestSlotTransactionTest.
  */
 class TestSlotTransactionTest extends PHPUnit_Framework_TestCase
 {

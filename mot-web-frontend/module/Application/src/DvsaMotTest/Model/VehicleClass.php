@@ -6,9 +6,7 @@ use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\VehicleClassCode;
 
 /**
- * Class VehicleClass
- *
- * @package DvsaMotTest\Model
+ * Class VehicleClass.
  */
 class VehicleClass
 {

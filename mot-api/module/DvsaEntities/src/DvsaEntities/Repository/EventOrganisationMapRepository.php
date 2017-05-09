@@ -3,11 +3,8 @@
 namespace DvsaEntities\Repository;
 
 /**
- * Class EventOrganisationMapRepository
- *
- * @package DvsaEntities\Repository
+ * Class EventOrganisationMapRepository.
  */
 class EventOrganisationMapRepository extends AbstractMutableRepository
 {
-
 }

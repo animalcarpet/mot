@@ -1,8 +1,8 @@
 <?php
 
 namespace OrganisationTest\UpdateAeProperty\Form;
-use Organisation\UpdateAeProperty\Process\Form\TradingNamePropertyForm;
 
+use Organisation\UpdateAeProperty\Process\Form\TradingNamePropertyForm;
 
 class TradingNamePropertyFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,8 +21,8 @@ class TradingNamePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function validData()
     {
         return [
-            [[TradingNamePropertyForm::FIELD_NAME => "AE trading name"]],
-            [[TradingNamePropertyForm::FIELD_NAME => "AE trading name 2 !"]],
+            [[TradingNamePropertyForm::FIELD_NAME => 'AE trading name']],
+            [[TradingNamePropertyForm::FIELD_NAME => 'AE trading name 2 !']],
             [[TradingNamePropertyForm::FIELD_NAME => $this->createName(TradingNamePropertyForm::FIELD_NAME_MAX_LENGTH)]],
         ];
     }
@@ -46,21 +46,21 @@ class TradingNamePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[TradingNamePropertyForm::FIELD_NAME => ""], TradingNamePropertyForm::TRADING_NAME_EMPTY_MSG],
-            [[TradingNamePropertyForm::FIELD_NAME => " "], TradingNamePropertyForm::TRADING_NAME_EMPTY_MSG],
-            [[TradingNamePropertyForm::FIELD_NAME => $this->createName(TradingNamePropertyForm::FIELD_NAME_MAX_LENGTH, " ")],
-                TradingNamePropertyForm::TRADING_NAME_EMPTY_MSG],
+            [[TradingNamePropertyForm::FIELD_NAME => ''], TradingNamePropertyForm::TRADING_NAME_EMPTY_MSG],
+            [[TradingNamePropertyForm::FIELD_NAME => ' '], TradingNamePropertyForm::TRADING_NAME_EMPTY_MSG],
+            [[TradingNamePropertyForm::FIELD_NAME => $this->createName(TradingNamePropertyForm::FIELD_NAME_MAX_LENGTH, ' ')],
+                TradingNamePropertyForm::TRADING_NAME_EMPTY_MSG, ],
             [[TradingNamePropertyForm::FIELD_NAME => $this->createName(TradingNamePropertyForm::FIELD_NAME_MAX_LENGTH + 1)],
-                str_replace("%max%", TradingNamePropertyForm::FIELD_NAME_MAX_LENGTH, TradingNamePropertyForm::TRADING_NAME_TOO_LONG_MSG)],
+                str_replace('%max%', TradingNamePropertyForm::FIELD_NAME_MAX_LENGTH, TradingNamePropertyForm::TRADING_NAME_TOO_LONG_MSG), ],
         ];
     }
 
-    private function createName($length, $char = "X")
+    private function createName($length, $char = 'X')
     {
-        $name = "";
+        $name = '';
         while ($length) {
             $name .= $char;
-            $length--;
+            --$length;
         }
 
         return $name;

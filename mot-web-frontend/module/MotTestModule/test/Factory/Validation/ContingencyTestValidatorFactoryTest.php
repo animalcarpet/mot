@@ -21,9 +21,9 @@ class ContingencyTestValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ContingencyTestValidatorFactory::class,
             ContingencyTestValidator::class,
             [
-                'Feature\FeatureToggles'        => function() {
+                'Feature\FeatureToggles' => function () {
                     return XMock::of(FeatureToggles::class);
-                }
+                },
             ]
         );
     }

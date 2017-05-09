@@ -6,9 +6,7 @@ use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 
 /**
- * Class BrakeTestResultSubmissionSummary
- *
- * @package DvsaMotApi\Service\Model
+ * Class BrakeTestResultSubmissionSummary.
  */
 class BrakeTestResultSubmissionSummary
 {
@@ -23,10 +21,10 @@ class BrakeTestResultSubmissionSummary
         $comment = null
     ) {
         $this->reasonsForRejectionList[] = [
-            MotTestReasonForRejectionService::RFR_ID_FIELD                => $rfrId,
-            MotTestReasonForRejectionService::TYPE_FIELD                  => $type,
+            MotTestReasonForRejectionService::RFR_ID_FIELD => $rfrId,
+            MotTestReasonForRejectionService::TYPE_FIELD => $type,
             MotTestReasonForRejectionService::LONGITUDINAL_LOCATION_FIELD => $longitudinalLocation,
-            MotTestReasonForRejectionService::COMMENT_FIELD               => $comment
+            MotTestReasonForRejectionService::COMMENT_FIELD => $comment,
         ];
 
         return $this;

@@ -1,8 +1,7 @@
 <?php
+
 namespace PersonApiTest\Assertion;
 
-use DvsaAuthentication\Identity;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Exception\UnauthorisedException;
@@ -42,12 +41,13 @@ class MotTestingAnnualCertificateAssertionTest extends \PHPUnit_Framework_TestCa
 
     /**
      * @dataProvider dataProviderTestAssertGranted
-     * @param int $loggedUserId
-     * @param int $personId
-     * @param bool $viewGranted
-     * @param bool $permissionGranted
+     *
+     * @param int   $loggedUserId
+     * @param int   $personId
+     * @param bool  $viewGranted
+     * @param bool  $permissionGranted
      * @param array $systemRoles
-     * @param bool $exceptionExpected
+     * @param bool  $exceptionExpected
      */
     public function testAssertGrantedView(
         $loggedUserId,
@@ -87,15 +87,15 @@ class MotTestingAnnualCertificateAssertionTest extends \PHPUnit_Framework_TestCa
         ];
     }
 
-
     /**
      * @dataProvider dataProviderTestAssertGranted
-     * @param int $loggedUserId
-     * @param int $personId
-     * @param bool $viewGranted
-     * @param bool $permissionGranted
+     *
+     * @param int   $loggedUserId
+     * @param int   $personId
+     * @param bool  $viewGranted
+     * @param bool  $permissionGranted
      * @param array $systemRoles
-     * @param bool $exceptionExpected
+     * @param bool  $exceptionExpected
      */
     public function testAssertGrantedCreate(
         $loggedUserId,
@@ -138,12 +138,13 @@ class MotTestingAnnualCertificateAssertionTest extends \PHPUnit_Framework_TestCa
 
     /**
      * @dataProvider dataProviderTestAssertGranted
-     * @param int $loggedUserId
-     * @param int $personId
-     * @param bool $viewGranted
-     * @param bool $permissionGranted
+     *
+     * @param int   $loggedUserId
+     * @param int   $personId
+     * @param bool  $viewGranted
+     * @param bool  $permissionGranted
      * @param array $systemRoles
-     * @param bool $exceptionExpected
+     * @param bool  $exceptionExpected
      */
     public function testAssertGrantedUpdate(
         $loggedUserId,
@@ -172,11 +173,11 @@ class MotTestingAnnualCertificateAssertionTest extends \PHPUnit_Framework_TestCa
     {
         $dto = XMock::of(PersonDetails::class);
         $dto->expects($this->any())
-            ->method("getRoles")
+            ->method('getRoles')
             ->willReturn([
-                "system" => [
-                    "roles" => $systemRoles,
-                ]
+                'system' => [
+                    'roles' => $systemRoles,
+                ],
             ]);
 
         return $dto;
@@ -195,17 +196,16 @@ class MotTestingAnnualCertificateAssertionTest extends \PHPUnit_Framework_TestCa
 
         $assertViewGrantedMethod = $this->personalDetailsService
             ->expects($this->any())
-            ->method("assertViewGranted");
+            ->method('assertViewGranted');
 
         if ($viewGranted == true) {
             $assertViewGrantedMethod->willReturn($viewGranted);
         } elseif ($viewGranted == false) {
-            $assertViewGrantedMethod->willThrowException(new UnauthorisedException("mocked unauthorised exception"));
+            $assertViewGrantedMethod->willThrowException(new UnauthorisedException('mocked unauthorised exception'));
         }
 
         $this->personalDetailsService->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn($this->createPersonDetails($systemRoles));
     }
-
 }

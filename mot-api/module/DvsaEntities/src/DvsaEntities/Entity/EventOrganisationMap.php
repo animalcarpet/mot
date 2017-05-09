@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * EventOrganisationMap
+ * EventOrganisationMap.
  *
  * @ORM\Table(
  *  name="event_organisation_map",

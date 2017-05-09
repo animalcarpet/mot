@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApiTest\Service;
 
 use DvsaEntities\Mapper\AddressMapper;
@@ -7,7 +8,7 @@ use DvsaEntities\Entity\Address;
 use DvsaCommonApi\Service\Validator\AddressValidator;
 
 /**
- * Class AddressServiceTest
+ * Class AddressServiceTest.
  */
 class AddressServiceTest extends AbstractServiceTestCase
 {

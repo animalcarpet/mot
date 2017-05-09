@@ -13,12 +13,10 @@ use DvsaCommon\Date\DateTimeHolder;
 use NotificationApi\Service\Helper\OrganisationNominationEventHelper;
 
 /**
- * Class DirectNominationOperationFactory
- * @package OrganisationApi\Factory\Service
+ * Class DirectNominationOperationFactory.
  */
 class DirectNominationOperationFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new DirectNominationOperation(

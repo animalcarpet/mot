@@ -1,15 +1,12 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use DvsaEntities\Entity\Notification;
 use DvsaEntities\Entity\NotificationAction;
-use DvsaEntities\Entity\NotificationField;
-use DvsaEntities\Entity\NotificationTemplate;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class NotificationTest
+ * Class NotificationTest.
  */
 class NotificationTest extends PHPUnit_Framework_TestCase
 {
@@ -59,7 +56,7 @@ class NotificationTest extends PHPUnit_Framework_TestCase
             [
                 'a' => 1,
                 'b' => 2,
-                'c' => 3
+                'c' => 3,
             ]
         );
 

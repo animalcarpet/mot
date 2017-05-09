@@ -20,11 +20,12 @@ class AeRoutes extends AbstractRoutes
 
     /**
      * @param Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url $object
+     *
      * @return AeRoutes
      */
     public static function of($object)
     {
-        return new AeRoutes($object);
+        return new self($object);
     }
 
     public function aeEditProperty($id, $propertyName, $formUuid = null)

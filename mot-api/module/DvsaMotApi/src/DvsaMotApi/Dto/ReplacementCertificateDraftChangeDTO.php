@@ -10,21 +10,18 @@ namespace DvsaMotApi\Dto;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class ReplacementCertificateDraftDTO
- *
- * @package DvsaMotApi\Dto
+ * Class ReplacementCertificateDraftDTO.
  */
 class ReplacementCertificateDraftChangeDTO
 {
-
     private $changedMap = [];
 
     /**
-     * @var string $primaryColour colour code
+     * @var string colour code
      */
     private $primaryColour;
     /**
-     * @var string $secondaryColour colour code
+     * @var string colour code
      */
     private $secondaryColour;
     /**
@@ -32,12 +29,12 @@ class ReplacementCertificateDraftChangeDTO
      */
     private $vrm;
     /**
-     * @var string $vin
+     * @var string
      */
     private $vin;
 
     /**
-     * @var integer
+     * @var int
      */
     private $odometerValue;
 
@@ -52,58 +49,58 @@ class ReplacementCertificateDraftChangeDTO
     private $odometerResultType;
 
     /**
-     * @var string $model
+     * @var string
      */
     private $model;
     /**
-     * @var string $make
+     * @var string
      */
     private $make;
     /**
-     * @var int $countryOfRegistration
+     * @var int
      */
     private $countryOfRegistration;
     /**
-     * @var string $reasonForReplacement
+     * @var string
      */
     private $reasonForReplacement;
 
     /**
-     * @var string $vtsSiteNumber
+     * @var string
      */
     private $vtsSiteNumber;
     /**
-     * @var string $expiryDate
+     * @var string
      */
     private $expiryDate;
 
     /**
-     * @var string $customMake
+     * @var string
      */
     private $customMake;
 
     /**
-     * @var string $customModel
+     * @var string
      */
     private $customModel;
 
     /**
-     * @var string $reasonForDifferentTester
+     * @var string
      */
     private $reasonForDifferentTester;
 
     /**
-     * @var boolean $isVinVrmExpiryChanged
+     * @var bool
      */
     private $isVinVrmExpiryChanged;
 
     /**
-     * @var boolean $includeInMismatchFile
+     * @var bool
      */
     private $includeInMismatchFile;
 
     /**
-     * @var boolean $includeInPassFile
+     * @var bool
      */
     private $includeInPassFile;
 
@@ -179,6 +176,7 @@ class ReplacementCertificateDraftChangeDTO
         if ($hasKey('includeInPassFile')) {
             $d->setIncludeInPassFile($data['includeInPassFile']);
         }
+
         return $d;
     }
 
@@ -191,6 +189,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->setAsChanged('reasonForDifferentTester');
         $this->reasonForDifferentTester = $reasonForDifferentTester;
+
         return $this;
     }
 
@@ -211,7 +210,8 @@ class ReplacementCertificateDraftChangeDTO
     }
 
     /**
-     * Primary key of country of registration
+     * Primary key of country of registration.
+     *
      * @param int $countryOfRegistration
      *
      * @return $this
@@ -220,11 +220,13 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->countryOfRegistration = $countryOfRegistration;
         $this->setAsChanged('countryOfRegistration');
+
         return $this;
     }
 
     /**
-     * Primary key of country of registration
+     * Primary key of country of registration.
+     *
      * @return int
      */
     public function getCountryOfRegistration()
@@ -249,6 +251,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->make = $make;
         $this->setAsChanged('make');
+
         return $this;
     }
 
@@ -277,6 +280,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->model = $model;
         $this->setAsChanged('model');
+
         return $this;
     }
 
@@ -300,6 +304,7 @@ class ReplacementCertificateDraftChangeDTO
      * @param $value
      * @param $unit
      * @param $resultType
+     *
      * @return $this
      */
     public function setOdometerReading($value, $unit, $resultType)
@@ -308,11 +313,12 @@ class ReplacementCertificateDraftChangeDTO
         $this->odometerUnit = $unit;
         $this->odometerResultType = $resultType;
         $this->setAsChanged('odometerReading');
+
         return $this;
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getOdometerValue()
     {
@@ -352,6 +358,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->primaryColour = $primaryColour;
         $this->setAsChanged('primaryColour');
+
         return $this;
     }
 
@@ -380,6 +387,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->reasonForReplacement = $reasonForReplacement;
         $this->setAsChanged('reasonForReplacement');
+
         return $this;
     }
 
@@ -408,6 +416,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->secondaryColour = $secondaryColour;
         $this->setAsChanged('secondaryColour');
+
         return $this;
     }
 
@@ -436,6 +445,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->vin = $vin;
         $this->setAsChanged('vin');
+
         return $this;
     }
 
@@ -464,6 +474,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->vrm = $vrm;
         $this->setAsChanged('vrm');
+
         return $this;
     }
 
@@ -492,6 +503,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->vtsSiteNumber = $vtsSiteNumber;
         $this->setAsChanged('vtsSiteNumber');
+
         return $this;
     }
 
@@ -520,6 +532,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->expiryDate = $expiryDate;
         $this->setAsChanged('expiryDate');
+
         return $this;
     }
 
@@ -554,6 +567,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->setAsChanged('customMake');
         $this->customMake = $customMake;
+
         return $this;
     }
 
@@ -588,6 +602,7 @@ class ReplacementCertificateDraftChangeDTO
     {
         $this->setAsChanged('customModel');
         $this->customModel = $customModel;
+
         return $this;
     }
 
@@ -608,17 +623,19 @@ class ReplacementCertificateDraftChangeDTO
     }
 
     /**
-     * @param boolean $vinVrmExpiryChanged
+     * @param bool $vinVrmExpiryChanged
+     *
      * @return $this
      */
     public function setIsVinVrmExpiryChanged($vinVrmExpiryChanged)
     {
         $this->isVinVrmExpiryChanged = $vinVrmExpiryChanged;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isVinVrmExpiryChanged()
     {
@@ -626,17 +643,19 @@ class ReplacementCertificateDraftChangeDTO
     }
 
     /**
-     * @param boolean $includeInMismatch
+     * @param bool $includeInMismatch
+     *
      * @return $this
      */
     public function setIncludeInMismatchFile($includeInMismatch)
     {
         $this->includeInMismatchFile = $includeInMismatch;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function includeInMismatchFile()
     {
@@ -644,17 +663,19 @@ class ReplacementCertificateDraftChangeDTO
     }
 
     /**
-     * @param boolean $includeInPassFile
+     * @param bool $includeInPassFile
+     *
      * @return $this
      */
     public function setIncludeInPassFile($includeInPassFile)
     {
         $this->includeInPassFile = $includeInPassFile;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function includeInPassFile()
     {

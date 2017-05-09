@@ -1,13 +1,12 @@
 <?php
+
 namespace DvsaEntities\DqlBuilder\SearchParam;
 
 use DvsaCommon\Dto\Search\SiteSearchParamsDto;
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * Class SiteSearchParam
- *
- * @package DvsaEntities\DqlBuilder\SearchParam
+ * Class SiteSearchParam.
  */
 class SiteSearchParam extends SearchParam
 {
@@ -58,7 +57,7 @@ class SiteSearchParam extends SearchParam
     {
         if (!$dto instanceof SiteSearchParamsDto) {
             throw new \InvalidArgumentException(
-                __METHOD__ . ' Expects instance of SiteSearchParamsDto, you passed ' . get_class($dto)
+                __METHOD__.' Expects instance of SiteSearchParamsDto, you passed '.get_class($dto)
             );
         }
 
@@ -75,9 +74,10 @@ class SiteSearchParam extends SearchParam
     }
 
     /**
-     * Check if at least one of the searches have been filled
+     * Check if at least one of the searches have been filled.
      *
      * @throws \UnexpectedValueException
+     *
      * @return $this
      */
     public function process()
@@ -86,18 +86,19 @@ class SiteSearchParam extends SearchParam
             && !$this->checkValue($this->getSiteName())
             && !$this->checkValue($this->getSiteTown())
             && !$this->checkValue($this->getSitePostcode())) {
-
             throw new \UnexpectedValueException(
                 self::SEARCH_REQUIRED_DISPLAY_MESSAGE
             );
         }
+
         return $this;
     }
 
     /**
-     * Check if the value is empty and more than 2 characters length
+     * Check if the value is empty and more than 2 characters length.
      *
      * @param string $value
+     *
      * @return bool
      */
     private function checkValue($value)
@@ -115,11 +116,13 @@ class SiteSearchParam extends SearchParam
 
     /**
      * @param string $siteNumber
+     *
      * @return $this
      */
     public function setSiteNumber($siteNumber)
     {
         $this->siteNumber = $siteNumber;
+
         return $this;
     }
 
@@ -133,11 +136,13 @@ class SiteSearchParam extends SearchParam
 
     /**
      * @param string $siteName
+     *
      * @return $this
      */
     public function setSiteName($siteName)
     {
         $this->siteName = $siteName;
+
         return $this;
     }
 
@@ -151,11 +156,13 @@ class SiteSearchParam extends SearchParam
 
     /**
      * @param string $siteTown
+     *
      * @return $this
      */
     public function setSiteTown($siteTown)
     {
         $this->siteTown = $siteTown;
+
         return $this;
     }
 
@@ -169,11 +176,13 @@ class SiteSearchParam extends SearchParam
 
     /**
      * @param string $sitePostcode
+     *
      * @return $this
      */
     public function setSitePostcode($sitePostcode)
     {
         $this->sitePostcode = $sitePostcode;
+
         return $this;
     }
 
@@ -187,11 +196,13 @@ class SiteSearchParam extends SearchParam
 
     /**
      * @param array $siteVehicleClass
+     *
      * @return $this
      */
     public function setSiteVehicleClass($siteVehicleClass)
     {
         $this->siteVehicleClass = $siteVehicleClass;
+
         return $this;
     }
 }

@@ -6,8 +6,8 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\TransmissionType;
 
 /**
- * Class TransmissionTypeRepository
- * @package DvsaEntities\Repository
+ * Class TransmissionTypeRepository.
+ *
  * @codeCoverageIgnore
  */
 class TransmissionTypeRepository extends AbstractMutableRepository
@@ -23,6 +23,7 @@ class TransmissionTypeRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return TransmissionType
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
@@ -31,6 +32,7 @@ class TransmissionTypeRepository extends AbstractMutableRepository
         if (!$entity) {
             throw new NotFoundException($this->getEntityName(), $id);
         }
+
         return $entity;
     }
 }

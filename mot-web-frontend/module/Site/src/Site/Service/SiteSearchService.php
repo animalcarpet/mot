@@ -8,17 +8,16 @@ use DvsaCommon\Utility\ArrayUtils;
 use Report\Table\Formatter\SubRow;
 use Report\Table\Table;
 use Report\Table\Formatter\SiteLink;
-use Report\Table\Formatter\Subline;
 use Zend\Http\Request;
 
 /**
- * Class SiteSearchService
- * @package Site\Service
+ * Class SiteSearchService.
  */
 class SiteSearchService
 {
     /**
-     * Replace empty fields with text
+     * Replace empty fields with text.
+     *
      * @var array fieldname => replacement
      */
     protected static $emptyFields = [
@@ -28,59 +27,60 @@ class SiteSearchService
     public function initTable(SiteListDto $result)
     {
         $result = $this->prepareResults($result);
+
         return (new Table())->setColumns(
             [
                 // Site Number + link Column
                 [
-                    'title'   => 'Site',
-                    'sortBy'  => 'siteNumber',
-                    'field'  => 'site_number',
+                    'title' => 'Site',
+                    'sortBy' => 'siteNumber',
+                    'field' => 'site_number',
                     'formatter' => SiteLink::class,
                 ],
                 // Site Name and Phone Column
                 [
-                    'title'    => 'Name/phone',
+                    'title' => 'Name/phone',
                     'sortBy' => 'siteName',
-                    'sub'    => [
+                    'sub' => [
                         [
-                            'field'     => 'name',
+                            'field' => 'name',
                         ],
                         [
-                            'field'     => 'phone',
+                            'field' => 'phone',
                             'formatter' => SubRow::class,
                         ],
                     ],
                 ],
                 // Address Town and Postcode Column
                 [
-                    'title'    => 'City/postcode',
+                    'title' => 'City/postcode',
                     'sortBy' => 'siteTownPostcode',
-                    'sub'    => [
+                    'sub' => [
                         [
-                            'field'     => 'town',
+                            'field' => 'town',
                         ],
                         [
-                            'field'     => 'postcode',
+                            'field' => 'postcode',
                             'formatter' => SubRow::class,
                         ],
                     ],
                 ],
                 // Site Classes Column
                 [
-                    'title'   => 'Classes',
-                    'sortBy'  => 'siteClasses',
-                    'field'  => 'roles',
+                    'title' => 'Classes',
+                    'sortBy' => 'siteClasses',
+                    'field' => 'roles',
                 ],
                 // Site Type and Status Column
                 [
-                    'title'    => 'Type/status',
+                    'title' => 'Type/status',
                     'sortBy' => 'siteTypeStatus',
-                    'sub'    => [
+                    'sub' => [
                         [
-                            'field'     => 'type',
+                            'field' => 'type',
                         ],
                         [
-                            'field'     => 'status',
+                            'field' => 'status',
                             'formatter' => SubRow::class,
                         ],
                     ],
@@ -93,29 +93,32 @@ class SiteSearchService
     }
 
     /**
-     * Build the url with the request
+     * Build the url with the request.
      *
      * @param SiteUrlBuilderWeb $url
-     * @param Request $request
+     * @param Request           $request
+     *
      * @return string
      */
     public function buildParams(SiteUrlBuilderWeb $url, Request $request)
     {
-        return $url . '?' . http_build_query($request->getQuery()->toArray());
+        return $url.'?'.http_build_query($request->getQuery()->toArray());
     }
 
     /**
-     * Replacing empty fields with default replacements
+     * Replacing empty fields with default replacements.
+     *
      * @param SiteListDto $result
+     *
      * @return $this
      */
     protected function prepareResults(SiteListDto $result)
     {
         $resultData = $result->getData();
-        if(is_array($resultData)){
+        if (is_array($resultData)) {
             foreach ($resultData as &$item) {
                 foreach (static::$emptyFields as $emptyFieldName => $replacement) {
-                    if(ArrayUtils::tryGet($item, $emptyFieldName) == null){
+                    if (ArrayUtils::tryGet($item, $emptyFieldName) == null) {
                         $item[$emptyFieldName] = $replacement;
                     }
                 }

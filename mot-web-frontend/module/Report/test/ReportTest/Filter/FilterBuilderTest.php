@@ -4,17 +4,15 @@ namespace ReportTest\Filter;
 
 use DvsaCommonTest\Bootstrap;
 use Report\Filter\FilterBuilder;
-use Zend\Http\Request;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Stdlib\Parameters;
-use Zend\Test\PHPUnit\Controller\AbstractControllerTestCase;
 use Zend\View\Helper\Url;
 use Zend\View\Renderer\PhpRenderer;
 
 class FilterBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  FilterBuilder */
+    /** @var FilterBuilder */
     private $targetClass;
     /** @var PhpRenderer */
     private static $renderer;
@@ -47,38 +45,38 @@ class FilterBuilderTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'options'       => [
-                    'today'     => [
+                'options' => [
+                    'today' => [
                         'label' => 'Today',
-                        'from'  => strtotime('today'),
-                        'to'    => strtotime('tomorrow -1 second')
+                        'from' => strtotime('today'),
+                        'to' => strtotime('tomorrow -1 second'),
                     ],
-                    'lastWeek'  => [
+                    'lastWeek' => [
                         'label' => 'Last week (Mon-Sun)',
-                        'from'  => strtotime('last monday - 7 days'),
-                        'to'    => strtotime('last monday - 1 second')
+                        'from' => strtotime('last monday - 7 days'),
+                        'to' => strtotime('last monday - 1 second'),
                     ],
                     'lastMonth' => [
-                        'label' => 'Last Month (' . date('M', strtotime('last month')) . ')',
-                        'from'  => strtotime('first day of last month'),
-                        'to'    => strtotime('last day of last month')
+                        'label' => 'Last Month ('.date('M', strtotime('last month')).')',
+                        'from' => strtotime('first day of last month'),
+                        'to' => strtotime('last day of last month'),
                     ],
                 ],
-                'queryParams'   => [
+                'queryParams' => [
                     'dateFrom' => strtotime('today'),
-                    'dateTo'   => strtotime('tomorrow -1 second')
+                    'dateTo' => strtotime('tomorrow -1 second'),
                 ],
                 'expectedLinks' => 3,
             ],
             [
-                'options'       => [
+                'options' => [
                     'today' => [
                         'label' => 'Today',
-                        'from'  => strtotime('today'),
-                        'to'    => strtotime('tomorrow -1 second')
+                        'from' => strtotime('today'),
+                        'to' => strtotime('tomorrow -1 second'),
                     ],
                 ],
-                'queryParams'   => [],
+                'queryParams' => [],
                 'expectedLinks' => 1,
             ],
         ];
@@ -90,7 +88,7 @@ class FilterBuilderTest extends \PHPUnit_Framework_TestCase
             return self::$renderer;
         }
 
-        $appTestConfig = include getcwd() . '/test/test.config.php';
+        $appTestConfig = include getcwd().'/test/test.config.php';
         Bootstrap::init($appTestConfig);
 
         /** @var \Zend\ServiceManager\ServiceManager $serviceManager */

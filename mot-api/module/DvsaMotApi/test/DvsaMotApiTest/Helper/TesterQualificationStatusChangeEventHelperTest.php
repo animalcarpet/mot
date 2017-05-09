@@ -41,8 +41,8 @@ class TesterQualificationStatusChangeEventHelperTest extends \PHPUnit_Framework_
 
         $person = (new Person())
             ->setId($personId)
-            ->setFirstName("John")
-            ->setFamilyName("Rambo");
+            ->setFirstName('John')
+            ->setFamilyName('Rambo');
 
         $identity = XMock::of(Identity::class);
         $identity
@@ -62,8 +62,8 @@ class TesterQualificationStatusChangeEventHelperTest extends \PHPUnit_Framework_
 
         $tester = (new Person())
             ->setId(123)
-            ->setFirstName("Marty")
-            ->setFamilyName("McFly");
+            ->setFirstName('Marty')
+            ->setFamilyName('McFly');
 
         $this->identityProvider = $identityProvider;
         $this->person = $person;
@@ -76,9 +76,9 @@ class TesterQualificationStatusChangeEventHelperTest extends \PHPUnit_Framework_
         $eventType = (new EventType())->setCode(EventTypeCode::GROUP_A_TESTER_QUALIFICATION);
         $helper = $this->createTesterQualificationStatusChangeEventHelper($eventType);
 
-        $eventPersonMap = $helper->create($this->tester, "A");
+        $eventPersonMap = $helper->create($this->tester, 'A');
         $event = $eventPersonMap->getEvent();
-        $description = sprintf(EventDescription::TESTER_QUALIFICATION_STATUS_CHANGE, "A", $this->person->getDisplayName());
+        $description = sprintf(EventDescription::TESTER_QUALIFICATION_STATUS_CHANGE, 'A', $this->person->getDisplayName());
 
         $this->assertEquals($this->tester, $eventPersonMap->getPerson());
         $this->assertEquals($description, $event->getShortDescription());
@@ -87,11 +87,11 @@ class TesterQualificationStatusChangeEventHelperTest extends \PHPUnit_Framework_
     public function testEventIsSendForGroupB()
     {
         $eventType = (new EventType())->setCode(EventTypeCode::GROUP_B_TESTER_QUALIFICATION);
-        $helper = $this->createTesterQualificationStatusChangeEventHelper($eventType);;
+        $helper = $this->createTesterQualificationStatusChangeEventHelper($eventType);
 
-        $eventPersonMap = $helper->create($this->tester, "B");
+        $eventPersonMap = $helper->create($this->tester, 'B');
         $event = $eventPersonMap->getEvent();
-        $description = sprintf(EventDescription::TESTER_QUALIFICATION_STATUS_CHANGE, "B", $this->person->getDisplayName());
+        $description = sprintf(EventDescription::TESTER_QUALIFICATION_STATUS_CHANGE, 'B', $this->person->getDisplayName());
 
         $this->assertEquals($this->tester, $eventPersonMap->getPerson());
         $this->assertEquals($description, $event->getShortDescription());
@@ -120,7 +120,9 @@ class TesterQualificationStatusChangeEventHelperTest extends \PHPUnit_Framework_
 
     /**
      * @param EventType $eventType
+     *
      * @return TesterQualificationStatusChangeEventHelper
+     *
      * @throws \Exception
      */
     private function createTesterQualificationStatusChangeEventHelper(EventType $eventType)

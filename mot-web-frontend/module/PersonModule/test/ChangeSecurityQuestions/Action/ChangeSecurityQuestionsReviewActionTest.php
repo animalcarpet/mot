@@ -1,19 +1,15 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Action;
 
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
-use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsConfirmationAction;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsReviewAction;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsConfirmationController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionTwoController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsStepService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\ViewModel\ChangeSecurityQuestionsSubmissionModel;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Http\Request;
 
@@ -22,13 +18,13 @@ class ChangeSecurityQuestionsReviewActionTest extends \PHPUnit_Framework_TestCas
     /** @var ChangeSecurityQuestionsStepService $changeSecurityQuestionsStepService */
     private $changeSecurityQuestionsStepService;
 
-    /** @var  Request $request */
+    /** @var Request $request */
     private $request;
 
     /** @var ChangeSecurityQuestionsService $changeSecurityQuestionsService */
     private $changeSecurityQuestionsService;
 
-    /** @var  ChangeSecurityQuestionsSubmissionModel $changeSecurityQuestionsSubmissionModel */
+    /** @var ChangeSecurityQuestionsSubmissionModel $changeSecurityQuestionsSubmissionModel */
     private $changeSecurityQuestionsSubmissionModel;
 
     public function setUp()
@@ -87,6 +83,7 @@ class ChangeSecurityQuestionsReviewActionTest extends \PHPUnit_Framework_TestCas
             $this->changeSecurityQuestionsStepService,
             $this->changeSecurityQuestionsService
         );
+
         return $action;
     }
 

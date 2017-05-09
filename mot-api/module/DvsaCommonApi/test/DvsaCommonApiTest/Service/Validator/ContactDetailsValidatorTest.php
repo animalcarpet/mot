@@ -8,7 +8,7 @@ use DvsaCommonApi\Service\Validator\AddressValidator;
 use DvsaCommonApi\Service\Validator\ContactDetailsValidator;
 
 /**
- * I'm building my professional career on comments
+ * I'm building my professional career on comments.
  */
 class ContactDetailsValidatorTest extends AbstractServiceTestCase
 {
@@ -16,8 +16,8 @@ class ContactDetailsValidatorTest extends AbstractServiceTestCase
     {
         $input = [
             'phoneNumber' => 'phoneNumber',
-            'email' => 'contactdetailvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-            'emailConfirmation' => 'contactdetailvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
+            'email' => 'contactdetailvalidatortest@'.EmailAddressValidator::TEST_DOMAIN,
+            'emailConfirmation' => 'contactdetailvalidatortest@'.EmailAddressValidator::TEST_DOMAIN,
         ];
 
         $this->createContactDetailsValidator()->validate($input);
@@ -38,8 +38,8 @@ class ContactDetailsValidatorTest extends AbstractServiceTestCase
     {
         $input = [
             'phoneNumber' => 'phoneNumber',
-            'email' => 'contactdetailvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-            'emailConfirmation' => 'contactdetailvalidatortest1@' . EmailAddressValidator::TEST_DOMAIN,
+            'email' => 'contactdetailvalidatortest@'.EmailAddressValidator::TEST_DOMAIN,
+            'emailConfirmation' => 'contactdetailvalidatortest1@'.EmailAddressValidator::TEST_DOMAIN,
         ];
 
         $this->createContactDetailsValidator()->validate($input);

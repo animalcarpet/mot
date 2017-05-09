@@ -35,8 +35,8 @@ class CampaignDates
      */
     public function __construct($start, $end, $lastTest)
     {
-        $this->start    = $start;
-        $this->end      = $end;
+        $this->start = $start;
+        $this->end = $end;
         $this->lastTest = $lastTest;
     }
 

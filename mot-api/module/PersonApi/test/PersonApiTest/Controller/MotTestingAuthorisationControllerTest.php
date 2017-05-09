@@ -8,7 +8,7 @@ use PersonApi\Dto\MotTestingAuthorisationCollector;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 
 /**
- * Unit tests for MotTestingAuthorisationController
+ * Unit tests for MotTestingAuthorisationController.
  */
 class MotTestingAuthorisationControllerTest extends AbstractPersonControllerTestCase
 {

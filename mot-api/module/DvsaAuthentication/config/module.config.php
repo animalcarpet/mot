@@ -23,21 +23,21 @@ use DvsaAuthentication\Factory\Service\TwoFactorStatusServiceFactory;
 return [
     'service_manager' => [
         'factories' => [
-            'DvsaAuthenticationService'             => \DvsaAuthentication\Factory\AuthenticationServiceFactory::class,
-            AuthenticationListenerFactory::class    => AuthenticationListenerFactory::class,
-            MotIdentityProviderInterface::class     => \DvsaAuthentication\Factory\IdentityProviderFactory::class,
-            'MotIdentityProvider'                   => \DvsaAuthentication\Factory\IdentityProviderFactory::class,
-            'tokenService'                          => ApiTokenServiceFactory::class,
-            OpenAMApiTokenBasedAdapter::class       => OpenAMApiTokenBasedAdapterFactory::class,
-            OtpService::class                       => OtpServiceFactory::class,
-            OpenAMCachedClient::class               => OpenAMCachedClientFactory::class,
-            IdentityFactoryFactory::class           => IdentityFactoryFactory::class,
-            UsernamePasswordAuthenticator::class    => AuthenticatorFactory::class,
-            LoginService::class                     => LoginServiceFactory::class,
-            IdentityByTokenResolver::class          => IdentityByTokenResolverFactory::class,
-            OpenAMIdentityByTokenResolver::class    => IdentityByTokenResolverFactory::class,
-            IdentityAttributesMapper::class         => IdentityAttributesMapperFactory::class,
-            TwoFactorStatusService::class           => TwoFactorStatusServiceFactory::class
+            'DvsaAuthenticationService' => \DvsaAuthentication\Factory\AuthenticationServiceFactory::class,
+            AuthenticationListenerFactory::class => AuthenticationListenerFactory::class,
+            MotIdentityProviderInterface::class => \DvsaAuthentication\Factory\IdentityProviderFactory::class,
+            'MotIdentityProvider' => \DvsaAuthentication\Factory\IdentityProviderFactory::class,
+            'tokenService' => ApiTokenServiceFactory::class,
+            OpenAMApiTokenBasedAdapter::class => OpenAMApiTokenBasedAdapterFactory::class,
+            OtpService::class => OtpServiceFactory::class,
+            OpenAMCachedClient::class => OpenAMCachedClientFactory::class,
+            IdentityFactoryFactory::class => IdentityFactoryFactory::class,
+            UsernamePasswordAuthenticator::class => AuthenticatorFactory::class,
+            LoginService::class => LoginServiceFactory::class,
+            IdentityByTokenResolver::class => IdentityByTokenResolverFactory::class,
+            OpenAMIdentityByTokenResolver::class => IdentityByTokenResolverFactory::class,
+            IdentityAttributesMapper::class => IdentityAttributesMapperFactory::class,
+            TwoFactorStatusService::class => TwoFactorStatusServiceFactory::class,
         ],
-    ]
+    ],
 ];

@@ -9,6 +9,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class DirectDebitStatusRepository extends EntityRepository
 {
-
     use EnumType1RepositoryTrait;
 }

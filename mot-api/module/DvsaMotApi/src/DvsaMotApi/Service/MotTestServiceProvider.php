@@ -2,7 +2,6 @@
 
 namespace DvsaMotApi\Service;
 
-use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MotTestServiceProvider

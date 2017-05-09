@@ -10,9 +10,8 @@ use DvsaCommon\Auth\PermissionInSystem;
 /** @var string $resetClaimAccountUrl */
 /** @var string $resetClaimAccountUrlPost */
 /** @var string $routeName */
-
-$errorMessages      = $this->layout()->flashMessenger->getErrorMessages();
-$successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
+$errorMessages = $this->layout()->flashMessenger->getErrorMessages();
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
 
 echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
@@ -92,7 +91,7 @@ $isEmail = empty(trim($presenter->displayEmail())) ? false : true;
             <?php if ($this->authorisationHelper()->isGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS)): ?>
             <a class="key-value-list__action"
                id="email-address-change"
-               href="<?php echo $url . '/email'; ?>"
+               href="<?php echo $url.'/email'; ?>"
                title="Amend user email">
                 Change this
             </a>
@@ -178,10 +177,10 @@ $isEmail = empty(trim($presenter->displayEmail())) ? false : true;
     <?php echo $this->partial(
         'partial/gds/form/control-navigation-secondary',
         [
-            'navigation'    => [
-                'Cancel and return to search results'   => $searchResultsUrl,
-                'Return to home'                        => $this->url(UserHomeController::ROUTE),
-            ]
+            'navigation' => [
+                'Cancel and return to search results' => $searchResultsUrl,
+                'Return to home' => $this->url(UserHomeController::ROUTE),
+            ],
         ]
     ); ?>
 </nav>

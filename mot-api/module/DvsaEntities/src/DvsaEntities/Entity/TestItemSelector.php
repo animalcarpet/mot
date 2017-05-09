@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * TestItemSelector
+ * TestItemSelector.
  *
  * @ORM\Table(name="test_item_category", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(readOnly=true)
@@ -16,7 +17,7 @@ class TestItemSelector
     use CommonIdentityTrait;
 
     /**
-     * Owning side
+     * Owning side.
      *
      * @ORM\ManyToMany(targetEntity="VehicleClass")
      * @ORM\JoinTable(name="test_item_category_vehicle_class_map",
@@ -27,14 +28,14 @@ class TestItemSelector
     private $vehicleClasses;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="section_test_item_category_id", type="integer", nullable=true)
      */
     private $sectionTestItemSelectorId;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parent_test_item_category_id", type="integer", nullable=true)
      */
@@ -60,9 +61,10 @@ class TestItemSelector
 
     // TODO VM-3386 remove
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return TestItemSelector
      */
     public function setName($name)
@@ -74,7 +76,7 @@ class TestItemSelector
 
     // TODO VM-3386 remove
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -85,7 +87,7 @@ class TestItemSelector
 
     // TODO VM-3386 remove
     /**
-     * Set cy name
+     * Set cy name.
      *
      * @param string $name
      *
@@ -99,9 +101,10 @@ class TestItemSelector
     }
 
     /**
-     * Set vehicleClasses
+     * Set vehicleClasses.
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $vehicleClasses
+     *
      * @return TestItemSelector
      */
     public function setVehicleClasses(\Doctrine\Common\Collections\ArrayCollection $vehicleClasses = null)
@@ -112,7 +115,7 @@ class TestItemSelector
     }
 
     /**
-     * Get vehicleClasses
+     * Get vehicleClasses.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection()
      */
@@ -122,9 +125,10 @@ class TestItemSelector
     }
 
     /**
-     * Set sectionTestItemSelectorId
+     * Set sectionTestItemSelectorId.
      *
-     * @param integer $sectionTestItemSelectorId
+     * @param int $sectionTestItemSelectorId
+     *
      * @return TestItemSelector
      */
     public function setSectionTestItemSelectorId($sectionTestItemSelectorId)
@@ -135,7 +139,7 @@ class TestItemSelector
     }
 
     /**
-     * Get sectionTestItemSelectorId
+     * Get sectionTestItemSelectorId.
      *
      * @return TestItemSelector
      */
@@ -145,9 +149,9 @@ class TestItemSelector
     }
 
     /**
-     * Set parentTestItemSelectorId
+     * Set parentTestItemSelectorId.
      *
-     * @param integer $value
+     * @param int $value
      *
      * @return TestItemSelector
      */
@@ -159,7 +163,7 @@ class TestItemSelector
     }
 
     /**
-     * Get parentTestItemSelectorId
+     * Get parentTestItemSelectorId.
      *
      * @return TestItemSelector
      */
@@ -184,6 +188,7 @@ class TestItemSelector
     public function setDescriptions($descriptions)
     {
         $this->descriptions = $descriptions;
+
         return $this;
     }
 }

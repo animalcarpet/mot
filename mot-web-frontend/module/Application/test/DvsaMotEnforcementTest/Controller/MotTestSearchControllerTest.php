@@ -25,7 +25,7 @@ use Zend\Stdlib\Parameters;
 class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
 {
     //unobfuscated value is 1
-    const OBFUSCATED_VEHICLE_ID = "1w";
+    const OBFUSCATED_VEHICLE_ID = '1w';
 
     protected function setUp()
     {
@@ -60,8 +60,8 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
             ->willReturn(
                 [
                     'data' => [
-                        'data'   => [],
-                        "_class" => "DvsaCommon\\Dto\\Search\\SearchResultDto",
+                        'data' => [],
+                        '_class' => 'DvsaCommon\\Dto\\Search\\SearchResultDto',
                     ],
                 ]
             );
@@ -129,7 +129,7 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
             ->set('search', 'V1234');
 
         $motTestData = $this->getTestMotData();
-        $apiUrl      = MotTestUrlBuilder::search();
+        $apiUrl = MotTestUrlBuilder::search();
 
         $restClientMock = $this->getRestClientMockForServiceManager();
         $restClientMock->expects($this->once())
@@ -138,11 +138,11 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
             ->willReturn(
                 [
                     'data' => [
-                        'data'   => [
+                        'data' => [
                             0 => $motTestData,
                             1 => $motTestData,
                         ],
-                        "_class" => "DvsaCommon\\Dto\\Search\\SearchResultDto",
+                        '_class' => 'DvsaCommon\\Dto\\Search\\SearchResultDto',
                     ],
                 ]
             );
@@ -181,7 +181,7 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
             ->set('search', $search)
             ->set('type', 'tester');
 
-        $testerData     = $this->getTesterData();
+        $testerData = $this->getTesterData();
         $testerFullData = $this->getTesterFullData($search);
 
         $restClientMock = $this->getRestClientMockForServiceManager();
@@ -287,8 +287,8 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
         $this->request->setQuery(
             new Parameters(
                 [
-                    'search'        => $search,
-                    'type'          => 'vts',
+                    'search' => $search,
+                    'type' => 'vts',
                     'search-result' => 'not-search',
                 ]
             )
@@ -493,7 +493,7 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
     protected function getViewRendererMock()
     {
         $viewRendererMock = \DvsaCommonTest\TestUtils\XMock::of(\Zend\View\Renderer\PhpRenderer::class);
-        $serviceManager   = $this->getServiceManager();
+        $serviceManager = $this->getServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService('ViewRenderer', $viewRendererMock);
 
@@ -503,8 +503,8 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
     protected function getTesterData()
     {
         return [
-            'username'    => 'username',
-            'id'          => 1,
+            'username' => 'username',
+            'id' => 1,
             'displayName' => 'John Smith',
         ];
     }
@@ -512,41 +512,41 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
     protected function getTestMotData()
     {
         $vehicleData = [
-            'id'            => 1,
-            'registration'  => 'ELFA 1111',
-            'vin'           => '1M2GDM9AXKP042725',
+            'id' => 1,
+            'registration' => 'ELFA 1111',
+            'vin' => '1M2GDM9AXKP042725',
             'vehicle_class' => '4',
-            'make'          => 'Volvo',
-            'model'         => 'S80 GTX',
-            'year'          => 2011,
-            'colour'        => 'Black',
-            'fuel_type'     => 'X',
+            'make' => 'Volvo',
+            'model' => 'S80 GTX',
+            'year' => 2011,
+            'colour' => 'Black',
+            'fuel_type' => 'X',
         ];
         $vehicleTestStation = [
-            'id'                   => '1',
-            'siteNumber'           => 'V12345',
+            'id' => '1',
+            'siteNumber' => 'V12345',
             'authorisedExaminerId' => 1,
-            'name'                 => 'Example Name',
-            'address'              => '1 road name, town, postcode',
+            'name' => 'Example Name',
+            'address' => '1 road name, town, postcode',
         ];
         $tester = [
             'username' => 'testerNo42',
         ];
         $motTest = [
-            "id"                    => 1,
-            "status"                => 'FAILED',
-            "vehicle"               => $vehicleData,
-            "vehicleTestingStation" => $vehicleTestStation,
-            "tester"                => $tester,
-            "startedDate"           => '2014-02-05T10:28:00Z',
-            "completedDate"         => '2014-02-05T11:47:34Z',
-            "odometerValue"         => '1234',
-            "testType"              => 'NT',
-            "odometerUnit"          => 'Km',
-            "reasons_for_rejection" => [['rfr-id'          => 1], ['rfr-id' => 2]],
-            "break_test_results"    => [['break-result-id' => 1]],
-            "hasRegistration"       => true,
-            'testDate'              => '2014-12-16T11:00:00Z',
+            'id' => 1,
+            'status' => 'FAILED',
+            'vehicle' => $vehicleData,
+            'vehicleTestingStation' => $vehicleTestStation,
+            'tester' => $tester,
+            'startedDate' => '2014-02-05T10:28:00Z',
+            'completedDate' => '2014-02-05T11:47:34Z',
+            'odometerValue' => '1234',
+            'testType' => 'NT',
+            'odometerUnit' => 'Km',
+            'reasons_for_rejection' => [['rfr-id' => 1], ['rfr-id' => 2]],
+            'break_test_results' => [['break-result-id' => 1]],
+            'hasRegistration' => true,
+            'testDate' => '2014-12-16T11:00:00Z',
         ];
 
         return $motTest;
@@ -569,7 +569,7 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
      */
     protected function getTesterFullData($search)
     {
-        $data                               = $this->jsonFixture('tester-full', __DIR__);
+        $data = $this->jsonFixture('tester-full', __DIR__);
         $data['data']['searched']['search'] = $search;
 
         return $data;
@@ -582,8 +582,7 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
     {
         $config = ['security' => ['obfuscate' => ['key' => 'ggg', 'entries' => ['vehicleId' => true]]]];
         $paramEncrypter = new ParamEncrypter(new EncryptionKey($config['security']['obfuscate']['key']));
-        $paramEncoder   = new ParamEncoder();
-
+        $paramEncoder = new ParamEncoder();
 
         return new ParamObfuscator($paramEncrypter, $paramEncoder, $config);
     }

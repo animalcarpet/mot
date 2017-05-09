@@ -3,7 +3,6 @@
 namespace DvsaMotTest\ViewModel\MotTestCertificate;
 
 use Core\ViewModel\Badge\Badge;
-use DvsaCommon\Constants\DuplicateCertificateSearchType;
 use DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto;
 
 class MotTestCertificateTableItem

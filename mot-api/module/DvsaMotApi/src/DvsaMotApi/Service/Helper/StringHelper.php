@@ -9,21 +9,22 @@ class StringHelper
 {
     /**
      * For backward compatibility with APIs that provide inputs in old 'role' formats,
-     * returns the appropriate vehicle class
+     * returns the appropriate vehicle class.
      *
      * @param $expectedPrefix             e.g. TESTER-CLASS-
      * @param $vehicleClassCodeWithPrefix e.g. TESTER-CLASS-1
      *
      * @return e.g. 1
+     *
      * @throws \LogicException
      */
     public static function extractClassFromString($expectedPrefix, $vehicleClassCodeWithPrefix)
     {
-        preg_match('/^' . $expectedPrefix . '(\d)$/', $vehicleClassCodeWithPrefix, $matches);
+        preg_match('/^'.$expectedPrefix.'(\d)$/', $vehicleClassCodeWithPrefix, $matches);
 
         if (!$matches) {
             throw new \InvalidArgumentException(
-                "Expecting a string of the form " . $expectedPrefix . "?, got [$vehicleClassCodeWithPrefix]"
+                'Expecting a string of the form '.$expectedPrefix."?, got [$vehicleClassCodeWithPrefix]"
             );
         }
 
@@ -32,6 +33,7 @@ class StringHelper
         if (!$vehicleClassCode) {
             throw new \LogicException("Expecting vehicle class code, got [$vehicleClassCodeWithPrefix]");
         }
+
         return $vehicleClassCode;
     }
 }

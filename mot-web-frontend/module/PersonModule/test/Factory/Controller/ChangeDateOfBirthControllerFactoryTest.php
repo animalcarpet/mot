@@ -6,7 +6,6 @@ use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeDateOfBirthController;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\MapperFactory;
-use DvsaCommon\Validator\DateOfBirthValidator;
 use DvsaCommonTest\TestUtils\XMock;
 use UserAdmin\Service\HelpdeskAccountAdminService;
 use Zend\ServiceManager\ServiceManager;
@@ -14,7 +13,6 @@ use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
 
 class ChangeDateOfBirthControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFactory()
     {
         $serviceManager = new ServiceManager();

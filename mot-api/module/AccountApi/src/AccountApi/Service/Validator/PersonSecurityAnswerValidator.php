@@ -23,7 +23,7 @@ class PersonSecurityAnswerValidator extends AbstractValidator
             $this->errors->add('Expecting array of two elements, each with a questionId and answer');
         } else {
             if (!$this->validateAnswerLength($data)) {
-                $this->errors->add('Answers must not be more than ' . BCryptHashFunction::MAX_SECRET_LENGTH . ' characters');
+                $this->errors->add('Answers must not be more than '.BCryptHashFunction::MAX_SECRET_LENGTH.' characters');
             }
             if (!$this->validateQuestionsExist($data)) {
                 $this->errors->add('Security question(s) not found');
@@ -40,7 +40,7 @@ class PersonSecurityAnswerValidator extends AbstractValidator
             count($data) == 2 &&
             is_array($data[0]) && is_array($data[1]) &&
             array_key_exists('questionId', $data[0]) && array_key_exists('questionId', $data[1]) &&
-            array_key_exists('answer', $data[0]) && array_key_exists('answer', $data[1]) ;
+            array_key_exists('answer', $data[0]) && array_key_exists('answer', $data[1]);
     }
 
     private function validateAnswerLength($data)

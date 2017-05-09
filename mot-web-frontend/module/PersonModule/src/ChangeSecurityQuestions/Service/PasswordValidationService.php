@@ -2,9 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service;
 
-use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
-use Zend\Http\Response;
 use DvsaCommon\HttpRestJson\Client;
 
 class PasswordValidationService
@@ -22,9 +20,9 @@ class PasswordValidationService
     {
         try {
             $this->client->post(self::ROUTE, ['password' => $password]);
+
             return true;
-        }
-       catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             return false;
         }
     }

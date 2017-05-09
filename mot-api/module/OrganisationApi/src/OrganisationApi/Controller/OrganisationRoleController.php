@@ -7,9 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\OrganisationRoleService;
 
 /**
- * Class OrganisationRoleController
- *
- * @package OrganisationApi\Controller
+ * Class OrganisationRoleController.
  */
 class OrganisationRoleController extends AbstractDvsaRestfulController
 {
@@ -17,7 +15,7 @@ class OrganisationRoleController extends AbstractDvsaRestfulController
     {
         $organisationId = $this->params()->fromRoute('organisationId');
         $nomineeId = $this->params()->fromRoute('personId');
-        $service        = $this->getOrganisationRoleService();
+        $service = $this->getOrganisationRoleService();
 
         return ApiResponse::jsonOk($service->getListForPerson($organisationId, $nomineeId));
     }

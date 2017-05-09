@@ -1,4 +1,5 @@
 <?php
+
 namespace UserAdminTest\Factory\Controller;
 
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
@@ -11,8 +12,7 @@ use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ResetAccountClaimByPostControllerFactoryTest
- * @package UserAdminTest\Factory\Controller
+ * Class ResetAccountClaimByPostControllerFactoryTest.
  */
 class ResetAccountClaimByPostControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,7 +32,7 @@ class ResetAccountClaimByPostControllerFactoryTest extends \PHPUnit_Framework_Te
         $serviceManager->setService(TesterGroupAuthorisationMapper::class, $testerQualificationStatus);
 
         $authorisationService = XMock::of(MotAuthorisationServiceInterface::class);
-        $serviceManager->setService("AuthorisationService", $authorisationService);
+        $serviceManager->setService('AuthorisationService', $authorisationService);
 
         // Create the factory
         $factory = new ResetAccountClaimByPostControllerFactory();

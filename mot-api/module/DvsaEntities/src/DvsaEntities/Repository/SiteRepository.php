@@ -2,24 +2,18 @@
 
 namespace DvsaEntities\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use DvsaCommon\Enum\AuthorisationForTestingMotAtSiteStatusCode;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
-use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommon\Enum\SiteTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\SeqNumberService;
 use DvsaEntities\DqlBuilder\SearchParam\SiteSearchParam;
-use DvsaEntities\DqlBuilder\SiteSlotUsageParamDqlBuilder;
 use DvsaEntities\DqlBuilder\SlotUsageParamDqlBuilder;
 use DvsaEntities\Entity\BusinessRoleStatus;
 use DvsaEntities\Entity\Organisation;
@@ -30,9 +24,10 @@ use DvsaEntities\Entity\SiteBusinessRole;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 
 /**
- * SiteRepository
+ * SiteRepository.
  *
  * Custom Doctrine Repository for reusable DQL queries
+ *
  * @codeCoverageIgnore
  */
 class SiteRepository extends AbstractMutableRepository
@@ -62,15 +57,15 @@ class SiteRepository extends AbstractMutableRepository
 
     const SEQ_CODE = 'SITENR';
 
-    const ERR_NEXT_SITE_NR_NOT_FOUND = "Next number of Site was not found";
+    const ERR_NEXT_SITE_NR_NOT_FOUND = 'Next number of Site was not found';
 
     /**
      * Initializes a new <tt>EntityRepository</tt>.
      *
      * Fire up the class and add build the static arrays
      *
-     * @param EntityManager $em The EntityManager to use.
-     * @param ClassMetadata $class The class descriptor.
+     * @param EntityManager $em    The EntityManager to use
+     * @param ClassMetadata $class The class descriptor
      */
     public function __construct($em, ClassMetadata $class)
     {
@@ -85,6 +80,7 @@ class SiteRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return Site
+     *
      * @throws NotFoundException
      */
     public function get($id)
@@ -92,7 +88,7 @@ class SiteRepository extends AbstractMutableRepository
         $site = $this->find($id);
 
         if ($site === null) {
-            throw new NotFoundException("Site");
+            throw new NotFoundException('Site');
         }
 
         return $site;
@@ -110,13 +106,14 @@ class SiteRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return Site
+     *
      * @throws NotFoundException
      */
     public function getVehicleTestingStation($id)
     {
         $site = $this->get($id);
         if (!$site->isVehicleTestingStation()) {
-            throw new NotFoundException("Vehicle Testing Station not found");
+            throw new NotFoundException('Vehicle Testing Station not found');
         }
 
         return $site;
@@ -126,6 +123,7 @@ class SiteRepository extends AbstractMutableRepository
      * @param $siteNumber
      *
      * @return Site
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getBySiteNumber($siteNumber)
@@ -173,11 +171,11 @@ class SiteRepository extends AbstractMutableRepository
             self::TYPE_SERVICE_DESK,
             self::TYPE_WELCOMBE_HOUSE,
             self::TYPE_BERKELEY_HOUSE,
-            self::TYPE_COURSE_VENUE
+            self::TYPE_COURSE_VENUE,
         ];
 
         foreach ($types as $type) {
-            $this->types[strtolower(str_replace(" ", "_", $type))] = $type;
+            $this->types[strtolower(str_replace(' ', '_', $type))] = $type;
         }
     }
 
@@ -188,7 +186,7 @@ class SiteRepository extends AbstractMutableRepository
             self::STATUS_APPROVED,
             self::STATUS_LAPSED,
             self::STATUS_REJECTED,
-            self::STATUS_RETRACTED
+            self::STATUS_RETRACTED,
         ];
 
         foreach ($statuses as $status) {
@@ -284,7 +282,7 @@ class SiteRepository extends AbstractMutableRepository
      * @param string $roleCode
      * @param string $statusCode
      *
-     * @return  Site[]
+     * @return Site[]
      */
     public function findForPersonIdWithRoleCodeAndStatusCode($personId, $roleCode, $statusCode)
     {
@@ -302,13 +300,15 @@ class SiteRepository extends AbstractMutableRepository
             ->setParameter('personId', $personId)
             ->setParameter('roleCode', $roleCode)
             ->setParameter('statusCode', $statusCode);
+
         return $queryBuilder->getQuery()->getResult();
     }
 
     /**
-     * Return the total result of the search for sites
+     * Return the total result of the search for sites.
      *
      * @param SiteSearchParam $searchParam
+     *
      * @return int
      */
     public function findSitesCount(SiteSearchParam $searchParam)
@@ -321,9 +321,10 @@ class SiteRepository extends AbstractMutableRepository
     }
 
     /**
-     * Return an array containing the list of site related to a search
+     * Return an array containing the list of site related to a search.
      *
      * @param SiteSearchParam $searchParam
+     *
      * @return array
      */
     public function findSites(SiteSearchParam $searchParam)
@@ -331,12 +332,9 @@ class SiteRepository extends AbstractMutableRepository
         return $this->buildFindSites($searchParam)->getResult(AbstractQuery::HYDRATE_SCALAR);
     }
 
-
     /**
      * Answers an array containing all Site entities that are "APPROVED" and also
-     * classified within the "assembly" group of tables as being an "Area Office"
-     *
-     *
+     * classified within the "assembly" group of tables as being an "Area Office".
      */
     public function getAllAreaOffices()
     {
@@ -364,10 +362,11 @@ class SiteRepository extends AbstractMutableRepository
     }
 
     /**
-     * Build the Query to search for a site
+     * Build the Query to search for a site.
      *
      * @param SiteSearchParam $searchParam
-     * @param bool $isCount
+     * @param bool            $isCount
+     *
      * @return AbstractQuery|static
      */
     public function buildFindSites(SiteSearchParam $searchParam, $isCount = false)
@@ -388,20 +387,20 @@ class SiteRepository extends AbstractMutableRepository
         );
 
         if ($isSiteVehicleClass === true) {
-            $sql .= " HAVING COUNT(DISTINCT vc.code) = :NUMBER_SITE_VEHICLE_CLASS";
+            $sql .= ' HAVING COUNT(DISTINCT vc.code) = :NUMBER_SITE_VEHICLE_CLASS';
         }
         if ($isCount === false) {
             if (is_array($searchParam->getSortColumnNameDatabase())) {
                 $orderBy = '';
                 foreach ($searchParam->getSortColumnNameDatabase() as $col) {
-                    $orderBy .= $orderBy  . " " . $col . " " . $searchParam->getSortDirection() . ",";
+                    $orderBy .= $orderBy.' '.$col.' '.$searchParam->getSortDirection().',';
                 }
                 $orderBy = substr($orderBy, 0, strlen($orderBy) - 1);
             } else {
-                $orderBy = $searchParam->getSortColumnNameDatabase() . " " . $searchParam->getSortDirection();
+                $orderBy = $searchParam->getSortColumnNameDatabase().' '.$searchParam->getSortDirection();
             }
-            $sql .= " ORDER BY " . $orderBy;
-            $sql .= " LIMIT " . (int)$searchParam->getRowCount() . " OFFSET " . (int)$searchParam->getStart();
+            $sql .= ' ORDER BY '.$orderBy;
+            $sql .= ' LIMIT '.(int) $searchParam->getRowCount().' OFFSET '.(int) $searchParam->getStart();
         }
 
         $query = $this->_em
@@ -429,12 +428,13 @@ class SiteRepository extends AbstractMutableRepository
     }
 
     /**
-     * Build the native SQL to search for a site
+     * Build the native SQL to search for a site.
      *
      * @param $isCount
      * @param $isFullTextSiteNameNumber
      * @param $isFullTextSiteTownPostcode
      * @param $isSiteVehicleClass
+     *
      * @return string
      */
     private function buildFindSitesSql(
@@ -484,7 +484,7 @@ class SiteRepository extends AbstractMutableRepository
         }
 
         if ($isSiteVehicleClass === true) {
-            $sql .= " AND vc.code IN (:SITE_VEHICLE_CLASS)";
+            $sql .= ' AND vc.code IN (:SITE_VEHICLE_CLASS)';
         }
 
         $sql .= '
@@ -502,9 +502,10 @@ class SiteRepository extends AbstractMutableRepository
     }
 
     /**
-     * Build the result set map of a search for sites
+     * Build the result set map of a search for sites.
      *
      * @param $isCount
+     *
      * @return Query\ResultSetMapping
      */
     private function getResultSetMappingFindSites($isCount)
@@ -512,6 +513,7 @@ class SiteRepository extends AbstractMutableRepository
         $rsm = new Query\ResultSetMapping();
         if ($isCount) {
             $rsm->addScalarResult('id', 'id');
+
             return $rsm;
         }
         $rsm->addScalarResult('id', 'id');
@@ -528,10 +530,11 @@ class SiteRepository extends AbstractMutableRepository
     }
 
     /**
-     * Build the full text search for the search of sites
+     * Build the full text search for the search of sites.
      *
      * @param $param1
      * @param $param2
+     *
      * @return string
      */
     private function buildFullTextSearchSites($param1, $param2)
@@ -544,7 +547,7 @@ class SiteRepository extends AbstractMutableRepository
         $finalClause = '';
         foreach ($words as $word) {
             if (empty($word) === false && strlen($word) > 2) {
-                $finalClause .= ' +' . $word . '*';
+                $finalClause .= ' +'.$word.'*';
             }
         }
 
@@ -552,9 +555,10 @@ class SiteRepository extends AbstractMutableRepository
     }
 
     /**
-     * Delete the special char use by the full text search to avoid unwanted search
+     * Delete the special char use by the full text search to avoid unwanted search.
      *
      * @param string $string
+     *
      * @return string
      */
     private function deleteUnwantedChar($string)
@@ -581,9 +585,9 @@ class SiteRepository extends AbstractMutableRepository
         $rsm = new Query\ResultSetMapping();
         $rsm->addScalarResult('site_number', 'site_number');
 
-        $sql = "SELECT site.site_number
+        $sql = 'SELECT site.site_number
             FROM site
-            WHERE site.organisation_id IS NULL AND site.site_status_id = (SELECT id FROM site_status_lookup WHERE code = :APPROVED)";
+            WHERE site.organisation_id IS NULL AND site.site_status_id = (SELECT id FROM site_status_lookup WHERE code = :APPROVED)';
 
         $query = $this->_em
             ->createNativeQuery($sql, $rsm)
@@ -596,6 +600,7 @@ class SiteRepository extends AbstractMutableRepository
      * @param int $aeId
      * @param int $offset
      * @param int $itemsPerPage
+     *
      * @return Site[]
      */
     public function getSitesTestQualityForOrganisationId($aeId, $offset, $itemsPerPage)
@@ -609,9 +614,9 @@ class SiteRepository extends AbstractMutableRepository
             ->where('site.organisation = :ORG_ID')
             ->addOrderBy('lastSiteAssessment.siteAssessmentScore', 'DESC')
             ->addOrderBy('site.name', 'ASC')
-            ->setMaxResults((int)$itemsPerPage)
-            ->setFirstResult((int)$offset)
-            ->setParameter('ORG_ID', (int)$aeId);
+            ->setMaxResults((int) $itemsPerPage)
+            ->setFirstResult((int) $offset)
+            ->setParameter('ORG_ID', (int) $aeId);
 
         return $queryBuilder->getQuery()->getResult();
     }

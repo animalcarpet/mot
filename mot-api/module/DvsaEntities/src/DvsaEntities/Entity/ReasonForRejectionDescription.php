@@ -9,13 +9,14 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
  * Reasons for rejection translated texts.
+ *
  * @ORM\Table(name="rfr_language_content_map")
  * @ORM\Entity(readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
  */
 class ReasonForRejectionDescription extends Entity
 {
-    const MANUAL_ADVISORY = "Manual Advisory";
+    const MANUAL_ADVISORY = 'Manual Advisory';
 
     use CommonIdentityTrait;
 
@@ -70,6 +71,7 @@ class ReasonForRejectionDescription extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -83,11 +85,13 @@ class ReasonForRejectionDescription extends Entity
 
     /**
      * @param string $advisoryText
+     *
      * @return $this
      */
     public function setAdvisoryText($advisoryText)
     {
         $this->advisoryText = $advisoryText;
+
         return $this;
     }
 
@@ -101,11 +105,13 @@ class ReasonForRejectionDescription extends Entity
 
     /**
      * @param string $inspectionManualDescription
+     *
      * @return $this
      */
     public function setInspectionManualDescription($inspectionManualDescription)
     {
         $this->inspectionManualDescription = $inspectionManualDescription;
+
         return $this;
     }
 
@@ -119,11 +125,13 @@ class ReasonForRejectionDescription extends Entity
 
     /**
      * @param Language $language
+     *
      * @return $this
      */
     public function setLanguage(Language $language)
     {
         $this->language = $language;
+
         return $this;
     }
 
@@ -149,9 +157,8 @@ class ReasonForRejectionDescription extends Entity
         foreach ($rfr->getDescriptions() as $description) {
             if ($description->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
                 return $description->getName();
-            }
-            else {
-                throw new NotFoundException("Reason for rejection description");
+            } else {
+                throw new NotFoundException('Reason for rejection description');
             }
         }
     }
@@ -170,9 +177,8 @@ class ReasonForRejectionDescription extends Entity
         foreach ($rfr->getDescriptions() as $description) {
             if ($description->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
                 return $description->getAdvisoryText();
-            }
-            else {
-                throw new NotFoundException("Reason for rejection advisory text");
+            } else {
+                throw new NotFoundException('Reason for rejection advisory text');
             }
         }
     }

@@ -18,19 +18,19 @@ class RegisterCardViewStrategy implements AutoWireableInterface
     /** @var FeatureToggles */
     private $featureToggles;
 
-    /** @var  RegisterCardHardStopCondition */
+    /** @var RegisterCardHardStopCondition */
     private $hardStopCondition;
 
     /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
     private $authorisationService;
 
-    /** @var  MotFrontendIdentityProvider $identityProvider */
+    /** @var MotFrontendIdentityProvider $identityProvider */
     private $identityProvider;
 
     /** @var SecurityCardGuard $securityCardGuard */
     private $securityCardGuard;
 
-    /** @var  PersonProfileGuardBuilder $personProfileGuardBuilder */
+    /** @var PersonProfileGuardBuilder $personProfileGuardBuilder */
     private $personProfileGuardBuilder;
 
     /** @var Url $url */
@@ -38,12 +38,13 @@ class RegisterCardViewStrategy implements AutoWireableInterface
 
     /**
      * RegisterCardViewStrategy constructor.
-     * @param FeatureToggles $featureToggles
-     * @param RegisterCardHardStopCondition $hardStopCondition
-     * @param MotAuthorisationServiceInterface $authorisationService
+     *
+     * @param FeatureToggles                       $featureToggles
+     * @param RegisterCardHardStopCondition        $hardStopCondition
+     * @param MotAuthorisationServiceInterface     $authorisationService
      * @param MotFrontendIdentityProviderInterface $identityProvider
-     * @param SecurityCardGuard $securityCardGuard
-     * @param PersonProfileGuardBuilder $personProfileGuardBuilder
+     * @param SecurityCardGuard                    $securityCardGuard
+     * @param PersonProfileGuardBuilder            $personProfileGuardBuilder
      */
     public function __construct(
         FeatureToggles $featureToggles,
@@ -65,7 +66,8 @@ class RegisterCardViewStrategy implements AutoWireableInterface
 
     /**
      * If user cannot activate a card, it will not put them
-     * On to the activate a card journey
+     * On to the activate a card journey.
+     *
      * @return bool
      */
     public function canActivateACard()
@@ -74,6 +76,7 @@ class RegisterCardViewStrategy implements AutoWireableInterface
         $hasActiveCard = $this->securityCardGuard->hasActiveTwoFaCard($identity);
         $hasCardOrdered = $this->securityCardGuard->hasOutstandingCardOrdersAndNoActiveCard($identity);
         $twoFactorEligibleUser = $this->securityCardGuard->is2faEligibleUserWhichCanActivateACard($identity);
+
         return $twoFactorEligibleUser && (!$hasActiveCard || $hasCardOrdered);
     }
 

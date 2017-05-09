@@ -7,7 +7,7 @@ use DvsaCommon\Constants\SectionState;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ApplicationSectionState
+ * ApplicationSectionState.
  *
  * @ORM\Table(
  * name="application_section_state",

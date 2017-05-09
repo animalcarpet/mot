@@ -2,7 +2,6 @@
 
 namespace DvsaMotTest\Mapper;
 
-use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
@@ -11,7 +10,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
 
 /**
- * Maps form data to BrakeTestConfigurationClass1And2Dto
+ * Maps form data to BrakeTestConfigurationClass1And2Dto.
  */
 class BrakeTestConfigurationClass1And2Mapper implements BrakeTestConfigurationMapperInterface
 {

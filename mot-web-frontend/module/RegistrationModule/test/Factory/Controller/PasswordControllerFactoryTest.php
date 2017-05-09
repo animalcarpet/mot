@@ -19,7 +19,6 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * Class PasswordControllerFactoryTest.
  */
-
 class PasswordControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**

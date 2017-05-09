@@ -7,9 +7,7 @@ use DvsaCommonApi\Service\Mapper\AbstractApiMapper;
 use DvsaEntities\Entity\CountryOfRegistration;
 
 /**
- * Class CountryOfRegistrationMapper
- *
- * @package VehicleApi\Service\Mapper
+ * Class CountryOfRegistrationMapper.
  */
 class CountryOfRegistrationMapper extends AbstractApiMapper
 {

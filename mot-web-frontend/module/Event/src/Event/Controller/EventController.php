@@ -51,7 +51,7 @@ class EventController extends AbstractAuthActionController
 
     /**
      * EventController constructor.
-     * 
+     *
      * @param ContextProvider $contextProvider
      */
     public function __construct(ContextProvider $contextProvider)
@@ -144,7 +144,7 @@ class EventController extends AbstractAuthActionController
      * This function is responsible to validate that the form is valid.
      *
      * @param EventFormDto $formModel
-     * @param Boolean      $isAjax
+     * @param bool         $isAjax
      *
      * @return EventFormDto|null
      */
@@ -198,7 +198,7 @@ class EventController extends AbstractAuthActionController
             $this->addErrorMessages(
                 sprintf(
                     self::DATE_INVALID,
-                    $fieldSfx, $date->getDay() . '-' . $date->getMonth() . '-' . $date->getYear()
+                    $fieldSfx, $date->getDay().'-'.$date->getMonth().'-'.$date->getYear()
                 )
             );
         } elseif (DateUtils::isDateInFuture($date->getDate()) === true) {

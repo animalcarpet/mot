@@ -1,4 +1,5 @@
 <?php
+
 namespace NotificationApi\Service\Helper;
 
 use DvsaEntities\Repository\EventOrganisationMapRepository;
@@ -8,7 +9,6 @@ use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaEventApi\Service\EventService;
 use DvsaEntities\Entity\EventOrganisationMap;
-use Doctrine\ORM\EntityManager;
 use DvsaEntities\Entity\Notification;
 
 class OrganisationNominationEventHelper
@@ -35,13 +35,14 @@ class OrganisationNominationEventHelper
 
     /**
      * @param Notification $notification
+     *
      * @return EventOrganisationMap
      */
     public function create(Notification $notification)
     {
-        $positionName = $notification->getFieldValue("positionName");
-        $organisationName = $notification->getFieldValue("organisationName");
-        $organisationId = $notification->getFieldValue("siteOrOrganisationId");
+        $positionName = $notification->getFieldValue('positionName');
+        $organisationName = $notification->getFieldValue('organisationName');
+        $organisationId = $notification->getFieldValue('siteOrOrganisationId');
         $person = $notification->getRecipient();
         $description = sprintf(
             EventDescription::ROLE_NOMINATION_ACCEPT,

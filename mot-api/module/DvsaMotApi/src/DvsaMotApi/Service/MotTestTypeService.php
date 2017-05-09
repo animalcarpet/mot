@@ -11,7 +11,7 @@ use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 
 /**
- * Class MotTestTypeService
+ * Class MotTestTypeService.
  */
 class MotTestTypeService extends AbstractService
 {
@@ -39,12 +39,14 @@ class MotTestTypeService extends AbstractService
         if (!$data) {
             throw new NotFoundException('MotTestType', $id);
         }
+
         return $this->extractMotTestTypeData($data);
     }
 
     private function extractMotTestTypeData($motTestType)
     {
         $motTestTypeData = $this->objectHydrator->extract($motTestType);
+
         return $motTestTypeData;
     }
 }

@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaCommonApiTest\Service\Exception;
 
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class BadRequestExceptionTest
+ * Class BadRequestExceptionTest.
  */
 class BadRequestExceptionTest extends PHPUnit_Framework_TestCase
 {
@@ -15,9 +16,9 @@ class BadRequestExceptionTest extends PHPUnit_Framework_TestCase
         $errorCode = 50;
 
         $errors = [[
-            "message" => $message,
-            "code" => $errorCode,
-            "displayMessage" => $message
+            'message' => $message,
+            'code' => $errorCode,
+            'displayMessage' => $message,
         ]];
 
         $badRequestException = new BadRequestException($message, $errorCode);
@@ -34,9 +35,9 @@ class BadRequestExceptionTest extends PHPUnit_Framework_TestCase
         $displayMessage = 'Invalid vehicle and color in bad taste';
 
         $errors = [[
-            "message" => $message,
-            "code" => $errorCode,
-            "displayMessage" => $displayMessage
+            'message' => $message,
+            'code' => $errorCode,
+            'displayMessage' => $displayMessage,
         ]];
 
         $badRequestException = new BadRequestException($message, $errorCode, $displayMessage);

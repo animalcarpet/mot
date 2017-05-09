@@ -5,7 +5,6 @@ namespace OrganisationApi\Controller;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\AuthorisedExaminerService;
-use Zend\Http\Response;
 
 class AuthorisedExaminerNameController extends AbstractDvsaRestfulController
 {

@@ -4,8 +4,8 @@ $this->headScript()->appendFile('/js/partials/rfr-results-summary.js');
 
 // pull in rfr sets if they exist.
 $rfrFail = isset($reasonsForRejection['FAIL']) ? $reasonsForRejection['FAIL'] : [];
-$rfrPRS  = isset($reasonsForRejection['PRS']) ? $reasonsForRejection['PRS'] : [];
-$rfrAdvisory  = isset($reasonsForRejection['ADVISORY']) ? $reasonsForRejection['ADVISORY'] : [];
+$rfrPRS = isset($reasonsForRejection['PRS']) ? $reasonsForRejection['PRS'] : [];
+$rfrAdvisory = isset($reasonsForRejection['ADVISORY']) ? $reasonsForRejection['ADVISORY'] : [];
 
 // Counting RFRs after checking if they're set.
 $rfrFailureCount = count($rfrFail);
@@ -20,7 +20,7 @@ $rfrCount = $rfrFailureCount + $rfrPrsCount + $rfrAdvisoryCount;
         <div class="col-md-4">
             <p>
                 Failures, PRS and advisories
-        <span id="rfrCount" class="h3 <?php echo $rfrCount ? 'fail' : '';?> " data-toggle="collapse" data-target="#showHideRfrResults">
+        <span id="rfrCount" class="h3 <?php echo $rfrCount ? 'fail' : ''; ?> " data-toggle="collapse" data-target="#showHideRfrResults">
             <?php echo $this->escapeHtml($rfrCount); ?>
             Listed
         </span>
@@ -31,7 +31,7 @@ $rfrCount = $rfrFailureCount + $rfrPrsCount + $rfrAdvisoryCount;
         <div class="col-md-12">
             <div id="rfrResults">
                 <div id="showHideRfrResults" class="show-hide-container clearfix">
-                    <h4 id="failureCount" class="<?php echo $rfrFailureCount ? 'fail' : '';?>">
+                    <h4 id="failureCount" class="<?php echo $rfrFailureCount ? 'fail' : ''; ?>">
                         Failure<?php echo $rfrFailureCount != 1 ? 's' : ''; ?>
                     </h4>
                     <?php echo $this->partial('rfrResultSet', ['motTestNumber' => $motTestNumber, 'rfrArray' => $rfrFail, 'cssId' => 'failureResults', 'rfrCount' => $rfrFailureCount]); ?>

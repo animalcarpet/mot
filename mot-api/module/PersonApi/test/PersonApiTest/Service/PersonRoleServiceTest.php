@@ -2,7 +2,6 @@
 
 namespace PersonApiTest\Service;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Model\PersonAuthorization;
@@ -25,7 +24,6 @@ use DvsaMotApi\Helper\RoleEventHelper;
 use DvsaMotApi\Helper\RoleNotificationHelper;
 use PersonApi\Service\PersonRoleService;
 use DvsaAuthentication\Identity;
-use Zend\Server\Reflection\ReflectionClass;
 use DvsaCommon\Constants\Role as RoleName;
 
 class PersonRoleServiceTest extends AbstractServiceTestCase
@@ -38,14 +36,15 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     /**
      * Rules for the current logged in user and what the user being managed currently has
      * active = managed user currently has role
-     * allowed = manager can manage the role
+     * allowed = manager can manage the role.
+     *
      * @var array
      */
     private $permissionMap = [
         ['code' => 'A', 'active' => true, 'allowed' => true, 'permission' => 'MANAGE-A'],
         ['code' => 'B', 'active' => true, 'allowed' => false, 'permission' => 'MANAGE-B'],
         ['code' => 'C', 'active' => false, 'allowed' => true, 'permission' => 'MANAGE-C'],
-        ['code' => 'D', 'active' => false, 'allowed' => false, 'permission' => 'MANAGE-D']
+        ['code' => 'D', 'active' => false, 'allowed' => false, 'permission' => 'MANAGE-D'],
     ];
 
     /**
@@ -54,7 +53,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     private $mocks;
 
     /**
-     * Test creating a role for a user
+     * Test creating a role for a user.
      */
     public function testCreate()
     {
@@ -62,37 +61,37 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $obj = XMock::of(
             PersonRoleService::class,
             [
-                "assertManageRolePermission",
-                "assertForSelfManagement",
-                "assertPersonHasTradeRole",
-                "getPersonEntity",
-                "getPersonSystemRoleEntityFromName",
-                "getPermissionCodeFromPersonSystemRole",
-                "assertSystemRolePermission",
-                "addRole",
-                "sendAssignRoleEvent",
-                "sendAssignRoleNotification",
+                'assertManageRolePermission',
+                'assertForSelfManagement',
+                'assertPersonHasTradeRole',
+                'getPersonEntity',
+                'getPersonSystemRoleEntityFromName',
+                'getPermissionCodeFromPersonSystemRole',
+                'assertSystemRolePermission',
+                'addRole',
+                'sendAssignRoleEvent',
+                'sendAssignRoleNotification',
             ]
         );
         $person = $this->createPersonMock();
         $personSystemRole = $this->createPersonSystemRoleMock();
 
-        $obj->expects($this->once())->method("assertManageRolePermission");
-        $obj->expects($this->once())->method("assertForSelfManagement")->with(self::PERSON_ID);
-        $obj->expects($this->once())->method("assertPersonHasTradeRole")->with(self::PERSON_ID);
-        $obj->expects($this->once())->method("getPersonEntity")->with(self::PERSON_ID)->willReturn($person);
-        $obj->expects($this->once())->method("assertSystemRolePermission")->with(self::FAKE_PERMISSION);
-        $obj->expects($this->once())->method("addRole")->with($person, $personSystemRole);
-        $obj->expects($this->once())->method("sendAssignRoleEvent")->with($person, $personSystemRole);
-        $obj->expects($this->once())->method("sendAssignRoleNotification")->with($person, $personSystemRole);
+        $obj->expects($this->once())->method('assertManageRolePermission');
+        $obj->expects($this->once())->method('assertForSelfManagement')->with(self::PERSON_ID);
+        $obj->expects($this->once())->method('assertPersonHasTradeRole')->with(self::PERSON_ID);
+        $obj->expects($this->once())->method('getPersonEntity')->with(self::PERSON_ID)->willReturn($person);
+        $obj->expects($this->once())->method('assertSystemRolePermission')->with(self::FAKE_PERMISSION);
+        $obj->expects($this->once())->method('addRole')->with($person, $personSystemRole);
+        $obj->expects($this->once())->method('sendAssignRoleEvent')->with($person, $personSystemRole);
+        $obj->expects($this->once())->method('sendAssignRoleNotification')->with($person, $personSystemRole);
 
         $obj->expects($this->once())
-            ->method("getPersonSystemRoleEntityFromName")
+            ->method('getPersonSystemRoleEntityFromName')
             ->with(self::FAKE_PERSON_SYSTEM_ROLE)
             ->willReturn($personSystemRole);
 
         $obj->expects($this->once())
-            ->method("getPermissionCodeFromPersonSystemRole")
+            ->method('getPermissionCodeFromPersonSystemRole')
             ->with($personSystemRole)
             ->willReturn(self::FAKE_PERMISSION);
 
@@ -110,37 +109,37 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $obj = XMock::of(
             PersonRoleService::class,
             [
-                "assertManageRolePermission",
-                "assertForSelfManagement",
-                "assertPersonHasTradeRole",
-                "getPersonEntity",
-                "getPersonSystemRoleEntityFromName",
-                "getPermissionCodeFromPersonSystemRole",
-                "assertSystemRolePermission",
-                "removeRole",
-                "sendRemoveRoleEvent",
-                "sendRemoveRoleNotification",
+                'assertManageRolePermission',
+                'assertForSelfManagement',
+                'assertPersonHasTradeRole',
+                'getPersonEntity',
+                'getPersonSystemRoleEntityFromName',
+                'getPermissionCodeFromPersonSystemRole',
+                'assertSystemRolePermission',
+                'removeRole',
+                'sendRemoveRoleEvent',
+                'sendRemoveRoleNotification',
             ]
         );
         $person = $this->createPersonMock();
         $personSystemRole = $this->createPersonSystemRoleMock();
 
-        $obj->expects($this->once())->method("assertManageRolePermission");
-        $obj->expects($this->once())->method("assertForSelfManagement")->with(self::PERSON_ID);
-        $obj->expects($this->once())->method("assertPersonHasTradeRole")->with(self::PERSON_ID);
-        $obj->expects($this->once())->method("getPersonEntity")->with(self::PERSON_ID)->willReturn($person);
-        $obj->expects($this->once())->method("assertSystemRolePermission")->with(self::FAKE_PERMISSION);
-        $obj->expects($this->once())->method("sendRemoveRoleEvent")->with($person, $personSystemRole);
-        $obj->expects($this->once())->method("sendRemoveRoleNotification")->with($person, $personSystemRole);
-        $obj->expects($this->once())->method("removeRole")->with($person, $personSystemRole);
+        $obj->expects($this->once())->method('assertManageRolePermission');
+        $obj->expects($this->once())->method('assertForSelfManagement')->with(self::PERSON_ID);
+        $obj->expects($this->once())->method('assertPersonHasTradeRole')->with(self::PERSON_ID);
+        $obj->expects($this->once())->method('getPersonEntity')->with(self::PERSON_ID)->willReturn($person);
+        $obj->expects($this->once())->method('assertSystemRolePermission')->with(self::FAKE_PERMISSION);
+        $obj->expects($this->once())->method('sendRemoveRoleEvent')->with($person, $personSystemRole);
+        $obj->expects($this->once())->method('sendRemoveRoleNotification')->with($person, $personSystemRole);
+        $obj->expects($this->once())->method('removeRole')->with($person, $personSystemRole);
 
         $obj->expects($this->once())
-            ->method("getPersonSystemRoleEntityFromName")
+            ->method('getPersonSystemRoleEntityFromName')
             ->with(self::FAKE_PERSON_SYSTEM_ROLE)
             ->willReturn($personSystemRole);
 
         $obj->expects($this->once())
-            ->method("getPermissionCodeFromPersonSystemRole")
+            ->method('getPermissionCodeFromPersonSystemRole')
             ->with($personSystemRole)
             ->willReturn(self::FAKE_PERMISSION);
 
@@ -148,7 +147,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test the Get person system role entity function
+     * Test the Get person system role entity function.
      */
     public function testGetPersonSystemRoleEntityFromName()
     {
@@ -158,7 +157,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * test a person who has permission to manage roles
+     * test a person who has permission to manage roles.
      */
     public function testAssertManageRolePermission()
     {
@@ -168,7 +167,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test for a person trying to manage themselves
+     * Test for a person trying to manage themselves.
      */
     public function testAssertForSelfManagement_False()
     {
@@ -178,7 +177,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test for a person trying to manage themselves
+     * Test for a person trying to manage themselves.
+     *
      * @expectedException \DvsaCommon\Exception\UnauthorisedException
      * @expectedExceptionMessage You are not allowed to change your own roles
      */
@@ -190,7 +190,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test for a person who does not have a trade role
+     * Test for a person who does not have a trade role.
      */
     public function testAssertPersonHasTradeRole_PersonHasRole()
     {
@@ -200,7 +200,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test for a person who does not have a trade role
+     * Test for a person who does not have a trade role.
+     *
      * @expectedException \Exception
      * @expectedExceptionMessage It's not possible to assign an "internal" role to a "trade" role owner
      */
@@ -223,7 +224,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test the getPersonSystemRoleMap returns a PersonSystemRoleMap for a Person and PersonSystemRole
+     * Test the getPersonSystemRoleMap returns a PersonSystemRoleMap for a Person and PersonSystemRole.
      */
     public function testGetPersonSystemRoleMap()
     {
@@ -237,7 +238,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Ensure that we trigger the event in the Role Event service
+     * Ensure that we trigger the event in the Role Event service.
      */
     public function testSendAssignRoleEvent()
     {
@@ -249,7 +250,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         );
     }
     /**
-     * Ensure that we trigger the event in the Role Event service
+     * Ensure that we trigger the event in the Role Event service.
      */
     public function testSendRemoveRoleEvent()
     {
@@ -262,7 +263,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Ensure that we trigger the event in the Role Notification service
+     * Ensure that we trigger the event in the Role Notification service.
      */
     public function testSendAssignRoleNotification()
     {
@@ -275,7 +276,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Ensure that we trigger the event in the Role Notification service
+     * Ensure that we trigger the event in the Role Notification service.
      */
     public function testSendRemoveRoleNotification()
     {
@@ -288,7 +289,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test assigning a role when it does not exist
+     * Test assigning a role when it does not exist.
+     *
      * @throws \Exception
      */
     public function testAssignRole_NotExists()
@@ -308,7 +310,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test assigning a role when it already exists
+     * Test assigning a role when it already exists.
+     *
      * @throws \Exception
      */
     public function testAssignRole_Exists()
@@ -323,7 +326,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test removing a role for a role that exists
+     * Test removing a role for a role that exists.
      */
     public function testRemoveRole_Exists()
     {
@@ -338,7 +341,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * test removing a role when the role does not exist
+     * test removing a role when the role does not exist.
+     *
      * @expectedException \Exception
      * @expectedExceptionMessage PersonSystemRoleMap does not exist
      */
@@ -354,7 +358,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test getting a system role entity by name
+     * Test getting a system role entity by name.
      */
     public function textGetPersonSystemRoleEntityFromName()
     {
@@ -384,7 +388,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
 
     /**
      * The user being managed currently has roles A and B, due to us messing with the data
-     * the logged in user now has permission to add role D
+     * the logged in user now has permission to add role D.
      */
     public function testGetPersonManageableInternalRoleCodes_AlteredData()
     {
@@ -403,7 +407,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test getting a person's assigned role codes
+     * Test getting a person's assigned role codes.
      */
     public function testGetPersonAssignedInternalRoleCodes()
     {
@@ -416,7 +420,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * test getting a persons internal role codes after modification
+     * test getting a persons internal role codes after modification.
      */
     public function testGetPersonAssignedInternalRoleCodes_AlteredData()
     {
@@ -430,7 +434,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test getting the roles for a user
+     * Test getting the roles for a user.
      */
     public function testGetRoles()
     {
@@ -451,7 +455,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test if a person are trying to access their own record
+     * Test if a person are trying to access their own record.
+     *
      * @dataProvider dpIsIdentitySelfForPerson
      */
     public function testIsIdentitySelfForPerson($authPersonId, $personToManageId, $expected)
@@ -473,7 +478,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Data is the ID of the person that is authenticated and the person being checked
+     * Data is the ID of the person that is authenticated and the person being checked.
+     *
      * @return array
      */
     public function dpIsIdentitySelfForPerson()
@@ -482,12 +488,13 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
             // The authenticated person is the same as the person being checked
             [self::PERSON_ID, self::PERSON_ID, true],
             // Shameless DNA reference, just to differ the id to test the authenticated person is NOT the same
-            [42, self::PERSON_ID, false]
+            [42, self::PERSON_ID, false],
         ];
     }
 
     /**
-     * Test a person has trade role
+     * Test a person has trade role.
+     *
      * @dataProvider dpResultsPeopleRolesCombination
      */
     public function testPersonHasTradeRole($expectedResult, $roles)
@@ -547,7 +554,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
                     RoleName::USER,
                     'GVTS-TESTER',
                     'VM-10519-USER',
-                    RoleName::DVLA_MANAGER
+                    RoleName::DVLA_MANAGER,
                 ],
             ],
             [
@@ -566,7 +573,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
             [
                 true,
                 [
-                    RoleName::AUTHORISED_EXAMINER
+                    RoleName::AUTHORISED_EXAMINER,
                 ],
             ],
             [
@@ -606,15 +613,15 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
                 ],
             ],
         ];
-
     }
 
     /**
-     * PRIVATE INTERNAL TEST FUNCTIONS
+     * PRIVATE INTERNAL TEST FUNCTIONS.
      */
 
     /**
      * @param string $with
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|AuthorisationService
      */
     private function fakeAuthService_assertGranted($with)
@@ -630,6 +637,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
 
     /**
      * @param int $startNumber
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|AuthorisationService
      */
     private function fakeAuthService_isGranted($startNumber = 0)
@@ -643,7 +651,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
                     ->method('isGranted')
                     ->with($entry['permission'])
                     ->willReturn($entry['allowed']);
-                $count++;
+                ++$count;
             }
         }
 
@@ -658,6 +666,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $mock = $this->getMockObj(RoleEventHelper::class);
         $mock->expects($this->once())
             ->method('createAssignRoleEvent');
+
         return $mock;
     }
 
@@ -669,6 +678,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $mock = $this->getMockObj(RoleEventHelper::class);
         $mock->expects($this->once())
             ->method('createRemoveRoleEvent');
+
         return $mock;
     }
 
@@ -680,6 +690,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $mock = $this->getMockObj(RoleNotificationHelper::class);
         $mock->expects($this->once())
             ->method('sendAssignRoleNotification');
+
         return $mock;
     }
 
@@ -691,11 +702,13 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $mock = $this->getMockObj(RoleNotificationHelper::class);
         $mock->expects($this->once())
             ->method('sendRemoveRoleNotification');
+
         return $mock;
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|Person
+     *
      * @throws \Exception
      */
     private function createPersonMock()
@@ -704,11 +717,13 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $person->expects($this->any())
             ->method('getId')
             ->willReturn(self::PERSON_ID);
+
         return $person;
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|PersonSystemRole
+     *
      * @throws \Exception
      */
     private function createPersonSystemRoleMock()
@@ -717,13 +732,16 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $personSystemRole->expects($this->any())
             ->method('getId')
             ->willReturn(self::PERSON_SYSTEM_ROLE_ID);
+
         return $personSystemRole;
     }
 
     /**
-     * @param string $functionName The function you want to mock
+     * @param string     $functionName The function you want to mock
      * @param bool|false $willReturn
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|PersonRoleService
+     *
      * @throws \Exception
      */
     private function createPersonRoleServiceMock($functionName, $willReturn = false)
@@ -733,13 +751,16 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
             ->method($functionName)
             ->with(self::PERSON_ID)
             ->willReturn($willReturn);
+
         return $mock;
     }
 
     /**
      * @param string $className
-     * @param bool $alwaysCreate
+     * @param bool   $alwaysCreate
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getMockObj($className, $alwaysCreate = false)
@@ -747,19 +768,22 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         if (!isset($this->mocks[$className]) || $alwaysCreate === true) {
             $this->mocks[$className] = XMock::of($className);
         }
+
         return $this->mocks[$className];
     }
 
     /**
      * @return Role[]
+     *
      * @throws \Exception
      */
     private function createRoleArrayFromPermissionsMap()
     {
         $return = [];
         foreach ($this->permissionMap as $entry) {
-            $return[] = (new Role)->setCode($entry['code']);
+            $return[] = (new Role())->setCode($entry['code']);
         }
+
         return $return;
     }
 
@@ -795,7 +819,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
             ->method('getByName')
             ->with(self::FAKE_PERSON_SYSTEM_ROLE)
             ->willReturn(
-                (new PersonSystemRole)
+                (new PersonSystemRole())
                     ->setId(self::PERSON_SYSTEM_ROLE_ID)
                     ->setName(self::FAKE_PERSON_SYSTEM_ROLE)
                     ->setRole(
@@ -803,6 +827,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
                             ->setCode(self::FAKE_PERSON_SYSTEM_ROLE)
                     )
             );
+
         return $mock;
     }
 
@@ -816,13 +841,12 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $counter = 0;
         foreach ($this->permissionMap as $entry) {
             if ($entry['active'] === false) {
-
                 $mock->expects($this->at($counter))
                     ->method('getPermissionCodeByRoleCode')
                     ->with($entry['code'])
                     ->willReturn($entry['permission']);
 
-                $counter++;
+                ++$counter;
             }
         }
 
@@ -839,6 +863,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
             ->method('getPersonActiveInternalRoleCodes')
             ->with(self::PERSON_ID)
             ->willReturn($this->generateActiveRolesFromPermissionMap());
+
         return $mock;
     }
 
@@ -853,6 +878,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
                 $return[] = ['code' => $entry['code']];
             }
         }
+
         return $return;
     }
 
@@ -865,6 +891,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $mock->expects($this->any())
             ->method('getAllInternalRoles')
             ->willReturn($this->createRoleArrayFromPermissionsMap());
+
         return $mock;
     }
 
@@ -878,6 +905,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
             ->method('findByPersonAndSystemRole')
             ->with(self::PERSON_ID, self::PERSON_SYSTEM_ROLE_ID)
             ->willReturn(null);
+
         return $mock;
     }
 
@@ -900,6 +928,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
                             ->setCode(BusinessRoleStatusCode::INACTIVE)
                     )
             );
+
         return $mock;
     }
 
@@ -911,6 +940,7 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
         $mock = $this->getMockObj(PersonSystemRoleMapRepository::class);
         $mock->expects($this->once())
             ->method('save');
+
         return $mock;
     }
 
@@ -928,11 +958,13 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
                     ->setId(1)
                     ->setCode(BusinessRoleStatusCode::ACTIVE)
             );
+
         return $mock;
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function stubRoleRepository()
@@ -953,7 +985,9 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
 
     /**
      * @param $mockPersonRoleCodes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RbacRepository
+     *
      * @throws \Exception
      */
     private function stubRbacRepository($mockPersonRoleCodes)
@@ -974,7 +1008,8 @@ class PersonRoleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * to mock all trade roles coming from the role repository
+     * to mock all trade roles coming from the role repository.
+     *
      * @return array
      */
     private function dpTradeRoles()

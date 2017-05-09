@@ -42,7 +42,7 @@ class PersonProfileControllerFactoryTest extends \PHPUnit_Framework_TestCase
                 CanTestWithoutOtpService::class => CanTestWithoutOtpService::class,
                 SecurityCardService::class => SecurityCardService::class,
                 SecurityCardGuard::class => SecurityCardGuard::class,
-                TwoFaFeatureToggle::class
+                TwoFaFeatureToggle::class,
             ]
         );
     }

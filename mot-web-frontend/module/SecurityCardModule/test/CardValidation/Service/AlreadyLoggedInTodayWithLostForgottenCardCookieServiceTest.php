@@ -16,7 +16,7 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
 {
     const USER_ID = 105;
 
-    /** @var MotIdentityProviderInterface $identityProvider*/
+    /** @var MotIdentityProviderInterface $identityProvider */
     private $motIdentityProvider;
 
     const COOKIE_DATE = '2016-10-05 14:39:42';
@@ -24,7 +24,7 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
 
     public function setUp()
     {
-        $this->motIdentityProvider =  XMock::of(MotIdentityProviderInterface::class);
+        $this->motIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
     }
 
     public function testCookieMatchesForUserShouldReturnTrue()
@@ -32,8 +32,8 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
         $this->withIdentity(self::USER_ID);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
-        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
 
         $this->assertTrue($this->createService()->hasLoggedInTodayWithLostForgottenCardJourney($request));
     }
@@ -43,8 +43,8 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
         $this->withIdentity(7838918293);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
-        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
 
         $this->assertFalse($this->createService()->hasLoggedInTodayWithLostForgottenCardJourney($request));
     }
@@ -54,11 +54,10 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
         $this->withIdentity(7838918293);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
         $cookies = array();
-        for ($userId = 1; $userId <= 30; $userId++)
-        {
-            $cookies[AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . $userId] = 1;
+        for ($userId = 1; $userId <= 30; ++$userId) {
+            $cookies[AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.$userId] = 1;
         }
         $request->getHeaders()->addHeader(new Cookie($cookies));
 
@@ -70,11 +69,10 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
         $this->withIdentity(25);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
         $cookies = array();
-        for ($userId = 1; $userId <= 30; $userId++)
-        {
-            $cookies[AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . $userId] = 1;
+        for ($userId = 1; $userId <= 30; ++$userId) {
+            $cookies[AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.$userId] = 1;
         }
         $request->getHeaders()->addHeader(new Cookie($cookies));
 
@@ -99,10 +97,10 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
 
         $this->createService()->addLoggedInViaLostForgottenCardCookie($response);
 
-        /** @var SetCookie $setCookieHeader  */
+        /** @var SetCookie $setCookieHeader */
         $setCookieHeader = $response->getCookie()[0];
 
-        $this->assertEquals(AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID, $setCookieHeader->getName());
+        $this->assertEquals(AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID, $setCookieHeader->getName());
         $this->assertEquals($userPath, $setCookieHeader->getPath());
         $this->assertEquals(true, $setCookieHeader->isSecure());
     }
@@ -112,10 +110,10 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
         $this->withIdentity(self::USER_ID);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::COOKIE_DATE]));
-        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::COOKIE_DATE]));
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => self::COOKIE_DATE]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => self::COOKIE_DATE]));
 
-        $activationDate =  new \DateTime(self::ACTIVATION_DATE, new \DateTimeZone('Europe/London'));
+        $activationDate = new \DateTime(self::ACTIVATION_DATE, new \DateTimeZone('Europe/London'));
 
         $this->assertTrue($this->createService()->hasActivationOccouredAfterCookie($request, $activationDate));
     }
@@ -125,10 +123,10 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
         $this->withIdentity(self::USER_ID);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::ACTIVATION_DATE]));
-        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::ACTIVATION_DATE]));
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => self::ACTIVATION_DATE]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME.self::USER_ID => self::ACTIVATION_DATE]));
 
-        $activationDate =  new \DateTime(self::COOKIE_DATE, new \DateTimeZone('Europe/London'));
+        $activationDate = new \DateTime(self::COOKIE_DATE, new \DateTimeZone('Europe/London'));
 
         $this->assertFalse($this->createService()->hasActivationOccouredAfterCookie($request, $activationDate));
     }
@@ -145,7 +143,8 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
             ->willReturn($identity);
     }
 
-    private function createService() {
+    private function createService()
+    {
         return new AlreadyLoggedInTodayWithLostForgottenCardCookieService(
             $this->motIdentityProvider
         );

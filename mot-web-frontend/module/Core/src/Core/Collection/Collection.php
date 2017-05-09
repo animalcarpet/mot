@@ -1,11 +1,11 @@
 <?php
+
 namespace Core\Collection;
 
 use DvsaCommon\Utility\TypeCheck;
 
 /**
- * Class Collection
- * @package Core\Collection
+ * Class Collection.
  *
  * @deprecated
  */
@@ -99,7 +99,7 @@ class Collection implements \Iterator, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function current()
     {
@@ -107,7 +107,7 @@ class Collection implements \Iterator, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function next()
     {
@@ -115,7 +115,7 @@ class Collection implements \Iterator, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function key()
     {
@@ -123,7 +123,7 @@ class Collection implements \Iterator, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function valid()
     {
@@ -131,7 +131,7 @@ class Collection implements \Iterator, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function rewind()
     {
@@ -139,7 +139,7 @@ class Collection implements \Iterator, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function count()
     {
@@ -168,6 +168,7 @@ class Collection implements \Iterator, \Countable
     public function clear()
     {
         $this->data = [];
+
         return $this;
     }
 }

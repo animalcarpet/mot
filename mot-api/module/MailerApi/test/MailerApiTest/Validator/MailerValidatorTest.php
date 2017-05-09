@@ -1,4 +1,5 @@
 <?php
+
 namespace MailerApiTest\Validator;
 
 use DvsaCommon\Dto\Mailer\MailerDto;
@@ -8,7 +9,6 @@ use MailerApi\Service\MailerService;
 use MailerApi\Validator\MailerValidator;
 use MailerApiTest\Mixin\ServiceManager;
 use PHPUnit_Framework_TestCase;
-use Zend\Validator\EmailAddress;
 
 class MailerValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -46,7 +46,6 @@ class MailerValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->validator->validate($dto, 999);
     }
-
 
     /**
      * @expectedException \DvsaCommonApi\Service\Exception\BadRequestException
@@ -96,10 +95,10 @@ class MailerValidatorTest extends PHPUnit_Framework_TestCase
     {
         $dto = new MailerDto();
         $dto->setData([
-            "email" => MailerService::AWS_MAIL_SIMULATOR_SUCCESS,
-            "firstName" => "some name",
-            "familyName" => "familyName",
-            "attachment" => "dummy attachment",
+            'email' => MailerService::AWS_MAIL_SIMULATOR_SUCCESS,
+            'firstName' => 'some name',
+            'familyName' => 'familyName',
+            'attachment' => 'dummy attachment',
         ]);
         $this->withMockEmailValidator();
         $this->assertTrue($this->validator->validate($dto, MailerValidator::TYPE_CUSTOMER_CERTIFICATE));
@@ -112,10 +111,10 @@ class MailerValidatorTest extends PHPUnit_Framework_TestCase
     {
         $dto = new MailerDto();
         $dto->setData([
-            "email" => MailerService::getTestEmailAddress('mailervalidatortestemailtoolonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglong@'),
-            "firstName" => "some name",
-            "familyName" => "familyName",
-            "attachment" => "dummy attachment",
+            'email' => MailerService::getTestEmailAddress('mailervalidatortestemailtoolonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglong@'),
+            'firstName' => 'some name',
+            'familyName' => 'familyName',
+            'attachment' => 'dummy attachment',
         ]);
         $this->withRealEmailValidator();
         $this->validator->validate($dto, MailerValidator::TYPE_CUSTOMER_CERTIFICATE);
@@ -140,6 +139,7 @@ class MailerValidatorTest extends PHPUnit_Framework_TestCase
             ->method('findPerson')
             ->with($id)
             ->willReturn($with);
+
         return $this;
     }
 

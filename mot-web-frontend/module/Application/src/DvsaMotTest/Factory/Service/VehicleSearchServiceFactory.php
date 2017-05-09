@@ -11,16 +11,15 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use Application\Service\ContingencySessionManager;
 
 /**
- * Class VehicleSearchServiceFactory
- * @package DvsaMotTest\Factory\Service
+ * Class VehicleSearchServiceFactory.
  */
 class VehicleSearchServiceFactory implements FactoryInterface
 {
-
     /**
-     * Create VehicleSearchService
+     * Create VehicleSearchService.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return VehicleSearchService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

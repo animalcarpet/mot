@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * SiteType
+ * SiteType.
  *
  * @ORM\Table(name="site_type")})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SiteTypeRepository", readOnly=true)
@@ -26,7 +26,7 @@ class SiteType
     private $name;
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $name
      *
@@ -40,7 +40,7 @@ class SiteType
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */

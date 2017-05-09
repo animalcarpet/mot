@@ -1,11 +1,8 @@
 <?php
-use DvsaCommon\Date\DateTimeDisplayFormat;
-use Dashboard\Controller\UserHomeController;
 
 /* SINGLE NOTIFICATION VIEW */
 
 /** @var $notification \Dashboard\Model\Notification */
-
 $fields = $notification->getFields();
 $displayButton = isset($fields['buttonLink']) && isset($fields['buttonText']);
 
@@ -26,7 +23,7 @@ $displayButton = isset($fields['buttonLink']) && isset($fields['buttonText']);
 </div>
 
 <?php
-    if(!$notification->getIsArchived()){
+    if (!$notification->getIsArchived()) {
         echo $this->partial('dashboard/notification/archive-notification-button.phtml', [
             'notificationId' => $notification->getId(),
         ]);

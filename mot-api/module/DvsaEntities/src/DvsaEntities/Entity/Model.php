@@ -1,12 +1,13 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Model
+ * Model.
+ *
  * @ORM\Table(name="model", indexes={@ORM\Index(name="fk_model_created_by", columns={"created_by"}), @ORM\Index(name="fk_model_last_updated_by", columns={"last_updated_by"}), @ORM\Index(name="fk_model_make_code", columns={"make_code"})})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\ModelRepository", readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
@@ -47,7 +48,7 @@ class Model extends Entity
     private $name;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_verified", type="boolean")
      */
@@ -66,6 +67,7 @@ class Model extends Entity
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -79,11 +81,13 @@ class Model extends Entity
 
     /**
      * @param \DvsaEntities\Entity\Make $make
+     *
      * @return $this
      */
     public function setMake(Make $make)
     {
         $this->make = $make;
+
         return $this;
     }
 
@@ -103,6 +107,7 @@ class Model extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -115,7 +120,7 @@ class Model extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isVerified()
     {

@@ -10,12 +10,14 @@ class VehicleClassGroupRepository extends EntityRepository
 {
     /**
      * @param string $code
+     *
      * @return VehicleClassGroup
+     *
      * @throws NotFoundException
      */
     public function getByCode($code)
     {
-        $result = $this->findOneBy(["code" => $code]);
+        $result = $this->findOneBy(['code' => $code]);
 
         if ($result === null) {
             throw new NotFoundException($this->getClassName(), $code);

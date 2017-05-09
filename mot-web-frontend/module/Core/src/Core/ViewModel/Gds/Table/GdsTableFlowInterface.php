@@ -6,7 +6,9 @@ interface GdsTableFlowInterface
 {
     /**
      * @param string $htmlId
+     *
      * @return GdsRow
+     *
      * @internal param string $value
      * @internal param string $label
      */
@@ -19,6 +21,7 @@ interface GdsTableFlowInterface
 
     /**
      * @param int $index
+     *
      * @return GdsRow
      */
     public function getRow($index);

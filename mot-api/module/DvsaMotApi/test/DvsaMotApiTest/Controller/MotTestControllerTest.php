@@ -18,11 +18,9 @@ use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Controller\MotTestController;
 use DvsaMotApi\Service\CertificateChangeService;
 use DvsaMotApiTest\Traits\MockTestTypeTrait;
-use Zend\Http\Response;
-use Zend\Stdlib\Parameters;
 
 /**
- * Class MotTestControllerTest
+ * Class MotTestControllerTest.
  */
 class MotTestControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -248,9 +246,9 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setContent(
             http_build_query(
                 [
-                    'onePersonTest'         => $onePersonTest,
+                    'onePersonTest' => $onePersonTest,
                     'onePersonReInspection' => $onePersonReInspection,
-                    'operation'             => 'updateOnePersonTest'
+                    'operation' => 'updateOnePersonTest',
                 ]
             )
         );
@@ -284,9 +282,9 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setContent(
             http_build_query(
                 [
-                    'onePersonTest'         => $onePersonTest,
+                    'onePersonTest' => $onePersonTest,
                     'onePersonReInspection' => $onePersonReInspection,
-                    'operation'             => 'updateOnePersonTest'
+                    'operation' => 'updateOnePersonTest',
                 ]
             )
         );
@@ -329,12 +327,12 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $mockDocumentService->expects($this->at(0))
             ->method('getReportName')
             ->with(10, null)
-            ->willReturn("ReportA");
+            ->willReturn('ReportA');
 
         $mockDocumentService->expects($this->at(1))
             ->method('getReportName')
             ->with(20, null)
-            ->willReturn("ReportB");
+            ->willReturn('ReportB');
 
         $this->controller = new MotTestControllerMockSupport();
         $this->setUpController($this->controller);
@@ -343,7 +341,7 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
 
         $expectedData = [
             ['documentId' => 10, 'reportName' => 'ReportA', 'isReplacement' => $isReplacement],
-            ['documentId' => 20, 'reportName' => 'ReportB', 'isReplacement' => $isReplacement]
+            ['documentId' => 20, 'reportName' => 'ReportB', 'isReplacement' => $isReplacement],
         ];
 
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, ['data' => $expectedData], $result);
@@ -353,7 +351,7 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
     {
         return [
             ['truthy', true],
-            [null, false]
+            [null, false],
         ];
     }
 
@@ -395,6 +393,7 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $testMock->expects($this->any())
             ->method('getMotTestType')
             ->willReturn($testTypeMock);
+
         return $testMock;
     }
 
@@ -420,7 +419,7 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $this->request->getPost()->set('contingencyId', 3);
         $this->request->getPost()->set(
             'contingencyDto', [
-                "_class" => "DvsaCommon\\Dto\\MotTesting\\ContingencyTestDto"
+                '_class' => 'DvsaCommon\\Dto\\MotTesting\\ContingencyTestDto',
             ]
         );
         $result = $this->getResultForAction('post');

@@ -11,8 +11,7 @@ use Report\Table\Table;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 /**
- * Class SiteSearchViewModel
- * @package Site\ViewModel
+ * Class SiteSearchViewModel.
  */
 class SiteSearchViewModel extends AbstractFormModel
 {
@@ -22,39 +21,39 @@ class SiteSearchViewModel extends AbstractFormModel
     const ONLY_VEHICLE_CLASS = 'You cannot search by vehicle test classes alone - try expanding your search criteria';
 
     /**
-     * @var string $siteNumber
+     * @var string
      */
     private $siteNumber;
     /**
-     * @var string $siteName
+     * @var string
      */
     private $siteName;
     /**
-     * @var string $siteTown
+     * @var string
      */
     private $siteTown;
     /**
-     * @var string $sitePostcode
+     * @var string
      */
     private $sitePostcode;
     /**
-     * @var array $siteVehicleClass
+     * @var array
      */
     private $siteVehicleClass;
     /**
-     * @var int $rowCount
+     * @var int
      */
     private $rowCount;
     /**
-     * @var int $pageNumber
+     * @var int
      */
     private $pageNumber;
     /**
-     * @var string $sortBy
+     * @var string
      */
     private $sortBy;
     /**
-     * @var string $sortDirection
+     * @var string
      */
     private $sortDirection;
 
@@ -73,11 +72,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param string $siteNumber
+     *
      * @return $this
      */
     public function setSiteNumber($siteNumber)
     {
         $this->siteNumber = $siteNumber;
+
         return $this;
     }
 
@@ -91,11 +92,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param string $siteName
+     *
      * @return $this
      */
     public function setSiteName($siteName)
     {
         $this->siteName = $siteName;
+
         return $this;
     }
 
@@ -109,11 +112,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param string $siteTown
+     *
      * @return $this
      */
     public function setSiteTown($siteTown)
     {
         $this->siteTown = $siteTown;
+
         return $this;
     }
 
@@ -127,11 +132,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param string $sitePostcode
+     *
      * @return $this
      */
     public function setSitePostcode($sitePostcode)
     {
         $this->sitePostcode = $sitePostcode;
+
         return $this;
     }
 
@@ -145,17 +152,19 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param array $siteVehicleClass
+     *
      * @return $this
      */
     public function setSiteVehicleClass($siteVehicleClass)
     {
         $this->siteVehicleClass = $siteVehicleClass;
+
         return $this;
     }
 
-
     /**
      * @param int $class
+     *
      * @return bool
      */
     public function isSiteVehicleClassChecked($class)
@@ -163,6 +172,7 @@ class SiteSearchViewModel extends AbstractFormModel
         if (!empty($this->siteVehicleClass)) {
             return in_array($class, $this->siteVehicleClass);
         }
+
         return false;
     }
 
@@ -176,11 +186,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param int $rowCount
+     *
      * @return $this
      */
     public function setRowCount($rowCount)
     {
         $this->rowCount = $rowCount;
+
         return $this;
     }
 
@@ -194,11 +206,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param int $pageNumber
+     *
      * @return $this
      */
     public function setPageNumber($pageNumber)
     {
         $this->pageNumber = $pageNumber;
+
         return $this;
     }
 
@@ -212,11 +226,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param string $sortBy
+     *
      * @return $this
      */
     public function setSortBy($sortBy)
     {
         $this->sortBy = $sortBy;
+
         return $this;
     }
 
@@ -230,11 +246,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param string $sortDirection
+     *
      * @return $this
      */
     public function setSortDirection($sortDirection)
     {
         $this->sortDirection = $sortDirection;
+
         return $this;
     }
 
@@ -245,46 +263,46 @@ class SiteSearchViewModel extends AbstractFormModel
     {
         return [
             [
-                'value'     => '1',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 1',
-                'checked'   => $this->isSiteVehicleClassChecked(1),
+                'value' => '1',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 1',
+                'checked' => $this->isSiteVehicleClassChecked(1),
             ],
             [
-                'value'     => '2',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 2',
-                'checked'   => $this->isSiteVehicleClassChecked(2),
+                'value' => '2',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 2',
+                'checked' => $this->isSiteVehicleClassChecked(2),
             ],
             [
-                'value'     => '3',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 3',
-                'checked'   => $this->isSiteVehicleClassChecked(3),
+                'value' => '3',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 3',
+                'checked' => $this->isSiteVehicleClassChecked(3),
             ],
             [
-                'value'     => '4',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 4',
-                'checked'   => $this->isSiteVehicleClassChecked(4),
+                'value' => '4',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 4',
+                'checked' => $this->isSiteVehicleClassChecked(4),
             ],
             [
-                'value'     => '5',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 5',
-                'checked'   => $this->isSiteVehicleClassChecked(5),
+                'value' => '5',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 5',
+                'checked' => $this->isSiteVehicleClassChecked(5),
             ],
             [
-                'value'     => '7',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 7',
-                'checked'   => $this->isSiteVehicleClassChecked(7),
+                'value' => '7',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 7',
+                'checked' => $this->isSiteVehicleClassChecked(7),
             ],
         ];
     }
 
     /**
-     * Check if at least one search filed is field
+     * Check if at least one search filed is field.
      *
      * @return bool
      */
@@ -307,7 +325,7 @@ class SiteSearchViewModel extends AbstractFormModel
     }
 
     /**
-     * Check if at least one field is valid
+     * Check if at least one field is valid.
      *
      * @return bool
      */
@@ -320,9 +338,10 @@ class SiteSearchViewModel extends AbstractFormModel
     }
 
     /**
-     * Check if the value is empty or more than 2 characters length
+     * Check if the value is empty or more than 2 characters length.
      *
      * @param string $value
+     *
      * @return bool
      */
     private function checkValue($value)
@@ -340,9 +359,10 @@ class SiteSearchViewModel extends AbstractFormModel
     }
 
     /**
-     * Delete the special char use by the full text search to avoid unwanted search
+     * Delete the special char use by the full text search to avoid unwanted search.
      *
      * @param string $string
+     *
      * @return string
      */
     private function deleteUnwantedChar($string)
@@ -351,11 +371,12 @@ class SiteSearchViewModel extends AbstractFormModel
         $string = preg_replace('/[^A-Za-z0-9\-]/', '-', $string);
 
         $string = preg_replace('/-+/', '-', $string);
+
         return $string;
     }
 
     /**
-     * Check if at least one search field is filed
+     * Check if at least one search field is filed.
      *
      * @return bool
      */
@@ -371,6 +392,7 @@ class SiteSearchViewModel extends AbstractFormModel
             } else {
                 $flashMessenger->addErrorMessage(self::ONLY_VEHICLE_CLASS);
             }
+
             return true;
         }
 
@@ -416,11 +438,13 @@ class SiteSearchViewModel extends AbstractFormModel
 
     /**
      * @param Table $table
+     *
      * @return $this
      */
     public function setTable(Table $table)
     {
         $this->table = $table;
+
         return $this;
     }
 
@@ -481,7 +505,7 @@ class SiteSearchViewModel extends AbstractFormModel
      */
     public function getSearchPage()
     {
-        return SiteUrlBuilderWeb::search() . '?' . http_build_query($this->toArray());
+        return SiteUrlBuilderWeb::search().'?'.http_build_query($this->toArray());
     }
 
     /**

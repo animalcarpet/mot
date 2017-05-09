@@ -5,16 +5,14 @@ namespace SiteApi\Service;
 use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Model\DvsaRole;
-use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Repository\SiteBusinessRoleMapRepository;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapper;
 
 /**
- * Class SiteBusinessRoleService
+ * Class SiteBusinessRoleService.
  */
 class SiteBusinessRoleService
 {
-
     private $roleMapper;
 
     /** @var AuthorisationServiceInterface */
@@ -43,12 +41,14 @@ class SiteBusinessRoleService
         }
 
         $availableRoles = $this->siteBusinessRoleRepository->findAll();
+
         return $this->roleMapper->manyToArray($availableRoles);
     }
 
     public function getAssociatedRoles($siteId, $personId)
     {
         $roles = $this->siteBusinessRoleMapRepository->getActiveOrPendingUserRolesInASite($siteId, $personId);
+
         return $this->roleMapper->convertRoleMapToArray($roles);
     }
 }

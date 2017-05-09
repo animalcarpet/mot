@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\DqlBuilder\SearchParam;
 
 use Doctrine\ORM\EntityManager;
@@ -9,38 +10,36 @@ use DvsaCommonApi\Model\SearchParam;
 use DvsaEntities\Entity\MotTest;
 
 /**
- * Class MotTestSearchParam
- *
- * @package DvsaEntities\DqlBuilder\SearchParam
+ * Class MotTestSearchParam.
  */
 class MotTestSearchParam extends SearchParam
 {
-    static public $esSortByColumns = [
-        "0" => "testDate",
-        "2" => "status",
-        "3" => "vin",
-        "4" => "registration",
-        "5" => "startedDate",
-        "6" => "make",
-        "7" => "model",
-        "8" => "testType",
-        "9" => "siteNumber",
-        "10" => "testerUsername",
-        "11" => "testNumber",
+    public static $esSortByColumns = [
+        '0' => 'testDate',
+        '2' => 'status',
+        '3' => 'vin',
+        '4' => 'registration',
+        '5' => 'startedDate',
+        '6' => 'make',
+        '7' => 'model',
+        '8' => 'testType',
+        '9' => 'siteNumber',
+        '10' => 'testerUsername',
+        '11' => 'testNumber',
     ];
 
-    static public $dbSortByColumns = [
-        "0" => ["test.startedDate", "test.completedDate"], // mot_test
-        "2" => "test.status", // mot_test
-        "3" => "vehicle.vin", // vehicle
-        "4" => "vehicle.registration", // vehicle
-        "5" => "test.completedDate, test.startedDate", // mot_test
-        "6" => "make.name", // make
-        "7" => "model.name", // model
-        "8" => "testType.description", // mot_test_type
-        "9" => "site.siteNumber", // site
-        "10" => "tester.username", // person
-        "11" => "test.number", // test number
+    public static $dbSortByColumns = [
+        '0' => ['test.startedDate', 'test.completedDate'], // mot_test
+        '2' => 'test.status', // mot_test
+        '3' => 'vehicle.vin', // vehicle
+        '4' => 'vehicle.registration', // vehicle
+        '5' => 'test.completedDate, test.startedDate', // mot_test
+        '6' => 'make.name', // make
+        '7' => 'model.name', // model
+        '8' => 'testType.description', // mot_test_type
+        '9' => 'site.siteNumber', // site
+        '10' => 'tester.username', // person
+        '11' => 'test.number', // test number
     ];
 
     protected $siteId = null;
@@ -89,20 +88,20 @@ class MotTestSearchParam extends SearchParam
     }
 
     /**
-     * Apply the rules to the params
+     * Apply the rules to the params.
      *
      * @throws \UnexpectedValueException
      */
     protected function validateInputs()
     {
         $hasOrganisationId = $this->getOrganisationId() > 0;
-        $hasSiteId         = (int)$this->getSiteId() > 0;
-        $hasSiteNumber     = strlen($this->getSiteNumber()) > 0;
-        $hasTesterId       = (int)$this->getTesterId() > 0;
-        $hasVehicleId      = (int)$this->getVehicleId() > 0;
-        $hasVrm            = strlen($this->getRegistration()) > 0;
-        $hasVin            = strlen($this->getVin()) > 0;
-        $hasTestNumber     = strlen($this->getTestNumber()) > 0;
+        $hasSiteId = (int) $this->getSiteId() > 0;
+        $hasSiteNumber = strlen($this->getSiteNumber()) > 0;
+        $hasTesterId = (int) $this->getTesterId() > 0;
+        $hasVehicleId = (int) $this->getVehicleId() > 0;
+        $hasVrm = strlen($this->getRegistration()) > 0;
+        $hasVin = strlen($this->getVin()) > 0;
+        $hasTestNumber = strlen($this->getTestNumber()) > 0;
 
         if (!($hasOrganisationId | $hasTesterId | $hasSiteId | $hasSiteNumber | $hasVrm | $hasVin | $hasVehicleId | $hasTestNumber)) {
             throw new \UnexpectedValueException(
@@ -142,9 +141,10 @@ class MotTestSearchParam extends SearchParam
     }
 
     /**
-     * This function is checking that only one search input is passed
+     * This function is checking that only one search input is passed.
      *
      * @param array $params
+     *
      * @return int
      */
     protected function checkIfMultipleInputs($params)
@@ -152,9 +152,10 @@ class MotTestSearchParam extends SearchParam
         $count = 0;
         foreach ($params as $param) {
             if ($param) {
-                $count++;
+                ++$count;
             }
         }
+
         return $count;
     }
 
@@ -164,23 +165,23 @@ class MotTestSearchParam extends SearchParam
     public function toArray()
     {
         return [
-            "format"          => $this->getFormat(),
-            "siteId"          => $this->getSiteId(),
-            "siteNumber"      => $this->getSiteNumber(),
-            "testNumber"      => $this->getTestNumber(),
-            "testerId"        => $this->getTesterId(),
-            "searchRecent"    => $this->getSearchRecent(),
-            "registration"    => $this->getRegistration(),
-            "vehicleId"       => $this->getVehicleId(),
-            "vin"             => $this->getVin(),
-            "searchFilter"    => $this->getSearchFilter(),
-            "dateFrom"        => $this->getDateFrom(),
-            "dateTo"          => $this->getDateTo(),
-            "sortColumnId"    => $this->getSortColumnId(),
-            "sortColumnName"  => $this->getSortColumnName(),
-            "sortDirection"   => $this->getSortDirection(),
-            "rowCount"        => $this->getRowCount(),
-            "start"           => $this->getStart(),
+            'format' => $this->getFormat(),
+            'siteId' => $this->getSiteId(),
+            'siteNumber' => $this->getSiteNumber(),
+            'testNumber' => $this->getTestNumber(),
+            'testerId' => $this->getTesterId(),
+            'searchRecent' => $this->getSearchRecent(),
+            'registration' => $this->getRegistration(),
+            'vehicleId' => $this->getVehicleId(),
+            'vin' => $this->getVin(),
+            'searchFilter' => $this->getSearchFilter(),
+            'dateFrom' => $this->getDateFrom(),
+            'dateTo' => $this->getDateTo(),
+            'sortColumnId' => $this->getSortColumnId(),
+            'sortColumnName' => $this->getSortColumnName(),
+            'sortDirection' => $this->getSortDirection(),
+            'rowCount' => $this->getRowCount(),
+            'start' => $this->getStart(),
         ];
     }
 
@@ -198,6 +199,7 @@ class MotTestSearchParam extends SearchParam
 
     /**
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public function getSortColumnName()
@@ -209,11 +211,12 @@ class MotTestSearchParam extends SearchParam
         if (isset(self::$esSortByColumns[$this->getSortColumnId()])) {
             return self::$esSortByColumns[$this->getSortColumnId()];
         }
-        throw new \InvalidArgumentException('Unknown sort column: ' . $this->getSortColumnId());
+        throw new \InvalidArgumentException('Unknown sort column: '.$this->getSortColumnId());
     }
 
     /**
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public function getSortColumnNameDatabase()
@@ -223,22 +226,21 @@ class MotTestSearchParam extends SearchParam
             return $sortColumn;
         }
 
-        throw new \InvalidArgumentException('Unknown sort column: ' . $this->getSortColumnId());
+        throw new \InvalidArgumentException('Unknown sort column: '.$this->getSortColumnId());
     }
 
     /**
      * @param $siteId
+     *
      * @return $this
      */
     public function setSiteId($siteId)
     {
         $this->siteId = $siteId;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getSiteId()
     {
         return $this->siteId;
@@ -252,12 +254,10 @@ class MotTestSearchParam extends SearchParam
     public function setSiteNumber($siteNumber)
     {
         $this->siteNumber = $siteNumber;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getSiteNumber()
     {
         return $this->siteNumber;
@@ -271,12 +271,10 @@ class MotTestSearchParam extends SearchParam
     public function setTesterId($testerId)
     {
         $this->testerId = $testerId;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getTesterId()
     {
         return $this->testerId;
@@ -290,6 +288,7 @@ class MotTestSearchParam extends SearchParam
     public function setDateFrom(\DateTime $dateFrom)
     {
         $this->dateFrom = $dateFrom;
+
         return $this;
     }
 
@@ -309,6 +308,7 @@ class MotTestSearchParam extends SearchParam
     public function setDateTo(\DateTime $dateTo)
     {
         $this->dateTo = $dateTo;
+
         return $this;
     }
 
@@ -328,12 +328,10 @@ class MotTestSearchParam extends SearchParam
     public function setSearchFilter($searchFilter)
     {
         $this->searchFilter = $searchFilter;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getSearchFilter()
     {
         return $this->searchFilter;
@@ -347,39 +345,35 @@ class MotTestSearchParam extends SearchParam
     public function setVin($vin)
     {
         $this->vin = $vin;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getVin()
     {
         return $this->vin;
     }
 
     /**
-     * @param boolean $searchRecent
+     * @param bool $searchRecent
      *
      * @return $this
      */
     public function setSearchRecent($searchRecent)
     {
         $this->searchRecent = $searchRecent;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSearchRecent()
     {
         return $this->searchRecent;
     }
 
-    /**
-     * @return null
-     */
     public function getRegistration()
     {
         return $this->registration;
@@ -393,12 +387,10 @@ class MotTestSearchParam extends SearchParam
     public function setRegistration($registration)
     {
         $this->registration = $registration;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getVehicleId()
     {
         return $this->vehicleId;
@@ -412,6 +404,7 @@ class MotTestSearchParam extends SearchParam
     public function setVehicleId($vehicleId)
     {
         $this->vehicleId = $vehicleId;
+
         return $this;
     }
 
@@ -430,7 +423,7 @@ class MotTestSearchParam extends SearchParam
      */
     public function setOrganisationId($organisationId)
     {
-        $this->organisationId = (int)$organisationId;
+        $this->organisationId = (int) $organisationId;
 
         return $this;
     }
@@ -485,11 +478,13 @@ class MotTestSearchParam extends SearchParam
 
     /**
      * @param \string[] $testNumber
+     *
      * @return MotTestSearchParam
      */
     public function setTestNumber($testNumber)
     {
         $this->testNumber = $testNumber;
+
         return $this;
     }
 
@@ -502,7 +497,7 @@ class MotTestSearchParam extends SearchParam
     {
         if (!$dto instanceof MotTestSearchParamsDto) {
             throw new \InvalidArgumentException(
-                __METHOD__ . ' Expects instance of MotTestSearchParamsDto, you passed ' . get_class($dto)
+                __METHOD__.' Expects instance of MotTestSearchParamsDto, you passed '.get_class($dto)
             );
         }
 
@@ -521,12 +516,12 @@ class MotTestSearchParam extends SearchParam
 
         $dateTs = (int) $dto->getDateFromTs();
         if ($dateTs) {
-            $this->setDateFrom(new \DateTime('@' . $dateTs));
+            $this->setDateFrom(new \DateTime('@'.$dateTs));
         }
 
         $dateTs = (int) $dto->getDateToTs();
         if ($dateTs) {
-            $this->setDateTo(new \DateTime('@' . $dateTs));
+            $this->setDateTo(new \DateTime('@'.$dateTs));
         }
 
         $this->setSearchRecent($dto->isSearchRecent());
@@ -536,7 +531,7 @@ class MotTestSearchParam extends SearchParam
     }
 
     /**
-     * Map parameters to MotTestSearchParamsDto
+     * Map parameters to MotTestSearchParamsDto.
      *
      * @param AbstractDataTransferObject $dto
      *

@@ -1,11 +1,11 @@
 <?php
+
 namespace DvsaMotTestTest\Controller;
 
 use CoreTest\Controller\StubIdentities;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
 use DvsaCommonTest\Bootstrap;
-use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaMotTest\Controller\LocationSelectController;
 use DvsaMotTest\Data\TesterInProgressTestNumberResource;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
@@ -151,14 +151,14 @@ class LocationSelectControllerTest extends AbstractDvsaMotTestTestCase
     private function setupLocationSelectRestClientMock($identity, $testerData)
     {
         if (is_null($identity)) {
-            throw new \Exception("Null identity!");
+            throw new \Exception('Null identity!');
         }
 
         $userId = $identity->getUserId();
         $restClientMock = \DvsaCommonTest\TestUtils\XMock::of(HttpRestJsonClient::class);
         $restClientMock->expects($this->any())
             ->method('get')
-            ->with('tester?userId=' . $userId)
+            ->with('tester?userId='.$userId)
             ->will($this->returnValue(['data' => $testerData]));
 
         $serviceManager = Bootstrap::getServiceManager();
@@ -195,15 +195,15 @@ class LocationSelectControllerTest extends AbstractDvsaMotTestTestCase
     {
         return [
             'username' => 'location_test_user',
-            'active'   => '1',
+            'active' => '1',
             'vtsSites' => [
                 [
-                    'id'           => '1',
-                    'slots'        => '12',
-                    'name'         => 'test_name',
-                    'address'      => 'test_address',
+                    'id' => '1',
+                    'slots' => '12',
+                    'name' => 'test_name',
+                    'address' => 'test_address',
                     'slotsWarning' => '15',
-                    'slotsInUse'   => '2'
+                    'slotsInUse' => '2',
                 ],
             ],
         ];
@@ -214,14 +214,15 @@ class LocationSelectControllerTest extends AbstractDvsaMotTestTestCase
         $testerData = $this->getTesterWithSingleVtsData();
         $testerData['vtsSites'][] = [
             [
-                'id'           => '2',
-                'slots'        => '22',
-                'name'         => 'test_name2',
-                'address'      => 'test_address2',
+                'id' => '2',
+                'slots' => '22',
+                'name' => 'test_name2',
+                'address' => 'test_address2',
                 'slotsWarning' => '152',
-                'slotsInUse'   => '1'
+                'slotsInUse' => '1',
             ],
         ];
+
         return $testerData;
     }
 

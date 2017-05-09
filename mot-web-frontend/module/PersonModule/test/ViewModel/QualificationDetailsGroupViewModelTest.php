@@ -3,18 +3,11 @@
 namespace Dvsa\Mot\Frontend\PersonModuleTest\ViewModel;
 
 use Core\ViewModel\Gds\Table\GdsTable;
-use Dvsa\Mot\Frontend\PersonModule\Model\CertificateFields;
-use Dvsa\Mot\Frontend\PersonModule\Model\CertificateFieldsData;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\QualificationDetailsGroupViewModel;
-use Dvsa\Mot\Frontend\PersonModule\ViewModel\QualificationDetailsViewModel;
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\VehicleClassGroupCode;
-use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Model\TesterGroupAuthorisationStatus;
-use DvsaCommonTest\TestUtils\XMock;
-use DvsaMotEnforcement\Model\MotTest;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 /**
  * Class QualificationDetailsGroupViewModelTest.
@@ -28,11 +21,11 @@ class QualificationDetailsGroupViewModelTest extends \PHPUnit_Framework_TestCase
     const DATE_OF_QUALIFICATION = '10-10-2000';
     const CERTIFICATE_NUMBER = 'W123';
 
-    /** @var  MotTestingCertificateDto */
+    /** @var MotTestingCertificateDto */
     private $motTestingCertificateDtoMock;
-    /** @var  TesterGroupAuthorisationStatus */
+    /** @var TesterGroupAuthorisationStatus */
     private $testerGroupAuthorisationStatus;
-    /** @var  QualificationDetailsGroupViewModel */
+    /** @var QualificationDetailsGroupViewModel */
     private $viewModel;
 
     public function setUp()
@@ -43,7 +36,6 @@ class QualificationDetailsGroupViewModelTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->motTestingCertificateDtoMock = $this->createMotTestingCertificateDtoMock();
-
     }
 
     private function createViewModel()
@@ -104,7 +96,7 @@ class QualificationDetailsGroupViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedCertificate['date'], $secondRow->getValueMetaData()->getContent());
 
         //AND expected action links appear
-        foreach($expectedActionLinks as $key => $expectedActionLink) {
+        foreach ($expectedActionLinks as $key => $expectedActionLink) {
             $this->assertSame($expectedActionLink, $secondRow->getActionLink($key)->getUrl());
         }
     }
@@ -119,7 +111,7 @@ class QualificationDetailsGroupViewModelTest extends \PHPUnit_Framework_TestCase
                 'dto' => null,
                 'authorisationStatusCode' => AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 'expectedActionLinks' => [
-                    self::ADD_URL
+                    self::ADD_URL,
                 ],
                 'expectedCertificate' => [
                     'number' => ' ',

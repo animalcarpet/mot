@@ -12,9 +12,10 @@ use Doctrine\ORM\EntityManager;
 class OrganisationEventServiceFactory implements FactoryInterface
 {
     /**
-    * @param ServiceLocatorInterface $serviceLocator
-    * @return OrganisationEventService
-    */
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return OrganisationEventService
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 
@@ -28,5 +29,4 @@ class OrganisationEventServiceFactory implements FactoryInterface
             $entityManager->getRepository(Organisation::class)
         );
     }
-
 }

@@ -3,14 +3,13 @@
 use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\MotTestController;
 use Site\ViewModel\MotTest\MotTestInProgressViewModel;
 use Site\Service\RiskAssessmentScoreRagClassifier;
 
-/**
+/*
  * @var \Site\ViewModel\SiteViewModel $viewModel
  * @var string $searchString
  * @var string $escRefPage
@@ -74,7 +73,7 @@ echo $this->partial(
 <table class="table-summary">
     <tbody>
     <?php foreach ($site->getPositions() as $position): ?>
-        <tr id="role-assignment-<?php echo $position->getPerson()->getId() . "-" . $position->getRole()->getCode(); ?>">
+        <tr id="role-assignment-<?php echo $position->getPerson()->getId().'-'.$position->getRole()->getCode(); ?>">
             <th class="table-summary__key">
                 <?php if ($permission->canViewProfile($position->getPerson())): ?>
 
@@ -82,19 +81,19 @@ echo $this->partial(
                     echo $this->url(ContextProvider::VTS_PARENT_ROUTE,
                             [
                                 'vehicleTestingStationId' => $site->getId(),
-                                'id' => $position->getPerson()->getId()
+                                'id' => $position->getPerson()->getId(),
                             ], []
                         )?>">
                         <?php echo $this->escapeHtml($position->getPerson()->getFullName());
                         if ($permission->canViewUsername()):
-                            echo "(" . $this->escapeHtml($position->getPerson()->getUsername()) . ")";
+                            echo '('.$this->escapeHtml($position->getPerson()->getUsername()).')';
                         endif;
                         ?>
                     </a>
                 <?php else: ?>
                     <?php echo $this->escapeHtml($position->getPerson()->getFullName());
                     if ($permission->canViewUsername()):
-                        echo "(" . $this->escapeHtml($position->getPerson()->getUsername()) . ")";
+                        echo '('.$this->escapeHtml($position->getPerson()->getUsername()).')';
                     endif;
                     ?>
                 <?php endif; ?>
@@ -140,7 +139,7 @@ echo $this->partial(
                     <span class="table-summary__meta">
                         <?php echo $this->escapeHtml(ArrayUtils::joinNonEmpty(', ', [
                                 $motTest->getVehicleMake(),
-                                $motTest->getVehicleModel()
+                                $motTest->getVehicleModel(),
                             ]));
                         ?>
                     </span>
@@ -172,7 +171,7 @@ foreach ($site->getFacilities() as $type => $items) {
     $itemType = current($items)->getType();
 
     $facilities[$type] = [
-        $itemType->getName() . ' (' . $itemType->getCode() . ')',
+        $itemType->getName().' ('.$itemType->getCode().')',
         count($items),
         'id' => 'testing-facility-'.strtolower($type),
         'class' => 'testing-facility-'.strtolower($type),

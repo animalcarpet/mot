@@ -12,7 +12,7 @@ use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 
 /**
- * Class BrakeTestConfigurationValidator
+ * Class BrakeTestConfigurationValidator.
  */
 class BrakeTestConfigurationValidator extends AbstractValidator
 {
@@ -31,7 +31,7 @@ class BrakeTestConfigurationValidator extends AbstractValidator
             BrakeTestTypeCode::DECELEROMETER,
             BrakeTestTypeCode::ROLLER,
             BrakeTestTypeCode::PLATE,
-            BrakeTestTypeCode::GRADIENT
+            BrakeTestTypeCode::GRADIENT,
         ];
 
     private $validBrakeTestTypesClass12
@@ -62,9 +62,7 @@ class BrakeTestConfigurationValidator extends AbstractValidator
                     $brakeTestResultClass3AndAbove->getParkingBrakeTestType()->getCode()
                 ))
         ) {
-
             $this->processWeightAndWeightType($brakeTestResultClass3AndAbove, $validationException);
-
         }
 
         $this->validateBrakeTestTypesClass3AndAbove(
@@ -76,6 +74,7 @@ class BrakeTestConfigurationValidator extends AbstractValidator
         if (count($validationException->getErrors())) {
             throw $validationException;
         }
+
         return true;
     }
 
@@ -170,6 +169,7 @@ class BrakeTestConfigurationValidator extends AbstractValidator
         if (count($validationException->getErrors())) {
             throw $validationException;
         }
+
         return true;
     }
 
@@ -198,7 +198,7 @@ class BrakeTestConfigurationValidator extends AbstractValidator
             [
                 BrakeTestTypeCode::ROLLER,
                 BrakeTestTypeCode::PLATE,
-                BrakeTestTypeCode::FLOOR
+                BrakeTestTypeCode::FLOOR,
             ]
         );
     }
@@ -209,7 +209,7 @@ class BrakeTestConfigurationValidator extends AbstractValidator
             $brakeTestType,
             [
                 BrakeTestTypeCode::ROLLER,
-                BrakeTestTypeCode::PLATE
+                BrakeTestTypeCode::PLATE,
             ]
         );
     }

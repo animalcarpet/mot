@@ -2,7 +2,6 @@
 
 namespace Core\TwoStepForm;
 
-use Core\Action\AbstractActionResult;
 use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\ViewModel\Gds\Table\GdsTable;
@@ -19,8 +18,7 @@ final class ReviewStepAction implements AutoWireableInterface
     public function __construct(
         TwoStepFormContainer $formContainer,
         MotAuthorisationServiceInterface $authorisationService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->formContainer = $formContainer;
     }
@@ -28,9 +26,11 @@ final class ReviewStepAction implements AutoWireableInterface
     /**
      * @param $isPost
      * @param SingleStepProcessInterface $process
-     * @param FormContextInterface $context
+     * @param FormContextInterface       $context
      * @param $formUuid
+     *
      * @return ViewActionResult
+     *
      * @throws UnauthorisedException
      */
     public function execute($isPost, SingleStepProcessInterface $process, FormContextInterface $context, $formUuid)
@@ -76,7 +76,7 @@ final class ReviewStepAction implements AutoWireableInterface
     private function assertGranted(SingleStepProcessInterface $process)
     {
         if (!$process->isAuthorised($this->authorisationService)) {
-            throw new UnauthorisedException("Not authorised to edit the form");
+            throw new UnauthorisedException('Not authorised to edit the form');
         }
     }
 
@@ -85,7 +85,8 @@ final class ReviewStepAction implements AutoWireableInterface
      * @param $formUuid
      * @param $formData
      * @param GdsTable $table
-     * @param null $errors
+     * @param null     $errors
+     *
      * @return ViewActionResult
      */
     protected function buildActionResult(TwoStepProcessInterface $process, $formUuid, $formData, GdsTable $table, $errors = null)

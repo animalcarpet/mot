@@ -4,7 +4,7 @@ $name = (!empty($this->name) ? $this->name : $id);
 $label = $this->label;
 $value = $this->value;
 
-$cssClass = join(
+$cssClass = implode(
     ' ', array_filter(
         [
             (!empty($this->errorMessage) ? 'has-error' : null),
@@ -13,11 +13,11 @@ $cssClass = join(
     )
 );
 
-$legendCssClass = (!empty($this->labelModifier) ? '-' . $this->labelModifier : '');
+$legendCssClass = (!empty($this->labelModifier) ? '-'.$this->labelModifier : '');
 ?>
 
 <div class="form-group <?php echo $this->escapeHtmlAttr($cssClass); ?>">
-    <fieldset class="<?php echo (!empty($inputModifier) ? $this->escapeHtmlAttr($inputModifier) : ''); ?>">
+    <fieldset class="<?php echo !empty($inputModifier) ? $this->escapeHtmlAttr($inputModifier) : ''; ?>">
         <legend class="form-label<?php echo $this->escapeHtmlAttr($legendCssClass); ?>">
 
             <?php echo $this->escapeHtml($label); ?>

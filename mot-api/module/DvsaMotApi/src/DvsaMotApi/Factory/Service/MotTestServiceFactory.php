@@ -12,7 +12,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for MotTestService
+ * Factory for MotTestService.
  */
 class MotTestServiceFactory implements FactoryInterface
 {

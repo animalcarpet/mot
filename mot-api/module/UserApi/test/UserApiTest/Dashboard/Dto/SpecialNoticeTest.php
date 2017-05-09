@@ -1,4 +1,5 @@
 <?php
+
 namespace UserApiTest\Dashboard\Dto;
 
 use DvsaCommon\Date\DateTimeApiFormat;
@@ -6,7 +7,7 @@ use DvsaCommon\Date\DateUtils;
 use UserApi\Dashboard\Dto\SpecialNotice;
 
 /**
- * Unit tests for Special notice dto
+ * Unit tests for Special notice dto.
  */
 class SpecialNoticeTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,12 +42,12 @@ class SpecialNoticeTest extends \PHPUnit_Framework_TestCase
 
     public function test_getDaysLeftToView_unreadCount1acknowledgementDeadlineInFuture_shouldReturn7()
     {
-        $this->runTest_getDaysLeftToView_expected_unread_deadline(7, 1, $this->now("+7 day"));
+        $this->runTest_getDaysLeftToView_expected_unread_deadline(7, 1, $this->now('+7 day'));
     }
 
     public function test_getDaysLeftToView_unreadCount1acknowledgementDeadlineInPast_shouldReturnMinus3()
     {
-        $this->runTest_getDaysLeftToView_expected_unread_deadline(-3, 1, $this->now("-3 day"));
+        $this->runTest_getDaysLeftToView_expected_unread_deadline(-3, 1, $this->now('-3 day'));
     }
 
     private function runTest_getDaysLeftToView_expected_unread_deadline($expected, $unread = 0, $deadline = null)
@@ -66,6 +67,7 @@ class SpecialNoticeTest extends \PHPUnit_Framework_TestCase
     private function getDaysDifference($deadline)
     {
         $deadline = (null !== $deadline) ? $deadline : $this->now();
+
         return DateUtils::getDaysDifference($this->now(), $deadline);
     }
 
@@ -75,6 +77,7 @@ class SpecialNoticeTest extends \PHPUnit_Framework_TestCase
         if (null !== $modify) {
             $date->modify($modify);
         }
+
         return $date;
     }
 
@@ -83,8 +86,8 @@ class SpecialNoticeTest extends \PHPUnit_Framework_TestCase
         $date = (null !== $deadline) ? DateTimeApiFormat::date($deadline) : null;
 
         return [
-            'unreadCount'             => $unread,
-            'overdueCount'            => $overdue,
+            'unreadCount' => $unread,
+            'overdueCount' => $overdue,
             'acknowledgementDeadline' => $date,
         ];
     }

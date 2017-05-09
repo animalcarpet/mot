@@ -7,9 +7,9 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
     <p class="lede">Now you need to create a memorable password for your account.</p>
 </div>
 
-<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
+<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorsSummary]); ?>
 
-<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep());?>" method="POST" autocomplete="off" novalidate="">
+<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep()); ?>" method="POST" autocomplete="off" novalidate="">
     <?php echo $this->csrfToken(); ?>
     <fieldset>
         <legend class="visuallyhidden">Your password</legend>
@@ -21,7 +21,9 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
                 <li class="criteria__criterion" data-criteria="hasMixedCase">upper and lower case letters</li>
             </ul>
         </div>
-        <div class="form-group<?php if ($passwordHasError) echo ' has-error' ?>">
+        <div class="form-group<?php if ($passwordHasError) {
+    echo ' has-error';
+} ?>">
             <label for="password" class="form-label">
                 Create a password
                 <?php
@@ -33,7 +35,9 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <input type="password" name="password" id="password" class="form-control"
                    value="<?php echo $this->escapeHtmlAttr($password) ?>">
         </div>
-        <div class="form-group<?php if ($passwordConfirmHasError) echo ' has-error' ?>">
+        <div class="form-group<?php if ($passwordConfirmHasError) {
+                    echo ' has-error';
+                } ?>">
             <label for="passwordConfirm" class="form-label">
                 Re-type your password
                 <?php
@@ -53,7 +57,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->escapeHtmlAttr($this->url('account-register/security-questions'));?>" id="back">Back</a>
+                <a href="<?php echo $this->escapeHtmlAttr($this->url('account-register/security-questions')); ?>" id="back">Back</a>
             </li>
         </ul>
 
@@ -62,9 +66,9 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 </form>
 <?php
 /**
- * To enable the password validator's JS widget
+ * To enable the password validator's JS widget.
  */
-$inlineScript = <<<EOT
+$inlineScript = <<<'EOT'
 
     if(typeof(document.querySelectorAll) != 'undefined'){
         var passwordCriteria = new DVSA.Modules.DVSACriteria.Criteria({

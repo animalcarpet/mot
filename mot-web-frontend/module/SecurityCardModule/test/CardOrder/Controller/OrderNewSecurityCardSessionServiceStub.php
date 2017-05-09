@@ -18,7 +18,6 @@ class OrderNewSecurityCardSessionServiceStub extends OrderNewSecurityCardSession
      */
     public function destroy()
     {
-
     }
 
     /**

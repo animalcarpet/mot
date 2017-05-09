@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\TestItemSelector;
@@ -6,7 +7,7 @@ use PHPUnit_Framework_TestCase;
 
 /**
  * Class TestItemSelectorTest
- * TODO update test
+ * TODO update test.
  */
 class TestItemSelectorTest extends PHPUnit_Framework_TestCase
 {
@@ -27,7 +28,7 @@ class TestItemSelectorTest extends PHPUnit_Framework_TestCase
     {
         $data = array(
             'sectionTestItemSelectorId' => 1,
-            'parentTestItemSelectorId'  => 1
+            'parentTestItemSelectorId' => 1,
         );
         $testItemSelector = new TestItemSelector();
         $testItemSelector

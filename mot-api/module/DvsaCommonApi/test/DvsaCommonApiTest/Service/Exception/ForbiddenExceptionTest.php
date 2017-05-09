@@ -1,12 +1,12 @@
 <?php
+
 namespace DvsaCommonApiTest\Service\Exception;
 
 use DvsaCommonApi\Service\Exception\ForbiddenException;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ForbiddenExceptionTest
+ * Class ForbiddenExceptionTest.
  */
 class ForbiddenExceptionTest extends PHPUnit_Framework_TestCase
 {
@@ -16,9 +16,9 @@ class ForbiddenExceptionTest extends PHPUnit_Framework_TestCase
         $forbiddenException = new ForbiddenException($message);
 
         $expectedErrors = [[
-            "message" => $message,
-            "code" => 403,
-            "displayMessage" => $message
+            'message' => $message,
+            'code' => 403,
+            'displayMessage' => $message,
         ]];
 
         $this->assertEquals($message, $forbiddenException->getMessage());

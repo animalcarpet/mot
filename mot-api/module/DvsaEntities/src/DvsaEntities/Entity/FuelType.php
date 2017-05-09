@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * FuelType
+ * FuelType.
  *
  * @ORM\Table(
  *  name="fuel_type",

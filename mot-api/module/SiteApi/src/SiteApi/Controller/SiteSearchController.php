@@ -1,18 +1,15 @@
 <?php
+
 namespace SiteApi\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\SiteSearchService;
-use Zend\Http\Request;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class SiteSearchController
- *
- * @package SiteApi\Controller
+ * Class SiteSearchController.
  */
 class SiteSearchController extends AbstractDvsaRestfulController
 {
@@ -29,6 +26,7 @@ class SiteSearchController extends AbstractDvsaRestfulController
 
     /**
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create($data)
@@ -38,6 +36,7 @@ class SiteSearchController extends AbstractDvsaRestfulController
 
     /**
      * @param mixed $number
+     *
      * @return JsonModel
      */
     public function get($number)

@@ -31,11 +31,10 @@ class CertificateExpiryService
     /** @var AuthorisationServiceInterface $authService */
     private $authService;
 
-
     /**
-     * @param DateTimeHolder $dateTimeHolder
-     * @param MotTestRepository $motTestRepository
-     * @param VehicleRepository $vehicleRepository
+     * @param DateTimeHolder          $dateTimeHolder
+     * @param MotTestRepository       $motTestRepository
+     * @param VehicleRepository       $vehicleRepository
      * @param ConfigurationRepository $configurationRepository
      */
     public function __construct(
@@ -75,15 +74,12 @@ class CertificateExpiryService
             $testDate = $this->dateTime->getCurrentDate();
         }
 
-        if (true === $isDvla)
-        {
+        if (true === $isDvla) {
             $expiryDate = null;
             $checkExpiryResults['previousCertificateExists'] = false;
             $earliestTestDateForPostdatingExpiryDate = null;
             $isEarlierThanTestDateLimit = false;
-        }
-        else
-        {
+        } else {
             $expiryDate = $this->motTestRepository->findLastCertificateExpiryDate($vehicleId);
 
             if ($expiryDate === null) {
@@ -109,7 +105,6 @@ class CertificateExpiryService
         return $checkExpiryResults;
     }
 
-
     /**
      * Returns the notional previous expiry date for a first certificate based on first use date.
      *
@@ -128,6 +123,7 @@ class CertificateExpiryService
      * @param \DateTime $dateRegistered
      *
      * @return \DateTime
+     *
      * @throws NotFoundException
      */
     public function getInitialClassAwareExpiryDate(
@@ -140,13 +136,13 @@ class CertificateExpiryService
             ? $dateRegistered
             : $dateManufactured;
 
-        $key = (5 === (int)$vehicleClass)
+        $key = (5 === (int) $vehicleClass)
             ? self::YEARS_BEFORE_FIRST_TEST_IS_DUE_CLASS_5
             : self::YEARS_BEFORE_FIRST_TEST_IS_DUE;
 
-        $years = (int)$this->configurationRepository->getValue($key);
+        $years = (int) $this->configurationRepository->getValue($key);
         $expiryDate = $date
-            ->add(new \DateInterval('P' . $years . 'Y'))
+            ->add(new \DateInterval('P'.$years.'Y'))
             ->sub(new \DateInterval('P1D'));
 
         return $expiryDate;

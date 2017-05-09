@@ -15,7 +15,6 @@ class MotTestLogControllerFactory implements FactoryInterface
         /** @var ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
 
-
         $elasticSearchService = $serviceLocator->get('ElasticSearchService');
         $entityManager = $serviceLocator->get(EntityManager::class);
         $motTestLogService = $serviceLocator->get(MotTestLogService::class);
@@ -23,4 +22,3 @@ class MotTestLogControllerFactory implements FactoryInterface
         return new MotTestLogController($motTestLogService, $elasticSearchService, $entityManager);
     }
 }
-

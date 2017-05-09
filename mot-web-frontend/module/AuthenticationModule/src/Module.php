@@ -32,7 +32,7 @@ class Module implements
     ServiceProviderInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function onBootstrap(EventInterface $e)
     {
@@ -90,26 +90,26 @@ class Module implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfig()
     {
         return array_merge(
-            include __DIR__ . '/../config/routes.config.php',
-            include __DIR__ . '/../config/module.config.php'
+            include __DIR__.'/../config/routes.config.php',
+            include __DIR__.'/../config/module.config.php'
         );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getControllerConfig()
     {
-        return include __DIR__ . '/../config/controllers.config.php';
+        return include __DIR__.'/../config/controllers.config.php';
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getModuleDependencies()
     {
@@ -117,10 +117,10 @@ class Module implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/../config/services.config.php';
+        return include __DIR__.'/../config/services.config.php';
     }
 }

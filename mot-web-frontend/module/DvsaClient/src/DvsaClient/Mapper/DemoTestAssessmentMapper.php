@@ -12,14 +12,14 @@ class DemoTestAssessmentMapper extends Mapper
         if ($vehicleTestingGroup != VehicleClassGroupCode::BIKES
             && $vehicleTestingGroup != VehicleClassGroupCode::CARS_ETC
         ) {
-            throw new \InvalidArgumentException('Unknown VehicleClassGroupCode: ' . $vehicleTestingGroup);
+            throw new \InvalidArgumentException('Unknown VehicleClassGroupCode: '.$vehicleTestingGroup);
         }
 
         $url = (new UrlBuilder())->demoTestAssessment($testerId)->toString();
 
         $data = [
-            'testerId'            => $testerId,
-            'vehicleClassGroup' => $vehicleTestingGroup
+            'testerId' => $testerId,
+            'vehicleClassGroup' => $vehicleTestingGroup,
         ];
 
         $this->client->post($url, $data);

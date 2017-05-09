@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service\Validator\MotTestingCertificate;
 
 use DvsaEntities\Entity\Site;
@@ -14,11 +15,11 @@ class SiteNumberValidatorTest extends \PHPUnit_Framework_TestCase
         $siteRepository = XMock::of(SiteRepository::class);
         $siteRepository
             ->expects($this->any())
-            ->method("getBySiteNumber")
+            ->method('getBySiteNumber')
             ->willReturn(new Site());
 
         $validator = new SiteNumberValidator($siteRepository);
-        $isValid = $validator->isValid("V1234");
+        $isValid = $validator->isValid('V1234');
 
         $this->assertTrue($isValid);
         $this->assertEquals([], $validator->getMessages());
@@ -26,12 +27,12 @@ class SiteNumberValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValidReturnsFalseWhenFindSite()
     {
-        $siteNumber = "V1234";
+        $siteNumber = 'V1234';
         $siteRepository = XMock::of(SiteRepository::class);
         $siteRepository
             ->expects($this->any())
-            ->method("getBySiteNumber")
-            ->willThrowException(new NotFoundException("Some message"));
+            ->method('getBySiteNumber')
+            ->willThrowException(new NotFoundException('Some message'));
 
         $validator = new SiteNumberValidator($siteRepository);
         $isValid = $validator->isValid($siteNumber);

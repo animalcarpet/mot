@@ -7,7 +7,7 @@ use UserAdmin\Controller\UserSearchController;
 use UserAdmin\ViewModel\UserSearchViewModel;
 
 /**
- * Unit tests for UserSearchViewModel
+ * Unit tests for UserSearchViewModel.
  */
 class UserSearchViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -101,7 +101,7 @@ class UserSearchViewModelTest extends \PHPUnit_Framework_TestCase
     public function expandingAdditionalSearchCriteriaDataProvider()
     {
         return [
-            ['John', 'Smith', 'usersearchviewmodeltest@' . EmailAddressValidator::TEST_DOMAIN, null, null, null, null, null, true],
+            ['John', 'Smith', 'usersearchviewmodeltest@'.EmailAddressValidator::TEST_DOMAIN, null, null, null, null, null, true],
             ['John', 'Smith', null, 10, null, null, null, null, true],
             ['John', 'Smith', null, null, 10, null, null, null, true],
             ['John', 'Smith', null, null, null, 2015, null, null, true],
@@ -125,10 +125,10 @@ class UserSearchViewModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'firstName' => 'Cheryl',
-            'lastName'  => 'Tunt',
+            'lastName' => 'Tunt',
             'middleName' => 'Thomas',
             'town' => 'Stoke Gifford',
-            'postcode'  => 'L1 1PQ',
+            'postcode' => 'L1 1PQ',
             UserSearchController::PARAM_DOB_DAY => '01',
             UserSearchController::PARAM_DOB_MONTH => '01',
             UserSearchController::PARAM_DOB_YEAR => '2015',

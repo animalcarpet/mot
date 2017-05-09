@@ -8,7 +8,6 @@ use NonWorkingDaysApi\NonWorkingDaysHelper;
 
 class NonWorkingDaysHelperFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new NonWorkingDaysHelper($serviceLocator->get('NonWorkingDaysLookupManager'));

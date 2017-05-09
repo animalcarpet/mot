@@ -40,9 +40,9 @@ class PersonProfileUrlGenerator
     /**
      * PersonProfileUrlGenerator constructor.
      *
-     * @param Router $router
-     * @param Request $request
-     * @param ContextProvider $contextProvider
+     * @param Router                       $router
+     * @param Request                      $request
+     * @param ContextProvider              $contextProvider
      * @param MotIdentityProviderInterface $identityProvider
      */
     public function __construct(Router $router, Request $request, ContextProvider $contextProvider,
@@ -72,6 +72,7 @@ class PersonProfileUrlGenerator
              * NOTE: The person 'id' parameter is optional in 'Your profile' contexts.
              */
             $params = ['id' => $personId ?: $this->getLoggedInPersonId()];
+
             return $this->generateUrlFromRoute(ContextProvider::YOUR_PROFILE_PARENT_ROUTE, $params);
         } elseif (ContextProvider::USER_SEARCH_CONTEXT === $context) {
             /*
@@ -105,7 +106,7 @@ class PersonProfileUrlGenerator
      *
      * @param string     $subRouteName
      * @param array      $params       Parameters to use in url generation, if any
-     * @param array|bool $options      RouteInterface-specific options to use in url generation, if any.
+     * @param array|bool $options      RouteInterface-specific options to use in url generation, if any
      *
      * @return string
      */
@@ -121,27 +122,27 @@ class PersonProfileUrlGenerator
              * NOTE: The person 'id' parameter is optional in 'Your profile' contexts.
              */
             $params = array_merge(['id' => $personId ?: $this->getLoggedInPersonId()], $params);
-            $route = ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/' . $subRouteName;
+            $route = ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/'.$subRouteName;
         } elseif (ContextProvider::USER_SEARCH_CONTEXT === $context) {
             /*
              * User search context.
              */
             $params = array_merge(['id' => $personId], $params);
-            $route = ContextProvider::USER_SEARCH_PARENT_ROUTE . '/' . $subRouteName;
+            $route = ContextProvider::USER_SEARCH_PARENT_ROUTE.'/'.$subRouteName;
         } elseif (ContextProvider::AE_CONTEXT === $context) {
             /*
              * AE context.
              */
             $aeId = $this->getParamFromRoute('authorisedExaminerId');
             $params = array_merge(['authorisedExaminerId' => $aeId, 'id' => $personId], $params);
-            $route = ContextProvider::AE_PARENT_ROUTE . '/' . $subRouteName;
+            $route = ContextProvider::AE_PARENT_ROUTE.'/'.$subRouteName;
         } elseif (ContextProvider::VTS_CONTEXT === $context) {
             /*
              * VTS context.
              */
             $vtsId = $this->getParamFromRoute('vehicleTestingStationId');
             $params = array_merge(['vehicleTestingStationId' => $vtsId, 'id' => $personId], $params);
-            $route =  ContextProvider::VTS_PARENT_ROUTE . '/' . $subRouteName;
+            $route = ContextProvider::VTS_PARENT_ROUTE.'/'.$subRouteName;
         } else {
             $route = ContextProvider::YOUR_PROFILE_PARENT_ROUTE;
             $params = [];
@@ -170,10 +171,10 @@ class PersonProfileUrlGenerator
     /**
      * Generates a URL based on a route.
      *
-     * @param  string     $route   RouteInterface name
-     * @param  array      $params  Parameters to use in url generation, if any
-     * @param  array|bool $options RouteInterface-specific options to use in url generation, if any.
-     *                              
+     * @param string     $route   RouteInterface name
+     * @param array      $params  Parameters to use in url generation, if any
+     * @param array|bool $options RouteInterface-specific options to use in url generation, if any
+     *
      * @return string
      */
     private function generateUrlFromRoute($route, $params = [], $options = [])

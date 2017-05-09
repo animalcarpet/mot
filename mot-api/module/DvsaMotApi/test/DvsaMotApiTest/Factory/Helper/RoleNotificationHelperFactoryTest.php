@@ -9,9 +9,9 @@ use NotificationApi\Service\NotificationService;
 use DvsaMotApi\Helper\RoleNotificationHelper;
 use DvsaMotApi\Factory\Helper\RoleNotificationHelperFactory;
 
-class RoleNotificationHelperTest extends AbstractServiceTestCase
+class RoleNotificationHelperFactoryTest extends AbstractServiceTestCase
 {
-    /** @var  ServiceManager */
+    /** @var ServiceManager */
     private $serviceLocator;
 
     public function setUp()
@@ -27,5 +27,4 @@ class RoleNotificationHelperTest extends AbstractServiceTestCase
             (new RoleNotificationHelperFactory())->createService($this->serviceLocator)
         );
     }
-
 }

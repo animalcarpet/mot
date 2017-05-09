@@ -9,7 +9,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SiteControllerFactory
+ * Class SiteControllerFactory.
  */
 class SiteControllerFactory implements FactoryInterface
 {
@@ -21,7 +21,7 @@ class SiteControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
-        $serviceLocator    = $controllerManager->getServiceLocator();
+        $serviceLocator = $controllerManager->getServiceLocator();
 
         return new SiteController(
             $serviceLocator->get('AuthorisationService'),

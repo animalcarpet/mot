@@ -5,7 +5,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BrakeTestResultClass3AndAbove
+ * BrakeTestResultClass3AndAbove.
  *
  * @ORM\Table(
  *   name="brake_test_result_class_3_and_above",
@@ -78,119 +78,119 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     private $serviceBrake2Data;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_effort_nearside", type="integer", length=5, nullable=true)
      */
     private $parkingBrakeEffortNearside;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_effort_offside", type="integer", length=5, nullable=true)
      */
     private $parkingBrakeEffortOffside;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_effort_secondary_nearside", type="integer", length=5, nullable=true)
      */
     private $parkingBrakeEffortSecondaryNearside;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_effort_secondary_offside", type="integer", length=5, nullable=true)
      */
     private $parkingBrakeEffortSecondaryOffside;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_effort_single", type="integer", length=5, nullable=true)
      */
     private $parkingBrakeEffortSingle;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="parking_brake_lock_nearside", type="boolean", nullable=true)
      */
     private $parkingBrakeLockNearside;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="parking_brake_lock_offside", type="boolean", nullable=true)
      */
     private $parkingBrakeLockOffside;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="parking_brake_lock_secondary_nearside", type="boolean", nullable=true)
      */
     private $parkingBrakeLockSecondaryNearside;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="parking_brake_lock_secondary_offside", type="boolean", nullable=true)
      */
     private $parkingBrakeLockSecondaryOffside;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_single_in_front", type="boolean", nullable=true)
      */
     private $isSingleInFront;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="parking_brake_lock_single", type="boolean", nullable=true)
      */
     private $parkingBrakeLockSingle;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="service_brake_is_single_line", type="boolean", nullable=false)
      */
     private $serviceBrakeIsSingleLine;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_commercial_vehicle", type="boolean", nullable=true)
      */
     private $isCommercialVehicle;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_imbalance", type="integer", nullable=true)
      */
     private $parkingBrakeImbalance;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_secondary_imbalance", type="integer", nullable=true)
      */
     private $parkingBrakeSecondaryImbalance;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="parking_brake_imbalance_pass", type="boolean", nullable=true)
      */
     private $parkingBrakeImbalancePass;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_weight", type="integer", length=6, nullable=true)
      */
@@ -207,49 +207,49 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     private $weightType;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="weight_is_unladen", type="boolean", nullable=false)
      */
     private $weightIsUnladen;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="service_brake_1_efficiency", type="integer", length=3, nullable=true)
      */
     private $serviceBrake1Efficiency;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="service_brake_2_efficiency", type="integer", length=3, nullable=true)
      */
     private $serviceBrake2Efficiency;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_efficiency", type="integer", length=3, nullable=true)
      */
     private $parkingBrakeEfficiency;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="service_brake_1_efficiency_pass", type="boolean", nullable=true)
      */
     private $serviceBrake1EfficiencyPass;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="service_brake_2_efficiency_pass", type="boolean", nullable=false)
      */
     private $serviceBrake2EfficiencyPass;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="parking_brake_efficiency_pass", type="boolean", nullable=true)
      */
@@ -266,14 +266,14 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     private $motTest;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="service_brake_total_axles_applied_to", nullable=true, type="integer")
      */
     private $numberOfAxles;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="parking_brake_total_axles_applied_to", nullable=true, type="integer")
      */
@@ -340,9 +340,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeEffortNearside
+     * Set parkingBrakeEffortNearside.
      *
-     * @param integer $parkingBrakeEffortNearside
+     * @param int $parkingBrakeEffortNearside
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -354,9 +354,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeEffortNearside
+     * Get parkingBrakeEffortNearside.
      *
-     * @return integer
+     * @return int
      */
     public function getParkingBrakeEffortNearside()
     {
@@ -364,9 +364,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeEffortOffside
+     * Set parkingBrakeEffortOffside.
      *
-     * @param integer $parkingBrakeEffortOffside
+     * @param int $parkingBrakeEffortOffside
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -378,9 +378,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeEffortOffside
+     * Get parkingBrakeEffortOffside.
      *
-     * @return integer
+     * @return int
      */
     public function getParkingBrakeEffortOffside()
     {
@@ -388,9 +388,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeEffortSingle
+     * Set parkingBrakeEffortSingle.
      *
-     * @param integer $parkingBrakeEffortSingle
+     * @param int $parkingBrakeEffortSingle
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -402,9 +402,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeEffortSingle
+     * Get parkingBrakeEffortSingle.
      *
-     * @return integer
+     * @return int
      */
     public function getParkingBrakeEffortSingle()
     {
@@ -452,9 +452,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeLockNearside
+     * Set parkingBrakeLockNearside.
      *
-     * @param boolean $parkingBrakeLockNearside
+     * @param bool $parkingBrakeLockNearside
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -466,9 +466,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeLockNearside
+     * Get parkingBrakeLockNearside.
      *
-     * @return boolean
+     * @return bool
      */
     public function getParkingBrakeLockNearside()
     {
@@ -476,9 +476,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeLockOffside
+     * Set parkingBrakeLockOffside.
      *
-     * @param boolean $parkingBrakeLockOffside
+     * @param bool $parkingBrakeLockOffside
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -490,9 +490,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeLockOffside
+     * Get parkingBrakeLockOffside.
      *
-     * @return boolean
+     * @return bool
      */
     public function getParkingBrakeLockOffside()
     {
@@ -500,9 +500,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeLockSingle
+     * Set parkingBrakeLockSingle.
      *
-     * @param boolean $parkingBrakeLockSingle
+     * @param bool $parkingBrakeLockSingle
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -514,9 +514,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeLockSingle
+     * Get parkingBrakeLockSingle.
      *
-     * @return boolean
+     * @return bool
      */
     public function getParkingBrakeLockSingle()
     {
@@ -524,7 +524,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @param boolean $parkingBrakeLockSecondaryNearside
+     * @param bool $parkingBrakeLockSecondaryNearside
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -536,7 +536,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getParkingBrakeLockSecondaryNearside()
     {
@@ -544,7 +544,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @param boolean $parkingBrakeLockSecondaryOffside
+     * @param bool $parkingBrakeLockSecondaryOffside
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -556,7 +556,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getParkingBrakeLockSecondaryOffside()
     {
@@ -564,9 +564,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set serviceBrakeIsSingleLine
+     * Set serviceBrakeIsSingleLine.
      *
-     * @param boolean $serviceBrakeIsSingleLine
+     * @param bool $serviceBrakeIsSingleLine
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -578,9 +578,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get serviceBrakeIsSingleLine
+     * Get serviceBrakeIsSingleLine.
      *
-     * @return boolean
+     * @return bool
      */
     public function getServiceBrakeIsSingleLine()
     {
@@ -588,7 +588,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @param boolean $isCommercialVehicle
+     * @param bool $isCommercialVehicle
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -600,7 +600,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsCommercialVehicle()
     {
@@ -608,18 +608,19 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @param boolean $isSingleInFront
+     * @param bool $isSingleInFront
      *
      * @return BrakeTestResultClass3AndAbove
      */
     public function setIsSingleInFront($isSingleInFront)
     {
         $this->isSingleInFront = $isSingleInFront;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsSingleInFront()
     {
@@ -627,9 +628,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set vehicleWeight
+     * Set vehicleWeight.
      *
-     * @param integer $vehicleWeight
+     * @param int $vehicleWeight
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -641,9 +642,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get vehicleWeight
+     * Get vehicleWeight.
      *
-     * @return integer
+     * @return int
      */
     public function getVehicleWeight()
     {
@@ -671,9 +672,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set weightIsUnladen
+     * Set weightIsUnladen.
      *
-     * @param boolean $weightIsUnladen
+     * @param bool $weightIsUnladen
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -685,9 +686,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get weightIsUnladen
+     * Get weightIsUnladen.
      *
-     * @return boolean
+     * @return bool
      */
     public function getWeightIsUnladen()
     {
@@ -695,9 +696,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set serviceBrake1Efficiency
+     * Set serviceBrake1Efficiency.
      *
-     * @param integer $serviceBrake1Efficiency
+     * @param int $serviceBrake1Efficiency
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -709,9 +710,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get serviceBrake1Efficiency
+     * Get serviceBrake1Efficiency.
      *
-     * @return integer
+     * @return int
      */
     public function getServiceBrake1Efficiency()
     {
@@ -719,9 +720,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set serviceBrake2Efficiency
+     * Set serviceBrake2Efficiency.
      *
-     * @param integer $serviceBrake2Efficiency
+     * @param int $serviceBrake2Efficiency
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -733,9 +734,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get serviceBrake2Efficiency
+     * Get serviceBrake2Efficiency.
      *
-     * @return integer
+     * @return int
      */
     public function getServiceBrake2Efficiency()
     {
@@ -743,9 +744,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeEfficiency
+     * Set parkingBrakeEfficiency.
      *
-     * @param integer $parkingBrakeEfficiency
+     * @param int $parkingBrakeEfficiency
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -757,9 +758,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeEfficiency
+     * Get parkingBrakeEfficiency.
      *
-     * @return integer
+     * @return int
      */
     public function getParkingBrakeEfficiency()
     {
@@ -767,9 +768,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set serviceBrake1EfficiencyPass
+     * Set serviceBrake1EfficiencyPass.
      *
-     * @param boolean $serviceBrake1EfficiencyPass
+     * @param bool $serviceBrake1EfficiencyPass
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -781,9 +782,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get serviceBrake1EfficiencyPass
+     * Get serviceBrake1EfficiencyPass.
      *
-     * @return boolean
+     * @return bool
      */
     public function getServiceBrake1EfficiencyPass()
     {
@@ -791,9 +792,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set serviceBrake2EfficiencyPass
+     * Set serviceBrake2EfficiencyPass.
      *
-     * @param boolean $serviceBrake2EfficiencyPass
+     * @param bool $serviceBrake2EfficiencyPass
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -805,9 +806,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get serviceBrake2EfficiencyPass
+     * Get serviceBrake2EfficiencyPass.
      *
-     * @return boolean
+     * @return bool
      */
     public function getServiceBrake2EfficiencyPass()
     {
@@ -815,9 +816,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set parkingBrakeEfficiencyPass
+     * Set parkingBrakeEfficiencyPass.
      *
-     * @param boolean $parkingBrakeEfficiencyPass
+     * @param bool $parkingBrakeEfficiencyPass
      *
      * @return BrakeTestResultClass3AndAbove
      */
@@ -829,9 +830,9 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get parkingBrakeEfficiencyPass
+     * Get parkingBrakeEfficiencyPass.
      *
-     * @return boolean
+     * @return bool
      */
     public function getParkingBrakeEfficiencyPass()
     {
@@ -839,7 +840,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set serviceBrake1Data
+     * Set serviceBrake1Data.
      *
      * @param \DvsaEntities\Entity\BrakeTestResultServiceBrakeData $serviceBrake1Data
      *
@@ -853,7 +854,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get serviceBrake1Data
+     * Get serviceBrake1Data.
      *
      * @return \DvsaEntities\Entity\BrakeTestResultServiceBrakeData
      */
@@ -863,7 +864,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Set serviceBrake2Data
+     * Set serviceBrake2Data.
      *
      * @param \DvsaEntities\Entity\BrakeTestResultServiceBrakeData $serviceBrake2Data
      *
@@ -877,7 +878,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * Get serviceBrake2Data
+     * Get serviceBrake2Data.
      *
      * @return \DvsaEntities\Entity\BrakeTestResultServiceBrakeData
      */
@@ -894,6 +895,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     public function setParkingBrakeImbalance($val)
     {
         $this->parkingBrakeImbalance = $val;
+
         return $this;
     }
 
@@ -913,6 +915,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     public function setParkingBrakeSecondaryImbalance($val)
     {
         $this->parkingBrakeSecondaryImbalance = $val;
+
         return $this;
     }
 
@@ -925,18 +928,19 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     }
 
     /**
-     * @param boolean $val
+     * @param bool $val
      *
      * @return BrakeTestResultClass3AndAbove
      */
     public function setParkingBrakeImbalancePass($val)
     {
         $this->parkingBrakeImbalancePass = $val;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getParkingBrakeImbalancePass()
     {
@@ -951,6 +955,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     public function setMotTest($motTest)
     {
         $this->motTest = $motTest;
+
         return $this;
     }
 
@@ -970,6 +975,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     public function setNumberOfAxles($axles)
     {
         $this->numberOfAxles = $axles;
+
         return $this;
     }
 
@@ -989,6 +995,7 @@ class BrakeTestResultClass3AndAbove extends BrakeTestResult
     public function setParkingBrakeNumberOfAxles($axles)
     {
         $this->parkingBrakeNumberOfAxles = $axles;
+
         return $this;
     }
 

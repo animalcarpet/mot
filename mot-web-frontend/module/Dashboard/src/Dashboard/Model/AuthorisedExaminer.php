@@ -5,7 +5,7 @@ namespace Dashboard\Model;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Data about AE link to person
+ * Data about AE link to person.
  */
 class AuthorisedExaminer
 {
@@ -58,7 +58,7 @@ class AuthorisedExaminer
     }
 
     /**
-     * Converts array of hash arrays to array of AuthorisedExaminer objects
+     * Converts array of hash arrays to array of AuthorisedExaminer objects.
      *
      * @param array $data
      *
@@ -83,6 +83,7 @@ class AuthorisedExaminer
     public function setManagerId($aedm)
     {
         $this->managerId = $aedm;
+
         return $this;
     }
 
@@ -102,6 +103,7 @@ class AuthorisedExaminer
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -121,6 +123,7 @@ class AuthorisedExaminer
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -140,6 +143,7 @@ class AuthorisedExaminer
     public function setReference($reference)
     {
         $this->reference = $reference;
+
         return $this;
     }
 
@@ -159,6 +163,7 @@ class AuthorisedExaminer
     public function setSites($sites)
     {
         $this->sites = $sites;
+
         return $this;
     }
 
@@ -178,6 +183,7 @@ class AuthorisedExaminer
     public function setSlots($slots)
     {
         $this->slots = $slots;
+
         return $this;
     }
 
@@ -197,6 +203,7 @@ class AuthorisedExaminer
     public function setSlotsWarnings($slotsWarnings)
     {
         $this->slotsWarnings = $slotsWarnings;
+
         return $this;
     }
 
@@ -216,6 +223,7 @@ class AuthorisedExaminer
     public function setTradingAs($tradingAs)
     {
         $this->tradingAs = $tradingAs;
+
         return $this;
     }
 
@@ -235,6 +243,7 @@ class AuthorisedExaminer
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 

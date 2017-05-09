@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardOrder\Controller;
 
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
-use Dvsa\Mot\ApiClient\Resource\Collection;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardOrder;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller\AlreadyOrderedNewCardController;
@@ -61,11 +60,11 @@ class AlreadyOrderedNewCardControllerTest extends AbstractLightWebControllerTest
 
         $controller->onDispatch($this->getMvcEventForIndexAction());
     }
-    
+
     public function testIndexAction_whenNoSecurityCardOrdersAreFound_shouldRedirectToUserHome()
     {
         $this->withNoCardOrders();
-        
+
         $controller = $this->buildController();
 
         $this->expectRedirect(UserHomeController::ROUTE);
@@ -111,6 +110,7 @@ class AlreadyOrderedNewCardControllerTest extends AbstractLightWebControllerTest
 
     /**
      * @param bool $isFeatureToggleEnabled
+     *
      * @return $this
      */
     private function withHasFeatureToggle($isFeatureToggleEnabled)

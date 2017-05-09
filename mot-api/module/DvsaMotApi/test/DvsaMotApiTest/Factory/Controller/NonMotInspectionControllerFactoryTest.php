@@ -2,7 +2,6 @@
 
 namespace DvsaMotApiTest\Factory\Controller;
 
-
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
 use DvsaMotApi\Controller\NonMotInspectionController;
@@ -11,7 +10,6 @@ use DvsaMotApi\Service\MotTestService;
 
 class NonMotInspectionControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFactory()
     {
         ServiceFactoryTestHelper::testCreateServiceForCM(
@@ -19,7 +17,7 @@ class NonMotInspectionControllerFactoryTest extends \PHPUnit_Framework_TestCase
             NonMotInspectionController::class,
             [
                 'MotTestService' => MotTestService::class,
-                'DvsaAuthorisationService' => AuthorisationService::class
+                'DvsaAuthorisationService' => AuthorisationService::class,
             ]
         );
     }

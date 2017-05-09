@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Comment;
@@ -6,7 +7,7 @@ use DvsaEntities\Entity\Person;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class CommentTest
+ * Class CommentTest.
  */
 class CommentTest extends PHPUnit_Framework_TestCase
 {
@@ -23,7 +24,7 @@ class CommentTest extends PHPUnit_Framework_TestCase
     {
         $data = [
             'comment' => 'Invalid address, postcode not real',
-            'created' => new \DateTime,
+            'created' => new \DateTime(),
             'createdBy' => new Person(),
         ];
 

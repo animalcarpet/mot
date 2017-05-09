@@ -6,16 +6,14 @@ use DvsaCommon\Dto\Organisation\OrganisationPositionDto;
 use DvsaCommon\Dto\Person\PersonDto;
 
 /**
- * Class Employee
- *
- * @package Organisation\ViewModel
+ * Class Employee.
  */
 class EmployeeViewModel
 {
     private $person;
 
     /**
-     * @var $roles OrganisationPositionDto[]
+     * @var OrganisationPositionDto[]
      */
     private $positions = [];
 
@@ -50,7 +48,8 @@ class EmployeeViewModel
             $displayRoles[] = $position->getRole();
         }
 
-        $displayRolesString = join(", ", $displayRoles);
+        $displayRolesString = implode(', ', $displayRoles);
+
         return $displayRolesString;
     }
 
@@ -62,6 +61,7 @@ class EmployeeViewModel
     public function setPositionId($positionId)
     {
         $this->positionId = $positionId;
+
         return $this;
     }
 

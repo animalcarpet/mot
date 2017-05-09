@@ -85,6 +85,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -93,6 +94,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 
@@ -258,7 +260,8 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             'ADVISORY' => $advisoryArray,
         ];
 
-        $this->reasonsForRejection = json_decode(json_encode($this->reasonsForRejection), FALSE);
+        $this->reasonsForRejection = json_decode(json_encode($this->reasonsForRejection), false);
+
         return $this->reasonsForRejection;
     }
 }

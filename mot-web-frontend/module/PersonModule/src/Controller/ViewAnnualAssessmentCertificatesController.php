@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
-
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Action\AnnualAssessmentCertificatesAction;
 use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
@@ -56,11 +55,12 @@ class ViewAnnualAssessmentCertificatesController extends AbstractAuthActionContr
 
     /**
      * @param $context
+     *
      * @return int
      */
     private function getPersonId($context)
     {
         return $context === ContextProvider::YOUR_PROFILE_CONTEXT ?
-            $this->getIdentity()->getUserId() : (int)$this->params()->fromRoute('id');
+            $this->getIdentity()->getUserId() : (int) $this->params()->fromRoute('id');
     }
 }

@@ -27,9 +27,9 @@ class MysteryShopperHelper
     protected $logger;
 
     /**
-     * @param VehicleService $vehicleService
+     * @param VehicleService                   $vehicleService
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param LoggerInterface $logger
+     * @param LoggerInterface                  $logger
      */
     public function __construct(
         VehicleService $vehicleService,
@@ -49,9 +49,11 @@ class MysteryShopperHelper
     public function isVehicleMysteryShopper($vehicleId)
     {
         if (null === $vehicleId) {
-            $this->logger->err('Could not get vehicle details on vehicle id: ' . $vehicleId);
+            $this->logger->err('Could not get vehicle details on vehicle id: '.$vehicleId);
+
             return false;
         }
+
         return $this->vehicleService->getDvsaVehicleById((int) $vehicleId)->getIsIncognito();
     }
 

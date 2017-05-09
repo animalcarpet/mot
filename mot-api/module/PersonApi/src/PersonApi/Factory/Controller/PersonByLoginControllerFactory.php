@@ -20,7 +20,7 @@ class PersonByLoginControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
-        $serviceLocator    = $controllerManager->getServiceLocator();
+        $serviceLocator = $controllerManager->getServiceLocator();
         $usernameValidator = $serviceLocator->get(UsernameValidator::class);
 
         return new PersonByLoginController($usernameValidator);

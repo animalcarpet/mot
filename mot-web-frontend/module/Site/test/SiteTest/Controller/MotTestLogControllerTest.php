@@ -129,37 +129,37 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
     {
         $apiResult = [
             '1' => [
-                'testNumber'    => 1234,
-                'testDateTime'  => '2014-12-10 23:59:59.000000',
+                'testNumber' => 1234,
+                'testDateTime' => '2014-12-10 23:59:59.000000',
                 'emRecDateTime' => '2013-12-11 23:59:59.000000',
-                'vehicleVIN'    => 123456789012345,
-                'vehicleModel'  => '100',
-                'emCode'        => null,
-                'column11'      => 'row1 col1',
-                'column12'      => 99999,
-                'column13'      => 'row1 col2',
+                'vehicleVIN' => 123456789012345,
+                'vehicleModel' => '100',
+                'emCode' => null,
+                'column11' => 'row1 col1',
+                'column12' => 99999,
+                'column13' => 'row1 col2',
             ],
             '2' => [
-                'testNumber'    => 1234,
-                'testDateTime'  => '2014-12-10 23:59:59.000000',
+                'testNumber' => 1234,
+                'testDateTime' => '2014-12-10 23:59:59.000000',
                 'emRecDateTime' => '2013-12-11 23:59:59.000000',
-                'vehicleVIN'    => 123456789012345,
-                'vehicleModel'  => 200,
-                'emCode'        => '1',
-                'column21'      => 'row2 col1',
-                'column22'      => 88888,
-                'column23'      => 'row2 col2',
+                'vehicleVIN' => 123456789012345,
+                'vehicleModel' => 200,
+                'emCode' => '1',
+                'column21' => 'row2 col1',
+                'column22' => 88888,
+                'column23' => 'row2 col2',
             ],
             '3' => [
-                'testNumber'    => 1234,
-                'testDateTime'  => '2014-12-10 23:59:59.000000',
+                'testNumber' => 1234,
+                'testDateTime' => '2014-12-10 23:59:59.000000',
                 'emRecDateTime' => null,
-                'vehicleVIN'    => 123456789012345,
-                'vehicleModel'  => '9-4',
-                'emCode'        => '1',
-                'column21'      => 'row2 col1',
-                'column22'      => 88888,
-                'column23'      => 'row2 col2',
+                'vehicleVIN' => 123456789012345,
+                'vehicleModel' => '9-4',
+                'emCode' => '1',
+                'column21' => 'row2 col1',
+                'column22' => 88888,
+                'column23' => 'row2 col2',
             ],
         ];
 
@@ -167,25 +167,25 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
             $apiResult,
             [
                 1 => [
-                    'testDateTime'  => '10/12/2014 23:59:59',
+                    'testDateTime' => '10/12/2014 23:59:59',
                     'emRecDateTime' => '11/12/2013 23:59:59',
-                    'vehicleModel'  => '="100"',
-                    'testNumber'    => '="1234"',
-                    'vehicleVIN'    => '="123456789012345"',
+                    'vehicleModel' => '="100"',
+                    'testNumber' => '="1234"',
+                    'vehicleVIN' => '="123456789012345"',
                 ],
                 2 => [
-                    'testDateTime'  => '10/12/2014',
+                    'testDateTime' => '10/12/2014',
                     'emRecDateTime' => '11/12/2013 23:59:59',
-                    'vehicleModel'  => '="200"',
-                    'testNumber'    => '="1234"',
-                    'vehicleVIN'    => '="123456789012345"',
+                    'vehicleModel' => '="200"',
+                    'testNumber' => '="1234"',
+                    'vehicleVIN' => '="123456789012345"',
                 ],
                 3 => [
-                    'testDateTime'  => '10/12/2014',
+                    'testDateTime' => '10/12/2014',
                     'emRecDateTime' => null,
-                    'vehicleModel'  => '="9-4"',
-                    'testNumber'    => '="1234"',
-                    'vehicleVIN'    => '="123456789012345"',
+                    'vehicleModel' => '="9-4"',
+                    'testNumber' => '="1234"',
+                    'vehicleVIN' => '="123456789012345"',
                 ],
             ]
         );
@@ -201,7 +201,7 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
 
         $queryParams = [
             SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => (new \DateTime('2013-12-11'))->getTimestamp(),
-            SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => (new \DateTime('2014-03-02'))->getTimestamp(),
+            SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => (new \DateTime('2014-03-02'))->getTimestamp(),
         ];
         $this->getResultForAction2('get', 'downloadCsv', ['id' => self::VTS_ID], $queryParams);
 
@@ -223,11 +223,11 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
         $fileName = 'test-log-11122013-02032014.csv';
 
         $expectHeaders = [
-            'Content-Type'        => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-            'Cache-Control'       => 'max-age=0, must-revalidate, no-cache, no-store',
-            'Pragma'              => 'no-cache',
-            'Content-Length'      => strlen($expectContent),
+            'Content-Type' => 'text/csv; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+            'Cache-Control' => 'max-age=0, must-revalidate, no-cache, no-store',
+            'Pragma' => 'no-cache',
+            'Content-Length' => strlen($expectContent),
         ];
 
         $headers = $response->getHeaders();
@@ -275,29 +275,29 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
             //  getLogDataBySearchCriteria
             [
                 'method' => [
-                    'name'   => 'getLogDataBySearchCriteria',
+                    'name' => 'getLogDataBySearchCriteria',
                     'params' => [self::VTS_ID, $paramsDto],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockMotTestLogMapper',
+                        'class' => 'mockMotTestLogMapper',
                         'method' => 'getSiteData',
                         'params' => [self::VTS_ID, $paramsDto],
                         'result' => ['RESULT'],
                     ],
                 ],
-                'expect'     => [
+                'expect' => [
                     'return' => ['RESULT'],
                 ],
             ],
             [
                 'method' => [
-                    'name'   => 'getLogDataBySearchCriteria',
+                    'name' => 'getLogDataBySearchCriteria',
                     'params' => [self::VTS_ID, $paramsDto],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockMotTestLogMapper',
+                        'class' => 'mockMotTestLogMapper',
                         'method' => 'getSiteData',
                         'params' => [self::VTS_ID, $paramsDto],
                         'result' => new RestApplicationException(
@@ -305,8 +305,8 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
                         ),
                     ],
                 ],
-                'expect'     => [
-                    'return'   => null,
+                'expect' => [
+                    'return' => null,
                     'errorMsg' => 'ErrorText',
                 ],
             ],
@@ -314,29 +314,29 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
             //  getLogSummary
             [
                 'method' => [
-                    'name'   => 'getLogSummary',
+                    'name' => 'getLogSummary',
                     'params' => [self::VTS_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockMotTestLogMapper',
+                        'class' => 'mockMotTestLogMapper',
                         'method' => 'getSiteSummary',
                         'params' => [self::VTS_ID],
                         'result' => ['RESULT'],
                     ],
                 ],
-                'expect'     => [
+                'expect' => [
                     'return' => ['RESULT'],
                 ],
             ],
             [
                 'method' => [
-                    'name'   => 'getLogSummary',
+                    'name' => 'getLogSummary',
                     'params' => [self::VTS_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockMotTestLogMapper',
+                        'class' => 'mockMotTestLogMapper',
                         'method' => 'getSiteSummary',
                         'params' => [self::VTS_ID],
                         'result' => new RestApplicationException(
@@ -344,8 +344,8 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
                         ),
                     ],
                 ],
-                'expect'     => [
-                    'return'   => null,
+                'expect' => [
+                    'return' => null,
                     'errorMsg' => 'ErrorText',
                 ],
             ],
@@ -353,29 +353,29 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
             //  getSite
             [
                 'method' => [
-                    'name'   => 'getSite',
+                    'name' => 'getSite',
                     'params' => [self::VTS_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSiteMapper',
+                        'class' => 'mockSiteMapper',
                         'method' => 'getById',
                         'params' => [self::VTS_ID],
                         'result' => ['RESULT'],
                     ],
                 ],
-                'expect'     => [
+                'expect' => [
                     'return' => ['RESULT'],
                 ],
             ],
             [
                 'method' => [
-                    'name'   => 'getSite',
+                    'name' => 'getSite',
                     'params' => [self::VTS_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSiteMapper',
+                        'class' => 'mockSiteMapper',
                         'method' => 'getById',
                         'params' => [self::VTS_ID],
                         'result' => new RestApplicationException(
@@ -383,8 +383,8 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
                         ),
                     ],
                 ],
-                'expect'     => [
-                    'return'   => null,
+                'expect' => [
+                    'return' => null,
                     'errorMsg' => 'ErrorText',
                 ],
             ],
@@ -399,6 +399,7 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
      * @param $expectErr
      *
      * @dataProvider dataProviderTestErrors
+     *
      * @throws \Exception
      */
     public function testErrors($postData, $mocks, $expectErr)
@@ -438,7 +439,7 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
         $currYear = (int) $currDate->format('Y');
 
         $dateFrom = ['Day' => $currDate->format('j'), 'Month' => $currDate->format('n'), 'Year' => $currYear];
-        $dateTo   = ['Day' => $currDate->format('j'), 'Month' => $currDate->format('n'), 'Year' => $currYear];
+        $dateTo = ['Day' => $currDate->format('j'), 'Month' => $currDate->format('n'), 'Year' => $currYear];
 
         $resultDto = (new SearchResultDto())
             ->setSearched(new MotTestSearchParamsDto());
@@ -446,25 +447,25 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
         return [
             //  date interval is valid, api return empty result (0 rows)
             [
-                'post'  => [
+                'post' => [
                     MotTestLogFormViewModel::FLD_DATE_FROM => $dateFrom,
-                    MotTestLogFormViewModel::FLD_DATE_TO   => $dateTo,
+                    MotTestLogFormViewModel::FLD_DATE_TO => $dateTo,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSiteMapper',
+                        'class' => 'mockSiteMapper',
                         'method' => 'getById',
                         'params' => [self::VTS_ID],
                         'result' => $siteDto,
                     ],
                     [
-                        'class'  => 'mockMotTestLogMapper',
+                        'class' => 'mockMotTestLogMapper',
                         'method' => 'getSiteSummary',
                         'params' => [self::VTS_ID],
                         'result' => new MotTestLogSummaryDto(),
                     ],
                     [
-                        'class'  => 'mockMotTestLogMapper',
+                        'class' => 'mockMotTestLogMapper',
                         'method' => 'getSiteData',
                         'result' => self::cloneObject($resultDto)->setTotalResultCount(0),
                     ],
@@ -519,6 +520,6 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
      */
     private static function cloneObject($obj)
     {
-        return clone ($obj);
+        return clone $obj;
     }
 }

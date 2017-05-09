@@ -1,4 +1,5 @@
 <?php
+
 namespace UserApiTest\SpecialNotice\Controller;
 
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
@@ -9,7 +10,7 @@ use UserApi\SpecialNotice\Service\SpecialNoticeService;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class SpecialNoticeContentControllerTest
+ * Class SpecialNoticeContentControllerTest.
  */
 class SpecialNoticeContentControllerTest extends AbstractRestfulControllerTestCase
 {
@@ -36,7 +37,7 @@ class SpecialNoticeContentControllerTest extends AbstractRestfulControllerTestCa
         // when
         $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
-        
+
         // then
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertInstanceOf(\Zend\View\Model\JsonModel::class, $result);
@@ -114,15 +115,15 @@ class SpecialNoticeContentControllerTest extends AbstractRestfulControllerTestCa
         // given
         $this->mockValidAuthorization();
 
-        $data = ['noticeTitle'         => 'Test Title',
-                 'issueNumber'         => '1',
-                 'issueYear'           => '2014',
-                 'issueDate'           => '2014-01-01',
-                 'expiryDate'          => '2022-01-01',
+        $data = ['noticeTitle' => 'Test Title',
+                 'issueNumber' => '1',
+                 'issueYear' => '2014',
+                 'issueDate' => '2014-01-01',
+                 'expiryDate' => '2022-01-01',
                  'internalPublishDate' => '2014-01-01',
                  'externalPublishDate' => '2014-01-10',
-                 'noticeText'          => 'This is a test notice.',
-                 'targetRoles'         => [0 => 'TESTER-CLASS-1', 1 => 'TESTER-CLASS-2']
+                 'noticeText' => 'This is a test notice.',
+                 'targetRoles' => [0 => 'TESTER-CLASS-1', 1 => 'TESTER-CLASS-2'],
         ];
 
         $this->request->setMethod('post');

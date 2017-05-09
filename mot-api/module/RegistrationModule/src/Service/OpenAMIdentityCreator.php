@@ -55,16 +55,16 @@ class OpenAMIdentityCreator
     {
         $this->validateArguments(
             [
-                '$username'  => $username,
-                '$password'  => $password,
+                '$username' => $username,
+                '$password' => $password,
                 '$firstName' => $firstName,
-                '$lastName'  => $lastName,
+                '$lastName' => $lastName,
             ]
         );
 
         $attributes = [
-            'sn'          => $lastName,
-            'cn'          => sprintf('%s %s', $firstName, $lastName),
+            'sn' => $lastName,
+            'cn' => sprintf('%s %s', $firstName, $lastName),
             'objectclass' => is_null($objectClass) ? self::DEFAULT_OBJECT_CLASS : $objectClass,
         ];
 

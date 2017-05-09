@@ -7,12 +7,10 @@ use DvsaAuthorisation\Service\RoleProviderService;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\RbacRepository;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class RoleProviderServiceFactoryTest
- *
+ * Class RoleProviderServiceFactoryTest.
  */
 class RoleProviderServiceFactoryTest extends AbstractServiceTestCase
 {

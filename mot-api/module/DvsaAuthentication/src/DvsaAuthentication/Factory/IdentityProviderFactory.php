@@ -7,9 +7,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class IdentityProviderFactory
- *
- * @package DvsaAuthentication\Factory
+ * Class IdentityProviderFactory.
  */
 class IdentityProviderFactory implements FactoryInterface
 {

@@ -8,7 +8,7 @@ use DvsaEntities\Entity\Person;
 use DvsaMotApi\Controller\DemoTestController;
 
 /**
- * Tests for DemoTestController
+ * Tests for DemoTestController.
  */
 class DemoTestControllerTest extends AbstractMotApiControllerTestCase
 {

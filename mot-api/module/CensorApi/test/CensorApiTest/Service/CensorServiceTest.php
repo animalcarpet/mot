@@ -8,8 +8,7 @@ use DvsaEntities\Entity\CensorBlacklist;
 use DvsaEntities\Repository\CensorBlacklistRepository;
 
 /**
- * Class CensorServiceTest
- * @package CensorApiTest\Service
+ * Class CensorServiceTest.
  */
 class CensorServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,13 +25,7 @@ class CensorServiceTest extends \PHPUnit_Framework_TestCase
     public static function data()
     {
         return [
-            [['text' => 'dirtyword', 'result' => true]]
-            , [['text' => 'dirtywords', 'result' => true]]
-            , [['text' => 'ddd1rtywords', 'result' => true]]
-            , [['text' => 'ddd1rtyw0rds', 'result' => true]]
-            , [['text' => 'dirts', 'result' => false]]
-            , [['text' => 'word', 'result' => false]]
-            , [['text' => 'notrelevant', 'result' => false]]
+            [['text' => 'dirtyword', 'result' => true]], [['text' => 'dirtywords', 'result' => true]], [['text' => 'ddd1rtywords', 'result' => true]], [['text' => 'ddd1rtyw0rds', 'result' => true]], [['text' => 'dirts', 'result' => false]], [['text' => 'word', 'result' => false]], [['text' => 'notrelevant', 'result' => false]],
         ];
     }
 
@@ -43,7 +36,7 @@ class CensorServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->defineBadWords(
             [
-                (new CensorBlacklist())->setPhrase('dirtyword')
+                (new CensorBlacklist())->setPhrase('dirtyword'),
             ]
         );
         $res = $this->censorService->containsProfanity($assumption['text']);

@@ -29,9 +29,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaEntities\Entity\SiteStatus;
 
 /**
- * Class SiteServiceFactory
- *
- * @package SiteApi\Factory\Service
+ * Class SiteServiceFactory.
  */
 class SiteServiceFactory implements FactoryInterface
 {

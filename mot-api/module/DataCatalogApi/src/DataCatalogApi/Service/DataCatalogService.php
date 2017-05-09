@@ -44,9 +44,7 @@ use DvsaEntities\Repository\SiteStatusRepository;
 use DvsaEntities\Entity\EventTypeOutcomeCategoryMap;
 
 /**
- * Class DataCatalogService
- *
- * @package DataCatalogApi\Service
+ * Class DataCatalogService.
  */
 class DataCatalogService extends AbstractService
 {
@@ -141,6 +139,7 @@ class DataCatalogService extends AbstractService
         /** @var ColourRepository $repo */
         $repo = $this->entityManager->getRepository(Colour::class);
         $items = $repo->getAll();
+
         return $this->extractType2EnumValues($items);
     }
 
@@ -149,6 +148,7 @@ class DataCatalogService extends AbstractService
         /** @var FuelTypeRepository $repo */
         $repo = $this->entityManager->getRepository(FuelType::class);
         $items = $repo->getAll();
+
         return $this->extractType2EnumValues($items);
     }
 
@@ -171,6 +171,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(VehicleClass::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_DVLA);
     }
 
@@ -178,6 +179,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(CountryOfRegistration::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -185,6 +187,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(TransmissionType::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_DVLA);
     }
 
@@ -192,6 +195,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(MotTestType::class)->findBy([], ['position' => 'ASC']);
+
         return $this->extractItemsWithPosition($items);
     }
 
@@ -201,19 +205,19 @@ class DataCatalogService extends AbstractService
         $items = $this->entityManager->getRepository(PersonSystemRole::class)->findAll();
         $values = [];
         foreach ($items as $item) {
-
             $values[$item->getId()] = [
                 'id' => $item->getId(),
                 'code' => $item->getName(),
                 'name' => $item->getFullName(),
             ];
         }
+
         return $values;
     }
 
-
     /**
-     * Generates an array of business roles for use in the catalog
+     * Generates an array of business roles for use in the catalog.
+     *
      * @return array
      */
     public function getBusinessRoles()
@@ -242,7 +246,6 @@ class DataCatalogService extends AbstractService
         }
 
         return $values;
-
     }
 
     public function getOrganisationBusinessRoles()
@@ -265,6 +268,7 @@ class DataCatalogService extends AbstractService
                 'name' => $extracted['fullName'],
             ];
         }
+
         return $values;
     }
 
@@ -272,6 +276,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(SiteBusinessRole::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -288,6 +293,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(EquipmentModelStatus::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -295,6 +301,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(EmptyVrmReason::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -302,6 +309,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(EmptyVinReason::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -309,6 +317,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(AuthorisationForTestingMotStatus::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -317,7 +326,7 @@ class DataCatalogService extends AbstractService
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $repo = $this->entityManager->getRepository(EventTypeOutcomeCategoryMap::class);
         $eventTypeOutcomes = $repo->getEventTypeWithOutcomes();
-        
+
         // Mapping the flat result into the structure we desire
         $i = 0;
         while ($i < sizeof($eventTypeOutcomes)) {
@@ -328,18 +337,19 @@ class DataCatalogService extends AbstractService
             while ($eventTypeOutcomes[$i]['typeCode'] == $typeCode && $i < count($eventTypeOutcomes)) {
                 $outcomes[] = [
                     'code' => $eventTypeOutcomes[$i]['outcomeCode'],
-                    'name' => $eventTypeOutcomes[$i]['outcomeName']
+                    'name' => $eventTypeOutcomes[$i]['outcomeName'],
                 ];
-                $i++;
+                ++$i;
             }
 
             $eventType = [
                 'code' => $eventTypeOutcome['typeCode'],
                 'name' => $eventTypeOutcome['typeName'],
-                'outcomes' => $outcomes
+                'outcomes' => $outcomes,
             ];
             $return[$eventTypeOutcome['categoryCode']][] = $eventType;
         }
+
         return $return;
     }
 
@@ -352,6 +362,7 @@ class DataCatalogService extends AbstractService
             $values[] = $type === self::ENUM_TYPE_DVLA ?
                 $this->mapDvlaType2Enum($extracted) : $this->mapStandardType2Enum($extracted);
         }
+
         return $values;
     }
 
@@ -374,7 +385,7 @@ class DataCatalogService extends AbstractService
 
     /**
      * extracts the passed items into php arrays
-     * - filters the position field
+     * - filters the position field.
      *
      * @param $items
      * @param $filters
@@ -411,6 +422,7 @@ class DataCatalogService extends AbstractService
                 $values[] = $extracted;
             }
         }
+
         return $values;
     }
 
@@ -419,6 +431,7 @@ class DataCatalogService extends AbstractService
      * @param $className
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     private function checkAndExtractItems($items, $className)
@@ -438,17 +451,20 @@ class DataCatalogService extends AbstractService
         /** @var SiteStatusRepository $repo */
         $repo = $this->entityManager->getRepository(SiteStatus::class);
         $items = $repo->getAll();
+
         return $this->extractType2EnumValues($items);
     }
 
     /**
-     * Fetches all availible countries
+     * Fetches all availible countries.
+     *
      * @return array
      */
     public function getCountries()
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(Country::class)->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -460,6 +476,7 @@ class DataCatalogService extends AbstractService
         /** @var SiteStatusRepository $repo */
         $repo = $this->entityManager->getRepository(SiteType::class);
         $items = $repo->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -471,6 +488,7 @@ class DataCatalogService extends AbstractService
         /** @var SiteStatusRepository $repo */
         $repo = $this->entityManager->getRepository(CompanyType::class);
         $items = $repo->findAll();
+
         return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 
@@ -481,7 +499,7 @@ class DataCatalogService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::DATA_CATALOG_READ);
         $items = $this->entityManager->getRepository(AuthForAeStatus::class)->findAll();
-        return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
 
+        return $this->extractType2EnumValues($items, self::ENUM_TYPE_STANDARD);
     }
 }

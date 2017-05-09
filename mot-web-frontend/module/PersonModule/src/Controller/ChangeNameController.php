@@ -182,7 +182,7 @@ class ChangeNameController extends AbstractAuthActionController
         if (!$validator->isValid($params)) {
             $this->validationErrors = $validator->getMessages();
             foreach ($this->validationErrors as $field => $errorMessage) {
-                $message = $validator->getFieldLabel($field) . ' - ' . $errorMessage;
+                $message = $validator->getFieldLabel($field).' - '.$errorMessage;
                 $this->flashMessenger()->addErrorMessage([$message]);
             }
 
@@ -210,9 +210,10 @@ class ChangeNameController extends AbstractAuthActionController
     /**
      * Get the breadcrumbs given the context of the url.
      *
-     * @param int $personId
+     * @param int             $personId
      * @param PersonalDetails $personalDetails
-     * @param bool $isProfile
+     * @param bool            $isProfile
+     *
      * @return array
      */
     private function generateBreadcrumbsFromRequest($personId, $personalDetails, $isProfile = false)
@@ -228,16 +229,16 @@ class ChangeNameController extends AbstractAuthActionController
             $profileUrl = $isProfile === false ? $this->url()->fromRoute('newProfile', ['id' => $personId]) : '';
             $breadcrumbs += [PersonProfileController::CONTENT_HEADER_TYPE__YOUR_PROFILE => $profileUrl];
         } elseif (ContextProvider::USER_SEARCH_CONTEXT === $context) {
-                /*
+            /*
                  * User search context.
                  */
                 $userSearchUrl = $this->url()->fromRoute('user_admin/user-search');
 
-                $profileUrl = $isProfile === false
+            $profileUrl = $isProfile === false
                     ? $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]) : '';
 
-                $breadcrumbs += [PersonProfileController::CONTENT_HEADER_TYPE__USER_SEARCH => $userSearchUrl];
-                $breadcrumbs += [$personName => $profileUrl];
+            $breadcrumbs += [PersonProfileController::CONTENT_HEADER_TYPE__USER_SEARCH => $userSearchUrl];
+            $breadcrumbs += [$personName => $profileUrl];
         } elseif (ContextProvider::AE_CONTEXT === $context) {
             /*
              * AE context.
@@ -294,6 +295,6 @@ class ChangeNameController extends AbstractAuthActionController
             return $url;
         }
 
-        return $url . '?' . http_build_query($params);
+        return $url.'?'.http_build_query($params);
     }
 }

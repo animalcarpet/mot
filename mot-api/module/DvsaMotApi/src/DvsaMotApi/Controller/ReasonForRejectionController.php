@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -8,7 +9,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class ReasonForRejectionController
+ * Class ReasonForRejectionController.
  */
 class ReasonForRejectionController extends AbstractDvsaRestfulController
 {
@@ -17,9 +18,9 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
         $this->setIdentifierName('motTestNumber');
     }
 
-    const QUERY_PARAM_SEARCH = "search";
+    const QUERY_PARAM_SEARCH = 'search';
 
-    const SEARCH_REQUIRED_MESSAGE = "search query string parameter is required";
+    const SEARCH_REQUIRED_MESSAGE = 'search query string parameter is required';
 
     /**
      * Search for defects during an MOT test using the "search" parameter.
@@ -30,7 +31,7 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
      */
     public function get($motTestNumber)
     {
-        $searchString = (string)$this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH);
+        $searchString = (string) $this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH);
 
         if (!$searchString) {
             return $this->returnBadRequestResponseModel(

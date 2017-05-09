@@ -5,13 +5,10 @@ namespace DvsaMotEnforcement\Controller;
 use Core\Controller\AbstractAuthActionController;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\UrlBuilder\UrlBuilder;
-use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class ReinspectionReportController
- *
- * @package DvsaMotEnforcement\Controller
+ * Class ReinspectionReportController.
  */
 class ReinspectionReportController extends AbstractAuthActionController
 {
@@ -29,7 +26,7 @@ class ReinspectionReportController extends AbstractAuthActionController
         'The reinspection assessment outcome and details of the test differences have not been saved';
 
     /**
-     * confirmation of saving reinspection assessment (rfr differences + mot tests)
+     * confirmation of saving reinspection assessment (rfr differences + mot tests).
      *
      * @return \Zend\Http\Response|ViewModel
      */
@@ -47,7 +44,7 @@ class ReinspectionReportController extends AbstractAuthActionController
 
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
-        $resultId = (int)$this->params()->fromRoute('resultId', 0);
+        $resultId = (int) $this->params()->fromRoute('resultId', 0);
         $apiUrl = UrlBuilder::enforcementMotTestResult($resultId)->toString();
 
         try {
@@ -74,6 +71,5 @@ class ReinspectionReportController extends AbstractAuthActionController
                 'successMessages' => $this->flashMessenger()->getSuccessMessages(),
             ]
         );
-
     }
 }

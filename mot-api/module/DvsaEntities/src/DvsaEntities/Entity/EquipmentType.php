@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Make
+ * Make.
  *
  * @ORM\Table(name="equipment_type")
  * @ORM\Entity(readOnly=true)

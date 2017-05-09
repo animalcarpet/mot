@@ -6,19 +6,16 @@ use DvsaMotTest\View\ReplacementVehicleViewModel;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
 /**
- * @var ReplacementVehicleViewModel $vehicle
- * @var OdometerReadingViewObject $odometerReading
- * @var ReplacementSiteViewModel $vts
- * @var DvsaVehicleViewModel $dvsaVehicleViewModel
- *
+ * @var ReplacementVehicleViewModel
+ * @var OdometerReadingViewObject         $odometerReading
+ * @var ReplacementSiteViewModel          $vts
+ * @var DvsaVehicleViewModel              $dvsaVehicleViewModel
  * @var \DvsaCommon\Dto\Common\MotTestDto $motTest
- *
- * @var $colours \Vehicle\Helper\ColoursContainer
+ * @var $colours                          \Vehicle\Helper\ColoursContainer
  * @var $countryOfRegistrationList
  * @var $isAdmin
  * @var $isTester
  */
-
 $title = 'Replacement certificate update';
 $this->headTitle($title);
 
@@ -28,7 +25,7 @@ $this->headLink()->appendStylesheet('/css/select2/select2-bootstrap.css');
 $sectionRenderer = function ($name, $args = []) {
     return function ($canRender, $divider = true) use (&$name, &$args) {
         if ($canRender) {
-            echo call_user_func_array([$this, 'partial'], ['dvsa-mot-test/dashboard/' . $name, $args]);
+            echo call_user_func_array([$this, 'partial'], ['dvsa-mot-test/dashboard/'.$name, $args]);
             if ($divider) {
                 echo $this->partial('dvsa-mot-test/dashboard/section-divider');
             }
@@ -40,7 +37,7 @@ $makeRenderer = $sectionRenderer(
     'make-section',
     [
         'make' => $vehicle->getMake(),
-        'makeList' => $makeList
+        'makeList' => $makeList,
     ]
 );
 $modelRenderer = $sectionRenderer(
@@ -49,7 +46,7 @@ $modelRenderer = $sectionRenderer(
         'make' => $vehicle->getMake(),
         'model' => $vehicle->getModel(),
         'modelList' => $modelList,
-        'displayModelBody' => $vehicle->displayModelBody()
+        'displayModelBody' => $vehicle->displayModelBody(),
     ]
 );
 $odometerReadingRenderer = $sectionRenderer('odometer-reading-section', ['odometerReading' => $odometerReading]);
@@ -63,14 +60,14 @@ $coloursRenderer = $sectionRenderer(
         'primaryColourId' => $vehicle->getPrimaryColourId(),
         'primaryColourList' => $colours->getPrimaryColours(),
         'secondaryColourId' => $vehicle->getSecondaryColourId(),
-        'secondaryColourList' => $colours->getSecondaryColours()
+        'secondaryColourList' => $colours->getSecondaryColours(),
     ]
 );
 $corRenderer = $sectionRenderer(
     'country-of-registration-section',
     [
         'countryOfRegistration' => $vehicle->getCountryOfRegistration(),
-        'countryOfRegistrationList' => $countryOfRegistrationList
+        'countryOfRegistrationList' => $countryOfRegistrationList,
     ]
 );
 $expiryDateRenderer = $sectionRenderer(
@@ -79,7 +76,7 @@ $expiryDateRenderer = $sectionRenderer(
         'expiryDate' => $vehicle->getExpiryDisplayDate(),
         'day' => $vehicle->getExpiryDateDay(),
         'month' => $vehicle->getExpiryDateMonth(),
-        'year' => $vehicle->getExpiryDateYear()
+        'year' => $vehicle->getExpiryDateYear(),
     ]
 );
 ?>

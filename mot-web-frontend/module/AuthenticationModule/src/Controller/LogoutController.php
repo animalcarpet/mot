@@ -5,6 +5,7 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
+
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Controller;
 
 use Core\Controller\AbstractAuthActionController;

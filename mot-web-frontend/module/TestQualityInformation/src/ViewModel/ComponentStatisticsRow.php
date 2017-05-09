@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\TestQualityInformation\ViewModel;
 
 class ComponentStatisticsRow
@@ -18,11 +19,13 @@ class ComponentStatisticsRow
 
     /**
      * @param mixed $categoryId
+     *
      * @return ComponentStatisticsRow
      */
     public function setCategoryId($categoryId)
     {
         $this->categoryId = $categoryId;
+
         return $this;
     }
 
@@ -36,11 +39,13 @@ class ComponentStatisticsRow
 
     /**
      * @param mixed $testerAverage
+     *
      * @return ComponentStatisticsRow
      */
     public function setTesterAverage($testerAverage)
     {
         $this->testerAverage = $testerAverage;
+
         return $this;
     }
 
@@ -54,11 +59,13 @@ class ComponentStatisticsRow
 
     /**
      * @param mixed $nationalAverage
+     *
      * @return ComponentStatisticsRow
      */
     public function setNationalAverage($nationalAverage)
     {
         $this->nationalAverage = $nationalAverage;
+
         return $this;
     }
 
@@ -72,11 +79,13 @@ class ComponentStatisticsRow
 
     /**
      * @param mixed $categoryName
+     *
      * @return ComponentStatisticsRow
      */
     public function setCategoryName($categoryName)
     {
         $this->categoryName = $categoryName;
+
         return $this;
     }
 }

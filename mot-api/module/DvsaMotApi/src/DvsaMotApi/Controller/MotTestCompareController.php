@@ -1,15 +1,13 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaMotApi\Service\MotTestCompareService;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class MotTestCompareController
- *
- * @package DvsaMotApi\Controller
+ * Class MotTestCompareController.
  */
 class MotTestCompareController extends AbstractDvsaRestfulController
 {
@@ -31,7 +29,7 @@ class MotTestCompareController extends AbstractDvsaRestfulController
     {
         $request = $this->getRequest();
 
-        $motTestNumber          = $request->getQuery('motTestNumber');
+        $motTestNumber = $request->getQuery('motTestNumber');
         $motTestNumberToCompare = $request->getQuery('motTestNumberToCompare');
 
         $motTestData = $this->getService()

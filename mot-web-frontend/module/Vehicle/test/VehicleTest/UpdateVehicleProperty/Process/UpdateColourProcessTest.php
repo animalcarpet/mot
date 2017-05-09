@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\UpdateVehicleProperty\Process;
 
 use Application\Service\CatalogService;
@@ -29,24 +30,24 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
     const SECONDARY_COLOUR_CODE = ColourCode::NOT_STATED;
     const SESSION_SECONDARY_COLOUR_CODE = ColourCode::BEIGE;
 
-    /** @var  DvsaVehicleBuilder */
+    /** @var DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
 
-    /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var Url | \PHPUnit_Framework_MockObject_MockObject */
     private $urlHelper;
-    /** @var  VehicleService | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleService | \PHPUnit_Framework_MockObject_MockObject */
     private $vehicleService;
-    /** @var  VehicleEditBreadcrumbsBuilder | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleEditBreadcrumbsBuilder | \PHPUnit_Framework_MockObject_MockObject */
     private $breadcrumbsBuilder;
-    /** @var  VehicleTertiaryTitleBuilder | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleTertiaryTitleBuilder | \PHPUnit_Framework_MockObject_MockObject */
     private $tertiaryTitleBuilder;
-    /** @var  CatalogService | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var CatalogService | \PHPUnit_Framework_MockObject_MockObject */
     private $catalogService;
 
     /** @var UpdateColourProcess */
     private $sut;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     public function setUp()
@@ -78,7 +79,7 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
         $this->sut->setContext($this->buildContext('change'));
 
         $this->vehicleService->expects($this->once())
-            ->method("updateDvsaVehicleAtVersion")
+            ->method('updateDvsaVehicleAtVersion')
             ->with(
                 self::VEHICLE_ID,
                 self::VEHICLE_VERSION,
@@ -104,7 +105,7 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
             ->with(StartTestChangeService::CHANGE_COLOUR)
             ->willReturn([
                 'primaryColour' => 'K',
-                'secondaryColour' => 'S'
+                'secondaryColour' => 'S',
             ]);
         $data = $this->sut->getPrePopulatedData();
         $this->assertSame(self::COLOUR_CODE, $data[UpdateColourForm::FIELD_COLOUR]);
@@ -125,7 +126,7 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
             ->with(StartTestChangeService::CHANGE_COLOUR)
             ->willReturn([
                 'primaryColour' => 'K',
-                'secondaryColour' => 'S'
+                'secondaryColour' => 'S',
             ]);
         $data = $this->sut->getPrePopulatedData();
         $this->assertSame(self::SESSION_COLOUR_CODE, $data[UpdateColourForm::FIELD_COLOUR]);
@@ -154,7 +155,7 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
 
     private function buildContext($routeContext)
     {
-        return new UpdateVehicleContext($this->buildDvsaVehicle(), "abc", $routeContext);
+        return new UpdateVehicleContext($this->buildDvsaVehicle(), 'abc', $routeContext);
     }
 
     private function buildDvsaVehicle()

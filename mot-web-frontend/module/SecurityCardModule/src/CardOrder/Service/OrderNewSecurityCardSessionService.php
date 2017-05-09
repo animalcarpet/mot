@@ -14,16 +14,16 @@ class OrderNewSecurityCardSessionService extends SessionService
 
     public function loadByGuid($guid)
     {
-        return $this->load(self::UNIQUE_KEY . $guid);
+        return $this->load(self::UNIQUE_KEY.$guid);
     }
 
     public function saveToGuid($guid, $value)
     {
-        $this->save(self::UNIQUE_KEY . $guid, $value);
+        $this->save(self::UNIQUE_KEY.$guid, $value);
     }
 
     public function clearByGuid($guid)
     {
-        $this->sessionContainer->offsetUnset(self::UNIQUE_KEY . $guid);
+        $this->sessionContainer->offsetUnset(self::UNIQUE_KEY.$guid);
     }
 }

@@ -19,7 +19,7 @@ use DvsaMotApi\Helper\MysteryShopperHelper;
 use NonWorkingDaysApi\NonWorkingDaysHelper;
 
 /**
- * Contains services related to retest eligibility feature
+ * Contains services related to retest eligibility feature.
  */
 class RetestEligibilityValidator
 {
@@ -29,7 +29,7 @@ class RetestEligibilityValidator
     private $nonWorkingDaysHelper;
     /** @var MotTestRepository $motTestRepository */
     private $motTestRepository;
-    /** @var  DateTimeHolder */
+    /** @var DateTimeHolder */
     private $dateTime;
 
     /**
@@ -55,13 +55,14 @@ class RetestEligibilityValidator
     }
 
     /**
-     * Method checks if a vehicle is eligible for a retest
+     * Method checks if a vehicle is eligible for a retest.
      *
-     * @param int $vehicleId database identifier of vehicle
-     * @param int $vtsId database identifier of Vehicle Testing Station
+     * @param int                $vehicleId      database identifier of vehicle
+     * @param int                $vtsId          database identifier of Vehicle Testing Station
      * @param ContingencyTestDto $contingencyDto
      *
-     * @return int  Retest granted code, or throw exception
+     * @return int Retest granted code, or throw exception
+     *
      * @throws BadRequestException
      */
     public function checkEligibilityForRetest($vehicleId, $vtsId, $contingencyDto = null)
@@ -70,7 +71,7 @@ class RetestEligibilityValidator
 
         $isEligibleForRetest = (count($checkResult) === 0);
         if (!$isEligibleForRetest) {
-            $exception = BadRequestException::create("Vehicle is not eligible for a retest");
+            $exception = BadRequestException::create('Vehicle is not eligible for a retest');
 
             foreach ($checkResult as $errorCode) {
                 $errorMsg = RetestEligibilityErrorCodeTranslator::toText($errorCode);
@@ -101,6 +102,7 @@ class RetestEligibilityValidator
      * @param $contingencyDto
      *
      * @return array
+     *
      * @throws ForbiddenException
      * @throws NotFoundException
      */
@@ -129,6 +131,7 @@ class RetestEligibilityValidator
         if ($reTest instanceof MotTest) {
             $resultCodes [] = RetestEligibilityCheckCode::RETEST_REJECTED_ALREADY_REGISTERED;
         }
+
         return $resultCodes;
     }
 
@@ -144,7 +147,7 @@ class RetestEligibilityValidator
     {
         $country = $test->getVehicleTestingStation()->getNonWorkingDayCountry();
         if (is_null($country)) {
-            throw new NotFoundException("Vts country required");
+            throw new NotFoundException('Vts country required');
         }
 
         $lastTestCompletedDate = DU::cropTime($test->getCompletedDate());

@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Service\PasswordServiceFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Service\RegisterUserServiceFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Service\RegistrationSessionServiceFactory;
@@ -16,9 +15,9 @@ use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
 
 return [
     'factories' => [
-        PasswordService::class              => PasswordServiceFactory::class,
-        RegistrationSessionService::class   => RegistrationSessionServiceFactory::class,
-        RegisterUserService::class          => RegisterUserServiceFactory::class,
-        RegistrationStepService::class      => RegistrationStepServiceFactory::class,
+        PasswordService::class => PasswordServiceFactory::class,
+        RegistrationSessionService::class => RegistrationSessionServiceFactory::class,
+        RegisterUserService::class => RegisterUserServiceFactory::class,
+        RegistrationStepService::class => RegistrationStepServiceFactory::class,
     ],
 ];

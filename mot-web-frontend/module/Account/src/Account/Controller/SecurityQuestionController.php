@@ -52,7 +52,7 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariables([
             'pageSubTitle' => 'Forgotten your password',
-            'pageTitle' => 'Your security questions'
+            'pageTitle' => 'Your security questions',
         ]);
 
         $verificationMessages = [];
@@ -64,58 +64,38 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-
             $form->bind($request->getPost());
 
             if ($form->isValid()) {
-
                 try {
-
                     $verificationResult = $this->service->verifyAnswers($personId, $form->getMappedQuestionsAndAnswers());
 
                     if ($this->service->isVerified()) {
-
                         $this->flashMessenger()->getContainer()->offsetSet(
                             PasswordResetController::SESSION_KEY_EMAIL,
                             $this->service->resetPersonPassword($personId)
                         );
 
                         return $this->redirect()->toRoute('forgotten-password/confirmationEmail');
-
                     } else {
-
                         foreach ($verificationResult as $failedQuestionId => $value) {
-
                             $form->flagFailedAnswerVerifications($failedQuestionId);
-
                         }
 
                         if ($this->service->hasRemainingAttempts()) {
-
                             if ($this->service->getRemainingAttempts() <= 1) {
-
                                 $verificationMessages = [[
-                                    SecurityQuestionAnswersInputFilter::MSG_LAST_ATTEMPT_WARNING
+                                    SecurityQuestionAnswersInputFilter::MSG_LAST_ATTEMPT_WARNING,
                                 ]];
-
                             }
-
                         } else {
-
                             throw new LimitReachedException();
-
                         }
-
                     }
-
                 } catch (LimitReachedException $e) {
-
                     return $this->redirectToTheNotAuthenticate();
-
                 } catch (\RuntimeException $e) {
-
                     return $this->redirectToTheNotAuthenticate();
-
                 }
             }
         }
@@ -154,6 +134,7 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
 
     /**
      * @param $personId
+     *
      * @return SecurityQuestionAnswersForm
      */
     private function getSecurityQuestionAnswersFormForPerson($personId)

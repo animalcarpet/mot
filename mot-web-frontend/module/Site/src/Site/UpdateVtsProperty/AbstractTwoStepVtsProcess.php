@@ -2,7 +2,6 @@
 
 namespace Site\UpdateVtsProperty;
 
-use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Routing\VtsRouteList;
 use Core\TwoStepForm\TwoStepProcessInterface;
@@ -26,7 +25,7 @@ abstract class AbstractTwoStepVtsProcess extends AbstractSingleStepVtsProcess im
     {
         return sprintf(
             '%s/%s/%s',
-            "UPDATE_VTS_PROPERTY_FORM",
+            'UPDATE_VTS_PROPERTY_FORM',
             $this->context->getVtsId(),
             $this->context->getPropertyName()
         );
@@ -39,11 +38,9 @@ abstract class AbstractTwoStepVtsProcess extends AbstractSingleStepVtsProcess im
 
     public function redirectToConfirmationPage()
     {
-
     }
 
     public function populateConfirmationPageVariables()
     {
-
     }
 }

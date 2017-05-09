@@ -33,17 +33,16 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
 
     private $config;
 
-    /** @var  TestQualityInformationAction */
+    /** @var TestQualityInformationAction */
     private $testQualityInformationAction;
 
-    /** @var  Url */
+    /** @var Url */
     private $urlPluginMock;
 
     private $breadcrumbs = [
         self::ORGANISATION_NAME => self::LINK,
         TestQualityInformationAction::PAGE_SUBTITLE => '',
     ];
-
 
     protected function setUp()
     {
@@ -64,13 +63,12 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
             ->method('getData')
             ->willReturn($this->buildAuthorisedExaminerSitePerformanceDto());
 
-
         $this->mockConfig();
 
         $this->urlPluginMock = XMock::of(Url::class);
         $this->urlPluginMock
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn(self::LINK);
 
         $this->testQualityInformationAction = new TestQualityInformationAction(
@@ -121,12 +119,10 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
         $this->assertNotNull($result->layout()->getTemplate());
 
         $this->assertSame($this->breadcrumbs, $result->layout()->getBreadcrumbs());
-
     }
 
     public function testLayoutForSiteAssertedDto()
     {
-
         $tqiAction = $this->testQualityInformationAction;
         $result = $tqiAction->execute(self::ORGANISATION_ID, self::PAGE_NUMBER);
 
@@ -140,7 +136,6 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
         $this->assertNotNull($result->layout()->getTemplate());
 
         $this->assertSame($this->breadcrumbs, $result->layout()->getBreadcrumbs());
-
     }
 
     private function getEmptyTestQualityInformationAction()
@@ -185,16 +180,15 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
         return $authorisedExaminerSitePerformanceDto;
     }
 
-
     protected function mockConfig()
     {
         $this->config = $this->getMockBuilder(MotConfig::class)->disableOriginalConstructor()->getMock();
         $returnMap = [
-            ["site_assessment", "green", "start", 0],
-            ["site_assessment", "amber", "start", 324.11],
-            ["site_assessment", "red", "start", 459.21]
+            ['site_assessment', 'green', 'start', 0],
+            ['site_assessment', 'amber', 'start', 324.11],
+            ['site_assessment', 'red', 'start', 459.21],
         ];
 
-        $this->config->expects($this->any())->method("get")->will($this->returnValueMap($returnMap));
+        $this->config->expects($this->any())->method('get')->will($this->returnValueMap($returnMap));
     }
 }

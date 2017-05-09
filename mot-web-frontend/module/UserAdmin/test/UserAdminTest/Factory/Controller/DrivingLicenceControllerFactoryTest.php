@@ -30,7 +30,7 @@ class DrivingLicenceControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $contextProviderMock = $this->getMock(ContextProvider::class, [], [], '', false);
 
         $serviceManager->setService(HelpdeskAccountAdminService::class, $accountAdminServiceMock);
-        $serviceManager->setService("AuthorisationService", $authorisationServiceMock);
+        $serviceManager->setService('AuthorisationService', $authorisationServiceMock);
         $serviceManager->setService(TesterGroupAuthorisationMapper::class, $testerGroupAuthorisationMapperMock);
         $serviceManager->setService(UserAdminSessionService::class, $userAdminSessionServiceMock);
         $serviceManager->setService(PersonRoleManagementService::class, $personRoleManagementServiceMock);
@@ -41,7 +41,7 @@ class DrivingLicenceControllerFactoryTest extends \PHPUnit_Framework_TestCase
                 ->method('getServiceLocator')
                 ->will($this->returnValue($serviceManager));
 
-        $factory = new DrivingLicenceControllerFactory;
+        $factory = new DrivingLicenceControllerFactory();
         $result = $factory->createService($plugins);
 
         $this->assertInstanceOf(DrivingLicenceController::class, $result);

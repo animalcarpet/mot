@@ -16,14 +16,14 @@ use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 
 return [
     'factories' => [
-        PersonStore::class                   => \Dashboard\Factory\PersonStoreFactory::class,
-        ApiNotificationResource::class       => \Dashboard\Factory\ApiNotificationResourceFactory::class,
-        ApiDashboardResource::class          => \Dashboard\Factory\ApiDashboardResourceFactory::class,
-        PasswordService::class               => \Dashboard\Factory\Service\PasswordServiceFactory::class,
-        ViewTradeRolesAssertion::class       => ViewTradeRolesAssertionFactory::class,
+        PersonStore::class => \Dashboard\Factory\PersonStoreFactory::class,
+        ApiNotificationResource::class => \Dashboard\Factory\ApiNotificationResourceFactory::class,
+        ApiDashboardResource::class => \Dashboard\Factory\ApiDashboardResourceFactory::class,
+        PasswordService::class => \Dashboard\Factory\Service\PasswordServiceFactory::class,
+        ViewTradeRolesAssertion::class => ViewTradeRolesAssertionFactory::class,
         TradeRolesAssociationsService::class => TradeRolesAssociationsServiceFactory::class,
-        PersonTradeRoleSorterService::class  => PersonTradeRoleSorterServiceFactory::class,
-        DashboardGuard::class                => DashboardGuardFactory::class,
+        PersonTradeRoleSorterService::class => PersonTradeRoleSorterServiceFactory::class,
+        DashboardGuard::class => DashboardGuardFactory::class,
     ],
     'abstract_factories' => [
         AutoWireFactory::class,

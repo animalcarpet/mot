@@ -1,12 +1,9 @@
 <?php
 
-
 namespace DvsaMotTest\Model;
-
 
 class MotChecklistPdfField
 {
-
     /**
      * @var int
      */
@@ -50,11 +47,13 @@ class MotChecklistPdfField
 
     /**
      * @param int $xCoordinate
+     *
      * @return MotChecklistPdfField
      */
     public function setXCoordinate($xCoordinate)
     {
         $this->xCoordinate = $xCoordinate;
+
         return $this;
     }
 
@@ -68,11 +67,13 @@ class MotChecklistPdfField
 
     /**
      * @param int $yCoordinate
+     *
      * @return MotChecklistPdfField
      */
     public function setYCoordinate($yCoordinate)
     {
         $this->yCoordinate = $yCoordinate;
+
         return $this;
     }
 
@@ -86,11 +87,13 @@ class MotChecklistPdfField
 
     /**
      * @param int $fontSize
+     *
      * @return MotChecklistPdfField
      */
     public function setFontSize($fontSize)
     {
         $this->fontSize = $fontSize;
+
         return $this;
     }
 
@@ -104,11 +107,13 @@ class MotChecklistPdfField
 
     /**
      * @param string $fontColor
+     *
      * @return MotChecklistPdfField
      */
     public function setFontColor($fontColor)
     {
         $this->fontColor = $fontColor;
+
         return $this;
     }
 
@@ -122,11 +127,13 @@ class MotChecklistPdfField
 
     /**
      * @param string $text
+     *
      * @return MotChecklistPdfField
      */
     public function setText($text)
     {
         $this->text = $text;
+
         return $this;
     }
 }

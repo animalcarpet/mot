@@ -53,15 +53,15 @@ class DvlaVehicleMapper extends AbstractVehicleMapper
         $dto->setColourSecondary($this->mapColourCodeToDto($vehicle->getSecondaryColour()));
 
         //  Make and Model details
-        $makeCode       = $vehicle->getMakeCode();
-        $modelCode      = $vehicle->getModelCode();
-        $map            = null;
+        $makeCode = $vehicle->getMakeCode();
+        $modelCode = $vehicle->getModelCode();
+        $map = null;
 
         if (!$vehicle->getMakeInFull()) {
             $map = $this->vehicleCatalog->getMakeModelMapByDvlaCode($makeCode, $modelCode);
         }
-        $makeEntity     = $map ? $map->getMake() : null;
-        $modelEntity    = $map ? $map->getModel() : null;
+        $makeEntity = $map ? $map->getMake() : null;
+        $modelEntity = $map ? $map->getModel() : null;
 
         $makeDto = new MakeDto();
         if ($makeEntity) {
@@ -92,8 +92,7 @@ class DvlaVehicleMapper extends AbstractVehicleMapper
         } else {
             if ($vehicle->getMakeInFull()) {
                 $dto->setMakeName($vehicle->getMakeInFull());
-            }
-            else {
+            } else {
                 $dto->setMakeName($this->vehicleCatalog->getMakeNameByDvlaCode($makeCode));
             }
         }

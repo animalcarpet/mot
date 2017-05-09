@@ -3,16 +3,12 @@
 namespace SiteApiTest\Service\Validator;
 
 use SiteApi\Service\Validator\SiteTestingDailyScheduleValidator;
-use Zend\Stdlib\DateTime;
 
 /**
- * Class SiteTestingDailyScheduleValidatorTest
- *
- * @package SiteApiTest\Service\Validator
+ * Class SiteTestingDailyScheduleValidatorTest.
  */
 class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     /** @var $scheduleValidator SiteTestingDailyScheduleValidator */
     private $scheduleValidator;
 
@@ -31,12 +27,12 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $siteData = [];
 
-        for ($i = 1; $i < 8; $i++) {
+        for ($i = 1; $i < 8; ++$i) {
             $siteData[] = [
-                "weekday"   => $i,
-                "openTime"  => "09:00:00",
-                "closeTime" => "17:00:00",
-                "isClosed"  => false
+                'weekday' => $i,
+                'openTime' => '09:00:00',
+                'closeTime' => '17:00:00',
+                'isClosed' => false,
             ];
         }
 
@@ -46,14 +42,14 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenZeroMinutes_shouldRun()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][1]['closeTime'] = "16:00:00";
+        $data['weeklySchedule'][1]['closeTime'] = '16:00:00';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
     public function testValidateOpeningHours_given30Minutes_shouldRun()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][1]['closeTime'] = "13:30:00";
+        $data['weeklySchedule'][1]['closeTime'] = '13:30:00';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
@@ -192,7 +188,7 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenTuesdayNotClosedAndOpenTimeInvalid_shouldThrowBadRequestException()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][1]['openTime'] = "apple";
+        $data['weeklySchedule'][1]['openTime'] = 'apple';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
@@ -203,7 +199,7 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenTuesdayNotClosedAndCloseTimeInvalid_shouldThrowBadRequestException()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][1]['closeTime'] = "24:00:00";
+        $data['weeklySchedule'][1]['closeTime'] = '24:00:00';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
@@ -214,7 +210,7 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenThursdayNotClosedAndOpenTimeInvalid_shouldThrowBadRequestException()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][3]['openTime'] = "12.00";
+        $data['weeklySchedule'][3]['openTime'] = '12.00';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
@@ -225,7 +221,7 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenThursdayNotClosedAndCloseTimeInvalid_shouldThrowBadRequestException()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][3]['closeTime'] = "$%£)@%)£@%)£@";
+        $data['weeklySchedule'][3]['closeTime'] = '$%£)@%)£@%)£@';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
@@ -258,7 +254,7 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenInvalidMinutesAround30_shouldThrowBadRequestException()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][5]['closeTime'] = "12:31:00";
+        $data['weeklySchedule'][5]['closeTime'] = '12:31:00';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
@@ -269,7 +265,7 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenInvalidMinutesAroundZero_shouldThrowBadRequestException()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][5]['closeTime'] = "12:01:00";
+        $data['weeklySchedule'][5]['closeTime'] = '12:01:00';
         $this->scheduleValidator->validateOpeningHours($data);
     }
 
@@ -300,7 +296,7 @@ class SiteTestingDailyScheduleValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateOpeningHours_givenIsClosedAndCloseTimeProvide_shouldThrowBadRequestException()
     {
         $data = $this->getDummyScheduleData();
-        $data['weeklySchedule'][2]['openTime'] = "";
+        $data['weeklySchedule'][2]['openTime'] = '';
         $data['weeklySchedule'][2]['isClosed'] = true;
         $this->scheduleValidator->validateOpeningHours($data);
     }

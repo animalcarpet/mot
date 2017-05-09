@@ -2,17 +2,17 @@
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Dto\Common\ReasonForRefusalDto;
 
-/** @var ReasonForRefusalDto[] $reasonForRefusal */
-/** @var DvsaVehicle $vehicle */
-/** @var string $backToSearchLink */
-/** @var string $formAction */
-/** @var bool $isDisplayRegistration */
+/* @var ReasonForRefusalDto[] $reasonForRefusal */
+/* @var DvsaVehicle $vehicle */
+/* @var string $backToSearchLink */
+/* @var string $formAction */
+/* @var bool $isDisplayRegistration */
 
 echo $this->partial('infoMessages', ['getFromFlash' => true]);
 echo $this->partial('errorMessages', ['getFromFlash' => true]);
 
 ?>
-<form action="<?php echo $formAction; //escaped in controller ?>" method="POST">
+<form action="<?php echo $formAction; //escaped in controller?>" method="POST">
     <div class="row">
         <div class="col-md-12">
             <?php echo $this->csrfToken() ?>
@@ -25,10 +25,10 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
                         echo $this->partial(
                             'partial/forms/radioElement.phtml',
                             [
-                                'id'            => 'refusal-' . $rfr->getId(),
-                                'name'          => 'refusal',
-                                'value'         => $rfr->getId(),
-                                'label'         => $rfr->getReason(),
+                                'id' => 'refusal-'.$rfr->getId(),
+                                'name' => 'refusal',
+                                'value' => $rfr->getId(),
+                                'label' => $rfr->getReason(),
                                 'labelCssClass' => 'block-label label-clear',
                             ]
                         );
@@ -41,14 +41,14 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
             <section class="module-present-data">
                 <h2>Vehicle details</h2>
                 <dl class="vertical">
-                    <?php if($isDisplayRegistration) : ?>
+                    <?php if ($isDisplayRegistration) : ?>
                     <dt>Registration mark</dt>
                     <dd id="registration-mark"><?php echo $this->escapeHtml($vehicle->getRegistration()); ?></dd>
                     <?php endif ?>
                     <dt>VIN/Chassis</dt>
                     <dd id="vin"><?php echo $this->escapeHtml($vehicle->getVin()); ?></dd>
                     <dt>Make and Model</dt>
-                    <dd id="make-and-model"><?php echo $this->escapeHtml($vehicle->getMakeName() . ', ' . $vehicle->getModelName()); ?></dd>
+                    <dd id="make-and-model"><?php echo $this->escapeHtml($vehicle->getMakeName().', '.$vehicle->getModelName()); ?></dd>
                 </dl>
             </section>
         </div>
@@ -62,7 +62,7 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
 <nav class="module-content-navigation">
     <ul class="content-navigation_secondary">
         <li>
-            <a href="<?php echo $backToSearchLink; //escaped in controller ?>" id="back_to_search">Back</a>
+            <a href="<?php echo $backToSearchLink; //escaped in controller?>" id="back_to_search">Back</a>
         </li>
     </ul>
 </nav>

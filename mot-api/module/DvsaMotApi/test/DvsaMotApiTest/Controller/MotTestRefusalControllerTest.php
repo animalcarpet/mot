@@ -23,8 +23,7 @@ use SiteApi\Service\SiteService;
 use VehicleApi\Service\VehicleService;
 
 /**
- * Class MotTestRefusalControllerTest
- * @package DvsaMotApiTest\Controller
+ * Class MotTestRefusalControllerTest.
  */
 class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -32,11 +31,11 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
 
     private static $rfrId = 999;
 
-    /** @var VehicleService|MockObj  */
+    /** @var VehicleService|MockObj */
     private $mockVehicleService;
-    /** @var SiteService|MockObj  */
+    /** @var SiteService|MockObj */
     private $mockSiteService;
-    /** @var DataCatalogService|MockObj  */
+    /** @var DataCatalogService|MockObj */
     private $mockCatalogService;
     private $mockCertCreationService;
 
@@ -61,7 +60,6 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
      * Test that the current vehicle testing station id in the post data is
      * being used to lookup in the entity in the service.
      */
-
     public function testVtsIdFromRequestIsUsedToLookupInService()
     {
         $expectedVtsId = 1;
@@ -69,8 +67,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
         $this->setJsonRequestContent(
             [
                 'vehicleId' => 7,
-                'siteId'    => $expectedVtsId,
-                'rfrId'     => self::$rfrId,
+                'siteId' => $expectedVtsId,
+                'rfrId' => self::$rfrId,
             ]
         );
 
@@ -99,7 +97,6 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
      * Test that the vehicle id in the post data is used to look up the entity
      * in the service.
      */
-
     public function testVehicleIdFromRequestIsUsedToLookupVehicleInService()
     {
         $expectedVehicleId = 7;
@@ -107,8 +104,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
         $this->setJsonRequestContent(
             [
                 'vehicleId' => $expectedVehicleId,
-                'siteId'    => 1,
-                'rfrId'     => self::$rfrId,
+                'siteId' => 1,
+                'rfrId' => self::$rfrId,
             ]
         );
 
@@ -149,8 +146,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
         $this->setJsonRequestContent(
             [
                 'vehicleId' => 1,
-                'siteId'    => 1,
-                'rfrId'     => self::$rfrId,
+                'siteId' => 1,
+                'rfrId' => self::$rfrId,
             ]
         );
 
@@ -174,9 +171,9 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
 
         $this->assertInstanceOf(\Zend\View\Model\JsonModel::class, $result);
     }
-  
+
     /**
-     * The JSON body should return a document id and name
+     * The JSON body should return a document id and name.
      */
     public function testForCorrectPropertiesInResponseBody()
     {
@@ -185,8 +182,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
         $this->setJsonRequestContent(
             [
                 'vehicleId' => 1,
-                'siteId'    => 1,
-                'rfrId'     => self::$rfrId,
+                'siteId' => 1,
+                'rfrId' => self::$rfrId,
             ]
         );
 
@@ -208,8 +205,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
         $result = $this->controller->dispatch($this->request);
         $expectedData = [
             'data' => [
-                'documentId' => $expectedDocumentId
-            ]
+                'documentId' => $expectedDocumentId,
+            ],
         ];
         $this->assertEquals($expectedData, $result->getVariables());
     }
@@ -223,8 +220,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
         $this->setJsonRequestContent(
             [
                 'vehicleId' => 1,
-                'siteId'    => '',
-                'rfrId'     => self::$rfrId,
+                'siteId' => '',
+                'rfrId' => self::$rfrId,
             ]
         );
 
@@ -246,7 +243,7 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * A stub of \DvsaMotApi\Service\VehicleService
+     * A stub of \DvsaMotApi\Service\VehicleService.
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -265,7 +262,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * Stubs \SiteApi\Service\SiteService
+     * Stubs \SiteApi\Service\SiteService.
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockSiteService()
@@ -278,7 +276,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * Stubs DataCatalogApi\Service\DataCatalogService
+     * Stubs DataCatalogApi\Service\DataCatalogService.
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockCatalogService()
@@ -295,7 +294,8 @@ class MotTestRefusalControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * Stubs DvsaMotApi\Service\CertificateCreationService
+     * Stubs DvsaMotApi\Service\CertificateCreationService.
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockCerfCreationService($expectedDocumentId = null)

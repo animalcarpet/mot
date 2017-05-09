@@ -6,26 +6,26 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\CertificateChangeDifferentTesterReason;
 
 /**
- * Class CertChangeDiffTesterReasonRepository
+ * Class CertChangeDiffTesterReasonRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class CertificateChangeReasonRepository extends AbstractMutableRepository
 {
-
     /**
      * @param $id
      *
      * @return CertificateChangeDifferentTesterReason
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getById($id)
     {
         $reason = $this->find($id);
         if ($reason === null) {
-            throw new NotFoundException("Reason for different tester changing certificate was not found");
+            throw new NotFoundException('Reason for different tester changing certificate was not found');
         }
+
         return $reason;
     }
 
@@ -33,6 +33,7 @@ class CertificateChangeReasonRepository extends AbstractMutableRepository
      * @param $code
      *
      * @return CertificateChangeDifferentTesterReason
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getByCode($code)
@@ -41,6 +42,7 @@ class CertificateChangeReasonRepository extends AbstractMutableRepository
         if (is_null($reason)) {
             throw new NotFoundException("Reason of code $code for different tester changing certificate was not found");
         }
+
         return $reason;
     }
 }

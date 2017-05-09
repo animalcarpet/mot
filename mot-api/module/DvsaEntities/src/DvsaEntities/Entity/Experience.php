@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Experience
+ * Experience.
  *
  * @ORM\Table(name="experience", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_experience_1", columns={"person_id"}), @ORM\Index(name="fk_experience_2", columns={"created_by"}), @ORM\Index(name="fk_experience_3", columns={"last_updated_by"})})
  * @ORM\Entity
@@ -56,7 +56,7 @@ class Experience extends Entity
     private $person;
 
     /**
-     * Set employer
+     * Set employer.
      *
      * @param string $employer
      *
@@ -70,7 +70,7 @@ class Experience extends Entity
     }
 
     /**
-     * Get employer
+     * Get employer.
      *
      * @return string
      */
@@ -80,7 +80,7 @@ class Experience extends Entity
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -94,7 +94,7 @@ class Experience extends Entity
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -104,7 +104,7 @@ class Experience extends Entity
     }
 
     /**
-     * Set dateFrom
+     * Set dateFrom.
      *
      * @param \DateTime $dateFrom
      *
@@ -118,7 +118,7 @@ class Experience extends Entity
     }
 
     /**
-     * Get dateFrom
+     * Get dateFrom.
      *
      * @return \DateTime
      */
@@ -128,7 +128,7 @@ class Experience extends Entity
     }
 
     /**
-     * Set dateTo
+     * Set dateTo.
      *
      * @param \DateTime $dateTo
      *
@@ -142,7 +142,7 @@ class Experience extends Entity
     }
 
     /**
-     * Get dateTo
+     * Get dateTo.
      *
      * @return \DateTime
      */
@@ -152,7 +152,7 @@ class Experience extends Entity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
      *
@@ -166,7 +166,7 @@ class Experience extends Entity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */

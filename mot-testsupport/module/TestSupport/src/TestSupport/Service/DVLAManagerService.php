@@ -2,12 +2,11 @@
 
 namespace TestSupport\Service;
 
-use TestSupport\Service\AccountDataService;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use DvsaCommon\Constants\Role;
 
-class DVLAManagerService {
-
+class DVLAManagerService
+{
     /**
      * @var AccountDataService
      */
@@ -15,15 +14,15 @@ class DVLAManagerService {
 
     public function __construct(
         AccountDataService $accountDataService
-    )
-    {
+    ) {
         $this->accountDataService = $accountDataService;
     }
 
     /**
-     * Create a user with the data supplied
+     * Create a user with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -31,6 +30,7 @@ class DVLAManagerService {
         TestSupportAccessTokenManager::addSchemeManagerAsRequestorIfNecessary($data);
         $resultJson = $this->accountDataService->create($data, Role::DVLA_MANAGER);
         $this->accountDataService->addRole($resultJson->data['personId'], Role::DVLA_MANAGER);
+
         return $resultJson;
     }
 }

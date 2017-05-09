@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaAuthenticationTest\Service;
 
 use Dvsa\Mot\ApiClient\Resource\Collection;
@@ -10,7 +11,6 @@ use DvsaAuthentication\TwoFactorStatus;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Model\PersonAuthorization;
-use DvsaCommon\Model\TradeRole;
 use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use DvsaCommonTest\TestUtils\XMock;
@@ -39,7 +39,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
             ->withTwoFactorInactivePerson()
             ->withNoExistingNomineeRoles()
             ->withNoCardOrder();
-        
+
         $status = $this->buildService()->getStatusForPerson(new Person());
 
         $this->assertEquals(TwoFactorStatus::AWAITING_CARD_ORDER, $status);
@@ -164,14 +164,14 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
     private function withExistingNomineeTradeRoles()
     {
         return $this->withExistingNomineeRoles([
-            RoleCode::TESTER
+            RoleCode::TESTER,
         ]);
     }
 
     private function withExistingNomineeNonTradeRoles()
     {
         return $this->withExistingNomineeRoles([
-            RoleCode::SCHEME_MANAGER
+            RoleCode::SCHEME_MANAGER,
         ]);
     }
 
@@ -215,7 +215,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
 
         return $person;
     }
-    
+
     private function getTwoFactorActiveIdentity()
     {
         return new Identity($this->getTwoFactorActivePerson());
@@ -236,7 +236,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
 
         $this->authorisationServiceClient
             ->expects($this->any())
-            ->method("getSecurityCardOrders")
+            ->method('getSecurityCardOrders')
             ->willReturn($securityCardOrders);
 
         return $this;
@@ -248,7 +248,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
 
         $this->authorisationServiceClient
             ->expects($this->any())
-            ->method("getSecurityCardOrders")
+            ->method('getSecurityCardOrders')
             ->willReturn($securityCardOrders);
 
         return $this;

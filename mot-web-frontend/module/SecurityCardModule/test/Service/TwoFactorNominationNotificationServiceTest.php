@@ -204,7 +204,7 @@ class TwoFactorNominationNotificationServiceTest extends PHPUnit_Framework_TestC
             ->method('updatePosition')
             ->with($orgId, self::NOMINEE_ID, $roleCode);
 
-        $this->pendingOrganisationRoleIndex++;
+        ++$this->pendingOrganisationRoleIndex;
 
         return $this;
     }
@@ -216,7 +216,7 @@ class TwoFactorNominationNotificationServiceTest extends PHPUnit_Framework_TestC
             ->method('update')
             ->with($siteId, self::NOMINEE_ID, $roleCode);
 
-        $this->pendingSiteRoleIndex++;
+        ++$this->pendingSiteRoleIndex;
 
         return $this;
     }
@@ -291,7 +291,7 @@ class TwoFactorNominationNotificationServiceTest extends PHPUnit_Framework_TestC
         $response = [
             'system' => [],
             'organisations' => [],
-            'sites' => []
+            'sites' => [],
         ];
 
         foreach ($this->pendingOrganisationRoles as $pendingRoleTuple) {
@@ -303,7 +303,7 @@ class TwoFactorNominationNotificationServiceTest extends PHPUnit_Framework_TestC
                     'name' => 'Test Organisation',
                     'number' => 'B000058',
                     'address' => 'Flat 57972a7fca2616.00930308 Lord House, Ipswich, IP1 1LL',
-                    'roles' => []
+                    'roles' => [],
                 ];
 
                 $response['organisations'][$orgId] = $organisation;
@@ -321,7 +321,7 @@ class TwoFactorNominationNotificationServiceTest extends PHPUnit_Framework_TestC
                     'name' => 'Test Garage',
                     'address' => 'addressLine1, Toulouse, BS1 3LL',
                     'addressParts' => [],
-                    'roles' => []
+                    'roles' => [],
                 ];
 
                 $response['sites'][$siteId] = $site;
@@ -329,7 +329,7 @@ class TwoFactorNominationNotificationServiceTest extends PHPUnit_Framework_TestC
 
             $response['sites'][$siteId]['roles'][] = $roleCode;
         }
-        
+
         return $response;
     }
 }

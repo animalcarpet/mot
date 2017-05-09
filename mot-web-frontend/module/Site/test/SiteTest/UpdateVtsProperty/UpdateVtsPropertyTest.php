@@ -42,15 +42,15 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
      */
     private $authorisationService;
 
-    private $propertyName = "vts-property";
+    private $propertyName = 'vts-property';
 
-    private $requiredPermission = "PERMISSION";
+    private $requiredPermission = 'PERMISSION';
 
     private $formElementName = 'vts-form-element-name';
 
-    private $submitButtonText = "Submit changes";
+    private $submitButtonText = 'Submit changes';
 
-    private $oldValueFromDb = "Old vts property";
+    private $oldValueFromDb = 'Old vts property';
 
     /** @var MethodSpy */
     private $updateVtsSpy;
@@ -58,19 +58,19 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
     /** @var VtsUpdaterStub */
     private $vtsUpdater;
 
-    private $successMessage = "You have changed the property";
+    private $successMessage = 'You have changed the property';
 
-    private $partial = "Partial file that displays form";
+    private $partial = 'Partial file that displays form';
 
-    private $pageTitle = "This is a proper page title";
+    private $pageTitle = 'This is a proper page title';
 
-    private $reviewPageTitle = "This is a proper review page title";
+    private $reviewPageTitle = 'This is a proper review page title';
 
-    private $reviewPageLede = "This is a proper review page lede";
+    private $reviewPageLede = 'This is a proper review page lede';
 
-    private $reviewSubmitButtonText = "Review button text";
+    private $reviewSubmitButtonText = 'Review button text';
 
-    private $breadCrumb = ["Breadcrumb"];
+    private $breadCrumb = ['Breadcrumb'];
 
     /** @var Url */
     private $urlHelper;
@@ -78,7 +78,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
     /** @var TwoStepFormContainer */
     private $formSession;
 
-    private $pageSubTitle = "Subtitle text";
+    private $pageSubTitle = 'Subtitle text';
 
     private $formStoreKey = UpdateVtsReviewProcess::SESSION_KEY;
 
@@ -133,7 +133,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->pageSubTitle, $result->layout()->getPageSubTitle());
 
         //AND template is gov layout
-        $this->assertEquals("layout/layout-govuk.phtml", $result->layout()->getTemplate());
+        $this->assertEquals('layout/layout-govuk.phtml', $result->layout()->getTemplate());
     }
 
     public function test_firstStepGet_notAuthorised()
@@ -150,7 +150,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
             $action->execute(false, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), null, []);
 
             // THEN an exception is thrown
-            $this->fail("The UnauthorisedException was not thrown");
+            $this->fail('The UnauthorisedException was not thrown');
         } catch (UnauthorisedException $exception) {
         }
     }
@@ -163,7 +163,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
 
         // WITH a formUuid that does not exist in the session
 
-        $formUuid = "some_random_value";
+        $formUuid = 'some_random_value';
 
         // WHEN I view it
 
@@ -183,7 +183,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
     public function test_firstStepGet_whenGoingBackFromReviewStep()
     {
         // GIVEN I'm viewing the form for editing after clicking "back" button on review page
-        $previouslyEnteredValue = "Small garage";
+        $previouslyEnteredValue = 'Small garage';
         $formUuid = $this->formSession->store($this->formStoreKey, [$this->formElementName => $previouslyEnteredValue]);
 
         $process = $this->createProcess(true);
@@ -211,7 +211,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->pageSubTitle, $result->layout()->getPageSubTitle());
 
         //AND template is gov layout
-        $this->assertEquals("layout/layout-govuk.phtml", $result->layout()->getTemplate());
+        $this->assertEquals('layout/layout-govuk.phtml', $result->layout()->getTemplate());
     }
 
     public function test_firstStepPost_notAuthorised()
@@ -229,7 +229,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
             $action->execute($isPost, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), null, []);
 
             // THEN an exception is thrown
-            $this->fail("The UnauthorisedException was not thrown");
+            $this->fail('The UnauthorisedException was not thrown');
         } catch (UnauthorisedException $exception) {
         }
     }
@@ -242,7 +242,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $action = new EditStepAction($this->formSession, $this->authorisationService);
 
         // AND I filled the form out properly
-        $formData = [$this->formElementName => "Small Garage"];
+        $formData = [$this->formElementName => 'Small Garage'];
 
         // WHEN I post the form
         /** @var RedirectToRoute $result */
@@ -251,7 +251,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         // THEN the form is submitted to API
         $this->assertEquals(1, $this->updateVtsSpy->invocationCount());
         $this->assertEquals($this->vtsId, $this->updateVtsSpy->paramsForLastInvocation()[0]);
-        $this->assertEquals([$this->formElementName => "Small Garage"], $this->updateVtsSpy->paramsForLastInvocation()[1]);
+        $this->assertEquals([$this->formElementName => 'Small Garage'], $this->updateVtsSpy->paramsForLastInvocation()[1]);
 
         // AND I get redirected to VTS overview page of the correct VTS
         $this->assertInstanceOf(RedirectToRoute::class, $result);
@@ -271,7 +271,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $action = new EditStepAction($this->formSession, $this->authorisationService);
 
         // AND I filled the form out properly
-        $formData = [$this->formElementName => "Small Garage"];
+        $formData = [$this->formElementName => 'Small Garage'];
 
         // WHEN I post the form
         /** @var RedirectToRoute $result */
@@ -332,14 +332,14 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->pageSubTitle, $result->layout()->getPageSubTitle());
 
         //AND template is gov layout
-        $this->assertEquals("layout/layout-govuk.phtml", $result->layout()->getTemplate());
+        $this->assertEquals('layout/layout-govuk.phtml', $result->layout()->getTemplate());
     }
 
     public function test_reviewStepGet_viewFormFirstTimeAction()
     {
         // GIVEN I've entered data into form
 
-        $newValue = "Entered value";
+        $newValue = 'Entered value';
         $enteredData = [$this->formElementName => $newValue];
         $uuid = $this->formSession->store($this->formStoreKey, $enteredData);
 
@@ -371,7 +371,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->pageSubTitle, $result->layout()->getPageSubTitle());
 
         //AND template is gov layout
-        $this->assertEquals("layout/layout-govuk.phtml", $result->layout()->getTemplate());
+        $this->assertEquals('layout/layout-govuk.phtml', $result->layout()->getTemplate());
     }
 
     public function test_reviewStepGet_withoutFormUuid()
@@ -382,7 +382,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
 
         // WITH a formUuid that does not exist in the session
 
-        $formUuid = "some_random_value";
+        $formUuid = 'some_random_value';
 
         // WHEN I view it
 
@@ -412,7 +412,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
             $action->execute(false, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), null);
 
             // THEN an exception is thrown
-            $this->fail("The UnauthorisedException was not thrown");
+            $this->fail('The UnauthorisedException was not thrown');
         } catch (UnauthorisedException $exception) {
         }
     }
@@ -442,10 +442,10 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
 
         try {
             // WHEN I post it
-            $action->execute($isPost, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), "uuid");
+            $action->execute($isPost, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), 'uuid');
 
             // THEN an exception is thrown
-            $this->fail("The UnauthorisedException was not thrown");
+            $this->fail('The UnauthorisedException was not thrown');
         } catch (UnauthorisedException $exception) {
         }
     }
@@ -467,7 +467,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
     {
         // GIVEN I want to confirm the form
         $isPost = true;
-        $dataThatShouldBePostToApi = ["key" => "value"];
+        $dataThatShouldBePostToApi = ['key' => 'value'];
         $formUuid = $this->formSession->store($this->formStoreKey, $dataThatShouldBePostToApi);
 
         $process = $this->createProcess(true);
@@ -478,7 +478,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $result = $action->execute($isPost, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), $formUuid);
 
         // THEN A call to API is made to save data
-        $this->assertGreaterThan(0, $this->updateVtsSpy->invocationCount(), "No call to API was made");
+        $this->assertGreaterThan(0, $this->updateVtsSpy->invocationCount(), 'No call to API was made');
 
         // for a correct VTS
         $this->assertEquals($this->vtsId, $this->updateVtsSpy->paramsForLastInvocation()[0]);
@@ -494,7 +494,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->vtsId, $result->getRouteParams()['id']);
 
         // with a success message
-        $this->assertGreaterThan(0, count($result->getSuccessMessages()), "No success message set");
+        $this->assertGreaterThan(0, count($result->getSuccessMessages()), 'No success message set');
         $this->assertEquals($this->successMessage, $result->getSuccessMessages()[0]);
     }
 
@@ -539,8 +539,8 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
                 function () {
                     return [$this->formElementName => $this->oldValueFromDb];
                 }, function ($vtsId, $formData) {
-                $this->vtsUpdater->update($vtsId, $formData);
-            },
+                    $this->vtsUpdater->update($vtsId, $formData);
+                },
                 $this->successMessage,
                 $this->pageTitle,
                 function () {

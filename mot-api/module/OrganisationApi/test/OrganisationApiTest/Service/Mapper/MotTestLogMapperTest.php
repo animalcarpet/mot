@@ -4,12 +4,9 @@ namespace OrganisationApiTest\Service\Mapper;
 
 use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
 use OrganisationApi\Service\Mapper\MotTestLogSummaryMapper;
-use PHPUnit_Framework_TestCase;
 
 /**
- * Class MotTestLogMapperTest
- *
- * @package OrganisationApiTest\Service\Mapper
+ * Class MotTestLogMapperTest.
  */
 class MotTestLogMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,9 +32,9 @@ class MotTestLogMapperTest extends \PHPUnit_Framework_TestCase
     protected function getMotTestLog()
     {
         return [
-            'year'  => '1024',
+            'year' => '1024',
             'month' => '256',
-            'week'  => '12',
+            'week' => '12',
             'today' => '1',
         ];
     }

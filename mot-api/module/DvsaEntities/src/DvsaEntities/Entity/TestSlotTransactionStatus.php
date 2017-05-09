@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * DirectDebitStatus
+ * DirectDebitStatus.
  *
  * @ORM\Table(name="test_slot_transaction_status")
  * @ORM\Entity(readOnly=true)
@@ -15,7 +15,6 @@ use DvsaEntities\EntityTrait\EnumType1EntityTrait;
  */
 class TestSlotTransactionStatus extends Entity
 {
-
     use CommonIdentityTrait;
 
     use EnumType1EntityTrait;
@@ -29,6 +28,7 @@ class TestSlotTransactionStatus extends Entity
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)

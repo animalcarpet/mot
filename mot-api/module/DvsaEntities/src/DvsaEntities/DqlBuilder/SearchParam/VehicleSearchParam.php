@@ -1,14 +1,12 @@
 <?php
+
 namespace DvsaEntities\DqlBuilder\SearchParam;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommonApi\Model\SearchParam;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class VehicleSearchParam
- *
- * @package DvsaEntities\DqlBuilder\SearchParam
+ * Class VehicleSearchParam.
  */
 class VehicleSearchParam extends SearchParam
 {
@@ -18,8 +16,8 @@ class VehicleSearchParam extends SearchParam
     protected $vin;
 
     /**
-     * @param string        $search
-     * @param string        $searchType
+     * @param string $search
+     * @param string $searchType
      */
     public function __construct($search, $searchType = null)
     {
@@ -40,22 +38,20 @@ class VehicleSearchParam extends SearchParam
     }
 
     /**
-     * Set-up search parameters based on search filter
-     *
-     * @return void
+     * Set-up search parameters based on search filter.
      */
     public function setSearchParams()
     {
         switch ($this->getSearchType()) {
-            case 'vin' :
+            case 'vin':
                 $this->setVin($this->getSearch());
                 break;
 
-            case 'registration' :
+            case 'registration':
                 $this->setRegistration($this->getSearch());
                 break;
 
-            default :
+            default:
                 throw new BadRequestException(
                     'Invalid search filter passed, search must contain valid filter type vin or registration.',
                     BadRequestException::ERROR_CODE_INVALID_DATA
@@ -65,9 +61,7 @@ class VehicleSearchParam extends SearchParam
     }
 
     /**
-     * Validate valid search string passed in
-     *
-     * @return void
+     * Validate valid search string passed in.
      */
     public function validateInputs()
     {
@@ -85,14 +79,14 @@ class VehicleSearchParam extends SearchParam
     public function toArray()
     {
         return [
-            "format"         => $this->getFormat(),
-            "search"         => $this->getSearch(),
-            "searchType"     => $this->getSearchType(),
-            "registration"   => $this->getRegistration(),
-            "vin"            => $this->getVin(),
-            "sortDirection"  => $this->getSortDirection(),
-            "rowCount"       => $this->getRowCount(),
-            "start"          => $this->getStart(),
+            'format' => $this->getFormat(),
+            'search' => $this->getSearch(),
+            'searchType' => $this->getSearchType(),
+            'registration' => $this->getRegistration(),
+            'vin' => $this->getVin(),
+            'sortDirection' => $this->getSortDirection(),
+            'rowCount' => $this->getRowCount(),
+            'start' => $this->getStart(),
         ];
     }
 
@@ -128,6 +122,7 @@ class VehicleSearchParam extends SearchParam
     public function setRegistration($registration)
     {
         $this->registration = (string) $registration;
+
         return $this;
     }
 
@@ -147,7 +142,7 @@ class VehicleSearchParam extends SearchParam
     public function setVin($vin)
     {
         $this->vin = (string) $vin;
+
         return $this;
     }
-
 }

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * NonWorkingDayCountry
+ * NonWorkingDayCountry.
  *
  * @ORM\Table(name="non_working_day_country_lookup")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\NonWorkingDayCountryRepository", readOnly=true)
@@ -32,11 +32,12 @@ class NonWorkingDayCountry extends Entity
 
     /**
      * @param mixed $country
-     * return $this
+     *                       return $this
      */
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 }

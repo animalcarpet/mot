@@ -28,9 +28,7 @@ use SiteApi\Service\SiteTestingFacilitiesService;
 use SiteApi\Service\Validator\SiteValidator;
 
 /**
- * Class SiteTestingFacilitiesServiceTest
- *
- * @package SiteApiTest\Service
+ * Class SiteTestingFacilitiesServiceTest.
  */
 class SiteTestingFacilitiesServiceTest extends AbstractServiceTestCase
 {
@@ -41,7 +39,7 @@ class SiteTestingFacilitiesServiceTest extends AbstractServiceTestCase
     /** @var SiteRepository $siteRepository */
     private $siteRepository;
 
-    /** @var  AuthorisationServiceInterface|MockObj */
+    /** @var AuthorisationServiceInterface|MockObj */
     private $mockAuthService;
 
     /** @var FacilityTypeRepository $facilityTypeRepository */
@@ -53,7 +51,7 @@ class SiteTestingFacilitiesServiceTest extends AbstractServiceTestCase
     /** @var EventService $eventService */
     private $eventService;
 
-    /** @var  MotIdentityInterface|MockObj */
+    /** @var MotIdentityInterface|MockObj */
     private $mockIdentity;
 
     /** @var UpdateVtsAssertion */
@@ -128,7 +126,7 @@ class SiteTestingFacilitiesServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * Permissions are as follows:
+     * Permissions are as follows:.
      *
      * PermissionAtSite::VTS_UPDATE_TESTING_FACILITIES_DETAILS,
      * PermissionAtSite::VTS_UPDATE_NAME,
@@ -150,7 +148,7 @@ class SiteTestingFacilitiesServiceTest extends AbstractServiceTestCase
 
     /**
      * We have a confirmation setter to define whether we need to update and validate the data generated,
-     * or do we just validate and return results
+     * or do we just validate and return results.
      */
     public function testIfAllBelowPermissionsAvailableButNeedsConfirmationReturnTrue()
     {
@@ -200,7 +198,7 @@ class SiteTestingFacilitiesServiceTest extends AbstractServiceTestCase
                 (new FacilityDto())->setId(1)->setName('TPTL')
                     ->setType(
                         (new FacilityTypeDto())->setId(1)->setName('TPTL')->setCode('TPTL')
-                    )
+                    ),
             ]
         );
 
@@ -260,5 +258,4 @@ class SiteTestingFacilitiesServiceTest extends AbstractServiceTestCase
             ->method($method)
             ->willReturn($result);
     }
-
 }

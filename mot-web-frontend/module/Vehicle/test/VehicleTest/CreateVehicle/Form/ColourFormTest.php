@@ -29,8 +29,7 @@ class ColourFormTest extends \PHPUnit_Framework_TestCase
     private function setDataValues(
         $primaryColour,
         $secondaryColour
-    )
-    {
+    ) {
         return [
             'primaryColour' => $primaryColour,
             'secondaryColours' => $secondaryColour,
@@ -67,8 +66,7 @@ class ColourFormTest extends \PHPUnit_Framework_TestCase
         $colours,
         $primaryColours,
         $secondaryColours
-    )
-    {
+    ) {
         return new ColourForm(
             $colours,
             $primaryColours,

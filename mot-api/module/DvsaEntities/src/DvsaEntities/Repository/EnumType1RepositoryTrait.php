@@ -17,6 +17,7 @@ trait EnumType1RepositoryTrait
      * @param string $code from auto-generated enum found in \DvsaCommon\Enum\
      *
      * @return EnumType1EntityTrait
+     *
      * @throws NotFoundException
      */
     public function getByCode($code)

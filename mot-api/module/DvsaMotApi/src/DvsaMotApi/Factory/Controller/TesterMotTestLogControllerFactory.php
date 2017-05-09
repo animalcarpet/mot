@@ -13,7 +13,7 @@ class TesterMotTestLogControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /**
-         * @var ServiceLocatorInterface $serviceLocator
+         * @var ServiceLocatorInterface
          */
         $serviceLocator = $controllerManager->getServiceLocator();
 

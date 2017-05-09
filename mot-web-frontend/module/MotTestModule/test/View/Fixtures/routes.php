@@ -15,12 +15,12 @@ use DvsaCommon\Constants\MotTestNumberConstraint;
 
 return [
     'login' => [
-        'type'    => 'literal',
+        'type' => 'literal',
         'options' => [
-            'route'    => '/login',
+            'route' => '/login',
             'defaults' => [
                 'controller' => SecurityController::class,
-                'action'     => 'login',
+                'action' => 'login',
             ],
         ],
         'may_terminate' => true,

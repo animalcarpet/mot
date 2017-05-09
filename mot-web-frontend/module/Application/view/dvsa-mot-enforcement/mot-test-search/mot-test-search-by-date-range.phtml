@@ -19,7 +19,7 @@ $dateRangeInfo = sprintf('From %s to %s (inclusive)', DateTimeDisplayFormat::toM
 <div class="info-notice">
     <p>
         If these are <strong>not the right results</strong> you can
-        <a href="<?php echo $this->url('mot-test-search'); ?>?type=<?php echo $this->escapeHtml($this->searchType) ;?>" id="search-again">search again</a>
+        <a href="<?php echo $this->url('mot-test-search'); ?>?type=<?php echo $this->escapeHtml($this->searchType); ?>" id="search-again">search again</a>
     </p>
 </div>
 
@@ -59,7 +59,7 @@ $dateRangeInfo = sprintf('From %s to %s (inclusive)', DateTimeDisplayFormat::toM
                                 [
                                     'status' => $motTest['status'],
                                     'url' => $motTest['link'],
-                                    'motTestNumber' => $motTest['motTestNumber']
+                                    'motTestNumber' => $motTest['motTestNumber'],
                                 ]
                             );
                             ?>
@@ -91,8 +91,8 @@ $dateRangeInfo = sprintf('From %s to %s (inclusive)', DateTimeDisplayFormat::toM
                                 'query' => [
                                     'type' => $this->searchType,
                                     'dateFrom' => $this->dateFrom->getTimeStamp(),
-                                    'dateTo' => $this->dateTo->getTimeStamp()
-                                ]
+                                    'dateTo' => $this->dateTo->getTimeStamp(),
+                                ],
                             ]
                         ); ?>';
     var paramUrlSummaryPage = '?<?php echo $this->escapeJs($this->summaryParams); ?>';

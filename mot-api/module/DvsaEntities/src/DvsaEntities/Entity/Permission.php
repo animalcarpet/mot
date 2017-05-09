@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Permission
+ * Permission.
  *
  * @ORM\Table(
  *  name="permission",
@@ -20,7 +20,6 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  */
 class Permission
 {
-
     use CommonIdentityTrait;
 
     /**

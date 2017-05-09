@@ -89,9 +89,9 @@ class OdometerReadingViewObjectTest extends PHPUnit_Framework_TestCase
     private function getReadingValueMapData($value = null, $unit = null, $resultType = null)
     {
         return [
-            'value'      => $value,
-            'unit'       => $unit,
-            'resultType' => $resultType
+            'value' => $value,
+            'unit' => $unit,
+            'resultType' => $resultType,
         ];
     }
 }

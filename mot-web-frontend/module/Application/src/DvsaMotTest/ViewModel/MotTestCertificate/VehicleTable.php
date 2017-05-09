@@ -4,8 +4,8 @@ namespace DvsaMotTest\ViewModel\MotTestCertificate;
 
 class VehicleTable
 {
-    const SINGLE_OLDER_TEST_TEXT = "1 older test";
-    const MANY_OLDER_TESTS_TEXT = "%s older tests";
+    const SINGLE_OLDER_TEST_TEXT = '1 older test';
+    const MANY_OLDER_TESTS_TEXT = '%s older tests';
 
     private $registration;
     private $vin;
@@ -53,7 +53,7 @@ class VehicleTable
      */
     public function getMakeAndModel()
     {
-        return sprintf("%s, %s", $this->make, $this->model);
+        return sprintf('%s, %s', $this->make, $this->model);
     }
 
     /**
@@ -91,7 +91,7 @@ class VehicleTable
             $this->firstTest = $test;
         } else {
             $this->olderTests[] = $test;
-            $this->olderTestsCount++;
+            ++$this->olderTestsCount;
         }
     }
 
@@ -150,7 +150,7 @@ class VehicleTable
      */
     public function getToggleTableClassName()
     {
-        return 'toggle-table-' . $this->getIndex();
+        return 'toggle-table-'.$this->getIndex();
     }
 
     /**

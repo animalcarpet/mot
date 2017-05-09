@@ -13,6 +13,7 @@ class GVTSTesterServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new GVTSTesterService($accountService);
+
         return $service;
     }
 }

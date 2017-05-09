@@ -5,9 +5,7 @@ namespace DashboardTest\Model;
 use Dashboard\Model\Site;
 
 /**
- * Class SiteTest
- *
- * @package DashboardTest\Model
+ * Class SiteTest.
  */
 class SiteTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,10 +25,10 @@ class SiteTest extends \PHPUnit_Framework_TestCase
     public static function getData()
     {
         return [
-            'id'         => self::ID,
-            'name'       => self::NAME,
+            'id' => self::ID,
+            'name' => self::NAME,
             'siteNumber' => self::SITE_NUMBER,
-            'positions'  => []
+            'positions' => [],
         ];
     }
 }

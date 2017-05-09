@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Repository;
 
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -16,9 +17,9 @@ class NationalComponentStatisticsRepository extends ComponentStatisticsRepositor
         $this->setDaysConfiguration($year, $month);
 
         return $this->getResult($qb->getSql(), [
-            ComponentStatisticsRepository::PARAM_GROUP      => $group,
+            ComponentStatisticsRepository::PARAM_GROUP => $group,
             ComponentStatisticsRepository::PARAM_START_DATE => $this->startDate,
-            ComponentStatisticsRepository::PARAM_END_DATE   => $this->endDate,
+            ComponentStatisticsRepository::PARAM_END_DATE => $this->endDate,
         ]);
     }
 
@@ -29,7 +30,7 @@ class NationalComponentStatisticsRepository extends ComponentStatisticsRepositor
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('testCount', 'testCount');
 
-        $sql = "SELECT COUNT(*) AS `testCount`
+        $sql = 'SELECT COUNT(*) AS `testCount`
             FROM `mot_test_current` `mt`
               USE INDEX (`ix_mot_test_current_completed_date`)
               LEFT JOIN `vehicle` ON (`vehicle`.`id` = `mt`.`vehicle_id`) AND (`vehicle`.`version` = `mt`.`vehicle_version`)
@@ -40,7 +41,7 @@ class NationalComponentStatisticsRepository extends ComponentStatisticsRepositor
               JOIN `mot_test_status` `mts` ON `mt`.`status_id` = `mts`.`id`
             WHERE `vcg`.`code` = :groupCode
               AND `mts`.`code` = :failedStatusCode
-              AND `mt`.`completed_date` BETWEEN :startDate AND :endDate";
+              AND `mt`.`completed_date` BETWEEN :startDate AND :endDate';
 
         $query = $this->entityManager->createNativeQuery($sql, $rsm);
 

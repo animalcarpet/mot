@@ -8,18 +8,16 @@
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationAccountLockoutViewModelBuilder;
-use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
 
 class AuthenticationAccountLockoutViewModelBuilderFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @throws RuntimeException If helpdesk details are not found in the configuration.
+     * @throws RuntimeException If helpdesk details are not found in the configuration
      *
      * @return AuthenticationAccountLockoutViewModelBuilder
      */

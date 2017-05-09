@@ -7,7 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\AuthorisedExaminerService;
 
 /**
- * Returns data about AE linked with person
+ * Returns data about AE linked with person.
  */
 class AuthorisedExaminerController extends AbstractDvsaRestfulController
 {

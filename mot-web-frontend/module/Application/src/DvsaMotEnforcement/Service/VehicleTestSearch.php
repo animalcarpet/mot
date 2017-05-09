@@ -21,7 +21,7 @@ use DvsaMotEnforcement\Controller\MotTestSearchController;
 use DvsaMotEnforcement\Model\MotTest as MotTestModel;
 
 /**
- * Class VehicleTestSearch
+ * Class VehicleTestSearch.
  */
 class VehicleTestSearch
 {
@@ -51,13 +51,13 @@ class VehicleTestSearch
     /** @var \Zend\Mvc\Controller\Plugin\Params */
     private $params;
 
-    /** @var  \Zend\ServiceManager\ServiceLocatorInterface */
+    /** @var \Zend\ServiceManager\ServiceLocatorInterface */
     private $serviceLocator;
-    /** @var  \DvsaCommon\HttpRestJson\Client */
+    /** @var \DvsaCommon\HttpRestJson\Client */
     private $restClient;
-    /** @var  \Application\Service\CatalogService */
+    /** @var \Application\Service\CatalogService */
     private $catalogService;
-    /** @var  \Zend\View\Renderer\PhpRenderer */
+    /** @var \Zend\View\Renderer\PhpRenderer */
     private $viewRender;
     /** @var ParamObfuscator */
     private $paramObfuscator;
@@ -80,16 +80,16 @@ class VehicleTestSearch
         $this->searchTermResult = $this->params->fromQuery('search-result', self::SEARCH_TERM_NOT_SEARCH);
         $this->dateRange = [
             'month1' => $this->params->fromQuery('month1', $currentDate->format('m')),
-            'year1'  => $this->params->fromQuery('year1', $currentDate->format('Y')),
+            'year1' => $this->params->fromQuery('year1', $currentDate->format('Y')),
             'month2' => $this->params->fromQuery('month2', $currentDate->format('m')),
-            'year2'  => $this->params->fromQuery('year2', $currentDate->format('Y'))
+            'year2' => $this->params->fromQuery('year2', $currentDate->format('Y')),
         ];
         $this->resultCount = 0;
         $this->searched = '';
     }
 
     /**
-     * Prepare the redirection by putting the form element in the query
+     * Prepare the redirection by putting the form element in the query.
      *
      * @param string                  $routeName
      * @param MotTestSearchController $controller
@@ -103,19 +103,19 @@ class VehicleTestSearch
             [],
             [
                 'query' => [
-                    'type'   => $this->searchType,
+                    'type' => $this->searchType,
                     'search' => $this->searchTerm,
                     'month1' => $this->dateRange['month1'],
-                    'year1'  => $this->dateRange['year1'],
+                    'year1' => $this->dateRange['year1'],
                     'month2' => $this->dateRange['month2'],
-                    'year2'  => $this->dateRange['year2'],
-                ]
+                    'year2' => $this->dateRange['year2'],
+                ],
             ]
         );
     }
 
     /**
-     * Return the valid search typeahead or direct input
+     * Return the valid search typeahead or direct input.
      *
      * @return string
      */
@@ -129,15 +129,15 @@ class VehicleTestSearch
     }
 
     /**
-     * Get The recent Mot Test done at a specific site
+     * Get The recent Mot Test done at a specific site.
      *
-     * @param MotTestSearchParamsDto                       $params
+     * @param MotTestSearchParamsDto $params
      *
      * @return array|null
      */
     public function getRecentMotTest(MotTestSearchParamsDto $params)
     {
-        $motTestModel = new MotTestModel;
+        $motTestModel = new MotTestModel();
 
         $apiUrl = MotTestUrlBuilder::search()->toString();
         $apiResult = $this->restClient->post($apiUrl, DtoHydrator::dtoToJson($params));
@@ -160,13 +160,14 @@ class VehicleTestSearch
     }
 
     /**
-     * Searches for given MOT test number, and returns information if that test exists
+     * Searches for given MOT test number, and returns information if that test exists.
+     *
      * @param MotTestSearchParamsDto $params
+     *
      * @return bool
      */
     public function checkIfMotTestExists(MotTestSearchParamsDto $params)
     {
-
         try {
             $apiResult = $this->restClient->getWithParams(
                 MotTestUrlBuilder::search()->toString(),
@@ -187,7 +188,7 @@ class VehicleTestSearch
     /**
      * Retrieve the correct search term from the query.
      * In case we search for a tester,
-     * we verify that we have the correct tester Id
+     * we verify that we have the correct tester Id.
      *
      * @param MotTestSearchController                      $controller
      * @param RestClient                                   $restClient
@@ -237,13 +238,15 @@ class VehicleTestSearch
             if (!empty($resultData['data']['resultCount'])) {
                 $this->resultCount = $resultData['data']['resultCount'];
             }
+
             return $this->prepareMotDataForView($resultData, $serviceLocator);
         }
+
         return null;
     }
 
     /**
-     * Get The Mot Test History done at a specific date
+     * Get The Mot Test History done at a specific date.
      *
      * @param MotTestSearchController $controller
      * @param RestClient              $restClient
@@ -278,11 +281,12 @@ class VehicleTestSearch
         } catch (RestApplicationException $e) {
             $controller->addErrorMessagesFromDecorator($e->getDisplayMessages());
         }
+
         return $resultData;
     }
 
     /**
-     * Retrieve the information related to a User
+     * Retrieve the information related to a User.
      *
      * @param string     $searchTerm
      * @param RestClient $restClient
@@ -295,18 +299,18 @@ class VehicleTestSearch
         try {
             $apiResult = $restClient->get(TesterUrlBuilder::create()->routeParam('id', $searchTerm));
         } catch (NotFoundException $e) {
-            //
         }
 
         if (!empty($apiResult['data'])) {
-            $titleName = $apiResult['data']['user']['username'] .
-                ' - ' . $apiResult['data']['user']['displayName'];
+            $titleName = $apiResult['data']['user']['username'].
+                ' - '.$apiResult['data']['user']['displayName'];
         }
+
         return $titleName;
     }
 
     /**
-     * Prepare the Mot Test Data to be format correctly for the view
+     * Prepare the Mot Test Data to be format correctly for the view.
      *
      * @param                                              $resultData
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
@@ -318,7 +322,7 @@ class VehicleTestSearch
         $data = [];
 
         if (!empty($resultData['data']['data'])) {
-            $motTestModel = new MotTestModel;
+            $motTestModel = new MotTestModel();
             $viewHelperManager = $serviceLocator->get('ViewHelperManager');
             $viewRender = $serviceLocator->get('ViewRenderer');
             $escapeHtml = $viewHelperManager->get('escapeHtml');
@@ -341,15 +345,16 @@ class VehicleTestSearch
                     'model' => $escapeHtml($motTest['model']),
                     'test_type' => $escapeHtml($motTest['display_test_type']),
                     'site_number' => $escapeHtml($motTest['siteNumber']),
-                    'username' => $escapeHtml($motTest['testerUsername'])
+                    'username' => $escapeHtml($motTest['testerUsername']),
                 ];
             }
         }
+
         return $data;
     }
 
     /**
-     * Returns the summary's url for a given test
+     * Returns the summary's url for a given test.
      *
      * @param $motTestNumber
      *
@@ -365,7 +370,7 @@ class VehicleTestSearch
     }
 
     /**
-     * Check if the date range is valid
+     * Check if the date range is valid.
      *
      * @return bool
      */
@@ -388,13 +393,11 @@ class VehicleTestSearch
     }
 
     /**
-     * Check if the Mot Test are valid to be compare
+     * Check if the Mot Test are valid to be compare.
      *
      * @param MotTestSearchController $controller
      * @param RestClient              $restClient
      * @param                         $comparedTest
-     *
-     * @return null
      */
     public function compareMotTest($controller, RestClient $restClient, $comparedTest)
     {
@@ -412,6 +415,7 @@ class VehicleTestSearch
                 $controller->addFormErrorMessagesToSessionFromDecorator($e->getFormErrorDisplayMessages());
             }
         }
+
         return $result;
     }
 
@@ -423,6 +427,7 @@ class VehicleTestSearch
     public function isSearchTermValid()
     {
         $length = strlen(trim($this->getSearchTerm()));
+
         return $length >= self::MINIMUM_LENGTH_OF_SEARCH_TERM;
     }
 
@@ -443,7 +448,7 @@ class VehicleTestSearch
     }
 
     /**
-     * Get the Mot Test History from a VRM or a Vin string
+     * Get the Mot Test History from a VRM or a Vin string.
      *
      * @param MotTestSearchController                      $controller
      * @param RestClient                                   $restClient
@@ -464,20 +469,20 @@ class VehicleTestSearch
                         'vrm' => $this->searchTerm,
                         'format' => SearchParamConst::FORMAT_DATA_TABLES,
                         'sortDirection' => SearchParamConst::SORT_DIRECTION_DESC,
-                        'rowCount' => 100
+                        'rowCount' => 100,
                     ]
                     : [
                         'vin' => $this->searchTerm,
                         'format' => SearchParamConst::FORMAT_DATA_TABLES,
                         'sortDirection' => SearchParamConst::SORT_DIRECTION_DESC,
-                        'rowCount' => 100
+                        'rowCount' => 100,
                     ]
                 )
             );
 
             $resultData = $result['data'];
             // Modify the raw data prior to presentation
-            $motTestModel = new MotTestModel;
+            $motTestModel = new MotTestModel();
             $viewRender = $serviceLocator->get('ViewRenderer');
             $catalog = $serviceLocator->get('CatalogService');
 
@@ -485,7 +490,7 @@ class VehicleTestSearch
                 $resultData = $motTestModel->prepareDataForVehicleExaminerListRecentMotTestsView(
                     $resultData['data'], $viewRender, $catalog
                 );
-                foreach ($resultData as $motTestNumber => & $motTest) {
+                foreach ($resultData as $motTestNumber => &$motTest) {
                     $motTest['link'] = $this->getSummaryUrl($motTestNumber);
                     $motTest['id'] = $motTestNumber;
                 }
@@ -500,12 +505,13 @@ class VehicleTestSearch
         } catch (RestApplicationException $e) {
             $controller->addErrorMessagesFromDecorator($e->getDisplayMessages());
         }
+
         return $resultData;
     }
 
     public function getMotTestByVehicleId(MotTestSearchParamsDto $params)
     {
-        $motTestModel = new MotTestModel;
+        $motTestModel = new MotTestModel();
         $apiUrl = MotTestUrlBuilder::search()->toString();
         $apiResult = $this->restClient->post($apiUrl, DtoHydrator::dtoToJson($params));
 
@@ -524,7 +530,7 @@ class VehicleTestSearch
                 [
                     'vehicleId' => $this->paramObfuscator->obfuscateEntry(
                         ParamObfuscator::ENTRY_VEHICLE_ID, $params->getVehicleId()
-                    )
+                    ),
                 ]
             );
             $motTest['id'] = $motId;
@@ -629,6 +635,7 @@ class VehicleTestSearch
         if ($this->catalogService === null) {
             $this->catalogService = $this->serviceLocator->get('CatalogService');
         }
+
         return $this->catalogService;
     }
 

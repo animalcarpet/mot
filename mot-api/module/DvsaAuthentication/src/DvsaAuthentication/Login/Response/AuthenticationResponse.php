@@ -3,15 +3,15 @@
 namespace DvsaAuthentication\Login\Response;
 
 /**
- * Base class for all authentication responses
+ * Base class for all authentication responses.
  */
 abstract class AuthenticationResponse
 {
     private $extra;
 
-    public abstract function getCode();
+    abstract public function getCode();
 
-    public abstract function getMessage();
+    abstract public function getMessage();
 
     public function getExtra()
     {

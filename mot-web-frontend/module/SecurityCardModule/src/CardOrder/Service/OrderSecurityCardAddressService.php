@@ -8,25 +8,25 @@ use Dashboard\Model\PersonalDetails;
 class OrderSecurityCardAddressService
 {
     /**
-     * @var OrderNewSecurityCardSessionService $orderNewSecurityCardSessionService
+     * @var OrderNewSecurityCardSessionService
      */
     private $orderNewSecurityCardSessionService;
 
     /**
-     * @var ApiPersonalDetails $apiPersonalDetails
+     * @var ApiPersonalDetails
      */
     private $apiPersonalDetails;
 
     /**
      * OrderSecurityCardAddressService constructor.
+     *
      * @param OrderNewSecurityCardSessionService $orderNewSecurityCardSessionService
-     * @param ApiPersonalDetails $apiPersonalDetails
+     * @param ApiPersonalDetails                 $apiPersonalDetails
      */
     public function __construct(
         OrderNewSecurityCardSessionService $orderNewSecurityCardSessionService,
         ApiPersonalDetails $apiPersonalDetails
-    )
-    {
+    ) {
         $this->orderNewSecurityCardSessionService = $orderNewSecurityCardSessionService;
         $this->apiPersonalDetails = $apiPersonalDetails;
     }
@@ -55,17 +55,20 @@ class OrderSecurityCardAddressService
     }
 
     /**
-     * Processes the home and site details into an array to be stored in session
+     * Processes the home and site details into an array to be stored in session.
+     *
      * @param PersonalDetails $personalDetails
+     *
      * @return array
      */
-    private function processAddresses(PersonalDetails $personalDetails) {
+    private function processAddresses(PersonalDetails $personalDetails)
+    {
         $siteData = $personalDetails->getSitesRolesAndAssociations();
 
         $sites = [];
 
         $homeAddress = [
-            'name' => "Home",
+            'name' => 'Home',
             'addressLine1' => $personalDetails->getAddressLine1(),
             'addressLine2' => $personalDetails->getAddressLine2(),
             'addressLine3' => $personalDetails->getAddressLine3(),
@@ -78,7 +81,7 @@ class OrderSecurityCardAddressService
 
         usort($siteData, $this->orderByValue('name'));
 
-        foreach($siteData as $site) {
+        foreach ($siteData as $site) {
             $siteTemp = [
                 'name' => $site['name'],
                 'addressString' => $site['address'],
@@ -86,21 +89,24 @@ class OrderSecurityCardAddressService
                 'addressLine2' => $site['addressParts']['addressLine2'],
                 'addressLine3' => $site['addressParts']['addressLine3'],
                 'town' => $site['addressParts']['town'],
-                'postcode' => $site['addressParts']['postcode'] ,
+                'postcode' => $site['addressParts']['postcode'],
             ];
-            array_push($sites, $siteTemp );
+            array_push($sites, $siteTemp);
         }
 
         return $sites;
     }
 
     /**
-     * Gets an Address in the format for displaying on frontend
+     * Gets an Address in the format for displaying on frontend.
+     *
      * @param PersonalDetails $personalDetails
+     *
      * @return string
      */
-    private function formatAddressString(PersonalDetails $personalDetails) {
-        return join(
+    private function formatAddressString(PersonalDetails $personalDetails)
+    {
+        return implode(
             ', ',
             array_filter(
                 [
@@ -115,8 +121,10 @@ class OrderSecurityCardAddressService
     }
 
     /**
-     * Function used by usort to order a multidemensional array by a key value
+     * Function used by usort to order a multidemensional array by a key value.
+     *
      * @param $key
+     *
      * @return \Closure
      */
     private function orderByValue($key)

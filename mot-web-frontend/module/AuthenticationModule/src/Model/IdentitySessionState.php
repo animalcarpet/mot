@@ -33,7 +33,7 @@ class IdentitySessionState
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAuthenticated()
     {
@@ -41,7 +41,7 @@ class IdentitySessionState
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function shouldClearIdentity()
     {

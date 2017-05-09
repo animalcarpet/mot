@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * QualificationType
+ * QualificationType.
  *
  * @ORM\Table(name="qualification_type", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_qualification_type_1", columns={"created_by"}), @ORM\Index(name="fk_qualification_type_2", columns={"last_updated_by"})})
  * @ORM\Entity(readOnly=true)
@@ -31,9 +31,10 @@ class QualificationType extends Entity
     private $code;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return QualificationType
      */
     public function setName($name)
@@ -44,7 +45,7 @@ class QualificationType extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -54,9 +55,10 @@ class QualificationType extends Entity
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
+     *
      * @return QualificationType
      */
     public function setCode($code)
@@ -67,7 +69,7 @@ class QualificationType extends Entity
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */

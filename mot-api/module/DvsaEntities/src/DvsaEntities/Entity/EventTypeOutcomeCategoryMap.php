@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * EventTypeOutcomeCategoryMap
+ * EventTypeOutcomeCategoryMap.
  *
  * @ORM\Table(
  *  name="event_type_outcome_category_map",

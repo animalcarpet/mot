@@ -2,10 +2,11 @@
 
 /**
  * Mot Test Failure Mapper
- * Maps MOT Test data into the snap shot format for the failure document
+ * Maps MOT Test data into the snap shot format for the failure document.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace DvsaMotApi\Mapper;
 
 use DataCatalogApi\Service\DataCatalogService;
@@ -13,14 +14,14 @@ use DvsaCommon\Utility\ArrayUtils;
 
 /**
  * Mot Test Failure Mapper
- * Maps MOT Test data into the snap shot format for the failure document
+ * Maps MOT Test data into the snap shot format for the failure document.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 class MotTestFailureMapper extends AbstractMotTestMapper
 {
     /**
-     * Holds the template map
+     * Holds the template map.
      *
      * @var array
      */

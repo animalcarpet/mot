@@ -75,14 +75,12 @@ class RegistrationAndVinActionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($form::ERROR_CANNOT_SELECT_AND_ENTER_REGISTRATION, $form->getMessages()['reg-input'][0]);
     }
 
-    private function mockPostData
-    (
+    private function mockPostData(
         $regInput,
         $vinInput,
         $leavingRegBlank,
         $leavingVinBlank
-    )
-    {
+    ) {
         return [
             'reg-input' => $regInput,
             'vin-input' => $vinInput,

@@ -50,6 +50,7 @@ class GdsRow implements GdsRowFlowInterface
     public function setLabel($content, $escape = true)
     {
         $this->label = new GdsRowLabel($this, $content, $escape);
+
         return $this->label;
     }
 
@@ -104,6 +105,7 @@ class GdsRow implements GdsRowFlowInterface
     public function setValue($content, $escape = true)
     {
         $this->value = new GdsRowValue($this, $content, $escape);
+
         return $this->value;
     }
 
@@ -115,6 +117,7 @@ class GdsRow implements GdsRowFlowInterface
     public function setValueMetaData($content, $escape = true)
     {
         $this->valueMetaData = new GdsRowValueMetaData($this, $content, $escape);
+
         return $this->valueMetaData;
     }
 

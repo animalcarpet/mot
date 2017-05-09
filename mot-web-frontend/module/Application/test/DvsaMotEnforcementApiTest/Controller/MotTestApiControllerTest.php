@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotEnforcementApiTest\Controller;
 
 use DvsaCommon\Auth\PermissionInSystem;
@@ -9,11 +10,11 @@ use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommonTest\Bootstrap;
 
 /**
- * Class MotTestApiControllerTest
+ * Class MotTestApiControllerTest.
  */
 class MotTestApiControllerTest extends AbstractDvsaMotTestTestCase
 {
-    const TEST_SITE_NUMBER = "V1234";
+    const TEST_SITE_NUMBER = 'V1234';
 
     protected function setUp()
     {
@@ -23,7 +24,7 @@ class MotTestApiControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test when the user is logged in and has the right role
+     * Test when the user is logged in and has the right role.
      */
     public function testExaminerFetchRecentMotTestDataActionCanBeAccessedForAuthenticatedRequest()
     {
@@ -35,7 +36,7 @@ class MotTestApiControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test when the user is not logged in
+     * Test when the user is not logged in.
      *
      * @expectedException \DvsaCommon\Exception\UnauthorisedException
      */
@@ -112,6 +113,7 @@ class MotTestApiControllerTest extends AbstractDvsaMotTestTestCase
         $serviceManager = $this->getServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService('ViewRenderer', $viewRendererMock);
+
         return $viewRendererMock;
     }
 
@@ -131,9 +133,9 @@ class MotTestApiControllerTest extends AbstractDvsaMotTestTestCase
                         'model' => 'pospolity',
                         'registration' => 'torba5000',
                         'testerUsername' => 'kretyn',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -207,25 +209,25 @@ class MotTestApiControllerTest extends AbstractDvsaMotTestTestCase
                 'resultCount' => 10,
                 'data' => [
                     2007 => [
-                        'status' => "PASSED",
-                        'primaryColour' => "Silver",
+                        'status' => 'PASSED',
+                        'primaryColour' => 'Silver',
                         'hasRegistration' => true,
                         'odometerReading' => [
                             'value' => 11111,
-                            'unit' => "mi",
+                            'unit' => 'mi',
                          ],
-                        'vin' => "1M5GDM9AXFT042755",
-                        'registration' => "F123ABC",
-                        'make' => "Vauxhall",
-                        'model' => "Astra",
-                        'testType' => "NT",
-                        'siteNumber' => "V1264",
-                        'startedDate'     => "2014-02-18T11:47:21Z",
-                        'completedDate' => "2014-02-18T11:47:21Z",
-                        'testerUsername' => "ft-catb",
-                    ]
-                ]
-            ]
+                        'vin' => '1M5GDM9AXFT042755',
+                        'registration' => 'F123ABC',
+                        'make' => 'Vauxhall',
+                        'model' => 'Astra',
+                        'testType' => 'NT',
+                        'siteNumber' => 'V1264',
+                        'startedDate' => '2014-02-18T11:47:21Z',
+                        'completedDate' => '2014-02-18T11:47:21Z',
+                        'testerUsername' => 'ft-catb',
+                    ],
+                ],
+            ],
         ];
     }
 

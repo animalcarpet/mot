@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\UpdateVehicleProperty\Form\Step;
 
 use Core\Action\RedirectToRoute;
@@ -9,7 +10,6 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Service\StartTestChangeService;
 use stdClass;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
-use Vehicle\UpdateVehicleProperty\Form\Wizard\Context;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\ReviewMakeAndModelStep;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateMakeStep;
@@ -24,7 +24,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
     private $vehicleEditBreadcrumbsBuilder;
     private $formUuid;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     protected function setUp()
@@ -33,20 +33,21 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
         $this->vehicleService = XMock::of(VehicleService::class);
         $this->vehicleEditBreadcrumbsBuilder = XMock::of(VehicleEditBreadcrumbsBuilder::class);
         $this->startTestChangeService = XMock::of(StartTestChangeService::class);
-        $this->vehicleEditBreadcrumbsBuilder->expects($this->any())->method("getVehicleEditBreadcrumbs")->willReturn(["vehicle", "change"]);
+        $this->vehicleEditBreadcrumbsBuilder->expects($this->any())->method('getVehicleEditBreadcrumbs')->willReturn(['vehicle', 'change']);
         $this->formUuid = uniqid();
     }
 
     /**
      * @dataProvider stepStatuses
+     *
      * @param $isMakeStepValid
      * @param $isModelStepValid
      * @param $expectedResponse
      */
     public function testIsValid($isMakeStepValid, $isModelStepValid, $expectedResponse)
     {
-        $makeStep = $this->createStep("make Step", $isMakeStepValid);
-        $modelStep = $this->createStep("model Step", $isModelStepValid);
+        $makeStep = $this->createStep('make Step', $isMakeStepValid);
+        $modelStep = $this->createStep('model Step', $isModelStepValid);
         $reviewStep = $this->createReviewStep();
 
         $makeStep->setNextStep($modelStep);
@@ -93,7 +94,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->with(StartTestChangeService::URL)
             ->willReturn([
-                'url' => 'start-test-confirmation'
+                'url' => 'start-test-confirmation',
             ]);
 
         $this->startTestChangeService
@@ -101,7 +102,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->with(StartTestChangeService::NO_REGISTRATION)
             ->willReturn([
-                'noRegistration' => '0'
+                'noRegistration' => '0',
             ]);
 
         $this->startTestChangeService
@@ -109,7 +110,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->with(StartTestChangeService::SOURCE)
             ->willReturn([
-                'source' => '1'
+                'source' => '1',
             ]);
         $reviewStep = $this->createReviewStepWithMakeAndModelSteps('change-under-test');
 
@@ -135,7 +136,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
     private function createReviewStepWithMakeAndModelSteps($route = 'change')
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new UpdateVehicleContext($dvsaVehicle, "1w", $route);
+        $context = new UpdateVehicleContext($dvsaVehicle, '1w', $route);
 
         $makeStep = $this->createStep(UpdateMakeStep::NAME, true);
         $modelStep = $this->createStep(UpdateModelStep::NAME, true);
@@ -164,31 +165,31 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
     {
         $make = new stdClass();
         $make->id = 1;
-        $make->name = "Audi";
+        $make->name = 'Audi';
 
         $model = new stdClass();
         $model->id = 2;
-        $model->name = "A4";
+        $model->name = 'A4';
 
         $fuel = new stdClass();
-        $model->code = "PE";
-        $model->name = "Petrol";
+        $model->code = 'PE';
+        $model->name = 'Petrol';
 
         $colour = new stdClass();
-        $colour->code = "L";
-        $colour->name = "Grey";
+        $colour->code = 'L';
+        $colour->name = 'Grey';
 
         $secondaryColour = new stdClass();
-        $secondaryColour->code = "W";
-        $secondaryColour->name = "Not Stated";
+        $secondaryColour->code = 'W';
+        $secondaryColour->name = 'Not Stated';
 
         $std = new stdClass();
         $std->id = 283;
         $std->version = 10000;
         $std->make = $make;
         $std->model = $model;
-        $std->registration = "reg123XSW";
-        $std->vin = "VIN98798798";
+        $std->registration = 'reg123XSW';
+        $std->vin = 'VIN98798798';
         $std->vehicleClass = null;
         $std->fuelType = $fuel;
         $std->colour = $colour;

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Payment
+ * Payment.
  *
  * @ORM\Table(name="payment_type", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(readOnly=true)
@@ -14,7 +14,6 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  */
 class PaymentType extends Entity
 {
-
     use CommonIdentityTrait;
 
     /**
@@ -67,9 +66,10 @@ class PaymentType extends Entity
         $this->isAdjustable = $isAdjustable;
     }
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return \DvsaEntities\Entity\PaymentType
      */
     public function setName($name)
@@ -80,7 +80,7 @@ class PaymentType extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -90,9 +90,10 @@ class PaymentType extends Entity
     }
 
     /**
-     * Set active
+     * Set active.
      *
      * @param bool $active
+     *
      * @return \DvsaEntities\Entity\PaymentType
      */
     public function setActive($active)
@@ -103,7 +104,7 @@ class PaymentType extends Entity
     }
 
     /**
-     * Get active
+     * Get active.
      *
      * @return bool
      */
@@ -113,9 +114,10 @@ class PaymentType extends Entity
     }
 
     /**
-     * Set display order
+     * Set display order.
      *
      * @param int $displayOrder
+     *
      * @return \DvsaEntities\Entity\PaymentType
      */
     public function setDisplayOrder($displayOrder)
@@ -126,7 +128,7 @@ class PaymentType extends Entity
     }
 
     /**
-     * Get display order
+     * Get display order.
      *
      * @return int
      */

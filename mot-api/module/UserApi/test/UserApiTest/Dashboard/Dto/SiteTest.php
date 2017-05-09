@@ -1,16 +1,16 @@
 <?php
+
 namespace UserApiTest\Dashboard\Dto;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use DvsaCommon\Enum\SiteBusinessRoleCode as Role;
-use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\SiteBusinessRole;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 use UserApi\Dashboard\Dto\Site;
 
 /**
- * Unit tests for Site dto
+ * Unit tests for Site dto.
  */
 class SiteTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,7 +33,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
     {
         $site = $this->createSiteWithPositions(
             [
-                1 => [Role::TESTER, Role::SITE_ADMIN, Role::SITE_MANAGER]
+                1 => [Role::TESTER, Role::SITE_ADMIN, Role::SITE_MANAGER],
             ]
         );
 
@@ -54,7 +54,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
         $personId = 1;
         $vts = self::createVehicleTestingStationEntityWithPositions(
             [
-                $personId => [Role::TESTER]
+                $personId => [Role::TESTER],
             ]
         );
 
@@ -89,6 +89,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase
                 self::addPositionToSite($vts, $siteRole, $workerId);
             }
         }
+
         return $vts;
     }
 
@@ -114,12 +115,12 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
     private function assertWellFormedData($data)
     {
-        return (
+        return
             is_array($data)
             && isset($data['id'])
             && isset($data['name'])
             && isset($data['siteNumber'])
             && isset($data['positions'])
-            && is_array($data['positions']));
+            && is_array($data['positions']);
     }
 }

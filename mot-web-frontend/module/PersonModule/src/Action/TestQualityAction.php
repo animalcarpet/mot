@@ -37,13 +37,13 @@ class TestQualityAction implements AutoWireableInterface
     const COMPONENT_BREAKDOWN_LINK_TEXT = 'failures by category in %s %s';
     const COMPONENT_BREAKDOWN_LINK_TEXT_GROUP = 'View %sGroup %s ';
 
-    /** @var  TesterPerformanceApiResource $testerPerformanceApiResource */
+    /** @var TesterPerformanceApiResource $testerPerformanceApiResource */
     private $testerPerformanceApiResource;
 
-    /** @var  NationalPerformanceApiResource $nationalPerformanceApiResource */
+    /** @var NationalPerformanceApiResource $nationalPerformanceApiResource */
     private $nationalPerformanceApiResource;
 
-    /** @var  bool $isYourProfile */
+    /** @var bool $isYourProfile */
     private $isYourProfile;
 
     /** @var TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper */
@@ -72,8 +72,7 @@ class TestQualityAction implements AutoWireableInterface
         PersonProfileRoutes $personProfileRoutes,
         TesterMultiSitePerformanceApiResource $multiSiteApiResource,
         TesterTqiBreadcrumbs $testerTqiBreadcrumbs
-    )
-    {
+    ) {
         $this->testerPerformanceApiResource = $testerPerformanceApiResource;
         $this->nationalPerformanceApiResource = $nationalPerformanceApiResource;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
@@ -90,6 +89,7 @@ class TestQualityAction implements AutoWireableInterface
      * @param int $month
      * @param int $year
      * @param $requestParams
+     *
      * @return AbstractActionResult
      */
     public function execute(
@@ -98,8 +98,7 @@ class TestQualityAction implements AutoWireableInterface
         $year,
         Url $url,
         $requestParams
-    )
-    {
+    ) {
         $this->url = $url;
 
         $personAuthorisation = $this->testerGroupAuthorisationMapper->getAuthorisation($targetPersonId);
@@ -156,6 +155,7 @@ class TestQualityAction implements AutoWireableInterface
 
     /**
      * @param TesterMultiSitePerformanceDto[] $siteTestsDtoArray
+     *
      * @return SiteRowViewModel[]
      */
     private function mapSiteStatsDtoToViewModel(array $siteTestsDtoArray, $month, $year, $targetPersonId, $group)
@@ -168,7 +168,7 @@ class TestQualityAction implements AutoWireableInterface
 
         usort($siteTestsDtoArray, $comparator);
 
-        return ArrayUtils::map($siteTestsDtoArray, function (TesterMultiSitePerformanceDto $siteStatsDto) use ($month, $year, $targetPersonId, $group){
+        return ArrayUtils::map($siteTestsDtoArray, function (TesterMultiSitePerformanceDto $siteStatsDto) use ($month, $year, $targetPersonId, $group) {
             if ($this->contextProvider->isYourProfileContext()) {
                 $tqiComponentsAtSiteUrl = ProfileRoutes::of($this->url)->yourProfileTqiComponentsAtSite($siteStatsDto->getSiteId(), $month, $year, $group);
             } elseif ($this->contextProvider->isUserSearchContext()) {
@@ -181,7 +181,7 @@ class TestQualityAction implements AutoWireableInterface
                 ? (new AddressFormatter())
                 ->setAddressPartsGlue(', ')
                 ->escapedDtoToMultiLine($siteStatsDto->getSiteAddress())
-                : "";
+                : '';
 
             return new SiteRowViewModel(
                 $siteStatsDto->getSiteId(),
@@ -201,7 +201,8 @@ class TestQualityAction implements AutoWireableInterface
      * @param $vm
      * @param string $monthFullName
      * @param string $year
-     * @param array $breadcrumbs
+     * @param array  $breadcrumbs
+     *
      * @return ViewActionResult
      */
     private function buildActionResult($vm, $monthFullName, $year, $breadcrumbs)
@@ -236,7 +237,7 @@ class TestQualityAction implements AutoWireableInterface
 
     private function getReturnLinkText()
     {
-        return 'Return to ' . strtolower($this->getProfileDescription());
+        return 'Return to '.strtolower($this->getProfileDescription());
     }
     private function getMonthFullName(\DateTime $date)
     {
@@ -245,6 +246,7 @@ class TestQualityAction implements AutoWireableInterface
 
     /**
      * @param $params
+     *
      * @return TestQualityInformationMonthFilter
      */
     private function getMonthFilter($params)

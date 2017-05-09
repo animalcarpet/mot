@@ -1,6 +1,7 @@
 <?php
 
 namespace AccountTest\Logic;
+
 use DvsaClient\ViewModel\AbstractFormModel;
 
 class PasswordPolicyTestFormModel extends AbstractFormModel

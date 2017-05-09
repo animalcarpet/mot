@@ -36,6 +36,6 @@ class RedirectToRoute extends AbstractRedirectActionResult
 
     public function toString(Url $url)
     {
-        return $url->__invoke($this->getRouteName(), $this->getRouteParams(), ["query" => $this->getQueryParams()]);
+        return $url->__invoke($this->getRouteName(), $this->getRouteParams(), ['query' => $this->getQueryParams()]);
     }
 }

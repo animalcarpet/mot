@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\AuthorisationForTestingMotAtSiteStatus;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class AuthorisationForTestingMotAtSiteStatusTest
+ * Class AuthorisationForTestingMotAtSiteStatusTest.
  */
 class AuthorisationForTestingMotAtSiteStatusTest extends PHPUnit_Framework_TestCase
 {

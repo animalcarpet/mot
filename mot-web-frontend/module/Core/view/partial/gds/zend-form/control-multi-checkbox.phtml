@@ -4,7 +4,7 @@ use Zend\Form\Element\MultiCheckbox;
 
 /** @var $element MultiCheckbox */
 if (!$element instanceof MultiCheckbox) {
-    throw new InvalidArgumentException('This partial expects variable $element of type: ' . MultiCheckbox::class);
+    throw new InvalidArgumentException('This partial expects variable $element of type: '.MultiCheckbox::class);
 }
 
 $formHint = $element->getAttribute('formHint');

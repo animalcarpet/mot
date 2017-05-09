@@ -1,4 +1,5 @@
 <?php
+
 namespace AccountTest\Factory\Service;
 
 use Account\Factory\Service\SecurityQuestionServiceFactory;
@@ -15,8 +16,7 @@ use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SecurityQuestionServiceFactoryTest
- * @package AccountTest\Factory
+ * Class SecurityQuestionServiceFactoryTest.
  */
 class SecurityQuestionServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +29,7 @@ class SecurityQuestionServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $mapperFactory = new StubMapperFactory([
             MapperFactory::PERSON => XMock::of(PersonMapper::class),
             MapperFactory::USER_ADMIN => XMock::of(UserAdminMapper::class),
-            MapperFactory::ACCOUNT => XMock::of(AccountMapper::class)
+            MapperFactory::ACCOUNT => XMock::of(AccountMapper::class),
         ]);
 
         $this->mockMethod($mockServiceLocator, 'get', $this->at(0), $mapperFactory);

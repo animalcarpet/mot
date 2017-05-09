@@ -5,7 +5,6 @@ namespace TestSupport\Controller;
 use DvsaCommon\Constants\Role;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use TestSupport\Service\AccountDataService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
  * Creates User account with ASSESSMENT role for use by tests.
@@ -27,7 +26,9 @@ class AssessorDataController extends BaseTestSupportRestfulController
         /** @var $accountHelper AccountDataService */
         $accountHelper = $this->getServiceLocator()->get(AccountDataService::class);
 
-        $resultJson =$accountHelper->create($data, Role::DVSA_AREA_OFFICE_1);
+        $resultJson = $accountHelper->create($data, Role::DVSA_AREA_OFFICE_1);
         $accountHelper->addRole($resultJson->data['personId'], Role::DVSA_AREA_OFFICE_1);
-        return $resultJson;    }
+
+        return $resultJson;
+    }
 }

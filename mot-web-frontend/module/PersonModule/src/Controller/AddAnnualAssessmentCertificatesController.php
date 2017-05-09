@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
-
 use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
@@ -19,7 +18,7 @@ class AddAnnualAssessmentCertificatesController extends AbstractAuthActionContro
     private $reviewStepAction;
 
     private $personId;
-    /** @var  FormContext */
+    /** @var FormContext */
     private $context;
     private $isPost;
     private $formUuid;
@@ -34,8 +33,7 @@ class AddAnnualAssessmentCertificatesController extends AbstractAuthActionContro
         AnnualAssessmentCertificatesAddProcess $annualAssessmentCertificatesAddProcess,
         EditStepAction $editStepAction,
         ReviewStepAction $reviewStepAction
-    )
-    {
+    ) {
         $this->contextProvider = $contextProvider;
         $this->annualAssessmentCertificatesAddProcess = $annualAssessmentCertificatesAddProcess;
         $this->editStepAction = $editStepAction;
@@ -73,7 +71,6 @@ class AddAnnualAssessmentCertificatesController extends AbstractAuthActionContro
 
         if (empty($this->formUuid)) {
             $this->formUuid = $this->params()->fromQuery('formUuid');
-
         }
 
         $actionResult = null;
@@ -104,11 +101,12 @@ class AddAnnualAssessmentCertificatesController extends AbstractAuthActionContro
 
     /**
      * @param $context
+     *
      * @return int
      */
     private function getPersonId($context)
     {
         return $context === ContextProvider::YOUR_PROFILE_CONTEXT ?
-            $this->getIdentity()->getUserId() : (int)$this->params()->fromRoute('id');
+            $this->getIdentity()->getUserId() : (int) $this->params()->fromRoute('id');
     }
 }

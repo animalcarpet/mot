@@ -18,22 +18,21 @@ use Zend\View\Model\JsonModel;
 /**
  * AbstractDvsaRestfulController.
  */
-class AbstractDvsaRestfulController
-    extends AbstractRestfulController
+class AbstractDvsaRestfulController extends AbstractRestfulController
 {
-    const ERROR_CODE_NOT_ALLOWED             = 10;
-    const ERROR_CODE_REQUIRED                = 20;
-    const ERROR_CODE_NOT_FOUND               = 40;
-    const ERROR_CODE_INVALID_DATA            = 60;
-    const ERROR_CODE_UNAUTHORIZED            = 401;
-    const CHECK_POSITIVE_INTEGER             = 'positiveInteger';
-    const CHECK_POSITIVE_INTEGER_OR_NULL     = 'positiveIntegerOrNull';
-    const ERROR_GENERIC_MSG                  = 'An error occurred.';
-    const ERROR_MSG_IS_REQUIRED              = ' is required';
-    const ERROR_MSG_POSITIVE_INTEGER         = ' must be a positive integer';
+    const ERROR_CODE_NOT_ALLOWED = 10;
+    const ERROR_CODE_REQUIRED = 20;
+    const ERROR_CODE_NOT_FOUND = 40;
+    const ERROR_CODE_INVALID_DATA = 60;
+    const ERROR_CODE_UNAUTHORIZED = 401;
+    const CHECK_POSITIVE_INTEGER = 'positiveInteger';
+    const CHECK_POSITIVE_INTEGER_OR_NULL = 'positiveIntegerOrNull';
+    const ERROR_GENERIC_MSG = 'An error occurred.';
+    const ERROR_MSG_IS_REQUIRED = ' is required';
+    const ERROR_MSG_POSITIVE_INTEGER = ' must be a positive integer';
     const ERROR_MSG_POSITIVE_INTEGER_OR_NULL = ' must be a positive integer or null';
-    const DISPLAY_MSG_IS_REQUIRED            = 'Values are missing.';
-    const ERROR_MSG_UNAUTHORIZED_REQUEST     = 'Unauthorised request, please supply valid token in authorisation header';
+    const DISPLAY_MSG_IS_REQUIRED = 'Values are missing.';
+    const ERROR_MSG_UNAUTHORIZED_REQUEST = 'Unauthorised request, please supply valid token in authorisation header';
 
     /**
      * @var \DvsaAuthentication\Identity
@@ -51,7 +50,7 @@ class AbstractDvsaRestfulController
     public function assertFeatureEnabled($name)
     {
         if (!$this->isFeatureEnabled($name)) {
-            throw new NotFoundException("Feature '". $name . "' is turned off", null, false);
+            throw new NotFoundException("Feature '".$name."' is turned off", null, false);
         }
     }
 
@@ -171,8 +170,8 @@ class AbstractDvsaRestfulController
      * See {@http://tools.ietf.org/html/draft-nottingham-http-problem-06} and
      * {@link https://apigility.org/documentation/api-primer/error-reporting} for an explanation of the format used.
      *
-     * @param integer $statusCode
-     * @param array   $properties
+     * @param int   $statusCode
+     * @param array $properties
      *
      * @return \Zend\View\Model\JsonModel
      */
@@ -181,18 +180,18 @@ class AbstractDvsaRestfulController
         $this->getResponse()->setStatusCode($statusCode);
 
         $properties = array_merge([
-            'type'   => 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
+            'type' => 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
             'status' => $statusCode,
-            'title'  => HttpStatus::$statusTexts[$statusCode],
+            'title' => HttpStatus::$statusTexts[$statusCode],
             'detail' => '',
         ], $properties);
 
         // Legacy response body
         $errors = ['errors' => [
-            'message'           => $properties['title'],
-            'code'              => $statusCode,
-            'displayMessage'    => $properties['detail'],
-            'problem'           => $properties,             // Problem Details for HTTP APIs (application/problem+json)
+            'message' => $properties['title'],
+            'code' => $statusCode,
+            'displayMessage' => $properties['detail'],
+            'problem' => $properties,             // Problem Details for HTTP APIs (application/problem+json)
             ],
         ];
 
@@ -225,7 +224,7 @@ class AbstractDvsaRestfulController
     public function createValidationProblemResponseModel(array $errors)
     {
         return $this->createApiProblemResponseModel(HttpStatus::HTTP_UNPROCESSABLE_ENTITY, [
-            'detail'              => 'Failed Validation',
+            'detail' => 'Failed Validation',
             'validation_messages' => $errors,
         ]);
     }
@@ -240,24 +239,22 @@ class AbstractDvsaRestfulController
     public function onDispatch(MvcEvent $e)
     {
         $routeMatch = $e->getRouteMatch();
-        if($routeMatch !== null) {
-
+        if ($routeMatch !== null) {
             $this->logEvent(
-                "Received API request to: [" . $routeMatch->getMatchedRouteName() .
-                '] method: [' . $e->getRequest()->getMethod() . '] url: [' . $this->getRequest()->getUriString() . '] content: ' . $e->getRequest()->getContent(),
+                'Received API request to: ['.$routeMatch->getMatchedRouteName().
+                '] method: ['.$e->getRequest()->getMethod().'] url: ['.$this->getRequest()->getUriString().'] content: '.$e->getRequest()->getContent(),
                 Logger::INFO
             );
-
         }
 
         $response = parent::onDispatch($e);
 
-        if($routeMatch !== null) {
+        if ($routeMatch !== null) {
             if ($response instanceof JsonModel) {
-                $this->logEvent("Returning json " . $response->serialize());
+                $this->logEvent('Returning json '.$response->serialize());
             } else {
                 // We're meant to be always returning JSON, so no reason to end up here
-                $this->logEvent("Returning unknown object");
+                $this->logEvent('Returning unknown object');
             }
         }
     }
@@ -277,7 +274,7 @@ class AbstractDvsaRestfulController
         }
 
         /** @var \Zend\Authentication\AuthenticationService $service */
-        $service  = $this->getServiceLocator()->get('DvsaAuthenticationService');
+        $service = $this->getServiceLocator()->get('DvsaAuthenticationService');
         $identity = $service->getIdentity();
         if (!$identity) {
             throw new UnauthenticatedException();
@@ -340,9 +337,9 @@ class AbstractDvsaRestfulController
     {
         if (!array_key_exists($fieldName, $postData)) {
             $errors[] = [
-                "message"        => $fieldName . self::ERROR_MSG_IS_REQUIRED,
-                "code"           => self::ERROR_CODE_REQUIRED,
-                "displayMessage" => self::DISPLAY_MSG_IS_REQUIRED,
+                'message' => $fieldName.self::ERROR_MSG_IS_REQUIRED,
+                'code' => self::ERROR_CODE_REQUIRED,
+                'displayMessage' => self::DISPLAY_MSG_IS_REQUIRED,
             ];
         } else {
             if ($dataTypeCheck) {
@@ -350,21 +347,21 @@ class AbstractDvsaRestfulController
                 switch ($dataTypeCheck) {
                     case self::CHECK_POSITIVE_INTEGER:
                         if (!is_numeric($fieldValue) || ((int) $fieldValue) < 0) {
-                            $message  = $fieldName . self::ERROR_MSG_POSITIVE_INTEGER;
+                            $message = $fieldName.self::ERROR_MSG_POSITIVE_INTEGER;
                             $errors[] = [
-                                "message"        => $message,
-                                "code"           => self::ERROR_CODE_INVALID_DATA,
-                                "displayMessage" => $message,
+                                'message' => $message,
+                                'code' => self::ERROR_CODE_INVALID_DATA,
+                                'displayMessage' => $message,
                             ];
                         }
                         break;
                     case self::CHECK_POSITIVE_INTEGER_OR_NULL:
                         if (!is_null($fieldValue) && (!is_numeric($fieldValue) || ((int) $fieldValue) < 0)) {
-                            $message  = $fieldName . self::ERROR_MSG_POSITIVE_INTEGER_OR_NULL;
+                            $message = $fieldName.self::ERROR_MSG_POSITIVE_INTEGER_OR_NULL;
                             $errors[] = [
-                                "message"        => $message,
-                                "code"           => self::ERROR_CODE_INVALID_DATA,
-                                "displayMessage" => $message,
+                                'message' => $message,
+                                'code' => self::ERROR_CODE_INVALID_DATA,
+                                'displayMessage' => $message,
                             ];
                         }
                         break;
@@ -382,7 +379,7 @@ class AbstractDvsaRestfulController
      * @param            $code    int contains the error code indicator
      * @param int|string $msgType int contains the display message indicator
      *
-     * @return Array
+     * @return array
      */
     protected function makeErrorMessage(
         $text,
@@ -390,9 +387,9 @@ class AbstractDvsaRestfulController
         $msgType = self::DISPLAY_MSG_IS_REQUIRED
     ) {
         return [
-            "message"        => $text,
-            "code"           => $code,
-            "displayMessage" => $msgType,
+            'message' => $text,
+            'code' => $code,
+            'displayMessage' => $msgType,
         ];
     }
 
@@ -401,11 +398,11 @@ class AbstractDvsaRestfulController
      *
      * @param $fieldName String contains the fieldname that is missing
      *
-     * @return Array
+     * @return array
      */
     protected function makeFieldIsRequiredError($fieldName)
     {
-        return $this->makeErrorMessage($fieldName . self::ERROR_MSG_IS_REQUIRED);
+        return $this->makeErrorMessage($fieldName.self::ERROR_MSG_IS_REQUIRED);
     }
 
     /**
@@ -419,8 +416,8 @@ class AbstractDvsaRestfulController
             [
                 'errors' => [
                         [
-                            'message'        => HttpStatus::$statusTexts[HttpStatus::HTTP_NOT_FOUND],
-                            'code'           => self::ERROR_CODE_NOT_FOUND,
+                            'message' => HttpStatus::$statusTexts[HttpStatus::HTTP_NOT_FOUND],
+                            'code' => self::ERROR_CODE_NOT_FOUND,
                             'displayMessage' => self::ERROR_GENERIC_MSG,
                         ],
                     ],
@@ -437,11 +434,11 @@ class AbstractDvsaRestfulController
 
         return new JsonModel(
             [
-                "errors" => [
+                'errors' => [
                         [
-                            "message"        => 'Method Not Allowed',
-                            "code"           => self::ERROR_CODE_NOT_ALLOWED,
-                            "displayMessage" => self::ERROR_GENERIC_MSG,
+                            'message' => 'Method Not Allowed',
+                            'code' => self::ERROR_CODE_NOT_ALLOWED,
+                            'displayMessage' => self::ERROR_GENERIC_MSG,
                         ],
                     ],
             ]
@@ -461,11 +458,11 @@ class AbstractDvsaRestfulController
 
         return new JsonModel(
             [
-                "errors" => [
+                'errors' => [
                         [
-                            "message"        => $errorMessage,
-                            "code"           => $code,
-                            "displayMessage" => $displayMessage,
+                            'message' => $errorMessage,
+                            'code' => $code,
+                            'displayMessage' => $displayMessage,
                         ],
                     ],
             ]
@@ -481,7 +478,7 @@ class AbstractDvsaRestfulController
     {
         $this->response->setStatusCode(Response::STATUS_CODE_400);
 
-        return new JsonModel(["errors" => $errors]);
+        return new JsonModel(['errors' => $errors]);
     }
 
     /**
@@ -495,7 +492,7 @@ class AbstractDvsaRestfulController
 
         if (is_null($doLog)) {
             $config = $this->getServiceLocator()->get('config');
-            $doLog  = array_key_exists('logJson', $config) && $config['logJson'];
+            $doLog = array_key_exists('logJson', $config) && $config['logJson'];
         }
 
         if ($doLog) {
@@ -506,6 +503,7 @@ class AbstractDvsaRestfulController
     protected function returnDto($dto)
     {
         $dtoSerializer = $this->getDtoSerializer();
+
         return ApiResponse::jsonOk($dtoSerializer->serialize($dto));
     }
 

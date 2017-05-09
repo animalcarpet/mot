@@ -6,8 +6,7 @@ use Core\Action\ActionResultLayout;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaMotTest\Form\VehicleSearch\DuplicateCertificateRegistrationSearchForm;
 
-class DuplicateCertificateSearchByRegistrationAction extends AbstractDuplicateCertificateSearchAction
-    implements AutoWireableInterface
+class DuplicateCertificateSearchByRegistrationAction extends AbstractDuplicateCertificateSearchAction implements AutoWireableInterface
 {
     const TEMPLATE_NAME = 'dvsa-mot-test/vehicle-search/search-for-duplicate-by-registration.phtml';
     const PAGE_TITLE = 'Search by registration mark';

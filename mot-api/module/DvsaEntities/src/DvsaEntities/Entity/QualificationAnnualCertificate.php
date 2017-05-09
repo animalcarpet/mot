@@ -2,13 +2,11 @@
 
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * QualificationAnnualCertificate
+ * QualificationAnnualCertificate.
  *
  * @ORM\Table(name="qualification_annual_certificate")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\QualificationAnnualCertificateRepository")
@@ -63,12 +61,14 @@ class QualificationAnnualCertificate extends Entity
     }
 
     /**
-     * @param  Person $person
+     * @param Person $person
+     *
      * @return QualificationAnnualCertificate
      */
     public function setPerson(Person $person)
     {
         $this->person = $person;
+
         return $this;
     }
 
@@ -83,6 +83,7 @@ class QualificationAnnualCertificate extends Entity
     public function setVehicleClassGroup(VehicleClassGroup $vehicleClassGroup)
     {
         $this->vehicleClassGroup = $vehicleClassGroup;
+
         return $this;
     }
 
@@ -96,11 +97,13 @@ class QualificationAnnualCertificate extends Entity
 
     /**
      * @param $certificateNumber
+     *
      * @return QualificationAnnualCertificate
      */
     public function setCertificateNumber($certificateNumber)
     {
         $this->certificateNumber = $certificateNumber;
+
         return $this;
     }
 
@@ -114,11 +117,13 @@ class QualificationAnnualCertificate extends Entity
 
     /**
      * @param \DateTime $dateAwarded
+     *
      * @return QualificationAnnualCertificate
      */
     public function setDateAwarded(\DateTime $dateAwarded)
     {
         $this->dateAwarded = $dateAwarded;
+
         return $this;
     }
 
@@ -132,11 +137,13 @@ class QualificationAnnualCertificate extends Entity
 
     /**
      * @param int $score
+     *
      * @return QualificationAnnualCertificate
      */
     public function setScore($score)
     {
         $this->score = $score;
+
         return $this;
     }
 }

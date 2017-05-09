@@ -7,7 +7,6 @@
 
 namespace DvlaInfo\Service;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NoResultException;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -55,7 +54,7 @@ class DvlaInfoMotHistoryServiceTest extends AbstractServiceTestCase
         $this->underTest->getMotTests(self::VRM, self::TEST_NUMBER, null);
 
         //then an exception is thrown
-        $this->assertTrue(false, "NotFoundException should be thrown!");
+        $this->assertTrue(false, 'NotFoundException should be thrown!');
     }
 
     public function test_givenTestNumberAndMotTestsFound_shouldReturnMotTests()
@@ -95,13 +94,13 @@ class DvlaInfoMotHistoryServiceTest extends AbstractServiceTestCase
 
         //then
         $this->assertTrue(
-            false, "This test is to be removed when code for finding mot tests by VRM and V5C reference is implemented."
+            false, 'This test is to be removed when code for finding mot tests by VRM and V5C reference is implemented.'
         );
     }
 
     public function prepareMotTestsArray($vehicle)
     {
-        $number = "1234567";
+        $number = '1234567';
         $expiryDate = new \DateTime();
         $vts = new Site();
 
@@ -122,7 +121,7 @@ class DvlaInfoMotHistoryServiceTest extends AbstractServiceTestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn(MotTestStatusName::ACTIVE);
 
         return $status;

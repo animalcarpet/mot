@@ -4,10 +4,9 @@ namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
-use DvsaEntities\Entity\TestSlotTransactionAmendmentType;
 
 /**
- * Reasons for amending a transaction
+ * Reasons for amending a transaction.
  *
  * @ORM\Table(name="test_slot_transaction_amendment_reason", options={"collate"="utf8_general_ci", "charset"="utf8",
  *                                                           "engine"="InnoDB"})
@@ -88,7 +87,7 @@ class TestSlotTransactionAmendmentReason extends Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $description
      *
@@ -102,7 +101,7 @@ class TestSlotTransactionAmendmentReason extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -112,7 +111,7 @@ class TestSlotTransactionAmendmentReason extends Entity
     }
 
     /**
-     * Set display order
+     * Set display order.
      *
      * @param int $displayOrder
      *
@@ -126,7 +125,7 @@ class TestSlotTransactionAmendmentReason extends Entity
     }
 
     /**
-     * Get display order
+     * Get display order.
      *
      * @return int
      */

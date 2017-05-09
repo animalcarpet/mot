@@ -47,7 +47,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
 
     private $motTestServiceTest;
 
-    /** @var  MotTestCreationHelper */
+    /** @var MotTestCreationHelper */
     private $motTestCreationHelper;
 
     private $mocks;
@@ -128,7 +128,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
         $rfrComment = XMock::of(\DvsaEntities\Entity\MotTestReasonForRejectionComment::class);
         $rfrComment->expects($this->any())
             ->method('getComment')
-            ->willReturn("original test comment");
+            ->willReturn('original test comment');
         $rfrFail->expects($this->any())
             ->method('popComment')
             ->willReturn($rfrComment);
@@ -137,7 +137,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
         $rfrDescription = XMock::of(\DvsaEntities\Entity\MotTestReasonForRejectionDescription::class);
         $rfrDescription->expects($this->any())
             ->method('getCustomDescription')
-            ->willReturn("original test description");
+            ->willReturn('original test description');
         $rfrFail->expects($this->any())
             ->method('popDescription')
             ->willReturn($rfrDescription);
@@ -315,7 +315,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
         $this->constructMotTestCreationHelper();
         $this->callCreateMotTestWithStandardTestParams($tester);
     }
-    
+
     /**
      * @param $id
      * @param $type
@@ -340,6 +340,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
         $motTestRfr->setId($id);
         $motTestRfr->setType($type);
         $motTestRfr->setReasonForRejection($rfr);
+
         return $motTestRfr;
     }
 
@@ -391,6 +392,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
 
     /**
      * @param $tester
+     *
      * @throws Exception
      * @throws NotFoundException
      */

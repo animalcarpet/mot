@@ -12,7 +12,6 @@ use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaEventApi\Service\EventService;
 use DvsaEntities\Entity\EventPersonMap;
 use DvsaEntities\Entity\Event;
-use Doctrine\ORM\EntityManager;
 
 class TesterQualificationStatusChangeEventHelper
 {
@@ -38,9 +37,9 @@ class TesterQualificationStatusChangeEventHelper
 
     /**
      * @param MotIdentityProviderInterface $identityProvider
-     * @param EventService $eventService
-     * @param EventPersonMapRepository $eventPersonMapRepository
-     * @param DateTimeHolder $dateTimeHolder
+     * @param EventService                 $eventService
+     * @param EventPersonMapRepository     $eventPersonMapRepository
+     * @param DateTimeHolder               $dateTimeHolder
      */
     public function __construct(
         MotIdentityProviderInterface $identityProvider,
@@ -57,6 +56,7 @@ class TesterQualificationStatusChangeEventHelper
     /**
      * @param Person $person
      * @param string $group
+     *
      * @return EventPersonMap
      */
     public function create(Person $person, $group)
@@ -67,12 +67,14 @@ class TesterQualificationStatusChangeEventHelper
             return $this->createEventForGroupB($person);
         }
 
-        throw new \InvalidArgumentException("Group \"" . $group. "\"  not found.");
+        throw new \InvalidArgumentException('Group "'.$group.'"  not found.');
     }
 
     /**
      * @param Person $person
+     *
      * @return EventPersonMap
+     *
      * @throws \Exception
      */
     private function createEventForGroupA(Person $person)
@@ -88,7 +90,9 @@ class TesterQualificationStatusChangeEventHelper
 
     /**
      * @param Person $person
+     *
      * @return EventPersonMap
+     *
      * @throws \Exception
      */
     private function createEventForGroupB(Person $person)
@@ -104,7 +108,8 @@ class TesterQualificationStatusChangeEventHelper
 
     /**
      * @param Person $person
-     * @param Event $event
+     * @param Event  $event
+     *
      * @return EventPersonMap
      */
     private function createEventPersonMap(Person $person, Event $event)

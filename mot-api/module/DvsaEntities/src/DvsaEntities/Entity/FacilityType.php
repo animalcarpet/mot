@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * FacilityType
+ * FacilityType.
  *
  * @ORM\Table(name="facility_type")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\FacilityTypeRepository", readOnly=true)
@@ -34,6 +34,7 @@ class FacilityType extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

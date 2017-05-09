@@ -49,9 +49,11 @@ class PersonEventService
     }
 
     /**
-     * @param int $personId
+     * @param int   $personId
      * @param array $data
+     *
      * @return RecordEventResult
+     *
      * @throws NotFoundException
      * @throws \Exception
      */
@@ -80,7 +82,8 @@ class PersonEventService
 
     /**
      * @param Person $person
-     * @param Event $event
+     * @param Event  $event
+     *
      * @return bool
      */
     private function createEventPersonMap(Person $person, Event $event)
@@ -91,13 +94,17 @@ class PersonEventService
 
         $this->entityManager->persist($eventPersonMap);
         $this->entityManager->flush();
+
         return true;
     }
 
     /**
-     * Ensures that the category being passed in data is the right one for the entity
+     * Ensures that the category being passed in data is the right one for the entity.
+     *
      * @param array $data
+     *
      * @return bool
+     *
      * @throws \InvalidArgumentException if wrong category supplied
      */
     private function assertEventCategory(array $data)
@@ -109,9 +116,12 @@ class PersonEventService
     }
 
     /**
-     * Retrieves the person entity from the DB
+     * Retrieves the person entity from the DB.
+     *
      * @param int $personId
+     *
      * @return Person
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     private function getPersonEntity($personId)
@@ -119,8 +129,9 @@ class PersonEventService
         // PersonRepository
         $person = $this->personRepository->find($personId);
         if (!$person instanceof Person) {
-            throw new NotFoundException('Unable to find person with id ' . $personId);
+            throw new NotFoundException('Unable to find person with id '.$personId);
         }
+
         return $person;
     }
 }

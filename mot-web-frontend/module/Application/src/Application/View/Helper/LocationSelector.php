@@ -14,8 +14,6 @@ use Zend\View\Helper\AbstractHtmlElement;
  * were before they decided to change their VTS location.
  *
  * Class LocationSelector
- *
- * @package Application\View\Helper
  */
 class LocationSelector extends AbstractHtmlElement
 {
@@ -24,7 +22,7 @@ class LocationSelector extends AbstractHtmlElement
 
     /**
      * @param LocationSelectContainerHelper $locationSelectContainerHelper
-     * @param RouteMatch $routeMatch
+     * @param RouteMatch                    $routeMatch
      */
     public function __construct(LocationSelectContainerHelper $locationSelectContainerHelper, RouteMatch $routeMatch = null)
     {
@@ -45,7 +43,7 @@ class LocationSelector extends AbstractHtmlElement
         if ($this->routeMatch->getMatchedRouteName() !== 'location-select') {
             $this->locationSelectContainerHelper->persistConfig(
                 [
-                    'route'  => $this->routeMatch->getMatchedRouteName(),
+                    'route' => $this->routeMatch->getMatchedRouteName(),
                     'params' => $this->routeMatch->getParams(),
                 ]
             );
@@ -57,9 +55,10 @@ class LocationSelector extends AbstractHtmlElement
         ) {
             $attribs = [
                 'id' => 'change-site',
-                'href' => $this->getView()->url(LocationSelectController::ROUTE)
+                'href' => $this->getView()->url(LocationSelectController::ROUTE),
             ];
             $attribs = $this->htmlAttribs($attribs);
+
             return '<div><a '.$attribs.'>Change site</a></div>';
         } else {
             return '';

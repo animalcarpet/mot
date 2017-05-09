@@ -7,7 +7,6 @@ use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 
 /** @var $personId int */
 /** @var $form array */
-
 $statuses = [
     0 => AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
     1 => AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED,
@@ -22,8 +21,8 @@ $statuses = [
         echo $this->partial(
             'hiddenElement',
             [
-                'name'  => $name,
-                'value' => $value
+                'name' => $name,
+                'value' => $value,
             ]
         );
     }
@@ -31,8 +30,8 @@ $statuses = [
     echo $this->partial(
         'submitElement',
         [
-            'id'    => 'initial-training-successful',
-            'name'  => 'initialTraining',
+            'id' => 'initial-training-successful',
+            'name' => 'initialTraining',
             'label' => 'Successful',
             'value' => '1',
 
@@ -41,11 +40,11 @@ $statuses = [
     <?php echo $this->partial(
         'submitElement',
         [
-            'id'       => 'initial-training-fail',
-            'name'     => 'initialTraining',
-            'label'    => 'Unsuccessful',
+            'id' => 'initial-training-fail',
+            'name' => 'initialTraining',
+            'label' => 'Unsuccessful',
             'cssClass' => 'btn btn-danger btn-large',
-            'value'    => '',
+            'value' => '',
 
         ]
     ); ?>

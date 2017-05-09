@@ -5,7 +5,6 @@ namespace PersonApi\Input\MotTestingCertificate;
 use DvsaCommon\Date\DateTimeHolder;
 use Zend\InputFilter\Input;
 use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
 use PersonApi\Service\Validator\MotTestingCertificate\DateOfQualificationValidator;
 
 class DateOfQualificationInput extends Input

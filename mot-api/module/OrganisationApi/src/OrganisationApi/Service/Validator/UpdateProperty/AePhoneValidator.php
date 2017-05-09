@@ -24,7 +24,7 @@ class AePhoneValidator extends AbstractValidator implements ValidatorInterface
             return;
         }
 
-        $this->phoneField = $prefix . ucfirst($this->phoneField);
+        $this->phoneField = $prefix.ucfirst($this->phoneField);
     }
 
     public function validate(array $data)
@@ -36,8 +36,8 @@ class AePhoneValidator extends AbstractValidator implements ValidatorInterface
         if (array_key_exists($this->phoneField, $data)
             && StringUtils::strlen($data[$this->phoneField]) > self::MAX_PHONE_LENGTH
         ) {
-            $errorSchema->add($this->phoneField . " - must be " . self::MAX_PHONE_LENGTH. " characters or less", $this->phoneField);
-        };
+            $errorSchema->add($this->phoneField.' - must be '.self::MAX_PHONE_LENGTH.' characters or less', $this->phoneField);
+        }
 
         $errorSchema->throwIfAny();
     }

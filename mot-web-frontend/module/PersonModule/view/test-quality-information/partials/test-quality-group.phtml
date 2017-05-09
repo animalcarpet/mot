@@ -2,7 +2,7 @@
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\GroupStatisticsTable;
 use Site\ViewModel\TimeSpanFormatter;
 
-/** @var GroupStatisticsTable $group */
+/* @var GroupStatisticsTable $group */
 ?>
 
 <h3 class="key-value-list__header">
@@ -33,21 +33,21 @@ use Site\ViewModel\TimeSpanFormatter;
         </td>
 
         <?php echo $this->partial('partials/test-quality-group-not-available-check', [
-            'hasTests'          => $group->hasTests(),
-            'notAvailableText'  => $group->getNotAvailableText(),
-            'value'             => $group->getAverageVehicleAge(),
+            'hasTests' => $group->hasTests(),
+            'notAvailableText' => $group->getNotAvailableText(),
+            'value' => $group->getAverageVehicleAge(),
         ]); ?>
 
         <?php echo $this->partial('partials/test-quality-group-not-available-check', [
-            'hasTests'          => $group->hasTests(),
-            'notAvailableText'  => $group->getNotAvailableText(),
-            'value'             => $group->getAverageTestDuration(),
+            'hasTests' => $group->hasTests(),
+            'notAvailableText' => $group->getNotAvailableText(),
+            'value' => $group->getAverageTestDuration(),
         ]); ?>
 
         <?php echo $this->partial('partials/test-quality-group-not-available-check', [
-            'hasTests'          => $group->hasTests(),
-            'notAvailableText'  => $group->getNotAvailableText(),
-            'value'             => $group->getFailurePercentage(),
+            'hasTests' => $group->hasTests(),
+            'notAvailableText' => $group->getNotAvailableText(),
+            'value' => $group->getFailurePercentage(),
         ]); ?>
 
     </tr>
@@ -67,7 +67,7 @@ use Site\ViewModel\TimeSpanFormatter;
                     <?php echo $site->getAverageVehicleAgeAsString() ?>
                 </td>
                 <td class="numeric ">
-                    <?php echo (new TimeSpanFormatter())->formatForTestQualityInformationView($site->getAverageTestTime()) ?>
+                    <?php echo(new TimeSpanFormatter())->formatForTestQualityInformationView($site->getAverageTestTime()) ?>
                 </td>
                 <td class="numeric ">
                     <?php echo $site->getTestsFailedPercentage() ?>

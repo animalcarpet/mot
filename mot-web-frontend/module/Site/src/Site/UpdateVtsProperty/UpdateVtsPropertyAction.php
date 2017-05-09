@@ -25,8 +25,7 @@ class UpdateVtsPropertyAction implements AutoWireableInterface
     public function __construct(
         UpdateVtsPropertyProcessBuilder $processBuilder,
         EditStepAction $editStepProcess
-    )
-    {
+    ) {
         $this->processBuilder = $processBuilder;
         $this->editStepProcess = $editStepProcess;
     }

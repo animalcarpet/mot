@@ -16,7 +16,7 @@ if ($this->abandonedMotTestNumber) {
 }
 
 if ($this->passedMotTestId && $this->failedMotTestId) {
-    $status = MotTestStatusName::PASSED . ' (PRS)';
+    $status = MotTestStatusName::PASSED.' (PRS)';
     $shortStatus = 'Pass';
 }
 
@@ -39,8 +39,8 @@ if ($this->failedMotTestId && !$this->passedMotTestId) {
         </h1>
     </header>
     <p class="lede">
-        The vehicle <span class="bold-small"><?php echo $make . ' ' . $model ?></span> with registration <br/>
-        mark <span class="bold-small"><?php echo $escVrn ?></span> has <?php if($status === MotTestStatusName::ABORTED): ?>been aborted <?php else: ?><span class="bold-small"><?php echo strtolower($status); ?></span> the MOT test <?php endif; ?>.
+        The vehicle <span class="bold-small"><?php echo $make.' '.$model ?></span> with registration <br/>
+        mark <span class="bold-small"><?php echo $escVrn ?></span> has <?php if ($status === MotTestStatusName::ABORTED): ?>been aborted <?php else: ?><span class="bold-small"><?php echo strtolower($status); ?></span> the MOT test <?php endif; ?>.
     </p>
 
     <p>The test has been saved and the certificate is currently being generated.</p>

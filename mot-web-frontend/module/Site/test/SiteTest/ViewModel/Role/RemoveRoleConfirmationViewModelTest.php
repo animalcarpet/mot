@@ -5,7 +5,7 @@ namespace SiteTest\ViewModel;
 use Site\ViewModel\Role\RemoveRoleConfirmationViewModel;
 
 /**
- * Class RemoveRoleConfirmationViewModelTest
+ * Class RemoveRoleConfirmationViewModelTest.
  */
 class RemoveRoleConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
 {

@@ -4,7 +4,6 @@ namespace DvsaMotApiTest\Service\Validator;
 
 use DvsaMotApi\Service\Validator\DemoTestAssessmentValidator;
 use DvsaCommon\Enum\VehicleClassGroupCode;
-use Zend\Validator\Digits;
 
 class DemoTestAssessmentValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,26 +41,26 @@ class DemoTestAssessmentValidatorTest extends \PHPUnit_Framework_TestCase
             //empty data
             [
                 [],
-                self::REQUIRED_FIELD_EXCEPTION
+                self::REQUIRED_FIELD_EXCEPTION,
             ],
 
             //FIELD_TESTER_ID is not digit
             [
                 [
-                    DemoTestAssessmentValidator::FIELD_TESTER_ID => "1a",
-                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => VehicleClassGroupCode::BIKES
+                    DemoTestAssessmentValidator::FIELD_TESTER_ID => '1a',
+                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => VehicleClassGroupCode::BIKES,
                 ],
-                self::BAD_REQUEST_EXCEPTION
+                self::BAD_REQUEST_EXCEPTION,
             ],
 
             //FIELD_VEHICLE_CLASS_GROUP not exists
             [
                 [
                     DemoTestAssessmentValidator::FIELD_TESTER_ID => 1,
-                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => "X"
+                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => 'X',
                 ],
-                self::BAD_REQUEST_EXCEPTION
-            ]
+                self::BAD_REQUEST_EXCEPTION,
+            ],
         ];
     }
 
@@ -71,11 +70,11 @@ class DemoTestAssessmentValidatorTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     DemoTestAssessmentValidator::FIELD_TESTER_ID => 1,
-                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => VehicleClassGroupCode::BIKES
+                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => VehicleClassGroupCode::BIKES,
                 ],
                 [
                     DemoTestAssessmentValidator::FIELD_TESTER_ID => 1,
-                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => VehicleClassGroupCode::CARS_ETC
+                    DemoTestAssessmentValidator::FIELD_VEHICLE_CLASS_GROUP => VehicleClassGroupCode::CARS_ETC,
                 ],
             ],
         ];

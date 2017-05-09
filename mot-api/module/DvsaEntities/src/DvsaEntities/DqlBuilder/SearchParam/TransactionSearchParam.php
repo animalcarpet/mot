@@ -1,18 +1,17 @@
 <?php
+
 namespace DvsaEntities\DqlBuilder\SearchParam;
 
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * Class TransactionSearchParam
+ * Class TransactionSearchParam.
  *
- * @package DvsaEntities\DqlBuilder\SearchParam
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class TransactionSearchParam extends SearchParam
 {
-
     protected $dateFrom = null;
     protected $dateTo = null;
     protected $organisationId = null;
@@ -44,7 +43,7 @@ class TransactionSearchParam extends SearchParam
     }
 
     /**
-     * Apply the rules to the params
+     * Apply the rules to the params.
      *
      * @throws \UnexpectedValueException
      */
@@ -65,10 +64,10 @@ class TransactionSearchParam extends SearchParam
     public function toArray()
     {
         return [
-            "organisationId"    => $this->getOrganisationId(),
-            "status"            => $this->getStatus(),
-            "dateFrom"          => $this->getDateFrom(),
-            "dateTo"            => $this->getDateTo()
+            'organisationId' => $this->getOrganisationId(),
+            'status' => $this->getStatus(),
+            'dateFrom' => $this->getDateFrom(),
+            'dateTo' => $this->getDateTo(),
         ];
     }
 
@@ -80,6 +79,7 @@ class TransactionSearchParam extends SearchParam
     public function setOrganisationId($organisationId)
     {
         $this->organisationId = $organisationId;
+
         return $this;
     }
 
@@ -99,12 +99,10 @@ class TransactionSearchParam extends SearchParam
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getStatus()
     {
         return $this->status;
@@ -118,6 +116,7 @@ class TransactionSearchParam extends SearchParam
     public function setDateFrom($dateFrom)
     {
         $this->dateFrom = $dateFrom;
+
         return $this;
     }
 
@@ -137,6 +136,7 @@ class TransactionSearchParam extends SearchParam
     public function setDateTo($dateTo)
     {
         $this->dateTo = $dateTo;
+
         return $this;
     }
 
@@ -156,6 +156,7 @@ class TransactionSearchParam extends SearchParam
     public function setSortColumnId($sortColumnID)
     {
         $this->sortColumnId = $sortColumnID;
+
         return $this;
     }
 
@@ -163,6 +164,7 @@ class TransactionSearchParam extends SearchParam
     {
         parent::loadStandardDataTableValuesFromRequest($request);
         $this->setSortColumnId($request->getQuery(SearchParamConst::SORT_COLUMN_ID));
+
         return $this;
     }
 

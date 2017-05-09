@@ -42,6 +42,7 @@ class ContactDetailFormModel extends AbstractFormModel
 
     /**
      * @param Parameters $postData
+     *
      * @return $this
      */
     public function fromPost(Parameters $postData)
@@ -111,6 +112,7 @@ class ContactDetailFormModel extends AbstractFormModel
     public function setEmailModel(EmailFormModel $emailModel)
     {
         $this->emailModel = $emailModel;
+
         return $this;
     }
 
@@ -128,6 +130,7 @@ class ContactDetailFormModel extends AbstractFormModel
     public function setAddressModel(AddressFormModel $addressModel)
     {
         $this->addressModel = $addressModel;
+
         return $this;
     }
 
@@ -145,6 +148,7 @@ class ContactDetailFormModel extends AbstractFormModel
     public function setPhoneModel(PhoneFormModel $phoneModel)
     {
         $this->phoneModel = $phoneModel;
+
         return $this;
     }
 }

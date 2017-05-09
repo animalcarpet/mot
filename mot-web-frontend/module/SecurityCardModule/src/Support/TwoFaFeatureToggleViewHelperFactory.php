@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\Support;
 
-use DvsaFeature\View\Helper\FeatureToggleViewHelper;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

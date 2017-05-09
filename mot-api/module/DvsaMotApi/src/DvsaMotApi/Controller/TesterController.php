@@ -5,12 +5,9 @@ namespace DvsaMotApi\Controller;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaMotApi\Service\TesterService;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class TesterController
- *
- * @package DvsaMotApi\Controller
+ * Class TesterController.
  */
 class TesterController extends AbstractDvsaRestfulController
 {
@@ -46,20 +43,21 @@ class TesterController extends AbstractDvsaRestfulController
         } elseif ($certificateNumber) {
             $testerData = $this->testerService->findTesterDataByCertificateNumber($certificateNumber);
         }
+
         return ApiResponse::jsonOk($testerData);
     }
 
     /**
      * SWG\Api(
      *  path="/tester/{id}/vehicle-testing-stations"
-     * )
+     * ).
      *
      * @return \Zend\View\Model\JsonModel
      */
     public function getVehicleTestingStationsAction()
     {
         $testerId = $this->params()->fromRoute('id');
-        $data     = $this->testerService->getVehicleTestingStationsForTester($testerId);
+        $data = $this->testerService->getVehicleTestingStationsForTester($testerId);
 
         return ApiResponse::jsonOk($data);
     }
@@ -67,7 +65,7 @@ class TesterController extends AbstractDvsaRestfulController
     public function getInProgressTestIdAction()
     {
         $personId = $this->params()->fromRoute('id');
-        $testId   = $this->testerService->findInProgressTestIdForTester($personId);
+        $testId = $this->testerService->findInProgressTestIdForTester($personId);
 
         return ApiResponse::jsonOk($testId);
     }
@@ -79,5 +77,4 @@ class TesterController extends AbstractDvsaRestfulController
 
         return ApiResponse::jsonOk($data);
     }
-
 }

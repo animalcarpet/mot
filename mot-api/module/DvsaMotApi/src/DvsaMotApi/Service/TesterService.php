@@ -13,13 +13,9 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaEntities\Entity\Site;
-use DvsaEntities\Entity\SiteBusinessRole;
-use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\AuthorisationForTestingMot;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
-use DvsaEntities\Repository\AuthorisationForTestingMotRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\SiteRepository;
@@ -31,9 +27,9 @@ use UserApi\SpecialNotice\Service\SpecialNoticeService;
  */
 class TesterService extends AbstractService
 {
-    /** @var  PersonRepository $personRepository */
+    /** @var PersonRepository $personRepository */
     private $personRepository;
-    /** @var  MotTestRepository $motTestRepository */
+    /** @var MotTestRepository $motTestRepository */
     private $motTestRepository;
     /** @var SiteRepository $siteRepository */
     private $siteRepository;
@@ -57,21 +53,21 @@ class TesterService extends AbstractService
         SiteRepository $siteRepository
     ) {
         parent::__construct($entityManager);
-        $this->siteRepository       = $siteRepository;
-        $this->personRepository     = $this->entityManager->getRepository(Person::class);
-        $this->motTestRepository    = $this->entityManager->getRepository(MotTest::class);
-        $this->objectHydrator       = $objectHydrator;
-        $this->authService          = $authService;
+        $this->siteRepository = $siteRepository;
+        $this->personRepository = $this->entityManager->getRepository(Person::class);
+        $this->motTestRepository = $this->entityManager->getRepository(MotTest::class);
+        $this->objectHydrator = $objectHydrator;
+        $this->authService = $authService;
         $this->specialNoticeService = $specialNoticeService;
-        $this->roleProviderService  = $roleProviderService;
-        $this->identityProvider     = $identityProvider;
+        $this->roleProviderService = $roleProviderService;
+        $this->identityProvider = $identityProvider;
     }
 
     public function getTesterData($id, $onlyVtsSlotBalance = false)
     {
         $this->authService->assertGranted(PermissionInSystem::TESTER_READ);
         if (!$this->authService->isAuthenticatedAsPerson($id) && !$this->authService->isGranted(PermissionInSystem::TESTER_READ_OTHERS)) {
-            throw new UnauthorisedException("You are not authorised to access this resource");
+            throw new UnauthorisedException('You are not authorised to access this resource');
         }
 
         $tester = $this->getTesterById($id);
@@ -142,6 +138,7 @@ class TesterService extends AbstractService
         if ($countOverdueSpecialNotices > 0) {
             return false;
         }
+
         return true;
     }
 
@@ -184,7 +181,7 @@ class TesterService extends AbstractService
      *
      * @param $personId
      *
-     * @return integer|null
+     * @return int|null
      */
     public function findInProgressTestIdForTester($personId)
     {
@@ -209,12 +206,14 @@ class TesterService extends AbstractService
 
     /**
      * Return in progress demo test number for the given person.
+     *
      * @see MotTestRepository::findInProgressDemoTestForPerson for different type of demo testst
      *
-     * @param int $personId
-     * @param boolean $routine To set the demo test type
+     * @param int  $personId
+     * @param bool $routine  To set the demo test type
      *
      * @return null|string
+     *
      * @throws UnauthorisedException
      */
     public function findInProgressDemoTestNumberForTester($personId, $routine = false)
@@ -226,14 +225,15 @@ class TesterService extends AbstractService
 
     /**
      * @param int $personId
-     * 
+     *
      * @return null|string
+     *
      * @throws UnauthorisedException
      */
     public function findInProgressNonMotTestNumberForVehicleExaminer($personId)
     {
         if (!$this->authService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)) {
-            throw new UnauthorisedException("Assertion failed. Cannot read in progress non-MOT test.");
+            throw new UnauthorisedException('Assertion failed. Cannot read in progress non-MOT test.');
         }
 
         return $this->motTestRepository->findInProgressNonMotTestNumberForPerson($personId);
@@ -254,7 +254,7 @@ class TesterService extends AbstractService
         $this->authService->assertGranted(PermissionInSystem::TESTER_READ);
         if (!$this->authService->isAuthenticatedAsPerson($testerId)
             && !$this->authService->isGranted(PermissionInSystem::TESTER_READ_OTHERS)) {
-            throw new UnauthorisedException("You are not authorised to access this resource");
+            throw new UnauthorisedException('You are not authorised to access this resource');
         }
         $result = [];
         $sites = $this->siteRepository->findForPersonIdWithRoleCodeAndStatusCode(
@@ -274,6 +274,7 @@ class TesterService extends AbstractService
             $siteArray['address'] = VtsAddressMapper::mapToVtsTitleString($site->getAddress());
             $result[] = $siteArray;
         }
+
         return $result;
     }
 
@@ -281,7 +282,7 @@ class TesterService extends AbstractService
     {
         if (!$this->authService->isGranted(PermissionInSystem::TESTER_READ)) {
             if ($personId != $this->identityProvider->getIdentity()->getUserId()) {
-                throw new UnauthorisedException("Assertion failed. Cannot read test in progress of other testers.");
+                throw new UnauthorisedException('Assertion failed. Cannot read test in progress of other testers.');
             }
         }
     }
@@ -295,7 +296,6 @@ class TesterService extends AbstractService
     {
         $testerData = [];
         if (!$onlyVtsSlotBalance) {
-
             $testerData = $this->objectHydrator->extract($tester);
 
             unset($testerData['roles']);
@@ -318,9 +318,9 @@ class TesterService extends AbstractService
         );
         /** @var \DvsaEntities\Repository\SiteRepository $siteRepository */
         $siteRepository = $this->entityManager->getRepository(\DvsaEntities\Entity\Site::class);
-        $sites          = $siteRepository->findForPersonWithRole($tester, $role, BusinessRoleStatusCode::ACTIVE);
+        $sites = $siteRepository->findForPersonWithRole($tester, $role, BusinessRoleStatusCode::ACTIVE);
         foreach ($sites as $vehicleTestingStation) {
-            $vehicleTestingStationData            = $this->objectHydrator->extract($vehicleTestingStation);
+            $vehicleTestingStationData = $this->objectHydrator->extract($vehicleTestingStation);
             $vehicleTestingStationData['address'] = VtsAddressMapper::mapToVtsTitleString(
                 $vehicleTestingStation->getAddress()
             );
@@ -329,17 +329,17 @@ class TesterService extends AbstractService
             // Set slots for backward compatibility (used to be associated with VTS rather than AE)
 
             if ($this->authService->isGranted(PermissionInSystem::SLOTS_VIEW)) {
-                $slots        = 0;
+                $slots = 0;
                 $slotsWarning = 0;
 
                 $organisation = $vehicleTestingStation->getOrganisation();
 
                 if (is_object($organisation)) {
-                    $slots        = $organisation->getSlotBalance();
+                    $slots = $organisation->getSlotBalance();
                     $slotsWarning = $organisation->getSlotsWarning();
                 }
 
-                $vehicleTestingStationData['slots']        = $slots;
+                $vehicleTestingStationData['slots'] = $slots;
                 $vehicleTestingStationData['slotsWarning'] = $slotsWarning;
             }
 
@@ -366,7 +366,7 @@ class TesterService extends AbstractService
             $testInProgress = $this->motTestRepository->findInProgressTestForPerson($tester->getId());
             if ($testInProgress) {
                 $testerData['testInProgress'] = [
-                    'id'  => $testInProgress->getId(),
+                    'id' => $testInProgress->getId(),
                     'vts' => [
                         'id' => $testInProgress->getVehicleTestingStation()->getId(),
                     ],

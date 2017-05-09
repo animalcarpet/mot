@@ -19,12 +19,10 @@ use DvsaCommon\Utility\AddressUtils;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Organisation\Authorisation\AuthorisedExaminerViewAuthorisation;
-use Organisation\Form\AeContactDetailsForm;
 use Organisation\Form\AeCreateForm;
 use Organisation\Presenter\AuthorisedExaminerPresenter;
 use Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel;
 use Organisation\ViewModel\Sidebar\AeOverviewSidebar;
-use Organisation\ViewModel\View\AEViewModel;
 use Organisation\ViewModel\View\Index\IndexViewModel;
 use SlotPurchase\Service\DirectDebitService;
 use Zend\Http\Request;
@@ -33,9 +31,7 @@ use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\Plugin\Url;
 
 /**
- * Class AuthorisedExaminerController
- *
- * @package Organisation\Controller
+ * Class AuthorisedExaminerController.
  */
 class AuthorisedExaminerController extends AbstractDvsaMotTestController
 {
@@ -104,7 +100,7 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
             $this->auth->assertGrantedAtOrganisation(PermissionAtOrganisation::AUTHORISED_EXAMINER_READ, $orgId);
         }
 
-        $this->layout("layout/layout-govuk.phtml");
+        $this->layout('layout/layout-govuk.phtml');
         $this->setHeadTitle('Authorised Examiner');
 
         $vm = $this->getIndexViewModel($orgId);
@@ -171,10 +167,10 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
         $this->presenter = new AuthorisedExaminerPresenter($organisation);
     }
 
-    private function getAuthorisedExaminerPresenter() {
+    private function getAuthorisedExaminerPresenter()
+    {
         return $this->presenter;
     }
-
 
     private function getBackButton($orgId)
     {
@@ -223,6 +219,7 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
 
     /**
      * @param int $orgId
+     *
      * @return AuthorisedExaminerViewAuthorisation
      */
     private function getAuthorisationForView($orgId)
@@ -263,7 +260,6 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
                     ->queryParam(self::SESSION_KEY, $sessionKey);
 
                 return $this->redirect()->toUrl($url);
-
             } catch (RestApplicationException $ve) {
                 $form->addErrorsFromApi($ve->getErrors());
             }
@@ -334,6 +330,7 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
             'areaOfficeDisplayName',
             $form->getAssignedAreaOffice()
         );
+
         return $viewModel;
     }
 
@@ -344,7 +341,6 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
 
         return ArrayUtils::asortBy($companyTypes);
     }
-
 
     /**
      * Asks the API for the list of Area Offices that a user can select
@@ -359,6 +355,7 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
         } catch (RestApplicationException $ve) {
             $this->addErrorMessages($ve->getDisplayMessages());
         }
+
         return [];
     }
 
@@ -380,26 +377,27 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
             $number = substr($aoName, 0, 2);
 
             if (ctype_digit($number)) {
-                foreach($aoOptions as $areaOffice) {
+                foreach ($aoOptions as $areaOffice) {
                     if ($number == $areaOffice['areaOfficeNumber']) {
-                        $result = (int)$number;
+                        $result = (int) $number;
                         break;
                     }
                 }
             }
         }
+
         return $result;
     }
 
     /**
-     * Prepare the view model for all the step of the create ae
+     * Prepare the view model for all the step of the create ae.
      *
      * @param ViewModel $view
-     * @param string $title
-     * @param string $subtitle
-     * @param null $breadcrumbs
-     * @param array $progress
-     * @param string $template
+     * @param string    $title
+     * @param string    $subtitle
+     * @param null      $breadcrumbs
+     * @param array     $progress
+     * @param string    $template
      *
      * @return ViewModel
      */

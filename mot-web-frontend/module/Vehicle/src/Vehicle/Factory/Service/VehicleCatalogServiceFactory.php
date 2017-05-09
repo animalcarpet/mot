@@ -11,6 +11,7 @@ class VehicleCatalogServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return VehicleCatalogService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

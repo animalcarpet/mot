@@ -16,13 +16,11 @@ use DvsaEntities\Entity\PhoneContactType;
 use OrganisationApi\Service\Mapper\AuthorisedExaminerListItemMapper;
 
 /**
- * Test functionality of AuthorisedExaminerListItemMapper class
- *
- * @package OrganisationApiTest\Mapper
+ * Test functionality of AuthorisedExaminerListItemMapper class.
  */
 class AuthorisedExaminerListItemMapperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  AuthorisedExaminerListItemMapper */
+    /** @var AuthorisedExaminerListItemMapper */
     private $mapper;
 
     public function setUp()

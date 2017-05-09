@@ -8,7 +8,6 @@ use DvsaCommon\Utility\Hydrator;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\OrganisationPositionHistory;
-use NotificationApi\Service\NotificationService;
 use NotificationApi\Service\PositionRemovalNotificationService;
 use NotificationApi\Service\UserOrganisationNotificationService;
 use OrganisationApi\Service\Mapper\OrganisationPositionMapper;

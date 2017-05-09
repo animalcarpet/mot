@@ -13,6 +13,7 @@ class PersonEmailControllerFactory implements FactoryInterface
     {
         $service = $serviceLocator->getServiceLocator();
         $duplicateEmailChecker = $service->get(DuplicateEmailCheckerService::class);
+
         return new PersonEmailController($duplicateEmailChecker);
     }
 }

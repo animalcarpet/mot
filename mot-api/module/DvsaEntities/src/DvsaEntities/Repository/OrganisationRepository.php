@@ -9,18 +9,17 @@ use DvsaEntities\Entity\OrganisationBusinessRole;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class OrganisationRepository
+ * Class OrganisationRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class OrganisationRepository extends AbstractMutableRepository
 {
-
     /**
      * @param $id
      *
      * @return Organisation
+     *
      * @throws NotFoundException
      */
     public function get($id)
@@ -38,6 +37,7 @@ class OrganisationRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return Organisation
+     *
      * @throws NotFoundException
      */
     public function getAuthorisedExaminer($id)
@@ -59,11 +59,11 @@ class OrganisationRepository extends AbstractMutableRepository
     {
         $this->getEntityManager()
             ->createQuery(
-                "UPDATE " . Organisation::class
-                . " o SET o.slotBalance = (o.slotBalance + :slotsIncrement) WHERE o.id = :id"
+                'UPDATE '.Organisation::class
+                .' o SET o.slotBalance = (o.slotBalance + :slotsIncrement) WHERE o.id = :id'
             )
-            ->setParameter("slotsIncrement", $increment)
-            ->setParameter("id", $id)->execute();
+            ->setParameter('slotsIncrement', $increment)
+            ->setParameter('id', $id)->execute();
     }
 
     public function findForPersonWithRole(Person $person, OrganisationBusinessRole $role, BusinessRoleStatus $status)
@@ -86,20 +86,23 @@ class OrganisationRepository extends AbstractMutableRepository
 
     /**
      * @param $siteId
+     *
      * @return Organisation
+     *
      * @throws NotFoundException
      */
     public function findOrganisationNameBySiteId($siteId)
     {
-        $qb = $this->createQueryBuilder("o")
+        $qb = $this->createQueryBuilder('o')
             ->select('o, a')
             ->join('o.sites', 's')
             ->join('o.authorisedExaminer', 'a')
-            ->where("s.id = :SITE_ID")
-            ->setParameter("SITE_ID", (int)$siteId)
+            ->where('s.id = :SITE_ID')
+            ->setParameter('SITE_ID', (int) $siteId)
             ->setMaxResults(1);
 
         $result = $qb->getQuery()->getResult();
+
         return !empty($result) ? $result[0] : null;
     }
 
@@ -113,6 +116,7 @@ class OrganisationRepository extends AbstractMutableRepository
 
     /**
      * @param int $aeId
+     *
      * @return int
      */
     public function getOrganisationSiteCount($aeId)
@@ -121,7 +125,7 @@ class OrganisationRepository extends AbstractMutableRepository
             ->select('count(sites.id)')
             ->join('organisation.sites', 'sites')
             ->where('organisation.id = :ORG_ID')
-            ->setParameter('ORG_ID', (int)$aeId);
+            ->setParameter('ORG_ID', (int) $aeId);
 
         return (int) $query->getQuery()->getSingleScalarResult();
     }

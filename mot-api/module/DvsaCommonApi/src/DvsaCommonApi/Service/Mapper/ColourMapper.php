@@ -7,8 +7,6 @@ use DvsaEntities\Entity\Colour;
 
 /**
  * Class map data of entity Colour to dto Colour.
- *
- * @package DvsaCommonApi\Service\Mapper
  */
 class ColourMapper extends AbstractApiMapper
 {

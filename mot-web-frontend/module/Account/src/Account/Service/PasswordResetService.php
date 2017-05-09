@@ -2,15 +2,10 @@
 
 namespace Account\Service;
 
-use DvsaClient\Entity\Person;
 use DvsaClient\MapperFactory;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
- * Class PasswordResetService
- *
- * @package Account\Service
+ * Class PasswordResetService.
  */
 class PasswordResetService
 {

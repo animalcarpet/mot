@@ -2,14 +2,12 @@
 
 namespace DashboardTest\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommonTest\TestUtils\XMock;
 use Dashboard\Factory\Controller\PasswordControllerFactory;
 use Dashboard\Controller\PasswordController;
 use Dashboard\Service\PasswordService;
 use Core\Service\MotFrontendIdentityProviderInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Dvsa\OpenAM\OpenAMClientInterface;
@@ -27,7 +25,7 @@ class PasswordControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         $serviceManager->setService('MotIdentityProvider', $identityProvider);

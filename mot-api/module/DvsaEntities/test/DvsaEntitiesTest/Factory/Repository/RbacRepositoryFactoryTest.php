@@ -22,7 +22,7 @@ class RbacRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
             EntityManager::class => $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock(),
             Cache::class => $this->getMock(Cache::class),
             'tokenService' => $this->getMock(TokenServiceInterface::class),
-            'config' => []
+            'config' => [],
         ];
     }
 

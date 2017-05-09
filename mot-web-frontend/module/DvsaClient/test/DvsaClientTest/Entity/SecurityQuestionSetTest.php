@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaClientTest\Entity;
 
 use DvsaClient\Entity\SecurityQuestionSet;
@@ -7,14 +8,14 @@ use DvsaEntities\Entity\SecurityQuestion;
 
 class SecurityQuestionSetTest extends \PHPUnit_Framework_TestCase
 {
-
     private static function generateQuestions($number, $group)
     {
         $res = [];
         while ($number--) {
-            $res [] = (new SecurityQuestionDto)->setDisplayOrder($number)->setGroup($group)
-                ->setText('Question ' . $number);
+            $res [] = (new SecurityQuestionDto())->setDisplayOrder($number)->setGroup($group)
+                ->setText('Question '.$number);
         }
+
         return $res;
     }
 
@@ -24,6 +25,7 @@ class SecurityQuestionSetTest extends \PHPUnit_Framework_TestCase
         $q2 = self::generateQuestions(3, 2);
         $merged = array_merge($q2, $q1);
         shuffle($merged);
+
         return $merged;
     }
 
@@ -64,7 +66,7 @@ class SecurityQuestionSetTest extends \PHPUnit_Framework_TestCase
     {
         foreach ($questions as $question) {
             if ($question->getGroup() !== $group) {
-                $this->fail('Questions are not group: ' . $group);
+                $this->fail('Questions are not group: '.$group);
             }
         }
     }

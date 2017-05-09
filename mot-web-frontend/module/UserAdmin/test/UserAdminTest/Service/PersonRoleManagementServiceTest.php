@@ -7,10 +7,8 @@ use DvsaClient\Mapper\UserAdminMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
-use DvsaCommon\Validator\EmailAddressValidator;
 use DvsaCommonTest\TestUtils\Auth\GrantAllAuthorisationServiceStub;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase as TestCase;
@@ -211,7 +209,7 @@ class PersonRoleManagementServiceTest extends TestCase
                         'DVSA-AREA-OFFICE-1',
                     ],
                 ],
-            ]
+            ],
         ];
 
         return $urlDataMap[$url];

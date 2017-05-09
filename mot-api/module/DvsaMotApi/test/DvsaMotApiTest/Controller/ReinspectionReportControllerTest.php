@@ -7,9 +7,7 @@ use DvsaCommon\Enum\EnfDecisionReinspectionOutcomeId;
 use DvsaMotApi\Controller\ReinspectionReportController;
 
 /**
- * Class ReinspectionReportControllerTest
- *
- * @package DvsaMotApiTest\Controller
+ * Class ReinspectionReportControllerTest.
  */
 class ReinspectionReportControllerTest extends AbstractMotApiControllerTestCase
 {

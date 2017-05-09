@@ -10,7 +10,7 @@ use DvsaCommon\HttpRestJson\Client;
 
 /**
  * unit tests for ApiDashboardResource
- * test data (mock for \Dashboard\Data\ApiDashboardResource)
+ * test data (mock for \Dashboard\Data\ApiDashboardResource).
  */
 class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,15 +53,15 @@ class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
 
         while ($aeCount--) {
             $aeList[] = [
-                'id'            => self::$aeCounter++,
-                'reference'     => 'AE000001',
-                'name'          => 'Coca Cola Motors',
-                'tradingAs'     => 'Pepsi Bikes',
-                'managerId'     => 1,
-                'slots'         => isset($data['slots']) ? $data['slots'] : 0,
+                'id' => self::$aeCounter++,
+                'reference' => 'AE000001',
+                'name' => 'Coca Cola Motors',
+                'tradingAs' => 'Pepsi Bikes',
+                'managerId' => 1,
+                'slots' => isset($data['slots']) ? $data['slots'] : 0,
                 'slotsWarnings' => 12,
-                'sites'         => self::getVts(isset($data['vtsCount']) ? $data['vtsCount'] : 1),
-                'position'      => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+                'sites' => self::getVts(isset($data['vtsCount']) ? $data['vtsCount'] : 1),
+                'position' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
             ];
         }
 
@@ -75,10 +75,10 @@ class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
 
         while ($vtsCount--) {
             $vtsList[] = [
-                'id'         => self::$siteCounter++,
-                'name'       => 'My Garage',
+                'id' => self::$siteCounter++,
+                'name' => 'My Garage',
                 'siteNumber' => 'V123443',
-                'positions'  => [],
+                'positions' => [],
             ];
         }
 
@@ -88,17 +88,17 @@ class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
     public static function getTestDataForUser($data = null)
     {
         return [
-            'hero'                => 'user',
+            'hero' => 'user',
             'authorisedExaminers' => [],
-            'specialNotice'       => [
-                'unreadCount'    => isset($data['unreadCount']) ? $data['unreadCount'] : 1,
+            'specialNotice' => [
+                'unreadCount' => isset($data['unreadCount']) ? $data['unreadCount'] : 1,
                 'daysLeftToView' => isset($data['daysLeftToView']) ? $data['daysLeftToView'] : 3,
-                'overdueCount'   => isset($data['overdueCount']) ? $data['overdueCount'] : 0,
+                'overdueCount' => isset($data['overdueCount']) ? $data['overdueCount'] : 0,
             ],
-            "overdueSpecialNotices" => array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0)),
-            'notifications'       => [],
+            'overdueSpecialNotices' => array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0)),
+            'notifications' => [],
             'unreadNotificationsCount' => 0,
-            'sites'               => [],
+            'sites' => [],
             'inProgressTestNumber' => '123456789012',
             'inProgressDemoTestNumber' => '210987654321',
             'inProgressTestTypeCode' => MotTestTypeCode::NORMAL_TEST,
@@ -112,15 +112,15 @@ class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
         return [
             'hero' => 'vehicle-examiner',
             'authorisedExaminers' => [],
-            'specialNotice'       => [
-                'unreadCount'    => 1,
+            'specialNotice' => [
+                'unreadCount' => 1,
                 'daysLeftToView' => 3,
-                'overdueCount'   => 0,
+                'overdueCount' => 0,
             ],
-            "overdueSpecialNotices" => array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0)),
-            'notifications'       => [],
+            'overdueSpecialNotices' => array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0)),
+            'notifications' => [],
             'unreadNotificationsCount' => 0,
-            'sites'               => [],
+            'sites' => [],
             'inProgressTestNumber' => '123456789012',
             'inProgressDemoTestNumber' => null,
             'inProgressNonMotTestNumber' => '210987654321',

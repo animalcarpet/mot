@@ -18,12 +18,11 @@ use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 use PersonApi\Service\PersonService;
 use PersonApi\Service\Validator\PersonalAuthorisationForMotTestingValidator;
 use DvsaEntities\Repository\AuthorisationForTestingMotStatusRepository;
-use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaEntities\Repository\VehicleClassRepository;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Unit tests for PersonalAuthorisationForMotTestingService
+ * Unit tests for PersonalAuthorisationForMotTestingService.
  */
 class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestCase
 {
@@ -76,11 +75,11 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
                 $this->returnValueMap(
                     [
                         [
-                            AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, $initialTrainingCode
+                            AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, $initialTrainingCode,
                         ],
                         [
-                            AuthorisationForTestingMotStatusCode::UNKNOWN, $unknownCode
-                        ]
+                            AuthorisationForTestingMotStatusCode::UNKNOWN, $unknownCode,
+                        ],
                     ]
                 )
             );
@@ -103,7 +102,7 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
         $this->setPersonAuthorisationForTesting(
             [
                 (new VehicleClass(1, 1))->setId(1),
-                (new VehicleClass(2, 2))->setId(2)
+                (new VehicleClass(2, 2))->setId(2),
             ]
         );
 
@@ -131,7 +130,6 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
         // And: I request to get the personalTestingAuthorisations
         $response = $this->getService()->getPersonalTestingAuthorisation(self::PERSON_ID);
 
-
         // Then: I should receive an array of Mot Authorisation Of Classes with what is expected
         $this->assertNotNull($response);
 
@@ -149,8 +147,10 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
     {
         // When: a person has all classes as for Group A (1 and 2)
         $vehicleClasses = [];
-        for ($i = 1; $i <= 7; $i++) {
-            if ($i == 6) continue;
+        for ($i = 1; $i <= 7; ++$i) {
+            if ($i == 6) {
+                continue;
+            }
             $vehicleClasses[] = (new VehicleClass($i, $i))->setId($i)->setCode($i);
         }
 
@@ -195,8 +195,10 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
     {
         // When: a person has all classes as for Group A (1 and 2)
         $vehicleClasses = [];
-        for ($i = 1; $i <= 7; $i++) {
-            if ($i == 6) continue;
+        for ($i = 1; $i <= 7; ++$i) {
+            if ($i == 6) {
+                continue;
+            }
             $vehicleClasses[] = (new VehicleClass($i, $i))->setId($i)->setCode($i);
         }
 
@@ -254,7 +256,7 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
     }
 
     /**
-     * Negative Scenario - Updating Group A with an invalid result
+     * Negative Scenario - Updating Group A with an invalid result.
      */
     public function testUpdatePersonAuthorisationForTestingMotForGroupAAsAInvalidResult()
     {
@@ -262,8 +264,10 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
 
         // When: a person has all classes as for Group A (1 and 2)
         $vehicleClasses = [];
-        for ($i = 1; $i <= 7; $i++) {
-            if ($i == 6) continue;
+        for ($i = 1; $i <= 7; ++$i) {
+            if ($i == 6) {
+                continue;
+            }
             $vehicleClasses[] = (new VehicleClass($i, $i))->setId($i)->setCode($i);
         }
 
@@ -292,7 +296,7 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
     }
 
     /**
-     * Negative Scenario - Updating Group A with an invalid result
+     * Negative Scenario - Updating Group A with an invalid result.
      */
     public function testUpdatePersonAuthorisationForTestingMotForGroupBAsAInvalidResult()
     {
@@ -300,8 +304,10 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
 
         // When: a person has all classes as for Group B (3-5, 7)
         $vehicleClasses = [];
-        for ($i = 1; $i <= 7; $i++) {
-            if ($i == 6) continue;
+        for ($i = 1; $i <= 7; ++$i) {
+            if ($i == 6) {
+                continue;
+            }
             $vehicleClasses[] = (new VehicleClass($i, $i))->setId($i)->setCode($i);
         }
 
@@ -455,7 +461,7 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
                                                   )
             );
 
-            $id++;
+            ++$id;
         }
     }
 
@@ -465,7 +471,7 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
 
         foreach (VehicleClassCode::getAll() as $statusCode) {
             $returnValueMap[] = [
-                $statusCode, (new VehicleClass($statusCode, $statusCode))
+                $statusCode, (new VehicleClass($statusCode, $statusCode)),
             ];
         }
 
@@ -496,5 +502,4 @@ class PersonalAuthorisationForMotTestingServiceTest extends AbstractServiceTestC
             $this->authenticationService
         );
     }
-
 }

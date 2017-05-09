@@ -1,13 +1,13 @@
 <?php
+
 namespace DvsaCommonApi\Logger;
 
 use Doctrine\DBAL\Logging\SQLLogger;
 
 /**
- * Class ZendSqlLogger
+ * Class ZendSqlLogger.
  *
  * Uses the injected Zend Framework 2 logger to log Doctrine 2 SQL.
- * @package DvsaCommonApi\Logger
  */
 class ZendSqlLogger implements SQLLogger
 {
@@ -23,11 +23,11 @@ class ZendSqlLogger implements SQLLogger
      */
     public function startQuery($sql, array $params = null, array $types = null)
     {
-        $this->zf2Logger->debug("SQL [" . $sql . "]");
+        $this->zf2Logger->debug('SQL ['.$sql.']');
 
         // TODO Need to avoid performance hit if logging disabled
         if ($params) {
-            $this->zf2Logger->debug("params [" . print_r($params, true) . "]");
+            $this->zf2Logger->debug('params ['.print_r($params, true).']');
         }
     }
 

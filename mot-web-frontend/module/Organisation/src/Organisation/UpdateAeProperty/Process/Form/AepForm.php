@@ -18,10 +18,9 @@ use Zend\Form\Form;
 
 class AepForm extends Form
 {
-
-    const FIELD_DOB_DAY = "dobDay";
-    const FIELD_DOB_MONTH = "dobMonth";
-    const FIELD_DOB_YEAR = "dobYear";
+    const FIELD_DOB_DAY = 'dobDay';
+    const FIELD_DOB_MONTH = 'dobMonth';
+    const FIELD_DOB_YEAR = 'dobYear';
 
     public function __construct()
     {
@@ -73,7 +72,7 @@ class AepForm extends Form
 
         $this->add((new Text())
             ->setName(self::FIELD_DOB_YEAR)
-            ->setLabel("Year")
+            ->setLabel('Year')
             ->setAttribute('id', 'dob-year')
             ->setAttribute('required', true)
             ->setAttribute('group', true)
@@ -169,10 +168,10 @@ class AepForm extends Form
         $day = $this->getDobDayElement()->getValue();
 
         if (empty($year) && empty($month) && empty($day)) {
-            return "";
+            return '';
         }
 
-        return join("-", [$year, $month, $day]);
+        return implode('-', [$year, $month, $day]);
     }
 
     private function showLabelOnError($field, $label)

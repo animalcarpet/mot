@@ -6,11 +6,10 @@ use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionExecutorInterface;
 
 /**
- * Class TestTransactionExecutor
+ * Class TestTransactionExecutor.
  */
 class TestTransactionExecutor implements TransactionExecutorInterface
 {
-
     private static $entityManager;
 
     private $flushed = false;
@@ -20,7 +19,7 @@ class TestTransactionExecutor implements TransactionExecutorInterface
         if (!($instance instanceof TransactionAwareInterface)) {
             throw new \InvalidArgumentException(
                 "Instance $instance does not implement: "
-                . TransactionAwareInterface::class
+                .TransactionAwareInterface::class
             );
         }
     }
@@ -28,10 +27,11 @@ class TestTransactionExecutor implements TransactionExecutorInterface
     public static function inject($instance, $entityManger = null)
     {
         self::assertImplementsInterface($instance);
-        /** @var TransactionAwareInterface $instance */
-        $instance->setTransactionExecutor(new TestTransactionExecutor());
+        /* @var TransactionAwareInterface $instance */
+        $instance->setTransactionExecutor(new self());
 
         static::$entityManager = $entityManger;
+
         return $instance;
     }
 
@@ -51,6 +51,7 @@ class TestTransactionExecutor implements TransactionExecutorInterface
         /** @var TransactionAwareInterface $instance */
         /** @var TestTransactionExecutor $executor */
         $executor = $instance->getTransactionExecutor();
+
         return $executor->flushed;
     }
 

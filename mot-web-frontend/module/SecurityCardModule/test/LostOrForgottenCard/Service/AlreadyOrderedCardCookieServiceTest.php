@@ -21,7 +21,7 @@ class AlreadyOrderedCardCookieServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->motIdentityProvider =  XMock::of(MotIdentityProviderInterface::class);
+        $this->motIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
     }
 
     public function testCookieMatchesForUserShouldReturnTrue()
@@ -29,8 +29,8 @@ class AlreadyOrderedCardCookieServiceTest extends \PHPUnit_Framework_TestCase
         $this->withIdentity(self::USER_ID);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyOrderedCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
-        $request->getHeaders()->addHeader(new Cookie([AlreadyOrderedCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
+        $request->setPost(new Parameters([AlreadyOrderedCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyOrderedCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
 
         $this->assertTrue($this->createService()->hasSeenOrderLandingPage($request));
     }
@@ -40,8 +40,8 @@ class AlreadyOrderedCardCookieServiceTest extends \PHPUnit_Framework_TestCase
         $this->withIdentity(7838918293);
         $request = new Request();
         $request->setMethod('POST');
-        $request->setPost(new Parameters([AlreadyOrderedCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
-        $request->getHeaders()->addHeader(new Cookie([AlreadyOrderedCardCookieService::COOKIE_NAME . self::USER_ID => 1]));
+        $request->setPost(new Parameters([AlreadyOrderedCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyOrderedCardCookieService::COOKIE_NAME.self::USER_ID => 1]));
 
         $this->assertFalse($this->createService()->hasSeenOrderLandingPage($request));
     }
@@ -60,14 +60,14 @@ class AlreadyOrderedCardCookieServiceTest extends \PHPUnit_Framework_TestCase
         $this->withIdentity(self::USER_ID);
         $response = new Response();
 
-        $userPath = '/'. LostOrForgottenCardController::START_ROUTE;
+        $userPath = '/'.LostOrForgottenCardController::START_ROUTE;
 
         $this->createService()->addAlreadyOrderedCardCookie($response);
 
-        /** @var SetCookie $setCookieHeader  */
+        /** @var SetCookie $setCookieHeader */
         $setCookieHeader = $response->getCookie()[0];
 
-        $this->assertEquals(AlreadyOrderedCardCookieService::COOKIE_NAME . self::USER_ID, $setCookieHeader->getName());
+        $this->assertEquals(AlreadyOrderedCardCookieService::COOKIE_NAME.self::USER_ID, $setCookieHeader->getName());
         $this->assertEquals($userPath, $setCookieHeader->getPath());
         $this->assertEquals(true, $setCookieHeader->isSecure());
     }
@@ -84,8 +84,8 @@ class AlreadyOrderedCardCookieServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($identity);
     }
 
-
-    private function createService() {
+    private function createService()
+    {
         return new AlreadyOrderedCardCookieService(
             $this->motIdentityProvider
         );

@@ -5,11 +5,10 @@ namespace Application\Navigation\Breadcrumbs\Handler;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilder;
 
 /**
- * Resolves organisation name based on site id
+ * Resolves organisation name based on site id.
  */
 class OrganisationNameBySiteResolver extends BreadcrumbsPartResolver
 {
-
     public function __construct($client, $urlHelper)
     {
         $this->client = $client;

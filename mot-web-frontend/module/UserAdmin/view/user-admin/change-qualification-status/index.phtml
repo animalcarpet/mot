@@ -1,5 +1,5 @@
 <?php
-use DvsaCommon\Constants\FeatureToggle;
+
 ?>
 
 <form method="post" action="<?php
@@ -18,13 +18,17 @@ echo $this->url(
 
                 <?php
                     $index = 0;
-                    foreach($statusLookup as $code => $description):
+                    foreach ($statusLookup as $code => $description):
                 ?>
-                    <label class="block-label <?php if($status === $code) { echo 'selected'; }?>" for="<?php echo 'radioStandard' . $index ?>">
-                        <input type="radio" value="<?php echo $code ?>" name="qualificationStatus" id="<?php echo 'radioStandard' . $index ?>" aria-expanded="false" <?php if($status === $code) { echo 'checked=checked'; }?>>
+                    <label class="block-label <?php if ($status === $code) {
+                    echo 'selected';
+                }?>" for="<?php echo 'radioStandard'.$index ?>">
+                        <input type="radio" value="<?php echo $code ?>" name="qualificationStatus" id="<?php echo 'radioStandard'.$index ?>" aria-expanded="false" <?php if ($status === $code) {
+                    echo 'checked=checked';
+                }?>>
                         <?php echo $description?>
                     </label>
-                    <?php $index++; ?>
+                    <?php ++$index; ?>
                 <?php endforeach ?>
 
                 

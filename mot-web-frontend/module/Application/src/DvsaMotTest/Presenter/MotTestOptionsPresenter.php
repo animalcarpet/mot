@@ -26,7 +26,7 @@ class MotTestOptionsPresenter
             return $this->motTestOptions->getVehicleMake();
         }
 
-        return join(' ', [$this->motTestOptions->getVehicleMake(), $this->motTestOptions->getVehicleModel()]);
+        return implode(' ', [$this->motTestOptions->getVehicleMake(), $this->motTestOptions->getVehicleModel()]);
     }
 
     /**
@@ -50,7 +50,7 @@ class MotTestOptionsPresenter
      */
     public function isMotTestRetest()
     {
-        return ($this->motTestOptions->getMotTestTypeDto()->getCode() === MotTestTypeCode::RE_TEST);
+        return $this->motTestOptions->getMotTestTypeDto()->getCode() === MotTestTypeCode::RE_TEST;
     }
 
     /**
@@ -79,11 +79,13 @@ class MotTestOptionsPresenter
 
     /**
      * @param mixed $motTestNumber
+     *
      * @return MotTestOptionsPresenter
      */
     public function setMotTestNumber($motTestNumber)
     {
         $this->motTestNumber = $motTestNumber;
+
         return $this;
     }
 

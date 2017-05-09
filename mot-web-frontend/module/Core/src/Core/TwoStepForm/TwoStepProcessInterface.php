@@ -12,26 +12,27 @@ interface TwoStepProcessInterface extends SingleStepProcessInterface
      * for user to review before completing the form.
      *
      * @param array $formData
+     *
      * @return GdsTable
      */
     public function transformFormIntoGdsTable(array $formData);
 
     /**
-     * The title that will be displayed on the review page
+     * The title that will be displayed on the review page.
      *
      * @return string
      */
     public function getReviewPageTitle();
 
     /**
-     * The page lede that will be displayed on the review page
+     * The page lede that will be displayed on the review page.
      *
      * @return string
      */
     public function getReviewPageLede();
 
     /**
-     * The text that will be displayed on the review page button text
+     * The text that will be displayed on the review page button text.
      *
      * @return string
      */
@@ -41,12 +42,14 @@ interface TwoStepProcessInterface extends SingleStepProcessInterface
      * @param $formUuid
      * @param $formData
      * @param GdsTable $table
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildReviewStepViewModel($formUuid, $formData, GdsTable $table);
 
     /**
      * @param $formUuid
+     *
      * @return AbstractRedirectActionResult $authorisationService
      */
     public function redirectToReviewPage($formUuid);
@@ -67,7 +70,7 @@ interface TwoStepProcessInterface extends SingleStepProcessInterface
     /**
      * Does the process have a confirmation page at the end.
      * If true, will redirect to the confirmation page on the process,
-     * if false will redirect to start with success message
+     * if false will redirect to start with success message.
      *
      * @return bool
      */

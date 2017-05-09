@@ -10,7 +10,7 @@ use MailerApi\Logic\UsernameCreator;
 use MailerApi\Service\MailerService;
 use MailerApi\Service\TemplateResolverService;
 
-class UsernameCreatorTest extends \PHPUnit_Framework_TestCase
+class UserNameCreatorTest extends \PHPUnit_Framework_TestCase
 {
     const FAKE_USERNAME = 'Fred0001';
     const FAKE_FIRSTNAME = 'Fred';
@@ -18,7 +18,7 @@ class UsernameCreatorTest extends \PHPUnit_Framework_TestCase
     public function testSetPerson()
     {
         $config = [
-            AbstractMailerLogic::CONFIG_KEY => []
+            AbstractMailerLogic::CONFIG_KEY => [],
         ];
         $person = $this->getPersonMock();
         $obj = new UsernameCreator(
@@ -35,7 +35,7 @@ class UsernameCreatorTest extends \PHPUnit_Framework_TestCase
         $person = $this->getPersonMock();
 
         $allData = [
-            'test' => __METHOD__
+            'test' => __METHOD__,
         ];
 
         $obj = XMock::of(UsernameCreator::class, ['renderTemplate']);
@@ -52,13 +52,13 @@ class UsernameCreatorTest extends \PHPUnit_Framework_TestCase
         $person = $this->getPersonMock();
 
         $extraData = [
-            'test' => __METHOD__
+            'test' => __METHOD__,
         ];
 
         $allData = array_merge([
             'userName' => $person->getUsername(),
             'firstName' => $person->getFirstName(),
-            'signInUrl' => AccountUrlBuilderWeb::signIn()
+            'signInUrl' => AccountUrlBuilderWeb::signIn(),
         ], $extraData);
 
         $obj = XMock::of(UsernameCreator::class, ['renderTemplate']);
@@ -80,6 +80,7 @@ class UsernameCreatorTest extends \PHPUnit_Framework_TestCase
         $person->expects($this->any())
             ->method('getFirstName')
             ->willReturn(self::FAKE_FIRSTNAME);
+
         return $person;
     }
 }

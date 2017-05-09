@@ -16,7 +16,7 @@ class RegisterCardHardStopCondition
     private $authorisationService;
 
     /**
-     * @var FeatureToggles $featureToggles
+     * @var FeatureToggles
      */
     private $featureToggles;
 
@@ -24,7 +24,6 @@ class RegisterCardHardStopCondition
      * @var MotIdentityProviderInterface
      */
     private $identityProvider;
-
 
     public function __construct(
         FeatureToggles $featureToggles,

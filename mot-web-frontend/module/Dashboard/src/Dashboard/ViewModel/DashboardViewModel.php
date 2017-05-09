@@ -43,12 +43,12 @@ class DashboardViewModel
     /**
      * DashboardViewModel constructor.
      *
-     * @param HeroActionViewModel          $heroActionViewModel
-     * @param NotificationsViewModel       $notificationsViewModel
-     * @param TrainingTestViewModel        $trainingTestViewModel
-     * @param NonMotTestViewModel          $nonMotTestViewModel
-     * @param AuthorisedExaminersViewModel $authorisedExaminersViewModel
-     * @param SpecialNoticesViewModel $specialNoticesViewModel
+     * @param HeroActionViewModel                   $heroActionViewModel
+     * @param NotificationsViewModel                $notificationsViewModel
+     * @param TrainingTestViewModel                 $trainingTestViewModel
+     * @param NonMotTestViewModel                   $nonMotTestViewModel
+     * @param AuthorisedExaminersViewModel          $authorisedExaminersViewModel
+     * @param SpecialNoticesViewModel               $specialNoticesViewModel
      * @param AuthorisedExaminerManagementViewModel $authorisedExaminerManagementViewModel
      */
     public function __construct(
@@ -194,7 +194,7 @@ class DashboardViewModel
      */
     public function setShowAuthorisedExaminerManagement($showAuthorisedExaminerManagement)
     {
-        $this->showAuthorisedExaminerManagement =  $showAuthorisedExaminerManagement;
+        $this->showAuthorisedExaminerManagement = $showAuthorisedExaminerManagement;
     }
 
     /**

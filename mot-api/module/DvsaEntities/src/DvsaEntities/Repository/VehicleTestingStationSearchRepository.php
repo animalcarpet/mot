@@ -6,9 +6,10 @@ use Doctrine\ORM\EntityRepository;
 use DvsaEntities\DqlBuilder\SiteSearchParamDqlBuilder;
 
 /**
- * VehicleTestingStationRepository
+ * VehicleTestingStationRepository.
  *
  * Custom Doctrine Repository for reusable DQL queries
+ *
  * @codeCoverageIgnore
  */
 class VehicleTestingStationSearchRepository extends EntityRepository

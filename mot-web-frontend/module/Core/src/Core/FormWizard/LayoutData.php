@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\FormWizard;
 
 class LayoutData
@@ -18,11 +19,13 @@ class LayoutData
 
     /**
      * @param string $pageTitle
+     *
      * @return LayoutData
      */
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $pageTitle;
+
         return $this;
     }
 
@@ -36,11 +39,13 @@ class LayoutData
 
     /**
      * @param string $pageSubTitle
+     *
      * @return LayoutData
      */
     public function setPageSubTitle($pageSubTitle)
     {
         $this->pageSubTitle = $pageSubTitle;
+
         return $this;
     }
 
@@ -54,11 +59,13 @@ class LayoutData
 
     /**
      * @param string $pageLede
+     *
      * @return LayoutData
      */
     public function setPageLede($pageLede)
     {
         $this->pageLede = $pageLede;
+
         return $this;
     }
 
@@ -72,11 +79,13 @@ class LayoutData
 
     /**
      * @param array $breadcrumbs
+     *
      * @return LayoutData
      */
     public function setBreadcrumbs(array $breadcrumbs)
     {
         $this->breadcrumbs = $breadcrumbs;
+
         return $this;
     }
 }

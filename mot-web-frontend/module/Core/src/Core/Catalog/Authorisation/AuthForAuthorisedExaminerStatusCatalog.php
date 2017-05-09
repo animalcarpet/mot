@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Core\Catalog\Authorisation;
-
 
 use Application\Service\CatalogService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -22,6 +20,7 @@ class AuthForAuthorisedExaminerStatusCatalog implements AutoWireableInterface
 
     /**
      * @param $code
+     *
      * @return AuthForAuthorisedExaminerStatus
      */
     public function getByCode($code)
@@ -31,12 +30,13 @@ class AuthForAuthorisedExaminerStatusCatalog implements AutoWireableInterface
 
     /**
      * @param $name
+     *
      * @return AuthForAuthorisedExaminerStatus|null
      */
     public function getByName($name)
     {
         foreach ($this->authForAuthorisedExaminerStatus->value() as $authStatus) {
-            if($authStatus->getName() == $name){
+            if ($authStatus->getName() == $name) {
                 return $authStatus;
             }
         }
@@ -52,6 +52,7 @@ class AuthForAuthorisedExaminerStatusCatalog implements AutoWireableInterface
 
     /**
      * @param CatalogService $catalog
+     *
      * @return AuthForAuthorisedExaminerStatus[]
      */
     private function buildAuthForAuthorisedExaminerStatusCatalog(CatalogService $catalog)

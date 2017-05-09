@@ -6,7 +6,7 @@ use PersonApi\Service\Validator\PersonalDetailsValidator;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class PersonalDetailsValidatorTest
+ * Class PersonalDetailsValidatorTest.
  */
 class PersonalDetailsValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -55,7 +55,7 @@ class PersonalDetailsValidatorTest extends PHPUnit_Framework_TestCase
     public function testValidateEmailConfirmationDoesntMatch()
     {
         $data = $this->getCorrectData();
-        $data['emailConfirmation'] = $data['email'] . 'doesnotmatch';
+        $data['emailConfirmation'] = $data['email'].'doesnotmatch';
 
         $this->callValidator($data);
     }
@@ -75,22 +75,22 @@ class PersonalDetailsValidatorTest extends PHPUnit_Framework_TestCase
     private function getCorrectData()
     {
         return [
-            'title'                => 'Mr',
-            'firstName'            => 'John',
-            'middleName'           => 'Adam',
-            'surname'              => 'Smith',
-            'gender'               => 'Male',
+            'title' => 'Mr',
+            'firstName' => 'John',
+            'middleName' => 'Adam',
+            'surname' => 'Smith',
+            'gender' => 'Male',
             'drivingLicenceNumber' => '1232142314',
             'drivingLicenceRegion' => 'oth',
-            'addressLine1'         => 'Ulica',
-            'addressLine2'         => 'Sezamkowa',
-            'addressLine3'         => '34',
-            'town'                 => 'Berlin',
-            'postcode'             => '23-232',
-            'email'                => 'persondetailsvalidatortest@dvsa.com',
-            'emailConfirmation'    => 'persondetailsvalidatortest@dvsa.com',
-            'phoneNumber'          => '+32324-324-324-234',
-            'dateOfBirth'          => '1980-05-05',
+            'addressLine1' => 'Ulica',
+            'addressLine2' => 'Sezamkowa',
+            'addressLine3' => '34',
+            'town' => 'Berlin',
+            'postcode' => '23-232',
+            'email' => 'persondetailsvalidatortest@dvsa.com',
+            'emailConfirmation' => 'persondetailsvalidatortest@dvsa.com',
+            'phoneNumber' => '+32324-324-324-234',
+            'dateOfBirth' => '1980-05-05',
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Service\Mapper;
 
 use DvsaCommon\Utility\Hydrator;
@@ -7,9 +8,7 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use OrganisationApi\Service\Mapper\PersonMapper;
 
 /**
- * Class SiteBusinessRoleMapMapper
- *
- * @package SiteApi\Service\Mapper
+ * Class SiteBusinessRoleMapMapper.
  */
 class SiteBusinessRoleMapMapper
 {

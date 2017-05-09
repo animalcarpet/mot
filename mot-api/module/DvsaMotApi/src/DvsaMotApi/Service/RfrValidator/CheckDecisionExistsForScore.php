@@ -6,9 +6,7 @@ use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class CheckDecisionAndCategoryValuesExistForScore
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class CheckDecisionAndCategoryValuesExistForScore.
  */
 class CheckDecisionExistsForScore extends BaseValidator
 {
@@ -27,7 +25,7 @@ class CheckDecisionExistsForScore extends BaseValidator
             self::SCORE_DEFECT_MISSED_VALUE,
             self::SCORE_NOT_TESTABLE_VALUE,
             self::SCORE_DAMAGE_MISSED_VALUE,
-            self::SCORE_RISK_INJURY_MISSED_VALUE
+            self::SCORE_RISK_INJURY_MISSED_VALUE,
         ];
 
         if (in_array($this->values['score'], $checkedScores)
@@ -41,6 +39,7 @@ class CheckDecisionExistsForScore extends BaseValidator
                 ['mappedRfrs' => [$this->mappedRfrId => ['decision' => null]]]
             );
         }
+
         return $this->error === null;
     }
 }

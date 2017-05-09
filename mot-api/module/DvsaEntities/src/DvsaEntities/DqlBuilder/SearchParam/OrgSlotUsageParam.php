@@ -6,11 +6,10 @@ use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * class OrgSlotUsageParam
+ * class OrgSlotUsageParam.
  */
 class OrgSlotUsageParam extends SearchParam
 {
-
     protected $organisationId;
     protected $dateFrom = null;
     protected $dateTo = null;
@@ -30,11 +29,13 @@ class OrgSlotUsageParam extends SearchParam
 
     /**
      * @param mixed $organisationId
+     *
      * @return $this
      */
     public function setOrganisationId($organisationId)
     {
         $this->organisationId = $organisationId;
+
         return $this;
     }
 
@@ -54,6 +55,7 @@ class OrgSlotUsageParam extends SearchParam
     public function setDateFrom($dateFrom)
     {
         $this->dateFrom = $dateFrom;
+
         return $this;
     }
 
@@ -73,6 +75,7 @@ class OrgSlotUsageParam extends SearchParam
     public function setDateTo($dateTo)
     {
         $this->dateTo = $dateTo;
+
         return $this;
     }
 
@@ -86,11 +89,13 @@ class OrgSlotUsageParam extends SearchParam
 
     /**
      * @param mixed $searchText
+     *
      * @return $this
      */
     public function setSearchText($searchText)
     {
         $this->searchText = $searchText;
+
         return $this;
     }
 
@@ -110,6 +115,7 @@ class OrgSlotUsageParam extends SearchParam
     public function setSortColumnId($sortColumnID)
     {
         $this->sortColumnId = $sortColumnID;
+
         return $this;
     }
 
@@ -117,6 +123,7 @@ class OrgSlotUsageParam extends SearchParam
     {
         parent::loadStandardDataTableValuesFromRequest($request);
         $this->setSortColumnId($request->getQuery(SearchParamConst::SORT_COLUMN_ID));
+
         return $this;
     }
 
@@ -125,6 +132,7 @@ class OrgSlotUsageParam extends SearchParam
         if (array_search($this->getSortColumnId(), $this->sortWhiteList) !== false) {
             return $this->getSortColumnId();
         }
+
         return self::DEFAULT_SORT_COL;
     }
 }

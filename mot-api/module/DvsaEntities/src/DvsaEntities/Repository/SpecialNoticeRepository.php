@@ -13,13 +13,12 @@ use DvsaEntities\Entity\SpecialNotice;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 
 /**
- * Class SpecialNoticeRepository
- * @package DvsaEntities\Repository
+ * Class SpecialNoticeRepository.
+ *
  * @codeCoverageIgnore
  */
 class SpecialNoticeRepository extends AbstractMutableRepository
 {
-
     const GET_LATEST_ISSUE_NUMBER_QUERY =
         'SELECT MAX(snc.issueNumber) FROM DvsaEntities\Entity\SpecialNoticeContent snc WHERE snc.issueYear = ?1';
 
@@ -67,23 +66,24 @@ class SpecialNoticeRepository extends AbstractMutableRepository
 
     /**
      * @param string $username
+     *
      * @return SpecialNotice[]
      */
     public function getAllCurrentSpecialNoticesForUser($username)
     {
         $qb = $this
-            ->createQueryBuilder("sn")
-            ->addSelect(["c"])
-            ->innerJoin("sn.content", "c")
-            ->where("c.isPublished = :isPublished")
-            ->andWhere("sn.username = :username")
-            ->andWhere("c.externalPublishDate <= :publishDate OR c.internalPublishDate <= :publishDate")
-            ->andWhere("sn.isDeleted = :isDeleted")
-            ->andWhere("c.isDeleted = :isDeleted")
-            ->setParameter("isPublished", 1)
-            ->setParameter("username", $username)
-            ->setParameter("publishDate", new \DateTime())
-            ->setParameter("isDeleted", 0)
+            ->createQueryBuilder('sn')
+            ->addSelect(['c'])
+            ->innerJoin('sn.content', 'c')
+            ->where('c.isPublished = :isPublished')
+            ->andWhere('sn.username = :username')
+            ->andWhere('c.externalPublishDate <= :publishDate OR c.internalPublishDate <= :publishDate')
+            ->andWhere('sn.isDeleted = :isDeleted')
+            ->andWhere('c.isDeleted = :isDeleted')
+            ->setParameter('isPublished', 1)
+            ->setParameter('username', $username)
+            ->setParameter('publishDate', new \DateTime())
+            ->setParameter('isDeleted', 0)
         ;
 
         return $qb->getQuery()->getResult();
@@ -92,22 +92,22 @@ class SpecialNoticeRepository extends AbstractMutableRepository
     public function getAmountOfOverdueSpecialNoticesForClasses($username)
     {
         $qb = $this
-            ->createQueryBuilder("sn")
-            ->select("a.vehicleClassId AS vehicleClass", "COUNT(sn.id) as amount")
-            ->innerJoin("sn.content", "c")
-            ->innerJoin("c.audience", "a")
-            ->where("c.isPublished = :isPublished")
-            ->andWhere("sn.username = :username")
-            ->andWhere("c.expiryDate <= :expiryDate")
-            ->andWhere("sn.isAcknowledged = :isAcknowledged")
-            ->andWhere("sn.isDeleted = :isDeleted")
-            ->andWhere("c.isDeleted = :isDeleted")
-            ->groupBy("a.vehicleClassId")
-            ->setParameter("isPublished", 1)
-            ->setParameter("username", $username)
-            ->setParameter("expiryDate", new \DateTime())
-            ->setParameter("isAcknowledged", 0)
-            ->setParameter("isDeleted", 0)
+            ->createQueryBuilder('sn')
+            ->select('a.vehicleClassId AS vehicleClass', 'COUNT(sn.id) as amount')
+            ->innerJoin('sn.content', 'c')
+            ->innerJoin('c.audience', 'a')
+            ->where('c.isPublished = :isPublished')
+            ->andWhere('sn.username = :username')
+            ->andWhere('c.expiryDate <= :expiryDate')
+            ->andWhere('sn.isAcknowledged = :isAcknowledged')
+            ->andWhere('sn.isDeleted = :isDeleted')
+            ->andWhere('c.isDeleted = :isDeleted')
+            ->groupBy('a.vehicleClassId')
+            ->setParameter('isPublished', 1)
+            ->setParameter('username', $username)
+            ->setParameter('expiryDate', new \DateTime())
+            ->setParameter('isAcknowledged', 0)
+            ->setParameter('isDeleted', 0)
         ;
 
         $results = $qb->getQuery()->getScalarResult();
@@ -117,35 +117,37 @@ class SpecialNoticeRepository extends AbstractMutableRepository
 
         $data = [];
         foreach ($results as $result) {
-            $data[$result["vehicleClass"]] = $result["amount"];
+            $data[$result['vehicleClass']] = $result['amount'];
         }
 
         return array_replace($default, $data);
     }
 
     /**
-     * @param int $id
+     * @param int    $id
      * @param string $username
+     *
      * @return SpecialNotice
+     *
      * @throws NotFoundException
      */
     public function getCurrentSpecialNoticeForUser($id, $username)
     {
         $qb = $this
-            ->createQueryBuilder("sn")
-            ->addSelect(["c"])
-            ->innerJoin("sn.content", "c")
-            ->where("c.isPublished = :isPublished")
-            ->andWhere("sn.username = :username")
-            ->andWhere("sn.id = :id")
-            ->andWhere("c.externalPublishDate <= :publishDate OR c.internalPublishDate <= :publishDate")
-            ->andWhere("sn.isDeleted = :isDeleted")
-            ->andWhere("c.isDeleted = :isDeleted")
-            ->setParameter("publishDate", new \DateTime())
-            ->setParameter("username", $username)
-            ->setParameter("id", $id)
-            ->setParameter("isPublished", 1)
-            ->setParameter("isDeleted", 0)
+            ->createQueryBuilder('sn')
+            ->addSelect(['c'])
+            ->innerJoin('sn.content', 'c')
+            ->where('c.isPublished = :isPublished')
+            ->andWhere('sn.username = :username')
+            ->andWhere('sn.id = :id')
+            ->andWhere('c.externalPublishDate <= :publishDate OR c.internalPublishDate <= :publishDate')
+            ->andWhere('sn.isDeleted = :isDeleted')
+            ->andWhere('c.isDeleted = :isDeleted')
+            ->setParameter('publishDate', new \DateTime())
+            ->setParameter('username', $username)
+            ->setParameter('id', $id)
+            ->setParameter('isPublished', 1)
+            ->setParameter('isDeleted', 0)
         ;
 
         $sn = $qb->getQuery()->getOneOrNullResult();
@@ -158,27 +160,29 @@ class SpecialNoticeRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param int $contentId
+     * @param int    $contentId
      * @param string $username
+     *
      * @return SpecialNotice
+     *
      * @throws NotFoundException
      */
     public function getCurrentSpecialNoticeForUserByContentId($contentId, $username)
     {
         $qb = $this
-            ->createQueryBuilder("sn")
-            ->addSelect(["c"])
-            ->innerJoin("sn.content", "c")
-            ->where("c.isPublished = :isPublished")
-            ->andWhere("sn.username = :username")
-            ->andWhere("c.id = :contentId")
-            ->andWhere("sn.isDeleted = :isDeleted")
-            ->andWhere("c.isDeleted = :isDeleted")
-            ->setParameter("username", $username)
-            ->setParameter("contentId", $contentId)
-            ->setParameter("isPublished", 1)
-            ->setParameter("isPublished", 1)
-            ->setParameter("isDeleted", 0)
+            ->createQueryBuilder('sn')
+            ->addSelect(['c'])
+            ->innerJoin('sn.content', 'c')
+            ->where('c.isPublished = :isPublished')
+            ->andWhere('sn.username = :username')
+            ->andWhere('c.id = :contentId')
+            ->andWhere('sn.isDeleted = :isDeleted')
+            ->andWhere('c.isDeleted = :isDeleted')
+            ->setParameter('username', $username)
+            ->setParameter('contentId', $contentId)
+            ->setParameter('isPublished', 1)
+            ->setParameter('isPublished', 1)
+            ->setParameter('isDeleted', 0)
         ;
 
         $sn = $qb->getQuery()->getOneOrNullResult();
@@ -189,7 +193,6 @@ class SpecialNoticeRepository extends AbstractMutableRepository
 
         return $sn;
     }
-
 
     public function getAllCurrentSpecialNotices()
     {
@@ -224,20 +227,20 @@ class SpecialNoticeRepository extends AbstractMutableRepository
 
         $conn->executeQuery(
             $this->getBroadcastInternalSpecialNoticeQuery(),
-            ["userId" => $userId, "dvsaRoles" => DvsaRole::getSpecialNoticeRecipientsRoles()],
-            ["userId" => \Pdo::PARAM_INT, "dvsaRoles" => Connection::PARAM_STR_ARRAY]
+            ['userId' => $userId, 'dvsaRoles' => DvsaRole::getSpecialNoticeRecipientsRoles()],
+            ['userId' => \Pdo::PARAM_INT, 'dvsaRoles' => Connection::PARAM_STR_ARRAY]
         );
 
         $conn->executeQuery(
             $this->getBroadcastExternalSpecialNoticeQuery(),
-            ["userId" => $userId],
-            ["userId" => \Pdo::PARAM_INT]
+            ['userId' => $userId],
+            ['userId' => \Pdo::PARAM_INT]
         );
     }
 
     private function getBroadcastExternalSpecialNoticeQuery()
     {
-        $fromPart = $this->getBroadcastQueryForTesters() . ' UNION ' . $this->getBroadcastQueryForVts();
+        $fromPart = $this->getBroadcastQueryForTesters().' UNION '.$this->getBroadcastQueryForVts();
 
         return sprintf($this->getBroadcastSpecialNoticeQuery(), $fromPart, ' AND un_sncid.external_publish_date <= CURRENT_DATE');
     }
@@ -263,13 +266,13 @@ class SpecialNoticeRepository extends AbstractMutableRepository
                     AND sna.vehicle_class_id = aftm.vehicle_class_id
                     AND aftm.status_id = aftms.id
                     AND aftm.person_id = p.id
-                    AND sna.special_notice_audience_type_id = ' . SpecialNoticeAudienceTypeId::TESTER_AUDIENCE . '
-                    AND aftms.code = "' . AuthorisationForTestingMotStatusCode::QUALIFIED . '"';
+                    AND sna.special_notice_audience_type_id = ' .SpecialNoticeAudienceTypeId::TESTER_AUDIENCE.'
+                    AND aftms.code = "' .AuthorisationForTestingMotStatusCode::QUALIFIED.'"';
     }
 
     private function getBroadcastQueryForVts()
     {
-        return "
+        return '
                 SELECT
                     p.username,
                     snc.id as special_notice_content_id,
@@ -289,10 +292,10 @@ class SpecialNoticeRepository extends AbstractMutableRepository
                     AND sbrm.person_id = p.id
                     AND sbrm.site_business_role_id = sbr.id
                     AND sbrm.status_id = brs.id
-                    AND sna.special_notice_audience_type_id = " . SpecialNoticeAudienceTypeId::VTS_AUDIENCE . "
+                    AND sna.special_notice_audience_type_id = ' .SpecialNoticeAudienceTypeId::VTS_AUDIENCE."
                     AND brs.code = 'AC'
                     AND sbr.code IN
-                        ('" . SiteBusinessRoleCode::SITE_MANAGER . "', '" . SiteBusinessRoleCode::SITE_ADMIN . "')
+                        ('" .SiteBusinessRoleCode::SITE_MANAGER."', '".SiteBusinessRoleCode::SITE_ADMIN."')
                 UNION
                 SELECT
                     p.username,
@@ -312,17 +315,17 @@ class SpecialNoticeRepository extends AbstractMutableRepository
                     AND p.username IS NOT NULL
                     AND obrm.person_id = p.id
                     AND obrm.status_id = obr.id
-                    AND sna.special_notice_audience_type_id = " . SpecialNoticeAudienceTypeId::VTS_AUDIENCE . "
+                    AND sna.special_notice_audience_type_id = " .SpecialNoticeAudienceTypeId::VTS_AUDIENCE."
                     AND obrm.status_id = brs.id
                     AND brs.code = 'AC'
                     AND obr.name IN
-                        ('" . OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE . "', '"
-                            . OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER . "')";
+                        ('" .OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE."', '"
+                            .OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER."')";
     }
 
     private function getBroadcastQueryForDvsa()
     {
-        return "
+        return '
                 SELECT
                     p.username,
                     snc.id as special_notice_content_id,
@@ -340,7 +343,7 @@ class SpecialNoticeRepository extends AbstractMutableRepository
                     snc.id = sna.special_notice_content_id
                     AND p.username IS NOT NULL
                     AND psrm.person_id = p.id
-                    AND sna.special_notice_audience_type_id = " . SpecialNoticeAudienceTypeId::DVSA_AUDIENCE . "
+                    AND sna.special_notice_audience_type_id = ' .SpecialNoticeAudienceTypeId::DVSA_AUDIENCE."
                     AND psrm.status_id = brs.id
                     AND psrm.person_system_role_id = psr.id
                     AND brs.code = 'AC'
@@ -377,4 +380,3 @@ class SpecialNoticeRepository extends AbstractMutableRepository
             %s';
     }
 }
-

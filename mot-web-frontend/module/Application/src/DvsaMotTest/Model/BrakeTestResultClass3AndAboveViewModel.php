@@ -9,7 +9,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Data for brake test result class 3 and above view
+ * Data for brake test result class 3 and above view.
  */
 class BrakeTestResultClass3AndAboveViewModel
 {
@@ -72,7 +72,7 @@ class BrakeTestResultClass3AndAboveViewModel
     const API_SERVICE_SERVICE_EFFORT_NEARSIDE_AXLE_1 = 'effortNearsideAxle1';
     const API_SERVICE_LOCK_NEARSIDE_AXLE_1 = 'lockNearsideAxle1';
     const API_SERVICE_EFFORT_OFFSIDE_AXLE_1 = 'effortOffsideAxle1';
-    const API_SERVICE_LOCK_OFFSIDE_AXLE_1  = 'lockOffsideAxle1';
+    const API_SERVICE_LOCK_OFFSIDE_AXLE_1 = 'lockOffsideAxle1';
 
     const API_SERVICE_EFFORT_NEARSIDE_AXLE_2 = 'effortNearsideAxle2';
     const API_SERVICE_LOCK_NEARSIDE_AXLE_2 = 'lockNearsideAxle2';
@@ -149,59 +149,58 @@ class BrakeTestResultClass3AndAboveViewModel
     private $serviceBrakeAxles;
     private $parkingBrakeAxles;
 
-    /** @var  BrakeTestConfigurationClass3AndAboveHelper $brakeTestConfiguration */
+    /** @var BrakeTestConfigurationClass3AndAboveHelper $brakeTestConfiguration */
     private $brakeTestConfiguration;
 
     /**
      * @param BrakeTestConfigurationClass3AndAboveDto $brakeTestConfigurationClass3AndAboveDto
-     * @param BrakeTestResultClass3AndAbove $brakeTestResult
-     * @param array $apiData
-     * @param array $postData
+     * @param BrakeTestResultClass3AndAbove           $brakeTestResult
+     * @param array                                   $apiData
+     * @param array                                   $postData
      */
     public function __construct(BrakeTestConfigurationClass3AndAboveDto $brakeTestConfigurationClass3AndAboveDto,
                                 BrakeTestResultClass3AndAbove $brakeTestResult = null, $apiData, $postData)
     {
-            $data = $postData === null ? $apiData : $postData;
+        $data = $postData === null ? $apiData : $postData;
 
-            $this->brakeTestConfiguration = new BrakeTestConfigurationClass3AndAboveHelper($brakeTestConfigurationClass3AndAboveDto);
+        $this->brakeTestConfiguration = new BrakeTestConfigurationClass3AndAboveHelper($brakeTestConfigurationClass3AndAboveDto);
 
-            $this->parkingBrakeEffortSingle = ArrayUtils::tryGet(
+        $this->parkingBrakeEffortSingle = ArrayUtils::tryGet(
                 $data,
                 self::ID_PARKING_EFFORT_SINGLE
             );
-            $this->parkingBrakeLockSingle = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_SINGLE);
+        $this->parkingBrakeLockSingle = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_SINGLE);
 
-            $this->parkingBrakeEffortNearside = ArrayUtils::tryGet($data, self::ID_PARKING_EFFORT_NEARSIDE);
-            $this->parkingBrakeLockNearside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_NEARSIDE);
-            $this->parkingBrakeEffortOffside = ArrayUtils::tryGet($data, self::ID_PARKING_EFFORT_OFFSIDE);
-            $this->parkingBrakeLockOffside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_OFFSIDE);
+        $this->parkingBrakeEffortNearside = ArrayUtils::tryGet($data, self::ID_PARKING_EFFORT_NEARSIDE);
+        $this->parkingBrakeLockNearside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_NEARSIDE);
+        $this->parkingBrakeEffortOffside = ArrayUtils::tryGet($data, self::ID_PARKING_EFFORT_OFFSIDE);
+        $this->parkingBrakeLockOffside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_OFFSIDE);
 
-            $this->parkingBrakeEffortSecondaryNearside = ArrayUtils::tryGet(
+        $this->parkingBrakeEffortSecondaryNearside = ArrayUtils::tryGet(
                 $data,
                 self::ID_PARKING_EFFORT_SECONDARY_NEARSIDE
             );
-            $this->parkingBrakeLockSecondaryNearside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_SECONDARY_NEARSIDE);
-            $this->parkingBrakeEffortSecondaryOffside = ArrayUtils::tryGet(
+        $this->parkingBrakeLockSecondaryNearside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_SECONDARY_NEARSIDE);
+        $this->parkingBrakeEffortSecondaryOffside = ArrayUtils::tryGet(
                 $data,
                 self::ID_PARKING_EFFORT_SECONDARY_OFFSIDE
             );
-            $this->parkingBrakeLockSecondaryOffside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_SECONDARY_OFFSIDE);
+        $this->parkingBrakeLockSecondaryOffside = ArrayUtils::tryGet($data, self::ID_PARKING_LOCK_SECONDARY_OFFSIDE);
 
-            $this->parkingBrakeEfficiencyPass = ArrayUtils::tryGet($data, self::NAME_PARKING_EFFICIENCY_PASS);
+        $this->parkingBrakeEfficiencyPass = ArrayUtils::tryGet($data, self::NAME_PARKING_EFFICIENCY_PASS);
 
-            $this->parkingBrakeEfficiency = ArrayUtils::tryGet($data, self::ID_PARKING_EFFICIENCY);
+        $this->parkingBrakeEfficiency = ArrayUtils::tryGet($data, self::ID_PARKING_EFFICIENCY);
 
-            $this->serviceBrake1Efficiency = ArrayUtils::tryGet($data, self::ID_SERVICE_1_EFFICIENCY);
-            $this->serviceBrake2Efficiency = ArrayUtils::tryGet($data, self::ID_SERVICE_2_EFFICIENCY);
+        $this->serviceBrake1Efficiency = ArrayUtils::tryGet($data, self::ID_SERVICE_1_EFFICIENCY);
+        $this->serviceBrake2Efficiency = ArrayUtils::tryGet($data, self::ID_SERVICE_2_EFFICIENCY);
 
-            if (null !== $brakeTestConfigurationClass3AndAboveDto) {
-                $this->serviceBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getNumberOfAxles();
-                $this->parkingBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getParkingBrakeNumberOfAxles();
-            }
-            elseif (null !== $brakeTestResult) {
-                $this->serviceBrakeAxles = $brakeTestResult->getNumberOfAxles();
-                $this->parkingBrakeAxles = $brakeTestResult->getParkingBrakeNumberOfAxles();
-            }
+        if (null !== $brakeTestConfigurationClass3AndAboveDto) {
+            $this->serviceBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getNumberOfAxles();
+            $this->parkingBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getParkingBrakeNumberOfAxles();
+        } elseif (null !== $brakeTestResult) {
+            $this->serviceBrakeAxles = $brakeTestResult->getNumberOfAxles();
+            $this->parkingBrakeAxles = $brakeTestResult->getParkingBrakeNumberOfAxles();
+        }
 
         if ($postData !== null) {
             $this->serviceBrakeLockSingle = ArrayUtils::tryGet($postData, self::ID_SERVICE_LOCK_SINGLE);
@@ -314,7 +313,7 @@ class BrakeTestResultClass3AndAboveViewModel
             $this->serviceBrakeEffortOffsideAxle3 = ArrayUtils::tryGet($serviceBrake1Data, 'effortOffsideAxle3');
             $this->serviceBrakeLockOffsideAxle3 = ArrayUtils::tryGet($serviceBrake1Data, 'lockOffsideAxle3');
 
-            $serviceBrake2Data = ArrayUtils::tryGet($apiData, self::API_SERVICE_BRAKE_2_DATA_KEY );
+            $serviceBrake2Data = ArrayUtils::tryGet($apiData, self::API_SERVICE_BRAKE_2_DATA_KEY);
 
             $this->serviceBrake2LockSingle = ArrayUtils::tryGet($serviceBrake2Data, 'lockSingle');
             $this->serviceBrake2EffortSingle = ArrayUtils::tryGet($serviceBrake2Data, 'effortSingle');
@@ -455,6 +454,7 @@ class BrakeTestResultClass3AndAboveViewModel
         }
 
         $configurationDto = $this->brakeTestConfiguration->getConfigDto();
+
         return array_merge(
             $data,
             DtoHydrator::dtoToJson($configurationDto)
@@ -476,7 +476,7 @@ class BrakeTestResultClass3AndAboveViewModel
 
     public function getParkingBrakeLockSingle()
     {
-        return $this->parkingBrakeLockSingle ? (bool)$this->parkingBrakeLockSingle : null;
+        return $this->parkingBrakeLockSingle ? (bool) $this->parkingBrakeLockSingle : null;
     }
 
     public function getParkingBrakeEffortNearside()
@@ -501,22 +501,22 @@ class BrakeTestResultClass3AndAboveViewModel
 
     public function getParkingBrakeLockNearside()
     {
-        return $this->parkingBrakeLockNearside ? (bool)$this->parkingBrakeLockNearside : null;
+        return $this->parkingBrakeLockNearside ? (bool) $this->parkingBrakeLockNearside : null;
     }
 
     public function getParkingBrakeLockOffside()
     {
-        return $this->parkingBrakeLockOffside ? (bool)$this->parkingBrakeLockOffside : null;
+        return $this->parkingBrakeLockOffside ? (bool) $this->parkingBrakeLockOffside : null;
     }
 
     public function getParkingBrakeLockSecondaryNearside()
     {
-        return $this->parkingBrakeLockSecondaryNearside ? (bool)$this->parkingBrakeLockSecondaryNearside : null;
+        return $this->parkingBrakeLockSecondaryNearside ? (bool) $this->parkingBrakeLockSecondaryNearside : null;
     }
 
     public function getParkingBrakeLockSecondaryOffside()
     {
-        return $this->parkingBrakeLockSecondaryOffside ? (bool)$this->parkingBrakeLockSecondaryOffside : null;
+        return $this->parkingBrakeLockSecondaryOffside ? (bool) $this->parkingBrakeLockSecondaryOffside : null;
     }
 
     public function getServiceBrake2EffortSingle()
@@ -526,7 +526,7 @@ class BrakeTestResultClass3AndAboveViewModel
 
     public function getServiceBrake2LockSingle()
     {
-        return $this->serviceBrake2LockSingle ? (bool)$this->serviceBrake2LockSingle : null;
+        return $this->serviceBrake2LockSingle ? (bool) $this->serviceBrake2LockSingle : null;
     }
 
     public function getServiceBrakeEffortSingle()
@@ -536,7 +536,7 @@ class BrakeTestResultClass3AndAboveViewModel
 
     public function getServiceBrakeLockSingle()
     {
-        return $this->serviceBrakeLockSingle ? (bool)$this->serviceBrakeLockSingle : null;
+        return $this->serviceBrakeLockSingle ? (bool) $this->serviceBrakeLockSingle : null;
     }
 
     public function getServiceBrake2EffortNearsideAxle1()
@@ -571,32 +571,32 @@ class BrakeTestResultClass3AndAboveViewModel
 
     public function getServiceBrake2LockNearsideAxle1()
     {
-        return $this->serviceBrake2LockNearsideAxle1 ? (bool)$this->serviceBrake2LockNearsideAxle1 : null;
+        return $this->serviceBrake2LockNearsideAxle1 ? (bool) $this->serviceBrake2LockNearsideAxle1 : null;
     }
 
     public function getServiceBrake2LockNearsideAxle2()
     {
-        return $this->serviceBrake2LockNearsideAxle2 ? (bool)$this->serviceBrake2LockNearsideAxle2 : null;
+        return $this->serviceBrake2LockNearsideAxle2 ? (bool) $this->serviceBrake2LockNearsideAxle2 : null;
     }
 
     public function getServiceBrake2LockNearsideAxle3()
     {
-        return $this->serviceBrake2LockNearsideAxle3 ? (bool)$this->serviceBrake2LockNearsideAxle3 : null;
+        return $this->serviceBrake2LockNearsideAxle3 ? (bool) $this->serviceBrake2LockNearsideAxle3 : null;
     }
 
     public function getServiceBrake2LockOffsideAxle1()
     {
-        return $this->serviceBrake2LockOffsideAxle1 ? (bool)$this->serviceBrake2LockOffsideAxle1 : null;
+        return $this->serviceBrake2LockOffsideAxle1 ? (bool) $this->serviceBrake2LockOffsideAxle1 : null;
     }
 
     public function getServiceBrake2LockOffsideAxle2()
     {
-        return $this->serviceBrake2LockOffsideAxle2 ? (bool)$this->serviceBrake2LockOffsideAxle2 : null;
+        return $this->serviceBrake2LockOffsideAxle2 ? (bool) $this->serviceBrake2LockOffsideAxle2 : null;
     }
 
     public function getServiceBrake2LockOffsideAxle3()
     {
-        return $this->serviceBrake2LockOffsideAxle3 ? (bool)$this->serviceBrake2LockOffsideAxle3 : null;
+        return $this->serviceBrake2LockOffsideAxle3 ? (bool) $this->serviceBrake2LockOffsideAxle3 : null;
     }
 
     public function getServiceBrakeEffortNearsideAxle1()
@@ -631,52 +631,52 @@ class BrakeTestResultClass3AndAboveViewModel
 
     public function getServiceBrakeLockNearsideAxle1()
     {
-        return $this->serviceBrakeLockNearsideAxle1 ? (bool)$this->serviceBrakeLockNearsideAxle1 : null;
+        return $this->serviceBrakeLockNearsideAxle1 ? (bool) $this->serviceBrakeLockNearsideAxle1 : null;
     }
 
     public function getServiceBrakeLockNearsideAxle2()
     {
-        return $this->serviceBrakeLockNearsideAxle2 ? (bool)$this->serviceBrakeLockNearsideAxle2 : null;
+        return $this->serviceBrakeLockNearsideAxle2 ? (bool) $this->serviceBrakeLockNearsideAxle2 : null;
     }
 
     public function getServiceBrakeLockNearsideAxle3()
     {
-        return $this->serviceBrakeLockNearsideAxle3 ? (bool)$this->serviceBrakeLockNearsideAxle3 : null;
+        return $this->serviceBrakeLockNearsideAxle3 ? (bool) $this->serviceBrakeLockNearsideAxle3 : null;
     }
 
     public function getServiceBrakeLockOffsideAxle1()
     {
-        return $this->serviceBrakeLockOffsideAxle1 ? (bool)$this->serviceBrakeLockOffsideAxle1 : null;
+        return $this->serviceBrakeLockOffsideAxle1 ? (bool) $this->serviceBrakeLockOffsideAxle1 : null;
     }
 
     public function getServiceBrakeLockOffsideAxle2()
     {
-        return $this->serviceBrakeLockOffsideAxle2 ? (bool)$this->serviceBrakeLockOffsideAxle2 : null;
+        return $this->serviceBrakeLockOffsideAxle2 ? (bool) $this->serviceBrakeLockOffsideAxle2 : null;
     }
 
     public function getServiceBrakeLockOffsideAxle3()
     {
-        return $this->serviceBrakeLockOffsideAxle3 ? (bool)$this->serviceBrakeLockOffsideAxle3 : null;
+        return $this->serviceBrakeLockOffsideAxle3 ? (bool) $this->serviceBrakeLockOffsideAxle3 : null;
     }
 
     public function getServiceBrake1Efficiency()
     {
-        return $this->serviceBrake1Efficiency ? (int)$this->serviceBrake1Efficiency : null;
+        return $this->serviceBrake1Efficiency ? (int) $this->serviceBrake1Efficiency : null;
     }
 
     public function getServiceBrake2Efficiency()
     {
-        return $this->serviceBrake2Efficiency ? (int)$this->serviceBrake2Efficiency : null;
+        return $this->serviceBrake2Efficiency ? (int) $this->serviceBrake2Efficiency : null;
     }
 
     public function getParkingBrakeEfficiency()
     {
-        return $this->parkingBrakeEfficiency ? (int)$this->parkingBrakeEfficiency : null;
+        return $this->parkingBrakeEfficiency ? (int) $this->parkingBrakeEfficiency : null;
     }
 
     public function getParkingBrakeEfficiencyPass()
     {
-        return isset($this->parkingBrakeEfficiencyPass) ? (bool)$this->parkingBrakeEfficiencyPass : null;
+        return isset($this->parkingBrakeEfficiencyPass) ? (bool) $this->parkingBrakeEfficiencyPass : null;
     }
 
     public function getServiceBrakeAxles()
@@ -691,13 +691,13 @@ class BrakeTestResultClass3AndAboveViewModel
 
     /**
      * This is to inject the brake test result's serviceBrake1Data data-set, coming from mot-test-service to
-     * the existing model, until a proper refactoring is possible
+     * the existing model, until a proper refactoring is possible.
      *
      * @param MotTest $motTest
      */
     public function setServiceBrake1Data(MotTest $motTest)
     {
-        $brakeTestResult =$motTest->getBrakeTestResult();
+        $brakeTestResult = $motTest->getBrakeTestResult();
         $serviceBrake1Data = $brakeTestResult->serviceBrake1Data;
         $parkingBrakeEfficiency = $motTest->getBrakeTestResult()->parkingBrakeEfficiency;
 
@@ -716,15 +716,15 @@ class BrakeTestResultClass3AndAboveViewModel
         $this->serviceBrakeLockOffsideAxle3 = $serviceBrake1Data->lockOffsideAxle3;
         $this->serviceBrakeLockSingle = $serviceBrake1Data->lockSingle;
 
-        $this->parkingBrakeEffortNearside =  $brakeTestResult->parkingBrakeEffortNearside;
-        $this->parkingBrakeEffortOffside =  $brakeTestResult->parkingBrakeEffortOffside;
-        $this->parkingBrakeLockNearside=  $brakeTestResult->parkingBrakeLockNearside;
-        $this->parkingBrakeLockOffside=  $brakeTestResult->parkingBrakeLockOffside;
+        $this->parkingBrakeEffortNearside = $brakeTestResult->parkingBrakeEffortNearside;
+        $this->parkingBrakeEffortOffside = $brakeTestResult->parkingBrakeEffortOffside;
+        $this->parkingBrakeLockNearside = $brakeTestResult->parkingBrakeLockNearside;
+        $this->parkingBrakeLockOffside = $brakeTestResult->parkingBrakeLockOffside;
 
-        $this->parkingBrakeEffortSecondaryNearside =  $brakeTestResult->parkingBrakeEffortSecondaryNearside;
-        $this->parkingBrakeEffortSecondaryOffside =  $brakeTestResult->parkingBrakeEffortSecondaryOffside;
-        $this->parkingBrakeLockSecondaryNearside =  $brakeTestResult->parkingBrakeLockSecondaryNearside;
-        $this->parkingBrakeLockSecondaryOffside =  $brakeTestResult->parkingBrakeLockSecondaryOffside;
+        $this->parkingBrakeEffortSecondaryNearside = $brakeTestResult->parkingBrakeEffortSecondaryNearside;
+        $this->parkingBrakeEffortSecondaryOffside = $brakeTestResult->parkingBrakeEffortSecondaryOffside;
+        $this->parkingBrakeLockSecondaryNearside = $brakeTestResult->parkingBrakeLockSecondaryNearside;
+        $this->parkingBrakeLockSecondaryOffside = $brakeTestResult->parkingBrakeLockSecondaryOffside;
 
         $this->parkingBrakeEfficiency = $parkingBrakeEfficiency;
     }

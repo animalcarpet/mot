@@ -3,11 +3,9 @@
 namespace UserAdmin\ViewModel\UserProfile;
 
 use DvsaCommon\Model\TesterAuthorisation;
-use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
-use ZendPdf\Exception\NotImplementedException;
 
 class TesterAuthorisationViewModel
 {

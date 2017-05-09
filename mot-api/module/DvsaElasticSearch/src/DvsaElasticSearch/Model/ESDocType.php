@@ -3,13 +3,11 @@
 namespace DvsaElasticSearch\Model;
 
 /**
- * Class ESDocType
+ * Class ESDocType.
  *
  * I am the base class for all document containers. As a family we are
  * responsible for actins as mediators/adapters between PHP internal form,
  * JSON return form and ElasticSearch form.
- *
- * @package DvsaElasticSearch\Model
  */
 class ESDocType
 {
@@ -20,7 +18,6 @@ class ESDocType
      */
     public function __construct()
     {
-
     }
 
     /**

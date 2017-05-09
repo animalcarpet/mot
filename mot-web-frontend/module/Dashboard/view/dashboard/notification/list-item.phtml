@@ -3,9 +3,8 @@ use Dashboard\Controller\NotificationController;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 
 /** @var $notification \Dashboard\Model\Notification */
-
-$backTo = $notification->getIsArchived()? NotificationController::BACK_TO_ARCHIVE_PARAM : null;
-$notificationUrl = $this->url(NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notification->getId()], ["query" => ["backTo" => $backTo]]);
+$backTo = $notification->getIsArchived() ? NotificationController::BACK_TO_ARCHIVE_PARAM : null;
+$notificationUrl = $this->url(NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notification->getId()], ['query' => ['backTo' => $backTo]]);
 $date = DateTimeDisplayFormat::textDateShortGds($notification->getCreatedOn());
 $unreadClass = $notification->getReadOn() ? '' : 'c-tab-list__row--unread';
 ?>

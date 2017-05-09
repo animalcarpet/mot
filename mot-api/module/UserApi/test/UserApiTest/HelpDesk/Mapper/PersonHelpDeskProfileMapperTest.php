@@ -32,18 +32,17 @@ class PersonHelpDeskProfileMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testFromPersonEntityToDto()
     {
-        $person   = $this->getPopulatedPersonEntity();
+        $person = $this->getPopulatedPersonEntity();
         $expected = $this->getPopulatedDto();
 
         $actual = $this->personHelpDeskProfileMapper->fromPersonEntityToDto($person);
-
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testFromPersonEntityWithEmptyAddressToDto()
     {
-        $person   = $this->getPopulatedPersonEntityWithEmptyAddress();
+        $person = $this->getPopulatedPersonEntityWithEmptyAddress();
         $expected = $this->getPopulatedDtoWithEmptyAddress();
 
         $actual = $this->personHelpDeskProfileMapper->fromPersonEntityToDto($person);
@@ -94,7 +93,7 @@ class PersonHelpDeskProfileMapperTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockTitle()
     {
-        $title = \DvsaCommonTest\TestUtils\XMock::of(Title::class, ['getName','getId']);
+        $title = \DvsaCommonTest\TestUtils\XMock::of(Title::class, ['getName', 'getId']);
         $title->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('Miss'));
@@ -129,7 +128,7 @@ class PersonHelpDeskProfileMapperTest extends \PHPUnit_Framework_TestCase
         $phone = (new Phone())
             ->setIsPrimary(true)
             ->setNumber('+768-45-4433630');
-        $contactDetail   = (new ContactDetail())->setAddress($address)->addPhone($phone);
+        $contactDetail = (new ContactDetail())->setAddress($address)->addPhone($phone);
         $personContactType = new \DvsaEntities\Entity\PersonContactType();
         $personContactType->setName(PersonContactType::PERSONAL);
         $personalContact = new PersonContact($contactDetail, $personContactType, $person);
@@ -156,7 +155,7 @@ class PersonHelpDeskProfileMapperTest extends \PHPUnit_Framework_TestCase
         $phone = (new Phone())
             ->setIsPrimary(true)
             ->setNumber('+768-45-4433630');
-        $contactDetail   = (new ContactDetail())->setAddress(null)->addPhone($phone);
+        $contactDetail = (new ContactDetail())->setAddress(null)->addPhone($phone);
         $personContactType = new \DvsaEntities\Entity\PersonContactType();
         $personContactType->setName(PersonContactType::PERSONAL);
         $personalContact = new PersonContact($contactDetail, $personContactType, $person);
@@ -168,27 +167,25 @@ class PersonHelpDeskProfileMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testFromPersonEntityToDtoWithPinAuthentication()
     {
-        $person   = $this->getPopulatedPersonEntity();
+        $person = $this->getPopulatedPersonEntity();
 
         $authenticationMethod = new AuthenticationMethod();
 
         $authenticationMethod
-                ->setName("Pin")
-                ->setCode("PIN");
+                ->setName('Pin')
+                ->setCode('PIN');
 
         $expected = $this->getPopulatedDto();
 
         $expected->setAuthenticationMethod(
             (new AuthenticationMethodDto())
-                ->setName("Pin")
-                ->setCode("PIN")
+                ->setName('Pin')
+                ->setCode('PIN')
         );
-
 
         $actual = $this->personHelpDeskProfileMapper->fromPersonEntityToDto($person);
 
         $this->personHelpDeskProfileMapper->mapAuthenticationMethod($authenticationMethod, $actual);
-
 
         $this->assertEquals($expected, $actual);
     }

@@ -6,9 +6,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\SiteBusinessRole;
 
 /**
- * Class RoleRestrictionsSet
- *
- * @package SiteApi\Model
+ * Class RoleRestrictionsSet.
  */
 class RoleRestrictionsSet
 {
@@ -34,6 +32,7 @@ class RoleRestrictionsSet
      * @param SiteBusinessRole $role
      *
      * @return RoleRestrictionInterface
+     *
      * @throws \Exception
      */
     public function getRestrictionForRole(SiteBusinessRole $role)
@@ -42,7 +41,7 @@ class RoleRestrictionsSet
         if ($restriction) {
             return $restriction;
         } else {
-            throw new \Exception('There are no known restrictions for role: "' . $role->getCode() . '"');
+            throw new \Exception('There are no known restrictions for role: "'.$role->getCode().'"');
         }
     }
 }

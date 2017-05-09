@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * DirectDebitStatus
+ * DirectDebitStatus.
  *
  * @ORM\Table(name="direct_debit_status")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\DirectDebitStatusRepository", readOnly=true)

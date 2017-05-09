@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * CensorBlacklist
+ * CensorBlacklist.
  *
  * @ORM\Table(name="censor_blacklist", uniqueConstraints={@ORM\UniqueConstraint(name="phrase", columns={"phrase"})})
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\CensorBlacklistRepository", readOnly=true)
@@ -24,7 +24,7 @@ class CensorBlacklist
     private $phrase = '';
 
     /**
-     * Set phrase
+     * Set phrase.
      *
      * @param string $phrase
      *
@@ -38,7 +38,7 @@ class CensorBlacklist
     }
 
     /**
-     * Get phrase
+     * Get phrase.
      *
      * @return string
      */

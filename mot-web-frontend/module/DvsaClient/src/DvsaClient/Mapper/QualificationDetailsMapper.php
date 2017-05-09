@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaClient\Mapper;
 
 use DvsaCommon\Dto\MotTesting\DemoTestRequestsListDto;
@@ -21,8 +22,7 @@ class QualificationDetailsMapper extends DtoMapper implements AutoWireableInterf
         Client $client,
         DtoReflectiveDeserializer $deserializer,
         DtoReflectiveSerializer $serializer
-    )
-    {
+    ) {
         parent::__construct($client);
         $this->deserializer = $deserializer;
         $this->serializer = $serializer;
@@ -31,29 +31,34 @@ class QualificationDetailsMapper extends DtoMapper implements AutoWireableInterf
     public function getQualificationDetails($personId, $group)
     {
         $result = $this->get(PersonUrlBuilder::qualificationDetails($personId, strtolower($group)));
+
         return $this->deserializer->deserialize($result, MotTestingCertificateDto::class);
     }
 
     public function validateQualificationDetails($personId, MotTestingCertificateDto $dto)
     {
         $data = $this->serializer->serialize($dto);
+
         return $this->post(PersonUrlBuilder::validateQualificationDetails($personId), $data);
     }
 
     public function createQualificationDetails($personId, $group, MotTestingCertificateDto $dto)
     {
         $data = $this->serializer->serialize($dto);
+
         return $this->post(PersonUrlBuilder::qualificationDetails($personId, $group), $data);
     }
 
     public function updateQualificationDetails($personId, $group, MotTestingCertificateDto $dto)
     {
         $data = $this->serializer->serialize($dto);
+
         return $this->put(PersonUrlBuilder::qualificationDetails($personId, $group), $data);
     }
 
     /**
      * @param $sortParams
+     *
      * @return DemoTestRequestsListDto
      */
     public function getDemoTestRequests($sortParams)
@@ -73,7 +78,7 @@ class QualificationDetailsMapper extends DtoMapper implements AutoWireableInterf
             ->setVehicleClassGroupCode(strtoupper($group))
             ->setSiteNumber($formData[QualificationDetailsForm::FIELD_VTS_ID])
             ->setCertificateNumber($formData[QualificationDetailsForm::FIELD_CERT_NUMBER])
-            ->setDateOfQualification(sprintf("%d-%d-%d",
+            ->setDateOfQualification(sprintf('%d-%d-%d',
                 $formData[QualificationDetailsForm::FIELD_DATE_YEAR],
                 $formData[QualificationDetailsForm::FIELD_DATE_MONTH],
                 $formData[QualificationDetailsForm::FIELD_DATE_DAY]
@@ -94,5 +99,4 @@ class QualificationDetailsMapper extends DtoMapper implements AutoWireableInterf
             QualificationDetailsForm::FIELD_DATE_YEAR => $date->format('Y'),
         ];
     }
-
 }

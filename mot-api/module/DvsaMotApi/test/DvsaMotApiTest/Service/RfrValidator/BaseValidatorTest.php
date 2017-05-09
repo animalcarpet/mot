@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Service\RfrValidator;
 
 use PHPUnit_Framework_TestCase;
@@ -69,13 +70,10 @@ use DvsaMotApi\Service\RfrValidator\BaseValidator;
  * need too.
  *
  * feature/VM-1615-Fitnesse-generators-do-not-delete-or-merge
- *
  */
 
 /**
- * Class BaseValidatorTest
- *
- * @package DvsaMotApiTest\Service\RfrValidator
+ * Class BaseValidatorTest.
  */
 class BaseValidatorTest extends PHPUnit_Framework_TestCase
 {

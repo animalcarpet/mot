@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * VehicleTestingStation
+ * VehicleTestingStation.
  *
  * @ORM\Table(
  *  name="site_search",
@@ -15,7 +16,6 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  */
 class VehicleTestingStationSearch
 {
-
     use CommonIdentityTrait;
 
     /**
@@ -64,6 +64,7 @@ class VehicleTestingStationSearch
     public function setRoles($roles)
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -83,6 +84,7 @@ class VehicleTestingStationSearch
     public function setSearch($search)
     {
         $this->search = $search;
+
         return $this;
     }
 
@@ -102,6 +104,7 @@ class VehicleTestingStationSearch
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -121,6 +124,7 @@ class VehicleTestingStationSearch
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -140,6 +144,7 @@ class VehicleTestingStationSearch
     public function setVehicleTestingStation($vehicleTestingStation)
     {
         $this->vehicleTestingStation = $vehicleTestingStation;
+
         return $this;
     }
 

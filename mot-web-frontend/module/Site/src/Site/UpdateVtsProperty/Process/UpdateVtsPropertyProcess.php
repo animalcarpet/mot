@@ -13,10 +13,8 @@ use Site\UpdateVtsProperty\UpdateVtsPropertyViewModel;
 use Zend\Form\Form;
 
 /**
- *
  * todo rename this to test process
- * Class UpdateVtsReviewProcess
- * @package Site\UpdateVtsProperty\Process
+ * Class UpdateVtsReviewProcess.
  */
 class UpdateVtsPropertyProcess implements SingleStepProcessInterface, AutoWireableInterface
 {
@@ -49,8 +47,7 @@ class UpdateVtsPropertyProcess implements SingleStepProcessInterface, AutoWireab
         $formPageTitle,
         $pageSubTitle,
         $breadCrumb
-    )
-    {
+    ) {
         $this->permission = $permission;
         $this->propertyName = $propertyName;
         $this->form = $form;
@@ -92,6 +89,7 @@ class UpdateVtsPropertyProcess implements SingleStepProcessInterface, AutoWireab
     public function getPrePopulatedData()
     {
         $function = $this->currentValuesExtractor;
+
         return $function($this->context->getVtsId());
     }
 

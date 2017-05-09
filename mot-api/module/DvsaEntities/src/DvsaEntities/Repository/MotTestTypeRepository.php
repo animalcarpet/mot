@@ -7,15 +7,17 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTestType;
 
 /**
- * Retrieves MotTestTypes
+ * Retrieves MotTestTypes.
  */
 class MotTestTypeRepository extends EntityRepository
 {
     /**
-     * Finds MotTestType by code. Throws NotFoundException if not found
+     * Finds MotTestType by code. Throws NotFoundException if not found.
+     *
      * @param $code
      *
      * @return MotTestType
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getByCode($code)

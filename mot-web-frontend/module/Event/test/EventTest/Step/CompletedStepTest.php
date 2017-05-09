@@ -7,13 +7,13 @@
 
 namespace Event\Step;
 
-use DvsaCommon\InputFilter\Event\CompletedInputFilter;
 use DvsaCommonTest\TestUtils\XMock;
 use Event\Service\EventSessionService;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Class CompletedStepTest
+ * Class CompletedStepTest.
+ *
  * @group event
  */
 class CompletedStepTest extends \PHPUnit_Framework_TestCase

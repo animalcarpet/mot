@@ -36,7 +36,7 @@ class AbstractMailerLogicTest extends \PHPUnit_Framework_TestCase
         $this->createServiceWithMocks();
 
         $this->assertTrue($this->object->send(
-            'abstractmailerlogictest@' . EmailAddressValidator::TEST_DOMAIN,
+            'abstractmailerlogictest@'.EmailAddressValidator::TEST_DOMAIN,
             __METHOD__.'_subject',
             __METHOD__.'message'
         ));
@@ -60,7 +60,7 @@ class AbstractMailerLogicTest extends \PHPUnit_Framework_TestCase
 
         /**
          * The two vars being passed are not important because I have defined (above) that the resolver
-         * will always return the same template
+         * will always return the same template.
          */
         $file = $this->object->renderTemplate('notImportant', 'alsoNotImportant');
         $this->assertInternalType('string', $file);
@@ -70,7 +70,7 @@ class AbstractMailerLogicTest extends \PHPUnit_Framework_TestCase
     private function createServiceWithMocks()
     {
         $config = [
-            AbstractMailerLogic::CONFIG_KEY => []
+            AbstractMailerLogic::CONFIG_KEY => [],
         ];
         $mailerService = $this->mailerService ?: XMock::of(MailerService::class);
         $templateResolver = $this->templateResolver ?: XMock::of(TemplateResolverService::class);
@@ -78,7 +78,7 @@ class AbstractMailerLogicTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs([
                 $mailerService,
                 $templateResolver,
-                $config
+                $config,
             ])
             ->getMockForAbstractClass();
     }

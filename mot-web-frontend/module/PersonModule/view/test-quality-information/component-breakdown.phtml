@@ -1,9 +1,9 @@
 <?php
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityComponentBreakdownViewModel;
 
-/** @var $viewModel TestQualityComponentBreakdownViewModel */
+/* @var $viewModel TestQualityComponentBreakdownViewModel */
 echo $this->partial('test-quality-information/partials/component-breakdown-table', [
-    'group' => $viewModel->getTable()
+    'group' => $viewModel->getTable(),
 ]);
 ?>
 <nav class="content-navigation">

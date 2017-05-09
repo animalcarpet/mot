@@ -9,7 +9,7 @@ use DvsaCommon\Date\DateUtils;
 
 class VehicleCertificateExpiryControllerTest extends AbstractMotApiControllerTestCase
 {
-    /** @var  VehicleCertificateExpiryController */
+    /** @var VehicleCertificateExpiryController */
     protected $controller;
 
     protected $certExpServiceMock;
@@ -28,23 +28,22 @@ class VehicleCertificateExpiryControllerTest extends AbstractMotApiControllerTes
 
     public function testGteFunctionsWithGivenContingencyDate()
     {
-        $contingencyDatetime =  '2010-10-10T10:10:11Z';
+        $contingencyDatetime = '2010-10-10T10:10:11Z';
         $this->certExpServiceMock->expects($this->once())
             ->method('getExpiryDetailsForVehicle')
             ->with(42, true, DateUtils::toDateTime($contingencyDatetime));
-        
+
         /** @var \HttpResponse|\Zend\Stdlib\ResponseInterface $result */
         $result = $this->getResultForAction(
             'get',
             null,
             ['id' => 42, 'isDvla' => true],
             [
-                VehicleCertificateExpiryController::FIELD_CONTINGENCY_DATETIME => $contingencyDatetime
+                VehicleCertificateExpiryController::FIELD_CONTINGENCY_DATETIME => $contingencyDatetime,
             ],
             []
         );
 
         $this->assertInstanceOf('Zend\View\Model\JsonModel', $result);
     }
-
 }

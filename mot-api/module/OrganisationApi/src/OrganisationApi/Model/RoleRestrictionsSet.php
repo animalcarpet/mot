@@ -6,9 +6,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\OrganisationBusinessRole;
 
 /**
- * Class RoleRestrictionsSet
- *
- * @package OrganisationApi\Model
+ * Class RoleRestrictionsSet.
  */
 class RoleRestrictionsSet
 {
@@ -26,7 +24,7 @@ class RoleRestrictionsSet
 
     public function add(RoleRestrictionInterface $restriction)
     {
-        $roleName                      = $restriction->getRole();
+        $roleName = $restriction->getRole();
         $this->restrictions[$roleName] = $restriction;
     }
 
@@ -36,7 +34,7 @@ class RoleRestrictionsSet
         if ($restriction) {
             return $restriction;
         } else {
-            throw new \RuntimeException('There are no known restrictions for role: "' . $role->getName() . '"');
+            throw new \RuntimeException('There are no known restrictions for role: "'.$role->getName().'"');
         }
     }
 }

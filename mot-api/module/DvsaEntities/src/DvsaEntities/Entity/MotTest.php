@@ -65,7 +65,7 @@ class MotTest extends Entity
     private $vehicle;
 
     /**
-     * @var Int
+     * @var int
      *
      * @ORM\Column(name="vehicle_version", type="integer", nullable=false)
      */
@@ -82,7 +82,7 @@ class MotTest extends Entity
     private $vehicleTestingStation;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="has_registration", type="boolean", nullable=false)
      */
@@ -169,7 +169,7 @@ class MotTest extends Entity
     private $brakeTestResultClass12History;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_weight", type="integer", length=10, nullable=true)
      */
@@ -229,7 +229,6 @@ class MotTest extends Entity
      */
     private $complaintRef;
 
-
     /**
      * @var string
      *
@@ -245,14 +244,14 @@ class MotTest extends Entity
     private $odometerUnit;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="odometer_value", type="integer", length=11, nullable=true)
      */
     private $odometerValue;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="document_id", type="integer", nullable=true)
      */
@@ -289,7 +288,7 @@ class MotTest extends Entity
     private $submittedDate;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="integer", nullable=false)
      */
@@ -467,7 +466,7 @@ class MotTest extends Entity
     }
 
     /**
-     * @return Int
+     * @return int
      */
     public function getVehicleVersion()
     {
@@ -475,12 +474,14 @@ class MotTest extends Entity
     }
 
     /**
-     * @param Int $vehicleVersion
+     * @param int $vehicleVersion
+     *
      * @return MotTest
      */
     public function setVehicleVersion($vehicleVersion)
     {
         $this->vehicleVersion = $vehicleVersion;
+
         return $this;
     }
 
@@ -509,7 +510,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return Colour
      */
     public function getPrimaryColour()
@@ -522,7 +524,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return Colour
      */
     public function getSecondaryColour()
@@ -535,7 +538,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return FuelType
      */
     public function getFuelType()
@@ -548,7 +552,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return \DvsaEntities\Entity\VehicleClass
      */
     public function getVehicleClass()
@@ -561,7 +566,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return CountryOfRegistration
      */
     public function getCountryOfRegistration()
@@ -574,7 +580,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return Make|null
      */
     public function getMake()
@@ -587,7 +594,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return string
      */
     public function getMakeName()
@@ -600,7 +608,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return Model|null
      */
     public function getModel()
@@ -613,7 +622,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return Model|string
      */
     public function getModelName()
@@ -626,7 +636,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return string
      */
     public function getRegistration()
@@ -639,7 +650,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return string
      */
     public function getVin()
@@ -654,13 +666,13 @@ class MotTest extends Entity
     /**
      * Set hasRegistration.
      *
-     * @param boolean $hasRegistration
+     * @param bool $hasRegistration
      *
      * @return MotTest
      */
     public function setHasRegistration($hasRegistration)
     {
-        $this->hasRegistration = (int)$hasRegistration;
+        $this->hasRegistration = (int) $hasRegistration;
 
         return $this;
     }
@@ -668,7 +680,7 @@ class MotTest extends Entity
     /**
      * Get hasRegistration.
      *
-     * @return boolean
+     * @return bool
      */
     public function getHasRegistration()
     {
@@ -816,6 +828,7 @@ class MotTest extends Entity
 
     /**
      * @param Organisation $organisation
+     *
      * @return MotTest
      */
     public function setOrganisation(Organisation $organisation = null)
@@ -959,11 +972,13 @@ class MotTest extends Entity
 
     /**
      * @param int $vehicleWeight
+     *
      * @return MotTest
      */
     public function setVehicleWeight($vehicleWeight)
     {
         $this->vehicleWeight = $vehicleWeight;
+
         return $this;
     }
 
@@ -977,16 +992,18 @@ class MotTest extends Entity
 
     /**
      * @param WeightSource $vehicleWeightSource
+     *
      * @return MotTest
      */
     public function setVehicleWeightSource($vehicleWeightSource)
     {
         $this->vehicleWeightSource = $vehicleWeightSource;
+
         return $this;
     }
 
     /**
-     * Proxy method to try to fetch test's reason for cancel
+     * Proxy method to try to fetch test's reason for cancel.
      *
      * @return MotTestReasonForCancel|void
      */
@@ -1013,17 +1030,19 @@ class MotTest extends Entity
 
     /**
      * @param MotTestCancelled $motTestCancelled
+     *
      * @return MotTest
      */
     public function setMotTestCancelled(MotTestCancelled $motTestCancelled)
     {
         $this->motTestCancelled = $motTestCancelled;
         $this->motTestCancelled->setId($this->getId());
+
         return $this;
     }
 
     /**
-     * Proxy method to try to fetch test's reason for temination's comment
+     * Proxy method to try to fetch test's reason for temination's comment.
      *
      * @return string|void
      */
@@ -1043,6 +1062,7 @@ class MotTest extends Entity
 
     /**
      * @param MotTestComplaintRef $complaintRef
+     *
      * @return $this
      */
     public function setComplaintRef(MotTestComplaintRef $complaintRef)
@@ -1098,11 +1118,13 @@ class MotTest extends Entity
 
     /**
      * @param string $odometerResultType
+     *
      * @return MotTest
      */
     public function setOdometerResultType($odometerResultType)
     {
         $this->odometerResultType = $odometerResultType;
+
         return $this;
     }
 
@@ -1116,11 +1138,13 @@ class MotTest extends Entity
 
     /**
      * @param string $odometerUnit
+     *
      * @return MotTest
      */
     public function setOdometerUnit($odometerUnit)
     {
         $this->odometerUnit = $odometerUnit;
+
         return $this;
     }
 
@@ -1134,16 +1158,18 @@ class MotTest extends Entity
 
     /**
      * @param int $odometerValue
+     *
      * @return MotTest
      */
     public function setOdometerValue($odometerValue)
     {
         $this->odometerValue = $odometerValue;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
@@ -1151,7 +1177,7 @@ class MotTest extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPassedOrFailed()
     {
@@ -1159,7 +1185,7 @@ class MotTest extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPassed()
     {
@@ -1167,7 +1193,7 @@ class MotTest extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFailed()
     {
@@ -1175,7 +1201,7 @@ class MotTest extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCancelled()
     {
@@ -1328,7 +1354,7 @@ class MotTest extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDocument()
     {
@@ -1359,11 +1385,13 @@ class MotTest extends Entity
 
     /**
      * @param MotTestEmergencyReason $motTestEmergencyReason
+     *
      * @return $this
      */
     public function setMotTestEmergencyReason(MotTestEmergencyReason $motTestEmergencyReason = null)
     {
         $this->motTestEmergencyReason = $motTestEmergencyReason;
+
         return $this;
     }
 
@@ -1395,11 +1423,13 @@ class MotTest extends Entity
 
     /**
      * @param EmergencyLog $emergencyLog
+     *
      * @return $this
      */
     public function setEmergencyLog(EmergencyLog $emergencyLog)
     {
         $this->getMotTestEmergencyReason()->setEmergencyLog($emergencyLog);
+
         return $this;
     }
 
@@ -1423,11 +1453,13 @@ class MotTest extends Entity
 
     /**
      * @param Comment $comment
+     *
      * @return $this
      */
     public function setEmergencyReasonComment(Comment $comment)
     {
         $this->getMotTestEmergencyReason()->setComment($comment);
+
         return $this;
     }
 
@@ -1443,21 +1475,25 @@ class MotTest extends Entity
         try {
             return $this->getMotTestEmergencyReason()->getEmergencyReason();
         } catch (EntityNotFoundException $e) {
-            return;}
+            return;
+        }
     }
 
     /**
      * @param EmergencyReason $emergencyReason
+     *
      * @return $this
      */
     public function setEmergencyReasonLookup(EmergencyReason $emergencyReason)
     {
         $this->getMotTestEmergencyReason()->setEmergencyReason($emergencyReason);
+
         return $this;
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return EmptyVrmReason
      */
     public function getEmptyVrmReason()
@@ -1470,7 +1506,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return EmptyVinReason
      */
     public function getEmptyVinReason()
@@ -1483,7 +1520,8 @@ class MotTest extends Entity
     }
 
     /**
-     * Proxy method
+     * Proxy method.
+     *
      * @return ModelDetail
      */
     public function getModelDetail()

@@ -2,7 +2,6 @@
 
 namespace SiteApi\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use SiteApi\Controller\SiteNameController;
 use SiteApi\Service\SiteService;
 use Zend\ServiceManager\FactoryInterface;

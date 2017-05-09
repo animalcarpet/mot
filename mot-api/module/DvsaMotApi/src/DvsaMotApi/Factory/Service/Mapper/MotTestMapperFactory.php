@@ -17,8 +17,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create an instance of MotTestMapper.
- *
- * @package DvsaMotApi\Factory\Service\Mapper
  */
 class MotTestMapperFactory implements FactoryInterface
 {

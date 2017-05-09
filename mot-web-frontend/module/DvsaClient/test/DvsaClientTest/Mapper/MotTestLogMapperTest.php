@@ -96,5 +96,4 @@ class MotTestLogMapperTest extends AbstractMapperTest
 
         $this->assertEquals($expectDto, $actualDto);
     }
-
 }

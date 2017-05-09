@@ -180,7 +180,8 @@ class PersonalDetails
 
     /**
      * Returns the persons assigned system roles. USER and CRON are filtered
-     * from roles as we don't want to display these in the user profile
+     * from roles as we don't want to display these in the user profile.
+     *
      * @return array
      */
     public function getDisplayableSystemRoles()
@@ -193,6 +194,7 @@ class PersonalDetails
                 $rolesFiltered[] = $role;
             }
         }
+
         return $rolesFiltered;
     }
 
@@ -211,13 +213,15 @@ class PersonalDetails
     }
 
     /**
-     * Returns an array of all site and organisation roles,
+     * Returns an array of all site and organisation roles,.
+     *
      * @return array
      */
     public function getSiteAndOrganisationRoles()
     {
         $roles = $this->getRolesAndAssociations();
         unset($roles['system']);
+
         return $roles;
     }
 
@@ -617,7 +621,6 @@ class PersonalDetails
             }
         }
 
-
         return $roles;
     }
 
@@ -634,6 +637,7 @@ class PersonalDetails
                 }
             }
         }
+
         return $roles;
     }
 }

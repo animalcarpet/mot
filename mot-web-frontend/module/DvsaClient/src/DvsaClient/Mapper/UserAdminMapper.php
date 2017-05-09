@@ -9,16 +9,13 @@ use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\Dto\Person\SearchPersonResultDto;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
-use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\MessageUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilder;
 use DvsaCommon\HttpRestJson\Client;
 
 /**
- * Class UserAdminMapper
- *
- * @package DvsaClient\Mapper
+ * Class UserAdminMapper.
  */
 class UserAdminMapper extends DtoMapper
 {
@@ -29,12 +26,12 @@ class UserAdminMapper extends DtoMapper
 
     /**
      * UserAdminMapper constructor.
+     *
      * @param Client $client
      */
     public function __construct(
         Client $client
-    )
-    {
+    ) {
         parent::__construct($client);
         $this->personDetailsService = new ApiPersonalDetails($client);
     }
@@ -48,11 +45,13 @@ class UserAdminMapper extends DtoMapper
     public function getSecurityQuestion($questionId, $personId)
     {
         $url = UserAdminUrlBuilder::securityQuestionGet($questionId, $personId)->toString();
+
         return $this->get($url);
     }
 
     /**
      * @param int $personId
+     *
      * @return mixed
      */
     public function getSecurityQuestionsForPerson($personId)
@@ -61,8 +60,8 @@ class UserAdminMapper extends DtoMapper
     }
 
     /**
-     * @param int $personId
-     * @param int $questionId
+     * @param int    $personId
+     * @param int    $questionId
      * @param string $answer
      *
      * @return bool
@@ -70,12 +69,14 @@ class UserAdminMapper extends DtoMapper
     public function checkSecurityQuestion($questionId, $personId, $answer)
     {
         $url = UserAdminUrlBuilder::securityQuestionCheck($questionId, $personId)->toString();
+
         return $this->getWithParams($url, $answer);
     }
 
     /**
-     * @param int $personId
+     * @param int   $personId
      * @param array $answers
+     *
      * @return array
      */
     public function checkSecurityQuestions($personId, array $answers)
@@ -88,16 +89,19 @@ class UserAdminMapper extends DtoMapper
 
     /**
      * @param int $personId
+     *
      * @return PersonHelpDeskProfileDto
      */
     public function getUserProfile($personId)
     {
         $response = $this->personDetailsService->getPersonalDetailsData($personId);
+
         return PersonHelpDeskProfileDto::fromArray($response);
     }
 
     /**
      * @param $criteria
+     *
      * @return \DvsaCommon\Dto\Person\SearchPersonResultDto[]
      */
     public function searchUsers($criteria)
@@ -110,40 +114,48 @@ class UserAdminMapper extends DtoMapper
 
     /**
      * @param $personId
+     *
      * @return bool
      */
     public function resetClaimAccount($personId)
     {
         $url = PersonUrlBuilder::resetClaimAccount($personId)->toString();
+
         return $this->client->get($url);
     }
 
     /**
      * @param $params
+     *
      * @return bool
      */
     public function postMessage($params)
     {
         $url = MessageUrlBuilder::message()->toString();
+
         return $this->client->post($url, $params);
     }
 
     /**
-     * @param integer $personId
+     * @param int    $personId
      * @param string $email
+     *
      * @throws RestApplicationException
+     *
      * @return PersonContactDto
      */
     public function updateEmail($personId, $email)
     {
         $url = UserAdminUrlBuilder::personContact($personId);
-        return $this->client->patch($url, ["email" => $email]);
+
+        return $this->client->patch($url, ['email' => $email]);
     }
 
     /**
      * @param $personId
      * @param $licenceNumber
      * @param $licenceRegion
+     *
      * @return mixed|string
      */
     public function updateDrivingLicence($personId, $licenceNumber, $licenceRegion)
@@ -152,14 +164,15 @@ class UserAdminMapper extends DtoMapper
 
         return $this->client->post(
             $url, [
-                "drivingLicenceNumber" => $licenceNumber,
-                "drivingLicenceRegion" => $licenceRegion,
+                'drivingLicenceNumber' => $licenceNumber,
+                'drivingLicenceRegion' => $licenceRegion,
             ]
         );
     }
 
     /**
      * @param int $personId
+     *
      * @return mixed|string
      */
     public function deleteDrivingLicence($personId)
@@ -174,6 +187,7 @@ class UserAdminMapper extends DtoMapper
      * @param $firstName
      * @param $middleName
      * @param $lastName
+     *
      * @return mixed|string
      */
     public function updatePersonName($personId, $firstName, $middleName, $lastName)
@@ -182,9 +196,9 @@ class UserAdminMapper extends DtoMapper
 
         return $this->client->post(
             $url, [
-                "firstName" => $firstName,
-                "middleName" => $middleName,
-                "lastName" => $lastName,
+                'firstName' => $firstName,
+                'middleName' => $middleName,
+                'lastName' => $lastName,
             ]
         );
     }
@@ -195,12 +209,12 @@ class UserAdminMapper extends DtoMapper
 
         return $this->client->post(
             $url, [
-                "firstLine" => $firstLine,
-                "secondLine" => $secondLine,
-                "thirdLine" => $thirdLine,
-                "townOrCity" => $townOrCity,
-                "country" => $country,
-                "postcode" => $postcode,
+                'firstLine' => $firstLine,
+                'secondLine' => $secondLine,
+                'thirdLine' => $thirdLine,
+                'townOrCity' => $townOrCity,
+                'country' => $country,
+                'postcode' => $postcode,
             ]
         );
     }
@@ -208,6 +222,7 @@ class UserAdminMapper extends DtoMapper
     /**
      * @param $personId
      * @param array $data
+     *
      * @return mixed|string
      */
     public function updateDateOfBirth($personId, array $data)
@@ -220,6 +235,7 @@ class UserAdminMapper extends DtoMapper
     /**
      * @param $personId
      * @param $newPhoneNumber
+     *
      * @return mixed|string
      */
     public function updatePersonTelephoneNumber($personId, $newPhoneNumber)
@@ -228,7 +244,7 @@ class UserAdminMapper extends DtoMapper
 
         $this->client->put(
             $url, [
-                ChangeTelephoneController::PHONE_NUMBER_KEY => $newPhoneNumber
+                ChangeTelephoneController::PHONE_NUMBER_KEY => $newPhoneNumber,
             ]
         );
     }

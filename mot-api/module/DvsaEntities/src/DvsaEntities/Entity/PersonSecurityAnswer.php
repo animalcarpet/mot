@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * PersonSecurityQuestionMap
+ * PersonSecurityQuestionMap.
  *
  * @ORM\Table(name="person_security_question_map", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\PersonSecurityAnswerRepository")

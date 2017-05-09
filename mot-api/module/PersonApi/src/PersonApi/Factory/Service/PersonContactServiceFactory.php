@@ -15,7 +15,7 @@ use Zend\Authentication\AuthenticationService;
 use PersonApi\Helper\PersonDetailsChangeNotificationHelper;
 
 /**
- * Factory for PersonContactService
+ * Factory for PersonContactService.
  */
 class PersonContactServiceFactory implements FactoryInterface
 {

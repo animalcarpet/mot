@@ -21,8 +21,7 @@ class DateOfFirstUseAction
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         CreateVehicleStepService $createVehicleStepService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->createVehicleStepService = $createVehicleStepService;
     }

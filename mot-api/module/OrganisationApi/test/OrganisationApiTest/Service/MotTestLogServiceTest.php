@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -13,17 +14,15 @@ use OrganisationApi\Service\MotTestLogService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class MotTestLogServiceTest
- *
- * @package OrganisationApiTest\Service
+ * Class MotTestLogServiceTest.
  */
 class MotTestLogServiceTest extends AbstractServiceTestCase
 {
     const AE_ID = 1;
-    const YEAR  = '1024';
+    const YEAR = '1024';
     const MONTH = '256';
-    const WEEK  = '12';
-    const DAY   = '2';
+    const WEEK = '12';
+    const DAY = '2';
 
     /** @var MotTestLogService */
     private $motTestLogService;
@@ -37,7 +36,7 @@ class MotTestLogServiceTest extends AbstractServiceTestCase
     public function setUp()
     {
         $this->mockAuthSrv = $this->getMockAuthorizationService();
-        $this->mockEm      = XMock::of(EntityManager::class, ['getRepository']);
+        $this->mockEm = XMock::of(EntityManager::class, ['getRepository']);
         $this->mockMotRepo = XMock::of(MotTestRepository::class, ['getCountOfMotTestsSummary']);
 
         $this->motTestLogService = new MotTestLogService(
@@ -71,9 +70,9 @@ class MotTestLogServiceTest extends AbstractServiceTestCase
     protected function getMotTestByAe()
     {
         return [
-            'year'  => self::YEAR,
+            'year' => self::YEAR,
             'month' => self::MONTH,
-            'week'  => self::WEEK,
+            'week' => self::WEEK,
             'today' => self::DAY,
         ];
     }

@@ -2,12 +2,11 @@
 
 namespace DvsaCommonApiTest\Service\Validator;
 
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Validator\ErrorSchema;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ErrorSchemaTest
+ * Class ErrorSchemaTest.
  */
 class ErrorSchemaTest extends PHPUnit_Framework_TestCase
 {
@@ -49,11 +48,11 @@ class ErrorSchemaTest extends PHPUnit_Framework_TestCase
         $expectedCount = 5;
 
         // Given I have multiple different errors
-        $error1 = "error 1";
-        $error2 = "error 2";
-        $error3 = "error 3";
-        $error4 = "error 4";
-        $error5 = "error 5";
+        $error1 = 'error 1';
+        $error2 = 'error 2';
+        $error3 = 'error 3';
+        $error4 = 'error 4';
+        $error5 = 'error 5';
 
         $errors = new ErrorSchema();
         $field1 = 'username';

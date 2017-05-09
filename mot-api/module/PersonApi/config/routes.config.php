@@ -36,38 +36,38 @@ use PersonApi\Controller\PersonEmailController;
 return [
     'routes' => [
         'personal-details' => [
-            'type'    => 'Segment',
+            'type' => 'Segment',
             'options' => [
-                'route'       => '/personal-details/:id',
+                'route' => '/personal-details/:id',
                 'constraints' => [
                     'id' => '[0-9]+',
                 ],
-                'defaults'    => [
+                'defaults' => [
                     'controller' => PersonalDetailsController::class,
                 ],
             ],
             'may_terminate' => true,
             'child_routes' => [
                 'pending_roles' => [
-                    'verb'    => 'get',
-                    'type'    => 'Segment',
+                    'verb' => 'get',
+                    'type' => 'Segment',
                     'options' => [
-                        'route'       => '/pending-roles',
-                        'defaults'    => [
+                        'route' => '/pending-roles',
+                        'defaults' => [
                             'controller' => PersonPendingRoleController::class,
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ],
         'password-expiry-notification' => [
-            'type'    => 'Segment',
+            'type' => 'Segment',
             'options' => [
-                'route'       => '/password-expiry-notification',
-                'defaults'    => [
+                'route' => '/password-expiry-notification',
+                'defaults' => [
                     'controller' => PasswordExpiryController::class,
-                ]
-            ]
+                ],
+            ],
         ],
         'demo-test-requests' => [
             'type' => 'segment',
@@ -79,19 +79,19 @@ return [
             ],
             'may_terminate' => true,
         ],
-        'person'           => [
-            'type'          => 'segment',
-            'options'       => [
-                'route'       => '/person[/:id]',
-                'defaults'    => [
+        'person' => [
+            'type' => 'segment',
+            'options' => [
+                'route' => '/person[/:id]',
+                'defaults' => [
                     'controller' => PersonController::class,
                 ],
                 'constraints' => [
-                    'id' => '[0-9]+'
+                    'id' => '[0-9]+',
                 ],
             ],
             'may_terminate' => true,
-            'child_routes'  => [
+            'child_routes' => [
                 'email-duplication' => [
                     'type' => 'segment',
                     'verb' => 'get',
@@ -145,55 +145,55 @@ return [
                     'may_terminate' => true,
                 ],
                 'roles' => [
-                    'verb'    => 'put, get, post',
-                    'type'    => 'Segment',
+                    'verb' => 'put, get, post',
+                    'type' => 'Segment',
                     'options' => [
-                        'route'       => '/roles',
-                        'defaults'    => [
+                        'route' => '/roles',
+                        'defaults' => [
                             'controller' => PersonRoleController::class,
                         ],
-                    ]
+                    ],
                 ],
                 'delete_role' => [
-                    'verb'    => 'delete',
-                    'type'    => 'Segment',
+                    'verb' => 'delete',
+                    'type' => 'Segment',
                     'options' => [
-                        'route'       => '/roles[/:role]',
+                        'route' => '/roles[/:role]',
                         'constraints' => [
                             'role' => '[A-Z0-9-]+',
                         ],
-                        'defaults'    => [
+                        'defaults' => [
                             'controller' => PersonRoleController::class,
                         ],
-                    ]
+                    ],
                 ],
-                'help-desk-reset-claim-account'  => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/reset-claim-account',
+                'help-desk-reset-claim-account' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/reset-claim-account',
                         'defaults' => [
                             'controller' => ResetClaimAccountController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'by-login'                       => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'       => '/username/:login',
-                        'defaults'    => [
+                'by-login' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/username/:login',
+                        'defaults' => [
                             'controller' => PersonByLoginController::class,
                         ],
                         'constraints' => [
-                            'login' => '[a-zA-Z]?[a-zA-Z0-9\.\-_@]*'
+                            'login' => '[a-zA-Z]?[a-zA-Z0-9\.\-_@]*',
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'help-desk-profile-restricted'   => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/help-desk-profile-restricted',
+                'help-desk-profile-restricted' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/help-desk-profile-restricted',
                         'defaults' => [
                             'controller' => PersonProfileRestrictedController::class,
                         ],
@@ -201,107 +201,107 @@ return [
                     'may_terminate' => true,
                 ],
                 'help-desk-profile-unrestricted' => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/help-desk-profile-unrestricted',
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/help-desk-profile-unrestricted',
                         'defaults' => [
                             'controller' => PersonProfileUnrestrictedController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'rbac-roles'                     => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/rbac-roles',
+                'rbac-roles' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/rbac-roles',
                         'defaults' => [
                             'controller' => PersonAuthorisationController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'dashboard'                      => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/dashboard',
+                'dashboard' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/dashboard',
                         'defaults' => [
                             'controller' => DashboardController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'current-mot-test'               => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/current-mot-test',
+                'current-mot-test' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/current-mot-test',
                         'defaults' => [
                             'controller' => PersonCurrentMotTestController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'site-count'                     => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/site-count',
+                'site-count' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/site-count',
                         'defaults' => [
                             'controller' => PersonSiteCountController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'mot-testing'                    => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/mot-testing',
+                'mot-testing' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/mot-testing',
                         'defaults' => [
                             'controller' => MotTestingAuthorisationController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'stats'                          => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/stats',
+                'stats' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/stats',
                         'defaults' => [
                             'controller' => UserStatsController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'authorised-examiner'            => [
-                    'type'    => 'segment',
+                'authorised-examiner' => [
+                    'type' => 'segment',
                     'options' => [
-                        'route'    => '/authorised-examiner',
+                        'route' => '/authorised-examiner',
                         'defaults' => [
-                            'controller' => AuthorisedExaminerController::class
-                        ]
-                    ]
+                            'controller' => AuthorisedExaminerController::class,
+                        ],
+                    ],
                 ],
-                'special-notice'                 => [
-                    'type'    => 'Segment',
+                'special-notice' => [
+                    'type' => 'Segment',
                     'options' => [
-                        'route'    => '/special-notice[/:snId]',
+                        'route' => '/special-notice[/:snId]',
                         'defaults' => [
-                            'controller' => SpecialNoticeController::class
-                        ]
-                    ]
+                            'controller' => SpecialNoticeController::class,
+                        ],
+                    ],
                 ],
-                'reset-pin'                      => [
-                    'type'          => 'segment',
-                    'options'       => [
-                        'route'    => '/reset-pin',
+                'reset-pin' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/reset-pin',
                         'defaults' => [
                             'controller' => ResetPinController::class,
                         ],
                     ],
                     'may_terminate' => true,
                 ],
-                'update-licence'                 => [
-                    'type'    => 'segment',
+                'update-licence' => [
+                    'type' => 'segment',
                     'options' => [
-                        'route'    => '/driving-licence',
+                        'route' => '/driving-licence',
                         'defaults' => [
                             'controller' => UpdateLicenceDetailsController::class,
                         ],
@@ -318,10 +318,10 @@ return [
                     ],
                     'may_terminate' => true,
                 ],
-                'update-date-of-birth'                 => [
-                    'type'    => 'segment',
+                'update-date-of-birth' => [
+                    'type' => 'segment',
                     'options' => [
-                        'route'    => '/date-of-birth',
+                        'route' => '/date-of-birth',
                         'defaults' => [
                             'controller' => UpdatePersonDateOfBirthController::class,
                         ],
@@ -344,8 +344,8 @@ return [
                         'route' => '/address',
                         'defaults' => [
                             'controller' => UpdateAddressController::class,
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'mot-testing-certificate' => [
                     'type' => 'segment',
@@ -355,7 +355,7 @@ return [
                             'controller' => MotTestingCertificateController::class,
                         ],
                         'constraints' => [
-                            'group' => 'a|b'
+                            'group' => 'a|b',
                         ],
                     ],
                     'may_terminate' => true,
@@ -379,8 +379,8 @@ return [
                         ],
                         'constraints' => [
                             'group' => 'A|B',
-                            'certificateId' => '[0-9]+'
-                        ]
+                            'certificateId' => '[0-9]+',
+                        ],
                     ],
                     'may_terminate' => true,
                 ],

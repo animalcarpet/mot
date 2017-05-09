@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Controller;
 
 use Core\Controller\AbstractStepController;
 use Core\Service\StepService;
-use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use Zend\Mvc\Controller\Plugin\Redirect;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
@@ -160,9 +159,9 @@ class AbstractStepControllerTest extends \PHPUnit_Framework_TestCase
     private function getFakeDetailsArray()
     {
         return [
-            DetailsInputFilter::FIELD_FIRST_NAME     => "John",
-            DetailsInputFilter::FIELD_MIDDLE_NAME    => "James",
-            DetailsInputFilter::FIELD_LAST_NAME      => "Doe",
+            DetailsInputFilter::FIELD_FIRST_NAME => 'John',
+            DetailsInputFilter::FIELD_MIDDLE_NAME => 'James',
+            DetailsInputFilter::FIELD_LAST_NAME => 'Doe',
         ];
     }
 }

@@ -45,15 +45,15 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
     /* @var VehicleEditBreadcrumbsBuilder */
     private $breadcrumbsBuilder;
 
-    /** @var  DvsaVehicleBuilder */
+    /** @var DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
 
     /** @var DvsaVehicle */
     private $vehicle;
 
-    private $obfuscatedId = "OBF-15-SCATED";
+    private $obfuscatedId = 'OBF-15-SCATED';
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     public function setUp()
@@ -167,7 +167,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         // with correct country
         /** @var UpdateDvsaVehicleRequest $updateRequest */
         $updateRequest = $this->vehicleServiceUpdateSpy->paramsForLastInvocation()[2];
-        $this->assertEquals($countryId , $updateRequest->getCountryOfRegistrationId());
+        $this->assertEquals($countryId, $updateRequest->getCountryOfRegistrationId());
     }
 
     public function testPrePopulatedData_vehicleExaminerChange()
@@ -377,29 +377,29 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
     {
         $make = new stdClass();
         $make->id = 1;
-        $make->name = "Audi";
+        $make->name = 'Audi';
 
         $model = new stdClass();
         $model->id = 4;
-        $model->name = "A4";
+        $model->name = 'A4';
 
         $fuel = new stdClass();
-        $model->code = "PE";
-        $model->name = "Petrol";
+        $model->code = 'PE';
+        $model->name = 'Petrol';
 
         $colour = new stdClass();
-        $colour->code = "L";
-        $colour->name = "Grey";
+        $colour->code = 'L';
+        $colour->name = 'Grey';
 
         $secondaryColour = new stdClass();
-        $secondaryColour->code = "W";
-        $secondaryColour->name = "Not Stated";
+        $secondaryColour->code = 'W';
+        $secondaryColour->name = 'Not Stated';
 
         $std = new stdClass();
         $std->make = $make;
         $std->model = $model;
-        $std->registration = "reg123XSW";
-        $std->vin = "VIN98798798";
+        $std->registration = 'reg123XSW';
+        $std->vin = 'VIN98798798';
         $std->vehicleClass = null;
         $std->fuelType = $fuel;
         $std->colour = $colour;

@@ -8,9 +8,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Mapper\AbstractApiMapper;
 
 /**
- * Class MotTestLogMapper
- *
- * @package OrganisationApi\Service\Mapper
+ * Class MotTestLogMapper.
  */
 class MotTestLogSummaryMapper extends AbstractApiMapper
 {

@@ -18,7 +18,6 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * Class CreateAccountControllerFactoryTest.
  */
-
 class CreateAccountControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -28,7 +27,7 @@ class CreateAccountControllerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $service  =  XMock::of(RegistrationStepService::class);
+        $service = XMock::of(RegistrationStepService::class);
         $serviceManager->setService(RegistrationStepService::class, $service);
         $serviceManager->setService(RegistrationSessionService::class, XMock::of(RegistrationSessionService::class));
 

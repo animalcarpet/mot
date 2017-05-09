@@ -8,47 +8,48 @@ use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingValidator;
 
 /**
- * Class OdometerReadingValidatorTest
+ * Class OdometerReadingValidatorTest.
  */
 class OdometerReadingValidatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var OdometerReadingValidator $odometerReadingValidator
+     * @var OdometerReadingValidator
      */
     private $odometerReadingValidator;
 
     public static function dataProviderGivenInvalidReadingAsInput()
     {
-        $invalidResultType = $invalidUnit = "><>";
+        $invalidResultType = $invalidUnit = '><>';
+
         return [
             [
                 'reading' => OdometerReadingDto::create()->setResultType($invalidResultType),
-                'fields'  => ['resultType']
+                'fields' => ['resultType'],
             ],
             [
                 'reading' => OdometerReadingDto::create()->setResultType(OdometerReadingResultType::OK)
                         ->setValue(null),
-                'fields'  => ['value']
+                'fields' => ['value'],
             ],
             [
                 'reading' => OdometerReadingDto::create()->setResultType(OdometerReadingResultType::OK)
                         ->setValue(-1),
-                'fields'  => ['value']
+                'fields' => ['value'],
             ],
             [
                 'reading' => OdometerReadingDto::create()->setResultType(OdometerReadingResultType::OK)
                         ->setValue(1)->setUnit($invalidUnit),
-                'fields'  => ['unit']
+                'fields' => ['unit'],
             ],
             [
                 'reading' => OdometerReadingDto::create()->setResultType(OdometerReadingResultType::NO_ODOMETER)
                         ->setUnit($invalidUnit),
-                'fields'  => ['unit']
+                'fields' => ['unit'],
             ],
             [
                 'reading' => OdometerReadingDto::create()->setResultType(OdometerReadingResultType::NO_ODOMETER)
-                        ->setUnit($invalidUnit)->setValue("nonEmptyValue"),
-                'fields'  => ['value']
+                        ->setUnit($invalidUnit)->setValue('nonEmptyValue'),
+                'fields' => ['value'],
             ],
         ];
     }
@@ -67,8 +68,7 @@ class OdometerReadingValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateGivenInvalidReadingAsInputShouldReturnErrorForFields(
         OdometerReadingDto $reading,
         $fields
-    )
-    {
+    ) {
         $result = $this->odometerReadingValidator->validate(
             $reading->getValue(),
             $reading->getUnit(),
@@ -79,7 +79,7 @@ class OdometerReadingValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Checks if for every field in the array there is at least one message in the check result
+     * Checks if for every field in the array there is at least one message in the check result.
      *
      * @param CheckResult $checkResult
      * @param array       $fields

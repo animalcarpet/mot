@@ -1,4 +1,5 @@
 <?php
+
 namespace AccountApiTest\Factory\Controller;
 
 use AccountApi\Controller\PasswordResetController;
@@ -6,12 +7,10 @@ use AccountApi\Factory\Controller\PasswordResetControllerFactory;
 use AccountApi\Service\TokenService;
 use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PasswordResetControllerFactoryTest
- * @package AccountTest\Factory
+ * Class PasswordResetControllerFactoryTest.
  */
 class PasswordResetControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

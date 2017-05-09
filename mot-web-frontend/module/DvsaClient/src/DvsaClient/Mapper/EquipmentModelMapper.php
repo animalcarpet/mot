@@ -6,15 +6,11 @@ use DvsaCommon\Dto\Equipment\EquipmentModelDto;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 
 /**
- * Class EquipmentModelMapper
- *
- * @package DvsaClient\Mapper
+ * Class EquipmentModelMapper.
  */
 class EquipmentModelMapper extends DtoMapper
 {
-
     /**
-     *
      * @return EquipmentModelDto[]
      */
     public function getAll()

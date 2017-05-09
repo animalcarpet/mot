@@ -34,17 +34,18 @@ class AlreadyHasRegisteredCardController extends AbstractAuthActionController
     /** @var MotIdentityProviderInterface */
     private $identityProvider;
 
-    /** @var  SecurityCardGuard */
+    /** @var SecurityCardGuard */
     private $securityCardGuard;
 
     /**
      * AlreadyHasRegisteredCardController constructor.
-     * @param SecurityCardService $securityCardService
-     * @param ContextProvider $contextProvider
-     * @param ApiPersonalDetails $personalDetailsService
-     * @param CatalogService $catalogService
+     *
+     * @param SecurityCardService          $securityCardService
+     * @param ContextProvider              $contextProvider
+     * @param ApiPersonalDetails           $personalDetailsService
+     * @param CatalogService               $catalogService
      * @param MotIdentityProviderInterface $identityProvider
-     * @param SecurityCardGuard $securityCardGuard
+     * @param SecurityCardGuard            $securityCardGuard
      */
     public function __construct(
         SecurityCardService $securityCardService,
@@ -53,8 +54,7 @@ class AlreadyHasRegisteredCardController extends AbstractAuthActionController
         CatalogService $catalogService,
         MotIdentityProviderInterface $identityProvider,
         SecurityCardGuard $securityCardGuard
-    )
-    {
+    ) {
         $this->securityCardService = $securityCardService;
         $this->contextProvider = $contextProvider;
         $this->personalDetailsService = $personalDetailsService;
@@ -85,7 +85,7 @@ class AlreadyHasRegisteredCardController extends AbstractAuthActionController
 
         return $this->createViewModel(self::PAGE_TEMPLATE, [
             'securityCard' => $securityCard,
-            'securityCardDate' => $securityCardDate
+            'securityCardDate' => $securityCardDate,
         ]);
     }
 

@@ -1,7 +1,5 @@
 <?php
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\Enum\ColourCode;
-use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Model\VehicleClass;
 
@@ -48,11 +46,11 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
         echo $this->partial(
             'dldtdd', [
                 'dlCssClass' => 'dl-large',
-                'items'      => [
+                'items' => [
                     ['Registration number', $vrm, 'id' => 'vehicleRegistrationNumber'],
                     ['VIN/Chassis number', $vin, 'id' => 'vehicleVINnumber'],
                     ['Make', $makeAndModel, 'id' => 'vehicleMake'],
-                ]
+                ],
             ]
         );
         ?>
@@ -64,7 +62,7 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                 echo $this->partial(
                     'dldtdd', [
                         'dlCssClass' => 'dl-standard',
-                        'items'      => [
+                        'items' => [
                             ['Cylinder capacity', $vehicle->getCylinderCapacity(), 'id' => 'vehicleCylinderCapacity'],
                             (
                                 $transmissionType
@@ -74,12 +72,12 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                             (
                                 method_exists($vehicle, 'getWeight')
                                     ? $vehicle->getWeight() > 0
-                                      ? ['Vehicle weight', $vehicle->getWeight() . ' kg', 'id' => 'vehicleWeight']
+                                      ? ['Vehicle weight', $vehicle->getWeight().' kg', 'id' => 'vehicleWeight']
                                       : ['Vehicle weight', 'Unknown', 'id' => 'vehicleWeight']
                                     : null
                             ),
-                            ($expiryDate ? ['MOT expiry date', $expiryDate, 'id' => 'motExpiryDate'] : null)
-                        ]
+                            ($expiryDate ? ['MOT expiry date', $expiryDate, 'id' => 'motExpiryDate'] : null),
+                        ],
                     ]
                 );
                 ?>
@@ -89,14 +87,14 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                 echo $this->partial(
                     'dldtdd', [
                         'dlCssClass' => 'dl-standard',
-                        'items'      => [
+                        'items' => [
                             ['Body type', $vehicle->getBodyType(), 'id' => 'vehicleBodyType'],
                             [
                                 'Date of first use',
                                 DateTimeDisplayFormat::textDate($vehicle->getFirstUsedDate()) ?: null,
-                                'id' => 'vehicleFirstUse'
+                                'id' => 'vehicleFirstUse',
                             ],
-                        ]
+                        ],
                     ]
                 );
                 ?>
@@ -115,18 +113,18 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                                 echo $this->partial(
                                     'selectElement',
                                     [
-                                        'id'       => 'vehicle-class-select',
-                                        'name'     => 'vehicleClassId',
-                                        'options'  => $vehicleClasses,
-                                        'value'    => $vehicle->getVehicleClass() ? $vehicle->getVehicleClass()->getCode() : "",
+                                        'id' => 'vehicle-class-select',
+                                        'name' => 'vehicleClassId',
+                                        'options' => $vehicleClasses,
+                                        'value' => $vehicle->getVehicleClass() ? $vehicle->getVehicleClass()->getCode() : '',
                                         'required' => true,
                                     ]
                                 );
                             } else {
-                                echo $vehicle->getVehicleClass()->getName();
-                                ?>
-                                    <input type="hidden" name="vehicleClassId" value="<?php echo $vehicle->getVehicleClass() ? $vehicle->getVehicleClass()->getCode() : ""; ?>" />
+                                echo $vehicle->getVehicleClass()->getName(); ?>
+                                    <input type="hidden" name="vehicleClassId" value="<?php echo $vehicle->getVehicleClass() ? $vehicle->getVehicleClass()->getCode() : ''; ?>" />
                                 <?php
+
                             }
                             ?>
                         </div>
@@ -139,22 +137,22 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     <dd>
                         <div class="form-group">
                             <?php
-                            $fuelTypeName = $vehicle->getFuelType() ? $vehicle->getFuelType()->getName() : "";
+                            $fuelTypeName = $vehicle->getFuelType() ? $vehicle->getFuelType()->getName() : '';
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
                                     'selectElementSelectedByDisplayedValue',
                                     [
-                                        'id'      => 'fuel-type-select',
-                                        'name'    => 'fuelTypeId',
+                                        'id' => 'fuel-type-select',
+                                        'name' => 'fuelTypeId',
                                         'options' => $fuelTypes,
-                                        'value'   => $fuelTypeName,
+                                        'value' => $fuelTypeName,
                                     ]
                                 );
                             } else {
-                                echo $fuelTypeName;
-                                ?>
+                                echo $fuelTypeName; ?>
                                     <input type="hidden" name="fuelTypeId" value="<?php echo $fuelTypeName; ?>" />
                                 <?php
+
                             }
                             ?>
                         </div>
@@ -169,22 +167,22 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     <dd>
                         <div class="form-group">
                             <?php
-                            $colourName = $vehicle->getColour() ? $vehicle->getColour()->getName() : "";
+                            $colourName = $vehicle->getColour() ? $vehicle->getColour()->getName() : '';
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
                                     'selectElementSelectedByDisplayedValue',
                                     [
-                                        'id'      => 'primary-colour',
-                                        'name'    => 'colourId',
+                                        'id' => 'primary-colour',
+                                        'name' => 'colourId',
                                         'options' => $colours->getPrimaryColours(),
-                                        'value'   => $colourName
+                                        'value' => $colourName,
                                     ]
                                 );
                             } else {
-                                echo $colourName;
-                                ?>
+                                echo $colourName; ?>
                                     <input type="hidden" name="colourId" value="<?php echo $colourName; ?>" />
                                 <?php
+
                             }
                             ?>
                         </div>
@@ -197,22 +195,22 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     <dd>
                         <div class="form-group">
                             <?php
-                            $secondaryColourName = $vehicle->getColourSecondary() ? $vehicle->getColourSecondary()->getName() : "";
+                            $secondaryColourName = $vehicle->getColourSecondary() ? $vehicle->getColourSecondary()->getName() : '';
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
                                     'selectElementSelectedByDisplayedValue',
                                     [
-                                        'id'      => 'secondary-colour',
-                                        'name'    => 'secondaryColourId',
+                                        'id' => 'secondary-colour',
+                                        'name' => 'secondaryColourId',
                                         'options' => $colours->getSecondaryColours(),
-                                        'value'   => $secondaryColourName
+                                        'value' => $secondaryColourName,
                                     ]
                                 );
                             } else {
-                                echo $secondaryColourName;
-                                ?>
+                                echo $secondaryColourName; ?>
                                     <input type="hidden" name="secondaryColourId" value="<?php echo $secondaryColourName; ?>" />
                                 <?php
+
                             }
                             ?>
                         </div>

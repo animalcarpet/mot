@@ -2,10 +2,11 @@
 
 /**
  * Mot Test Certificate Mapper
- * Maps MOT Test data into the snap shot format for the Certificate
+ * Maps MOT Test data into the snap shot format for the Certificate.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace DvsaMotApi\Mapper;
 
 use DataCatalogApi\Service\DataCatalogService;
@@ -16,7 +17,7 @@ use Exception;
 
 /**
  * Mot Test Certificate Mapper
- * Maps MOT Test data into the snap shot format for the Certificate
+ * Maps MOT Test data into the snap shot format for the Certificate.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -26,14 +27,13 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
     const REP_VAR_ADDITIONAL_INFO = 'AdditionalInformation';
     const REP_VAR_ODOMETER_HISTORY = 'OdometerHistory';
 
-
     public function __construct(DataCatalogService $dataCatalogService)
     {
         parent::__construct($dataCatalogService);
     }
 
     /**
-     * Holds the template map
+     * Holds the template map.
      *
      * @var array
      */
@@ -60,7 +60,7 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
         ];
 
     /**
-     * Map the input data to the certificate snapshot data format
+     * Map the input data to the certificate snapshot data format.
      *
      * @return array
      */
@@ -82,7 +82,7 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
     }
 
     /**
-     * Map Odometers
+     * Map Odometers.
      */
     private function mapOdometers()
     {
@@ -105,24 +105,24 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
             );
         }
 
-        $this->setValue(self::REP_VAR_ODOMETER_HISTORY, join(PHP_EOL, $result));
+        $this->setValue(self::REP_VAR_ODOMETER_HISTORY, implode(PHP_EOL, $result));
     }
 
     private function mapExpiryDate()
     {
         if (empty($this->data)) {
             return;
-        } else if(empty($this->data['expiryDate'])) {
-            throw new Exception('Expiry date for passed test is mandatory, test number: ' . $this->data['motTestNumber']);
+        } elseif (empty($this->data['expiryDate'])) {
+            throw new Exception('Expiry date for passed test is mandatory, test number: '.$this->data['motTestNumber']);
         }
 
         $date = DateUtils::toDateTime($this->data['expiryDate'], false);
 
-        $expiryYear = (int)$date->format('y');
+        $expiryYear = (int) $date->format('y');
 
-        $expiryDate = $this->formatDate($date) .
-            ($this->isDualLanguage() ? PHP_EOL : ' ') .
-            '(' . $this->convertYearToWords($expiryYear) . ')';
+        $expiryDate = $this->formatDate($date).
+            ($this->isDualLanguage() ? PHP_EOL : ' ').
+            '('.$this->convertYearToWords($expiryYear).')';
 
         $this->setValue(self::REP_VAR_EXPIRY_DATE, $expiryDate);
     }
@@ -137,7 +137,7 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
         $this->setValue(
             self::REP_VAR_ADDITIONAL_INFO,
             'To preserve the anniversary of the expiry date, the earliest you can present your vehicle for test is '
-            . $this->formatDate(MotTestDate::preservationDate(new \DateTime($expiryDate))) . '.'
+            .$this->formatDate(MotTestDate::preservationDate(new \DateTime($expiryDate))).'.'
         );
     }
 }

@@ -6,11 +6,9 @@ use DvsaEntities\Repository\RbacRepository;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class RoleProviderService
+ * Class RoleProviderService.
  *
  * Allows for queries against the database to retrieve roles for users.
- *
- * @package DvsaAuthorisation\Service
  */
 class RoleProviderService
 {
@@ -41,6 +39,7 @@ class RoleProviderService
         foreach ($roles['normal']['roles'] as $id => $role) {
             $results[] = $role;
         }
+
         return $results;
     }
 }

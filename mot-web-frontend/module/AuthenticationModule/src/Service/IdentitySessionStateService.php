@@ -41,10 +41,10 @@ class IdentitySessionStateService
     private $logger;
 
     /**
-     * @param \Dvsa\OpenAM\OpenAMClientInterface                         $openAMClient
-     * @param \DvsaCommon\Auth\MotIdentityProviderInterface              $motIdentityProvider
+     * @param \Dvsa\OpenAM\OpenAMClientInterface                                             $openAMClient
+     * @param \DvsaCommon\Auth\MotIdentityProviderInterface                                  $motIdentityProvider
      * @param \Dvsa\Mot\Frontend\AuthenticationModule\Service\WebAuthenticationCookieService $cookieService
-     * @param \Zend\Log\LoggerInterface                                  $logger
+     * @param \Zend\Log\LoggerInterface                                                      $logger
      */
     public function __construct(
         OpenAMClientInterface $openAMClient,

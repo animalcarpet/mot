@@ -5,13 +5,12 @@ namespace DvsaEntitiesTest\DqlBuilder\SearchParam;
 use DvsaEntities\DqlBuilder\SearchParam\OrgSlotUsageParam;
 
 /**
- * Class OrgSlotUsageParamTest
+ * Class OrgSlotUsageParamTest.
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
 class OrgSlotUsageParamTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var OrgSlotUsageParam
      */
@@ -35,7 +34,7 @@ class OrgSlotUsageParamTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(1, 1),
-            array(999, 999)
+            array(999, 999),
         );
     }
 
@@ -85,7 +84,7 @@ class OrgSlotUsageParamTest extends \PHPUnit_Framework_TestCase
         return array(
             array('test', 'test'),
             array('very_long_string_very_long_string_very_long_string_very_long_string_very_long_string_very_long_string_',
-                'very_long_string_very_long_string_very_long_string_very_long_string_very_long_string_very_long_string_'),
+                'very_long_string_very_long_string_very_long_string_very_long_string_very_long_string_very_long_string_', ),
         );
     }
 

@@ -142,7 +142,7 @@ class OrganisationPositionServiceTest extends \PHPUnit_Framework_TestCase
     private function notificationSent()
     {
         $capNotification = ArgCapture::create();
-        $this->notificationService->expects($this->atLeastOnce())->method("add")
+        $this->notificationService->expects($this->atLeastOnce())->method('add')
             ->with($capNotification());
 
         return $capNotification;
@@ -152,7 +152,7 @@ class OrganisationPositionServiceTest extends \PHPUnit_Framework_TestCase
     {
         $person = new Person();
 
-        $authExaminer = (new AuthorisationForAuthorisedExaminer)->setNumber('AE123');
+        $authExaminer = (new AuthorisationForAuthorisedExaminer())->setNumber('AE123');
 
         $org = (new Organisation())->setId($organisationId);
         $org->setAuthorisedExaminer($authExaminer);
@@ -171,5 +171,4 @@ class OrganisationPositionServiceTest extends \PHPUnit_Framework_TestCase
 
         return $map;
     }
-
 }

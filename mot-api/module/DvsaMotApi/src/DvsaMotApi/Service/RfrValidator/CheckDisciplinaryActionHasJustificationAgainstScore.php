@@ -6,9 +6,7 @@ use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class CheckDisciplinaryActionHasJustificationAgainstScore
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class CheckDisciplinaryActionHasJustificationAgainstScore.
  */
 class CheckDisciplinaryActionHasJustificationAgainstScore extends BaseResultValidator
 {
@@ -16,13 +14,13 @@ class CheckDisciplinaryActionHasJustificationAgainstScore extends BaseResultVali
      * Pattern for validation of an RFR.
      * - Do the relevant check,
      * - set the error if required
-     * - return true if passed
+     * - return true if passed.
      *
      * @return bool|ErrorMessage
      */
     public function validate()
     {
-        if ((int)$this->values['caseOutcome'] === self::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT
+        if ((int) $this->values['caseOutcome'] === self::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT
             && $this->calculatedScore < self::SCORE_DAMAGE_MISSED_POINTS
             && strlen(trim($this->values['finalJustification'])) === 0
         ) {
@@ -32,6 +30,7 @@ class CheckDisciplinaryActionHasJustificationAgainstScore extends BaseResultVali
                 ['finalJustification' => null]
             );
         }
+
         return $this->error === null;
     }
 }

@@ -7,7 +7,7 @@ use Zend\Http\PhpEnvironment\Response;
 use Zend\View\Model\JsonModel;
 
 /**
- * Responsible for unifying response format across API layer
+ * Responsible for unifying response format across API layer.
  */
 class ApiResponse
 {
@@ -39,6 +39,7 @@ class ApiResponse
     public static function httpResponse($status)
     {
         $response = new Response();
+
         return $response->setStatusCode($status);
     }
 }

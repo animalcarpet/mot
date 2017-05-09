@@ -14,12 +14,11 @@ use AccountApi\Service\TokenService;
 use AccountApi\Service\Validator\ClaimValidator;
 use AccountApi\Service\OpenAmIdentityService;
 use AccountApi\Service\Validator\PersonSecurityAnswerValidator;
-use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 /**
- * Class Module
+ * Class Module.
  */
 class Module
 {
@@ -32,7 +31,7 @@ class Module
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function getServiceConfig()
@@ -44,8 +43,8 @@ class Module
                 OpenAmIdentityService::class => OpenAmIdentityServiceFactory::class,
                 TokenService::class => TokenServiceFactory::class,
                 SecurityQuestionService::class => SecurityQuestionServiceFactory::class,
-                PersonSecurityAnswerValidator::class => PersonSecurityAnswerValidatorFactory::class
-            ]
+                PersonSecurityAnswerValidator::class => PersonSecurityAnswerValidatorFactory::class,
+            ],
         ];
     }
 

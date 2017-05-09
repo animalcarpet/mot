@@ -2,13 +2,11 @@
 
 namespace DvsaMotEnforcementTest\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotEnforcement\Controller\MotTestController;
 use DvsaMotEnforcement\Factory\Controller\MotTestControllerFactory;
-use Zend\Log\LoggerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MotTestControllerFactoryTest extends \PHPUnit_Framework_TestCase

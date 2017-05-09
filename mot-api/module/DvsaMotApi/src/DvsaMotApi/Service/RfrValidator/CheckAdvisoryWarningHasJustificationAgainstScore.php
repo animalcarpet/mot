@@ -6,9 +6,7 @@ use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class CheckAdvisoryWarningHasJustificationAgainstScore
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class CheckAdvisoryWarningHasJustificationAgainstScore.
  */
 class CheckAdvisoryWarningHasJustificationAgainstScore extends BaseResultValidator
 {
@@ -16,13 +14,13 @@ class CheckAdvisoryWarningHasJustificationAgainstScore extends BaseResultValidat
      * Pattern for validation of an RFR.
      * - Do the relevant check,
      * - set the error if required
-     * - return true if passed
+     * - return true if passed.
      *
      * @return bool|ErrorMessage
      */
     public function validate()
     {
-        if ((int)$this->values['caseOutcome'] === self::CASE_OUTCOME_ADVISORY_WARNING_LETTER
+        if ((int) $this->values['caseOutcome'] === self::CASE_OUTCOME_ADVISORY_WARNING_LETTER
             && ($this->calculatedScore < BaseValidator::SCORE_SIGNIFICANTLY_WRONG_POINTS
                 || $this->calculatedScore >= BaseValidator::SCORE_DAMAGE_MISSED_POINTS)
             && strlen(trim($this->values['finalJustification'])) === 0
@@ -33,6 +31,7 @@ class CheckAdvisoryWarningHasJustificationAgainstScore extends BaseResultValidat
                 ['finalJustification' => null]
             );
         }
+
         return $this->error === null;
     }
 }

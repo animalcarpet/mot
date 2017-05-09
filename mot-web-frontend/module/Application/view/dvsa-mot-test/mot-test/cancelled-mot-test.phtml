@@ -4,7 +4,7 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 
 /**
- * @var \Dvsa\Mot\ApiClient\Resource\Item\ReasonForCancel $cancelReason
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\ReasonForCancel
  */
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
@@ -26,7 +26,7 @@ if ($motTest !== null) {
 
 //  --  title and header    --
 $testName = AbstractDvsaMotTestController::getTestName($motTestType);
-$header = $testName . ' ' . $status;
+$header = $testName.' '.$status;
 $title = $header;
 $this->headTitle($title);
 ?>
@@ -41,7 +41,7 @@ $this->headTitle($title);
 echo $this->partial('errorMessages', ['getFromFlash' => true]);
 echo $this->partial('infoMessages', ['getFromFlash' => true]);
 
-if ($vehicle !== null)  {
+if ($vehicle !== null) {
     echo $this->partial('vehicleSummary', ['vehicle' => $vehicle]);
 }
 ?>
@@ -75,7 +75,7 @@ if ($vehicle !== null)  {
             ?>
             <ul>
                 <li>
-                    <?php echo $this->escapeHtml('The VT' . $reportNr. '  has been generated'); ?>
+                    <?php echo $this->escapeHtml('The VT'.$reportNr.'  has been generated'); ?>
                 </li>
             </ul>
         <?php endif; ?>

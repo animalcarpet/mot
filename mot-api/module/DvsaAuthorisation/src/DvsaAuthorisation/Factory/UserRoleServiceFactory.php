@@ -19,6 +19,7 @@ class UserRoleServiceFactory implements FactoryInterface
     {
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get(\Doctrine\ORM\EntityManager::class);
+
         return new UserRoleService(
             $entityManager->getRepository(OrganisationBusinessRoleMap::class),
             $entityManager->getRepository(SiteBusinessRoleMap::class),

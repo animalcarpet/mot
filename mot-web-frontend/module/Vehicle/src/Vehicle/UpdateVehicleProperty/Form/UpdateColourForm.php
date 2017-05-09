@@ -1,4 +1,5 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form;
 
 use DvsaCommon\Enum\ColourCode;
@@ -8,8 +9,8 @@ use Zend\Form\Form;
 
 class UpdateColourForm extends Form
 {
-    const FIELD_COLOUR = "colour";
-    const FIELD_SECONDARY_COLOUR = "secondaryColour";
+    const FIELD_COLOUR = 'colour';
+    const FIELD_SECONDARY_COLOUR = 'secondaryColour';
 
     private $colours;
     private $colourOptions;
@@ -40,14 +41,14 @@ class UpdateColourForm extends Form
             ->setDisableInArrayValidator(true)
             ->setValueOptions($this->colourOptions)
             ->setName(self::FIELD_COLOUR)
-            ->setLabel("Primary colour")
+            ->setLabel('Primary colour')
             ->setAttribute('type', 'select')
             ->setAttribute('id', self::FIELD_COLOUR)
             ->setAttribute('required', false)
             ->setAttribute('group', true)
             ->setAttribute('formControlClass', 'form-control-select')
             ->setAttribute('data-target', 'secondaryColours')
-            ->setAttribute('data-target-value','S,P,B,A,V,G,H,L,T,K,E,D,C,M,U,N,F,R,W,J')
+            ->setAttribute('data-target-value', 'S,P,B,A,V,G,H,L,T,K,E,D,C,M,U,N,F,R,W,J')
             ->setAttribute('aria-expanded', false)
             ->setAttribute('aria-controls', 'secondaryColours')
             ->setAttribute('inputModifier', '1-4');
@@ -63,8 +64,8 @@ class UpdateColourForm extends Form
             ->setDisableInArrayValidator(true)
             ->setValueOptions($this->colourOptions)
             ->setName(self::FIELD_SECONDARY_COLOUR)
-            ->setLabel("Secondary colour")
-            ->setAttribute("defaultValue", "No other colour")
+            ->setLabel('Secondary colour')
+            ->setAttribute('defaultValue', 'No other colour')
             ->setAttribute('type', 'select')
             ->setAttribute('id', self::FIELD_SECONDARY_COLOUR)
             ->setAttribute('required', false)
@@ -89,7 +90,7 @@ class UpdateColourForm extends Form
     {
         unset($colours[ColourCode::NOT_STATED]);
         asort($colours);
-        $colours += [ColourCode::NOT_STATED => "Not stated"];
+        $colours += [ColourCode::NOT_STATED => 'Not stated'];
 
         return $colours;
     }
@@ -100,7 +101,7 @@ class UpdateColourForm extends Form
         $secondaryColourOptions = $this->colourOptions;
 
         //if secondary colour is picked then primary colour can't be not stated nor null
-        if(!in_array($secondaryColourPicked, [ColourCode::NOT_STATED, ""], true)) {
+        if (!in_array($secondaryColourPicked, [ColourCode::NOT_STATED, ''], true)) {
             unset($colourOptions[ColourCode::NOT_STATED]);
         }
 

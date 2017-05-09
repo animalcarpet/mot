@@ -3,7 +3,7 @@
 namespace DvsaEntities\Repository;
 
 /**
- * Repository for SiteType lookup entity
+ * Repository for SiteType lookup entity.
  */
 class SiteTypeRepository extends AbstractMutableRepository
 {

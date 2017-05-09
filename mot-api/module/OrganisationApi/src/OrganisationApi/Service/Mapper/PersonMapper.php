@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Date\DateTimeApiFormat;
@@ -8,9 +9,7 @@ use DvsaCommon\Dto\Person\PersonDto;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class PersonMapper
- *
- * @package OrganisationApi\Service\Mapper
+ * Class PersonMapper.
  */
 class PersonMapper
 {
@@ -37,13 +36,13 @@ class PersonMapper
      */
     public function toArray(Person $person)
     {
-        $personData['id']         = $person->getId();
-        $personData['userName']   = $person->getUsername();
-        $personData['firstName']  = $person->getFirstName();
+        $personData['id'] = $person->getId();
+        $personData['userName'] = $person->getUsername();
+        $personData['firstName'] = $person->getFirstName();
         $personData['middleName'] = $person->getMiddleName();
         $personData['familyName'] = $person->getFamilyName();
-        $personData['gender']     = $person->getGender() ? $person->getGender()->getName() : '';
-        $personData['title']      = $person->getTitle() && $person->getTitle()->getId() ? $person->getTitle()->getName() : '';
+        $personData['gender'] = $person->getGender() ? $person->getGender()->getName() : '';
+        $personData['title'] = $person->getTitle() && $person->getTitle()->getId() ? $person->getTitle()->getName() : '';
 
         // AEP hasn't got date of birth
         if ($person->getDateOfBirth()) {
@@ -99,7 +98,7 @@ class PersonMapper
             $emailDto->setEmail($person->getPrimaryEmail());
         }
         $emailDtoArray = [
-            $emailDto
+            $emailDto,
         ];
 
         return $emailDtoArray;

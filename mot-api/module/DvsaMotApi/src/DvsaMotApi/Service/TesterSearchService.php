@@ -15,9 +15,7 @@ use DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesTester;
 use DvsaMotApi\Model\OutputFormat\OutputFormatTypeAheadTester;
 
 /**
- * Class TesterSearchService
- *
- * @package DvsaMotApi\Service
+ * Class TesterSearchService.
  */
 class TesterSearchService extends AbstractSearchService
 {
@@ -64,6 +62,7 @@ class TesterSearchService extends AbstractSearchService
      * @param $searchParams
      *
      * @return OutputFormatDataObjectTester|OutputFormatDataTablesTester|OutputFormatTypeAheadTester
+     *
      * @throws \Exception
      */
     public function getOutputFormat($searchParams)
@@ -76,11 +75,11 @@ class TesterSearchService extends AbstractSearchService
             return new OutputFormatTypeAheadTester();
         }
 
-        throw new \Exception('Unknown search format: ' . $searchParams->getFormat());
+        throw new \Exception('Unknown search format: '.$searchParams->getFormat());
     }
 
     /**
-     * Perform the search
+     * Perform the search.
      *
      * @param SearchParam  $params
      * @param OutputFormat $format
@@ -93,7 +92,7 @@ class TesterSearchService extends AbstractSearchService
     }
 
     /**
-     * Provides the ability to check the users access to the current search
+     * Provides the ability to check the users access to the current search.
      */
     protected function checkPermissions()
     {

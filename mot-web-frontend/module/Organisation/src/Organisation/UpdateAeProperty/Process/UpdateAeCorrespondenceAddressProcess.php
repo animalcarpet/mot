@@ -12,12 +12,12 @@ class UpdateAeCorrespondenceAddressProcess extends UpdateAeRegisteredAddressProc
 {
     protected $propertyName = UpdateAePropertyAction::AE_CORRESPONDENCE_ADDRESS_PROPERTY;
     protected $permission = PermissionAtOrganisation::AE_UPDATE_CORRESPONDENCE_ADDRESS;
-    protected $successfulEditMessage = "Correspondence address has been successfully changed.";
-    protected $breadcrumbLabel = "Change correspondence address";
-    protected $submitButtonText = "Review correspondence address";
-    protected $formPageTitle = "Change correspondence address";
-    protected $reviewPageTitle = "Review correspondence address";
-    protected $reviewPageButtonText = "Change correspondence address";
+    protected $successfulEditMessage = 'Correspondence address has been successfully changed.';
+    protected $breadcrumbLabel = 'Change correspondence address';
+    protected $submitButtonText = 'Review correspondence address';
+    protected $formPageTitle = 'Change correspondence address';
+    protected $reviewPageTitle = 'Review correspondence address';
+    protected $reviewPageButtonText = 'Change correspondence address';
 
     public function getPrePopulatedData()
     {
@@ -27,6 +27,7 @@ class UpdateAeCorrespondenceAddressProcess extends UpdateAeRegisteredAddressProc
             return [];
         }
         $address = $contact->getAddress();
+
         return $this->prepopulateFromAddressDto($address);
     }
 
@@ -34,11 +35,11 @@ class UpdateAeCorrespondenceAddressProcess extends UpdateAeRegisteredAddressProc
     {
         $this->organisationMapper->updateAePropertiesWithArray($this->context->getAeId(), [
             AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_POSTCODE => $formData[AddressPropertyForm::FIELD_POSTCODE],
-            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_COUNTRY  => $formData[AddressPropertyForm::FIELD_COUNTRY],
-            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_LINE_1   => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_1],
-            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_LINE_2   => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_2],
-            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_LINE_3   => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_3],
-            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_TOWN     => $formData[AddressPropertyForm::FIELD_TOWN],
+            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_COUNTRY => $formData[AddressPropertyForm::FIELD_COUNTRY],
+            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_LINE_1 => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_1],
+            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_LINE_2 => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_2],
+            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_LINE_3 => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_3],
+            AuthorisedExaminerPatchModel::CORRESPONDENCE_ADDRESS_TOWN => $formData[AddressPropertyForm::FIELD_TOWN],
         ]);
     }
 }

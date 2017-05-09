@@ -41,7 +41,7 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
     public function testSpecialNoticesForAuthenticatedRequestCanBeAccessed()
     {
         // given
-        $this->getRestClientMock('get', $this->getSpecialNoticesData(), "person/1/special-notice");
+        $this->getRestClientMock('get', $this->getSpecialNoticesData(), 'person/1/special-notice');
 
         // when
         $response = $this->getResponseForAction('displaySpecialNotices');
@@ -82,7 +82,7 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
         //then
         $this->assertEquals(302, $response->getStatusCode());
         $locationHeader = $response->getHeaders()->get('location');
-        $this->assertEquals($locationHeader->getUri(), "/special-notices");
+        $this->assertEquals($locationHeader->getUri(), '/special-notices');
     }
 
     public function testCreateSpecialNoticeForAuthenticatedRequestCanBeAccessed()
@@ -139,7 +139,7 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
         // then
         $this->assertEquals(302, $response->getStatusCode());
         $locationHeader = $response->getHeaders()->get('location');
-        $this->assertEquals($locationHeader->getUri(), "/special-notices/" . $id . "/preview");
+        $this->assertEquals($locationHeader->getUri(), '/special-notices/'.$id.'/preview');
     }
 
     /**
@@ -219,7 +219,7 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
         //then
         $this->assertEquals(302, $response->getStatusCode());
         $locationHeader = $response->getHeaders()->get('location');
-        $this->assertEquals($locationHeader->getUri(), "/special-notices/all");
+        $this->assertEquals($locationHeader->getUri(), '/special-notices/all');
     }
 
     public function testPrintSpecialNoticeForAuthenticatedRequestCanBeAccessed()
@@ -245,23 +245,24 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
     public function testPrintSpecialNoticeViewHasRequiredHelpers()
     {
         $serviceManager = $this->getServiceManager();
-        $view           = $serviceManager->get('ViewHelperManager');
+        $view = $serviceManager->get('ViewHelperManager');
 
-        $htmlPurifier   = $view->get('htmlPurifier');
+        $htmlPurifier = $view->get('htmlPurifier');
         $this->assertInstanceOf('Soflomo\Purifier\View\Helper\Purifier', $htmlPurifier);
         $this->assertInstanceOf('Zend\View\Helper\HelperInterface', $htmlPurifier);
     }
 
     /**
-     * expects wkhtmltopdf to be in /usr/bin
+     * expects wkhtmltopdf to be in /usr/bin.
+     *
      * @throws \Exception
      * @group integration
      */
     public function testPrintSpecialNoticeWithPdfExtensionGeneratesPdf()
     {
-        $id     = 1;
+        $id = 1;
         $params = [
-            'id'        => $id,
+            'id' => $id,
             'extension' => '.pdf',
         ];
 
@@ -271,14 +272,14 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
             ->routeParam('id', $id)
             ->toString();
         $specialNotice = $this->getSpecialNoticesReturnData();
-        $specialNotice['data']['noticeText'] = file_get_contents(__DIR__ . '/fixtures/special-notice-text.md');
+        $specialNotice['data']['noticeText'] = file_get_contents(__DIR__.'/fixtures/special-notice-text.md');
         $this->getRestClientMock('get', $specialNotice, $specialNoticeContentApiPath);
 
         // Mock ViewRenderer
         $this->getServiceManager()->setService('ViewRenderer', XMock::of(PhpRenderer::class));
 
         $response = $this->getResponseForAction('printSpecialNotice', $params);
-        $headers  = $response->getHeaders();
+        $headers = $response->getHeaders();
 
         // Status code
         $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -303,34 +304,34 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
     protected function getSpecialNoticesData()
     {
         $specialNotices = [
-            "data" => [
+            'data' => [
                     [
-                        "id"             => 2,
-                        "isAcknowledged" => false,
-                        "content"        => [
-                            "title"       => "Expired special notice",
-                            "noticeText"  => "Happy birthday!",
-                            "issueDate"   => "1989-02-10",
-                            "issueNumber" => "2-1989",
-                            "issueYear"   => 1989,
-                            "expiryDate"  => "1989-02-26",
-                            "targetRoles" => [],
+                        'id' => 2,
+                        'isAcknowledged' => false,
+                        'content' => [
+                            'title' => 'Expired special notice',
+                            'noticeText' => 'Happy birthday!',
+                            'issueDate' => '1989-02-10',
+                            'issueNumber' => '2-1989',
+                            'issueYear' => 1989,
+                            'expiryDate' => '1989-02-26',
+                            'targetRoles' => [],
                         ],
-                        "isExpired"      => true,
+                        'isExpired' => true,
                     ],
                     [
-                        "id"             => 5,
-                        "isAcknowledged" => true,
-                        "content"        => [
-                            "title"       => "Another special notice",
-                            "noticeText"  => "Testing!",
-                            "issueDate"   => "2020-02-10",
-                            "issueNumber" => "2-1989",
-                            "issueYear"   => 2020,
-                            "expiryDate"  => "2022-02-26",
-                            "targetRoles" => [],
+                        'id' => 5,
+                        'isAcknowledged' => true,
+                        'content' => [
+                            'title' => 'Another special notice',
+                            'noticeText' => 'Testing!',
+                            'issueDate' => '2020-02-10',
+                            'issueNumber' => '2-1989',
+                            'issueYear' => 2020,
+                            'expiryDate' => '2022-02-26',
+                            'targetRoles' => [],
                         ],
-                        "isExpired"      => true
+                        'isExpired' => true,
                     ],
                 ],
         ];
@@ -344,27 +345,27 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
     protected function getSpecialNoticesReturnData()
     {
         $specialNotice = [
-            "data" => [
-                    'version'             => 1,
-                    'title'               => 'test title',
-                    'issueNumber'         => '1-2014',
-                    'issueYear'           => '2014',
-                    'issueDate'           => '2014-01-15',
-                    'expiryDate'          => '2014-01-31',
+            'data' => [
+                    'version' => 1,
+                    'title' => 'test title',
+                    'issueNumber' => '1-2014',
+                    'issueYear' => '2014',
+                    'issueDate' => '2014-01-15',
+                    'expiryDate' => '2014-01-31',
                     'internalPublishDate' => [
-                        'date'          => '2014-14-01',
+                        'date' => '2014-14-01',
                         'timeZone_type' => 3,
-                        'timeZone'      => 'EuropeLondon',
+                        'timeZone' => 'EuropeLondon',
                     ],
                     'externalPublishDate' => [
-                        'date'          => '2014-15-01',
+                        'date' => '2014-15-01',
                         'timeZone_type' => 3,
-                        'timeZone'      => 'EuropeLondon',
+                        'timeZone' => 'EuropeLondon',
                     ],
-                    'noticeText'          => 'This is the body of the message',
-                    'status'              => 'DRAFT',
-                    'id'                  => 1,
-                    'targetRoles'         => [
+                    'noticeText' => 'This is the body of the message',
+                    'status' => 'DRAFT',
+                    'id' => 1,
+                    'targetRoles' => [
                         'TESTER-CLASS-1',
                         'TESTER-CLASS-2',
                     ],
@@ -379,22 +380,22 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
      */
     protected function getTestSpecialNoticeContentData()
     {
-        $date = new \DateTime("tomorrow");
+        $date = new \DateTime('tomorrow');
         $dateArray = [
-            'day'   => $date->format("d"),
-            'month' => $date->format("m"),
-            'year'  => $date->format("Y")
+            'day' => $date->format('d'),
+            'month' => $date->format('m'),
+            'year' => $date->format('Y'),
         ];
 
         return [
-            'noticeTitle'              => 'test title',
-            'internalPublishDate'      => $dateArray,
-            'externalPublishDate'      => $dateArray,
-            'acknowledgementPeriod'    => 16,
-            'vehicleTestClass'         => true,
-            'allClasses'               => null,
-            'targetRoles'              => [0 => 'TESTER-CLASS-1', 1 => 'TESTER-CLASS-2'],
-            'noticeText'               => 'This is the body of the message',
+            'noticeTitle' => 'test title',
+            'internalPublishDate' => $dateArray,
+            'externalPublishDate' => $dateArray,
+            'acknowledgementPeriod' => 16,
+            'vehicleTestClass' => true,
+            'allClasses' => null,
+            'targetRoles' => [0 => 'TESTER-CLASS-1', 1 => 'TESTER-CLASS-2'],
+            'noticeText' => 'This is the body of the message',
         ];
     }
 }

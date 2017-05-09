@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\ContactDetailsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CompletedController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CreateAccountController;
@@ -33,116 +32,116 @@ return [
     'router' => [
         'routes' => [
             'account-register' => [
-                'type'    => 'literal',
+                'type' => 'literal',
                 'options' => [
-                    'route'    => '/account/register',
+                    'route' => '/account/register',
                     'defaults' => [
                         'controller' => IndexController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'create-an-account' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/create-an-account[/]',
+                            'route' => '/create-an-account[/]',
                             'defaults' => [
                                 'controller' => CreateAccountController::class,
                             ],
                         ],
                     ],
                     'email' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/email[/]',
+                            'route' => '/email[/]',
                             'defaults' => [
                                 'controller' => EmailController::class,
                             ],
                         ],
                     ],
                     'details' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/details[/]',
+                            'route' => '/details[/]',
                             'defaults' => [
                                 'controller' => DetailsController::class,
                             ],
                         ],
                     ],
                     'address' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/contact-details[/]',
+                            'route' => '/contact-details[/]',
                             'defaults' => [
                                 'controller' => ContactDetailsController::class,
                             ],
                         ],
                     ],
                     'security-questions' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/security-questions[/]',
+                            'route' => '/security-questions[/]',
                             'defaults' => [
                                 'controller' => SecurityQuestionsController::class,
                             ],
                         ],
                     ],
                     'password' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/password[/]',
+                            'route' => '/password[/]',
                             'defaults' => [
                                 'controller' => PasswordController::class,
                             ],
                         ],
                     ],
                     'summary' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/summary[/]',
+                            'route' => '/summary[/]',
                             'defaults' => [
                                 'controller' => SummaryController::class,
                             ],
                         ],
                     ],
                     'complete' => [
-                        'type'    => 'literal',
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/complete',
+                            'route' => '/complete',
                             'defaults' => [
                                 'controller' => CompletedController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                     ],
                     'complete-registration-success' => [
-                        'type'    => 'literal',
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/success',
+                            'route' => '/success',
                             'defaults' => [
                                 'controller' => CompletedController::class,
-                                'action'     => 'success',
+                                'action' => 'success',
                             ],
                         ],
                     ],
                     'complete-registration-failure' => [
-                        'type'    => 'literal',
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/fail',
+                            'route' => '/fail',
                             'defaults' => [
                                 'controller' => CompletedController::class,
-                                'action'     => 'fail',
+                                'action' => 'fail',
                             ],
                         ],
                     ],
                     'duplicate-email' => [
-                        'type'    => 'literal',
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/duplicate-email',
+                            'route' => '/duplicate-email',
                             'defaults' => [
                                 'controller' => DuplicateEmailController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                     ],

@@ -29,12 +29,12 @@ class StartMotViewModel
     /**
      * StartMotViewModel constructor.
      *
-     * @param Url $url
-     * @param bool $isTestingEnabled
-     * @param bool $isTesterAtAnySite
-     * @param bool $hasTestInProgress
-     * @param string $enterResultsLabel
-     * @param int $testNumberInProgress
+     * @param Url                   $url
+     * @param bool                  $isTestingEnabled
+     * @param bool                  $isTesterAtAnySite
+     * @param bool                  $hasTestInProgress
+     * @param string                $enterResultsLabel
+     * @param int                   $testNumberInProgress
      * @param VehicleTestingStation $testerAtCurrentVts
      */
     public function __construct(
@@ -45,8 +45,7 @@ class StartMotViewModel
         $testNumberInProgress,
         $isTestingEnabled,
         $testerAtCurrentVts
-    )
-    {
+    ) {
         $this->url = $url;
         $this->isTesterAtAnySite = $isTesterAtAnySite;
         $this->hasTestInProgress = $hasTestInProgress;

@@ -131,12 +131,12 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            'firstName'             => __METHOD__ . '_firstName',
-            'middleName'            => __METHOD__ . '_middleName',
-            'lastName'              => __METHOD__ . '_lastName',
-            'day'                   => __METHOD__ . '_01',
-            'month'                 => __METHOD__ . '_02',
-            'year'                  => __METHOD__ . '_1990',
+            'firstName' => __METHOD__.'_firstName',
+            'middleName' => __METHOD__.'_middleName',
+            'lastName' => __METHOD__.'_lastName',
+            'day' => __METHOD__.'_01',
+            'month' => __METHOD__.'_02',
+            'year' => __METHOD__.'_1990',
         ];
 
         return $fixture;

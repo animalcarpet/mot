@@ -100,7 +100,7 @@ abstract class AbstractStep implements Step
         // Automatically make error check variables available to the views.
         // This removes the need for Array::get() checks inside the views, and makes them safer and cleaner.
         foreach ($values as $fieldName => $value) {
-            $result[$fieldName . 'HasError'] = isset($result['errors'][$fieldName]);
+            $result[$fieldName.'HasError'] = isset($result['errors'][$fieldName]);
         }
 
         $result['urls'] = [];
@@ -188,7 +188,7 @@ abstract class AbstractStep implements Step
      */
     protected function prependLabel($fieldName, $message)
     {
-        return $this->getFieldLabel($fieldName) . ' - ' . $message;
+        return $this->getFieldLabel($fieldName).' - '.$message;
     }
 
     /**

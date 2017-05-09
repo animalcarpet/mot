@@ -2,7 +2,7 @@
 
 namespace DvsaMotTest\View\VehicleSearchResult;
 
-interface VehicleSearchResultUrlTemplateInterface {
+interface VehicleSearchResultUrlTemplateInterface
+{
     public function getUrl(array $vehicle);
 }
-

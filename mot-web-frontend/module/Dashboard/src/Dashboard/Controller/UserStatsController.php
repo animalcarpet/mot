@@ -8,11 +8,10 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\UrlBuilder\DashboardUrlBuilder;
 
 /**
- * Class UserStatsController
+ * Class UserStatsController.
  */
 class UserStatsController extends AbstractAuthActionController
 {
-
     const ROUTE_USER_STATS = 'user-home/stats';
 
     public function showAction()
@@ -26,16 +25,16 @@ class UserStatsController extends AbstractAuthActionController
         $currentDate = DateTimeDisplayFormat::nowAsDate();
 
         return [
-            'currentDate'  => $currentDate,
-            'today'        => [
-                'total'   => $data['total'],
-                'passed'  => $data['numberOfPasses'],
-                'failed'  => $data['numberOfFails'],
+            'currentDate' => $currentDate,
+            'today' => [
+                'total' => $data['total'],
+                'passed' => $data['numberOfPasses'],
+                'failed' => $data['numberOfFails'],
             ],
             'currentMonth' => [
                 'averageTime' => $averageTestTime,
-                'failRate'    => number_format($data['failRate'], 2),
-            ]
+                'failRate' => number_format($data['failRate'], 2),
+            ],
         ];
     }
 }

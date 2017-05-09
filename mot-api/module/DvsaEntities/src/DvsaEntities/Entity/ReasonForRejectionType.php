@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ReasonForRejectionType
+ * ReasonForRejectionType.
  *
  * @ORM\Table(name="reason_for_rejection_type")
  * @ORM\Entity(readOnly=true)
@@ -29,7 +29,7 @@ class ReasonForRejectionType
     private $reasonForRejectionType;
 
     /**
-     * Get reasonForRejectionType
+     * Get reasonForRejectionType.
      *
      * @return string
      */
@@ -40,11 +40,13 @@ class ReasonForRejectionType
 
     /**
      * @param string $reasonForRejectionType
+     *
      * @return ReasonForRejectionType
      */
     public function setReasonForRejectionType($reasonForRejectionType)
     {
         $this->reasonForRejectionType = $reasonForRejectionType;
+
         return $this;
     }
 

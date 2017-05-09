@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\MotTestingAnnualCertificate;
 
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -42,7 +43,7 @@ class MotTestingAnnualCertificateEventService implements AutoWireableInterface
                 $eventTypeCode = EventTypeCode::GROUP_B_TESTER_ANNUAL_EXAM;
                 break;
             default:
-                throw new \InvalidArgumentException("Wrong group code");
+                throw new \InvalidArgumentException('Wrong group code');
         }
 
         $description = sprintf(
@@ -68,7 +69,7 @@ class MotTestingAnnualCertificateEventService implements AutoWireableInterface
                 $eventTypeCode = EventTypeCode::CHANGE_GROUP_B_TESTER_ANNUAL_EXAM;
                 break;
             default:
-                throw new \InvalidArgumentException("Wrong group code");
+                throw new \InvalidArgumentException('Wrong group code');
         }
 
         $description = sprintf(
@@ -96,7 +97,7 @@ class MotTestingAnnualCertificateEventService implements AutoWireableInterface
                 $eventTypeCode = EventTypeCode::REMOVE_GROUP_B_TESTER_ANNUAL_EXAM;
                 break;
             default:
-                throw new \InvalidArgumentException("Wrong group code");
+                throw new \InvalidArgumentException('Wrong group code');
         }
 
         $description = sprintf(EventDescription::MOT_TESTING_ANNUAL_CERTIFICATE_REMOVE,

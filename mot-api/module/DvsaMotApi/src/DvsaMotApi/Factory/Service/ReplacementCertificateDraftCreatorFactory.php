@@ -10,7 +10,6 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 
 class ReplacementCertificateDraftCreatorFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ReplacementCertificateDraftCreator(

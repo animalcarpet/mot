@@ -6,7 +6,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
 
 /**
- * Data model for Notification
+ * Data model for Notification.
  */
 class Notification
 {
@@ -62,7 +62,7 @@ class Notification
     }
 
     /**
-     * Returns list of Notification objects
+     * Returns list of Notification objects.
      *
      * @param array $notifications
      *
@@ -73,14 +73,14 @@ class Notification
         $result = [];
 
         foreach ($notifications as $item) {
-            $result[] = new Notification($item);
+            $result[] = new self($item);
         }
 
         return $result;
     }
 
     /**
-     * Notification requires action (is nomination?)
+     * Notification requires action (is nomination?).
      *
      * @return bool
      */
@@ -90,13 +90,13 @@ class Notification
     }
 
     /**
-     * User has already taken an action
+     * User has already taken an action.
      *
      * @return bool
      */
     public function isDone()
     {
-        return ($this->getAction() !== null);
+        return $this->getAction() !== null;
     }
 
     /**
@@ -276,7 +276,7 @@ class Notification
     }
 
     /**
-     * Returns human-friendly string
+     * Returns human-friendly string.
      */
     public function getFriendlyAction()
     {
@@ -288,7 +288,7 @@ class Notification
     }
 
     /**
-     * Returns if action is confirmed
+     * Returns if action is confirmed.
      */
     public function isConfirmedAction()
     {
@@ -296,12 +296,13 @@ class Notification
     }
 
     /**
-     * Returns if action is rejected
+     * Returns if action is rejected.
+     *
      * @return bool
      */
     private function isRejectedAction()
     {
-        return (strrpos($this->action, 'REJECTED') > 0);
+        return strrpos($this->action, 'REJECTED') > 0;
     }
 
     /**
@@ -326,11 +327,13 @@ class Notification
 
     /**
      * @param int $id
+     *
      * @return Notification
      */
     public function setTemplateId($id)
     {
         $this->templateId = $id;
+
         return $this;
     }
 
@@ -343,7 +346,7 @@ class Notification
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsArchived()
     {
@@ -351,12 +354,14 @@ class Notification
     }
 
     /**
-     * @param boolean $isArchived
+     * @param bool $isArchived
+     *
      * @return Notification
      */
     public function setIsArchived($isArchived)
     {
         $this->isArchived = $isArchived;
+
         return $this;
     }
 }

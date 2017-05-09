@@ -6,13 +6,10 @@ use DvsaEntities\Entity\SiteBusinessRole;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 
 /**
- * Class SiteBusinessRoleMapper
- *
- * @package SiteApi\Service\Mapper
+ * Class SiteBusinessRoleMapper.
  */
 class SiteBusinessRoleMapper
 {
-
     /**
      * @param SiteBusinessRole $role
      *
@@ -41,6 +38,7 @@ class SiteBusinessRoleMapper
 
     /**
      * @param SiteBusinessRoleMap[] $roles
+     *
      * @return array
      */
     public function convertRoleMapToArray($siteBusinessRoleMap)

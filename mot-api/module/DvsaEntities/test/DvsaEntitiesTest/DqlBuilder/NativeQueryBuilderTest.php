@@ -2,16 +2,11 @@
 
 namespace DvsaEntitiesTest\DqlBuilder;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Query;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaEntities\DqlBuilder\NativeQueryBuilder;
 
 /**
- * Class NativeQueryBuilderTest
- *
- * @package DvsaEntitiesTest\DqlBuilder
+ * Class NativeQueryBuilderTest.
  */
 class NativeQueryBuilderTest extends AbstractServiceTestCase
 {
@@ -22,7 +17,7 @@ class NativeQueryBuilderTest extends AbstractServiceTestCase
 
     public function setup()
     {
-        $this->queryBuilder = new NativeQueryBuilder;
+        $this->queryBuilder = new NativeQueryBuilder();
     }
 
     public function testResetPart()
@@ -42,13 +37,13 @@ class NativeQueryBuilderTest extends AbstractServiceTestCase
             ->setOffset(99);
 
         $expect =
-            'SELECT testSelect1, testSelect2 ' .
-            'FROM testFrom1 AS from1, testFrom2 ' .
-            'INNER JOIN testJoin1 AS join1 ON cond ' .
-            'INNER JOIN testJoin2 ON cond ' .
-            'INNER JOIN testJoin3 ON cond ' .
-            'WHERE 1=1 AND testWhere1 AND testWhere2 ' .
-            'ORDER BY testOrder1, testOrder2 ' .
+            'SELECT testSelect1, testSelect2 '.
+            'FROM testFrom1 AS from1, testFrom2 '.
+            'INNER JOIN testJoin1 AS join1 ON cond '.
+            'INNER JOIN testJoin2 ON cond '.
+            'INNER JOIN testJoin3 ON cond '.
+            'WHERE 1=1 AND testWhere1 AND testWhere2 '.
+            'ORDER BY testOrder1, testOrder2 '.
             'LIMIT 100 OFFSET 99';
 
         $this->assertEquals($expect, $this->queryBuilder->getSql());
@@ -64,11 +59,11 @@ class NativeQueryBuilderTest extends AbstractServiceTestCase
             ->setOffset(0);
 
         $expect =
-            'SELECT testSelect2 ' .
-            'FROM testFrom1 AS from1 ' .
-            'INNER JOIN testJoin2 ON cond ' .
-            'WHERE 1=1 AND testWhere1 ' .
-            'ORDER BY testOrder2 ' .
+            'SELECT testSelect2 '.
+            'FROM testFrom1 AS from1 '.
+            'INNER JOIN testJoin2 ON cond '.
+            'WHERE 1=1 AND testWhere1 '.
+            'ORDER BY testOrder2 '.
             'LIMIT 100';
 
         $this->assertEquals($expect, $this->queryBuilder->getSql());
@@ -84,12 +79,12 @@ class NativeQueryBuilderTest extends AbstractServiceTestCase
             ->resetPart('orderBy')
             ->setLimit(0);
 
-        $this->assertEquals('' . 'SELECT testSelectX FROM testFromX', $this->queryBuilder->getSql());
+        $this->assertEquals(''.'SELECT testSelectX FROM testFromX', $this->queryBuilder->getSql());
     }
 
     public function testParameters()
     {
-        $params= [
+        $params = [
             [':mtnumber' => 20],
             [':mtstatus' => 30],
         ];

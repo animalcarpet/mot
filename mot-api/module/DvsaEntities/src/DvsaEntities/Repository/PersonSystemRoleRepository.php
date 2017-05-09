@@ -11,12 +11,13 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
  */
 class PersonSystemRoleRepository extends EntityRepository
 {
-
     /**
      * Gets person system role by id.
      *
      * @param int $id
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     *
      * @return PersonSystemRole
      */
     public function get($id)
@@ -33,6 +34,7 @@ class PersonSystemRoleRepository extends EntityRepository
      * @param mixed $id
      * @param null  $lockMode
      * @param null  $lockVersion
+     *
      * @return PersonSystemRole
      */
     public function find($id, $lockMode = null, $lockVersion = null)
@@ -44,6 +46,7 @@ class PersonSystemRoleRepository extends EntityRepository
      * Gets person system role by name.
      *
      * @param string $name
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      *
      * @return PersonSystemRole
@@ -68,6 +71,7 @@ class PersonSystemRoleRepository extends EntityRepository
 
     /**
      * @param mixed $param
+     *
      * @throws NotFoundException
      */
     private function notFound($param)

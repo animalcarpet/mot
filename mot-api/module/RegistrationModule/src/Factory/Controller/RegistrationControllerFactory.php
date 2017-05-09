@@ -8,7 +8,6 @@
 namespace Dvsa\Mot\Api\RegistrationModule\Factory\Controller;
 
 use Dvsa\Mot\Api\RegistrationModule\Controller\RegistrationController;
-use Dvsa\Mot\Api\RegistrationModule\Service\DuplicatedEmailChecker;
 use Dvsa\Mot\Api\RegistrationModule\Service\RegistrationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

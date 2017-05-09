@@ -10,14 +10,12 @@ use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 
 /**
- * Class SiteTestingDailyScheduleRepository
+ * Class SiteTestingDailyScheduleRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class SiteTestingDailyScheduleRepository extends AbstractMutableRepository
 {
-
     /**
      * @param EntityManager $em
      * @param ClassMetadata $class
@@ -31,6 +29,7 @@ class SiteTestingDailyScheduleRepository extends AbstractMutableRepository
      * @param int $id
      *
      * @return null|object
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
@@ -38,7 +37,7 @@ class SiteTestingDailyScheduleRepository extends AbstractMutableRepository
         $schedules = $this->find($id);
 
         if (null === $schedules) {
-            throw new NotFoundException("Schedules not found");
+            throw new NotFoundException('Schedules not found');
         }
 
         return $schedules;
@@ -53,12 +52,13 @@ class SiteTestingDailyScheduleRepository extends AbstractMutableRepository
     }
 
     /**
-     * This function create the opening time of a site for a specified day of the week
+     * This function create the opening time of a site for a specified day of the week.
      *
      * @param Site $site
-     * @param int $weekday
+     * @param int  $weekday
      * @param Time $opening
      * @param Time $closing
+     *
      * @return SiteTestingDailySchedule
      */
     public function createOpeningHours(Site $site, $weekday, $opening, $closing)

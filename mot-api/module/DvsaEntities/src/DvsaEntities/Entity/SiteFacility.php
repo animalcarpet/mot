@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SiteFacility
+ * SiteFacility.
  *
  * @ORM\Table(name="site_facility", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SiteFacilityRepository")
@@ -50,6 +50,7 @@ class SiteFacility extends Entity
     public function setVehicleTestingStation(Site $site)
     {
         $this->vehicleTestingStation = $site;
+
         return $this;
     }
 
@@ -66,6 +67,7 @@ class SiteFacility extends Entity
     public function setFacilityType($facilityType)
     {
         $this->facilityType = $facilityType;
+
         return $this;
     }
 
@@ -85,6 +87,7 @@ class SiteFacility extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

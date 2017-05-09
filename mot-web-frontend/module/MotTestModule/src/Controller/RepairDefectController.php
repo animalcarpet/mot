@@ -14,9 +14,7 @@ use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Zend\Http\Response;
-use DvsaCommon\Utility\ArrayUtils;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
-
 
 /**
  * Class RepairDefectController.
@@ -59,7 +57,6 @@ class RepairDefectController extends AbstractDvsaMotTestController
             } else {
                 $success = true;
             }
-
         } catch (GeneralRestException $e) {
             if (false === $isAjax) {
                 $this->addErrorMessage(FlashMessageBuilder::defectRepairedUnsuccessfully($identifiedDefectType, $identifiedDefectText));
@@ -68,10 +65,10 @@ class RepairDefectController extends AbstractDvsaMotTestController
             }
         }
 
-        if (true === $isAjax){
+        if (true === $isAjax) {
             $motTest = $this->getMotTestFromApi($motTestNumber);
             //Check if it is a retest and get the original mot test
-            if(MotTestType::isRetest($motTest->getTestTypeCode() )){
+            if (MotTestType::isRetest($motTest->getTestTypeCode())) {
                 $originalMotTest = $this->getMotTestFromApi($motTest->getMotTestOriginalNumber());
                 $motTestResults = new MotTestResults($motTest, $originalMotTest);
             } else {
@@ -85,17 +82,17 @@ class RepairDefectController extends AbstractDvsaMotTestController
                 'brakeTestOutcome' => $motTestResults->getBrakeTestOutcome(),
                 'brakeTestResults' => $motTestResults->hasBrakeTestResult(),
                 'brakesTested' => !$motTestResults->isBrakePerformanceNotTested(),
-                'disableSubmitButton' => $motTestResults->shouldDisableSubmitButton()
+                'disableSubmitButton' => $motTestResults->shouldDisableSubmitButton(),
             );
 
             $response = $this->getResponse();
-            $response->getHeaders()->addHeaderLine( 'Content-Type', 'application/json' );
+            $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
             $response->setContent(json_encode($data));
+
             return $response;
         } else {
             return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
         }
-
     }
 
     /**
@@ -120,7 +117,6 @@ class RepairDefectController extends AbstractDvsaMotTestController
             } else {
                 $success = true;
             }
-
         } catch (GeneralRestException $e) {
             if (false === $isAjax) {
                 $this->addErrorMessage(FlashMessageBuilder::undoDefectRepairUnsuccessfully($identifiedDefectType, $identifiedDefectText));
@@ -129,10 +125,10 @@ class RepairDefectController extends AbstractDvsaMotTestController
             }
         }
 
-        if (true === $isAjax){
+        if (true === $isAjax) {
             $motTest = $this->getMotTestFromApi($motTestNumber);
             //Check if it is a retest and get the original mot test
-            if(MotTestType::isRetest($motTest->getTestTypeCode() )){
+            if (MotTestType::isRetest($motTest->getTestTypeCode())) {
                 $originalMotTest = $this->getMotTestFromApi($motTest->getMotTestOriginalNumber());
                 $motTestResults = new MotTestResults($motTest, $originalMotTest);
             } else {
@@ -146,11 +142,12 @@ class RepairDefectController extends AbstractDvsaMotTestController
                 'brakeTestOutcome' => $motTestResults->getBrakeTestOutcome(),
                 'brakeTestResults' => $motTestResults->hasBrakeTestResult(),
                 'brakesTested' => !$motTestResults->isBrakePerformanceNotTested(),
-                'disableSubmitButton' => $motTestResults->shouldDisableSubmitButton()
+                'disableSubmitButton' => $motTestResults->shouldDisableSubmitButton(),
             );
             $response = $this->getResponse();
-            $response->getHeaders()->addHeaderLine( 'Content-Type', 'application/json' );
+            $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
             $response->setContent(json_encode($data));
+
             return $response;
         } else {
             return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());

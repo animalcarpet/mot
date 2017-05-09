@@ -6,11 +6,10 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 
 /**
  * Calls to api, path:
- *   /person/:id/current-mot-test
+ *   /person/:id/current-mot-test.
  */
 class ApiCurrentMotTest extends ApiResources
 {
-
     /**
      * @param int $personId
      *
@@ -19,6 +18,7 @@ class ApiCurrentMotTest extends ApiResources
     public function getCurrentMotTest($personId)
     {
         $path = $this->personalDetailsUrlBuilder($personId)->toString();
+
         return $this->restGet($path)['data'];
     }
 

@@ -2,7 +2,6 @@
 
 namespace PersonApi\Service;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -96,10 +95,13 @@ class PersonRoleService
     }
 
     /**
-     * Add the role to the user
-     * @param int $personId
-     * @param array $data ['personSystemRoleCode' => 'SOME-ROLE-CODE']
+     * Add the role to the user.
+     *
+     * @param int   $personId
+     * @param array $data     ['personSystemRoleCode' => 'SOME-ROLE-CODE']
+     *
      * @return PersonSystemRoleMap
+     *
      * @throws \Exception If user has a trade role
      */
     public function create($personId, $data)
@@ -114,13 +116,16 @@ class PersonRoleService
         $obj = $this->addRole($person, $personSystemRole);
         $this->sendAssignRoleEvent($person, $personSystemRole);
         $this->sendAssignRoleNotification($person, $personSystemRole);
+
         return $obj;
     }
 
     /**
-     * Remove a role from the user
-     * @param int $personId
+     * Remove a role from the user.
+     *
+     * @param int    $personId
      * @param string $role
+     *
      * @throws NotFoundException
      * @throws \Exception
      */
@@ -139,10 +144,13 @@ class PersonRoleService
     }
 
     /**
-     * Attaches the role to the person
-     * @param Person $person
+     * Attaches the role to the person.
+     *
+     * @param Person           $person
      * @param PersonSystemRole $personSystemRole
+     *
      * @return PersonSystemRoleMap
+     *
      * @throws \Exception if the mapping for the person already exists
      */
     public function addRole(Person $person, PersonSystemRole $personSystemRole)
@@ -172,9 +180,11 @@ class PersonRoleService
     }
 
     /**
-     * Detaches the role from the person
-     * @param Person $person
+     * Detaches the role from the person.
+     *
+     * @param Person           $person
      * @param PersonSystemRole $personSystemRole
+     *
      * @throws \Exception
      */
     public function removeRole(Person $person, PersonSystemRole $personSystemRole)
@@ -189,20 +199,26 @@ class PersonRoleService
     }
 
     /**
-     * Returns both assigned and manageable roles for the given person
+     * Returns both assigned and manageable roles for the given person.
+     *
      * @param int $personId
+     *
      * @return array
      */
     public function getRoles($personId)
     {
         $this->authService->assertGranted(PermissionInSystem::READ_DVSA_ROLES);
+
         return $this->getPersonAssignedAndAvailableInternalRoleCodes($personId);
     }
 
     /**
-     * Retrieve the role entity from the DB
+     * Retrieve the role entity from the DB.
+     *
      * @param string $roleName
+     *
      * @return PersonSystemRole
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getPersonSystemRoleEntityFromName($roleName)
@@ -211,7 +227,8 @@ class PersonRoleService
     }
 
     /**
-     * Check the permission to use this feature has been granted
+     * Check the permission to use this feature has been granted.
+     *
      * @throws \Exception
      */
     public function assertManageRolePermission()
@@ -220,8 +237,10 @@ class PersonRoleService
     }
 
     /**
-     * Checks to see if the user being managed has a trade role
+     * Checks to see if the user being managed has a trade role.
+     *
      * @param int $personId
+     *
      * @throws \Exception
      */
     public function assertPersonHasTradeRole($personId)
@@ -232,29 +251,34 @@ class PersonRoleService
     }
 
     /**
-     * Checks to see if the user is trying to manage their own roles
+     * Checks to see if the user is trying to manage their own roles.
+     *
      * @param int $personId
+     *
      * @throws UnauthorisedException
      */
     public function assertForSelfManagement($personId)
     {
         if ($this->IsIdentitySelfForPerson($personId)) {
             throw new UnauthorisedException(self::ERR_MSG_SELF_MANAGEMENT);
-        };
+        }
     }
 
     /**
      * @param $personId
+     *
      * @return bool
      */
     public function isIdentitySelfForPerson($personId)
     {
         $identity = $this->authService->getIdentity();
-        return ($personId == $identity->getUserId());
+
+        return $personId == $identity->getUserId();
     }
 
     /**
      * @param string $permission
+     *
      * @throws \DvsaCommon\Exception\UnauthorisedException
      */
     public function assertSystemRolePermission($permission)
@@ -263,7 +287,7 @@ class PersonRoleService
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $personSystemRole
      */
     public function sendAssignRoleEvent(Person $person, PersonSystemRole $personSystemRole)
@@ -272,7 +296,7 @@ class PersonRoleService
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $personSystemRole
      */
     public function sendRemoveRoleEvent(Person $person, PersonSystemRole $personSystemRole)
@@ -281,7 +305,7 @@ class PersonRoleService
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $personSystemRole
      */
     public function sendAssignRoleNotification(Person $person, PersonSystemRole $personSystemRole)
@@ -290,7 +314,7 @@ class PersonRoleService
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $personSystemRole
      */
     public function sendRemoveRoleNotification(Person $person, PersonSystemRole $personSystemRole)
@@ -299,9 +323,12 @@ class PersonRoleService
     }
 
     /**
-     * Retrieves the person entity from the DB
+     * Retrieves the person entity from the DB.
+     *
      * @param int $personId
+     *
      * @return Person
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getPersonEntity($personId)
@@ -309,27 +336,30 @@ class PersonRoleService
         // PersonRepository
         $person = $this->personRepository->find($personId);
         if (!$person instanceof Person) {
-            throw new NotFoundException('Unable to find person with id ' . $personId);
+            throw new NotFoundException('Unable to find person with id '.$personId);
         }
+
         return $person;
     }
 
     /**
      * @param int $personId
+     *
      * @return array
      */
     private function getPersonAssignedAndAvailableInternalRoleCodes($personId)
     {
         return [
             self::ROLES_ASSIGNED => $this->getPersonAssignedInternalRoleCodes($personId),
-            self::ROLES_MANAGEABLE => $this->getPersonManageableInternalRoleCodes($personId)
+            self::ROLES_MANAGEABLE => $this->getPersonManageableInternalRoleCodes($personId),
         ];
     }
 
     /**
-     * Return an array of all the internal role codes, associated to the given person
+     * Return an array of all the internal role codes, associated to the given person.
      *
      * @param int $personId
+     *
      * @return array
      */
     public function getPersonAssignedInternalRoleCodes($personId)
@@ -346,9 +376,10 @@ class PersonRoleService
 
     /**
      * Return an array of all the internal role codes, NOT associated to the given person,
-     * And the logged in person has the permission to manage (add/remove) them
+     * And the logged in person has the permission to manage (add/remove) them.
      *
      * @param int $personToAssignRoleTo
+     *
      * @return array
      */
     public function getPersonManageableInternalRoleCodes($personToAssignRoleTo)
@@ -366,9 +397,12 @@ class PersonRoleService
     }
 
     /**
-     * Uses the mapping repository to return the relevant permission code
+     * Uses the mapping repository to return the relevant permission code.
+     *
      * @param Role $role
+     *
      * @return string
+     *
      * @throws NotFoundException
      */
     private function getPermissionCodeFromRole(Role $role)
@@ -377,9 +411,12 @@ class PersonRoleService
     }
 
     /**
-     * Uses the mapping repository to return the relevant permission code
+     * Uses the mapping repository to return the relevant permission code.
+     *
      * @param PersonSystemRole $personSystemRole
+     *
      * @return string
+     *
      * @throws NotFoundException
      */
     public function getPermissionCodeFromPersonSystemRole(PersonSystemRole $personSystemRole)
@@ -388,9 +425,10 @@ class PersonRoleService
     }
 
     /**
-     * Return an array of all the internal roles, NOT associated to the given person
+     * Return an array of all the internal roles, NOT associated to the given person.
      *
      * @param int $personId
+     *
      * @return Role[]
      */
     private function getPersonAvailableInternalRoles($personId)
@@ -408,8 +446,10 @@ class PersonRoleService
     }
 
     /**
-     * To identify if the given person has any trade roles
+     * To identify if the given person has any trade roles.
+     *
      * @param int $personId
+     *
      * @return bool
      */
     public function personHasTradeRole($personId)
@@ -422,7 +462,8 @@ class PersonRoleService
     }
 
     /**
-     * Returns an array of all trade role codes
+     * Returns an array of all trade role codes.
+     *
      * @return array
      */
     private function getAllTradeRoleCodes()
@@ -437,9 +478,10 @@ class PersonRoleService
 
     /**
      * Returns an array of all role codes, assigned to the given person in all three different scopes.
-     * Including system, site and organisation level
+     * Including system, site and organisation level.
      *
      * @param $personId
+     *
      * @return array
      */
     private function getPersonRoles($personId)
@@ -448,8 +490,9 @@ class PersonRoleService
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $personSystemRole
+     *
      * @return PersonSystemRoleMap|null
      */
     public function getPersonSystemRoleMap(Person $person, PersonSystemRole $personSystemRole)
@@ -458,6 +501,7 @@ class PersonRoleService
             $person->getId(),
             $personSystemRole->getId()
         );
+
         return $personSystemRoleMap;
     }
 }

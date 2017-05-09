@@ -16,12 +16,10 @@ trait SearchParamTrait
     public function setSearchCountDql($searchCountDql)
     {
         $this->searchCountDql = $searchCountDql;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getSearchCountDql()
     {
         return $this->searchCountDql;
@@ -35,12 +33,10 @@ trait SearchParamTrait
     public function setSearchDql($searchDql)
     {
         $this->searchDql = $searchDql;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getSearchDql()
     {
         return $this->searchDql;

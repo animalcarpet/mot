@@ -57,6 +57,7 @@ class EmergencyLog extends Entity
     public function setNumber($number)
     {
         $this->number = $number;
+
         return $this;
     }
 
@@ -76,6 +77,7 @@ class EmergencyLog extends Entity
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -95,6 +97,7 @@ class EmergencyLog extends Entity
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
+
         return $this;
     }
 
@@ -114,6 +117,7 @@ class EmergencyLog extends Entity
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
+
         return $this;
     }
 }

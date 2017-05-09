@@ -47,7 +47,6 @@ class PersonHelpDeskProfileMapper
         if ($drivingLicence !== null) {
             $dto->setDrivingLicenceNumber($drivingLicence->getLicenceNumber());
 
-
             if ($drivingLicence->hasCountry()) {
                 $dto->setDrivingLicenceRegion($drivingLicence->getCountry());
                 $dto->setDrivingLicenceRegionCode($drivingLicence->getCountryCode());

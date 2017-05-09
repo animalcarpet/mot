@@ -13,7 +13,7 @@ use Zend\Validator\NotEmpty;
 class StatusPropertyForm extends Form
 {
     const FIELD_STATUS = UpdateVtsPropertyAction::VTS_STATUS_PROPERTY;
-    const STATUS_EMPTY_MSG = "you must choose a site status";
+    const STATUS_EMPTY_MSG = 'you must choose a site status';
 
     private $statusElement;
 

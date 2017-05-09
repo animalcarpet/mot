@@ -4,16 +4,12 @@ namespace Organisation\Controller;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Organisation\Action\TestQualityInformationAction;
 
-
 /**
- * Class TestQualityInformationController
- *
- * @package Organisation\Controller
+ * Class TestQualityInformationController.
  */
 class TestQualityInformationController extends AbstractDvsaMotTestController implements AutoWireableInterface
 {
@@ -30,8 +26,7 @@ class TestQualityInformationController extends AbstractDvsaMotTestController imp
     public function __construct(
         MotAuthorisationServiceInterface $authService,
         TestQualityInformationAction $testQualityInformationAction
-    )
-    {
+    ) {
         $this->authService = $authService;
         $this->testQualityInformationAction = $testQualityInformationAction;
     }

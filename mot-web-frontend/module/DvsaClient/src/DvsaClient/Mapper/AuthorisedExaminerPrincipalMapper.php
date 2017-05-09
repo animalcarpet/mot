@@ -2,27 +2,20 @@
 
 namespace DvsaClient\Mapper;
 
-use Core\Routing\AeRoutes;
 use DvsaCommon\Dto\AuthorisedExaminerPrincipal\AuthorisedExaminerPrincipalDto;
-use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilder;
-use DvsaCommon\UrlBuilder\PersonUrlBuilder;
-use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaClient\Entity\AuthorisedExaminerPrincipal;
 
 /**
- * Class AuthorisedExaminerPrincipalDtoMapper
- *
- * @package DvsaClient\Mapper
+ * Class AuthorisedExaminerPrincipalDtoMapper.
  */
 class AuthorisedExaminerPrincipalMapper extends AutoMapper
 {
-
     protected $entityClass = AuthorisedExaminerPrincipal::class;
 
     /**
-     * @param     $organisationId
+     * @param   $organisationId
      *
      * @return AuthorisedExaminerPrincipalDto[]
      */
@@ -34,6 +27,7 @@ class AuthorisedExaminerPrincipalMapper extends AutoMapper
         $dtoHydrator = new DtoHydrator();
 
         $obj = $dtoHydrator->doHydration($principals['data']);
+
         return $obj;
     }
 
@@ -50,6 +44,7 @@ class AuthorisedExaminerPrincipalMapper extends AutoMapper
 
         $dtoHydrator = new DtoHydrator();
         $obj = $dtoHydrator->doHydration($principal['data']);
+
         return $obj;
     }
 

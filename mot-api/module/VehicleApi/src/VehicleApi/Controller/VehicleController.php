@@ -20,11 +20,11 @@ class VehicleController extends AbstractDvsaRestfulController
     const VTS_ID_QUERY_PARAMETER = 'vtsId';
     const EXCLUDE_DVLA_PARAMETER = 'excludeDvla';
     const CONTINGENCY_DATETIME_QUERY_PARAMETER = 'contingencyDatetime';
-    const VIN_REG_REQUIRED_MESSAGE = "Query parameter vin or reg is required";
-    const VIN_REG_REQUIRED_DISPLAY_MESSAGE = "You need to enter the vehicle registration mark or VIN";
-    const TOO_LONG_ERROR_MESSAGE = "Query parameter %s is more than %d characters long";
-    const VIN_TOO_LONG_DISPLAY_MESSAGE = "The VIN is more than %d characters long";
-    const REG_TOO_LONG_DISPLAY_MESSAGE = "The vehicle registration mark is more than %d characters long";
+    const VIN_REG_REQUIRED_MESSAGE = 'Query parameter vin or reg is required';
+    const VIN_REG_REQUIRED_DISPLAY_MESSAGE = 'You need to enter the vehicle registration mark or VIN';
+    const TOO_LONG_ERROR_MESSAGE = 'Query parameter %s is more than %d characters long';
+    const VIN_TOO_LONG_DISPLAY_MESSAGE = 'The VIN is more than %d characters long';
+    const REG_TOO_LONG_DISPLAY_MESSAGE = 'The vehicle registration mark is more than %d characters long';
     const VIN_LENGTH = 20;
     const REG_LENGTH = 13;
 

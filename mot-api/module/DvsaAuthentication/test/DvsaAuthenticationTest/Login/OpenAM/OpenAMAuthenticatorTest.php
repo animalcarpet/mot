@@ -19,22 +19,19 @@ use DvsaAuthentication\Login\Response\GenericAuthenticationFailure;
 use DvsaAuthentication\Login\Response\InvalidCredentialsAuthenticationFailure;
 use DvsaAuthentication\Login\Response\LockoutWarningAuthenticationFailure;
 use DvsaAuthentication\Login\Response\UnresolvableIdentityAuthenticationFailure;
-use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use Zend\Log\LoggerInterface;
 
 class OpenAMAuthenticatorTest extends \PHPUnit_Framework_TestCase
 {
     private $openAMClient;
-    /** @var  OpenAMClientOptions */
+    /** @var OpenAMClientOptions */
     private $openAMOptions;
 
     private $identityByTokenResolver;
     private $logger;
-
 
     public function setUp()
     {
@@ -44,10 +41,8 @@ class OpenAMAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->logger = XMock::of(LoggerInterface::class);
     }
 
-
     public function dataProvider_usernamePasswordEmptyCombinations()
     {
-
         return [[null, 'abc'], ['', 'abc'], [null, null], ['abc', '']];
     }
 
@@ -71,16 +66,14 @@ class OpenAMAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(InvalidCredentialsAuthenticationFailure::class, $result);
     }
 
-
     public function dataProvider_openAMExceptionsToAuthenticationFailureMapping()
     {
-
         return [
             [InvalidPasswordException::class, InvalidCredentialsAuthenticationFailure::class],
             [TooManyAuthenticationAttemptsException::class, LockoutWarningAuthenticationFailure::class],
             [UserLockedException::class, AccountLockedAuthenticationFailure::class],
             [UserInactiveException::class, AccountLockedAuthenticationFailure::class],
-            [OpenAMClientException::class, GenericAuthenticationFailure::class]
+            [OpenAMClientException::class, GenericAuthenticationFailure::class],
 
         ];
     }
@@ -104,8 +97,8 @@ class OpenAMAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($failureClass, $failure);
     }
 
-
-    public function testAuthenticate_givenTooManyAttempts_shouldAttachAttemptsLeftInExtra() {
+    public function testAuthenticate_givenTooManyAttempts_shouldAttachAttemptsLeftInExtra()
+    {
         $username = 'abc';
         $password = 'def';
         $this->openAMOptions->setLoginFailureLockoutCount(6);
@@ -115,10 +108,8 @@ class OpenAMAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
         $failure = $this->create()->authenticate($username, $password);
 
-
         $this->assertEquals(4, ArrayUtils::get($failure->getExtra(), 'attemptsLeft'));
     }
-
 
     public function testAuthenticate_givenIdentityResolutionFailed_shouldThrowUnresolvableIdentityException()
     {

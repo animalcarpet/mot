@@ -7,7 +7,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardI
 use Zend\Http\Header\SetCookie;
 use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\Mvc\Controller\Plugin\Identity;
 use DateTimeZone;
 
 class RegisterCardInformationCookieService
@@ -33,10 +32,10 @@ class RegisterCardInformationCookieService
     public function addRegisterCardInformationCookie(Response $response)
     {
         $secure = true;
-        $path = '/' . RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE . '/' .
+        $path = '/'.RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE.'/'.
             $this->identityProvider->getIdentity()->getUserId();
 
-        $expires   = new \DateTime("tomorrow", new DateTimeZone('Europe/London'));
+        $expires = new \DateTime('tomorrow', new DateTimeZone('Europe/London'));
         $value = 1;
 
         $cookie = new SetCookie(
@@ -53,8 +52,10 @@ class RegisterCardInformationCookieService
     }
 
     /**
-     * Verifies if user has already seen the card information page
+     * Verifies if user has already seen the card information page.
+     *
      * @param Request $request
+     *
      * @return bool
      */
     public function validate(Request $request)
@@ -65,7 +66,7 @@ class RegisterCardInformationCookieService
         if (isset($cookies[$this->name])) {
             return true;
         }
+
         return false;
     }
-
 }

@@ -12,7 +12,7 @@ class DemoTestAssessmentControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
-        $serviceLocator    = $controllerManager->getServiceLocator();
+        $serviceLocator = $controllerManager->getServiceLocator();
         $demoTestAssessmentService = $serviceLocator->get(DemoTestAssessmentService::class);
 
         return new DemoTestAssessmentController($demoTestAssessmentService);

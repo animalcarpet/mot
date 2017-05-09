@@ -3,9 +3,7 @@
 namespace DvsaMotApi\Service\RfrValidator;
 
 /**
- * Class BaseResultValidator
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class BaseResultValidator.
  */
 class BaseResultValidator extends BaseValidator
 {
@@ -46,12 +44,10 @@ class BaseResultValidator extends BaseValidator
     public function setError($error)
     {
         $this->error = $error;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getError()
     {
         return $this->error;
@@ -69,9 +65,6 @@ class BaseResultValidator extends BaseValidator
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getValues()
     {
         return $this->values;
@@ -89,9 +82,6 @@ class BaseResultValidator extends BaseValidator
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getCalculatedScore()
     {
         return $this->calculatedScore;

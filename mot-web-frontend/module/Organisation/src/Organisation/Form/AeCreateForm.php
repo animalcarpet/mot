@@ -8,7 +8,6 @@ use DvsaCommon\Dto\Contact\ContactDto;
 use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationContactDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
-use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommon\Enum\OrganisationContactTypeCode;
 use Zend\Stdlib\Parameters;
 
@@ -166,11 +165,13 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param string $organisationName
+     *
      * @return $this
      */
     private function setName($organisationName)
     {
         $this->organisationName = $organisationName;
+
         return $this;
     }
 
@@ -184,14 +185,15 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param string $tradingAs
+     *
      * @return $this
      */
     public function setTradingAs($tradingAs)
     {
         $this->tradingAs = $tradingAs;
+
         return $this;
     }
-
 
     /**
      * @return string
@@ -203,11 +205,13 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param string $companyType
+     *
      * @return $this
      */
     public function setCompanyType($companyType)
     {
         $this->companyType = $companyType;
+
         return $this;
     }
 
@@ -221,11 +225,13 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param string $registeredCompanyNumber
+     *
      * @return $this
      */
     public function setRegisteredCompanyNumber($registeredCompanyNumber)
     {
         $this->registeredCompanyNumber = $registeredCompanyNumber;
+
         return $this;
     }
 
@@ -239,17 +245,18 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param string $assignedAreaOffice
+     *
      * @return $this
      */
     private function setAssignedAreaOffice($assignedAreaOffice)
     {
         $this->assignedAreaOffice = $assignedAreaOffice;
+
         return $this;
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCorrDetailsTheSame()
     {
@@ -257,12 +264,14 @@ class AeCreateForm extends AbstractFormModel
     }
 
     /**
-     * @param boolean $isTheSame
+     * @param bool $isTheSame
+     *
      * @return $this
      */
     private function setIsCorrDetailsTheSame($isTheSame)
     {
         $this->isCorrDetailsTheSame = $isTheSame;
+
         return $this;
     }
 
@@ -278,14 +287,15 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param array $areaOfficeOptions
+     *
      * @return $this
      */
     public function setAreaOfficeOptions(array $areaOfficeOptions)
     {
         $this->areaOfficeOptions = $areaOfficeOptions;
+
         return $this;
     }
-
 
     /**
      * @return \DvsaCommon\Enum\CompanyTypeName[]
@@ -297,14 +307,15 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param array $companyTypes
+     *
      * @return $this
      */
     public function setCompanyTypes(array $companyTypes)
     {
         $this->companyTypes = $companyTypes;
+
         return $this;
     }
-
 
     /**
      * @return ContactDetailFormModel
@@ -332,11 +343,13 @@ class AeCreateForm extends AbstractFormModel
 
     /**
      * @param string $formUrl
+     *
      * @return $this
      */
     public function setFormUrl($formUrl)
     {
         $this->formUrl = $formUrl;
+
         return $this;
     }
 }

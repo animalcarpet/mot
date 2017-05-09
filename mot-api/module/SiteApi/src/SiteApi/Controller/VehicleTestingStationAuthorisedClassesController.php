@@ -1,18 +1,13 @@
 <?php
+
 namespace SiteApi\Controller;
 
-use DvsaEntities\Entity\Site;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
-use DvsaEntities\DqlBuilder\SearchParam\VehicleTestingStationSearchParam;
 use SiteApi\Service\SiteService;
-use Zend\Http\Request;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class VehicleTestingStationAuthorisedClassesController
- *
- * @package SiteApi\Controller
+ * Class VehicleTestingStationAuthorisedClassesController.
  */
 class VehicleTestingStationAuthorisedClassesController extends AbstractDvsaRestfulController
 {

@@ -6,21 +6,17 @@ use DvsaCommon\ApiClient\Vehicle\Dictionary\Dto\ModelDto;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
 use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
 use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
 use Zend\Validator\InArray;
 use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
 
 class ModelForm extends OtherModelForm
 {
-    const OTHER_ID = "other";
-    const OTHER_NAME = "OTHER";
+    const OTHER_ID = 'other';
+    const OTHER_NAME = 'OTHER';
     const FIELD_MODEL_NAME = 'vehicleModel';
     const FIELD_MODEL_ID = 'vehicleModel';
-    const DATA_TARGET_ID = "other-model-field";
+    const DATA_TARGET_ID = 'other-model-field';
     const FIELD_OTHER_MODEL_LABEL = 'If other, please specify';
 
     /**
@@ -36,13 +32,14 @@ class ModelForm extends OtherModelForm
     public function getSelectedModelName()
     {
         $options = $this->getModelElement()->getValueOptions();
+
         return $options[$this->getModelElement()->getValue()];
     }
 
     /**
      * @param ModelDto[] $modelList
      */
-    public function __construct(array $modelList, $makeName = "")
+    public function __construct(array $modelList, $makeName = '')
     {
         parent::__construct(false);
 
@@ -90,7 +87,7 @@ class ModelForm extends OtherModelForm
             ->setValueOptions($modelSelectValue)
             ->setName(self::FIELD_MODEL_NAME)
             ->setLabel('Model')
-            ->setAttribute('help', sprintf("Choose a %s model", $makeName))
+            ->setAttribute('help', sprintf('Choose a %s model', $makeName))
             ->setAttribute('id', self::FIELD_MODEL_ID)
             ->setAttribute('required', false)
             ->setAttribute('group', true)
@@ -102,11 +99,11 @@ class ModelForm extends OtherModelForm
 
     private function createModelValidator(array $modelSelectValue)
     {
-        $notEmptyValidator = (new NotEmpty())->setMessage(" you must choose a model", NotEmpty::IS_EMPTY);
+        $notEmptyValidator = (new NotEmpty())->setMessage(' you must choose a model', NotEmpty::IS_EMPTY);
         $inArrayValidator = (new InArray())
             ->setHaystack(array_keys($modelSelectValue));
 
-        $inArrayValidator->setMessage(" you must choose a model");
+        $inArrayValidator->setMessage(' you must choose a model');
         $makeInput = new Input(self::FIELD_MODEL_ID);
         $makeInput
             ->setRequired(true)

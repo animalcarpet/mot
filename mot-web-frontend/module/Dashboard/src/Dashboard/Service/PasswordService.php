@@ -31,9 +31,11 @@ class PasswordService
         try {
             $this->client->put($url, $data);
             $this->identityProvider->getIdentity()->setPasswordExpired(false);
+
             return true;
         } catch (ValidationException $e) {
             $this->extractErrors($e);
+
             return false;
         }
     }
@@ -41,7 +43,7 @@ class PasswordService
     private function extractErrors(ValidationException $e)
     {
         foreach ($e->getErrors() as $error) {
-            $msg = $error["displayMessage"];
+            $msg = $error['displayMessage'];
             if ($msg === ChangePasswordInputFilter::MSG_PASSWORD_INVALID) {
                 $this->addError($msg, ChangePasswordInputFilter::FIELD_OLD_PASSWORD);
             } elseif ($msg === ChangePasswordInputFilter::MSG_PASSWORD_MATCH_USERNAME) {
@@ -59,7 +61,7 @@ class PasswordService
         return $this->errors;
     }
 
-    private function addError($message, $field = "")
+    private function addError($message, $field = '')
     {
         if (!array_key_exists($field, $this->errors)) {
             $this->errors[$field] = [];

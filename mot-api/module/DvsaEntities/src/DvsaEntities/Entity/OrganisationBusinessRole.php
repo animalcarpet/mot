@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * OrganisationBusinessRole
+ * OrganisationBusinessRole.
  *
  * @ORM\Table(
  *  name="organisation_business_role",
@@ -55,9 +55,10 @@ class OrganisationBusinessRole extends Entity
     private $role;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return OrganisationBusinessRole
      */
     public function setName($name)
@@ -68,7 +69,7 @@ class OrganisationBusinessRole extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -78,9 +79,10 @@ class OrganisationBusinessRole extends Entity
     }
 
     /**
-     * Set fullName
+     * Set fullName.
      *
      * @param string $fullName
+     *
      * @return OrganisationBusinessRole
      */
     public function setFullName($fullName)
@@ -91,7 +93,7 @@ class OrganisationBusinessRole extends Entity
     }
 
     /**
-     * Get fullName
+     * Get fullName.
      *
      * @return string
      */
@@ -101,9 +103,10 @@ class OrganisationBusinessRole extends Entity
     }
 
     /**
-     * Set shortName
+     * Set shortName.
      *
      * @param string $shortName
+     *
      * @return OrganisationBusinessRole
      */
     public function setShortName($shortName)
@@ -114,7 +117,7 @@ class OrganisationBusinessRole extends Entity
     }
 
     /**
-     * Get shortName
+     * Get shortName.
      *
      * @return string
      */
@@ -129,9 +132,10 @@ class OrganisationBusinessRole extends Entity
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param \DvsaEntities\Entity\Role $role
+     *
      * @return OrganisationBusinessRole
      */
     public function setRole(\DvsaEntities\Entity\Role $role = null)
@@ -142,7 +146,7 @@ class OrganisationBusinessRole extends Entity
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return \DvsaEntities\Entity\Role
      */

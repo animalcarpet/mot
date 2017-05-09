@@ -8,16 +8,15 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 
 /**
- * Class AuthorisedClassesServiceFactory
- * @package DvsaMotTest\Factory\Service
+ * Class AuthorisedClassesServiceFactory.
  */
 class AuthorisedClassesServiceFactory implements FactoryInterface
 {
-
     /**
-     * Create AuthorisedClassesService
+     * Create AuthorisedClassesService.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return AuthorisedClassesService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

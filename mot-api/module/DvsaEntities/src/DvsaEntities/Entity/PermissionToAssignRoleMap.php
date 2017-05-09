@@ -3,12 +3,10 @@
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DvsaEntities\Entity\Role;
-use DvsaEntities\Entity\Permission;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * PermissionToAssignRoleMap
+ * PermissionToAssignRoleMap.
  *
  * @ORM\Table(
  *  name="permission_to_assign_role_map",
@@ -42,7 +40,7 @@ class PermissionToAssignRoleMap extends Entity
     private $role;
 
     /**
-     * Get the associated permission entity
+     * Get the associated permission entity.
      *
      * @return Permission
      */
@@ -52,7 +50,7 @@ class PermissionToAssignRoleMap extends Entity
     }
 
     /**
-     * Get the associated role entity
+     * Get the associated role entity.
      *
      * @return Role
      */

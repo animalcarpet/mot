@@ -22,13 +22,13 @@ use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
 use NotificationApi\Service\NotificationService;
 
 /**
- * Test for TestingOutsideOpeningHoursNotificationService
+ * Test for TestingOutsideOpeningHoursNotificationService.
  */
 class TestingOutsideOpeningHoursNotificationServiceTest extends \PHPUnit_Framework_TestCase
 {
     const SITE_MANAGER_PERSON_ID = 4;
     const AEDM_PERSON_ID = 5;
-    /** @var  NotificationService */
+    /** @var NotificationService */
     private $notificationService;
 
     public function setUp()
@@ -60,7 +60,7 @@ class TestingOutsideOpeningHoursNotificationServiceTest extends \PHPUnit_Framewo
 
     public function testNotify_shouldSetFieldsCorrectly()
     {
-        $dateTime = DateUtils::toDateTime("2012-12-12T11:59:22Z");
+        $dateTime = DateUtils::toDateTime('2012-12-12T11:59:22Z');
         $tester = $this->exampleTester();
         $site = $this->setAedm($this->site());
         $notificationPromise = $this->notificationSent();
@@ -69,11 +69,11 @@ class TestingOutsideOpeningHoursNotificationServiceTest extends \PHPUnit_Framewo
 
         $this->assertEquals(
             [
-                'username'   => $tester->getUsername(),
-                'time'       => '11:59am',
-                'date'       => DateTimeDisplayFormat::textDate('2012-12-12'),
+                'username' => $tester->getUsername(),
+                'time' => '11:59am',
+                'date' => DateTimeDisplayFormat::textDate('2012-12-12'),
                 'siteNumber' => $site->getSiteNumber(),
-                'address'    => 'b1, b4'
+                'address' => 'b1, b4',
 
             ],
             $notificationPromise->get()['fields']
@@ -87,14 +87,15 @@ class TestingOutsideOpeningHoursNotificationServiceTest extends \PHPUnit_Framewo
 
     private function exampleTester()
     {
-        return $this->person(1245)->setUsername("tester");
+        return $this->person(1245)->setUsername('tester');
     }
 
     private function notificationSent()
     {
         $notificationCapture = ArgCapture::create();
-        $this->notificationService->expects($this->once())->method("add")
+        $this->notificationService->expects($this->once())->method('add')
             ->with($notificationCapture());
+
         return $notificationCapture;
     }
 
@@ -102,11 +103,11 @@ class TestingOutsideOpeningHoursNotificationServiceTest extends \PHPUnit_Framewo
     {
         return (new Address())->setAddressLine1("{$lineSeed}1")
             ->setAddressLine2(null)
-            ->setAddressLine3("")
+            ->setAddressLine3('')
             ->setAddressLine4("{$lineSeed}4");
     }
 
-    private function site($siteNumber = "123456VC")
+    private function site($siteNumber = '123456VC')
     {
         $site = (new Site());
         $businessContactDetail = (new ContactDetail())->setAddress($this->address('b'));
@@ -141,6 +142,7 @@ class TestingOutsideOpeningHoursNotificationServiceTest extends \PHPUnit_Framewo
         $map->setBusinessRoleStatus($status);
 
         $site->getPositions()->add($map);
+
         return $site;
     }
 
@@ -151,6 +153,7 @@ class TestingOutsideOpeningHoursNotificationServiceTest extends \PHPUnit_Framewo
         //$aedmPosition->accept();
         $org->getPositions()->add($aedmPosition);
         $site->setOrganisation($org);
+
         return $site;
     }
 }

@@ -1,8 +1,8 @@
 <?php
+
 namespace DvsaAuthentication\Identity\OpenAM;
 
 use Dvsa\OpenAM\Exception\OpenAMClientException;
-use Dvsa\OpenAM\Exception\OpenAMUnauthorisedException;
 use Dvsa\OpenAM\OpenAMClient;
 use Dvsa\OpenAM\OpenAMClientInterface;
 use Dvsa\OpenAM\Options\OpenAMClientOptions;
@@ -40,7 +40,8 @@ class OpenAMIdentityByTokenResolver implements IdentityByTokenResolver
         try {
             $attributes = $this->openAMClient->getIdentityAttributes($token);
         } catch (OpenAMClientException $clientEx) {
-            $this->logger->err('OpenAM client - message: ' . $clientEx->getMessage());
+            $this->logger->err('OpenAM client - message: '.$clientEx->getMessage());
+
             return null;
         }
 
@@ -55,12 +56,13 @@ class OpenAMIdentityByTokenResolver implements IdentityByTokenResolver
         }
 
         $passwordExpiryDateRaw = $this->findAttribute($this->options->getIdentityAttributePasswordExpiryTime(), $attributes);
-        if(!$passwordExpiryDateRaw) {
+        if (!$passwordExpiryDateRaw) {
             return null;
         }
         $passwordExpiryDate = PasswordExpiryAttributeParser::parse($passwordExpiryDateRaw);
-        if(!$passwordExpiryDate) {
-            $this->logger->err('Failure to parse password expiry date for user: ' .$username);
+        if (!$passwordExpiryDate) {
+            $this->logger->err('Failure to parse password expiry date for user: '.$username);
+
             return null;
         }
 
@@ -70,10 +72,12 @@ class OpenAMIdentityByTokenResolver implements IdentityByTokenResolver
     private function findAttribute($attributeName, $attributes)
     {
         $value = IdentityAttributeFinder::find($attributeName, $attributes);
-        if(empty($value)) {
-            $this->logger->err($attributeName . ' not found in identity attributes!');
+        if (empty($value)) {
+            $this->logger->err($attributeName.' not found in identity attributes!');
+
             return null;
         }
+
         return $value;
     }
 }

@@ -1,12 +1,12 @@
 <?php
+
 namespace Core\Controller;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
-use Zend\Session\Container;
 
 /**
- * Superclass of controllers that use the logged-in user's identity and roles
+ * Superclass of controllers that use the logged-in user's identity and roles.
  */
 abstract class AbstractAuthActionController extends AbstractDvsaActionController
 {
@@ -62,6 +62,7 @@ abstract class AbstractAuthActionController extends AbstractDvsaActionController
 
     /**
      * @return \Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface
+     *
      * @deprecated
      */
     protected function getIdentityProviderService()
@@ -71,11 +72,12 @@ abstract class AbstractAuthActionController extends AbstractDvsaActionController
 
     /**
      * @return MotFrontendAuthorisationServiceInterface
+     *
      * @deprecated
      */
     public function getAuthorizationService()
     {
-        return $this->serviceLocator->get("AuthorisationService");
+        return $this->serviceLocator->get('AuthorisationService');
     }
 
     /**

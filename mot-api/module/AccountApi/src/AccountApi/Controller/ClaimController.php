@@ -7,7 +7,6 @@ use AccountApi\Service\Exception\OpenAmChangePasswordException;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\ServiceException;
-use SebastianBergmann\Exporter\Exception;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -47,16 +46,16 @@ class ClaimController extends AbstractDvsaRestfulController
 
             return ApiResponse::jsonOk($response);
         } catch (OpenAmChangePasswordException $e) {
-            $statusCode       = $e->getCode();
-            $displayMessage   = 'Must be something you haven\'t used before';
+            $statusCode = $e->getCode();
+            $displayMessage = 'Must be something you haven\'t used before';
 
             /*
              * NOTE: Add 'message' => $e->getMessage() to the $errors array if we need the OpenAM message in the
              * Web Frontend.
              */
-            $errors           = [
-                'step'              => 'confirmPassword',
-                'displayMessage'    => $displayMessage,
+            $errors = [
+                'step' => 'confirmPassword',
+                'displayMessage' => $displayMessage,
             ];
 
             $serviceException = new ServiceException($displayMessage, $statusCode, $e);

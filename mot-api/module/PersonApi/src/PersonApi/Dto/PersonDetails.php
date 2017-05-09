@@ -5,12 +5,10 @@ namespace PersonApi\Dto;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Enum\PhoneContactTypeCode;
-use DvsaCommonApi\Service\EntityHelperService;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\Email;
 use DvsaEntities\Entity\Licence;
-use DvsaEntities\Entity\LicenceCountry;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Phone;
 use DvsaEntities\Entity\PhoneContactType;
@@ -117,10 +115,10 @@ class PersonDetails
     private $roles;
 
     /**
-     * @param Person              $person
-     * @param ContactDetail       $profileContactDetails
-     * @param EntityManager       $entityManager
-     * @param array               $roles
+     * @param Person        $person
+     * @param ContactDetail $profileContactDetails
+     * @param EntityManager $entityManager
+     * @param array         $roles
      *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
@@ -130,20 +128,20 @@ class PersonDetails
         EntityManager $entityManager,
         $roles
     ) {
-        $this->id    = $person->getId();
+        $this->id = $person->getId();
         $this->title = '';
 
         if ($person->getTitle() && $person->getTitle()->getId()) {
             $this->title = $person->getTitle()->getName();
         }
 
-        $this->gender       = $person->getGender()->getName();
-        $this->firstName    = $person->getFirstName();
-        $this->middleName   = $person->getMiddleName();
-        $this->surname      = $person->getFamilyName();
-        $this->username     = $person->getUsername();
-        $this->dateOfBirth  = DateTimeApiFormat::date($person->getDateOfBirth());
-        $this->positions    = $person->findAllOrganisationPositions();
+        $this->gender = $person->getGender()->getName();
+        $this->firstName = $person->getFirstName();
+        $this->middleName = $person->getMiddleName();
+        $this->surname = $person->getFamilyName();
+        $this->username = $person->getUsername();
+        $this->dateOfBirth = DateTimeApiFormat::date($person->getDateOfBirth());
+        $this->positions = $person->findAllOrganisationPositions();
 
         // VM-10289: Address is optional
         $this->importAddress($profileContactDetails->getAddress());
@@ -175,14 +173,14 @@ class PersonDetails
             $this->addressLine1 = $address->getAddressLine1();
             $this->addressLine2 = $address->getAddressLine2();
             $this->addressLine3 = $address->getAddressLine3();
-            $this->town         = $address->getTown();
-            $this->postcode     = $address->getPostcode();
+            $this->town = $address->getTown();
+            $this->postcode = $address->getPostcode();
         } else {
             $this->addressLine1 = null;
             $this->addressLine2 = null;
             $this->addressLine3 = null;
-            $this->town         = null;
-            $this->postcode     = null;
+            $this->town = null;
+            $this->postcode = null;
         }
     }
 
@@ -200,7 +198,7 @@ class PersonDetails
                 ->getRepository(Phone::class)
                 ->findOneBy(
                     [
-                        'contact'     => $profileContactDetails,
+                        'contact' => $profileContactDetails,
                         'contactType' => $phoneContactType,
                     ]
                 );

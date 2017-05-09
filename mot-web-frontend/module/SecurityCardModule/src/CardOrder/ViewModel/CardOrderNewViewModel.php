@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel;
 
-
 class CardOrderNewViewModel
 {
     private $hasAnActiveCard;
@@ -19,11 +18,13 @@ class CardOrderNewViewModel
 
     /**
      * @param mixed $userId
+     *
      * @return CardOrderNewViewModel
      */
     public function setUserId($userId)
     {
         $this->userId = $userId;
+
         return $this;
     }
 
@@ -37,12 +38,13 @@ class CardOrderNewViewModel
 
     /**
      * @param mixed $hasAnActiveCard
+     *
      * @return CardOrderNewViewModel
      */
     public function setHasAnActiveCard($hasAnActiveCard)
     {
         $this->hasAnActiveCard = $hasAnActiveCard;
+
         return $this;
     }
-
 }

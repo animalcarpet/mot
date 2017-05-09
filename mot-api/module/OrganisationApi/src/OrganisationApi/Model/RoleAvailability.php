@@ -18,11 +18,9 @@ use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class RoleAvailability
+ * Class RoleAvailability.
  *
  * Provides information what roles are available for people to assign.
- *
- * @package OrganisationApi\Model
  */
 class RoleAvailability
 {
@@ -35,7 +33,7 @@ class RoleAvailability
     /** @var EntityRepository */
     private $organisationBusinessRoleRepository;
 
-    const ERROR_ALREADY_HAS_ROLE       = 'This person already has this role';
+    const ERROR_ALREADY_HAS_ROLE = 'This person already has this role';
     const ERROR_ALREADY_HAS_NOMINATION = 'This person has been already nominated to this role';
 
     public function __construct(
@@ -43,13 +41,13 @@ class RoleAvailability
         AuthorisationServiceInterface $authorisationService,
         EntityRepository $organisationBusinessRoleRepository
     ) {
-        $this->roleRestrictionsSet                = $roleRestrictionsSet;
-        $this->authorisationService               = $authorisationService;
+        $this->roleRestrictionsSet = $roleRestrictionsSet;
+        $this->authorisationService = $authorisationService;
         $this->organisationBusinessRoleRepository = $organisationBusinessRoleRepository;
     }
 
     /**
-     * Returns conditions that are not met to allow role assignment
+     * Returns conditions that are not met to allow role assignment.
      *
      * @param OrganisationBusinessRoleMap $nomination
      *
@@ -57,7 +55,7 @@ class RoleAvailability
      */
     public function findUnmetRestrictions(OrganisationBusinessRoleMap $nomination)
     {
-        $personnel        = new OrganisationPersonnel($nomination->getOrganisation());
+        $personnel = new OrganisationPersonnel($nomination->getOrganisation());
         $existingPosition = $personnel->findPosition(
             $nomination->getPerson(),
             $nomination->getOrganisationBusinessRole()

@@ -2,7 +2,6 @@
 
 namespace Site\Service;
 
-
 use DvsaCommon\Configuration\MotConfig;
 
 class RiskAssessmentScoreRagClassifier
@@ -16,11 +15,10 @@ class RiskAssessmentScoreRagClassifier
 
     const PRECISION = 2;
 
-
     /** @var float $score */
     private $score;
 
-    /** @var Array $config */
+    /** @var array $config */
     private $config;
 
     /** @var float $greenStart */
@@ -33,15 +31,15 @@ class RiskAssessmentScoreRagClassifier
     private $redStart;
 
     /**
-     * @param int|float|string $score Risk assessment score
-     * @param MotConfig $config
+     * @param int|float|string $score  Risk assessment score
+     * @param MotConfig        $config
      */
     public function __construct($score, MotConfig $config)
     {
         $this->setScore($score);
-        $this->greenStart = $config->get("site_assessment", "green", "start");
-        $this->amberStart = $config->get("site_assessment", "amber", "start");
-        $this->redStart = $config->get("site_assessment", "red", "start");
+        $this->greenStart = $config->get('site_assessment', 'green', 'start');
+        $this->amberStart = $config->get('site_assessment', 'amber', 'start');
+        $this->redStart = $config->get('site_assessment', 'red', 'start');
     }
 
     /**
@@ -49,15 +47,15 @@ class RiskAssessmentScoreRagClassifier
      */
     public function getRagScore()
     {
-        if($this->isWhite()){
+        if ($this->isWhite()) {
             return self::WHITE_STATUS;
         }
 
-        if($this->isGreen()){
+        if ($this->isGreen()) {
             return self::GREEN_STATUS;
         }
 
-        if($this->isAmber()){
+        if ($this->isAmber()) {
             return self::AMBER_STATUS;
         }
 
@@ -110,7 +108,7 @@ class RiskAssessmentScoreRagClassifier
      */
     public function setScore($score)
     {
-        if(!is_numeric($score)){
+        if (!is_numeric($score)) {
             throw new \InvalidArgumentException('Score should be an numeric value');
         }
 
@@ -122,6 +120,7 @@ class RiskAssessmentScoreRagClassifier
     /**
      * @param $lowerBound
      * @param $upperBound
+     *
      * @return bool
      */
     private function isBetween($lowerBound, $upperBound)
@@ -134,6 +133,7 @@ class RiskAssessmentScoreRagClassifier
 
     /**
      * @param $lowerBound
+     *
      * @return bool
      */
     private function isGreaterOrEqualThan($lowerBound)
@@ -143,6 +143,7 @@ class RiskAssessmentScoreRagClassifier
 
     /**
      * @param $upperBound
+     *
      * @return bool
      */
     private function isLessThan($upperBound)
@@ -152,11 +153,11 @@ class RiskAssessmentScoreRagClassifier
 
     /**
      * @param $value
+     *
      * @return bool
      */
     private function isEqual($value)
     {
         return bccomp($this->score, $value, self::PRECISION) == 0;
     }
-
 }

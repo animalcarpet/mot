@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service\Validator;
 
 use DvsaCommon\ApiClient\Person\MotTestingAnnualCertificate\Dto\MotTestingAnnualCertificateDto;
@@ -7,8 +8,8 @@ use PersonApi\Service\Validator\MotTestingAnnualCertificateValidator;
 
 class MotTestingAnnualCertificateValidatorTest extends \PHPUnit_Framework_TestCase
 {
-    const CERTIFICATE_NUMBER = "CERTIFICATE NUMBER";
-    /** @var  MotTestingAnnualCertificateValidator */
+    const CERTIFICATE_NUMBER = 'CERTIFICATE NUMBER';
+    /** @var MotTestingAnnualCertificateValidator */
     private $sut;
 
     public function setUp()
@@ -26,7 +27,7 @@ class MotTestingAnnualCertificateValidatorTest extends \PHPUnit_Framework_TestCa
             ->setExamDate($examDate)
             ->setScore($score);
 
-        if($expectedException == true) {
+        if ($expectedException == true) {
             $this->setExpectedException(BadRequestException::class);
         }
         $this->sut->validate($dto);
@@ -34,7 +35,7 @@ class MotTestingAnnualCertificateValidatorTest extends \PHPUnit_Framework_TestCa
 
     public function dataProviderTestValidate()
     {
-        $tomorrow = new \DateTime("tomorrow");
+        $tomorrow = new \DateTime('tomorrow');
         $today = new \DateTime();
 
         return [
@@ -49,10 +50,10 @@ class MotTestingAnnualCertificateValidatorTest extends \PHPUnit_Framework_TestCa
             //score above 100 - [EXCEPTION]
             [self::CERTIFICATE_NUMBER, $today, 101, true],
             //score is not integer - [EXCEPTION]
-            [self::CERTIFICATE_NUMBER, $today, "score", true],
-            [self::CERTIFICATE_NUMBER, $today, "", true],
+            [self::CERTIFICATE_NUMBER, $today, 'score', true],
+            [self::CERTIFICATE_NUMBER, $today, '', true],
             [self::CERTIFICATE_NUMBER, $today, [10], true],
-            [self::CERTIFICATE_NUMBER, $today, "010", true],
+            [self::CERTIFICATE_NUMBER, $today, '010', true],
         ];
     }
 }

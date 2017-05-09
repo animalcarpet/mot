@@ -12,7 +12,7 @@ use Zend\View\Model\JsonModel;
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
 
 /**
- * Unit tests for PersonByLoginControllerTest
+ * Unit tests for PersonByLoginControllerTest.
  */
 class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
 {
@@ -27,11 +27,11 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
     }
 
     /**
-     * Route /person/tester1
+     * Route /person/tester1.
      */
     public function testGetCanBeAccessed()
     {
-        $username        = 'tester1';
+        $username = 'tester1';
         $expectedResults = ['username' => 'tester1'];
         $this->routeMatch->setParam('login', $username);
 
@@ -41,8 +41,8 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
             ->method('getPersonByIdentifierArray')
             ->will($this->returnValue($expectedResults));
 
-        $result    = $this->controller->dispatch($this->request);
-        $response  = $this->controller->getResponse();
+        $result = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
 
         $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
         $this->assertInstanceOf(JsonModel::class, $result);
@@ -54,7 +54,7 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
      */
     public function testGetListCantBeAccessed()
     {
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertEquals(HttpStatus::HTTP_METHOD_NOT_ALLOWED, $response->getStatusCode());
@@ -69,7 +69,7 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
      */
     public function testGetThrowsNotFoundResponseIfNotAuthorised()
     {
-        $username        = 'tester1';
+        $username = 'tester1';
         $this->routeMatch->setParam('login', $username);
 
         $personServiceMock = $this->getPersonServiceMock();
@@ -78,8 +78,8 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
             ->method('getPersonByIdentifierArray')
             ->will($this->throwException(new UnauthorisedException('')));
 
-        $result    = $this->controller->dispatch($this->request);
-        $response  = $this->controller->getResponse();
+        $result = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
 
         $this->assertEquals(HttpStatus::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertInstanceOf(JsonModel::class, $result);
@@ -102,10 +102,10 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
         $this->setController(new PersonByloginController($this->createUsernameValidatorMock(false)));
         $this->setUpController($this->getController());
 
-        $this->routeMatch->setParam('login', str_repeat('a', self::MAX_USERNAME_LENGTH+1));
+        $this->routeMatch->setParam('login', str_repeat('a', self::MAX_USERNAME_LENGTH + 1));
 
-        $result    = $this->controller->dispatch($this->request);
-        $response  = $this->controller->getResponse();
+        $result = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
 
         $this->assertEquals(HttpStatus::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         $this->assertInstanceOf(JsonModel::class, $result);
@@ -123,14 +123,14 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
         $validationMessages = $problem['validation_messages'];
         $this->assertArrayHasKey('username', $validationMessages);
         $this->assertArrayHasKey('stringLengthTooLong', $validationMessages['username']);
-        $this->assertEquals(sprintf("Username must be less than %s characters long.", self::MAX_USERNAME_LENGTH),
+        $this->assertEquals(sprintf('Username must be less than %s characters long.', self::MAX_USERNAME_LENGTH),
             $validationMessages['username']['stringLengthTooLong']);
     }
 
     /**
      * Querying the endpoint for a person that doesn't exist should return a 404 NOT FOUND.
      *
-     * @expectedException     DvsaCommonApi\Service\Exception\NotFoundException
+     * @expectedException     \DvsaCommonApi\Service\Exception\NotFoundException
      * @expectedExceptionCode 404
      */
     public function testGetReturnsErrorForPersonWhoDoesNotExist()
@@ -144,7 +144,7 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
             ->method('getPersonByIdentifierArray')
             ->will($this->throwException(new NotFoundException('Person', $username)));
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertPersonNotFoundResponse($response, $result, $username);
@@ -191,7 +191,7 @@ class PersonByLoginControllerTest extends AbstractRestfulControllerTestCase
             ->willReturn($isValid);
 
         if (!$isValid) {
-            $messages = ['stringLengthTooLong' => sprintf("Username must be less than %s characters long.",
+            $messages = ['stringLengthTooLong' => sprintf('Username must be less than %s characters long.',
                 self::MAX_USERNAME_LENGTH)];
 
             $usernameValidatorMock

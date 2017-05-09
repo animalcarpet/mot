@@ -10,7 +10,7 @@ use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Tests for BrakeTestConfigurationClass1And2Mapper
+ * Tests for BrakeTestConfigurationClass1And2Mapper.
  */
 class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestCase
 {
@@ -74,7 +74,8 @@ class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestC
     private function getMotTestWithoutBrakeTestType()
     {
         $data = Fixture::getMotTestDataVehicleClass1(true);
-        $data->brakeTestResult->brakeTestTypeCode =  null;
+        $data->brakeTestResult->brakeTestTypeCode = null;
+
         return new MotTest($data);
     }
 
@@ -85,7 +86,7 @@ class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestC
     {
         $data = Fixture::getMotTestDataVehicleClass1(true);
         $data->brakeTestResult->brakeTestTypeCode = $brakeTestType;
+
         return new MotTest($data);
     }
-
 }

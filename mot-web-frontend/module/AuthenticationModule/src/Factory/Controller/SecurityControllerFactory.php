@@ -10,10 +10,8 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\SuccessLoginResultRoutingService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
-use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\SessionManager;
 
 /**
  * Factory for SecurityController instances.

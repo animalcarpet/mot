@@ -13,10 +13,10 @@ class UpdateVtsNameProcess extends AbstractSingleStepVtsProcess implements AutoW
 {
     private $propertyName = UpdateVtsPropertyAction::VTS_NAME_PROPERTY;
     private $permission = PermissionAtSite::VTS_UPDATE_NAME;
-    private $submitButtonText = "Change site name";
-    private $successfulEditMessage = "Site name has been successfully changed.  ";
-    private $formPageTitle = "Change site name";
-    private $formPartial = "site/update-vts-property/partials/edit-name";
+    private $submitButtonText = 'Change site name';
+    private $successfulEditMessage = 'Site name has been successfully changed.  ';
+    private $formPageTitle = 'Change site name';
+    private $formPartial = 'site/update-vts-property/partials/edit-name';
 
     public function getPropertyName()
     {
@@ -41,6 +41,7 @@ class UpdateVtsNameProcess extends AbstractSingleStepVtsProcess implements AutoW
     public function getPrePopulatedData()
     {
         $vtsData = $this->siteMapper->getById($this->context->getVtsId());
+
         return [$this->propertyName => $vtsData->getName()];
     }
 

@@ -3,22 +3,15 @@
 namespace VehicleApi\Service\Mapper;
 
 use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Vehicle\AbstractVehicleDto;
-use DvsaCommon\Dto\Vehicle\MakeDto;
-use DvsaCommon\Dto\Vehicle\ModelDetailDto;
-use DvsaCommon\Dto\Vehicle\ModelDto;
 use DvsaCommon\Dto\Vehicle\VehicleParamDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommonApi\Service\Mapper\AbstractApiMapper;
-use DvsaCommonApi\Service\Mapper\ColourMapper;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\BodyType;
 
 /**
- * Class AbstractVehicleMapper
- *
- * @package VehicleApi\Service\Mapper
+ * Class AbstractVehicleMapper.
  */
 abstract class AbstractVehicleMapper extends AbstractApiMapper
 {
@@ -40,7 +33,7 @@ abstract class AbstractVehicleMapper extends AbstractApiMapper
         $dto->setId($vehicle->getId());
         $dto->setRegistration($vehicle->getRegistration());
         $dto->setVin($vehicle->getVin());
-        
+
         $dto->setManufactureDate(DateTimeApiFormat::date($vehicle->getManufactureDate()));
         $dto->setFirstRegistrationDate(DateTimeApiFormat::date($vehicle->getFirstRegistrationDate()));
         $dto->setFirstUsedDate(DateTimeApiFormat::date($vehicle->getFirstUsedDate()));
@@ -71,6 +64,7 @@ abstract class AbstractVehicleMapper extends AbstractApiMapper
                 ->setCode($bodyType->getCode())
                 ->setName($bodyType->getName());
         }
+
         return $bodyTypeDto;
     }
 }

@@ -3,12 +3,10 @@
 namespace SiteApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\Assertion\UpdateVtsAssertion;
 use DvsaCommon\Dto\Contact\ContactDto;
 use DvsaCommon\Dto\Contact\EmailDto;
 use DvsaCommon\Dto\Contact\PhoneDto;
-use DvsaCommon\Dto\Site\SiteContactDto;
 use DvsaCommon\Dto\Site\SiteContactPatchDto;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -17,25 +15,23 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\ContactDetailsService;
-use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\SiteContact;
 use DvsaEntities\Entity\SiteContactType;
-use DvsaEntities\Repository;
 use DvsaEntities\Repository\SiteContactRepository;
 use DvsaEntities\Repository\SiteContactTypeRepository;
 
 class SiteContactService extends AbstractService
 {
-    /**  @var \DvsaCommonApi\Filter\XssFilter */
+    /** @var \DvsaCommonApi\Filter\XssFilter */
     protected $xssFilter;
-    /** @var ContactDetailsService  */
+    /** @var ContactDetailsService */
     private $contactDetailsService;
-    /** @var UpdateVtsAssertion  */
+    /** @var UpdateVtsAssertion */
     private $updateVtsAssertion;
-    /** @var SiteContactRepository  */
+    /** @var SiteContactRepository */
     private $siteContactRepo;
-    /** @var SiteContactTypeRepository  */
+    /** @var SiteContactTypeRepository */
     private $siteContactTypeRepo;
 
     public function __construct(
@@ -56,7 +52,7 @@ class SiteContactService extends AbstractService
 
     private function buildDto(array $data)
     {
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_ADDRESS, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_ADDRESS, $data)) {
             $data[VehicleTestingStation::PATCH_PROPERTY_ADDRESS]['_class'] =
                 'DvsaCommon\Dto\Contact\AddressDto';
         }
@@ -88,16 +84,16 @@ class SiteContactService extends AbstractService
     private function mapSiteContactPatchDtoToContactDto(ContactDetail $contactDetails, $siteId, array $data, SiteContactPatchDto $siteContactPatchDto)
     {
         $contactDto = new ContactDto();
-        $contactDto->setType( $this->siteContactTypeRepo->getByCode(SiteContactTypeCode::BUSINESS) );
+        $contactDto->setType($this->siteContactTypeRepo->getByCode(SiteContactTypeCode::BUSINESS));
 
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_PHONE, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_PHONE, $data)) {
             $this->updateVtsAssertion->assertUpdatePhone($siteId);
 
             $newPhone = (new PhoneDto())
                 ->setIsPrimary(true)
                 ->setNumber($siteContactPatchDto->getPhone());
 
-            if($contactDetails->getPrimaryPhone()) {
+            if ($contactDetails->getPrimaryPhone()) {
                 $newPhone->setContactType($contactDetails->getPrimaryPhone()->getContactType()->getCode());
             } else {
                 $newPhone->setContactType(PhoneContactTypeCode::BUSINESS);
@@ -105,28 +101,27 @@ class SiteContactService extends AbstractService
 
             $contactDto->setPhones(
                 [
-                    $newPhone
+                    $newPhone,
                 ]
             );
         }
 
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_EMAIL, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_EMAIL, $data)) {
             $this->updateVtsAssertion->assertUpdateEmail($siteId);
             $contactDto->setEmails(
                 [
                     (new EmailDto())
                         ->setIsPrimary(true)
-                        ->setEmail($siteContactPatchDto->getEmail())
+                        ->setEmail($siteContactPatchDto->getEmail()),
                 ]
             );
         }
 
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_ADDRESS, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_ADDRESS, $data)) {
             $this->updateVtsAssertion->assertUpdateAddress($siteId);
             $contactDto->setAddress($siteContactPatchDto->getAddress());
         }
 
         return $contactDto;
     }
-
 }

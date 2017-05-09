@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * MotTestReasonForCancel
+ * MotTestReasonForCancel.
  *
  * @ORM\Table(name="mot_test_reason_for_cancel_lookup")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\MotTestReasonForCancelRepository", readOnly=true)
@@ -30,14 +31,14 @@ class MotTestReasonForCancel
     private $reasonCy;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_abandoned", type="boolean", nullable=false)
      */
     private $abandoned;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_displayable", type="boolean", nullable=false)
      */
@@ -51,11 +52,12 @@ class MotTestReasonForCancel
     public function setAbandoned($abandoned)
     {
         $this->abandoned = $abandoned;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAbandoned()
     {
@@ -70,6 +72,7 @@ class MotTestReasonForCancel
     public function setReason($reason)
     {
         $this->reason = $reason;
+
         return $this;
     }
 

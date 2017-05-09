@@ -1,11 +1,8 @@
 <?php
 
-
 namespace VehicleTest\UpdateVehicleProperty\Form;
 
-
 use DvsaCommon\Enum\FuelTypeCode;
-use DvsaCommon\Enum\FuelTypeId;
 use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
 use Vehicle\UpdateVehicleProperty\Form\InputFilter\UpdateEngineInputFilter;
 use Vehicle\UpdateVehicleProperty\Form\UpdateEngineForm;
@@ -14,7 +11,7 @@ use Zend\Form\Element\Text;
 
 class UpdateEngineFormTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  UpdateEngineForm */
+    /** @var UpdateEngineForm */
     private $updateEngineForm;
     private $fuelTypes;
 
@@ -30,7 +27,6 @@ class UpdateEngineFormTest extends \PHPUnit_Framework_TestCase
         $this->updateEngineForm
             ->setEngineCapacityValidator($updateEngineInputFilter->getEngineCapacityValidator())
             ->setInputFilter($updateEngineInputFilter->getInputFilter());
-
     }
 
     public function testForm()
@@ -61,7 +57,8 @@ class UpdateEngineFormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($valid, $this->updateEngineForm->isValid());
     }
 
-    private function getInvalidInputs(){
+    private function getInvalidInputs()
+    {
         return [
                 [UpdateEngineForm::FIELD_FUEL_TYPE => null, UpdateEngineForm::FIELD_CAPACITY => null],
                 [UpdateEngineForm::FIELD_FUEL_TYPE => FuelTypeCode::DIESEL, UpdateEngineForm::FIELD_CAPACITY => null],
@@ -91,7 +88,8 @@ class UpdateEngineFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function getValidInputs(){
+    private function getValidInputs()
+    {
         return [
                 [UpdateEngineForm::FIELD_FUEL_TYPE => FuelTypeCode::FUEL_CELLS, UpdateEngineForm::FIELD_CAPACITY => ''],
                 [UpdateEngineForm::FIELD_FUEL_TYPE => FuelTypeCode::STEAM, UpdateEngineForm::FIELD_CAPACITY => ''],
@@ -110,7 +108,8 @@ class UpdateEngineFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function dataProviderTestFormValidation(){
+    public function dataProviderTestFormValidation()
+    {
         $out = [];
         foreach ($this->getInvalidInputs() as $invalidInput) {
             $out [] = [

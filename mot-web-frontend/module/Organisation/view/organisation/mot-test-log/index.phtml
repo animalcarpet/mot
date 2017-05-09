@@ -1,12 +1,11 @@
 <?php
 
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use Organisation\Controller\MotTestLogController;
 use Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use Organisation\ViewModel\MotTestLog\MotTestLogViewModel;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 
-/**
+/*
  * @var MotTestLogViewModel                                        $viewModel
  * @var \DvsaCommon\Dto\Organisation\OrganisationDto               $organisation
  * @var \DvsaCommon\Dto\Organisation\MotTestLogSummaryDto          $logSummary
@@ -36,7 +35,7 @@ $numberFormatter = (new NumberFormatter('en_GB', NumberFormatter::DECIMAL));
 if ($dateLinks->findOneBy('active', true)) {
     $topLineLabel = $dateLinks->findOneBy('active', true)->getLabel();
 } else {
-    $topLineLabel = join(
+    $topLineLabel = implode(
         ' ', [
             'from', DateTimeDisplayFormat::date($dateFrom->getDate()),
             'to', DateTimeDisplayFormat::date($dateTo->getDate()),
@@ -90,14 +89,14 @@ if ($dateLinks->findOneBy('active', true)) {
         if ($rowsTotalCount > 0) {
             echo $this->partial(
                 'report/top-line', [
-                    'text'        => '<strong>%s</strong> tests performed <strong>%s</strong>',
+                    'text' => '<strong>%s</strong> tests performed <strong>%s</strong>',
                     'itemsNumber' => $rowsTotalCount,
-                    'range'       => $topLineLabel
+                    'range' => $topLineLabel,
                 ]
             );
         }
 
-        $errorMessages      = $this->layout()->flashMessenger->getErrorMessages();
+        $errorMessages = $this->layout()->flashMessenger->getErrorMessages();
         echo $this->partial(
             'partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']
         );
@@ -140,11 +139,11 @@ if ($dateLinks->findOneBy('active', true)) {
                             echo $this->partial(
                                 'partials/form/date-group.phtml',
                                 [
-                                    'legend'       => 'From',
-                                    'fieldKey'     => MotTestLogFormViewModel::FLD_DATE_FROM,
-                                    'valueDay'     => $dateFrom->getDay(),
-                                    'valueMonth'   => $dateFrom->getMonth(),
-                                    'valueYear'    => $dateFrom->getYear(),
+                                    'legend' => 'From',
+                                    'fieldKey' => MotTestLogFormViewModel::FLD_DATE_FROM,
+                                    'valueDay' => $dateFrom->getDay(),
+                                    'valueMonth' => $dateFrom->getMonth(),
+                                    'valueYear' => $dateFrom->getYear(),
                                     'errorMessage' => $formModel->getError(MotTestLogFormViewModel::FLD_DATE_FROM),
                                 ]
                             );
@@ -158,11 +157,11 @@ if ($dateLinks->findOneBy('active', true)) {
                             echo $this->partial(
                                 'partials/form/date-group.phtml',
                                 [
-                                    'legend'       => 'To',
-                                    'fieldKey'     => MotTestLogFormViewModel::FLD_DATE_TO,
-                                    'valueDay'     => $dateTo->getDay(),
-                                    'valueMonth'   => $dateTo->getMonth(),
-                                    'valueYear'    => $dateTo->getYear(),
+                                    'legend' => 'To',
+                                    'fieldKey' => MotTestLogFormViewModel::FLD_DATE_TO,
+                                    'valueDay' => $dateTo->getDay(),
+                                    'valueMonth' => $dateTo->getMonth(),
+                                    'valueYear' => $dateTo->getYear(),
                                     'errorMessage' => $formModel->getError(MotTestLogFormViewModel::FLD_DATE_TO),
                                 ]
                             );
@@ -187,8 +186,8 @@ if ($dateLinks->findOneBy('active', true)) {
         'partial/gds/form/control-navigation-secondary',
         [
             'navigation' => [
-                'Return to Authorised Examiner' => AuthorisedExaminerUrlBuilderWeb::of($organisation->getId())
-            ]
+                'Return to Authorised Examiner' => AuthorisedExaminerUrlBuilderWeb::of($organisation->getId()),
+            ],
         ]
     ); ?>
 </nav>

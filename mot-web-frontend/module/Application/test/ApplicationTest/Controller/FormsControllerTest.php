@@ -8,14 +8,10 @@ use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\ReportUrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Mvc\Router\RouteMatch;
 
 /**
- * Class FormsControllerTest
+ * Class FormsControllerTest.
  */
 class FormsControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -167,7 +163,7 @@ class FormsControllerTest extends AbstractFrontendControllerTestCase
     {
         $restMock = $this->getRestClientMockForServiceManager();
 
-        $this->mockMethod($restMock, 'getPdf', null, new \Exception("pdf failed"), $this->buildContingencyUrl($name));
+        $this->mockMethod($restMock, 'getPdf', null, new \Exception('pdf failed'), $this->buildContingencyUrl($name));
 
         $result = $this->getResultForAction($action);
 
@@ -213,14 +209,14 @@ class FormsControllerTest extends AbstractFrontendControllerTestCase
         if ($vts) {
             $testStation = $vts->getSiteNumber();
 
-            $inspAuthority = $vts->getName() . PHP_EOL .
+            $inspAuthority = $vts->getName().PHP_EOL.
                 preg_replace("/,\s*/", PHP_EOL, $vts->getAddress());
         }
 
         return $certificateUrl->queryParams(
             [
-                'testStation'   => $testStation,
-                'inspAuthority' => $inspAuthority
+                'testStation' => $testStation,
+                'inspAuthority' => $inspAuthority,
             ]
         );
     }

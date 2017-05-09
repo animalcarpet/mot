@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\test\PersonApiTest\Service;
 
 use DvsaCommon\Enum\VehicleClassGroupCode;
@@ -33,7 +34,7 @@ class PersonQualificationStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function testChangeStatusCreateNewStatusesIfDoNotExist($vehicleClassGroupCode)
     {
         $expects = $this->countClassesForGroup($vehicleClassGroupCode);
-        $this->vehicleClassRepository->expects($this->exactly($expects))->method("getByCode");
+        $this->vehicleClassRepository->expects($this->exactly($expects))->method('getByCode');
 
         $person = new Person();
         $this->createService()->changeStatus($person, $vehicleClassGroupCode, AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED);
@@ -44,7 +45,7 @@ class PersonQualificationStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testChangeStatusOverwriteExistingStatus($vehicleClassGroupCode)
     {
-        $this->vehicleClassRepository->expects($this->exactly(0))->method("getByCode");
+        $this->vehicleClassRepository->expects($this->exactly(0))->method('getByCode');
 
         $person = new Person();
         $person->setAuthorisationsForTestingMot($this->getAuthorisationForTestingMotForGroup($vehicleClassGroupCode));
@@ -59,14 +60,13 @@ class PersonQualificationStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $expects = $this->countClassesForGroup($vehicleClassGroupCode);
 
-        $this->authorisationForTestingMotRepository->expects($this->exactly($expects))->method("remove");
-        $this->authorisationForTestingMotRepository->expects($this->once())->method("flush");
+        $this->authorisationForTestingMotRepository->expects($this->exactly($expects))->method('remove');
+        $this->authorisationForTestingMotRepository->expects($this->once())->method('flush');
 
         $person = new Person();
         $person->setAuthorisationsForTestingMot($this->getAuthorisationForTestingMotForGroup($vehicleClassGroupCode));
 
         $this->createService()->removeStatus($person, $vehicleClassGroupCode);
-
     }
 
     /**
@@ -83,11 +83,11 @@ class PersonQualificationStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                VehicleClassGroupCode::BIKES
+                VehicleClassGroupCode::BIKES,
             ],
             [
-                VehicleClassGroupCode::CARS_ETC
-            ]
+                VehicleClassGroupCode::CARS_ETC,
+            ],
         ];
     }
 
@@ -119,6 +119,7 @@ class PersonQualificationStatusServiceTest extends \PHPUnit_Framework_TestCase
     private function countClassesForGroup($vehicleClassGroupCode)
     {
         $classes = VehicleClassGroup::getClassesForGroup($vehicleClassGroupCode);
+
         return count($classes);
     }
 }

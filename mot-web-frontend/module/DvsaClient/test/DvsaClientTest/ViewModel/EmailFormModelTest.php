@@ -32,12 +32,12 @@ class EmailFormModelTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . $method}($value);
+        $result = $this->model->{'set'.$method}($value);
         $this->assertInstanceOf(EmailFormModel::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? '' : 'get') . $method;
+        $method = (is_bool($expect) ? '' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -46,7 +46,7 @@ class EmailFormModelTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'property' => 'email',
-                'value'    => 'test_email',
+                'value' => 'test_email',
             ],
             ['emailConfirm', 'test_EmailConf'],
             ['isSupplied', true],
@@ -71,11 +71,11 @@ class EmailFormModelTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'postData' => [
-                    EmailFormModel::FIELD_EMAIL         => 'test_email',
+                    EmailFormModel::FIELD_EMAIL => 'test_email',
                     EmailFormModel::FIELD_EMAIL_CONFIRM => 'test_emailConf',
                     EmailFormModel::FIELD_IS_NOT_SUPPLY => 1,
                 ],
-                'expect'   => (new EmailFormModel())
+                'expect' => (new EmailFormModel())
                     ->setEmail('test_email')
                     ->setEmailConfirm('test_emailConf')
                     ->setIsSupplied(false),
@@ -84,7 +84,7 @@ class EmailFormModelTest extends \PHPUnit_Framework_TestCase
                 'postData' => [
                     EmailFormModel::FIELD_IS_NOT_SUPPLY => 0,
                 ],
-                'expect'   => (new EmailFormModel())
+                'expect' => (new EmailFormModel())
                     ->setIsSupplied(true),
             ],
         ];
@@ -119,7 +119,6 @@ class EmailFormModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($dto, $actual);
     }
 
-
     /**
      * @dataProvider dataProviderTestIsValid
      */
@@ -144,34 +143,34 @@ class EmailFormModelTest extends \PHPUnit_Framework_TestCase
                 'postData' => [
                     EmailFormModel::FIELD_IS_NOT_SUPPLY => 1,
                 ],
-                'expect'   => [
+                'expect' => [
                     'isValid' => true,
-                    'errors'  => [],
+                    'errors' => [],
                 ],
             ],
             //  set supply email, validation is true, because email valid and same
             [
                 'postData' => [
-                    EmailFormModel::FIELD_EMAIL         => 'emailformmodeltest@' . EmailAddressValidator::TEST_DOMAIN,
-                    EmailFormModel::FIELD_EMAIL_CONFIRM => 'emailformmodeltest@' . EmailAddressValidator::TEST_DOMAIN,
+                    EmailFormModel::FIELD_EMAIL => 'emailformmodeltest@'.EmailAddressValidator::TEST_DOMAIN,
+                    EmailFormModel::FIELD_EMAIL_CONFIRM => 'emailformmodeltest@'.EmailAddressValidator::TEST_DOMAIN,
                     EmailFormModel::FIELD_IS_NOT_SUPPLY => 0,
                 ],
-                'expect'   => [
+                'expect' => [
                     'isValid' => true,
-                    'errors'  => [],
+                    'errors' => [],
                 ],
             ],
             //  set supply email, validation is FALSE, because email invalid and conf not same
             [
                 'postData' => [
-                    EmailFormModel::FIELD_EMAIL         => 'test_Tows',
+                    EmailFormModel::FIELD_EMAIL => 'test_Tows',
                     EmailFormModel::FIELD_EMAIL_CONFIRM => 'test_EmailConfirm',
                     EmailFormModel::FIELD_IS_NOT_SUPPLY => 0,
                 ],
-                'expect'   => [
+                'expect' => [
                     'isValid' => false,
-                    'errors'  => [
-                        EmailFormModel::FIELD_EMAIL         => EmailFormModel::ERR_INVALID,
+                    'errors' => [
+                        EmailFormModel::FIELD_EMAIL => EmailFormModel::ERR_INVALID,
                         EmailFormModel::FIELD_EMAIL_CONFIRM => EmailFormModel::ERR_CONF_NOT_SAME,
                     ],
                 ],
@@ -182,9 +181,9 @@ class EmailFormModelTest extends \PHPUnit_Framework_TestCase
     private static function getTestDto()
     {
         return (new EmailDto())
-            ->setEmail('emailformmodeltest@' . EmailAddressValidator::TEST_DOMAIN)
+            ->setEmail('emailformmodeltest@'.EmailAddressValidator::TEST_DOMAIN)
             ->setIsSupplied(true)
-            ->setEmailConfirm('emailformmodeltest@' . EmailAddressValidator::TEST_DOMAIN)
+            ->setEmailConfirm('emailformmodeltest@'.EmailAddressValidator::TEST_DOMAIN)
             ->setIsPrimary(true);
     }
 }

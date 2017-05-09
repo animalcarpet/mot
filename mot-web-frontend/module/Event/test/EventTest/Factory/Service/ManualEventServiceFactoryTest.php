@@ -8,7 +8,6 @@ use Event\Service\ManualEventService;
 use Zend\ServiceManager\ServiceManager;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 
-
 class ManualEventServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateService()
@@ -24,5 +23,4 @@ class ManualEventServiceFactoryTest extends \PHPUnit_Framework_TestCase
             $factory->createService($sm)
         );
     }
-
 }

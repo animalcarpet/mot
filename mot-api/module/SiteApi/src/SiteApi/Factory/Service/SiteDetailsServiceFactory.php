@@ -26,12 +26,13 @@ use SiteApi\Service\Validator\TestingFacilitiesValidator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class SiteDetailsServiceFactory  implements FactoryInterface
+class SiteDetailsServiceFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

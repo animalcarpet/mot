@@ -10,9 +10,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardView
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardSuccessViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\TwoFactorNominationNotificationService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaFeature\FeatureToggles;
 use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 
 class RegisterCardSuccessAction implements AutoWireableInterface
 {
@@ -27,15 +25,14 @@ class RegisterCardSuccessAction implements AutoWireableInterface
     protected $viewStrategy;
 
     /**
-     * @var TwoFactorNominationNotificationService $twoFactorNominationNotificationService
+     * @var TwoFactorNominationNotificationService
      */
     protected $twoFactorNominationNotificationService;
 
     /**
-     * @var MotFrontendIdentityProviderInterface $identityProvider
+     * @var MotFrontendIdentityProviderInterface
      */
     protected $identityProvider;
-
 
     public function __construct(RegisterCardService $registerCardService, RegisterCardViewStrategy $viewStrategy,
                                 TwoFactorNominationNotificationService $twoFactorNominationNotificationService,
@@ -72,6 +69,7 @@ class RegisterCardSuccessAction implements AutoWireableInterface
         $result->setTemplate('2fa/register-card/success');
         $result->layout()->setBreadcrumbs($this->viewStrategy->breadcrumbs());
         $result->setViewModel($viewModel);
+
         return $result;
     }
 }

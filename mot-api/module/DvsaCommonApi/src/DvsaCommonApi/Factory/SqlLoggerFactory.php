@@ -8,7 +8,6 @@ use DvsaCommonApi\Logger\ZendSqlLogger;
 
 class SqlLoggerFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ZendSqlLogger(

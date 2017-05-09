@@ -5,12 +5,9 @@ namespace DvsaClient\Mapper;
 use DvsaClient\Entity\Role;
 
 /**
- * Class RoleMapper
- *
- * @package DvsaClient\Mapper
+ * Class RoleMapper.
  */
 class RoleMapper extends Mapper
 {
-
     protected $entityClass = Role::class;
 }

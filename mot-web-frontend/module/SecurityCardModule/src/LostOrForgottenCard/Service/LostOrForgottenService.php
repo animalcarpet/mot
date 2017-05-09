@@ -9,12 +9,12 @@ use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 class LostOrForgottenService
 {
     /**
-     * @var UserAdminMapper $userAdminMapper
+     * @var UserAdminMapper
      */
     private $userAdminMapper;
 
     /**
-     * @var LostOrForgottenSessionService $sessionService
+     * @var LostOrForgottenSessionService
      */
     private $sessionService;
 
@@ -27,23 +27,25 @@ class LostOrForgottenService
     /**
      * @param $questionId
      * @param $userId
+     *
      * @return \DvsaCommon\Dto\Security\SecurityQuestionDto
+     *
      * @throws \Exception
      */
     public function getQuestionForUser($questionId, $userId)
     {
         try {
             return $this->userAdminMapper->getSecurityQuestion($questionId, $userId);
-        }
-        catch (NotFoundException $e) {
-            throw new \Exception("Security Question " .$questionId. " not found for user " .$userId);
+        } catch (NotFoundException $e) {
+            throw new \Exception('Security Question '.$questionId.' not found for user '.$userId);
         }
     }
 
     /**
-     * @param int $questionId
-     * @param int $userId
-     * @param String $answer
+     * @param int    $questionId
+     * @param int    $userId
+     * @param string $answer
+     *
      * @return bool
      */
     public function getAnswerForQuestion($questionId, $userId, $answer)
@@ -54,12 +56,14 @@ class LostOrForgottenService
     /**
      * @param array $steps
      */
-    public function saveSteps(array $steps) {
+    public function saveSteps(array $steps)
+    {
         $this->sessionService->save(LostOrForgottenSessionService::UNIQUE_KEY, $steps);
     }
 
     /**
      * @param $step
+     *
      * @return bool
      */
     public function isAllowedOnStep($step)
@@ -83,12 +87,14 @@ class LostOrForgottenService
             }
             $previousValue = $value;
         }
+
         return false;
     }
 
     /**
      * @param $step
      * @param $status
+     *
      * @throws \Exception
      */
     public function updateStepStatus($step, $status)
@@ -100,7 +106,7 @@ class LostOrForgottenService
         }
 
         if (!isset($steps[$step])) {
-            throw new \Exception('Step: ' .$step. ' is not a valid step');
+            throw new \Exception('Step: '.$step.' is not a valid step');
         }
 
         if (!is_bool($status)) {

@@ -3,12 +3,10 @@
 namespace AccountTest\ViewModel;
 
 use Account\ViewModel\ReviewViewModel;
-use DvsaCommon\Validator\EmailAddressValidator;
 
 class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
 {
-
-    /** @var  ReviewViewModel */
+    /** @var ReviewViewModel */
     private $model;
 
     public function setUp()
@@ -86,17 +84,13 @@ class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
                 'answer_b' => 'test2',
             ],
             'securityQuestions' => [
-                'groupA' =>
-                    [
-                        1 => 'What is your Fav Car'
-                    ]
-                ,
-                'groupB' =>
-                    [
-                        2 => 'What is your Fav Colour'
-                    ]
-            ]
+                'groupA' => [
+                        1 => 'What is your Fav Car',
+                    ],
+                'groupB' => [
+                        2 => 'What is your Fav Colour',
+                    ],
+            ],
         ];
     }
-
 }

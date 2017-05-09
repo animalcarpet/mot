@@ -1,14 +1,15 @@
 <?php
+
 return [
-    'modules'         => [
+    'modules' => [
         'DvsaFeature',
         'DvsaCommonApi',
         'DvsaEntities',
         'DvsaMotApi',
         'DvsaAuthentication',
-        'DvsaAuthorisation'
+        'DvsaAuthorisation',
     ],
     'test_namespaces' => [
-        'DvsaCommonApiTest' => __DIR__ . '/' . 'DvsaCommonApiTest',
-    ]
+        'DvsaCommonApiTest' => __DIR__.'/'.'DvsaCommonApiTest',
+    ],
 ];

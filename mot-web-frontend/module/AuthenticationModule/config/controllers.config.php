@@ -9,6 +9,6 @@ return [
 
     'factories' => [
         SecurityController::class => SecurityControllerFactory::class,
-        LogoutController::class   => LogoutControllerFactory::class,
+        LogoutController::class => LogoutControllerFactory::class,
     ],
 ];

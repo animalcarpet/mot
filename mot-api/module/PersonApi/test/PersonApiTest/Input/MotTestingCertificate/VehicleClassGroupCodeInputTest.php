@@ -7,7 +7,6 @@ use Zend\Validator\InArray;
 use Zend\Validator\NotEmpty;
 use PersonApi\Input\MotTestingCertificate\VehicleClassGroupCodeInput;
 use PersonApiTest\Input\BaseInput;
-use Zend\Validator\StringLength;
 
 class VehicleClassGroupCodeInputTest extends BaseInput
 {
@@ -31,8 +30,8 @@ class VehicleClassGroupCodeInputTest extends BaseInput
     public function getValidData()
     {
         return [
-            [ VehicleClassGroupCode::BIKES ],
-            [ VehicleClassGroupCode::CARS_ETC ],
+            [VehicleClassGroupCode::BIKES],
+            [VehicleClassGroupCode::CARS_ETC],
         ];
     }
 
@@ -48,7 +47,6 @@ class VehicleClassGroupCodeInputTest extends BaseInput
         $this->assertEquals($expectedMessages, $this->input->getMessages());
     }
 
-
     public function getInvalidData()
     {
         return [
@@ -56,19 +54,19 @@ class VehicleClassGroupCodeInputTest extends BaseInput
                 null,
                 [
                     NotEmpty::IS_EMPTY => VehicleClassGroupCodeInput::MSG_EMPTY,
-                    InArray::NOT_IN_ARRAY => VehicleClassGroupCodeInput::MSG_NOT_EXIST
-                ]
+                    InArray::NOT_IN_ARRAY => VehicleClassGroupCodeInput::MSG_NOT_EXIST,
+                ],
             ],
             [
-                "",
+                '',
                 [
                     NotEmpty::IS_EMPTY => VehicleClassGroupCodeInput::MSG_EMPTY,
-                    InArray::NOT_IN_ARRAY => VehicleClassGroupCodeInput::MSG_NOT_EXIST
-                ]
+                    InArray::NOT_IN_ARRAY => VehicleClassGroupCodeInput::MSG_NOT_EXIST,
+                ],
             ],
             [
-                "C",
-                [InArray::NOT_IN_ARRAY => VehicleClassGroupCodeInput::MSG_NOT_EXIST]
+                'C',
+                [InArray::NOT_IN_ARRAY => VehicleClassGroupCodeInput::MSG_NOT_EXIST],
             ],
         ];
     }

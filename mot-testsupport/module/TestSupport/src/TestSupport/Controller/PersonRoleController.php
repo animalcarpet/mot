@@ -6,13 +6,14 @@ use TestSupport\Helper\TestDataResponseHelper;
 use TestSupport\Service\AccountDataService;
 
 /**
- * Manipulates roles assigned to Person
+ * Manipulates roles assigned to Person.
  */
 class PersonRoleController extends BaseTestSupportRestfulController
 {
     /**
      * @param mixed $personId
      * @param mixed $data
+     *
      * @return mixed|void
      */
     public function update($personId, $data)
@@ -21,9 +22,9 @@ class PersonRoleController extends BaseTestSupportRestfulController
         $accountHelper = $this->getServiceLocator()->get(AccountDataService::class);
         $role = $this->params()->fromRoute('role', null);
 
-
-        if(!empty($personId) && !empty($role)){
+        if (!empty($personId) && !empty($role)) {
             $accountHelper->addRole($personId, $role);
+
             return TestDataResponseHelper::jsonOk(['success' => true]);
         }
 
@@ -32,6 +33,7 @@ class PersonRoleController extends BaseTestSupportRestfulController
 
     /**
      * @param mixed $personId
+     *
      * @return mixed|void
      */
     public function delete($personId)
@@ -40,8 +42,9 @@ class PersonRoleController extends BaseTestSupportRestfulController
         $accountHelper = $this->getServiceLocator()->get(AccountDataService::class);
         $role = $this->params()->fromRoute('role', null);
 
-        if(!empty($personId) && !empty($role)){
+        if (!empty($personId) && !empty($role)) {
             $accountHelper->removeRole($personId, $role);
+
             return TestDataResponseHelper::jsonOk(['success' => true]);
         }
 

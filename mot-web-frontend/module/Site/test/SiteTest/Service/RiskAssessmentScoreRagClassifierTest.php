@@ -5,7 +5,7 @@ namespace SiteTest\Service;
 use DvsaCommon\Configuration\MotConfig;
 use Site\Service\RiskAssessmentScoreRagClassifier;
 
-class RiskAssessmentScoreRagClassifierTest  extends \PHPUnit_Framework_TestCase
+class RiskAssessmentScoreRagClassifierTest extends \PHPUnit_Framework_TestCase
 {
     private $config;
 
@@ -29,67 +29,67 @@ class RiskAssessmentScoreRagClassifierTest  extends \PHPUnit_Framework_TestCase
         return [
             [
                 'score' => 0,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::WHITE_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::WHITE_STATUS,
             ],
             [
                 'score' => '0',
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::WHITE_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::WHITE_STATUS,
             ],
             [
                 'score' => 0.1,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS,
             ],
             [
                 'score' => '0.1',
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS,
             ],
             [
                 'score' => 0.11,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS,
             ],
             [
                 'score' => 0.99,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS,
             ],
             [
                 'score' => 199.32,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS,
             ],
             [
                 'score' => 324.10,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::GREEN_STATUS,
             ],
             [
                 'score' => 424.11,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS,
             ],
             [
                 'score' => '424.11',
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS,
             ],
             [
                 'score' => 459.20,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS,
             ],
             [
                 'score' => '459.20',
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::AMBER_STATUS,
             ],
             [
                 'score' => 459.21,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS,
             ],
             [
                 'score' => 459.22,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS,
             ],
             [
                 'score' => 899.99,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS,
             ],
             [
                 'score' => 999.99,
-                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS
+                'expectedStatus' => RiskAssessmentScoreRagClassifier::RED_STATUS,
             ],
         ];
     }
@@ -107,14 +107,14 @@ class RiskAssessmentScoreRagClassifierTest  extends \PHPUnit_Framework_TestCase
     public function invalidInputsDataProvider()
     {
         return [
-            [ 'value' => 'test'],
-            [ 'value' => '234sdfa234'],
-            [ 'value' => '32.32daa'],
-            [ 'value' => Null],
-            [ 'value' => true],
-            [ 'value' => false],
-            [ 'value' => new \StdClass()],
-            [ 'value' => []],
+            ['value' => 'test'],
+            ['value' => '234sdfa234'],
+            ['value' => '32.32daa'],
+            ['value' => null],
+            ['value' => true],
+            ['value' => false],
+            ['value' => new \StdClass()],
+            ['value' => []],
         ];
     }
 
@@ -122,11 +122,11 @@ class RiskAssessmentScoreRagClassifierTest  extends \PHPUnit_Framework_TestCase
     {
         $this->config = $this->getMockBuilder(MotConfig::class)->disableOriginalConstructor()->getMock();
         $returnMap = [
-            ["site_assessment", "green", "start", 0],
-            ["site_assessment", "amber", "start", 324.11],
-            ["site_assessment", "red", "start", 459.21]
+            ['site_assessment', 'green', 'start', 0],
+            ['site_assessment', 'amber', 'start', 324.11],
+            ['site_assessment', 'red', 'start', 459.21],
         ];
 
-        $this->config->expects($this->any())->method("get")->will($this->returnValueMap($returnMap));
+        $this->config->expects($this->any())->method('get')->will($this->returnValueMap($returnMap));
     }
 }

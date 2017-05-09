@@ -4,7 +4,6 @@ namespace DvsaEntities\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 class EnumType1Repository extends EntityRepository
 {
@@ -14,6 +13,7 @@ class EnumType1Repository extends EntityRepository
      * @param string $code from auto-generated enum found in \DvsaCommon\Enum\
      *
      * @return null|object
+     *
      * @throws NotFoundException
      */
     public function getByCode($code)

@@ -10,12 +10,12 @@ class OrderSecurityCardStepServiceTest extends \PHPUnit_Framework_TestCase
 {
     const GUID = 101010101;
     /**
-     * @var OrderSecurityCardStepService $orderNewSecurityCardSessionService
+     * @var OrderSecurityCardStepService
      */
     private $orderSecurityCardStepService;
 
     /**
-     * @var OrderNewSecurityCardSessionService $orderNewSecurityCardSessionService
+     * @var OrderNewSecurityCardSessionService
      */
     private $orderNewSecurityCardSessionService;
 
@@ -51,7 +51,7 @@ class OrderSecurityCardStepServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->orderNewSecurityCardSessionService
             ->expects($this->once())
-            ->method("loadByGuid")
+            ->method('loadByGuid')
             ->with(self::GUID)
             ->willReturn($steps);
 
@@ -74,7 +74,7 @@ class OrderSecurityCardStepServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->orderNewSecurityCardSessionService
             ->expects($this->once())
-            ->method("loadByGuid")
+            ->method('loadByGuid')
             ->with(self::GUID)
             ->willReturn($steps);
 
@@ -90,7 +90,7 @@ class OrderSecurityCardStepServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->orderNewSecurityCardSessionService
             ->expects($this->once())
-            ->method("loadByGuid")
+            ->method('loadByGuid')
             ->with(self::GUID)
             ->willReturn(null);
 
@@ -112,7 +112,7 @@ class OrderSecurityCardStepServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->orderNewSecurityCardSessionService
             ->expects($this->once())
-            ->method("loadByGuid")
+            ->method('loadByGuid')
             ->with(self::GUID)
             ->willReturn($steps);
 

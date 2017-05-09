@@ -3,13 +3,10 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class Address
- *
- * @package DvsaClient\Entity
+ * Class Address.
  */
 class Address
 {
-
     private $addressLine1;
     private $addressLine2;
     private $addressLine3;
@@ -27,6 +24,7 @@ class Address
     public function setAddressLine1($addressLine1)
     {
         $this->addressLine1 = $addressLine1;
+
         return $this;
     }
 
@@ -48,6 +46,7 @@ class Address
     public function setAddressLine2($addressLine2)
     {
         $this->addressLine2 = $addressLine2;
+
         return $this;
     }
 
@@ -69,6 +68,7 @@ class Address
     public function setAddressLine3($addressLine3)
     {
         $this->addressLine3 = $addressLine3;
+
         return $this;
     }
 
@@ -90,6 +90,7 @@ class Address
     public function setPostcode($postcode)
     {
         $this->postcode = $postcode;
+
         return $this;
     }
 
@@ -111,6 +112,7 @@ class Address
     public function setTown($town)
     {
         $this->town = $town;
+
         return $this;
     }
 
@@ -132,6 +134,7 @@ class Address
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -153,6 +156,7 @@ class Address
     public function setCounty($county)
     {
         $this->county = $county;
+
         return $this;
     }
 

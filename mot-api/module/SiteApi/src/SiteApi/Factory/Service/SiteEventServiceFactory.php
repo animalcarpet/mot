@@ -13,6 +13,7 @@ class SiteEventServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return SiteEventService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -27,5 +28,4 @@ class SiteEventServiceFactory implements FactoryInterface
             $entityManager->getRepository(Site::class)
         );
     }
-
 }

@@ -22,11 +22,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\TesterMotTestLogController;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\Response;
-use Zend\Log\Writer\Mock;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
 
 class TesterMotTestLogControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -90,7 +86,6 @@ class TesterMotTestLogControllerTest extends AbstractFrontendControllerTestCase
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asTester());
     }
 
-
     public function testIndexAction()
     {
         $motTestLogSummaryDto = new MotTestLogSummaryDto();
@@ -101,7 +96,6 @@ class TesterMotTestLogControllerTest extends AbstractFrontendControllerTestCase
             $this->any(),
             $motTestLogSummaryDto
         );
-
 
         $searchResultDto = new SearchResultDto();
         $searchParamsDto = new SearchParamsDto();
@@ -114,13 +108,12 @@ class TesterMotTestLogControllerTest extends AbstractFrontendControllerTestCase
             $searchResultDto
         );
 
-
         $this->getResultForAction2('get', 'index', [], ['_csrf_token' => true]);
         $this->assertResponseStatus(self::HTTP_OK_CODE);
     }
 
     /**
-     * Test creation of CVS file
+     * Test creation of CVS file.
      *
      * @throws \Exception
      */
@@ -238,7 +231,7 @@ class TesterMotTestLogControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Test class methods getTesterLogDataBySearchCriteria and getTesterLogSummary
+     * Test class methods getTesterLogDataBySearchCriteria and getTesterLogSummary.
      *
      * @dataProvider dataProviderTestGetLogX
      */

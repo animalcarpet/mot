@@ -19,7 +19,7 @@ class ApiPerformMotTestAssertion
     {
         $testType = $motTest->getMotTestType()->getCode();
         $ownerId = $motTest->getTester()->getId();
-        $vtsId = $motTest->getVehicleTestingStation() ? $motTest->getVehicleTestingStation()->getId() :null;
+        $vtsId = $motTest->getVehicleTestingStation() ? $motTest->getVehicleTestingStation()->getId() : null;
 
         $this->assertion->assertGranted($testType, $ownerId, $vtsId);
     }
@@ -28,7 +28,7 @@ class ApiPerformMotTestAssertion
     {
         $testType = $motTest->getMotTestType()->getCode();
         $ownerId = $motTest->getTester()->getId();
-        $vtsId = $motTest->getVehicleTestingStation() ? $motTest->getVehicleTestingStation()->getId() :null;
+        $vtsId = $motTest->getVehicleTestingStation() ? $motTest->getVehicleTestingStation()->getId() : null;
 
         $this->assertion->isGranted($testType, $ownerId, $vtsId);
     }

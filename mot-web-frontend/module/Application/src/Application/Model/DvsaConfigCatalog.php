@@ -9,20 +9,18 @@ namespace Application\Model;
  * the simplest thing that will work.
  *
  * This is not to be mixed up with the CatalogService
- *
  */
 class DvsaConfigCatalog
 {
-
     public function __construct($restClient)
     {
         // not used any more
     }
 
     /**
-     * TODO: Migrate to DB lookup table when slack time permits
+     * TODO: Migrate to DB lookup table when slack time permits.
      *
-     * @return array of RFR-is for Items not tested in Class 2 vehicles.
+     * @return array of RFR-is for Items not tested in Class 2 vehicles
      */
     public function getClass2RfrsNotTested()
     {
@@ -30,9 +28,9 @@ class DvsaConfigCatalog
     }
 
     /**
-     * TODO: Migrate to DB lookup table when slack time permits
+     * TODO: Migrate to DB lookup table when slack time permits.
      *
-     * @return array of RFR-is for Items not tested in Class 4 vehicles.
+     * @return array of RFR-is for Items not tested in Class 4 vehicles
      */
     public function getClass4RfrsNotTested()
     {
@@ -40,9 +38,10 @@ class DvsaConfigCatalog
     }
 
     /**
-     * @param Int $id contains the RFR internal identifier,
+     * @param int $id contains the RFR internal identifier,
      *
      * @return bool is the RFR Id is an "item not tested"
+     *
      * @throws \Exception if $id cannot be treated as a numeric value
      */
     public function isItemNotTested($id)
@@ -56,7 +55,7 @@ class DvsaConfigCatalog
             throw new \Exception('RFR id must be numeric');
         }
 
-        return in_array((int)$id, $this->getClass2RfrsNotTested())
-        || in_array((int)$id, $this->getClass4RfrsNotTested());
+        return in_array((int) $id, $this->getClass2RfrsNotTested())
+        || in_array((int) $id, $this->getClass4RfrsNotTested());
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /** @var \DvsaCommon\Dto\Common\MotTestDto $motTestDetails */
 use DvsaCommon\Utility\ArrayUtils;
 
@@ -16,7 +17,7 @@ if ($motTestDetails) {
             'currentStep' => 2,
             'title' => 'Add PRS, failures and advisories',
             'motTestNumber' => $motTestNumber,
-            'isMotContingency' => $this->isMotContingency
+            'isMotContingency' => $this->isMotContingency,
         ]
     );
     echo $this->partial('vehicleSummary', ['vehicle' => $vehicle, 'rfrCount' => $rfrCount]);

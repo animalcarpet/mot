@@ -27,15 +27,13 @@ use DvsaEventApi\Service\EventService;
 use DvsaAuthentication\Identity;
 
 /**
- * Class SitePositionServiceTest
- *
- * @package SiteApiTest\Service
+ * Class SitePositionServiceTest.
  */
 class SitePositionServiceTest extends \PHPUnit_Framework_TestCase
 {
     protected $userOrganisationNotificationService;
     /**
-     * @var  AbstractMotAuthorisationService $authorisationService
+     * @var AbstractMotAuthorisationService
      */
     private $authorisationService;
     private $notificationService;
@@ -64,7 +62,8 @@ class SitePositionServiceTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function getServiceWithMockServices($siteBusinessRoleMapMock) {
+    private function getServiceWithMockServices($siteBusinessRoleMapMock)
+    {
         return new SitePositionService(
             $this->eventService,
             $siteBusinessRoleMapMock,
@@ -89,7 +88,7 @@ class SitePositionServiceTest extends \PHPUnit_Framework_TestCase
         $this->siteBusinessRoleMapRepository = XMock::of(SiteBusinessRoleMapRepository::class);
         $this->siteBusinessRoleMapRepository->expects($this->atLeastOnce())
                                             ->method('findOneBy')
-                                            ->with([ 'id' => $positionId])
+                                            ->with(['id' => $positionId])
                                             ->will($this->returnValue($position));
 
         $notificationPromise = $this->notificationSent();
@@ -110,7 +109,7 @@ class SitePositionServiceTest extends \PHPUnit_Framework_TestCase
         $this->siteBusinessRoleMapRepository = XMock::of(SiteBusinessRoleMapRepository::class);
         $this->siteBusinessRoleMapRepository->expects($this->atLeastOnce())
             ->method('findOneBy')
-            ->with([ 'id' => $positionId])
+            ->with(['id' => $positionId])
             ->will($this->returnValue($sitePosition));
 
         $this->setExpectedException(BadRequestException::class);
@@ -123,7 +122,7 @@ class SitePositionServiceTest extends \PHPUnit_Framework_TestCase
     private function notificationSent()
     {
         $capNotification = ArgCapture::create();
-        $this->notificationService->expects($this->atLeastOnce())->method("add")
+        $this->notificationService->expects($this->atLeastOnce())->method('add')
             ->with($capNotification());
 
         return $capNotification;

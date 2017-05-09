@@ -84,7 +84,7 @@ class MotTestLogViewModel
             ->queryParams(
                 [
                     SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $this->formModel->getDateFrom()->getDate()->getTimestamp(),
-                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => $this->formModel->getDateTo()->getDate()->getTimestamp(),
+                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $this->formModel->getDateTo()->getDate()->getTimestamp(),
                 ]
             )->toString();
     }
@@ -98,58 +98,58 @@ class MotTestLogViewModel
         $this->table->setColumns(
             [
                 [
-                    'title'   => 'Date/time',
-                    'sortBy'  => 'testDateTime',
-                    'sub'     => [
+                    'title' => 'Date/time',
+                    'sortBy' => 'testDateTime',
+                    'sub' => [
                         [
-                            'field'     => 'testDate',
+                            'field' => 'testDate',
                         ],
                         [
-                            'field'     => 'testTime',
+                            'field' => 'testTime',
                             'formatter' => SubRow::class,
                         ],
                     ],
                 ],
                 [
-                    'field'  => 'vehicleVRM',
-                    'title'  => 'VRM',
+                    'field' => 'vehicleVRM',
+                    'title' => 'VRM',
                     'sortBy' => 'vehicleVRM',
                 ],
                 [
-                    'title'    => 'Vehicle',
-                    'sortBy'   => 'makeModel',
-                    'sub'      => [
+                    'title' => 'Vehicle',
+                    'sortBy' => 'makeModel',
+                    'sub' => [
                         [
-                            'field'     => 'vehicleMake',
+                            'field' => 'vehicleMake',
                         ],
                         [
-                            'field'     => 'vehicleModel',
+                            'field' => 'vehicleModel',
                             'formatter' => VehicleModelSubRow::class,
                         ],
                     ],
                 ],
                 [
-                    'title'    => 'User/Site Id',
-                    'sortBy'   => 'tester',
-                    'sub'      => [
+                    'title' => 'User/Site Id',
+                    'sortBy' => 'tester',
+                    'sub' => [
                         [
-                            'field'     => 'testUsername',
+                            'field' => 'testUsername',
                         ],
                         [
-                            'field'     => 'siteNumber',
+                            'field' => 'siteNumber',
                             'formatter' => SubRow::class,
                         ],
                     ],
                 ],
                 [
-                    'title'    => 'Status/Type',
-                    'sortBy'   => 'statusType',
-                    'sub'      => [
+                    'title' => 'Status/Type',
+                    'sortBy' => 'statusType',
+                    'sub' => [
                         [
-                            'field'     => 'status',
+                            'field' => 'status',
                         ],
                         [
-                            'field'     => 'testType',
+                            'field' => 'testType',
                             'formatter' => SubRow::class,
                         ],
                     ],
@@ -166,8 +166,8 @@ class MotTestLogViewModel
         $this->filterBuilder
             ->setOptions(
                 [
-                    'today'     => $this->getDateRange(self::RANGE_TODAY),
-                    'lastWeek'  => $this->getDateRange(self::RANGE_LAST_WEEK),
+                    'today' => $this->getDateRange(self::RANGE_TODAY),
+                    'lastWeek' => $this->getDateRange(self::RANGE_LAST_WEEK),
                     'lastMonth' => $this->getDateRange(self::RANGE_LAST_MONTH),
                 ]
             );
@@ -180,7 +180,7 @@ class MotTestLogViewModel
      *
      * @param $rangeName
      *
-     * @return Array
+     * @return array
      */
     private function getDateRange($rangeName)
     {
@@ -188,23 +188,23 @@ class MotTestLogViewModel
             case self::RANGE_LAST_WEEK:
                 return [
                     'label' => 'Last week (Mon-Sun)',
-                    'from'  => strtotime('monday last week 00:00:00'),
-                    'to'    => strtotime('sunday last week 23:59:59'),
+                    'from' => strtotime('monday last week 00:00:00'),
+                    'to' => strtotime('sunday last week 23:59:59'),
                 ];
 
             case self::RANGE_LAST_MONTH:
                 return [
-                    'label' => 'Last Month (' . date('M', strtotime('last month')) . ')',
-                    'from'  => strtotime('first day of last month midnight'),
-                    'to'    => strtotime('first day of this month midnight -1 second'),
+                    'label' => 'Last Month ('.date('M', strtotime('last month')).')',
+                    'from' => strtotime('first day of last month midnight'),
+                    'to' => strtotime('first day of this month midnight -1 second'),
                 ];
 
             case self::RANGE_TODAY:
             default:
                 return [
                     'label' => 'Today',
-                    'from'  => strtotime('today'),
-                    'to'    => strtotime('tomorrow -1 second'),
+                    'from' => strtotime('today'),
+                    'to' => strtotime('tomorrow -1 second'),
                 ];
         }
     }
@@ -314,7 +314,7 @@ class MotTestLogViewModel
                 // Monday last week
                 SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $lastWeek['from'],
                 // Sunday last week
-                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => $lastWeek['to'],
+                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $lastWeek['to'],
             ]
         );
 

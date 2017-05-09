@@ -25,7 +25,7 @@ use DvsaEntities\Entity\Person;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Personal Authorisation For Mot Testing
+ * Personal Authorisation For Mot Testing.
  */
 class PersonalAuthorisationForMotTestingService
 {
@@ -34,12 +34,12 @@ class PersonalAuthorisationForMotTestingService
     const SUCCESS = 1;
 
     /**
-     * @var $notificationService NotificationService
+     * @var NotificationService
      */
     private $notificationService;
 
     /**
-     * @var $validator PersonalAuthorisationForMotTestingValidator
+     * @var PersonalAuthorisationForMotTestingValidator
      */
     private $validator;
 
@@ -87,19 +87,19 @@ class PersonalAuthorisationForMotTestingService
         AuthorisationForTestingMotStatusCode::QUALIFIED => 'Qualified',
         AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED => 'Demo test needed',
         AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED => 'Initial training needed',
-        AuthorisationForTestingMotStatusCode::REFRESHER_NEEDED => 'Refresher Needed'
+        AuthorisationForTestingMotStatusCode::REFRESHER_NEEDED => 'Refresher Needed',
     ];
 
     /**
-     * @param EntityManager $entityManager
-     * @param NotificationService $notificationService
+     * @param EntityManager                               $entityManager
+     * @param NotificationService                         $notificationService
      * @param PersonalAuthorisationForMotTestingValidator $validator
-     * @param MotAuthorisationServiceInterface $authorisationService
-     * @param EventService $eventService
-     * @param PersonService $personService
-     * @param AuthorisationForTestingMotStatusRepository $authorisationForTestingMotStatusRepository
-     * @param VehicleClassRepository $vehicleClassRepository
-     * @param AuthenticationService $authenticationService
+     * @param MotAuthorisationServiceInterface            $authorisationService
+     * @param EventService                                $eventService
+     * @param PersonService                               $personService
+     * @param AuthorisationForTestingMotStatusRepository  $authorisationForTestingMotStatusRepository
+     * @param VehicleClassRepository                      $vehicleClassRepository
+     * @param AuthenticationService                       $authenticationService
      */
     public function __construct(
         EntityManager $entityManager,
@@ -125,16 +125,18 @@ class PersonalAuthorisationForMotTestingService
 
     /**
      * @param int $personId
+     *
      * @return MotTestingAuthorisationCollector
      */
     public function getPersonalTestingAuthorisation($personId)
     {
         $authList = $this->getPersonalTestingAuthorisationList($personId);
+
         return new MotTestingAuthorisationCollector($authList);
     }
 
     /**
-     * @param int $personId
+     * @param int   $personId
      * @param array $data
      *
      * @return MotTestingAuthorisationCollector
@@ -147,8 +149,8 @@ class PersonalAuthorisationForMotTestingService
 
         $person = $this->personService->getPersonById($personId);
 
-        $group = (int)$data['group'];
-        $status = (string)$data['result'];
+        $group = (int) $data['group'];
+        $status = (string) $data['result'];
 
         /** @var array $classes */
         $classes = $this->getClassesFromGroup($group, $status);
@@ -180,10 +182,11 @@ class PersonalAuthorisationForMotTestingService
     }
 
     /**
-     * @param int $group
+     * @param int    $group
      * @param string $oldStatus
      * @param string $newStatus
      * @param Person $person
+     *
      * @return EventPersonMap
      */
     private function createEvent($group, $oldStatus, $newStatus, Person $person)
@@ -215,7 +218,9 @@ class PersonalAuthorisationForMotTestingService
      * @param string $groupName
      * @param string $eventTypeCode
      * @param string $newlyAssignedStatus
+     *
      * @return \DvsaEntities\Entity\Event
+     *
      * @throws \Exception
      */
     private function createNewStatusAssignedEvent($groupName, $eventTypeCode, $newlyAssignedStatus)
@@ -241,7 +246,9 @@ class PersonalAuthorisationForMotTestingService
      * @param string $eventTypeCode
      * @param string $oldStatus
      * @param string $newlyAssignedStatus
+     *
      * @return \DvsaEntities\Entity\Event
+     *
      * @throws \Exception
      */
     private function createUpdateStatusAssignedEvent($groupName, $eventTypeCode, $oldStatus, $newlyAssignedStatus)
@@ -264,10 +271,11 @@ class PersonalAuthorisationForMotTestingService
     }
 
     /**
-     * @param int $personId
-     * @param int $group
+     * @param int    $personId
+     * @param int    $group
      * @param string $fromStatus
      * @param string $toStatus
+     *
      * @return int
      */
     private function sendNotification($personId, $group, $fromStatus, $toStatus)
@@ -293,10 +301,12 @@ class PersonalAuthorisationForMotTestingService
     }
 
     /**
-     * @param Person $person
+     * @param Person                       $person
      * @param AuthorisationForTestingMot[] $applicationClasses
-     * @param int $group
+     * @param int                          $group
+     *
      * @return \DvsaEntities\Entity\AuthorisationForTestingMot[]
+     *
      * @throws NotFoundException
      */
     private function createAuthorisationRecords(Person $person, $applicationClasses, $group)
@@ -344,31 +354,34 @@ class PersonalAuthorisationForMotTestingService
     {
         /** @var Person $identity */
         $identity = $this->authenticationService->getIdentity();
+
         return $identity->getUsername();
     }
 
     /**
-     * @param int $group
+     * @param int    $group
      * @param string $status
+     *
      * @return array
+     *
      * @throws NotFoundException
      */
     private function getClassesFromGroup($group, $status)
     {
         if (self::GROUP_A_VEHICLE === $group) {
             $classes = [
-                'class' . VehicleClassCode::CLASS_1 => $status,
-                'class' . VehicleClassCode::CLASS_2 => $status,
+                'class'.VehicleClassCode::CLASS_1 => $status,
+                'class'.VehicleClassCode::CLASS_2 => $status,
             ];
         } elseif (self::GROUP_B_VEHICLE === $group) {
             $classes = [
-                'class' . VehicleClassCode::CLASS_3 => $status,
-                'class' . VehicleClassCode::CLASS_4 => $status,
-                'class' . VehicleClassCode::CLASS_5 => $status,
-                'class' . VehicleClassCode::CLASS_7 => $status,
+                'class'.VehicleClassCode::CLASS_3 => $status,
+                'class'.VehicleClassCode::CLASS_4 => $status,
+                'class'.VehicleClassCode::CLASS_5 => $status,
+                'class'.VehicleClassCode::CLASS_7 => $status,
             ];
         } else {
-            throw new NotFoundException("Group", $group, false);
+            throw new NotFoundException('Group', $group, false);
         }
 
         return $classes;
@@ -376,9 +389,10 @@ class PersonalAuthorisationForMotTestingService
 
     /**
      * @param AuthorisationForTestingMot[] $authorisationList
-     * @param int $group
+     * @param int                          $group
      *
      * @throws \Exception
+     *
      * @return string
      */
     private function getStatusCodeFromAuthorisationListForGroup($authorisationList, $group)
@@ -396,12 +410,13 @@ class PersonalAuthorisationForMotTestingService
                 return $vcAuth->getStatus()->getCode();
             }
         }
-        throw new \InvalidArgumentException("Authorisation list does not contain record for vehicle group " . $group);
+        throw new \InvalidArgumentException('Authorisation list does not contain record for vehicle group '.$group);
     }
 
     /**
      * @param int $vehicleClassCode
      * @param int $group
+     *
      * @return bool
      */
     private function isClassInGroup($vehicleClassCode, $group)
@@ -412,12 +427,12 @@ class PersonalAuthorisationForMotTestingService
             return VehicleClassGroup::isGroupB($vehicleClassCode);
         }
 
-        throw new \InvalidArgumentException("Vehicle Class Code specified " . $vehicleClassCode . " is not part of Group " . $group);
+        throw new \InvalidArgumentException('Vehicle Class Code specified '.$vehicleClassCode.' is not part of Group '.$group);
     }
 
     /**
      * @param AuthorisationForTestingMot[] $applicationClasses
-     * @param array $data
+     * @param array                        $data
      *
      * @return MotTestingAuthorisationCollector
      */
@@ -426,7 +441,7 @@ class PersonalAuthorisationForMotTestingService
         if ($applicationClasses) {
             /** @var $vcAuth AuthorisationForTestingMot */
             foreach ($applicationClasses as $vcAuth) {
-                $key = 'class' . $vcAuth->getVehicleClass()->getCode();
+                $key = 'class'.$vcAuth->getVehicleClass()->getCode();
 
                 if (isset($data[$key])) {
                     $vcAuth->setStatus($this->getStatusByCode($data[$key]));
@@ -449,23 +464,27 @@ class PersonalAuthorisationForMotTestingService
 
     /**
      * @param string $code
+     *
      * @return AuthorisationForTestingMotStatus
+     *
      * @throws NotFoundException
      */
     private function getStatusByCode($code)
     {
         $status = $this->authorisationForTestingMotStatusRepository->getByCode($code);
+
         return $status;
     }
 
     /**
      * @param $personId
+     *
      * @return \DvsaEntities\Entity\AuthorisationForTestingMot[]
      */
     private function getPersonalTestingAuthorisationList($personId)
     {
         $person = $this->personService->getPersonById($personId);
+
         return $person->getAuthorisationsForTestingMot();
     }
-
 }

@@ -22,11 +22,13 @@ class ChangeSecurityQuestionsSubmissionModel
 
     /**
      * @param mixed $questionOneId
+     *
      * @return ChangeSecurityQuestionsSubmissionModel
      */
     public function setQuestionOneId($questionOneId)
     {
         $this->questionOneId = $questionOneId;
+
         return $this;
     }
 
@@ -40,11 +42,13 @@ class ChangeSecurityQuestionsSubmissionModel
 
     /**
      * @param mixed $questionOneAnswer
+     *
      * @return ChangeSecurityQuestionsSubmissionModel
      */
     public function setQuestionOneAnswer($questionOneAnswer)
     {
         $this->questionOneAnswer = $questionOneAnswer;
+
         return $this;
     }
 
@@ -58,11 +62,13 @@ class ChangeSecurityQuestionsSubmissionModel
 
     /**
      * @param mixed $questionTwoId
+     *
      * @return ChangeSecurityQuestionsSubmissionModel
      */
     public function setQuestionTwoId($questionTwoId)
     {
         $this->questionTwoId = $questionTwoId;
+
         return $this;
     }
 
@@ -76,11 +82,13 @@ class ChangeSecurityQuestionsSubmissionModel
 
     /**
      * @param mixed $questionTwoAnswer
+     *
      * @return ChangeSecurityQuestionsSubmissionModel
      */
     public function setQuestionTwoAnswer($questionTwoAnswer)
     {
         $this->questionTwoAnswer = $questionTwoAnswer;
+
         return $this;
     }
 }

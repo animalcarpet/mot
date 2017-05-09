@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ResetPinControllerFactory
+ * Class ResetPinControllerFactory.
  *
  * Generates the ResetPinController, injecting dependencies
  */

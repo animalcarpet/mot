@@ -8,22 +8,19 @@ use DvsaEntities\Entity\CertificateChangeDifferentTesterReason;
 use DvsaEntities\Repository\CertificateChangeReasonRepository;
 
 /**
- * Class CertificateChangeService
- *
- * @package DvsaMotApi\Service
+ * Class CertificateChangeService.
  */
 class CertificateChangeService
 {
-
     /**
-     * @var CertificateChangeReasonRepository $repository
+     * @var CertificateChangeReasonRepository
      */
     protected $repository;
     protected $authService;
 
     /**
      * @param CertificateChangeReasonRepository $repository
-     * @param AuthorisationServiceInterface  $authService
+     * @param AuthorisationServiceInterface     $authService
      */
     public function __construct(
         CertificateChangeReasonRepository $repository,
@@ -37,6 +34,7 @@ class CertificateChangeService
      * Retrieves all CertChangeDiffTesterReasons.
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getDifferentTesterReasonsAsArray()
@@ -48,6 +46,7 @@ class CertificateChangeService
         foreach ($certChangeDiffTesterReasons as $reason) {
             $extractedCertChangeDiffTesterReasons[] = $this->extractDifferentTesterReason($reason);
         }
+
         return $extractedCertChangeDiffTesterReasons;
     }
 

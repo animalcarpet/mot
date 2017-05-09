@@ -6,15 +6,14 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 // $this->headLink()->appendStylesheet('/assets/stylesheets/dataTables.css');
 
 /**
- * @var \Event\ViewModel\Event\EventViewModel                   $viewModel
- * @var \DvsaCommon\Dto\Organisation\OrganisationDto            $organisation
- * @var array                                                   $site
- * @var \DvsaClient\Entity\Person                               $person
- * @var \DvsaCommon\Dto\Event\EventFormDto                      $formModel
- * @var \DvsaClient\ViewModel\DateTimeViewModel                 $dateFrom
- * @var \DvsaClient\ViewModel\DateTimeViewModel                 $dateTo
+ * @var \Event\ViewModel\Event\EventViewModel
+ * @var \DvsaCommon\Dto\Organisation\OrganisationDto $organisation
+ * @var array                                        $site
+ * @var \DvsaClient\Entity\Person                    $person
+ * @var \DvsaCommon\Dto\Event\EventFormDto           $formModel
+ * @var \DvsaClient\ViewModel\DateTimeViewModel      $dateFrom
+ * @var \DvsaClient\ViewModel\DateTimeViewModel      $dateTo
  */
-
 $formModel = $viewModel->getFormModel();
 $isShowDate = $formModel->isShowDate();
 $search = $formModel->getSearch();
@@ -32,13 +31,13 @@ $goBackLink = $viewModel->getGoBackLink();
 <?php
     echo $this->partial('partial/gds/general/system-message.phtml', [
             'messages' => $this->flashMessenger()->getErrorMessages(),
-            'type' => 'failure'
+            'type' => 'failure',
         ]
     );
 
     echo $this->partial('partial/gds/general/system-message.phtml', [
             'messages' => $this->flashMessenger()->getSuccessMessages(),
-            'type' => 'success'
+            'type' => 'success',
         ]
     );
 
@@ -67,10 +66,10 @@ $goBackLink = $viewModel->getGoBackLink();
                     </tr>
                     </thead>
                     <tbody>
-                    <?php $i = 0;?>
+                    <?php $i = 0; ?>
                     <input name="go_back_link" value="<?php echo $goBackLink ?>" style="display: none">
                     <?php foreach ($events as $event): ?>
-                        <?php $escClass = ($i++ % 2 == 0 ? 'even' : 'odd');?>
+                        <?php $escClass = ($i++ % 2 == 0 ? 'even' : 'odd'); ?>
                         <tr class="<?php echo $escClass; ?>">
                             <td class="truncate" title="<?php echo $this->escapeHtml($event->getType()); ?>">
                                 <a href="<?php
@@ -85,8 +84,8 @@ $goBackLink = $viewModel->getGoBackLink();
                                 $tempDescription = $this->escapeHtml($event->getDescription());
                                 $tempOutcome = $this->escapeHtml($event->getEventOutcomeDescription());
 
-                                if(!empty($tempOutcome)) {
-                                    $finalDescription = $tempOutcome . '. ' . $tempDescription;
+                                if (!empty($tempOutcome)) {
+                                    $finalDescription = $tempOutcome.'. '.$tempDescription;
                                 } else {
                                     $finalDescription = $tempDescription;
                                 }
@@ -132,7 +131,7 @@ $goBackLink = $viewModel->getGoBackLink();
                             'name' => 'search',
                             'id' => 'search',
                             'class' => 'form-control',
-                            'value' => $search
+                            'value' => $search,
                         ]
                     );
                     ?>
@@ -148,7 +147,7 @@ $goBackLink = $viewModel->getGoBackLink();
                     [
                         'name' => 'isShowDate',
                         'id' => 'isShowDate',
-                        'value' => $isShowDate
+                        'value' => $isShowDate,
                     ]
                 );
                 //'value' => $isShowDate
@@ -162,23 +161,23 @@ $goBackLink = $viewModel->getGoBackLink();
                             echo $this->partial(
                                 'partials/form/date-group.phtml',
                                 [
-                                    'legend'     => 'From',
-                                    'fieldKey'   => \DvsaCommon\Dto\Event\EventFormDto::FLD_DATE_FROM,
-                                    'valueDay'   => $dateFrom->getDay(),
+                                    'legend' => 'From',
+                                    'fieldKey' => \DvsaCommon\Dto\Event\EventFormDto::FLD_DATE_FROM,
+                                    'valueDay' => $dateFrom->getDay(),
                                     'valueMonth' => $dateFrom->getMonth(),
-                                    'valueYear'  => $dateFrom->getYear(),
-                                    'hint' => 'For example, 31 03 2015'
+                                    'valueYear' => $dateFrom->getYear(),
+                                    'hint' => 'For example, 31 03 2015',
                                 ]
                             );
                             echo $this->partial(
                                 'partials/form/date-group.phtml',
                                 [
-                                    'legend'     => 'To',
-                                    'fieldKey'   => \DvsaCommon\Dto\Event\EventFormDto::FLD_DATE_TO,
-                                    'valueDay'   => $dateTo->getDay(),
+                                    'legend' => 'To',
+                                    'fieldKey' => \DvsaCommon\Dto\Event\EventFormDto::FLD_DATE_TO,
+                                    'valueDay' => $dateTo->getDay(),
                                     'valueMonth' => $dateTo->getMonth(),
-                                    'valueYear'  => $dateTo->getYear(),
-                                    'hint' => ''
+                                    'valueYear' => $dateTo->getYear(),
+                                    'hint' => '',
                                 ]
                             );
                             ?>
@@ -213,11 +212,11 @@ $goBackLink = $viewModel->getGoBackLink();
 
 <?php
 /**
- * To enable the password validator's JS widget
+ * To enable the password validator's JS widget.
  */
 $currentPage = $viewModel->getCurrentPage();
 $isShowDateValue = '';
-if($isShowDate === true) {
+if ($isShowDate === true) {
     $isShowDateValue = 'true';
 } else {
     $isShowDateValue = 'false';

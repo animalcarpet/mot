@@ -6,7 +6,6 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\IncorrectDateFormatException;
 use DvsaCommon\Date\Exception\NonexistentDateException;
-use DvsaCommon\Dto\Person\SearchPersonResultDto;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use UserAdmin\Service\DateOfBirthFilterService;
@@ -16,7 +15,7 @@ use Zend\Http\PhpEnvironment\Request;
 use UserAdmin\View\Helper\UserSearchHelper;
 
 /**
- * Controller for user search
+ * Controller for user search.
  */
 class UserSearchController extends AbstractDvsaMotTestController
 {
@@ -41,7 +40,7 @@ class UserSearchController extends AbstractDvsaMotTestController
     const PARAM_DOB_YEAR = 'dobYear';
     const MESSAGE = 'Using more than one search criteria will improve your chances of finding a particular user. A good search uses last name, date of birth and postcode.';
     const EXCEPTION_VALIDATION_DOB_INVALID_DATE = 'The date of birth is an invalid date.';
-    const EXCEPTION_VALIDATION_DOB_DATE_IN_FUTURE= 'The date of birth specified is in the future.';
+    const EXCEPTION_VALIDATION_DOB_DATE_IN_FUTURE = 'The date of birth specified is in the future.';
     const EXCEPTION_VALIDATION_DOB_INCORRECT_FORMAT = 'The date of birth is not in the correct format.';
     const EXCEPTION_VALIDATION_NO_CRITERIA = 'You must enter information in at least one of the fields below to search for a user.';
     const ERROR_CODE_TOO_MANY_RESULTS = 22;
@@ -82,7 +81,7 @@ class UserSearchController extends AbstractDvsaMotTestController
             'userSearchExtended' => $userSearchExtended,
             'systemMessage' => $systemMessage,
             'infoMessage' => $infoMessage,
-            'message' => self::MESSAGE
+            'message' => self::MESSAGE,
         ];
     }
 
@@ -117,7 +116,7 @@ class UserSearchController extends AbstractDvsaMotTestController
                 self::ROUTE_USER_SEARCH,
                 [],
                 [
-                    'query' => $this->getFullSearchCriteria()
+                    'query' => $this->getFullSearchCriteria(),
                 ]
             );
 
@@ -129,7 +128,7 @@ class UserSearchController extends AbstractDvsaMotTestController
             'escUserSearchRoute' => $userSearchRoute,
             'helper' => new UserSearchHelper($this->getAuthorizationService()),
             'resultsQueryArray' => $this->getRequest()->getQuery()->toArray(),
-            'userSearchExtended' => $userSearchExtended
+            'userSearchExtended' => $userSearchExtended,
         ];
     }
 
@@ -146,6 +145,7 @@ class UserSearchController extends AbstractDvsaMotTestController
 
     /**
      * @return array|\DvsaCommon\Dto\Person\SearchPersonResultDto[]
+     *
      * @throws Exception
      */
     private function getUsers()
@@ -178,7 +178,7 @@ class UserSearchController extends AbstractDvsaMotTestController
             self::PARAM_EMAIL => $request->getQuery(self::PARAM_EMAIL),
             self::PARAM_DOB => $this->getDobSearchCriteria(),
             self::PARAM_TOWN => $request->getQuery(self::PARAM_TOWN),
-            self::PARAM_POSTCODE => $request->getQuery(self::PARAM_POSTCODE)
+            self::PARAM_POSTCODE => $request->getQuery(self::PARAM_POSTCODE),
         ];
     }
 
@@ -197,6 +197,7 @@ class UserSearchController extends AbstractDvsaMotTestController
     {
         /** @var Request $request */
         $request = $this->getRequest();
+
         return array_merge(
             $this->getFilteredSearchCriteria(),
             [
@@ -250,16 +251,18 @@ class UserSearchController extends AbstractDvsaMotTestController
                 $valid = false;
             }
         }
+
         return $valid;
     }
 
     /**
      * @param ValidationException $e
+     *
      * @return \Zend\Http\Response
      */
     private function handleValidationException(ValidationException $e)
     {
-        $errorCode = (int)$e->getErrors()[0]['code'];
+        $errorCode = (int) $e->getErrors()[0]['code'];
 
         $viewModel = new UserSearchViewModel(
             [],
@@ -267,10 +270,10 @@ class UserSearchController extends AbstractDvsaMotTestController
         );
 
         if ($errorCode === self::ERROR_CODE_TOO_MANY_RESULTS) {
-            $message = 'Your search for ' . $viewModel->displaySearchCriteria() . '
+            $message = 'Your search for '.$viewModel->displaySearchCriteria().'
             returned too many results. Add more details and try again.';
         } elseif ($errorCode === self::ERROR_CODE_TOO_FEW_RESULTS) {
-            $message = 'Your search for ' . $viewModel->displaySearchCriteria() . '
+            $message = 'Your search for '.$viewModel->displaySearchCriteria().'
             returned no results. Check what you have entered or add more details and try again.';
         }
 

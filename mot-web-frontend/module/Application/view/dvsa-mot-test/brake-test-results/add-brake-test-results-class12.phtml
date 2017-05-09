@@ -3,12 +3,12 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
 /**
- * @var int $motTestNumber
- * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
- * @var BrakeTestResultClass1And2ViewModel $brakeTestResult
+ * @var int
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle             $vehicle
+ * @var BrakeTestResultClass1And2ViewModel                        $brakeTestResult
  * @var \DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper $brakeTestConfiguration
- * @var MotTestTitleModel $motTestTitleViewModel
- * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest
+ * @var MotTestTitleModel                                         $motTestTitleViewModel
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest                 $motTest
  */
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
@@ -17,7 +17,7 @@ $pageSubtTitle = $motTestTitleViewModel->getTitle($motTest);
 $title = 'Add brake test results';
 $this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $pageSubtTitle);
-$this->layout()->setVariable('pageTitle', "Add brake test results");
+$this->layout()->setVariable('pageTitle', 'Add brake test results');
 
 $isSidecarAttached = $brakeTestConfiguration->isSidecarAttached();
 $vehicleClass = $vehicle->getVehicleClass()->getCode();

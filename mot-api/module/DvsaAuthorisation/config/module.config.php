@@ -5,5 +5,5 @@ return [
         'factories' => [
             'DvsaAuthorisationService' => \DvsaAuthorisation\Factory\AuthorisationServiceFactory::class,
         ],
-    ]
+    ],
 ];

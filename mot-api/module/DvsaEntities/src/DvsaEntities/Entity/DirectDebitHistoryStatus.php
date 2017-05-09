@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * DirectDebitHistoryStatus
+ * DirectDebitHistoryStatus.
  *
  * @ORM\Table(name="direct_debit_history_status")
  * @ORM\Entity(readOnly=true)
@@ -28,6 +28,7 @@ class DirectDebitHistoryStatus
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)

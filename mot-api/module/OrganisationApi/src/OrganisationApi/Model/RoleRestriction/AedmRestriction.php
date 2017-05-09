@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Model\RoleRestriction;
 
 use DvsaCommon\Enum\BusinessRoleStatusCode;
@@ -10,13 +11,11 @@ use DvsaEntities\Entity\Person;
 use OrganisationApi\Model\OrganisationPersonnel;
 
 /**
- * Class AedmRestriction
- *
- * @package OrganisationApi\Model\RoleRestriction
+ * Class AedmRestriction.
  */
 class AedmRestriction extends AbstractOrganisationRoleRestriction
 {
-    const NOT_AE_ERROR          = 'You cannot assign an AEDM to an organisation that is not an Authorised Examiner';
+    const NOT_AE_ERROR = 'You cannot assign an AEDM to an organisation that is not an Authorised Examiner';
     const SITE_ALREADY_HAS_AEDM = 'There is already an AEDM assigned to this Authorised Examiner';
 
     /**

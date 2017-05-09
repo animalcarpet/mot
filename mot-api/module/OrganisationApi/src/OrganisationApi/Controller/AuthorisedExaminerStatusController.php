@@ -1,8 +1,7 @@
 <?php
+
 namespace OrganisationApi\Controller;
 
-use DvsaCommon\Dto\Organisation\OrganisationDto;
-use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\AuthorisedExaminerStatusService;

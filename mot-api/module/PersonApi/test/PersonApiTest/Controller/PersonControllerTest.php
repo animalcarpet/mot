@@ -5,11 +5,10 @@ namespace PersonApiTest\Controller;
 use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Controller\PersonController;
 use PersonApi\Service\PersonService;
-use PersonApi\Generator\PersonGenerator;
 use DvsaCommon\Dto\Person\PersonDto;
 
 /**
- * Unit tests for PersonController
+ * Unit tests for PersonController.
  */
 class PersonControllerTest extends AbstractPersonControllerTestCase
 {

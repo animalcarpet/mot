@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SiteBusinessRoleMap
+ * SiteBusinessRoleMap.
  *
  * @ORM\Table(
  *  name="site_business_role_map",
@@ -87,7 +87,7 @@ class SiteBusinessRoleMap extends Entity
     private $businessRoleStatus;
 
     /**
-     * Set statusChangedOn
+     * Set statusChangedOn.
      *
      * @param \DateTime $statusChangedOn
      *
@@ -101,7 +101,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Get statusChangedOn
+     * Get statusChangedOn.
      *
      * @return \DateTime
      */
@@ -111,7 +111,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Set validFrom
+     * Set validFrom.
      *
      * @param \DateTime $validFrom
      *
@@ -125,7 +125,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Get validFrom
+     * Get validFrom.
      *
      * @return \DateTime
      */
@@ -135,7 +135,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Set expiryDate
+     * Set expiryDate.
      *
      * @param \DateTime $expiryDate
      *
@@ -149,7 +149,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Get expiryDate
+     * Get expiryDate.
      *
      * @return \DateTime
      */
@@ -159,7 +159,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Set siteBusinessRole
+     * Set siteBusinessRole.
      *
      * @param \DvsaEntities\Entity\SiteBusinessRole $siteBusinessRole
      *
@@ -173,7 +173,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Get siteBusinessRole
+     * Get siteBusinessRole.
      *
      * @return \DvsaEntities\Entity\SiteBusinessRole
      */
@@ -183,7 +183,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
      *
@@ -197,7 +197,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */
@@ -207,7 +207,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Set site
+     * Set site.
      *
      * @param \DvsaEntities\Entity\Site $site
      *
@@ -221,7 +221,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Get site
+     * Get site.
      *
      * @return \DvsaEntities\Entity\Site
      */
@@ -231,7 +231,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Set businessRoleStatus
+     * Set businessRoleStatus.
      *
      * @param \DvsaEntities\Entity\BusinessRoleStatus $businessRoleStatus
      *
@@ -245,7 +245,7 @@ class SiteBusinessRoleMap extends Entity
     }
 
     /**
-     * Get businessRoleStatus
+     * Get businessRoleStatus.
      *
      * @return \DvsaEntities\Entity\BusinessRoleStatus
      */

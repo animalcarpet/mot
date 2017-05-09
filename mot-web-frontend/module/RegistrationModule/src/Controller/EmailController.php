@@ -34,8 +34,10 @@ class EmailController extends RegistrationBaseController
      *
      * @param string $stepID
      * @param string $title
-     * @param null $subtitle
+     * @param null   $subtitle
+     *
      * @return \Zend\Http\Response|ViewModel
+     *
      * @throws \Exception
      */
     public function doStepLogic($stepID, $title, $subtitle = null)
@@ -80,4 +82,3 @@ class EmailController extends RegistrationBaseController
         return new ViewModel($step->toViewArray());
     }
 }
-

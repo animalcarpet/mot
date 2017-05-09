@@ -68,8 +68,8 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $service = $this->constructVehicleHistoryServiceWithMocks();
         $service->findHistoricalTestsForVehicleSince(self::VEHICLE_ID, self::PERSON_ID, $testStartDate);
 
-        $this->assertEquals(self::VEHICLE_ID, $captureVehicleId->get(), "Relayed vehicle id mismatch!");
-        $this->assertEquals($testStartDate, $captureStartDate->get(), "Relayed start date mismatch");
+        $this->assertEquals(self::VEHICLE_ID, $captureVehicleId->get(), 'Relayed vehicle id mismatch!');
+        $this->assertEquals($testStartDate, $captureStartDate->get(), 'Relayed start date mismatch');
     }
 
     public function testFindHistoricalTestsForVehicleSinceShouldRelaySiteIdsWhenPersonDoesNotHaveViewMsTestsPermission()
@@ -163,7 +163,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
             ->with($captureVehicleId(), null)
             ->will($this->returnValue([]));
 
-        $this->mockMethod($this->mockConfigurationRepository, "getValue", null, $maxDefaultHistoryLength);
+        $this->mockMethod($this->mockConfigurationRepository, 'getValue', null, $maxDefaultHistoryLength);
         $this->mockMethod($this->mockAuthService, 'isGranted', null, true);
         $this->setupStubSiteRepository();
         $this->setupNoSiteIdsForPersonId();
@@ -172,7 +172,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $service->findHistoricalTestsForVehicleSince(self::VEHICLE_ID, self::PERSON_ID);
 
         DateUtils::subtractCalendarMonths($testDate, $maxDefaultHistoryLength);
-        $this->assertEquals(self::VEHICLE_ID, $captureVehicleId->get(), "Relayed vehicle id mismatch!");
+        $this->assertEquals(self::VEHICLE_ID, $captureVehicleId->get(), 'Relayed vehicle id mismatch!');
     }
 
     public function testFindHistoricalTestsForVehicleSinceAsActiveTesterShouldReturnOnlyFirstNormalAndRetestMotTestMarkedAsEditable()
@@ -222,11 +222,11 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         foreach ($vehicleHistoryDto->getIterator() as $item) {
             /* @var VehicleHistoryItemDto $item */
             if ($item->isAllowEdit()) {
-                $count++;
+                ++$count;
             }
         }
 
-        $this->assertEquals($expectedCount, $count, "Number of editable Mot tests is incorrect");
+        $this->assertEquals($expectedCount, $count, 'Number of editable Mot tests is incorrect');
     }
 
     protected function checkAllowEditForTest($testId, $listOfMotTests, $expectedOutput)
@@ -243,7 +243,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $service = $this->constructVehicleHistoryServiceWithMocks();
         $editAllowedDto = $service->getEditAllowedPermissionsDto(self::VEHICLE_ID, self::PERSON_ID, $testId, $now);
 
-        $this->assertEquals($expectedOutput, $editAllowedDto->getEditAllowed(), "Allow edit permissions are not correct");
+        $this->assertEquals($expectedOutput, $editAllowedDto->getEditAllowed(), 'Allow edit permissions are not correct');
     }
 
     private function setPersonMock()
@@ -261,7 +261,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
             ->setStatus((new AuthorisationForTestingMotStatus())
                 ->setCode(AuthorisationForTestingMotStatusCode::QUALIFIED))
             ->setVehicleClass((new VehicleClass())->setCode(3));
-
 
         $person->setAuthorisationsForTestingMot([$authorisationForTestingMotClass1, $authorisationForTestingMotClass3]);
 
@@ -328,7 +327,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
     {
         /** @var MotTestStatus|PHPUnit_Framework_MockObject_MockObject $status */
         $status = XMock::of(MotTestStatus::class);
-        $this->mockMethod($status, "getName", null, $name);
+        $this->mockMethod($status, 'getName', null, $name);
 
         return $status;
     }
@@ -343,13 +342,13 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
             $this->mockAuthService,
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::VEHICLE_MOT_TEST_HISTORY_READ
+                PermissionInSystem::VEHICLE_MOT_TEST_HISTORY_READ,
             ]);
 
         $this->mockIsGrantedAtSite(
             $this->mockAuthService,
             [
-                PermissionAtSite::MOT_TEST_PERFORM_AT_SITE
+                PermissionAtSite::MOT_TEST_PERFORM_AT_SITE,
             ],
             1
         );
@@ -517,9 +516,10 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
             ->with(self::PERSON_ID)
             ->willReturn([]);
     }
-    
+
     /**
      * @param $classCode
+     *
      * @return Vehicle
      */
     private function getVehicleWithClass($classCode)

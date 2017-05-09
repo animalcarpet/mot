@@ -3,8 +3,6 @@
 namespace DvsaMotApiTest\Service;
 
 use DvsaEntities\Entity\ModelDetail;
-use PHPUnit_Framework_ExpectationFailedException;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Service\MotTestDate;
@@ -15,13 +13,13 @@ use DvsaEntities\Entity\MotTest;
 
 class MotTestDateTest extends AbstractServiceTestCase
 {
-    /** @var  MotTest */
+    /** @var MotTest */
     private $motCurrent;
 
-    /** @var  MotTest */
+    /** @var MotTest */
     private $motPrevious;
 
-    /** @var  Vehicle */
+    /** @var Vehicle */
     private $vehicle;
 
     /** @var ModelDetail */
@@ -34,7 +32,7 @@ class MotTestDateTest extends AbstractServiceTestCase
             [
                 'getVehicle',
                 'getEmergencyLog',
-                'getStartedDate'
+                'getStartedDate',
             ]
         );
         $this->motPrevious = XMock::of('\DvsaEntities\Entity\MotTest', ['getExpiryDate']);
@@ -297,7 +295,7 @@ class MotTestDateTest extends AbstractServiceTestCase
         $this->assertNotNull($expiryDate);
         $this->assertEquals($registrationDate->modify('+3 years -1 day'), $expiryDate);
 
-        $vehicle->setFirstRegistrationDate(NULL);
+        $vehicle->setFirstRegistrationDate(null);
         $vehicle->setFirstUsedDate($registrationDate);
         $vehicleClass->setCode(5);
 
@@ -305,7 +303,5 @@ class MotTestDateTest extends AbstractServiceTestCase
 
         $this->assertNotNull($expiryDate);
         $this->assertEquals($registrationDate->modify('+1 years -1 day'), $expiryDate);
-
     }
 }
-

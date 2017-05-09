@@ -45,7 +45,7 @@ class ApiAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * If the route failed to match then it will return false and do nothing
-     * else
+     * else.
      */
     public function testNoAuthCheckWhenNoRouteMatches()
     {
@@ -54,7 +54,7 @@ class ApiAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * The listener will not check controllers that appear in the whitelist
+     * The listener will not check controllers that appear in the whitelist.
      */
     public function testNoAuthForControllerOnWhitelist()
     {

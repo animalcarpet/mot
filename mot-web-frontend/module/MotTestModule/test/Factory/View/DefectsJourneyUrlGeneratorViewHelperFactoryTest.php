@@ -18,7 +18,7 @@ class DefectsJourneyUrlGeneratorViewHelperFactoryTest extends PHPUnit_Framework_
             DefectsJourneyUrlGeneratorViewHelper::class,
             [
                 DefectsJourneyUrlGenerator::class => DefectsJourneyUrlGenerator::class,
-                DefectsJourneyContextProvider::class => DefectsJourneyContextProvider::class
+                DefectsJourneyContextProvider::class => DefectsJourneyContextProvider::class,
             ]
         );
     }

@@ -13,17 +13,17 @@ use DvsaCommonTest\TestUtils\XMock;
 class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var LostOrForgottenService $lostAndForgottenService
+     * @var LostOrForgottenService
      */
     private $lostAndForgottenService;
 
     /**
-     * @var UserAdminMapper $userAdminMapper
+     * @var UserAdminMapper
      */
     private $userAdminMapper;
 
     /**
-     * @var LostOrForgottenSessionService $sessionService
+     * @var LostOrForgottenSessionService
      */
     private $sessionService;
 
@@ -41,7 +41,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->userAdminMapper
             ->expects($this->once())
-            ->method("getSecurityQuestion")
+            ->method('getSecurityQuestion')
             ->with($questionId, $userId)
             ->WillReturn(new SecurityQuestionDto());
 
@@ -60,7 +60,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->userAdminMapper
             ->expects($this->once())
-            ->method("getSecurityQuestion")
+            ->method('getSecurityQuestion')
             ->with($questionId, $userId)
             ->will($this->throwException(new NotFoundException('/', 'post', [], 10, 'Question not found')));
 
@@ -75,7 +75,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->userAdminMapper
             ->expects($this->once())
-            ->method("checkSecurityQuestion")
+            ->method('checkSecurityQuestion')
             ->with($questionId, $userId, ['answer' => $answer])
             ->WillReturn(true);
 
@@ -92,7 +92,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->userAdminMapper
             ->expects($this->once())
-            ->method("checkSecurityQuestion")
+            ->method('checkSecurityQuestion')
             ->with($questionId, $userId, ['answer' => $answer])
             ->WillReturn(false);
 
@@ -112,7 +112,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->sessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(LostOrForgottenSessionService::UNIQUE_KEY)
             ->willReturn($steps);
 
@@ -132,7 +132,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->sessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(LostOrForgottenSessionService::UNIQUE_KEY)
             ->willReturn($steps);
 
@@ -145,7 +145,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->sessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(LostOrForgottenSessionService::UNIQUE_KEY)
             ->willReturn(null);
 
@@ -164,7 +164,7 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->sessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(LostOrForgottenSessionService::UNIQUE_KEY)
             ->willReturn($steps);
 

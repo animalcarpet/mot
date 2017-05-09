@@ -19,10 +19,10 @@ class UpdateAeBusinessTypeProcess extends AbstractSingleStepAeProcess implements
     private $propertyCompanyNumber = UpdateAePropertyAction::AE_COMPANY_NUMBER_PROPERTY;
     private $propertyName = UpdateAePropertyAction::AE_BUSINESS_TYPE_PROPERTY;
     private $permission = PermissionAtOrganisation::AE_UPDATE_TYPE;
-    private $submitButtonText = "Change business type";
-    private $successfulEditMessage = "Business type has been successfully changed.";
-    private $formPageTitle = "Change business type";
-    private $formPartial = "organisation/update-ae-property/partials/edit-business-type";
+    private $submitButtonText = 'Change business type';
+    private $successfulEditMessage = 'Business type has been successfully changed.';
+    private $formPageTitle = 'Change business type';
+    private $formPartial = 'organisation/update-ae-property/partials/edit-business-type';
 
     /**
      * @var OrganisationCompanyTypeCatalog
@@ -38,8 +38,7 @@ class UpdateAeBusinessTypeProcess extends AbstractSingleStepAeProcess implements
         OrganisationCompanyTypeCatalog $organisationCompanyTypeCatalog,
         MapperFactory $mapper,
         Url $urlHelper
-    )
-    {
+    ) {
         parent::__construct($organisationMapper, $urlHelper);
         $this->organisationCompanyTypeCatalog = $organisationCompanyTypeCatalog;
         $this->mapper = $mapper;
@@ -90,7 +89,7 @@ class UpdateAeBusinessTypeProcess extends AbstractSingleStepAeProcess implements
                 $formData[$this->propertyName]);
         } else {
             return $this->organisationMapper->updateAePropertiesWithArray($this->context->getAeId(), [
-                AuthorisedExaminerPatchModel::TYPE           => $formData[$this->propertyName],
+                AuthorisedExaminerPatchModel::TYPE => $formData[$this->propertyName],
                 AuthorisedExaminerPatchModel::COMPANY_NUMBER => $companyNumber,
             ]);
         }

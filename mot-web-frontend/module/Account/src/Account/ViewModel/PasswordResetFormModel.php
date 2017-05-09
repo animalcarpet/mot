@@ -7,20 +7,19 @@ use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class ResetViewModel
- * @package Account\ViewModel
+ * Class ResetViewModel.
  */
 class PasswordResetFormModel extends AbstractFormModel
 {
-    const FIELD_USERNAME            = 'username';
-    const USER_NOT_FOUND            = 'This user ID does not match our records';
-    const USER_REQUIRED             = 'User Id is required';
+    const FIELD_USERNAME = 'username';
+    const USER_NOT_FOUND = 'This user ID does not match our records';
+    const USER_REQUIRED = 'User Id is required';
 
     /** @var string $username */
     private $username;
     /** @var array $config */
     private $config;
-    /** @var integer $cfgExpireTime */
+    /** @var int $cfgExpireTime */
     private $cfgExpireTime;
     /** @var string $email */
     private $email;
@@ -35,11 +34,13 @@ class PasswordResetFormModel extends AbstractFormModel
 
     /**
      * @param string $username
+     *
      * @return $this
      */
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -59,6 +60,7 @@ class PasswordResetFormModel extends AbstractFormModel
     public function setCfgExpireTime($cfgExpireTime)
     {
         $this->cfgExpireTime = $cfgExpireTime;
+
         return $this;
     }
 
@@ -85,6 +87,7 @@ class PasswordResetFormModel extends AbstractFormModel
     public function populateFromPost(array $postData)
     {
         $this->setUsername(ArrayUtils::tryGet($postData, self::FIELD_USERNAME));
+
         return $this;
     }
 
@@ -112,6 +115,7 @@ class PasswordResetFormModel extends AbstractFormModel
     public function setConfig($config)
     {
         $this->config = $config;
+
         return $this;
     }
 
@@ -131,6 +135,7 @@ class PasswordResetFormModel extends AbstractFormModel
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -146,6 +151,6 @@ class PasswordResetFormModel extends AbstractFormModel
         $localPartObscured = str_repeat('•', $positionOfLastAtSign - strlen($localPartVisible));
         $domain = substr($this->email, $positionOfLastAtSign, strlen($this->email));
 
-        return $localPartVisible . $localPartObscured . $domain;
+        return $localPartVisible.$localPartObscured.$domain;
     }
 }

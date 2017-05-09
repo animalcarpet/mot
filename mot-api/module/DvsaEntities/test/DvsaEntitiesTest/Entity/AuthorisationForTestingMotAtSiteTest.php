@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaCommon\Enum\AuthorisationForTestingMotAtSiteStatusCode;
@@ -7,7 +8,7 @@ use DvsaEntities\Entity\AuthorisationForTestingMotAtSiteStatus;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class AuthorisationForTestingMotAtSiteTest
+ * Class AuthorisationForTestingMotAtSiteTest.
  */
 class AuthorisationForTestingMotAtSiteTest extends PHPUnit_Framework_TestCase
 {

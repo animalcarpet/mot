@@ -11,12 +11,10 @@ class AeAreaOfficeValidator extends AbstractValidator implements ValidatorInterf
 {
     public function validate(array $data)
     {
-        if(empty($data[AuthorisedExaminerPatchModel::AREA_OFFICE])) {
+        if (empty($data[AuthorisedExaminerPatchModel::AREA_OFFICE])) {
             $errorSchema = new ErrorSchema();
-            $errorSchema->add("Area Office - must not be empty");
+            $errorSchema->add('Area Office - must not be empty');
             $errorSchema->throwIfAny();
         }
-
-        
     }
 }

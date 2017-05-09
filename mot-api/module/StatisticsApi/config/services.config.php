@@ -13,15 +13,15 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Storage\NationalTesterPerformanceStatisticsStorage;
 
 return [
-    'factories'  => [
-        "TqiStore"                                        => TqiStatisticsStorageFactory::class,
+    'factories' => [
+        'TqiStore' => TqiStatisticsStorageFactory::class,
         NationalTesterPerformanceStatisticsStorage::class => NationalTesterPerformanceStatisticsStorageFactory::class,
-        SiteTesterPerformanceStatisticsStorage::class     => SiteTesterPerformanceStatisticsStorageFactory::class,
-        NationalComponentFailRateStorage::class           => NationalComponentFailRateStorageFactory::class,
-        BatchStatisticsService::class                     => BatchStatisticsServiceFactory::class,
+        SiteTesterPerformanceStatisticsStorage::class => SiteTesterPerformanceStatisticsStorageFactory::class,
+        NationalComponentFailRateStorage::class => NationalComponentFailRateStorageFactory::class,
+        BatchStatisticsService::class => BatchStatisticsServiceFactory::class,
         NationalStatisticsService::class => NationalStatisticsServiceFactory::class,
     ],
     'invokables' => [
 
-    ]
+    ],
 ];

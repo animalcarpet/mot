@@ -7,15 +7,13 @@ use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\AuthorisedExaminerPrincipal;
 use DvsaEventApi\Service\EventService;
 use OrganisationApi\Service\AuthorisedExaminerPrincipalService;
-use PersonApi\Service\BasePersonService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use OrganisationApi\Service\Validator\AuthorisedExaminerPrincipalValidator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class AuthorisedExaminerPrincipalServiceFactory
- * @package OrganisationApi\Factory\Service
+ * Class AuthorisedExaminerPrincipalServiceFactory.
  */
 class AuthorisedExaminerPrincipalServiceFactory implements FactoryInterface
 {

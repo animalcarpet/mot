@@ -2,30 +2,27 @@
 
 namespace DvsaEntities\Repository;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\SiteContact;
-use DvsaEntities\Entity\SiteContactType;
 
 /**
- * Class SiteContactRepository
+ * Class SiteContactRepository.
  *
  * Custom Doctrine Repository for reusable DQL queries
+ *
  * @codeCoverageIgnore
  */
 class SiteContactRepository extends AbstractMutableRepository
 {
     /**
-     * Get First founded site contact by specified type code in Site
+     * Get First founded site contact by specified type code in Site.
      *
-     * @param integer $siteId
-     * @param string  $typeCode
+     * @param int    $siteId
+     * @param string $typeCode
      *
      * @return SiteContact
+     *
      * @throws NotFoundException
      */
     public function getHydratedByTypeCode($siteId, $typeCode)
@@ -42,7 +39,7 @@ class SiteContactRepository extends AbstractMutableRepository
             ->leftJoin('cd.address', 'cda')
             ->where('sc.site = :SITE_ID')
             ->andWhere('sct.code = :TYPE_CODE')
-            ->setParameter("SITE_ID", $siteId)
+            ->setParameter('SITE_ID', $siteId)
             ->setParameter('TYPE_CODE', $typeCode)
             ->setMaxResults(1);
 

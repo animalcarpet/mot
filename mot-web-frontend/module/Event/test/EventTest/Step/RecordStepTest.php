@@ -13,7 +13,8 @@ use Event\Service\EventSessionService;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Class RecordStepTest
+ * Class RecordStepTest.
+ *
  * @group event
  */
 class RecordStepTest extends \PHPUnit_Framework_TestCase
@@ -45,7 +46,6 @@ class RecordStepTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(RecordStep::STEP_ID, $step->getId());
     }
-
 
     /**
      * Test loading data returned from the session.
@@ -105,11 +105,11 @@ class RecordStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            RecordInputFilter::FIELD_TYPE   => __METHOD__ . '_eventType',
-            RecordInputFilter::FIELD_DATE   => __METHOD__ . '_date',
-            RecordInputFilter::FIELD_DAY   => "09",
-            RecordInputFilter::FIELD_MONTH => "09",
-            RecordInputFilter::FIELD_YEAR   => 2015,
+            RecordInputFilter::FIELD_TYPE => __METHOD__.'_eventType',
+            RecordInputFilter::FIELD_DATE => __METHOD__.'_date',
+            RecordInputFilter::FIELD_DAY => '09',
+            RecordInputFilter::FIELD_MONTH => '09',
+            RecordInputFilter::FIELD_YEAR => 2015,
         ];
 
         return $fixture;

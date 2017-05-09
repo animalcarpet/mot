@@ -8,14 +8,12 @@ use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 
 /**
- * Class SitePositionTest
- *
- * @package DvsaClientTest\Entity
+ * Class SitePositionTest.
  */
 class SitePositionTest extends \PHPUnit_Framework_TestCase
 {
     const ID = 1;
-    const ACTIONED_ON = "2011-01-01 12:00:00";
+    const ACTIONED_ON = '2011-01-01 12:00:00';
     const STATUS = BusinessRoleStatusCode::ACTIVE;
 
     public function testGetters()
@@ -43,6 +41,7 @@ class SitePositionTest extends \PHPUnit_Framework_TestCase
     private function sitePosition()
     {
         $user = new Person();
+
         return (new SitePosition())
             ->setId(self::ID)
             ->setActionedOn(self::ACTIONED_ON)

@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\Factory;
 
-
 use Dvsa\Mot\Frontend\MotTestModule\Controller\ContingencyTestController;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Controller\ContingencyTestControllerFactory;
 use Dvsa\Mot\Frontend\MotTestModule\Validation\ContingencyTestValidator;
@@ -20,9 +19,8 @@ class ContingencyTestControllerFactoryTest extends \PHPUnit_Framework_TestCase
         ServiceFactoryTestHelper::testCreateServiceForCM(
             ContingencyTestControllerFactory::class,
             ContingencyTestController::class, [
-                ContingencyTestValidator::class => ContingencyTestValidator::class
+                ContingencyTestValidator::class => ContingencyTestValidator::class,
             ]
         );
     }
 }
-

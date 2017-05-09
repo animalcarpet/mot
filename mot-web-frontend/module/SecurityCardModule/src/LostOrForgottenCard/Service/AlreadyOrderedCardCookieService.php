@@ -7,7 +7,6 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use Zend\Http\Header\SetCookie;
 use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\Mvc\Controller\Plugin\Identity;
 use DateTimeZone;
 
 class AlreadyOrderedCardCookieService
@@ -27,13 +26,13 @@ class AlreadyOrderedCardCookieService
     public function addAlreadyOrderedCardCookie(Response $response)
     {
         $secure = true;
-        $path = '/' . LostOrForgottenCardController::START_ROUTE;
+        $path = '/'.LostOrForgottenCardController::START_ROUTE;
 
-        $expires   = new \DateTime("tomorrow", new DateTimeZone('Europe/London'));
+        $expires = new \DateTime('tomorrow', new DateTimeZone('Europe/London'));
         $userId = $this->identityProvider->getIdentity()->getUserId();
 
         $cookie = new SetCookie(
-            self::COOKIE_NAME . $userId,
+            self::COOKIE_NAME.$userId,
             $userId,
             $expires,
             $path,
@@ -46,8 +45,10 @@ class AlreadyOrderedCardCookieService
     }
 
     /**
-     * Verifies if user has already seen the Order landing page
+     * Verifies if user has already seen the Order landing page.
+     *
      * @param Request $request
+     *
      * @return bool
      */
     public function hasSeenOrderLandingPage(Request $request)
@@ -56,6 +57,6 @@ class AlreadyOrderedCardCookieService
         $cookies = $request->getCookie();
         $userId = $this->identityProvider->getIdentity()->getUserId();
 
-        return isset($cookies[self::COOKIE_NAME . $userId]);
+        return isset($cookies[self::COOKIE_NAME.$userId]);
     }
 }

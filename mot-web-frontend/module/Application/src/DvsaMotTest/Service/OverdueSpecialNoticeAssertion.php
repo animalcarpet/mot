@@ -7,7 +7,7 @@ use DvsaCommon\Exception\UnauthorisedException;
 
 class OverdueSpecialNoticeAssertion
 {
-    const OVERDUE_SPECIAL_NOTICES_ERROR = "Cannot perform a test. Test status will be active when unacknowledged notices have been read and confirmed";
+    const OVERDUE_SPECIAL_NOTICES_ERROR = 'Cannot perform a test. Test status will be active when unacknowledged notices have been read and confirmed';
 
     /**
      * @var array
@@ -38,8 +38,8 @@ class OverdueSpecialNoticeAssertion
     {
         $result = false;
         foreach ($this->authorisationsForTestingMot as $authorisation) {
-            $isQualified = ($authorisation["statusCode"] === AuthorisationForTestingMotStatusCode::QUALIFIED);
-            $hasOverdueSpecialNotice = ((int) $this->overdueSpecialNotices[$authorisation["vehicleClassCode"]] > 0) ? true : false;
+            $isQualified = ($authorisation['statusCode'] === AuthorisationForTestingMotStatusCode::QUALIFIED);
+            $hasOverdueSpecialNotice = ((int) $this->overdueSpecialNotices[$authorisation['vehicleClassCode']] > 0) ? true : false;
             if ($isQualified && !$hasOverdueSpecialNotice) {
                 $result = true;
                 break;

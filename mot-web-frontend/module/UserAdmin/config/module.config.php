@@ -27,11 +27,11 @@ return [
             RecordDemoTestController::class => RecordDemoTestControllerFactory::class,
             ChangeQualificationStatusController::class => ChangeQualificationStatusControllerFactory::class,
             DrivingLicenceControllerFactory::class => DrivingLicenceControllerFactory::class,
-        ]
+        ],
     ],
     'view_manager' => [
         'template_path_stack' => [
-            'user-admin' => __DIR__ . '/../view',
+            'user-admin' => __DIR__.'/../view',
         ],
     ],
     'router' => [
@@ -41,7 +41,7 @@ return [
                 'options' => [
                     'route' => '/user-admin',
                     'defaults' => [
-                        'action' => 'index'
+                        'action' => 'index',
                     ],
                 ],
                 'child_routes' => [
@@ -51,7 +51,7 @@ return [
                             'route' => '/search',
                             'defaults' => [
                                 'controller' => UserSearchControllerFactory::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -62,7 +62,7 @@ return [
                             'route' => '/demo-test-requests',
                             'defaults' => [
                                 'controller' => DemoTestRequestsController::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -73,7 +73,7 @@ return [
                                     'route' => '/csv',
                                     'defaults' => [
                                         'controller' => DemoTestRequestsController::class,
-                                        'action' => 'downloadCsv'
+                                        'action' => 'downloadCsv',
                                     ],
                                 ],
                                 'may_terminate' => true,

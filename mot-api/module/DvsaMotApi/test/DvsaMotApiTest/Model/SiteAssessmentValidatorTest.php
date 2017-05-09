@@ -15,9 +15,7 @@ use SiteApi\Service\SiteService;
 use Zend\Form\Annotation\ErrorMessage;
 
 /**
- * Class SiteAssessmentValidatorTest
- *
- * @package DvsaMotApiTest\Model
+ * Class SiteAssessmentValidatorTest.
  */
 class SiteAssessmentValidatorTest extends AbstractServiceTestCase
 {
@@ -49,7 +47,7 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * Check count of items will be return after validation
+     * Check count of items will be return after validation.
      */
     public function testCanSeparateSiteNameAndNumberToJustNumber()
     {
@@ -62,7 +60,7 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * Check error is appear with correct error message if passed invalid data
+     * Check error is appear with correct error message if passed invalid data.
      *
      * @param array  $siteData       Site data
      * @param int    $expectErrCount Count of errors
@@ -80,13 +78,13 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
         return [
             //  --  incorrect date  --
             [
-                'siteData'       => [
-                    'day'   => 30,
+                'siteData' => [
+                    'day' => 30,
                     'month' => 2,
                 ],
-                'services'       => [],
+                'services' => [],
                 'expectErrCount' => 1,
-                'expectErrMssg'  => 'Incorrect days',
+                'expectErrMssg' => 'Incorrect days',
             ],
 
             //  --  incorrect Year - too High & too Low    --
@@ -138,7 +136,7 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
                 ['site-score' => 9999],
                 [],
                 1,
-                'A site score cannot be higher than ' . SiteAssessment::RISK_SCORE_MAX
+                'A site score cannot be higher than '.SiteAssessment::RISK_SCORE_MAX,
             ],
             [['site-score' => 'a'], [], 1, 'A site score must be a number and greater or equals zero'],
             [['site-score' => 0.001], [], 0, null],
@@ -146,10 +144,10 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * Check error and error message if site service return empty result or exception
+     * Check error and error message if site service return empty result or exception.
      *
      * @param string|array|null $srvResult        Service result
-     * @param boolean           $srvIsException   Is service thrown Exception
+     * @param bool              $srvIsException   Is service thrown Exception
      * @param array             $siteData         Passed site data
      * @param int               $expectSiteNumber Expected Site Number
      * @param int               $expectErrCount   Expected count of errors
@@ -188,41 +186,42 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     public function dataProviderTestSiteNumberFailsFailsToResolve()
     {
         $result = (new VehicleTestingStationDto())->setSiteNumber(12345);
+
         return [
             [
-                'srvResult'      => $result,
+                'srvResult' => $result,
                 'srvIsException' => false,
-                'siteData'       => [
-                    'vts-search'       => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
+                'siteData' => [
+                    'vts-search' => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
                     'searchSiteNumber' => '0003AW',
                 ],
-                'expectSiteNr'   => 12345,
+                'expectSiteNr' => 12345,
                 'expectErrCount' => 0,
-                'expectErrMsg'   => null,
+                'expectErrMsg' => null,
             ],
             [
                 null, true,
                 [
-                    'vts-search'       => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
+                    'vts-search' => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
                     'searchSiteNumber' => '0003AW',
                 ],
-                null, 1, 'Invalid site'
+                null, 1, 'Invalid site',
             ],
             [
                 null, false,
                 [
-                    'vts-search'       => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
+                    'vts-search' => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
                     'searchSiteNumber' => '0003AW',
                 ],
-                null, 1, '0003AW'
+                null, 1, '0003AW',
             ],
             [
                 null, false,
                 [
-                    'vts-search'       => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
+                    'vts-search' => '0003AW, M And T Transmissions Limited, 120 Bradway Road, Sheffield, S17 4QW',
                     'searchSiteNumber' => '-1',
                 ],
-                null, 1, '0003AW'
+                null, 1, '0003AW',
             ],
             [null, false, ['vts-search' => 'V1261 - blah'], null, 1, 'Invalid site'],
             [$result, false, [], 12345, 0, null],
@@ -230,10 +229,10 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * Check error and error message appear is Authorised Examiner service throw Exception or empty result
+     * Check error and error message appear is Authorised Examiner service throw Exception or empty result.
      *
      * @param array|null $userSrvResult   Service return
-     * @param boolean    $testerSrvResult Is service throw error
+     * @param bool       $testerSrvResult Is service throw error
      *
      * @dataProvider dataProviderTestAeRepresentativeIdFailsToResolve
      */
@@ -259,7 +258,7 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     {
         return [
             [
-                'srvResult'      => [],
+                'srvResult' => [],
                 'srvIsException' => false,
             ],
             [null, true],
@@ -267,12 +266,12 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * Check error and message error if User service or Tester service thrown exception or return empty result
+     * Check error and message error if User service or Tester service thrown exception or return empty result.
      *
      * @param null|array $userSrvResult      User Service return
-     * @param boolean    $userSrvException   Is User Service thrown exception
+     * @param bool       $userSrvException   Is User Service thrown exception
      * @param null|array $testerSrvResult    Tester Service return
-     * @param boolean    $testerSrvException Is Tester Service thrown exception
+     * @param bool       $testerSrvException Is Tester Service thrown exception
      *
      * @dataProvider dataProviderTestUserOrTesterFailToResolve
      */
@@ -308,7 +307,7 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
         $this->subTestError(
             ['tester-id' => 54321],
             [
-                'user'   => $this->mockUserService,
+                'user' => $this->mockUserService,
                 'tester' => $this->mockTesterService,
             ],
             1,
@@ -320,9 +319,9 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     {
         return [
             [
-                'userSrvResult'      => ['id' => 31415],
-                'userSrvException'   => null,
-                'testerSrvResult'    => null,
+                'userSrvResult' => ['id' => 31415],
+                'userSrvException' => null,
+                'testerSrvResult' => null,
                 'testerSrvException' => true,
             ],
             [['id' => 999], null, [], true],
@@ -357,16 +356,16 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     private function getSiteData()
     {
         return [
-            'vts-search'      => 'V1261 - MOTs R Us',
-            'ae-rep-id'       => 1234,
-            'visit-outcome'   => 1,
-            'tester-id'       => 999,
+            'vts-search' => 'V1261 - MOTs R Us',
+            'ae-rep-id' => 1234,
+            'visit-outcome' => 1,
+            'tester-id' => 999,
             'advisory-issued' => 'N',
-            'day'             => 31,
-            'month'           => 1,
-            'year'            => 2001,
-            'ae-rep-pos'      => 'human being',
-            'site-score'      => 1,
+            'day' => 31,
+            'month' => 1,
+            'year' => 2001,
+            'ae-rep-pos' => 'human being',
+            'site-score' => 1,
         ];
     }
 
@@ -381,7 +380,7 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
                     [
                         ['id' => 1, 'description' => 'Satisfactory'],
                         ['id' => 2, 'description' => 'Shortcomings found'],
-                        ['id' => 3, 'description' => 'Abandoned']
+                        ['id' => 3, 'description' => 'Abandoned'],
                     ]
                 )
             );

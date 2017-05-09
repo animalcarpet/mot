@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ModelDetail
+ * ModelDetail.
  *
  * @ORM\Table(name="model_detail")
  * @ORM\Entity
@@ -26,7 +26,7 @@ class ModelDetail extends Entity
     private $model;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_verified", type="boolean", nullable=false)
      */
@@ -90,7 +90,7 @@ class ModelDetail extends Entity
     private $euClassification;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="cylinder_capacity", type="integer", length=10, nullable=true)
      */
@@ -106,16 +106,18 @@ class ModelDetail extends Entity
 
     /**
      * @param Model $model
+     *
      * @return $this
      */
     public function setModel($model)
     {
         $this->model = $model;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsVerified()
     {
@@ -123,12 +125,14 @@ class ModelDetail extends Entity
     }
 
     /**
-     * @param boolean $isVerified
+     * @param bool $isVerified
+     *
      * @return $this
      */
     public function setIsVerified($isVerified)
     {
         $this->isVerified = $isVerified;
+
         return $this;
     }
 
@@ -142,11 +146,13 @@ class ModelDetail extends Entity
 
     /**
      * @param VehicleClass $vehicleClass
+     *
      * @return $this
      */
     public function setVehicleClass($vehicleClass)
     {
         $this->vehicleClass = $vehicleClass;
+
         return $this;
     }
 
@@ -164,6 +170,7 @@ class ModelDetail extends Entity
     public function setBodyType($bodyType)
     {
         $this->bodyType = $bodyType;
+
         return $this;
     }
 
@@ -177,11 +184,13 @@ class ModelDetail extends Entity
 
     /**
      * @param FuelType $fuelType
+     *
      * @return $this
      */
     public function setFuelType($fuelType)
     {
         $this->fuelType = $fuelType;
+
         return $this;
     }
 
@@ -195,11 +204,13 @@ class ModelDetail extends Entity
 
     /**
      * @param WheelplanType $wheelplanType
+     *
      * @return $this
      */
     public function setWheelplanType($wheelplanType)
     {
         $this->wheelplanType = $wheelplanType;
+
         return $this;
     }
 
@@ -213,11 +224,13 @@ class ModelDetail extends Entity
 
     /**
      * @param TransmissionType $transmissionType
+     *
      * @return $this
      */
     public function setTransmissionType($transmissionType)
     {
         $this->transmissionType = $transmissionType;
+
         return $this;
     }
 
@@ -231,11 +244,13 @@ class ModelDetail extends Entity
 
     /**
      * @param string $euClassification
+     *
      * @return $this
      */
     public function setEuClassification($euClassification)
     {
         $this->euClassification = $euClassification;
+
         return $this;
     }
 
@@ -249,11 +264,13 @@ class ModelDetail extends Entity
 
     /**
      * @param int $cylinderCapacity
+     *
      * @return $this
      */
     public function setCylinderCapacity($cylinderCapacity)
     {
         $this->cylinderCapacity = $cylinderCapacity;
+
         return $this;
     }
 }

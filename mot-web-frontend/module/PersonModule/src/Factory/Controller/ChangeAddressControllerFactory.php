@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Factory\Controller;
 
-
 use Application\Data\ApiPersonalDetails;
 use Core\Service\SessionService;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeAddressController;
@@ -26,38 +25,37 @@ class ChangeAddressControllerFactory implements FactoryInterface
         $serviceLocator = $controllerManager->getServiceLocator();
 
         /**
-         * @var PersonProfileGuardBuilder $personProfileGuard
+         * @var PersonProfileGuardBuilder
          */
         $personProfileGuardBuilder = $serviceLocator->get(PersonProfileGuardBuilder::class);
 
         /**
-         * @var HelpDeskAccountAdminService $helpDeskAccountAdminService
+         * @var HelpDeskAccountAdminService
          */
         $helpDeskAccountAdminService = $serviceLocator->get(HelpDeskAccountAdminService::class);
 
         /**
-         * @var PersonProfileUrlGenerator $personProfileUrlBuilder
+         * @var PersonProfileUrlGenerator
          */
         $personProfileUrlBuilder = $serviceLocator->get(PersonProfileUrlGenerator::class);
 
         /**
-         * @var ContextProvider $contextProvider
+         * @var ContextProvider
          */
         $contextProvider = $serviceLocator->get(ContextProvider::class);
 
         /**
-         * @var ApiPersonalDetails $personalDetailsService
+         * @var ApiPersonalDetails
          */
         $personalDetailsService = $serviceLocator->get(ApiPersonalDetails::class);
 
         /**
-         * @var MapperFactory $mapperFactory
+         * @var MapperFactory
          */
-
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 
         /**
-         * @var SessionService $sessionService
+         * @var SessionService
          */
         $sessionService = $serviceLocator->get(UserAdminSessionService::class);
 

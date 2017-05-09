@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * NotificationTemplateAction
+ * NotificationTemplateAction.
  *
  * @ORM\Table(name="notification_template_action", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_notification_template_action_1", columns={"notification_template_id"}), @ORM\Index(name="fk_notification_template_action_2", columns={"action_id"})})
  * @ORM\Entity(readOnly=true)
@@ -52,6 +53,7 @@ class NotificationTemplateAction extends Entity
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
 
@@ -71,6 +73,7 @@ class NotificationTemplateAction extends Entity
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -90,6 +93,7 @@ class NotificationTemplateAction extends Entity
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 

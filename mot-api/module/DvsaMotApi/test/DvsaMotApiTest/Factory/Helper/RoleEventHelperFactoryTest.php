@@ -24,7 +24,7 @@ class RoleEventHelperFactoryTest extends AbstractServiceTestCase
         $entityManager = XMock::of(EntityManager::class);
         $entityManager
             ->expects($this->any())
-            ->method("getRepository")
+            ->method('getRepository')
             ->with(EventPersonMap::class)
             ->willReturn(XMock::of(EventPersonMapRepository::class));
 

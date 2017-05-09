@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: szymonf
  * Date: 23.03.2016
- * Time: 15:46
+ * Time: 15:46.
  */
 
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
-
 
 use Core\Controller\AbstractAuthActionController;
 use Dashboard\Model\PersonalDetails;
@@ -28,9 +27,7 @@ class PersonProfileChildController extends AbstractAuthActionController
     public function __construct(
         ContextProvider $contextProvider,
         MapperFactory $mapperFactory
-    )
-    {
-
+    ) {
         $this->contextProvider = $contextProvider;
         $this->mapperFactory = $mapperFactory;
     }
@@ -38,9 +35,10 @@ class PersonProfileChildController extends AbstractAuthActionController
     /**
      * @param PersonalDetails $personalDetails
      * @param int|string      $personId
+     *
      * @return array
      */
-    private function getBreadcrumbs(PersonalDetails $personalDetails, $personId, $isProfile = false, $currentPageTitle)
+    private function getBreadcrumbs(PersonalDetails $personalDetails, $personId, $isProfile, $currentPageTitle)
     {
         $breadcrumbs = [];
         $personName = $personalDetails->getFullName();
@@ -75,7 +73,7 @@ class PersonProfileChildController extends AbstractAuthActionController
             $profileUrl = $isProfile === false ?
                 $this->url()->fromRoute(ContextProvider::AE_PARENT_ROUTE, [
                     'authorisedExaminerId' => $aeId,
-                    'id' => $personId
+                    'id' => $personId,
                 ]) : '';
             $breadcrumbs += [$personName => $profileUrl];
         } elseif (ContextProvider::VTS_CONTEXT === $context) {
@@ -96,7 +94,7 @@ class PersonProfileChildController extends AbstractAuthActionController
             $profileUrl = $isProfile === false ?
                 $this->url()->fromRoute(ContextProvider::VTS_PARENT_ROUTE, [
                     'vehicleTestingStationId' => $vtsId,
-                    'id' => $personId
+                    'id' => $personId,
                 ]) : '';
             $breadcrumbs += [$personName => $profileUrl];
         } else {
@@ -110,5 +108,4 @@ class PersonProfileChildController extends AbstractAuthActionController
 
         return $breadcrumbs;
     }
-
 }

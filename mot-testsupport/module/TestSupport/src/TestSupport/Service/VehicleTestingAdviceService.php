@@ -1,4 +1,5 @@
 <?php
+
 namespace TestSupport\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -26,19 +27,19 @@ class VehicleTestingAdviceService
     public function createDefault($vehicleId, $modelId)
     {
         $content = [
-            "Most common engines have 4, 6, or 8 pistons which move up and down in the cylinders.",
-            "The crankshaft is connected to the pistons via a connecting rod."
+            'Most common engines have 4, 6, or 8 pistons which move up and down in the cylinders.',
+            'The crankshaft is connected to the pistons via a connecting rod.',
         ];
 
-        $this->create($vehicleId, $modelId, "Engine", $content);
+        $this->create($vehicleId, $modelId, 'Engine', $content);
     }
 
     private function createModelTechnicalData($modelId)
     {
-        $this->em->getConnection()->insert("model_technical_data",
+        $this->em->getConnection()->insert('model_technical_data',
         [
-            "model_id" => $modelId,
-            "created_by" =>$this->getUserId()
+            'model_id' => $modelId,
+            'created_by' => $this->getUserId(),
         ]);
 
         return $this->em->getConnection()->lastInsertId();
@@ -46,14 +47,14 @@ class VehicleTestingAdviceService
 
     private function createModelTechnicalDataCategory($name)
     {
-        $max = (int) $this->em->getConnection()->fetchColumn("SELECT MAX(`display_order`) FROM model_technical_data_category");
-        $order = $max+1;
+        $max = (int) $this->em->getConnection()->fetchColumn('SELECT MAX(`display_order`) FROM model_technical_data_category');
+        $order = $max + 1;
 
-        $this->em->getConnection()->insert("model_technical_data_category",
+        $this->em->getConnection()->insert('model_technical_data_category',
             [
-                "name" => $name,
-                "display_order" => $order,
-                "created_by" =>$this->getUserId()
+                'name' => $name,
+                'display_order' => $order,
+                'created_by' => $this->getUserId(),
             ]);
 
         return $this->em->getConnection()->lastInsertId();
@@ -63,36 +64,35 @@ class VehicleTestingAdviceService
     {
         $order = 1;
         foreach ($content as $description) {
-            $this->em->getConnection()->insert("model_technical_data_content",
+            $this->em->getConnection()->insert('model_technical_data_content',
                 [
-                    "short_description" => "The Automotive Engine",
-                    "description" => $description,
-                    "display_order" => $order,
-                    "model_technical_data_category_id" => $categoryId,
-                    "created_by" =>$this->getUserId()
+                    'short_description' => 'The Automotive Engine',
+                    'description' => $description,
+                    'display_order' => $order,
+                    'model_technical_data_category_id' => $categoryId,
+                    'created_by' => $this->getUserId(),
                 ]);
 
             $contentId = $this->em->getConnection()->lastInsertId();
 
-            $order++;
+            ++$order;
 
-            $this->em->getConnection()->insert("model_technical_data_content_map",
+            $this->em->getConnection()->insert('model_technical_data_content_map',
                 [
-                    "model_technical_data_id" => $modelTechnicalDataId,
-                    "model_technical_data_content_id" => $contentId,
-                    "created_by" =>$this->getUserId()
+                    'model_technical_data_id' => $modelTechnicalDataId,
+                    'model_technical_data_content_id' => $contentId,
+                    'created_by' => $this->getUserId(),
                 ]);
         }
-
     }
 
     private function createVehicleModelTechnicalDataMap($modelTechnicalDataId, $vehicleId)
     {
-        $this->em->getConnection()->insert("vehicle_model_technical_data_map",
+        $this->em->getConnection()->insert('vehicle_model_technical_data_map',
             [
-                "vehicle_id" => $vehicleId,
-                "model_technical_data_id" => $modelTechnicalDataId,
-                "created_by" =>$this->getUserId()
+                'vehicle_id' => $vehicleId,
+                'model_technical_data_id' => $modelTechnicalDataId,
+                'created_by' => $this->getUserId(),
             ]);
     }
 

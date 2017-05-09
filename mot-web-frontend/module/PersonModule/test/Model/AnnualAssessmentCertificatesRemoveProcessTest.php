@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonModule\test\Model;
 
 use Core\ViewModel\Gds\Table\GdsTable;
@@ -22,24 +23,24 @@ class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_T
     const LOGGED_PERSON_ID = 2;
     const GROUP = VehicleClassGroupCode::BIKES;
     const CERTIFICATE_ID = 3;
-    const CERTIFICATE_NUMBER = "CERTIFICATE NUMBER";
-    const DATE_AWARDED = "10-10-2010";
-    const EXPECTED_DATE_AWARDED = "10 October 2010";
-    const SCORE = "90";
-    const EXPECTED_SCORE = "90%";
-    const BACK_ROUTE = "/this-is-back-route";
+    const CERTIFICATE_NUMBER = 'CERTIFICATE NUMBER';
+    const DATE_AWARDED = '10-10-2010';
+    const EXPECTED_DATE_AWARDED = '10 October 2010';
+    const SCORE = '90';
+    const EXPECTED_SCORE = '90%';
+    const BACK_ROUTE = '/this-is-back-route';
 
-    /** @var  ContextProvider|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var ContextProvider|\PHPUnit_Framework_MockObject_MockObject */
     private $contextProvider;
-    /** @var  AnnualAssessmentCertificatesRoutes|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var AnnualAssessmentCertificatesRoutes|\PHPUnit_Framework_MockObject_MockObject */
     private $routes;
-    /** @var  MotTestingAnnualCertificateApiResource|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotTestingAnnualCertificateApiResource|\PHPUnit_Framework_MockObject_MockObject */
     private $apiResource;
-    /** @var  CertificatesBreadcrumbs|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var CertificatesBreadcrumbs|\PHPUnit_Framework_MockObject_MockObject */
     private $breadcrumbs;
-    /** @var  AnnualAssessmentCertificatesPermissions|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var AnnualAssessmentCertificatesPermissions|\PHPUnit_Framework_MockObject_MockObject */
     private $permissions;
-    /** @var  AnnualAssessmentCertificatesRemoveProcess */
+    /** @var AnnualAssessmentCertificatesRemoveProcess */
     private $sut;
 
     public function setUp()
@@ -64,7 +65,7 @@ class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_T
     {
         $this->apiResource
             ->expects($this->once())
-            ->method("remove")
+            ->method('remove')
             ->with(self::TARGET_PERSON_ID, self::GROUP, self::CERTIFICATE_ID);
 
         $this->sut->update($this->createFormData());
@@ -79,11 +80,11 @@ class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_T
 
     public function testGetBreadcrumbs()
     {
-        $breadcrumbs = ["bread" => "crumb"];
+        $breadcrumbs = ['bread' => 'crumb'];
 
         $this->breadcrumbs
             ->expects($this->once())
-            ->method("getBreadcrumbsForAnnualAssessmentCertificate")
+            ->method('getBreadcrumbsForAnnualAssessmentCertificate')
             ->willReturn($breadcrumbs);
 
         $this->assertSame($breadcrumbs, $this->sut->getBreadcrumbs($this->createAuthorisationService()));
@@ -93,12 +94,12 @@ class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_T
     {
         $this->routes
             ->expects($this->once())
-            ->method("getRoute")
+            ->method('getRoute')
             ->willReturn(self::BACK_ROUTE);
 
         $this->apiResource
             ->expects($this->once())
-            ->method("get")
+            ->method('get')
             ->willReturn($this->createDto());
 
         $this->sut->getPrePopulatedData();
@@ -111,19 +112,18 @@ class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_T
         $this->assertEquals(self::EXPECTED_DATE_AWARDED, $table->getRow(1)->getValue()->getContent());
         $this->assertEquals(self::EXPECTED_SCORE, $table->getRow(2)->getValue()->getContent());
 
-        $this->assertEquals("Remove your assessment certificate", $viewModel->getEditStepPageTitle());
+        $this->assertEquals('Remove your assessment certificate', $viewModel->getEditStepPageTitle());
 
-        $this->assertEquals("Your profile", $viewModel->getPageSubTitle());
+        $this->assertEquals('Your profile', $viewModel->getPageSubTitle());
 
-        $this->assertEquals("Remove certificate", $viewModel->getSubmitButtonText());
+        $this->assertEquals('Remove certificate', $viewModel->getSubmitButtonText());
 
         $this->assertEquals(self::BACK_ROUTE, $viewModel->getBackRoute());
 
         $this->assertEquals([
-            "id" => self::TARGET_PERSON_ID,
-            "group" => self::GROUP,
+            'id' => self::TARGET_PERSON_ID,
+            'group' => self::GROUP,
         ], $viewModel->getBackRouteParams());
-
     }
 
     private function createContext()
@@ -145,9 +145,9 @@ class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_T
     private function createFormData()
     {
         return [
-            "cert-number" => self::CERTIFICATE_NUMBER,
-            "date-awarded" => self::EXPECTED_DATE_AWARDED,
-            "score" => self::EXPECTED_SCORE,
+            'cert-number' => self::CERTIFICATE_NUMBER,
+            'date-awarded' => self::EXPECTED_DATE_AWARDED,
+            'score' => self::EXPECTED_SCORE,
         ];
     }
 

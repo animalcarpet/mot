@@ -3,23 +3,25 @@
 namespace DvsaMotTestTest\TestHelper;
 
 /**
- * Class Fixture
+ * Class Fixture.
  */
 class Fixture
 {
-
     /**
-     * Returns the content of a fixture file
+     * Returns the content of a fixture file.
+     *
      * @param string $fixtureFileName
+     *
      * @throws \BadMethodCallException
+     *
      * @return string
      */
     public static function getJsonFromFile($fixtureFileName)
     {
-        $fixture = __DIR__ . '/../Controller/fixtures/' . $fixtureFileName;
+        $fixture = __DIR__.'/../Controller/fixtures/'.$fixtureFileName;
 
         if (!file_exists($fixture) || !is_readable($fixture)) {
-            throw new \BadMethodCallException('Fixture file ' . $fixture . ' not found');
+            throw new \BadMethodCallException('Fixture file '.$fixture.' not found');
         }
 
         return file_get_contents($fixture);
@@ -27,6 +29,7 @@ class Fixture
 
     /**
      * @param bool $decoded
+     *
      * @return \stdClass|string
      */
     public static function getMotTestDataVehicleClass4($decoded = false)
@@ -36,6 +39,7 @@ class Fixture
 
     /**
      * @param bool $decoded
+     *
      * @return \stdClass|string
      */
     public static function getMotTestDataVehicleClass1($decoded = false)
@@ -45,6 +49,7 @@ class Fixture
 
     /**
      * @param bool $decoded
+     *
      * @return \stdClass|string
      */
     public static function getDvsaVehicleTestDataVehicleClass4($decoded = false)
@@ -54,6 +59,7 @@ class Fixture
 
     /**
      * @param bool $decoded
+     *
      * @return \stdClass|string
      */
     public static function getDvsaVehicleTestDataVehicleClass1($decoded = false)
@@ -63,12 +69,12 @@ class Fixture
 
     /**
      * @param string $content
-     * @param bool $decoded
+     * @param bool   $decoded
+     *
      * @return \stdClass|string
      */
     private static function prepareReturnValue($content, $decoded)
     {
         return $decoded ? json_decode($content) : $content;
     }
-
 }

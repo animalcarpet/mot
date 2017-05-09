@@ -5,7 +5,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ApplicationStatus
+ * ApplicationStatus.
  *
  * @ORM\Table(name="application_status", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity
@@ -23,7 +23,7 @@ class ApplicationStatus
     private $applicationStatus = '';
 
     /**
-     * Get applicationStatus
+     * Get applicationStatus.
      *
      * @return string
      */

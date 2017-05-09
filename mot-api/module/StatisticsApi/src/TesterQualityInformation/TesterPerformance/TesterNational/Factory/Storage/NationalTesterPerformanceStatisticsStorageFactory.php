@@ -12,7 +12,7 @@ class NationalTesterPerformanceStatisticsStorageFactory implements FactoryInterf
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var KeyValueStorageInterface $tqiStore */
-        $tqiStore = $serviceLocator->get("TqiStore");
+        $tqiStore = $serviceLocator->get('TqiStore');
 
         return new NationalTesterPerformanceStatisticsStorage(
             $tqiStore

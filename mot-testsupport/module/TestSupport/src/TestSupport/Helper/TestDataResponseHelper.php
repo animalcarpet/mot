@@ -5,7 +5,7 @@ namespace TestSupport\Helper;
 use Zend\View\Model\JsonModel;
 
 /**
- * Originally copied from \TestSupport\TestDataResponseHelper
+ * Originally copied from \TestSupport\TestDataResponseHelper.
  */
 class TestDataResponseHelper
 {
@@ -16,7 +16,7 @@ class TestDataResponseHelper
      */
     public static function jsonOk($data = [])
     {
-        return new JsonModel(["data" => $data]);
+        return new JsonModel(['data' => $data]);
     }
 
     /**
@@ -26,6 +26,6 @@ class TestDataResponseHelper
      */
     public static function jsonError($data)
     {
-        return new JsonModel(["errors" => $data]);
+        return new JsonModel(['errors' => $data]);
     }
 }

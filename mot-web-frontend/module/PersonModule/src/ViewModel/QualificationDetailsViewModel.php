@@ -2,8 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel;
 
-use Zend\Form\Form;
-
 class QualificationDetailsViewModel
 {
     private $template = 'qualification-details/view';
@@ -20,8 +18,7 @@ class QualificationDetailsViewModel
         QualificationDetailsGroupViewModel $qualificationDetailsGroupAViewModel,
         QualificationDetailsGroupViewModel $qualificationDetailsGroupBViewModel,
         $isGuidanceShown
-    )
-    {
+    ) {
         $this->returnLink = $returnLink;
         $this->pageSubtitle = $pageSubtitle;
         $this->qualificationDetailsGroupAViewModel = $qualificationDetailsGroupAViewModel;

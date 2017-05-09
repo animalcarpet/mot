@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Action;
 
-
 use Core\Action\ViewActionResult;
 use Dvsa\Mot\Frontend\PersonModule\Action\TestQualityAction;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
@@ -50,7 +49,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
     /** @var ViewTesterTestQualityAssertion $viewTesterTestQualityAssertionMock */
     private $viewTesterTestQualityAssertionMock;
 
-    /** @var PersonProfileRoutes $personProfileRoutesMock  */
+    /** @var PersonProfileRoutes $personProfileRoutesMock */
     private $personProfileRoutesMock;
 
     private $url;
@@ -94,7 +93,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $this
             ->testerTqiBreadcrumbs
             ->expects($this->any())
-            ->method("getBreadcrumbs")
+            ->method('getBreadcrumbs')
             ->willReturn(['breadcrumbLinkText' => 'http://breadcrumbsLink']);
 
         $this->testQualityAction = new TestQualityAction(
@@ -111,17 +110,16 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $url = XMock::of(Url::class);
         $url
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn('http://link');
 
         $this->url = $url;
     }
 
-
     public static function buildTesterAuthorisation()
     {
-            $groupA = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, '');
-            $groupB = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, '');
+        $groupA = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, '');
+        $groupB = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, '');
 
         $testerAuthorisation = new TesterAuthorisation(
             $groupA,
@@ -152,11 +150,11 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
 
         // sites are ordered by most tests done
         // Need4Meat did most tests in group B
-        $this->assertEquals("Need4Meat", $vm->getB()->getSiteTests()[0]->getSiteName(), "Wrong order of sites");
+        $this->assertEquals('Need4Meat', $vm->getB()->getSiteTests()[0]->getSiteName(), 'Wrong order of sites');
         // Need4Meat did second mosts test in group B
-        $this->assertEquals("Turbo Bourbon", $vm->getB()->getSiteTests()[1]->getSiteName(), "Wrong order of sites");
+        $this->assertEquals('Turbo Bourbon', $vm->getB()->getSiteTests()[1]->getSiteName(), 'Wrong order of sites');
         // Need4Meat did least tests in group B
-        $this->assertEquals("Wild Cat", $vm->getB()->getSiteTests()[2]->getSiteName(), "Wrong order of sites");
+        $this->assertEquals('Wild Cat', $vm->getB()->getSiteTests()[2]->getSiteName(), 'Wrong order of sites');
 
         $site1Vm = $vm->getA()->getSiteTests()[0];
         $site2Vm = $vm->getB()->getSiteTests()[0];
@@ -164,17 +162,17 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $site4Vm = $vm->getB()->getSiteTests()[2];
 
         // check if site names are copied to view model
-        $this->assertEquals("Fancy Cars", $site1Vm->getSiteName());
-        $this->assertEquals("Need4Meat", $site2Vm->getSiteName());
-        $this->assertEquals("Turbo Bourbon", $vm->getB()->getSiteTests()[1]->getSiteName());
-        $this->assertEquals("Wild Cat", $vm->getB()->getSiteTests()[2]->getSiteName());
+        $this->assertEquals('Fancy Cars', $site1Vm->getSiteName());
+        $this->assertEquals('Need4Meat', $site2Vm->getSiteName());
+        $this->assertEquals('Turbo Bourbon', $vm->getB()->getSiteTests()[1]->getSiteName());
+        $this->assertEquals('Wild Cat', $vm->getB()->getSiteTests()[2]->getSiteName());
 
         // address is translated
-        $this->assertEquals("Unit 4, Mod Way Industrial Park, MD99 4RT", $site1Vm->getSiteAddress());
-        $this->assertEquals("10 Offroad, Hottap, HT6 4RF", $site2Vm->getSiteAddress());
+        $this->assertEquals('Unit 4, Mod Way Industrial Park, MD99 4RT', $site1Vm->getSiteAddress());
+        $this->assertEquals('10 Offroad, Hottap, HT6 4RF', $site2Vm->getSiteAddress());
 
         // sites with no address are handled
-        $this->assertEquals("", $site3Vm->getSiteAddress());
+        $this->assertEquals('', $site3Vm->getSiteAddress());
 
         // check if ids names are copied to view model
         $this->assertEquals(15, $site1Vm->getSiteId());
@@ -190,17 +188,17 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
 
         // check if average vehicle age is copied to view model
         // handling rounding of vehicle with 0 age
-        $this->assertSame("1", $site1Vm->getAverageVehicleAgeAsString());
-        $this->assertSame("1", $site2Vm->getAverageVehicleAgeAsString());
-        $this->assertSame("2", $site3Vm->getAverageVehicleAgeAsString());
+        $this->assertSame('1', $site1Vm->getAverageVehicleAgeAsString());
+        $this->assertSame('1', $site2Vm->getAverageVehicleAgeAsString());
+        $this->assertSame('2', $site3Vm->getAverageVehicleAgeAsString());
         // handling lack of data about vehicles average age
-        $this->assertSame("Not available", $site4Vm->getAverageVehicleAgeAsString());
+        $this->assertSame('Not available', $site4Vm->getAverageVehicleAgeAsString());
 
         // check if average test time is copied to view
-        $this->assertSame("14%", $site1Vm->getTestsFailedPercentage());
-        $this->assertSame("0%", $site2Vm->getTestsFailedPercentage());
-        $this->assertSame("16%", $site3Vm->getTestsFailedPercentage());
-        $this->assertSame("100%", $site4Vm->getTestsFailedPercentage());
+        $this->assertSame('14%', $site1Vm->getTestsFailedPercentage());
+        $this->assertSame('0%', $site2Vm->getTestsFailedPercentage());
+        $this->assertSame('16%', $site3Vm->getTestsFailedPercentage());
+        $this->assertSame('100%', $site4Vm->getTestsFailedPercentage());
 
         $this->assertEquals($result->layout()->getBreadcrumbs(), $breadcrumb);
         $this->assertEquals($result->layout()->getPageLede(), 'Tests done at all associated sites in July 2013');
@@ -209,6 +207,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
 
     /**
      * @dataProvider dataProviderContext
+     *
      * @param $context
      * @param $contextualProfileName
      * @param $componentContextualProfile
@@ -221,7 +220,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             $this->any())
             ->method('getContext')
             ->willReturn($context);
-        $returnLinkText = 'Return to ' . strtolower($contextualProfileName);
+        $returnLinkText = 'Return to '.strtolower($contextualProfileName);
 
         $this->mockMultiSiteData();
 
@@ -246,7 +245,6 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $this->assertEquals($vm->getA()->getComponentLinkTextGroup(), sprintf($componentContextualProfileGroup, 'A'));
         $this->assertEquals($vm->getB()->getComponentLinkText(), $componentContextualProfile);
         $this->assertEquals($vm->getB()->getComponentLinkTextGroup(), sprintf($componentContextualProfileGroup, 'B'));
-
     }
 
     public function dataProviderContext()
@@ -262,7 +260,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
                 'context' => ContextProvider::USER_SEARCH_CONTEXT,
                 'contextualProfileName' => 'User profile',
                 'componentContextualProfile' => 'failures by category in July 2013',
-                'componentContextualProfileGroup' => 'View Group %s '
+                'componentContextualProfileGroup' => 'View Group %s ',
             ],
             [
                 'context' => ContextProvider::AE_CONTEXT,
@@ -285,7 +283,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
 
         $stats1 = new EmployeePerformanceDto();
 
-        $stats1->setUsername("Tester");
+        $stats1->setUsername('Tester');
         $stats1->setTotal(1);
         $stats1->setAverageTime(new TimeSpan(1, 1, 1, 1));
         $stats1->setPercentageFailed(100);
@@ -294,7 +292,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
 
         $stats2 = new EmployeePerformanceDto();
 
-        $stats2->setUsername("Tester");
+        $stats2->setUsername('Tester');
         $stats2->setTotal(200);
         $stats2->setAverageTime(new TimeSpan(2, 2, 2, 2));
         $stats2->setPercentageFailed(33.33);
@@ -334,40 +332,40 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $reportDto = new TesterMultiSitePerformanceReportDto();
         $groupASitesDto = [
             (new TesterMultiSitePerformanceDto())
-                ->setSiteName("Fancy Cars")
+                ->setSiteName('Fancy Cars')
                 ->setSiteId(15)
                 ->setSiteAddress((new AddressDto())
-                ->setAddressLine1("Unit 4")
-                ->setAddressLine2("Mod Way Industrial Park")
-                ->setPostcode("MD99 4RT"))
+                ->setAddressLine1('Unit 4')
+                ->setAddressLine2('Mod Way Industrial Park')
+                ->setPostcode('MD99 4RT'))
                 ->setTotal(11)
                 ->setAverageTime(new TimeSpan(1, 3, 4, 6))
                 ->setAverageVehicleAgeInMonths(1)
                 ->setIsAverageVehicleAgeAvailable(true)
-                ->setPercentageFailed(13.976)
+                ->setPercentageFailed(13.976),
         ];
         $groupBSitesDto = [
             (new TesterMultiSitePerformanceDto())
-                ->setSiteName("Turbo Bourbon")
+                ->setSiteName('Turbo Bourbon')
                 ->setTotal(40)
-                ->setAverageTime(new TimeSpan(1, 4 , 6, 59))
+                ->setAverageTime(new TimeSpan(1, 4, 6, 59))
                 ->setIsAverageVehicleAgeAvailable(true)
                 ->setAverageVehicleAgeInMonths(18)
                 ->setPercentageFailed(15.71),
             (new TesterMultiSitePerformanceDto())
                 ->setTotal(19)
-                ->setSiteName("Wild Cat")
-                ->setAverageTime(new TimeSpan(1, 4 , 6, 59))
+                ->setSiteName('Wild Cat')
+                ->setAverageTime(new TimeSpan(1, 4, 6, 59))
                 ->setIsAverageVehicleAgeAvailable(false)
                 ->setAverageVehicleAgeInMonths(0)
                 ->setPercentageFailed(99.950001),
             (new TesterMultiSitePerformanceDto())
-                ->setSiteName("Need4Meat")
+                ->setSiteName('Need4Meat')
                 ->setSiteId(103)
                 ->setSiteAddress((new AddressDto())
-                    ->setAddressLine1("10 Offroad")
-                    ->setTown("Hottap")
-                    ->setPostcode("HT6 4RF"))
+                    ->setAddressLine1('10 Offroad')
+                    ->setTown('Hottap')
+                    ->setPostcode('HT6 4RF'))
                 ->setTotal(51)
                 ->setAverageTime(new TimeSpan(1, 3, 4, 55))
                 ->setIsAverageVehicleAgeAvailable(true)

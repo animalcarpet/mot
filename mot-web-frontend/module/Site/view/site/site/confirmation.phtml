@@ -1,10 +1,9 @@
 <?php
 
 /**
- * @var Site\ViewModel\VehicleTestingStation\VtsFormViewModel $model
+ * @var Site\ViewModel\VehicleTestingStation\VtsFormViewModel
  * @var Site\Form\VtsCreateForm                               $form
  */
-
 use DvsaCommon\Utility\AddressUtils;
 
 $model = $this->model;
@@ -43,7 +42,7 @@ echo $this->partial(
         'body' => [
             ['OPTL test lanes', $form->getTestingFacilityOptl()],
             ['TPTL test lanes', $form->getTestingFacilityTptl()],
-            ['Classes of vehicles tested at site', join(', ', $form->getClasses())],
+            ['Classes of vehicles tested at site', implode(', ', $form->getClasses())],
         ],
     ]
 );
@@ -58,9 +57,9 @@ echo $this->partial(
     echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'submitSiteConfirmation',
-            'name'       => 'submitSiteConfirmation',
-            'value'      => 'Create site',
+            'id' => 'submitSiteConfirmation',
+            'name' => 'submitSiteConfirmation',
+            'value' => 'Create site',
             'navigation' => [
                 'Back' => $model->getCancelUrl(),
             ],

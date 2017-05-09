@@ -13,6 +13,7 @@ class PersonEventServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return PersonEventService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

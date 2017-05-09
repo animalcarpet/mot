@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\Service;
 
 use Application\Service\CatalogService;
@@ -8,7 +9,6 @@ use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use Core\Service\LazyMotFrontendAuthorisationService;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\Service\VehicleSearchService;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
@@ -19,11 +19,11 @@ use DvsaMotTest\View\VehicleSearchResult\TrainingTestUrlTemplate;
 use Zend\Mvc\Controller\Plugin\Url;
 
 /**
- * Class VehicleSearchService
+ * Class VehicleSearchService.
  */
 class VehicleSearchServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  VehicleSearchService */
+    /** @var VehicleSearchService */
     private $service;
 
     /** @var Client */
@@ -169,7 +169,7 @@ class VehicleSearchServiceTest extends \PHPUnit_Framework_TestCase
             [VehicleSearchService::SEARCH_TYPE_CERTIFICATE, CertificateUrlTemplate::class],
             [VehicleSearchService::SEARCH_TYPE_TRAINING, TrainingTestUrlTemplate::class],
             [VehicleSearchService::SEARCH_TYPE_STANDARD, MotTestUrlTemplate::class],
-            [VehicleSearchService::SEARCH_TYPE_NON_MOT, NonMotTestUrlTemplate::class]
+            [VehicleSearchService::SEARCH_TYPE_NON_MOT, NonMotTestUrlTemplate::class],
         ];
     }
 
@@ -185,7 +185,7 @@ class VehicleSearchServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($urlTemplateClass, $urlTemplate);
     }
 
-    private function setAuthorisationServiceResponse($method = 'isTester', $result)
+    private function setAuthorisationServiceResponse($method, $result)
     {
         $this->authorisationService->expects($this->any())
             ->method($method)
@@ -207,8 +207,7 @@ class VehicleSearchServiceTest extends \PHPUnit_Framework_TestCase
                                     );
 
         return [
-            'data' => $object
+            'data' => $object,
         ];
     }
-
 }

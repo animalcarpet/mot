@@ -16,9 +16,9 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
      * @dataProvider creationDataProvider
      *
      * @param object $reasonsForRejection
-     * @param bool  $hasFailures
-     * @param bool  $hasPrs
-     * @param bool  $hasAdvisories
+     * @param bool   $hasFailures
+     * @param bool   $hasPrs
+     * @param bool   $hasAdvisories
      */
     public function testCreation($reasonsForRejection, $hasFailures, $hasPrs, $hasAdvisories)
     {
@@ -301,7 +301,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
             ];
         }
 
-        return json_decode(json_encode($testData), FALSE);
+        return json_decode(json_encode($testData), false);
     }
 
     /**
@@ -338,6 +338,6 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
             ];
         }
 
-        return json_decode(json_encode($testData), FALSE);
+        return json_decode(json_encode($testData), false);
     }
 }

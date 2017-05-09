@@ -11,7 +11,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Creates HelpDeskPersonService
+ * Creates HelpDeskPersonService.
  */
 class HelpDeskPersonServiceFactory implements FactoryInterface
 {

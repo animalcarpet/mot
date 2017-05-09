@@ -15,7 +15,7 @@ use UserApi\Dashboard\Dto\DayStats;
 use UserApi\Dashboard\Dto\MonthStats;
 
 /**
- * Service to gather a tester's statistics
+ * Service to gather a tester's statistics.
  */
 class UserStatsService extends AbstractService
 {
@@ -26,7 +26,8 @@ class UserStatsService extends AbstractService
 
     /**
      * UserStatsService constructor.
-     * @param EntityManager $entityManager
+     *
+     * @param EntityManager     $entityManager
      * @param MotTestRepository $repository
      */
     public function __construct(EntityManager $entityManager, MotTestRepository $repository)
@@ -74,8 +75,8 @@ class UserStatsService extends AbstractService
     }
 
     /**
-     * @param      $person
-     * @param      $startDate
+     * @param       $person
+     * @param       $startDate
      * @param array $optionalMotTestTypes
      *
      * @return MotTest[]
@@ -110,7 +111,7 @@ class UserStatsService extends AbstractService
         $queryBuilder->setParameter('startDate', $startDate);                        /* VM-11281 */
         $queryBuilder->setParameter('completeDate', $startDate);
 
-        $queryBuilder->andWhere("tt.code IN (:SLOT_TEST_TYPES)");
+        $queryBuilder->andWhere('tt.code IN (:SLOT_TEST_TYPES)');
 
         $slotTestTypes = [MotTestTypeCode::NORMAL_TEST];
         if (!empty($optionalMotTestTypes)) {
@@ -135,16 +136,16 @@ class UserStatsService extends AbstractService
         $failCount = 0;
 
         foreach ($motTests as $motTest) {
-            if($motTest->getPrsMotTest()) {
+            if ($motTest->getPrsMotTest()) {
                 //PRS tests come as a pair of passed and failed test, but we don't count the passed one
-                if($motTest->getStatus() == MotTestStatusName::FAILED) {
-                    $failCount++;
+                if ($motTest->getStatus() == MotTestStatusName::FAILED) {
+                    ++$failCount;
                 }
             } else {
                 if ($motTest->getStatus() == MotTestStatusName::PASSED) {
-                    $passCount++;
+                    ++$passCount;
                 } elseif ($motTest->getStatus() == MotTestStatusName::FAILED) {
-                    $failCount++;
+                    ++$failCount;
                 }
             }
         }
@@ -170,21 +171,20 @@ class UserStatsService extends AbstractService
         $failRate = 0;
         $averageTestTime = 0;
 
-
         foreach ($motTests as $motTest) {
             $testTime = DateUtils::getTimeDifferenceInSeconds($motTest->getCompletedDate(), $motTest->getStartedDate());
 
-            if($motTest->getPrsMotTest()) {
+            if ($motTest->getPrsMotTest()) {
                 //PRS tests come as a pair of passed and failed test, but we don't count the passed one
-                if($motTest->getStatus() == MotTestStatusName::FAILED) {
-                    $failCount++;
+                if ($motTest->getStatus() == MotTestStatusName::FAILED) {
+                    ++$failCount;
                     $sumOfTestTimes += $testTime;
                 }
             } else {
                 if ($motTest->getStatus() == MotTestStatusName::PASSED) {
-                    $passCount++;
+                    ++$passCount;
                 } elseif ($motTest->getStatus() == MotTestStatusName::FAILED) {
-                    $failCount++;
+                    ++$failCount;
                 }
                 $sumOfTestTimes += $testTime;
             }

@@ -5,8 +5,7 @@ namespace DvsaClientTest\Entity;
 use DvsaClient\Entity\Role;
 
 /**
- * Class RoleTest
- * @package DvsaClient\Entity
+ * Class RoleTest.
  */
 class RoleTest extends BaseEntityTestCase
 {
@@ -39,14 +38,14 @@ class RoleTest extends BaseEntityTestCase
 //    {
 //        //given
 //        $roles = [];
-//
+
 //        //when
 //        $rolesArray = Role::getRolesAsArray($roles);
-//
+
 //        //then
 //        $this->assertEquals([], $rolesArray);
 //    }
-//
+
 //    public function testGetRolesAsArrayWithRoleReturnsArrayWithKeyAndDisplayValue()
 //    {
 //        //given
@@ -54,10 +53,10 @@ class RoleTest extends BaseEntityTestCase
 //        $role->setName('keyName');
 //        $role->setFullName('Full Name');
 //        $role->setShortName('AB');
-//
+
 //        //when
 //        $rolesArray = Role::getRolesAsArray([$role]);
-//
+
 //        //then
 //        $this->assertCount(1, $rolesArray);
 //        $this->assertEquals(['keyName' => 'Full Name (AB)'], $rolesArray);

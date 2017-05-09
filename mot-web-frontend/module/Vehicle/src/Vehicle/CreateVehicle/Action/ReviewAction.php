@@ -19,13 +19,13 @@ use Zend\View\Model\ViewModel;
 
 class ReviewAction
 {
-    /** @var MotAuthorisationServiceInterface  */
+    /** @var MotAuthorisationServiceInterface */
     private $authorisationService;
-    /** @var CreateVehicleStepService  */
+    /** @var CreateVehicleStepService */
     private $createVehicleStepService;
-    /** @var CreateVehicleModelService  */
+    /** @var CreateVehicleModelService */
     private $createVehicleModelService;
-    /** @var CreateNewVehicleService  */
+    /** @var CreateNewVehicleService */
     private $createNewVehicleService;
 
     public function __construct(
@@ -33,8 +33,7 @@ class ReviewAction
         CreateVehicleStepService $createVehicleStepService,
         CreateVehicleModelService $createVehicleModelService,
         CreateNewVehicleService $createNewVehicleService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->createVehicleStepService = $createVehicleStepService;
         $this->createVehicleModelService = $createVehicleModelService;
@@ -77,6 +76,7 @@ class ReviewAction
             $this->createVehicleStepService->saveStep(CreateVehicleStepService::REVIEW_STEP, $vehicle);
             $this->createVehicleStepService->updateStepStatus(CreateVehicleStepService::REVIEW_STEP, true);
             $prgHelper->setRedirectUrl('create-vehicle/new-vehicle-created-and-started');
+
             return new RedirectToRoute(ConfirmationController::ROUTE);
         }
 
@@ -121,12 +121,12 @@ class ReviewAction
         $fuelType = $this->createVehicleStepService->getStep('engine');
 
         if ($fuelType['fuel-type'] == 'OT') {
-            return 'Other, ' . $fuelType['cylinder-capacity'];
+            return 'Other, '.$fuelType['cylinder-capacity'];
         }
 
         foreach ($this->createVehicleStepService->getStaticData()['fuelType'] as $id => $name) {
             if ($id == $fuelType['fuel-type']) {
-                $fuelName = $name . ($fuelType['cylinder-capacity'] ? ', ' . $fuelType['cylinder-capacity'] : '');
+                $fuelName = $name.($fuelType['cylinder-capacity'] ? ', '.$fuelType['cylinder-capacity'] : '');
             }
         }
 
@@ -186,6 +186,7 @@ class ReviewAction
     private function getCorrectDateFormat()
     {
         $dateFromSession = $this->createVehicleStepService->getStep('date');
+
         return (new DateTime($dateFromSession['dateMonth'].'/'.$dateFromSession['dateDay'].'/'.$dateFromSession['dateYear']))
             ->format(DateTimeDisplayFormat::FORMAT_DATE);
     }

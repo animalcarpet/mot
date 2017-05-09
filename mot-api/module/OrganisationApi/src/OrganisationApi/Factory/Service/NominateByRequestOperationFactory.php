@@ -8,11 +8,9 @@ use OrganisationApi\Model\Operation\ConditionalNominationOperation;
 use OrganisationApi\Service\OrganisationNominationNotificationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use NotificationApi\Service\NotificationService;
 
 /**
- * Class NominateByRequestOperationFactory
- * @package OrganisationApi\Factory\Service
+ * Class NominateByRequestOperationFactory.
  */
 class NominateByRequestOperationFactory implements FactoryInterface
 {

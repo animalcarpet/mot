@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Model\RoleRestriction;
 
 use DvsaCommon\Constants\Role;
@@ -8,9 +9,7 @@ use OrganisationApi\Model\OrganisationPersonnel;
 use OrganisationApi\Model\RoleRestrictionInterface;
 
 /**
- * Class AedmRestriction
- *
- * @package OrganisationApi\Model\RoleRestriction
+ * Class AedmRestriction.
  */
 class SchemeManagerRestriction implements RoleRestrictionInterface
 {

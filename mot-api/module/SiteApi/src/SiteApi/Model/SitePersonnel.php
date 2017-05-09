@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Model;
 
 use DvsaEntities\Entity\SiteBusinessRole;
@@ -8,9 +9,7 @@ use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 
 /**
- * Class SitePersonnel
- *
- * @package SiteApi\Model
+ * Class SitePersonnel.
  */
 class SitePersonnel
 {
@@ -21,7 +20,7 @@ class SitePersonnel
 
     /**
      * @param Site $site
-     * @param                       $positions
+     * @param      $positions
      */
     public function __construct(Site $site, $positions)
     {
@@ -74,7 +73,7 @@ class SitePersonnel
     }
 
     /**
-     * @param Person   $person
+     * @param Person           $person
      * @param SiteBusinessRole $role
      *
      * @return SiteBusinessRoleMap

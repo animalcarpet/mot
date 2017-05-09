@@ -19,19 +19,17 @@ use InvalidArgumentException;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
- * Class CertificateCreationService
- *
- * @package DvsaMotApi\Service
+ * Class CertificateCreationService.
  */
 class CertificateCreationService
 {
     /** @var MotTestService */
     private $motTestService;
 
-    /** @var DocumentService  */
+    /** @var DocumentService */
     private $documentService;
 
-    /** @var  DataCatalogService */
+    /** @var DataCatalogService */
     private $dataCatalogService;
 
     /** @var DvsaContactDetailsConfiguration $dvsaContactDetailsConfig */
@@ -43,9 +41,9 @@ class CertificateCreationService
     /**
      * CertificateCreationService constructor.
      *
-     * @param MotTestService $motTestService
-     * @param DocumentService $documentService
-     * @param DataCatalogService $dataCatalogService
+     * @param MotTestService                  $motTestService
+     * @param DocumentService                 $documentService
+     * @param DataCatalogService              $dataCatalogService
      * @param DvsaContactDetailsConfiguration $dvsaContactDetailsConfig
      */
     public function __construct(
@@ -54,7 +52,7 @@ class CertificateCreationService
         DataCatalogService $dataCatalogService,
         DvsaContactDetailsConfiguration $dvsaContactDetailsConfig
     ) {
-        $this->motTestService  = $motTestService;
+        $this->motTestService = $motTestService;
         $this->documentService = $documentService;
         $this->dataCatalogService = $dataCatalogService;
         $this->dvsaContactDetailsConfig = $dvsaContactDetailsConfig;
@@ -62,7 +60,7 @@ class CertificateCreationService
 
     /**
      * @param string $motTestNumber
-     * @param int $userId
+     * @param int    $userId
      *
      * @return MotTestDto
      *
@@ -78,9 +76,9 @@ class CertificateCreationService
     }
 
     /**
-     * @param string      $motTestNumber
-     * @param MotTestDto  $motTestData
-     * @param int         $userId
+     * @param string     $motTestNumber
+     * @param MotTestDto $motTestData
+     * @param int        $userId
      *
      * @return MotTestDto
      */
@@ -98,10 +96,10 @@ class CertificateCreationService
             [
                 MotTestStatusName::FAILED,
                 MotTestStatusName::ABANDONED,
-                MotTestStatusName::ABORTED
+                MotTestStatusName::ABORTED,
             ]
         )) {
-            if($this->isPrsTest($motTestData)){
+            if ($this->isPrsTest($motTestData)) {
                 $this->createPrsPassCertificate($motTestData, $userId);
             }
 
@@ -109,7 +107,7 @@ class CertificateCreationService
         }
 
         if ($testStatus === MotTestStatusName::PASSED) {
-            if($this->isPrsTest($motTestData)){
+            if ($this->isPrsTest($motTestData)) {
                 $this->createPrsFailCertificate($motTestData, $userId);
             }
 
@@ -122,7 +120,9 @@ class CertificateCreationService
     /**
      * @param MotTestDto $motTestData
      * @param int        $userId
+     *
      * @throws InvalidArgumentException
+     *
      * @return int
      */
     private function createPrsPassCertificate(MotTestDto $motTestData, $userId)
@@ -144,7 +144,9 @@ class CertificateCreationService
     /**
      * @param MotTestDto $motTestData
      * @param int        $userId
+     *
      * @throws InvalidArgumentException
+     *
      * @return int
      */
     private function createPrsFailCertificate(MotTestDto $motTestData, $userId)
@@ -235,10 +237,11 @@ class CertificateCreationService
 
     /**
      * @param $motTestNumber
-     * @param MotTestDto $data
+     * @param MotTestDto            $data
      * @param AbstractMotTestMapper $certificateMapper
      * @param $documentName
      * @param $userId
+     *
      * @return MotTestDto
      */
     private function createCertificate(
@@ -278,7 +281,7 @@ class CertificateCreationService
             $dvsaPhone = $this->dvsaContactDetailsConfig->getPhone();
 
             $snapShotData['TestStation'] = '';
-            $snapShotData['InspectionAuthority'] = $dvsaName . "\n" . self::TELEPHONE_NUMBER_LABEL . $dvsaPhone;
+            $snapShotData['InspectionAuthority'] = $dvsaName."\n".self::TELEPHONE_NUMBER_LABEL.$dvsaPhone;
         }
 
         $data->setDocument($this->documentService->createSnapshot($documentName, $snapShotData, $userId));
@@ -292,14 +295,14 @@ class CertificateCreationService
 
     /**
      * @param MotTestDto $data
-     * 
+     *
      * @return bool
      */
     public static function isRequiresDualLanguage(MotTestDto $data)
     {
         $site = $data->getVehicleTestingStation();
 
-        return (ArrayUtils::tryGet($site, 'dualLanguage', false) === true);
+        return ArrayUtils::tryGet($site, 'dualLanguage', false) === true;
     }
 
     /**

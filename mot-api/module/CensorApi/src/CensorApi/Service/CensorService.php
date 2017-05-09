@@ -6,8 +6,7 @@ use DvsaEntities\Entity\CensorBlacklist;
 use DvsaEntities\Repository\CensorBlacklistRepository;
 
 /**
- * Class CensorService
- * @package CensorApi\Service
+ * Class CensorService.
  */
 class CensorService
 {
@@ -26,6 +25,7 @@ class CensorService
 
     /**
      * @param $text
+     *
      * @return bool
      */
     public function containsProfanity($text)
@@ -38,6 +38,7 @@ class CensorService
     /**
      * @param $text
      * @param CensorBlacklist[] $badPhrases
+     *
      * @return bool
      */
     private function hasBadPhrases(&$text, array $badPhrases)
@@ -45,15 +46,15 @@ class CensorService
         $string = $this->prepareText($text);
         $mutation = self::mutationBase();
 
-        /** @var CensorBlacklist $badPhrase */
-        foreach($badPhrases as $censorBlacklist) {
+        /* @var CensorBlacklist $badPhrase */
+        foreach ($badPhrases as $censorBlacklist) {
             $text = $censorBlacklist->getPhrase();
             $badPhrase = $this->prepareText($text);
-            $badPhrasePattern = '/\b' . str_ireplace(
+            $badPhrasePattern = '/\b'.str_ireplace(
                 array_keys($mutation),
                 array_values($mutation),
                 $badPhrase
-            ) . '(?:es|s)?\b/si';
+            ).'(?:es|s)?\b/si';
             if (1 === preg_match($badPhrasePattern, $string)) {
                 return true;
             }
@@ -64,15 +65,16 @@ class CensorService
 
     /**
      * @param $text
+     *
      * @return string
      */
     private function prepareText(&$text)
     {
         $res = html_entity_decode(strip_tags($text));
         $reg_arr = [
-            '/\s+/'          => ' ',
+            '/\s+/' => ' ',
             '/[[:punct:]]+/' => '',
-            '/[_]+/'         => ''
+            '/[_]+/' => '',
         ];
 
         return preg_replace(array_keys($reg_arr), array_values($reg_arr), $res);

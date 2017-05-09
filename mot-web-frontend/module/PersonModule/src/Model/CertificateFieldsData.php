@@ -5,7 +5,7 @@ namespace Dvsa\Mot\Frontend\PersonModule\Model;
 use Core\ViewModel\Badge\Badge;
 
 /**
- * Data for Certificate Fields Data
+ * Data for Certificate Fields Data.
  */
 class CertificateFieldsData
 {

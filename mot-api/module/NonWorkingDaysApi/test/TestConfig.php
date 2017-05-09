@@ -1,13 +1,14 @@
 <?php
+
 return [
     'modules' => [
         'DvsaFeature',
         'NonWorkingDaysApi',
         'DvsaCommonApi',
         'DvsaEntities',
-        'DvsaAuthorisation'
+        'DvsaAuthorisation',
     ],
     'test_namespaces' => [
-        'NonWorkingDaysApiTest' => __DIR__ . '/' . 'NonWorkingDaysApiTest',
-    ]
+        'NonWorkingDaysApiTest' => __DIR__.'/'.'NonWorkingDaysApiTest',
+    ],
 ];

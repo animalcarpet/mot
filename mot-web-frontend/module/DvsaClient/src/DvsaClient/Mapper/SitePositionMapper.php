@@ -2,17 +2,15 @@
 
 namespace DvsaClient\Mapper;
 
-use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\UrlBuilder\SiteUrlBuilder;
 
 /**
- * Class SitePositionMapper
+ * Class SitePositionMapper.
  */
 class SitePositionMapper extends Mapper implements BusinessPositionMapperInterface
 {
-
     /**
-     * Validate if a person has already been nominated for a role at a Site
+     * Validate if a person has already been nominated for a role at a Site.
      *
      * @param int $siteId
      * @param int $nomineeId
@@ -21,15 +19,15 @@ class SitePositionMapper extends Mapper implements BusinessPositionMapperInterfa
     {
         $data = [
             'nomineeId' => $nomineeId,
-            'roleCode' => $roleCode
+            'roleCode' => $roleCode,
         ];
 
         $this->client->postJson(SiteUrlBuilder::site($siteId)->validate()->toString(), $data);
     }
 
     /**
-     * @param int $siteId
-     * @param int $nomineeId
+     * @param int    $siteId
+     * @param int    $nomineeId
      * @param string $roleCode
      */
     public function post($siteId, $nomineeId, $roleCode)
@@ -41,9 +39,10 @@ class SitePositionMapper extends Mapper implements BusinessPositionMapperInterfa
     }
 
     /**
-     * @param int $siteId
-     * @param int $nomineeId
+     * @param int    $siteId
+     * @param int    $nomineeId
      * @param string $roleCode
+     *
      * @return array
      */
     public function update($siteId, $nomineeId, $roleCode)

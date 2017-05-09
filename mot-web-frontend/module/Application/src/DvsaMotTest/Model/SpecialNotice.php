@@ -91,12 +91,12 @@ class SpecialNotice
      * @Annotation\Type("Zend\Form\Element\Submit")
      * @Annotation\Attributes({"value":"Preview"})
      */
-    public $submit = "Preview";
+    public $submit = 'Preview';
 
     public function exchangeArray($data)
     {
         $this->noticeTitle = ArrayUtils::tryGet($data, 'title');
-        $this->noticeText  = ArrayUtils::tryGet($data, 'noticeText');
+        $this->noticeText = ArrayUtils::tryGet($data, 'noticeText');
 
         $this->targetRoles = ArrayUtils::tryGet($data, 'targetRoles', []);
 
@@ -106,7 +106,7 @@ class SpecialNotice
         if ($this->externalPublishDate) {
             $dt = DateUtils::toDate($this->externalPublishDate);
             if (isset($data['expiryDate'])) {
-                $expiryDate                  = DateUtils::toDate($data['expiryDate']);
+                $expiryDate = DateUtils::toDate($data['expiryDate']);
                 $this->acknowledgementPeriod = $expiryDate->diff($dt)->d;
             }
         }
@@ -115,12 +115,12 @@ class SpecialNotice
     public function getArrayCopy()
     {
         return [
-            "title"                 => $this->noticeTitle,
-            "noticeText"            => $this->noticeText,
-            "targetRoles"           => $this->targetRoles,
-            "internalPublishDate"   => $this->internalPublishDate,
-            "externalPublishDate"   => $this->externalPublishDate,
-            "acknowledgementPeriod" => $this->acknowledgementPeriod,
+            'title' => $this->noticeTitle,
+            'noticeText' => $this->noticeText,
+            'targetRoles' => $this->targetRoles,
+            'internalPublishDate' => $this->internalPublishDate,
+            'externalPublishDate' => $this->externalPublishDate,
+            'acknowledgementPeriod' => $this->acknowledgementPeriod,
         ];
     }
 }

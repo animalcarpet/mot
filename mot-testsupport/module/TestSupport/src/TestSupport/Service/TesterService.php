@@ -66,10 +66,11 @@ class TesterService
     }
 
     /**
-     * Create a tester with the data supplied
+     * Create a tester with the data supplied.
      *
-     * @param array   $data
-     * @param boolean $addLicence
+     * @param array $data
+     * @param bool  $addLicence
+     *
      * @return JsonModel
      */
     public function create(array $data, $addLicence = true)
@@ -101,10 +102,8 @@ class TesterService
                 $data,
                 TesterAuthorisationStatusService::CUSTOM_QUALIFICATIONS_KEY,
                 [
-                    VehicleClassGroupCode::BIKES =>
-                        TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
-                    VehicleClassGroupCode::CARS_ETC =>
-                        TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
+                    VehicleClassGroupCode::BIKES => TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
+                    VehicleClassGroupCode::CARS_ETC => TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
                 ]
             )
         );
@@ -112,22 +111,22 @@ class TesterService
         $this->addUserRolesToSite($account, $data);
 
         return TestDataResponseHelper::jsonOk([
-            "message"  => "Tester created",
-            "title"    => "Mr",
-            "username" => $account->getUsername(),
-            "password" => $account->getPassword(),
-            "personId" => $account->getPersonId(),
-            "firstName"=> $account->getFirstName(),
-            "middleName" => $this->accountPerson->getMiddleName(),
-            "surname"  => $account->getSurname(),
-            "addressLine1" => $this->accountPerson->getAddressLine1(),
-            "addressLine2" => $this->accountPerson->getAddressLine2(),
-            "postcode" => $this->accountPerson->getPostcode(),
-            "phoneNumber" => $this->accountPerson->getPhoneNumber(),
-            "emailAddress" => $this->accountPerson->getEmailAddress(),
-            "multiSiteUser" => (isset($data['siteIds']) && count($data['siteIds']) > 1) ? true : false,
-            "dateOfBirth" => $this->accountPerson->getDateOfBirth(),
-            "drivingLicenceNumber" => $this->accountPerson->getDrivingLicenceNumber(),
+            'message' => 'Tester created',
+            'title' => 'Mr',
+            'username' => $account->getUsername(),
+            'password' => $account->getPassword(),
+            'personId' => $account->getPersonId(),
+            'firstName' => $account->getFirstName(),
+            'middleName' => $this->accountPerson->getMiddleName(),
+            'surname' => $account->getSurname(),
+            'addressLine1' => $this->accountPerson->getAddressLine1(),
+            'addressLine2' => $this->accountPerson->getAddressLine2(),
+            'postcode' => $this->accountPerson->getPostcode(),
+            'phoneNumber' => $this->accountPerson->getPhoneNumber(),
+            'emailAddress' => $this->accountPerson->getEmailAddress(),
+            'multiSiteUser' => (isset($data['siteIds']) && count($data['siteIds']) > 1) ? true : false,
+            'dateOfBirth' => $this->accountPerson->getDateOfBirth(),
+            'drivingLicenceNumber' => $this->accountPerson->getDrivingLicenceNumber(),
         ]);
     }
 
@@ -150,7 +149,7 @@ class TesterService
     public function insertTesterQualificationStatus($testerId, $group, $statusCode)
     {
         if (!VehicleClassGroupCode::exists($group)) {
-            throw new \InvalidArgumentException("Group '" . $group . "' does not exist.");
+            throw new \InvalidArgumentException("Group '".$group."' does not exist.");
         }
 
         $this->testerAuthorisationStatusService->insertTesterQualificationStatus($testerId, [$group => $statusCode]);
@@ -168,6 +167,7 @@ class TesterService
 
     /**
      * @param array $testerDetails
+     *
      * @return JsonModel
      */
     public function createWithoutLicence(array $testerDetails = [])

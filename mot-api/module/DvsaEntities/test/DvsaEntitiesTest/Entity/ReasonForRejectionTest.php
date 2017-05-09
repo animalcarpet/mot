@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaCommon\Enum\VehicleClassCode;
@@ -8,7 +9,7 @@ use DvsaEntities\Entity\VehicleClass;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ReasonForRejectionTest
+ * Class ReasonForRejectionTest.
  *
  * TODO update test to change in entity
  */
@@ -76,19 +77,19 @@ class ReasonForRejectionTest extends PHPUnit_Framework_TestCase
     public function testSetsPropertiesCorrectly()
     {
         $data = [
-            'testItemSelectorName'          => 'Stop Lamp',
-            'inspectionManualReference'     => '10',
-            'minorItem'                     => 0,
-            'description'                   => 'missing',
-            'locationMarker'                => 1,
-            'qtMarker'                      => 1,
-            'note'                          => 0,
-            'manual'                        => '4',
-            'specProc'                      => 0,
-            'inspectionManualDescription'   => 'a mandatory rear fog lamp tell-tale missing or inoperative',
-            'advisoryText'                  => '',
-            'testItemSelector'              => '5012',
-            'sectionTestItemSelector'       => '5000'
+            'testItemSelectorName' => 'Stop Lamp',
+            'inspectionManualReference' => '10',
+            'minorItem' => 0,
+            'description' => 'missing',
+            'locationMarker' => 1,
+            'qtMarker' => 1,
+            'note' => 0,
+            'manual' => '4',
+            'specProc' => 0,
+            'inspectionManualDescription' => 'a mandatory rear fog lamp tell-tale missing or inoperative',
+            'advisoryText' => '',
+            'testItemSelector' => '5012',
+            'sectionTestItemSelector' => '5000',
         ];
 
         $testItemSelector = new TestItemSelector();

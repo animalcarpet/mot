@@ -1,4 +1,5 @@
 <?php
+
 namespace NotificationApi\Controller;
 
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -8,9 +9,7 @@ use NotificationApi\Mapper\NotificationMapper;
 use NotificationApi\Service\NotificationService;
 
 /**
- * Class PersonNotificationController
- *
- * @package NotificationApi\Controller
+ * Class PersonNotificationController.
  */
 class PersonNotificationController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
@@ -38,7 +37,6 @@ class PersonNotificationController extends AbstractDvsaRestfulController impleme
         $notifications = $fetchArchived
             ? $this->notificationService->getAllArchivedByPersonId($personId)
             : $this->notificationService->getAllInboxByPersonId($personId);
-
 
         if (is_array($notifications)) {
             $extractor = new NotificationMapper();

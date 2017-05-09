@@ -17,6 +17,7 @@ class SiteRoleController extends BaseTestSupportRestfulController
 
         if (!empty($personId) && !empty($siteId) && !empty($role)) {
             $accountHelper->addSiteRole($personId, $siteId, $role);
+
             return TestDataResponseHelper::jsonOk(['success' => true]);
         }
 

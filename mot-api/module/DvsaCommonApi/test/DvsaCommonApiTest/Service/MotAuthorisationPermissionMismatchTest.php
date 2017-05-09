@@ -29,20 +29,21 @@ class MotAuthorisationPermissionMismatchTest extends \PHPUnit_Framework_TestCase
 
     private $systemPermissions;
 
-    /** @var  ListOfRolesAndPermissions[] */
+    /** @var ListOfRolesAndPermissions[] */
     private $organisationRoles;
 
-    /** @var  ListOfRolesAndPermissions[] */
+    /** @var ListOfRolesAndPermissions[] */
     private $siteRoles;
 
     private $siteOrganisationMap;
 
     /**
-     * Return a mock of the Zend AuthorisationService
+     * Return a mock of the Zend AuthorisationService.
      *
      * @param $identity
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getIdentityMock($identity)
@@ -158,7 +159,7 @@ class MotAuthorisationPermissionMismatchTest extends \PHPUnit_Framework_TestCase
         try {
             $function();
         } catch (PermissionNotFoundException $e) {
-            $this->fail("PermissionNotFoundException should not be thrown");
+            $this->fail('PermissionNotFoundException should not be thrown');
         } catch (UnauthorisedException $e) {
             //  it's okay for UnauthorizedException to happen
         }

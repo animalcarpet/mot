@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
 
 use Core\Action\ViewActionResult;
@@ -11,7 +10,7 @@ use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurit
 
 class ChangeSecurityQuestionsConfirmationAction
 {
-    const CHANGE_SECURITY_QUESTIONS_CONFIRMATION_TEMPLATE = "profile/change-security-questions/confirmation";
+    const CHANGE_SECURITY_QUESTIONS_CONFIRMATION_TEMPLATE = 'profile/change-security-questions/confirmation';
 
     private $changeSecurityQuestionsStepService;
 

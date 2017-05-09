@@ -20,6 +20,7 @@ class ReplacementCertificateControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return ReplacementCertificateController
      */
     public function createService(ServiceLocatorInterface $controllerManager)

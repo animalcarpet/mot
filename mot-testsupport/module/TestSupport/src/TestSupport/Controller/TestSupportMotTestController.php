@@ -3,7 +3,6 @@
 namespace TestSupport\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Date\DateUtils;
@@ -22,8 +21,6 @@ use DvsaCommon\Utility\DtoHydrator;
 use TestSupport\FieldValidation;
 use TestSupport\Helper\RestClientGetterTrait;
 use TestSupport\Helper\TestDataResponseHelper;
-use Zend\Mvc\Controller\AbstractRestfulController;
-use Zend\View\Model\JsonModel;
 
 /**
  * Creates Mot tests for use by tests.
@@ -34,10 +31,10 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
 {
     use RestClientGetterTrait;
 
-    const OTP = "123456";
-    private static $RFR_ID_MAP = ["1" => 12, "2" => 12, "3" => 622, "4" => 622, "5" => 622, "7" => 622];
+    const OTP = '123456';
+    private static $RFR_ID_MAP = ['1' => 12, '2' => 12, '3' => 622, '4' => 622, '5' => 622, '7' => 622];
 
-    private static $END_DATED_RFR_ID_MAP = ["1" => 811, "2" => 811, "3" => 726, "4" => 8827, "5" => 2537, "7" => 8801];
+    private static $END_DATED_RFR_ID_MAP = ['1' => 811, '2' => 811, '3' => 726, '4' => 8827, '5' => 2537, '7' => 8801];
 
     public function create($data)
     {
@@ -50,7 +47,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $vehicle = $this->getVehicle($restClient, $vehicleId);
         $motTestNumber = $this->createMotTest($restClient, $vehicle, $data);
 
-        $message = "Mot test created";
+        $message = 'Mot test created';
         /** @var EntityManager $entityManager */
         $entityManager = $this->getServiceLocator()->get(EntityManager::class);
 
@@ -69,7 +66,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
                 $retestCompletedDate,
                 $retestExpiryDate
             );
-            $message = "Mot test with retest created";
+            $message = 'Mot test with retest created';
         }
         $motTestIssueDate = DateUtils::toDate($data['motTest']['issueDate']);
         $motTestStartDate = DateUtils::toDateTime($data['motTest']['startDate']);
@@ -86,7 +83,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $entityManager->flush();
 
         return TestDataResponseHelper::jsonOk(
-            ["message" => $message, "motTestNumber" => $motTestNumber]
+            ['message' => $message, 'motTestNumber' => $motTestNumber]
         );
     }
 
@@ -125,23 +122,23 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
                 $status = MotTestStatusName::PASSED;
                 break;
             case 'AUTO':
-                $status = $this->hasFailingRfrs($rfrs)? MotTestStatusName::FAILED : MotTestStatusName::PASSED;
+                $status = $this->hasFailingRfrs($rfrs) ? MotTestStatusName::FAILED : MotTestStatusName::PASSED;
                 break;
             default:
                 $status = $outcome;
         }
 
         $motTestData = [
-            'motTestType'             => isset($motTest['testType']) ? $motTest['testType'] : null,
-            'vehicleId'               => $vehicle->getId(),
+            'motTestType' => isset($motTest['testType']) ? $motTest['testType'] : null,
+            'vehicleId' => $vehicle->getId(),
             'vehicleTestingStationId' => $vtsId,
-            'countryOfRegistration'   => $vehicle->getCountryOfRegistration()->getId(),
-            'primaryColour'           => $vehicle->getColour()->getCode(),
-            'secondaryColour'         => $vehicle->getColourSecondary()->getCode(),
-            'fuelTypeId'              => $vehicle->getFuelType()->getCode(),
-            'cylinderCapacity'        => $vehicle->getCylinderCapacity(),
-            'vehicleClassCode'        => $vehicleClass,
-            'hasRegistration'         => true
+            'countryOfRegistration' => $vehicle->getCountryOfRegistration()->getId(),
+            'primaryColour' => $vehicle->getColour()->getCode(),
+            'secondaryColour' => $vehicle->getColourSecondary()->getCode(),
+            'fuelTypeId' => $vehicle->getFuelType()->getCode(),
+            'cylinderCapacity' => $vehicle->getCylinderCapacity(),
+            'vehicleClassCode' => $vehicleClass,
+            'hasRegistration' => true,
         ];
 
         // Linking tests: check to see if an original test Id has been supplied
@@ -204,14 +201,14 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $status = $outcome;
 
         $motTestData = [
-            'vehicleId'               => $vehicle->getId(),
+            'vehicleId' => $vehicle->getId(),
             'vehicleTestingStationId' => $vtsId,
-            'primaryColour'           => $vehicle->getColour()->getCode(),
-            'secondaryColour'         => $vehicle->getColourSecondary()->getCode(),
-            'fuelTypeId'              => $vehicle->getFuelType()->getCode(),
-            'vehicleClassCode'        => $vehicleClass,
-            'oneTimePassword'         => self::OTP,
-            'hasRegistration'         => true
+            'primaryColour' => $vehicle->getColour()->getCode(),
+            'secondaryColour' => $vehicle->getColourSecondary()->getCode(),
+            'fuelTypeId' => $vehicle->getFuelType()->getCode(),
+            'vehicleClassCode' => $vehicleClass,
+            'oneTimePassword' => self::OTP,
+            'hasRegistration' => true,
         ];
 
         // create mot test
@@ -233,6 +230,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
 
     /**
      * @param $comment
+     *
      * @return int|null
      */
     private function addRfrCommentToDb($id, $comment)
@@ -244,7 +242,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $sql = 'INSERT INTO `mot_test_rfr_map_comment` (`id`, `comment`) VALUES (:id, :comment)';
         $params = [
             'id' => $id,
-            'comment' => $comment
+            'comment' => $comment,
         ];
 
         return $this->updateInDb($sql, $params);
@@ -280,7 +278,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
             'generated' => ArrayUtils::tryGet($rfr, 'generated', 0),
         ];
 
-        if(empty($values['rfrId'])){
+        if (empty($values['rfrId'])) {
             $values['rfrId'] = ArrayUtils::get($rfr, 'reasonId');
         }
 
@@ -293,7 +291,8 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
 
     /**
      * @param string $query
-     * @param array $bindValues
+     * @param array  $bindValues
+     *
      * @return int
      */
     private function updateInDb($query, $bindValues = [])
@@ -304,11 +303,12 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
             $stmt->bindValue($key, $value);
         }
         $stmt->execute();
+
         return $entityManager->getConnection()->lastInsertId();
     }
 
     /**
-     * Issued Date cannot be changed normally, so it has to be hacked
+     * Issued Date cannot be changed normally, so it has to be hacked.
      */
     private function setIssuedDate(
         EntityManager $em,
@@ -319,9 +319,9 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         \DateTime $expiryDate
     ) {
         $stmt = $em->getConnection()->prepare(
-            "UPDATE mot_test_current m LEFT JOIN mot_test_current n on n.id = m.prs_mot_test_id "
-            . "SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? "
-            . "WHERE m.number = ?"
+            'UPDATE mot_test_current m LEFT JOIN mot_test_current n on n.id = m.prs_mot_test_id '
+            .'SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? '
+            .'WHERE m.number = ?'
         );
 
         $stmt->bindValue(1, $startedDate, 'datetime');
@@ -333,9 +333,9 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $stmt->execute();
 
         $stmt = $em->getConnection()->prepare(
-            "UPDATE mot_test_current m LEFT JOIN mot_test_current n on n.id = m.prs_mot_test_id "
-            . "SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? "
-            . "WHERE n.number=?"
+            'UPDATE mot_test_current m LEFT JOIN mot_test_current n on n.id = m.prs_mot_test_id '
+            .'SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? '
+            .'WHERE n.number=?'
         );
 
         $stmt->bindValue(1, $startedDate, 'datetime');
@@ -345,7 +345,6 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $stmt->bindValue(5, $motTestNumber);
 
         $stmt->execute();
-
     }
 
     /**
@@ -369,9 +368,9 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $client->putJson(
             $apiUrl,
             [
-                'value'      => $mileage,
-                'unit'       => OdometerUnit::MILES,
-                'resultType' => OdometerReadingResultType::OK
+                'value' => $mileage,
+                'unit' => OdometerUnit::MILES,
+                'resultType' => OdometerReadingResultType::OK,
             ]
         );
     }
@@ -385,17 +384,17 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         // set brake test PASS based on the class
         if ($class12) {
             $brakeTestResult = [
-                'brakeTestType'           => BrakeTestTypeCode::DECELEROMETER,
+                'brakeTestType' => BrakeTestTypeCode::DECELEROMETER,
                 'control1BrakeEfficiency' => $isPassed ? 90 : 10,
                 'control2BrakeEfficiency' => $isPassed ? 90 : 10,
-                'isSideAttached'          => '0'
+                'isSideAttached' => '0',
             ];
         } else {
             $brakeTestResult = [
-                "serviceBrake1TestType"   => BrakeTestTypeCode::DECELEROMETER,
-                "parkingBrakeTestType"    => BrakeTestTypeCode::DECELEROMETER,
-                "serviceBrake1Efficiency" => $isPassed ? 80 : 10,
-                "parkingBrakeEfficiency"  => $isPassed ? 80 : 10
+                'serviceBrake1TestType' => BrakeTestTypeCode::DECELEROMETER,
+                'parkingBrakeTestType' => BrakeTestTypeCode::DECELEROMETER,
+                'serviceBrake1Efficiency' => $isPassed ? 80 : 10,
+                'parkingBrakeEfficiency' => $isPassed ? 80 : 10,
             ];
         }
 
@@ -407,8 +406,8 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $apiUrl = MotTestUrlBuilder::motTestStatus($motTestNumber)->toString();
 
         $data = [
-            'status'          => $status,
-            'oneTimePassword' => self::OTP
+            'status' => $status,
+            'oneTimePassword' => self::OTP,
         ];
 
         if ($status === MotTestStatusName::ABANDONED || $status === MotTestStatusName::ABORTED) {

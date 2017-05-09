@@ -5,9 +5,7 @@ namespace SiteApiTest\Controller;
 use SiteApi\Controller\SiteRoleController;
 
 /**
- * Class SiteRoleControllerTest
- *
- * @package SiteApiTest\Controller
+ * Class SiteRoleControllerTest.
  */
 class SiteRoleControllerTest extends AbstractSiteApiControllerTest
 {

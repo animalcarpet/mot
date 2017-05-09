@@ -14,6 +14,6 @@ return [
         VehicleService::class => VehicleServiceFactory::class,
         AuthorisationService::class => AuthorisationServiceFactory::class,
         MotTestService::class => MotTestServiceFactory::class,
-        ApiServicesConfigOptions::class => ApiServicesConfigOptionsFactory::class
+        ApiServicesConfigOptions::class => ApiServicesConfigOptionsFactory::class,
     ],
 ];

@@ -3,16 +3,15 @@
 namespace DvsaCommonApi\Service;
 
 use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaCommon\Date\DateUtils;
 
 /**
- * Class DateMappingUtils
+ * Class DateMappingUtils.
  */
 class DateMappingUtils
 {
     public static function extractDateTimeObject($dateTimeObject)
     {
-        return DateMappingUtils::extractDateObjectInternal(
+        return self::extractDateObjectInternal(
             $dateTimeObject,
             function ($dateObjectInt) {
                 return DateTimeApiFormat::dateTime($dateObjectInt);
@@ -22,7 +21,7 @@ class DateMappingUtils
 
     public static function extractDateObject($dateObject)
     {
-        return DateMappingUtils::extractDateObjectInternal(
+        return self::extractDateObjectInternal(
             $dateObject,
             function ($dateObjectInt) {
                 return DateTimeApiFormat::date($dateObjectInt);
@@ -42,16 +41,17 @@ class DateMappingUtils
                     $type = gettype($dateObject);
                 }
                 throw new \InvalidArgumentException(
-                    "Unexpected object class " . $type . "; expecting DateTime"
+                    'Unexpected object class '.$type.'; expecting DateTime'
                 );
             }
         }
+
         return null;
     }
 
     public static function extractDateTimeOrUnsetField(&$extractedResult, $key)
     {
-        DateMappingUtils::extractDateOrDateTimeOrUnsetField(
+        self::extractDateOrDateTimeOrUnsetField(
             $extractedResult,
             $key,
             function ($dateObject) {
@@ -62,7 +62,7 @@ class DateMappingUtils
 
     public static function extractDateOrUnsetField(&$extractedResult, $key)
     {
-        DateMappingUtils::extractDateOrDateTimeOrUnsetField(
+        self::extractDateOrDateTimeOrUnsetField(
             $extractedResult,
             $key,
             function ($dateObject) {

@@ -21,6 +21,7 @@ class DuplicateEmailController extends AbstractDvsaActionController
         ]);
 
         $this->setHeadTitle('This email is already in use');
+
         return $viewModel;
     }
 }

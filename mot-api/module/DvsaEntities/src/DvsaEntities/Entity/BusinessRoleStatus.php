@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * BusinessRoleStatus
+ * BusinessRoleStatus.
  *
  * @ORM\Table(
  *  name="business_role_status",
@@ -37,9 +37,10 @@ class BusinessRoleStatus extends Entity
     private $code;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return BusinessRoleStatus
      */
     public function setName($name)
@@ -50,7 +51,7 @@ class BusinessRoleStatus extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -60,9 +61,10 @@ class BusinessRoleStatus extends Entity
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
+     *
      * @return BusinessRoleStatus
      */
     public function setCode($code)
@@ -73,7 +75,7 @@ class BusinessRoleStatus extends Entity
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */

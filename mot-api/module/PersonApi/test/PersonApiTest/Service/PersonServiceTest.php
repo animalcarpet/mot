@@ -16,12 +16,12 @@ use PersonApi\Service\PersonService;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Unit tests for PersonService
+ * Unit tests for PersonService.
  */
 class PersonServiceTest extends AbstractServiceTestCase
 {
     const PERSON_ID = 1;
-    const LOGIN     = 'aaa';
+    const LOGIN = 'aaa';
 
     public function testGetPerson()
     {
@@ -73,7 +73,7 @@ class PersonServiceTest extends AbstractServiceTestCase
         $personMock
             ->expects($this->once())
             ->method('getPrimaryEmail')
-            ->willReturn('personservicetest@' . EmailAddressValidator::TEST_DOMAIN);
+            ->willReturn('personservicetest@'.EmailAddressValidator::TEST_DOMAIN);
         $personMock
             ->expects($this->once())
             ->method('getId')
@@ -88,7 +88,7 @@ class PersonServiceTest extends AbstractServiceTestCase
         $service = $this->constructPersonServiceWithMocks(
             $this->createMocks(
                 [
-                    PersonRepository::class => $personRepositoryMock
+                    PersonRepository::class => $personRepositoryMock,
                 ],
                 true
             )
@@ -114,7 +114,7 @@ class PersonServiceTest extends AbstractServiceTestCase
         $service = $this->constructPersonServiceWithMocks(
             $this->createMocks(
                 [
-                    PersonRepository::class => $personRepositoryMock
+                    PersonRepository::class => $personRepositoryMock,
                 ],
                 true
             )
@@ -134,7 +134,7 @@ class PersonServiceTest extends AbstractServiceTestCase
         $service = $this->constructPersonServiceWithMocks(
             $this->createMocks(
                 [
-                    PersonRepository::class => $personRepositoryMock
+                    PersonRepository::class => $personRepositoryMock,
                 ],
                 true
             )
@@ -157,7 +157,7 @@ class PersonServiceTest extends AbstractServiceTestCase
         $service = $this->constructPersonServiceWithMocks(
             $this->createMocks(
                 [
-                    PersonRepository::class => $personRepositoryMock
+                    PersonRepository::class => $personRepositoryMock,
                 ],
                 true
             )
@@ -168,7 +168,7 @@ class PersonServiceTest extends AbstractServiceTestCase
 
     /**
      * @param array $mocks
-     * @param bool $authorised
+     * @param bool  $authorised
      *
      * @throws \Exception
      *
@@ -189,7 +189,7 @@ class PersonServiceTest extends AbstractServiceTestCase
             $mocks[AuthorisationService::class]
                 ->expects($this->any())
                 ->method('assertGranted')
-                ->will($this->throwException(new UnauthorisedException("")));
+                ->will($this->throwException(new UnauthorisedException('')));
         }
 
         $mocks[Person::class] = isset($mocks[Person::class]) ?
@@ -206,7 +206,7 @@ class PersonServiceTest extends AbstractServiceTestCase
         $mocks[AuthenticationService::class]
             ->expects($this->any())
             ->method('getIdentity')
-            ->will($this->returnValue($this->createPersonEntity('personservicetest@' . EmailAddressValidator::TEST_DOMAIN)));
+            ->will($this->returnValue($this->createPersonEntity('personservicetest@'.EmailAddressValidator::TEST_DOMAIN)));
 
         return $mocks;
     }
@@ -256,7 +256,7 @@ class PersonServiceTest extends AbstractServiceTestCase
     {
         $person = (new Person())
             ->setUsername($username)
-            ->setDateOfBirth(new \DateTime);
+            ->setDateOfBirth(new \DateTime());
 
         return $person;
     }

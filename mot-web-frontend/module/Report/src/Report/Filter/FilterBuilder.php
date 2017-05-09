@@ -6,14 +6,10 @@ use DvsaCommon\Constants\SearchParamConst;
 use Zend\Navigation\Navigation;
 use Zend\Navigation\Page\Uri;
 use Zend\Stdlib\Parameters;
-use Zend\Stdlib\RequestInterface;
-use Zend\View\Helper\HtmlPage;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class FilterBuilder
- *
- * @package Report\Filter
+ * Class FilterBuilder.
  */
 class FilterBuilder
 {
@@ -22,17 +18,18 @@ class FilterBuilder
      */
     private $filterPeriodNavigation;
     /**
-     * @var  array
+     * @var array
      */
     private $options;
     /**
-     * @var  Parameters
+     * @var Parameters
      */
     private $queryParams;
 
     public function setQueryParams(Parameters $params)
     {
         $this->queryParams = $params;
+
         return $this;
     }
 
@@ -50,6 +47,7 @@ class FilterBuilder
     public function setOptions($options)
     {
         $this->options = $options;
+
         return $this;
     }
 
@@ -59,7 +57,7 @@ class FilterBuilder
     }
 
     /**
-     * Build time period navigation
+     * Build time period navigation.
      *
      * @param PhpRenderer $phpRenderer
      *
@@ -78,12 +76,12 @@ class FilterBuilder
         foreach ($options as $period) {
             $page = new Uri();
 
-            $dateFrom = (new \DateTime('@' . $period['from']))->getTimestamp();
-            $dateTo = (new \DateTime('@' . $period['to']))->getTimestamp();
+            $dateFrom = (new \DateTime('@'.$period['from']))->getTimestamp();
+            $dateTo = (new \DateTime('@'.$period['to']))->getTimestamp();
 
             $urlParams = [
                 SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $dateFrom,
-                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => $dateTo,
+                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $dateTo,
             ];
 
             $uri = $phpRenderer->url(null, [], ['query' => $urlParams], true);
@@ -106,10 +104,10 @@ class FilterBuilder
         $dateFromQuery = $queryParams->get(SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM, false);
         $dateToQuery = $queryParams->get(SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM, false);
 
-        return (
+        return
             $dateFromQuery && $dateToQuery
             && (int) $dateFromQuery === $optionParams[SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM]
             && (int) $dateToQuery === $optionParams[SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM]
-        );
+        ;
     }
 }

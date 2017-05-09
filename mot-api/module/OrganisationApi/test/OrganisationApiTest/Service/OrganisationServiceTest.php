@@ -1,8 +1,8 @@
 <?php
+
 namespace OrganisationApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NoResultException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Organisation;
@@ -12,17 +12,15 @@ use OrganisationApi\Service\OrganisationService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class OrganisationServiceTest
- *
- * @package OrganisationApiTest\Service
+ * Class OrganisationServiceTest.
  */
 class OrganisationServiceTest extends AbstractServiceTestCase
 {
     const ORG_ID = 9;
 
-    /** @var  OrganisationRepository|MockObj */
+    /** @var OrganisationRepository|MockObj */
     private $mockOrganisationRepo;
-    /** @var  EntityManager|MockObj */
+    /** @var EntityManager|MockObj */
     private $entityManager;
     /** @var OrganisationService */
     private $service;
@@ -62,18 +60,18 @@ class OrganisationServiceTest extends AbstractServiceTestCase
         $this->service->decrementSlotBalance($this->organisation);
     }
 
-    public function testFindOrganisationNameBySiteId_organisationFound() {
-
+    public function testFindOrganisationNameBySiteId_organisationFound()
+    {
         $siteId = 4;
         $this->mockOrganisationRepo->expects($this->once())->method('findOrganisationNameBySiteId')
-            ->with($siteId)->willReturn((new Organisation)->setName('orgName')->setId(5));
+            ->with($siteId)->willReturn((new Organisation())->setName('orgName')->setId(5));
 
         $result = $this->service->findOrganisationNameBySiteId($siteId);
         $this->assertEquals(['id' => 5, 'name' => 'orgName'], $result);
     }
 
-    public function testFindOrganisationNameBySiteId_organisationNotFound() {
-
+    public function testFindOrganisationNameBySiteId_organisationNotFound()
+    {
         $siteId = 5;
         $this->mockOrganisationRepo->expects($this->once())->method('findOrganisationNameBySiteId')
             ->with($siteId)->willReturn(null);

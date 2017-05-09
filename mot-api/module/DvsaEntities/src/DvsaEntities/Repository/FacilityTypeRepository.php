@@ -6,9 +6,8 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\FacilityType;
 
 /**
- * Class FacilityTypeRepository
+ * Class FacilityTypeRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class FacilityTypeRepository extends AbstractMutableRepository
@@ -19,6 +18,7 @@ class FacilityTypeRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return FacilityType
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
@@ -27,6 +27,7 @@ class FacilityTypeRepository extends AbstractMutableRepository
         if ($facilityType === null) {
             throw new NotFoundException('FacilityType', $id);
         }
+
         return $facilityType;
     }
 }

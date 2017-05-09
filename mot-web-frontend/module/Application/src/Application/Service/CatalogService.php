@@ -120,7 +120,7 @@ class CatalogService
      * These values are used in the SELECT menu in the middle column on the
      * page: /enforcement/mot-test/:id/differences-found-between-tests
      *
-     * @return Array of values intended for a SELECT control.
+     * @return array of values intended for a SELECT control
      */
     public function getScores()
     {
@@ -129,7 +129,7 @@ class CatalogService
         if (is_null($scoreCache)) {
             foreach ($this->getCatalog()['scores'] as $e) {
                 $scoreCache [] = [
-                    'id'    => $e['id'],
+                    'id' => $e['id'],
                     'value' => $e['score'],
                     'label' => $e['description'],
                 ];
@@ -160,7 +160,7 @@ class CatalogService
     /**
      * These are the reasons for AE refusal for conducting MOT test.
      *
-     * @return Array of possible reasons indexed by reason id.
+     * @return array of possible reasons indexed by reason id
      */
     public function getReasonsForRefusal()
     {

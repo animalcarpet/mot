@@ -2,7 +2,6 @@
 
 namespace DvsaMotTestTest\View\VehicleSearchResult;
 
-
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\StartTestConfirmationController;
 use DvsaMotTest\Model\VehicleSearchResult;
@@ -27,7 +26,6 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
      * @var VehicleSearchResult | \PHPUnit_Framework_MockObject_MockObject
      */
     private $vehicleSearchResults;
-
 
     public function setUp()
     {
@@ -54,7 +52,7 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'params' => []
+                'params' => [],
             ],
             [
                 'params' => [
@@ -63,7 +61,7 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                   'registration' => 'test',
                   'searchVrm' => 'test',
                   'searchVin' => 'test',
-                ]
+                ],
             ],
             [
                 'params' => [
@@ -72,7 +70,7 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                   'registration' => 'test',
                   'searchVrm' => 'test',
                   'searchVin' => 'test',
-                ]
+                ],
             ],
             [
                 'params' => [
@@ -81,7 +79,7 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                   'registration' => '',
                   'searchVrm' => '',
                   'searchVin' => '',
-                ]
+                ],
             ],
             [
                 'params' => [
@@ -90,7 +88,7 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                   'vin' => 'test',
                   'searchVrm' => 'test',
                   'searchVin' => 'test',
-                ]
+                ],
             ],
             [
                 'params' => [
@@ -99,7 +97,7 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                   'vin' => 'test',
                   'registration' => 'test',
                   'searchVin' => 'test',
-                ]
+                ],
             ],
             [
                 'params' => [
@@ -108,14 +106,15 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                   'vin' => 'test',
                   'registration' => 'test',
                   'searchVrm' => 'test',
-                ]
+                ],
             ],
         ];
     }
 
     /**
      * @param array $params
-     * @param int $noRegistration
+     * @param int   $noRegistration
+     *
      * @internal param string $source
      * @dataProvider validSearchParamsProvider
      */
@@ -138,8 +137,8 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                         'vin' => $params['vin'],
                         'registration' => $params['registration'],
                         'searchVrm' => $params['searchVrm'],
-                        'searchVin' => $params['searchVin']
-                    ]
+                        'searchVin' => $params['searchVin'],
+                    ],
                 ]
             )
         ;
@@ -189,8 +188,8 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
                         'vin' => $searchParams['vin'],
                         'registration' => $searchParams['registration'],
                         'searchVrm' => $searchParams['searchVrm'],
-                        'searchVin' => $searchParams['searchVin']
-                    ]
+                        'searchVin' => $searchParams['searchVin'],
+                    ],
                 ]
             );
 
@@ -199,7 +198,6 @@ class NonMotTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
 
     public function getStartMotTestUrlProvider()
     {
-
         return [
           [
               'searchParams' => [

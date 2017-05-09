@@ -9,12 +9,10 @@ use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommon\Enum\EventTypeCode;
-use DvsaCommon\Enum\OrganisationContactTypeCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Model\AuthorisedExaminerPatchModel;
 use DvsaCommon\Utility\ArrayUtils;
-use DvsaCommonApi\Formatting\AddressFormatter;
 use DvsaCommonApi\Service\Validator\ValidationChain;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\AuthForAeStatus;
@@ -67,8 +65,7 @@ class UpdateAeDetailsService implements AutoWireableInterface
         SiteRepository $siteRepository,
         EventService $eventService,
         MotIdentityProviderInterface $identityProvider
-    )
-    {
+    ) {
         $this->organisationRepository = $organisationRepository;
         $this->organisationContactTypeRepository = $organisationContactTypeRepository;
         $this->entityManager = $entityManager;
@@ -177,7 +174,7 @@ class UpdateAeDetailsService implements AutoWireableInterface
             $this->updateEmail($ae, AuthorisedExaminerPatchModel::createForCorrespondenceContact(), $data);
         }
 
-        if(!empty($diff)) {
+        if (!empty($diff)) {
             $this->sendDiffEvent($ae, $diff);
         }
 
@@ -193,8 +190,8 @@ class UpdateAeDetailsService implements AutoWireableInterface
 
         $ae->setName($name);
 
-        if($oldName != $name) {
-            $diff+=$this->createDiffItem('Name', $oldName, $name);
+        if ($oldName != $name) {
+            $diff += $this->createDiffItem('Name', $oldName, $name);
         }
     }
 
@@ -218,8 +215,8 @@ class UpdateAeDetailsService implements AutoWireableInterface
             ->setStatus($status)
             ->setStatusChangedOn(new \DateTime());
 
-        if($oldStatusName != $status->getName()) {
-            $diff+=$this->createDiffItem('Status', $oldStatusName, $status->getName());
+        if ($oldStatusName != $status->getName()) {
+            $diff += $this->createDiffItem('Status', $oldStatusName, $status->getName());
         }
     }
 
@@ -245,21 +242,22 @@ class UpdateAeDetailsService implements AutoWireableInterface
 
         $newAreaOfficeNumber = $areaOffice->getSiteNumber();
 
-        if($newAreaOfficeNumber != $oldAreaOfficeNumber) {
-            $diff+=$this->createDiffItem('Area Office', $oldAreaOfficeNumber, $newAreaOfficeNumber);
+        if ($newAreaOfficeNumber != $oldAreaOfficeNumber) {
+            $diff += $this->createDiffItem('Area Office', $oldAreaOfficeNumber, $newAreaOfficeNumber);
         }
     }
-    
+
     private function getAreaOfficeIdByNumber($aoNumber)
     {
         $allAreaOffices = $this->siteRepository->getAllAreaOffices();
-        $aoNumber = (int)$aoNumber;
+        $aoNumber = (int) $aoNumber;
 
         foreach ($allAreaOffices as $areaOffice) {
             if ($aoNumber == $areaOffice['areaOfficeNumber']) {
                 return $areaOffice['id'];
             }
         }
+
         return null;
     }
 
@@ -391,7 +389,7 @@ class UpdateAeDetailsService implements AutoWireableInterface
         $validatorChain = new ValidationChain();
 
         $fields = [
-            AuthorisedExaminerPatchModel::NAME         => function (ValidationChain &$validatorChain) use ($ae) {
+            AuthorisedExaminerPatchModel::NAME => function (ValidationChain &$validatorChain) use ($ae) {
                 $this->authorisationService->assertGrantedAtOrganisation(PermissionAtOrganisation::AE_UPDATE_NAME, $ae->getId());
                 $validatorChain->addValidator(new AeNameValidator());
             },
@@ -399,18 +397,18 @@ class UpdateAeDetailsService implements AutoWireableInterface
                 $this->authorisationService->assertGrantedAtOrganisation(PermissionAtOrganisation::AE_UPDATE_TRADING_NAME, $ae->getId());
                 $validatorChain->addValidator(new AeTradingNameValidator());
             },
-            AuthorisedExaminerPatchModel::TYPE         => function (ValidationChain &$validatorChain) use ($ae) {
+            AuthorisedExaminerPatchModel::TYPE => function (ValidationChain &$validatorChain) use ($ae) {
                 $this->authorisationService->assertGrantedAtOrganisation(PermissionAtOrganisation::AE_UPDATE_TYPE, $ae->getId());
                 $validatorChain->addValidator(new AeTypeValidator());
             },
-            AuthorisedExaminerPatchModel::STATUS       => function (ValidationChain &$validatorChain) use ($ae) {
+            AuthorisedExaminerPatchModel::STATUS => function (ValidationChain &$validatorChain) use ($ae) {
                 $this->authorisationService->assertGrantedAtOrganisation(PermissionAtOrganisation::AE_UPDATE_STATUS, $ae->getId());
                 $validatorChain->addValidator(new AeStatusValidator());
             },
-            AuthorisedExaminerPatchModel::AREA_OFFICE  => function (ValidationChain &$validatorChain) use ($ae) {
+            AuthorisedExaminerPatchModel::AREA_OFFICE => function (ValidationChain &$validatorChain) use ($ae) {
                 $this->authorisationService->assertGrantedAtOrganisation(PermissionAtOrganisation::AE_UPDATE_TYPE, $ae->getId());
                 $validatorChain->addValidator(new AeAreaOfficeValidator());
-            }
+            },
         ];
 
         foreach ($fields as $field => $addValidator) {
@@ -427,8 +425,8 @@ class UpdateAeDetailsService implements AutoWireableInterface
         return [
             $key => [
                 self::DIFF_OLD_VALUE => $oldValue,
-                self::DIFF_NEW_VALUE => $newValue
-            ]
+                self::DIFF_NEW_VALUE => $newValue,
+            ],
         ];
     }
 

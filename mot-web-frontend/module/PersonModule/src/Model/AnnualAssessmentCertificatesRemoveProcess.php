@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Model;
 
 use Core\Action\AbstractRedirectActionResult;
@@ -7,7 +8,6 @@ use Core\TwoStepForm\FormContextInterface;
 use Core\TwoStepForm\SingleStepProcessInterface;
 use Core\ViewModel\Gds\Table\GdsTable;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
-use Dvsa\Mot\Frontend\PersonModule\Model\AnnualAssessmentCertificatesFormContext;
 use Dvsa\Mot\Frontend\PersonModule\Routes\AnnualAssessmentCertificatesRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\AnnualAssessmentCertificatesPermissions;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -19,18 +19,17 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesRemoveViewModel;
 use Zend\Form\Form;
-use Zend\View\Model\ViewModel;
 
 class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInterface, AutoWireableInterface
 {
-    /** @var  AnnualAssessmentCertificatesFormContext */
+    /** @var AnnualAssessmentCertificatesFormContext */
     private $context;
     private $contextProvider;
     private $routes;
     private $apiResource;
     private $breadcrumbs;
     private $permissions;
-    /** @var  MotTestingAnnualCertificateDto */
+    /** @var MotTestingAnnualCertificateDto */
     private $dto;
 
     public function __construct(
@@ -54,9 +53,10 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
     }
 
     /**
-     * Will make a call to API to update the data from the form
+     * Will make a call to API to update the data from the form.
      *
      * @param $formData
+     *
      * @return
      */
     public function update($formData)
@@ -70,7 +70,8 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
 
     /**
      * Gets the values that the form should be pre-populated with.
-     * (e.g. old values)
+     * (e.g. old values).
+     *
      * @return array
      */
     public function getPrePopulatedData()
@@ -91,7 +92,7 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
      */
     public function getSubmitButtonText()
     {
-        return "Remove certificate";
+        return 'Remove certificate';
     }
 
     /**
@@ -99,6 +100,7 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
      * Returning null means there are no breadcrumbs to display.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return array
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
@@ -111,7 +113,7 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
     }
 
     /**
-     * Zend form used to edit values
+     * Zend form used to edit values.
      *
      * @return Form
      */
@@ -121,50 +123,51 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
     }
 
     /**
-     * Tells what message should be shown to the user when the form has been successfully submitted
+     * Tells what message should be shown to the user when the form has been successfully submitted.
      *
      * @return string
      */
     public function getSuccessfulEditMessage()
     {
-        return sprintf("Group %s annual assessment certificate removed successfully.", $this->context->getGroup());
+        return sprintf('Group %s annual assessment certificate removed successfully.', $this->context->getGroup());
     }
 
     /**
-     * The title that will be displayed on the form page
+     * The title that will be displayed on the form page.
      *
      * @return string
      */
     public function getEditStepPageTitle()
     {
-        return "Remove your assessment certificate";
+        return 'Remove your assessment certificate';
     }
 
     /**
-     * The sub title that will be displayed on the edit and review pages
+     * The sub title that will be displayed on the edit and review pages.
      *
      * @return string
      */
     public function getPageSubTitle()
     {
-        return "Your profile";
+        return 'Your profile';
     }
 
     /**
      * @param Form $form
+     *
      * @return AnnualAssessmentCertificatesRemoveViewModel
      */
     public function buildEditStepViewModel($form)
     {
         $table = new GdsTable();
-        $table->newRow()->setLabel("Certificate number")->setValue(
+        $table->newRow()->setLabel('Certificate number')->setValue(
             $this->dto->getCertificateNumber()
         );
-        $table->newRow()->setLabel("Date awarded")->setValue(
+        $table->newRow()->setLabel('Date awarded')->setValue(
             $this->dto->getExamDate()->format(DateTimeDisplayFormat::FORMAT_DATE)
         );
-        $table->newRow()->setLabel("Score achieved")->setValue(
-            $this->dto->getScore()."%"
+        $table->newRow()->setLabel('Score achieved')->setValue(
+            $this->dto->getScore().'%'
         );
 
         return new AnnualAssessmentCertificatesRemoveViewModel(
@@ -174,8 +177,8 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
             $this->getSubmitButtonText(),
             $this->routes->getRoute(),
             [
-                "id" => $this->context->getTargetPersonId(),
-                "group" => $this->context->getGroup(),
+                'id' => $this->context->getTargetPersonId(),
+                'group' => $this->context->getGroup(),
             ]
         );
     }
@@ -188,15 +191,16 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
         $route = $this->routes->getRoute();
 
         return new RedirectToRoute($route, [
-            "id" => $this->context->getTargetPersonId(),
-            "group" => $this->context->getGroup()
+            'id' => $this->context->getTargetPersonId(),
+            'group' => $this->context->getGroup(),
         ]);
     }
 
     /**
-     * Says if the users is authorised to reach the page
+     * Says if the users is authorised to reach the page.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return bool
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
@@ -209,7 +213,7 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
 
     public function getEditPageLede()
     {
-        return sprintf("Confirm that you want to remove the Group %s annual assessment certificate",
+        return sprintf('Confirm that you want to remove the Group %s annual assessment certificate',
             $this->context->getGroup());
     }
 }

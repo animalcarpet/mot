@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -102,6 +103,7 @@ class EnforcementMotTestDifference extends Entity
     public function setComment($comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 
@@ -121,6 +123,7 @@ class EnforcementMotTestDifference extends Entity
     public function setDecision($decision)
     {
         $this->decision = $decision;
+
         return $this;
     }
 
@@ -140,6 +143,7 @@ class EnforcementMotTestDifference extends Entity
     public function setDecisionCategory($decisionCategory)
     {
         $this->decisionCategory = $decisionCategory;
+
         return $this;
     }
 
@@ -159,6 +163,7 @@ class EnforcementMotTestDifference extends Entity
     public function setMotTest($motTest)
     {
         $this->motTest = $motTest;
+
         return $this;
     }
 
@@ -178,6 +183,7 @@ class EnforcementMotTestDifference extends Entity
     public function setMotTestResult($motTestResult)
     {
         $this->motTestResult = $motTestResult;
+
         return $this;
     }
 
@@ -197,6 +203,7 @@ class EnforcementMotTestDifference extends Entity
     public function setMotTestRfr($motTestRfr)
     {
         $this->motTestRfr = $motTestRfr;
+
         return $this;
     }
 
@@ -216,6 +223,7 @@ class EnforcementMotTestDifference extends Entity
     public function setMotTestType(MotTestType $motTestType)
     {
         $this->motTestType = $motTestType;
+
         return $this;
     }
 
@@ -235,6 +243,7 @@ class EnforcementMotTestDifference extends Entity
     public function setRfr($rfr)
     {
         $this->rfr = $rfr;
+
         return $this;
     }
 
@@ -254,6 +263,7 @@ class EnforcementMotTestDifference extends Entity
     public function setScore($score)
     {
         $this->score = $score;
+
         return $this;
     }
 

@@ -7,13 +7,10 @@ use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\SiteBusinessRoleService;
 
 /**
- * Class SiteRoleController
- *
- * @package SiteApi\Controller
+ * Class SiteRoleController.
  */
 class SiteRoleController extends AbstractDvsaRestfulController
 {
-
     public function getList()
     {
         $personId = $this->params()->fromRoute('personId');

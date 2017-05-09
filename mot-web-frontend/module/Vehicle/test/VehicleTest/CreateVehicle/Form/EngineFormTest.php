@@ -83,7 +83,8 @@ class EngineFormTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::ERROR_CAPACITY_MUST_BE_NUMERIC, $form->getMessages()[EngineForm::FIELD_CAPACITY][0]);
     }
 
-    public function nonNumericInputsDataProvider() {
+    public function nonNumericInputsDataProvider()
+    {
         return [
             ['A'],
             ['a'],
@@ -96,7 +97,8 @@ class EngineFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function validDataDataProvider() {
+    public function validDataDataProvider()
+    {
         return [
             [FuelTypeCode::PETROL, '1400'],
             [FuelTypeCode::DIESEL, '1400'],
@@ -119,7 +121,7 @@ class EngineFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             EngineForm::FIELD_FUEL_TYPE => $fuelType,
-            EngineForm::FIELD_CAPACITY => $capacity
+            EngineForm::FIELD_CAPACITY => $capacity,
         ];
     }
 

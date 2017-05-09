@@ -14,9 +14,8 @@ class MethodNotAllowedException extends ServiceException
     public function __construct(
         $message = 'Method is not allowed',
         $statusCode = Response::STATUS_CODE_405,
-        \Exception $previous  = null
-    )
-    {
+        \Exception $previous = null
+    ) {
         parent::__construct($message, $statusCode, $previous);
         $this->addError($message, $statusCode);
     }

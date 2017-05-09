@@ -3,7 +3,7 @@
 namespace DvsaEntities\Repository;
 
 /**
- * Repository for brake test types
+ * Repository for brake test types.
  */
 class BrakeTestTypeRepository extends AbstractMutableRepository
 {

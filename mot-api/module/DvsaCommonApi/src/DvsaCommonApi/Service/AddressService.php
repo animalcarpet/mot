@@ -10,7 +10,7 @@ use DvsaEntities\Entity\Address;
 use Zend\Stdlib\Hydrator\AbstractHydrator;
 
 /**
- * Service to handle Address entities
+ * Service to handle Address entities.
  */
 class AddressService extends AbstractService
 {
@@ -32,7 +32,7 @@ class AddressService extends AbstractService
 
     public function persist(Address $address, array $data, $isNeedValidate = true)
     {
-        if ((bool)$isNeedValidate) {
+        if ((bool) $isNeedValidate) {
             $this->validator->validate($data);
         }
 

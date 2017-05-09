@@ -1,17 +1,18 @@
 <?php
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Form\LostOrForgottenSecurityQuestionForm;
-/** @var LostOrForgottenSecurityQuestionForm $form */
+
+/* @var LostOrForgottenSecurityQuestionForm $form */
 
 $this->securityQuestionText = 'Test';
 $this->layout('layout/layout-govuk.phtml');
 $this->layout()->setVariables([
     'pageTitle' => 'Second security question',
     'pageSubTitle' => 'Sign in without your security card',
-    'hideUserNav' => true
+    'hideUserNav' => true,
 ]);
 $this->headTitle('Second security question');
 
-$successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
 echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
 $this->layout()->flashMessenger->clearCurrentMessages();
 ?>

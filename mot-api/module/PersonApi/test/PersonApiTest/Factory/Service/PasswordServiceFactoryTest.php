@@ -8,7 +8,6 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use AccountApi\Service\OpenAmIdentityService;
 use PersonApi\Service\PasswordService;
 use PersonApi\Factory\Service\PasswordServiceFactory;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class PasswordServiceFactoryTest extends \PHPUnit_Framework_TestCase

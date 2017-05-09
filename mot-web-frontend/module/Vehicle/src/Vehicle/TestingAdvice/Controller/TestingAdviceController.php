@@ -19,34 +19,35 @@ class TestingAdviceController extends AbstractAuthActionController implements Au
         $this->paramObfuscator = $paramObfuscator;
     }
 
-    public function displayAction() {
-        $vehicleId = $this->params()->fromRoute("id");
-        $noRegistration = $this->params()->fromQuery("noRegistration");
-        $source = $this->params()->fromQuery("source");
-        $motTestNumber = $this->params()->fromQuery("motTestNumber");
-        $navigateFrom = $this->params()->fromQuery("navigateFrom");
+    public function displayAction()
+    {
+        $vehicleId = $this->params()->fromRoute('id');
+        $noRegistration = $this->params()->fromQuery('noRegistration');
+        $source = $this->params()->fromQuery('source');
+        $motTestNumber = $this->params()->fromQuery('motTestNumber');
+        $navigateFrom = $this->params()->fromQuery('navigateFrom');
 
-        if ($navigateFrom == "home-page") {
+        if ($navigateFrom == 'home-page') {
             // navigated from home page
 
-            $backLinkUrl = "/";
-            $backLinkLabel = "Return home";
+            $backLinkUrl = '/';
+            $backLinkLabel = 'Return home';
             $motTestResultsUrl = MotTestRoutes::of($this->url())->motTest($motTestNumber);
-            $breadcrumbs = ["MOT testing" => $motTestResultsUrl, "Testing advice for this vehicle" => ""];
+            $breadcrumbs = ['MOT testing' => $motTestResultsUrl, 'Testing advice for this vehicle' => ''];
 
             $vehicleId = $this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
-        } else if ($motTestNumber) {
+        } elseif ($motTestNumber) {
             // navigated from a running mot test
 
             $backLinkUrl = MotTestRoutes::of($this->url())->motTest($motTestNumber);
-            $backLinkLabel = "Back to MOT test results";
-            $breadcrumbs = ["MOT test results" => $backLinkUrl, "Testing advice for this vehicle" => ""];
+            $backLinkLabel = 'Back to MOT test results';
+            $breadcrumbs = ['MOT test results' => $backLinkUrl, 'Testing advice for this vehicle' => ''];
         } else {
             // navigated from vehicle page, right before starting mot test
 
             $backLinkUrl = MotTestRoutes::of($this->url())->vehicleMotTestStartTest($vehicleId, $noRegistration, $source);
-            $backLinkLabel = "Back to confirm vehicle";
-            $breadcrumbs = ["MOT testing" => $backLinkUrl, "Testing advice for this vehicle" => ""];
+            $backLinkLabel = 'Back to confirm vehicle';
+            $breadcrumbs = ['MOT testing' => $backLinkUrl, 'Testing advice for this vehicle' => ''];
             $vehicleId = $this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
         }
 

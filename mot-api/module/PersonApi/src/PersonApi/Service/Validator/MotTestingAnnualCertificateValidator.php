@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\Validator;
 
 use DvsaCommon\ApiClient\Person\MotTestingAnnualCertificate\Dto\MotTestingAnnualCertificateDto;
@@ -10,7 +11,6 @@ use DvsaCommonApi\Service\Validator\AbstractValidator;
 use PersonApi\Input\MotTestingCertificate\CertificateNumberInput;
 use PersonApi\Input\MotTestingCertificate\ScoreInput;
 use PersonApi\Input\MotTestingCertificate\DateOfQualificationInput;
-use Zend\InputFilter\Input;
 use Zend\InputFilter\InputFilter;
 
 class MotTestingAnnualCertificateValidator extends AbstractValidator implements AutoWireableInterface
@@ -25,7 +25,6 @@ class MotTestingAnnualCertificateValidator extends AbstractValidator implements 
             ->add(new CertificateNumberInput())
             ->add(new ScoreInput())
             ->add(new DateOfQualificationInput(new DateTimeHolder()));
-
     }
 
     public function validate(MotTestingAnnualCertificateDto $dto)

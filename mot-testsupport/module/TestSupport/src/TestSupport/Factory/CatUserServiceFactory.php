@@ -13,6 +13,7 @@ class CatUserServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new CatUserService($accountService);
+
         return $service;
     }
 }

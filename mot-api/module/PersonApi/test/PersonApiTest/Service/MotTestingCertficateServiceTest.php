@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service;
 
 use DvsaCommon\Enum\VehicleClassGroupCode;
@@ -27,8 +28,6 @@ use PersonApi\Service\Validator\MotTestingCertificateValidator;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\DtoSerialization\DtoReflectiveDeserializer;
-use DvsaCommon\DtoSerialization\DtoReflector;
-use DvsaCommon\DtoSerialization\DtoConvertibleTypesRegistry;
 use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 use PersonApi\Service\PersonalDetailsService;
@@ -38,7 +37,7 @@ use DvsaEntities\Repository\VehicleClassRepository;
 use PersonApi\Service\MotTestingCertificate\RemoveMotTestingCertificateService;
 use PersonApi\Service\MotTestingCertificate\MotTestingCertificateNotification;
 
-class MotTestingCertificateServiceTest extends AbstractServiceTestCase
+class MotTestingCertficateServiceTest extends AbstractServiceTestCase
 {
     const PERSON_ID = 1234;
 
@@ -96,22 +95,22 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->personRepository
             ->expects($this->any())
-            ->method("getByIdOrUsername")
-            ->willReturn((new Person())->setId(1)->setUsername("username1"));
+            ->method('getByIdOrUsername')
+            ->willReturn((new Person())->setId(1)->setUsername('username1'));
 
         $this->authorisation = XMock::of(MotAuthorisationServiceInterface::class);
 
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUsername")
-            ->willReturn("username1");
+            ->method('getUsername')
+            ->willReturn('username1');
 
         $this->motIdentity = XMock::of(MotIdentityProviderInterface::class);
         $this
             ->motIdentity
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         $this->personalAuthorisationForMotTestingService = XMock::of(PersonalAuthorisationForMotTestingService::class);
@@ -119,14 +118,14 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $personalDetails = XMock::of(PersonDetails::class);
         $personalDetails
             ->expects($this->any())
-            ->method("getRoles")
-            ->willReturn(["system" => []]);
+            ->method('getRoles')
+            ->willReturn(['system' => []]);
 
         $this->personalDetailsService = XMock::of(PersonalDetailsService::class);
         $this
             ->personalDetailsService
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn($personalDetails);
 
         $this->createMotTestingCertificateAssertion = XMock::of(CreateMotTestingCertificateAssertion::class);
@@ -139,6 +138,7 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
 
     /**
      * @dataProvider getMotTestingCertificates
+     *
      * @param array $data
      */
     public function testGetListReturnsCertificates(array $data)
@@ -146,19 +146,19 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->authorisation
             ->expects($this->any())
-            ->method("assertGranted")
+            ->method('assertGranted')
             ->willReturn(true);
 
         $this
             ->qualificationAwardRepository
             ->expects($this->any())
-            ->method("findAllByPersonId")
+            ->method('findAllByPersonId')
             ->willReturn($data);
 
         $this
             ->personRepository
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn((new Person())->setId(self::PERSON_ID));
 
         $motTestingCertificateService = $this->createMotTestingCertificateService();
@@ -174,6 +174,7 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
 
     /**
      * @dataProvider getMotTestingCertificate
+     *
      * @param QualificationAward $cert
      */
     public function testGetReturnsCertificate(QualificationAward $cert = null)
@@ -181,19 +182,19 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->authorisation
             ->expects($this->any())
-            ->method("assertGranted")
+            ->method('assertGranted')
             ->willReturn(true);
 
         $this
             ->qualificationAwardRepository
             ->expects($this->any())
-            ->method("getOneByGroupAndPersonId")
+            ->method('getOneByGroupAndPersonId')
             ->willReturn($cert);
 
         $this
             ->personRepository
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn((new Person())->setId(self::PERSON_ID));
 
         $motTestingCertificateService = $this->createMotTestingCertificateService();
@@ -210,13 +211,13 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->authorisation
             ->expects($this->any())
-            ->method("assertGranted")
+            ->method('assertGranted')
             ->willReturn(true);
 
         $this
             ->vehicleClassGroupRepository
             ->expects($this->any())
-            ->method("getByCode")
+            ->method('getByCode')
             ->willReturnCallback(function ($group) {
                 $vehicleClassGroup = new VehicleClassGroup();
                 $vehicleClassGroup
@@ -230,35 +231,35 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
             $this
                 ->siteRepository
                 ->expects($this->exactly(0))
-                ->method("getBySiteNumber");
+                ->method('getBySiteNumber');
         } else {
             $this
                 ->siteRepository
                 ->expects($this->any())
-                ->method("getBySiteNumber")
+                ->method('getBySiteNumber')
                 ->willReturn((new Site())->setSiteNumber($data->getSiteNumber()));
         }
 
         $this
             ->personRepository
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn((new Person())->setId(1));
 
         $this
             ->authorisationForTestingMotRepository
             ->expects($this->once())
-            ->method("flush");
+            ->method('flush');
 
         $this
             ->event
             ->expects($this->once())
-            ->method("sendCreateEvent");
+            ->method('sendCreateEvent');
 
         $this
             ->notification
             ->expects($this->once())
-            ->method("sendCreateNotification");
+            ->method('sendCreateNotification');
 
         $dto = $this->createMotTestingCertificateService()->create($data->getVehicleClassGroupCode(), $data);
 
@@ -276,13 +277,13 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->authorisation
             ->expects($this->any())
-            ->method("assertGranted")
+            ->method('assertGranted')
             ->willReturn(true);
 
         $this
             ->vehicleClassGroupRepository
             ->expects($this->any())
-            ->method("getByCode")
+            ->method('getByCode')
             ->willReturnCallback(function ($group) {
                 $vehicleClassGroup = new VehicleClassGroup();
                 $vehicleClassGroup
@@ -295,7 +296,7 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->qualificationAwardRepository
             ->expects($this->any())
-            ->method("getOneByGroupAndPersonId")
+            ->method('getOneByGroupAndPersonId')
             ->willReturnCallback(function () use ($data) {
                 $vehicleClassGroup = new VehicleClassGroup();
                 $vehicleClassGroup->setCode($data->getVehicleClassGroupCode());
@@ -314,8 +315,8 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
                     ->setPerson((new Person())->setUsername($this->motIdentity->getIdentity()->getUsername()))
                     ->setVehicleClassGroup($vehicleClassGroup)
                     ->setSite($site)
-                    ->setCertificateNumber("someCert")
-                    ->setDateOfQualification(new \DateTime("2011-11-22"));
+                    ->setCertificateNumber('someCert')
+                    ->setDateOfQualification(new \DateTime('2011-11-22'));
 
                 return $motTestingCertificate;
             });
@@ -324,19 +325,19 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
             $this
                 ->siteRepository
                 ->expects($this->exactly(0))
-                ->method("getBySiteNumber");
+                ->method('getBySiteNumber');
         } else {
             $this
                 ->siteRepository
                 ->expects($this->any())
-                ->method("getBySiteNumber")
+                ->method('getBySiteNumber')
                 ->willReturn((new Site())->setSiteNumber($data->getSiteNumber()));
         }
 
         $this
             ->event
             ->expects($this->once())
-            ->method("sendUpdateEvent");
+            ->method('sendUpdateEvent');
 
         $dto = $this->createMotTestingCertificateService()->update($data->getVehicleClassGroupCode(), 1, $data);
 
@@ -352,26 +353,26 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
             [
                 $this->createMotTestingCertificateDto(
                     [
-                        "id" => null,
-                        "vehicleClassGroupCode" => VehicleClassGroupCode::BIKES,
-                        "siteNumber" => "",
-                        "certificateNumber" =>"certNum123",
-                        "dateOfQualification" => "2015-09-12"
+                        'id' => null,
+                        'vehicleClassGroupCode' => VehicleClassGroupCode::BIKES,
+                        'siteNumber' => '',
+                        'certificateNumber' => 'certNum123',
+                        'dateOfQualification' => '2015-09-12',
                     ]
-                )
+                ),
 
             ],
 
             [
                 $this->createMotTestingCertificateDto([
-                    "id" => null,
-                    "vehicleClassGroupCode" => VehicleClassGroupCode::BIKES,
-                    "siteNumber" => "V1234",
-                    "certificateNumber" =>"certNum123",
-                    "dateOfQualification" => "2015-09-12"
-                ])
+                    'id' => null,
+                    'vehicleClassGroupCode' => VehicleClassGroupCode::BIKES,
+                    'siteNumber' => 'V1234',
+                    'certificateNumber' => 'certNum123',
+                    'dateOfQualification' => '2015-09-12',
+                ]),
 
-            ]
+            ],
         ];
     }
 
@@ -387,7 +388,7 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
             [$this->createMotTestingCertificates(23)],
             [[$this->createMotTestingCertificate(1, VehicleClassGroupCode::BIKES)]],
             [[$this->createMotTestingCertificate(1, VehicleClassGroupCode::CARS_ETC)]],
-            [[]]
+            [[]],
         ];
     }
 
@@ -404,7 +405,7 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
         $testerGroupAuthorisationMapper = XMock::of(TesterGroupAuthorisationMapper::class);
         $testerGroupAuthorisationMapper
             ->expects($this->any())
-            ->method("getAuthorisation")
+            ->method('getAuthorisation')
             ->willReturn(new TesterAuthorisation());
 
         return new MotTestingCertificateService(
@@ -432,6 +433,7 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
 
     /**
      * @param int $siteId
+     *
      * @return array
      */
     private function createMotTestingCertificates($siteId = null)
@@ -444,9 +446,10 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param int $id
+     * @param int    $id
      * @param string $vehicleClassGroupCode
-     * @param int $siteId
+     * @param int    $siteId
+     *
      * @return QualificationAward
      */
     private function createMotTestingCertificate($id, $vehicleClassGroupCode, $siteId = null)
@@ -456,11 +459,11 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
             ->setId($id)
             ->setPerson((new Person())->setId(self::PERSON_ID))
             ->setVehicleClassGroup((new VehicleClassGroup())->setCode($vehicleClassGroupCode))
-            ->setCertificateNumber("NUMBER" . $id)
+            ->setCertificateNumber('NUMBER'.$id)
             ->setDateOfQualification((new \DateTime()));
 
         if ($siteId !== null) {
-            $cert->setSite((new Site())->setId($siteId)->setSiteNumber("number" . $siteId));
+            $cert->setSite((new Site())->setId($siteId)->setSiteNumber('number'.$siteId));
         }
 
         return $cert;

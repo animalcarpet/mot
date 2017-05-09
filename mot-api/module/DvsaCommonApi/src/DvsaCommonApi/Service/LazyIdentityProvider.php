@@ -14,7 +14,6 @@ use Zend\Http\Request;
  */
 class LazyIdentityProvider implements MotIdentityProviderInterface
 {
-
     /** @var Request $request */
     private $request;
 
@@ -73,7 +72,7 @@ class LazyIdentityProvider implements MotIdentityProviderInterface
         $accessToken = str_replace('Bearer ', '', $authHeader->getFieldValue());
 
         /**
-         * @var Session $session
+         * @var Session
          */
         $session = $this->getValidSession($accessToken);
 

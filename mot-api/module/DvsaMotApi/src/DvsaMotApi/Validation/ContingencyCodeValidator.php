@@ -15,22 +15,24 @@ class ContingencyCodeValidator extends Callback
     const INVALID = 'invalidContingencyCode';
 
     protected $messageTemplates = [
-        self::INVALID => "must be a valid contingency code",
+        self::INVALID => 'must be a valid contingency code',
     ];
 
     /**
      * Returns true if and only if the set callback returns
-     * for the provided $value
+     * for the provided $value.
      *
-     * @param  mixed $value
-     * @param  mixed $context Additional context to provide to the callback
+     * @param mixed $value
+     * @param mixed $context Additional context to provide to the callback
+     *
      * @return bool
+     *
      * @throws Exception\InvalidArgumentException
      */
     public function isValid($value, $context = null)
     {
         $this->setValue($value);
-        $options  = $this->getCallbackOptions();
+        $options = $this->getCallbackOptions();
         $callback = $this->getCallback();
         if (empty($callback)) {
             throw new Exception\InvalidArgumentException('No callback given');
@@ -44,11 +46,12 @@ class ContingencyCodeValidator extends Callback
         }
         if (!empty($options) && !empty($context)) {
             $args[] = $context;
-            $args   = array_merge($args, $options);
+            $args = array_merge($args, $options);
         }
 
         if (!call_user_func_array($callback, $args)) {
             $this->error(self::INVALID);
+
             return false;
         }
 

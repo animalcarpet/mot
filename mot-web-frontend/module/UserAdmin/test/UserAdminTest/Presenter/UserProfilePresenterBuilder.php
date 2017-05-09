@@ -12,7 +12,7 @@ use UserAdmin\Service\PersonRoleManagementService;
 use UserAdmin\ViewModel\UserProfile\TesterAuthorisationViewModel;
 
 /**
- * Builder for UserProfilePresenter object in unit tests
+ * Builder for UserProfilePresenter object in unit tests.
  */
 class UserProfilePresenterBuilder
 {
@@ -27,7 +27,7 @@ class UserProfilePresenterBuilder
     /** @var int $personId */
     private $personId;
 
-    /** @var \PHPUnit_Framework_TestCase $testCase*/
+    /** @var \PHPUnit_Framework_TestCase $testCase */
     private $testCase;
 
     /**
@@ -83,20 +83,20 @@ class UserProfilePresenterBuilder
     public function withTradeRoles()
     {
         $this->catalogService->expects($this->testCase->atLeastOnce())
-            ->method("getBusinessRoles")
+            ->method('getBusinessRoles')
             ->willReturn(self::buildSiteAndOrganisationCatalog());
 
         return $this->setTradeRoles(
             [
                 'organisations' => [
                     [
-                        'roles' => ['AEDM']
-                    ]
+                        'roles' => ['AEDM'],
+                    ],
                 ],
-                'sites'         => [
+                'sites' => [
                     [
-                        'roles' => ['TESTER']
-                    ]
+                        'roles' => ['TESTER'],
+                    ],
                 ],
             ]
         );
@@ -209,7 +209,7 @@ class UserProfilePresenterBuilder
             ->setLastName('Jones')
             ->setDateOfBirth('1992-05-29')
             ->setAddress($address)
-            ->setEmail('userprofilepresentertest@' . EmailAddressValidator::TEST_DOMAIN)
+            ->setEmail('userprofilepresentertest@'.EmailAddressValidator::TEST_DOMAIN)
             ->setTelephone('+768-45-4433630');
     }
 
@@ -220,12 +220,12 @@ class UserProfilePresenterBuilder
     {
         return [
             [
-                'id'   => 1,
+                'id' => 1,
                 'code' => 'AEDM',
                 'name' => 'Authorised Examiner Designated Manager',
             ],
             [
-                'id'   => 1,
+                'id' => 1,
                 'code' => 'TESTER',
                 'name' => 'Tester',
             ],

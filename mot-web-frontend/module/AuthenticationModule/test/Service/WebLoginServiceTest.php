@@ -4,8 +4,6 @@ namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Service;
 
 use Account\Service\ExpiredPasswordService;
 use Core\Service\LazyMotFrontendAuthorisationService;
-use Dvsa\Mot\ApiClient\Resource\Collection;
-use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardOrder;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebAuthenticationCookieService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
@@ -157,7 +155,7 @@ class WebLoginServiceTest extends \PHPUnit_Framework_TestCase
         return (new AuthenticationResponseDto())
             ->setAuthnCode(AuthenticationResultCode::SUCCESS)
             ->setExtra(null)
-            ->setAccessToken("someToken")
+            ->setAccessToken('someToken')
             ->setUser((new AuthenticatedUserDto())
                 ->setDisplayName('displayName')
                 ->setUserId(5)
@@ -181,5 +179,4 @@ class WebLoginServiceTest extends \PHPUnit_Framework_TestCase
             $this->authorisationServiceClient
         );
     }
-
 }

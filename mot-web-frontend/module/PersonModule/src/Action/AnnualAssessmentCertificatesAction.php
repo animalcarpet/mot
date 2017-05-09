@@ -94,6 +94,7 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
     {
         $personId = $context->getTargetPersonId();
         $annualAssessmentCertificates = $this->annualAssessmentCertificatesMapper->getAnnualAssessmentCertificates($personId, $group);
+
         return new AnnualAssessmentCertificatesGroupViewModel(
             $annualAssessmentCertificates,
             $context,
@@ -117,6 +118,7 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
 
     /**
      * @param FormContext $formContext
+     *
      * @return bool
      */
     private function isUserViewingHisOwnProfile(FormContext $formContext)

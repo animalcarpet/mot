@@ -7,14 +7,12 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Step;
 
-
-
 class CompletedStep extends AbstractRegistrationStep
 {
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "COMPLETE";
+    const STEP_ID = 'COMPLETE';
 
     /**
      * @return string

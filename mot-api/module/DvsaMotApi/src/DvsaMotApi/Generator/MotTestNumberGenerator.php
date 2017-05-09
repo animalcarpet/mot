@@ -3,7 +3,7 @@
 namespace DvsaMotApi\Generator;
 
 /**
- * Generates a unique determined number ("MOT Test Number") by seed (that should be DB MOT Test Id)
+ * Generates a unique determined number ("MOT Test Number") by seed (that should be DB MOT Test Id).
  *
  * - Must not start with 0 (zero).
  * - Must be 12 digits long (11 digits for number + 1 digits for checksum).
@@ -26,11 +26,11 @@ namespace DvsaMotApi\Generator;
  */
 class MotTestNumberGenerator
 {
-    const EXCEPTION_MOT_TEST_NUMBER_BASE_TYPE = "Mot Test Number Base type should be a string.";
-    const EXCEPTION_INCORRECT_LENGTH = "Mot Test Number Base should be 11 characters in length.";
+    const EXCEPTION_MOT_TEST_NUMBER_BASE_TYPE = 'Mot Test Number Base type should be a string.';
+    const EXCEPTION_INCORRECT_LENGTH = 'Mot Test Number Base should be 11 characters in length.';
     const EXCEPTION_MOT_TEST_NUMBER_BASE_STARTS_WITH_ZERO = "Mot Test Number Base must not start with '0'.";
-    const EXCEPTION_MOT_TEST_ID_NEGATIVE = "MOT Test ID should be greater than zero.";
-    const EXCEPTION_MOT_TEST_ID_TYPE = "MOT Test ID must an integer.";
+    const EXCEPTION_MOT_TEST_ID_NEGATIVE = 'MOT Test ID should be greater than zero.';
+    const EXCEPTION_MOT_TEST_ID_TYPE = 'MOT Test ID must an integer.';
 
     const MOT_TEST_NUMBER_BASE_LENGTH = 11;
     const MOT2_CHECKSUM_ADDITION = 4;
@@ -55,7 +55,7 @@ class MotTestNumberGenerator
     {
         $motNumberWithoutChecksumDigit = self::generateMotTestNumberBaseFromId($motTestId);
 
-        return strval($motNumberWithoutChecksumDigit . self::generateChecksumDigit($motNumberWithoutChecksumDigit));
+        return strval($motNumberWithoutChecksumDigit.self::generateChecksumDigit($motNumberWithoutChecksumDigit));
     }
 
     /**
@@ -97,6 +97,7 @@ class MotTestNumberGenerator
      * @param string $motTestNumberBase
      *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public static function generateChecksumDigit($motTestNumberBase)
@@ -117,12 +118,12 @@ class MotTestNumberGenerator
         $weightedMaskDigits = str_split(self::$weightedMask);
 
         $total = 0;
-        for ($i = 0; $i < self::MOT_TEST_NUMBER_BASE_LENGTH; $i++) {
-            $total += (int)$motTestNumberBaseDigits[$i] * (int)$weightedMaskDigits[$i];
+        for ($i = 0; $i < self::MOT_TEST_NUMBER_BASE_LENGTH; ++$i) {
+            $total += (int) $motTestNumberBaseDigits[$i] * (int) $weightedMaskDigits[$i];
         }
 
         $mod = bcmod($total, self::$checksumDivisionInteger);
 
-        return strval(((int)$mod + self::MOT2_CHECKSUM_ADDITION) % 10);
+        return strval(((int) $mod + self::MOT2_CHECKSUM_ADDITION) % 10);
     }
 }

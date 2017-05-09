@@ -17,32 +17,31 @@ use DvsaEntities\Repository\MessageTypeRepository;
 use DvsaEntities\Repository\PersonRepository;
 use UserApi\Message\Service\MessageService;
 use UserApi\Message\Service\Validator\MessageValidator;
-use Zend\ServiceManager\ServiceManager;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 
 class MessageServiceTest extends AbstractServiceTestCase
 {
     protected $mockEntityManager;
 
-    /** @var   MessageRepository|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MessageRepository|\PHPUnit_Framework_MockObject_MockObject */
     protected $mockMessageRepo;
 
-    /** @var  MessageTypeRepository|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MessageTypeRepository|\PHPUnit_Framework_MockObject_MockObject */
     protected $mockMessageTypeRepo;
 
-    /** @var  PersonRepository|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var PersonRepository|\PHPUnit_Framework_MockObject_MockObject */
     protected $mockPersonRepository;
 
-    /** @var  MotAuthorisationServiceInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotAuthorisationServiceInterface|\PHPUnit_Framework_MockObject_MockObject */
     protected $mockAuthorisationService;
 
-    /** @var  MessageValidator */
+    /** @var MessageValidator */
     protected $messageValidator;
 
-    /** @var  DateTimeHolder|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DateTimeHolder|\PHPUnit_Framework_MockObject_MockObject */
     protected $mockDateTimeHolder;
 
-    /** @var  MessageService */
+    /** @var MessageService */
     protected $service;
 
     protected $openAMIdentityServiceMock;
@@ -58,7 +57,7 @@ class MessageServiceTest extends AbstractServiceTestCase
 
         $this->mockMessageRepo = XMock::of(
             MessageRepository::class,
-            ['hasAlreadyRequestedMessage','persist','flush']
+            ['hasAlreadyRequestedMessage', 'persist', 'flush']
         );
 
         // Mock Message Repository
@@ -139,7 +138,7 @@ class MessageServiceTest extends AbstractServiceTestCase
 
         $data = [
           'personId' => '',
-            'mesageTypeCoder' => '' // Invalid Parameter
+            'mesageTypeCoder' => '', // Invalid Parameter
         ];
 
         $this->service->createMessage($data);
@@ -147,11 +146,10 @@ class MessageServiceTest extends AbstractServiceTestCase
 
     public function testCreateMessageWithInvalidPersonWillThrowException()
     {
-
-        $this->setExpectedException(NotFoundException::class, 'Person ' . 5 . ' not found');
+        $this->setExpectedException(NotFoundException::class, 'Person '. 5 .' not found');
         $data = [
             'personId' => 5,
-            'messageTypeCode' => MessageTypeCode::ACCOUNT_RESET_BY_LETTER
+            'messageTypeCode' => MessageTypeCode::ACCOUNT_RESET_BY_LETTER,
         ];
 
         // Below doesn't exist according to our mocking
@@ -159,7 +157,7 @@ class MessageServiceTest extends AbstractServiceTestCase
         $mockPersonRepository->expects($this->once())
             ->method('get')
             ->with(5)
-            ->will($this->throwException(new NotFoundException('Person ' . 5 . ' not found')));
+            ->will($this->throwException(new NotFoundException('Person '. 5 .' not found')));
 
         $service = $this->getService($mockPersonRepository);
 
@@ -212,9 +210,9 @@ class MessageServiceTest extends AbstractServiceTestCase
         $person = $this->getMockPerson()->getPerson();
         $this->setExpectedException(
             BadRequestException::class,
-            'A password reset letter has already been requested for ' .
-            $person->getFirstName() . ' ' . $person->getFamilyName()
-            . ' today.');
+            'A password reset letter has already been requested for '.
+            $person->getFirstName().' '.$person->getFamilyName()
+            .' today.');
         $messageType = new MessageType();
         $messageType->setCode(MessageTypeCode::PASSWORD_RESET_BY_LETTER);
 
@@ -264,9 +262,9 @@ class MessageServiceTest extends AbstractServiceTestCase
         return new Identity($person);
     }
 
-    protected function getMockMessage() {
+    protected function getMockMessage()
+    {
         $message = new Message();
         $message->setId(2);
     }
-
 }

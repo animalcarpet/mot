@@ -14,15 +14,16 @@ use Zend\Form\View\Helper\FormLabel;
 class MotFormLabel extends FormLabel
 {
     /**
-     * Generate a form label, optionally with content
+     * Generate a form label, optionally with content.
      *
      * Always generates a "for" statement, as we cannot assume the form input
      * will be provided in the $labelContent.
      *
-     * @param  ElementInterface $element
-     * @param  bool $renderErrors
-     * @param  null|string $labelContent
-     * @param  string $position
+     * @param ElementInterface $element
+     * @param bool             $renderErrors
+     * @param null|string      $labelContent
+     * @param string           $position
+     *
      * @return string|FormLabel
      */
     public function __invoke(ElementInterface $element = null, $renderErrors = null, $labelContent = null, $position = null)
@@ -38,7 +39,7 @@ class MotFormLabel extends FormLabel
             if (empty($label)) {
                 throw new Exception\DomainException(
                     sprintf(
-                        '%s expects either label content as the second argument, ' .
+                        '%s expects either label content as the second argument, '.
                         'or that the element provided has a label attribute; neither found',
                         __METHOD__
                     )
@@ -55,11 +56,9 @@ class MotFormLabel extends FormLabel
             }
 
             if ($renderErrors) {
-
                 $messages = $element->getMessages();
 
                 if (!empty($messages)) {
-
                     $message = array_shift($messages);
 
                     if (!is_null($translator = $this->getTranslator())) {
@@ -83,7 +82,7 @@ class MotFormLabel extends FormLabel
                     break;
                 case self::PREPEND:
                 default:
-                    $labelContent = $label . $labelContent;
+                    $labelContent = $label.$labelContent;
                     break;
             }
         }
@@ -92,6 +91,6 @@ class MotFormLabel extends FormLabel
             $labelContent = $label;
         }
 
-        return $openTag . $labelContent . $this->closeTag();
+        return $openTag.$labelContent.$this->closeTag();
     }
 }

@@ -17,4 +17,3 @@ class PersonDetailsChangeNotificationHelperFactory implements FactoryInterface
         return new PersonDetailsChangeNotificationHelper($notificationService);
     }
 }
-

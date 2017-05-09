@@ -2,15 +2,11 @@
 
 namespace Site\Fieldset;
 
-use Zend\Captcha;
-use Zend\Form\Element;
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
-use Zend\Stdlib\Hydrator\ObjectProperty as ObjectPropertyHydrator;
 
 /**
- * Generates radio buttons and submit button for roles
+ * Generates radio buttons and submit button for roles.
  */
 class VehicleTestingStationFormFieldSet extends Fieldset implements InputFilterProviderInterface
 {
@@ -21,16 +17,16 @@ class VehicleTestingStationFormFieldSet extends Fieldset implements InputFilterP
 
         $this->add(
             [
-                'name'       => 'siteName',
-                'type'       => 'text',
-                'id'         => 'siteName',
-                'options'    => [
-                    'label' => 'VTS Trading As Name:'
+                'name' => 'siteName',
+                'type' => 'text',
+                'id' => 'siteName',
+                'options' => [
+                    'label' => 'VTS Trading As Name:',
                 ],
                 'attributes' => [
-                    'id'       => 'siteName',
+                    'id' => 'siteName',
                     'required' => true,
-                    'class'    => 'form-control',
+                    'class' => 'form-control',
                 ],
             ]
         );
@@ -47,21 +43,21 @@ class VehicleTestingStationFormFieldSet extends Fieldset implements InputFilterP
     {
         return [
             [
-                'name'       => 'siteName',
-                'required'   => 'true',
+                'name' => 'siteName',
+                'required' => 'true',
                 'validators' => [
                     [
-                        'name'    => 'string_length',
+                        'name' => 'string_length',
                         'options' => [
                             'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 100,
+                            'min' => 1,
+                            'max' => 100,
                             'messages' => [
-                                \Zend\Validator\StringLength::TOO_LONG => 'Site name should be 100 characters or less'
+                                \Zend\Validator\StringLength::TOO_LONG => 'Site name should be 100 characters or less',
                             ],
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
         ];
     }

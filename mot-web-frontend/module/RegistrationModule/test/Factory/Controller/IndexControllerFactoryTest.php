@@ -17,7 +17,6 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * Class IndexControllerFactoryTest.
  */
-
 class IndexControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -27,7 +26,7 @@ class IndexControllerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $service  =  XMock::of(RegistrationStepService::class);
+        $service = XMock::of(RegistrationStepService::class);
         $serviceManager->setService(RegistrationStepService::class, $service);
 
         $plugins = $this->getMock(ControllerManager::class);

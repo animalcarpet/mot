@@ -2,41 +2,34 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action;
 
-use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller\AlreadyOrderedNewCardController;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderNewViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
-use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 
 class CardOrderProtection implements AutoWireableInterface
 {
     /**
-     * @var MotFrontendIdentityProvider $identityProvider
+     * @var MotFrontendIdentityProvider
      */
     private $identityProvider;
 
     /**
-     * @var SecurityCardGuard $securityCardGuard
+     * @var SecurityCardGuard
      */
     private $securityCardGuard;
 
     /**
-     * @var TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
+     * @var TesterGroupAuthorisationMapper
      */
     private $testerGroupAuthorisationMapper;
 
     /**
-     * @var TwoFaFeatureToggle $twoFaFeatureToggle
+     * @var TwoFaFeatureToggle
      */
     private $twoFaFeatureToggle;
 
@@ -70,7 +63,7 @@ class CardOrderProtection implements AutoWireableInterface
 
         if ($cannotEnterJourney && $hasOutstandingCardOrder) {
             return new RedirectToRoute(AlreadyOrderedNewCardController::ROUTE);
-        } else if ($cannotEnterJourney) {
+        } elseif ($cannotEnterJourney) {
             return new RedirectToRoute(UserHomeController::ROUTE);
         }
     }

@@ -3,13 +3,11 @@
 namespace DvsaCommonApi\Service\Exception;
 
 /**
- * Class InvalidFieldValueException
- *
- * @package DvsaCommonApi\Service\Exception
+ * Class InvalidFieldValueException.
  */
 class InvalidFieldValueException extends ServiceException
 {
-    const MESSAGE = "Invalid field value";
+    const MESSAGE = 'Invalid field value';
     const ERROR_CODE_INVALID_FIELD_VALUE = 21;
 
     public function __construct($message = null)

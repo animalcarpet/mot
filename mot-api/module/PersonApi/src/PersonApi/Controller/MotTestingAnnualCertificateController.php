@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Controller;
 
 use DvsaCommon\ApiClient\Person\MotTestingAnnualCertificate\Dto\MotTestingAnnualCertificateDto;
@@ -17,14 +18,14 @@ class MotTestingAnnualCertificateController extends AbstractDvsaRestfulControlle
         MotTestingAnnualCertificateService $motTestingAnnualCertificateService,
         DtoReflectiveDeserializer $deserializer
     ) {
-        $this->setIdentifierName("certificateId");
+        $this->setIdentifierName('certificateId');
         $this->motTestingAnnualCertificateService = $motTestingAnnualCertificateService;
         $this->deserializer = $deserializer;
     }
 
     public function getList()
     {
-        $personId = (int)$this->params()->fromRoute("id");
+        $personId = (int) $this->params()->fromRoute('id');
         $group = $this->params()->fromRoute('group');
 
         return $this->returnDto($this->motTestingAnnualCertificateService->getListByGroup($personId, $group));
@@ -32,7 +33,7 @@ class MotTestingAnnualCertificateController extends AbstractDvsaRestfulControlle
 
     public function get($certificateId)
     {
-        $personId = (int)$this->params()->fromRoute("id");
+        $personId = (int) $this->params()->fromRoute('id');
         $group = $this->params()->fromRoute('group');
 
         return $this->returnDto($this->motTestingAnnualCertificateService->get($certificateId, $personId, $group));
@@ -40,7 +41,7 @@ class MotTestingAnnualCertificateController extends AbstractDvsaRestfulControlle
 
     public function create($data)
     {
-        $personId = (int)$this->params()->fromRoute('id');
+        $personId = (int) $this->params()->fromRoute('id');
         $group = $this->params()->fromRoute('group');
 
         /** @var MotTestingAnnualCertificateDto $dto */
@@ -51,7 +52,7 @@ class MotTestingAnnualCertificateController extends AbstractDvsaRestfulControlle
 
     public function update($certificateId, $data)
     {
-        $personId = (int)$this->params()->fromRoute('id');
+        $personId = (int) $this->params()->fromRoute('id');
         $group = $this->params()->fromRoute('group');
 
         /** @var MotTestingAnnualCertificateDto $dto */
@@ -62,7 +63,7 @@ class MotTestingAnnualCertificateController extends AbstractDvsaRestfulControlle
 
     public function delete($certificateId)
     {
-        $personId = (int)$this->params()->fromRoute('id');
+        $personId = (int) $this->params()->fromRoute('id');
         $group = $this->params()->fromRoute('group');
 
         $this->motTestingAnnualCertificateService->delete($personId, $group, $certificateId);

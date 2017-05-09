@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service\MotTestingCertificate\Event;
 
 use DvsaCommon\Enum\EventTypeCode;
@@ -24,27 +25,27 @@ class MotTestingCertificateEventTest extends \PHPUnit_Framework_TestCase
 
     private $eventServiceSpy;
 
-    public  function setUp()
+    public function setUp()
     {
         $this->eventService = XMock::of(EventService::class);
 
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUsername")
-            ->willReturn("username1");
+            ->method('getUsername')
+            ->willReturn('username1');
 
         $this->motIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
         $this
             ->motIdentityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         $this
             ->eventService
             ->expects($this->eventServiceSpy = $this->once())
-            ->method("addEvent");
+            ->method('addEvent');
     }
 
     /**
@@ -135,23 +136,24 @@ class MotTestingCertificateEventTest extends \PHPUnit_Framework_TestCase
         $motTestingCertificateA = new QualificationAward();
         $motTestingCertificateA
             ->setVehicleClassGroup((new VehicleClassGroup())->setCode(VehicleClassGroupCode::BIKES))
-            ->setCertificateNumber("certNum123")
-            ->setDateOfQualification(new \DateTime("2012-09-09"))
+            ->setCertificateNumber('certNum123')
+            ->setDateOfQualification(new \DateTime('2012-09-09'))
             ;
 
         $motTestingCertificateB = new QualificationAward();
         $motTestingCertificateB
             ->setVehicleClassGroup((new VehicleClassGroup())->setCode(VehicleClassGroupCode::CARS_ETC))
-            ->setCertificateNumber("certNum123")
-            ->setDateOfQualification(new \DateTime("2012-09-09"))
+            ->setCertificateNumber('certNum123')
+            ->setDateOfQualification(new \DateTime('2012-09-09'))
         ;
+
         return [
             [
-                $motTestingCertificateA
+                $motTestingCertificateA,
             ],
             [
-                $motTestingCertificateB
-            ]
+                $motTestingCertificateB,
+            ],
         ];
     }
 }

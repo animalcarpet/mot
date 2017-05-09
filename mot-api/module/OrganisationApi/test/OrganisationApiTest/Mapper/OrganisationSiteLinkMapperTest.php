@@ -12,9 +12,7 @@ use DvsaEntities\Entity\Site;
 use OrganisationApi\Service\Mapper\OrganisationSiteLinkMapper;
 
 /**
- * Test functionality of OrganisationSiteLinkMapper class
- *
- * @package OrganisationApiTest\Mapper
+ * Test functionality of OrganisationSiteLinkMapper class.
  */
 class OrganisationSiteLinkMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +20,7 @@ class OrganisationSiteLinkMapperTest extends \PHPUnit_Framework_TestCase
     const ORG_ID = 9999;
     const SITE_ID = 8888;
 
-    /** @var  OrganisationSiteLinkMapper */
+    /** @var OrganisationSiteLinkMapper */
     private $mapper;
 
     public function setUp()
@@ -55,7 +53,7 @@ class OrganisationSiteLinkMapperTest extends \PHPUnit_Framework_TestCase
 
     public static function getOrganisationSiteMap()
     {
-        $entity = new OrganisationSiteMap;
+        $entity = new OrganisationSiteMap();
 
         $entity
             ->setId(self::LINK_ID)

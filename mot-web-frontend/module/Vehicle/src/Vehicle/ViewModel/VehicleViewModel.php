@@ -212,7 +212,7 @@ class VehicleViewModel
     }
 
     /**
-     * @param boolean $shouldDisplayVehicleMaskedBanner
+     * @param bool $shouldDisplayVehicleMaskedBanner
      *
      * @return $this
      */

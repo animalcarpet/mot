@@ -9,9 +9,7 @@ use OrganisationApi\Model\RoleAvailability;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class OrganisationRoleService
- *
- * @package OrganisationApi\Service
+ * Class OrganisationRoleService.
  */
 class OrganisationRoleService
 {
@@ -31,17 +29,18 @@ class OrganisationRoleService
         AuthenticationService $motIdentityProvider
     ) {
         $this->organisationRepository = $organisationRepository;
-        $this->personRepository       = $personRepository;
-        $this->authorizationService   = $authorizationService;
-        $this->nominationVerifier     = $nominationVerifier;
-        $this->motIdentityProvider    = $motIdentityProvider;
+        $this->personRepository = $personRepository;
+        $this->authorizationService = $authorizationService;
+        $this->nominationVerifier = $nominationVerifier;
+        $this->motIdentityProvider = $motIdentityProvider;
     }
 
     /**
      * @param int $organisationId
-     * @param int $nomineeId    Person's Id who going to be nominated for one of returning role
+     * @param int $nomineeId      Person's Id who going to be nominated for one of returning role
      *
-     * @return array                                              array of strings
+     * @return array array of strings
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getListForPerson($organisationId,  $nomineeId)

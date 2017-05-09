@@ -7,17 +7,11 @@ use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaElasticSearch\Query\FbQueryMotTestLog;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
-use \PHPUnit_Framework_TestCase;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\DateTime;
 use DvsaCommon\Dto\Search\MotTestSearchParamsDto;
 
 /**
- * Class FbQueryMotTestLogTest
- *
- * @package DvsaElasticSearchTest\Query
+ * Class FbQueryMotTestLogTest.
  */
 class FbQueryMotTestLogTest extends \PHPUnit_Framework_TestCase
 {

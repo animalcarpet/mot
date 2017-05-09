@@ -16,7 +16,7 @@ use Dashboard\Controller\UserHomeController;
 class RegisterCardInformationController extends AbstractDvsaActionController
 {
     const REGISTER_CARD_INFORMATION_ROUTE = 'security-card-information';
-    const PAGE_TITLE = "Changes to your account security";
+    const PAGE_TITLE = 'Changes to your account security';
 
     /**
      * @var RegisterCardInformationCookieService
@@ -34,16 +34,16 @@ class RegisterCardInformationController extends AbstractDvsaActionController
     protected $response;
 
     /**
-     * @var MotIdentityProviderInterface $motIdentityProvider
+     * @var MotIdentityProviderInterface
      */
     private $motIdentityProvider;
 
     /**
-     * @var LazyMotFrontendAuthorisationService $authorisationService
+     * @var LazyMotFrontendAuthorisationService
      */
     private $authorisationService;
 
-    /** @var  TwoFaFeatureToggle */
+    /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
     public function __construct(
@@ -53,8 +53,7 @@ class RegisterCardInformationController extends AbstractDvsaActionController
         MotIdentityProviderInterface $motIdentityProvider,
         LazyMotFrontendAuthorisationService $authorisationService,
         TwoFaFeatureToggle $twoFaFeatureToggle
-    )
-    {
+    ) {
         $this->cookieService = $cookieService;
         $this->request = $request;
         $this->response = $response;
@@ -75,8 +74,8 @@ class RegisterCardInformationController extends AbstractDvsaActionController
             || $userId != $this->motIdentityProvider->getIdentity()->getUserId()
             || $isDvsa
             || $userHasActivatedA2FaCard) {
-
             $this->response->setStatusCode(HttpStatus::HTTP_NOT_FOUND);
+
             return new ViewModel(array('content' => 'Page not found'));
         }
 
@@ -90,6 +89,7 @@ class RegisterCardInformationController extends AbstractDvsaActionController
         $this->layout()->setVariable('pageTitle', self::PAGE_TITLE);
 
         $viewModel = new ViewModel();
+
         return $viewModel->setTemplate('2fa/register-card/register-card-information');
     }
 }

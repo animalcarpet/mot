@@ -10,9 +10,7 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 
 /**
- * Class OrganisationMapperTest
- *
- * @package DvsaClientTest\Mapper
+ * Class OrganisationMapperTest.
  */
 class OrganisationMapperTest extends AbstractMapperTest
 {
@@ -22,7 +20,7 @@ class OrganisationMapperTest extends AbstractMapperTest
     const AE_NUMBER = 'A-12345';
 
     /**
-     * @var $mapper OrganisationMapper
+     * @var OrganisationMapper
      */
     private $mapper;
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,6 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  */
 class EnforcementDecisionOutcome
 {
-
     use CommonIdentityTrait;
 
     /**
@@ -36,6 +36,7 @@ class EnforcementDecisionOutcome
     public function setOutcome($outcome)
     {
         $this->outcome = $outcome;
+
         return $this;
     }
 
@@ -55,6 +56,7 @@ class EnforcementDecisionOutcome
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 

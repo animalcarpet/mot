@@ -5,8 +5,6 @@ namespace Vehicle\UpdateVehicleProperty\Context;
 use Core\FormWizard\WizardContextInterface;
 use Core\TwoStepForm\FormContextInterface;
 use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
-use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Context;
 
 class UpdateVehicleContext extends Context implements FormContextInterface, WizardContextInterface
@@ -18,7 +16,7 @@ class UpdateVehicleContext extends Context implements FormContextInterface, Wiza
      */
     private $obfuscatedVehicleId;
 
-    /** @var  string */
+    /** @var string */
     private $requestUrl;
 
     /**
@@ -60,7 +58,7 @@ class UpdateVehicleContext extends Context implements FormContextInterface, Wiza
     {
         return $this->vehicle;
     }
-    
+
     /**
      * @return string
      */

@@ -1,13 +1,12 @@
 <?php
+
 namespace NonWorkingDaysApi;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class Module
+ * Class Module.
  */
 class Module implements AutoloaderProviderInterface, ServiceProviderInterface
 {
@@ -21,8 +20,8 @@ class Module implements AutoloaderProviderInterface, ServiceProviderInterface
             'factories' => [
                 'NonWorkingDaysProvider' => \NonWorkingDaysApi\Factory\NonWorkingDaysProviderFactory::class,
                 'NonWorkingDaysLookupManager' => \NonWorkingDaysApi\Factory\NonWorkingDaysLookupManagerFactory::class,
-                'NonWorkingDaysHelper' => \NonWorkingDaysApi\Factory\NonWorkingDaysHelperFactory::class
-            ]
+                'NonWorkingDaysHelper' => \NonWorkingDaysApi\Factory\NonWorkingDaysHelperFactory::class,
+            ],
         ];
     }
 }

@@ -22,18 +22,17 @@ class TargetedReinspectionViewModel
     /**
      * StartMotViewModel constructor.
      *
-     * @param Url $url
+     * @param Url  $url
      * @param bool $isVehicleExaminer
      * @param bool $hasTestInProgress
-     * @param int $testNumberInProgress
+     * @param int  $testNumberInProgress
      */
     public function __construct(
         $url,
         $isVehicleExaminer,
         $hasTestInProgress,
         $testNumberInProgress
-    )
-    {
+    ) {
         $this->url = $url;
         $this->isVehicleExaminer = $isVehicleExaminer;
         $this->hasTestInProgress = $hasTestInProgress;

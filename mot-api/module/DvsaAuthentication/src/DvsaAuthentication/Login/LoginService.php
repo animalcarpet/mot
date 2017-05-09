@@ -2,14 +2,12 @@
 
 namespace DvsaAuthentication\Login;
 
-use DvsaAuthentication\IdentityFactory;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Dto\Authn\AuthenticationResponseDto;
 use PersonApi\Service\PasswordExpiryService;
-use Zend\Authentication\Result;
 
 /**
- * Application service to perform all the logic relevant to login event
+ * Application service to perform all the logic relevant to login event.
  */
 class LoginService
 {
@@ -39,6 +37,7 @@ class LoginService
     /**
      * @param $username
      * @param $password
+     *
      * @return AuthenticationResponseDto
      */
     public function login($username, $password)
@@ -56,4 +55,3 @@ class LoginService
         return $this->authenticator->validateCredentials($identity->getUsername(), $password);
     }
 }
-

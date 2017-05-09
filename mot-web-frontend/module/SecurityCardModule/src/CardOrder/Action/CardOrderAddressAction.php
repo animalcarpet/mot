@@ -8,41 +8,39 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Form\SecurityCardAddressForm;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderAddressViewModel;
-use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardAddressService;
 use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
-use Zend\Form\Form;
 use Zend\Http\Request;
 
 class CardOrderAddressAction
 {
-    const ADDRESS_PAGE_TITLE = "Choose a delivery address";
-    const ADDRESS_PAGE_SUBTITLE = "Order a security card";
+    const ADDRESS_PAGE_TITLE = 'Choose a delivery address';
+    const ADDRESS_PAGE_SUBTITLE = 'Order a security card';
 
     /**
-     * @var OrderSecurityCardAddressService $orderSecurityCardAddressService
+     * @var OrderSecurityCardAddressService
      */
     private $orderSecurityCardAddressService;
 
     /**
-     * @var OrderNewSecurityCardSessionService $sessionService
+     * @var OrderNewSecurityCardSessionService
      */
     private $sessionService;
 
     /**
-     * @var OrderSecurityCardStepService $stepService
+     * @var OrderSecurityCardStepService
      */
     private $stepService;
 
     /**
-     * @var CardOrderProtection $cardOrderProtection
+     * @var CardOrderProtection
      */
     private $cardOrderProtection;
 
     public function __construct(OrderSecurityCardAddressService $orderSecurityCardAddressService,
                                 OrderNewSecurityCardSessionService $sessionService,
                                 OrderSecurityCardStepService $stepService,
-                                CardOrderProtection $cardOrderProtection )
+                                CardOrderProtection $cardOrderProtection)
     {
         $this->orderSecurityCardAddressService = $orderSecurityCardAddressService;
         $this->sessionService = $sessionService;
@@ -58,7 +56,7 @@ class CardOrderAddressAction
             return $cardOrderProtectionResult;
         }
 
-        if(!$this->stepService->isAllowedOnStep($userId, OrderSecurityCardStepService::ADDRESS_STEP)) {
+        if (!$this->stepService->isAllowedOnStep($userId, OrderSecurityCardStepService::ADDRESS_STEP)) {
             return new RedirectToRoute('security-card-order/new', ['userId' => $userId]);
         }
 
@@ -73,6 +71,7 @@ class CardOrderAddressAction
                 $postData = str_replace(['=', '@', '+'], ' ', $postData);
                 $this->savePostDataToSession($postData, $userId);
                 $this->stepService->updateStepStatus($userId, OrderSecurityCardStepService::REVIEW_STEP, true);
+
                 return new RedirectToRoute('security-card-order/review', ['userId' => $userId]);
             } else {
                 $result = new ViewActionResult();
@@ -83,6 +82,7 @@ class CardOrderAddressAction
                 $result->layout()->setPageTitle(self::ADDRESS_PAGE_TITLE);
                 $result->layout()->setPageSubTitle(self::ADDRESS_PAGE_SUBTITLE);
                 $result->setTemplate('2fa/card-order/address');
+
                 return $result;
             }
         }
@@ -97,20 +97,21 @@ class CardOrderAddressAction
         $result->layout()->setPageTitle(self::ADDRESS_PAGE_TITLE);
         $result->layout()->setPageSubTitle(self::ADDRESS_PAGE_SUBTITLE);
         $result->setTemplate('2fa/card-order/address');
+
         return $result;
     }
-
 
     /**
      * @param array $values
      * @param $userId
+     *
      * @throws \Exception
      */
     public function savePostDataToSession(array $values, $userId)
     {
         $addressData = [];
         if (is_array($values) && count($values)) {
-            if($values[SecurityCardAddressForm::ADDRESS_RADIOS] != SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE) {
+            if ($values[SecurityCardAddressForm::ADDRESS_RADIOS] != SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE) {
                 $address = $this->getAddressInformationByAddressChoice($values['addressChoice'], $userId);
                 (isset($address[SecurityCardAddressForm::NAME_FIELD_KEY]) && $address[SecurityCardAddressForm::NAME_FIELD_KEY] != 'Home') ? $addressData['vtsName'] = $address[SecurityCardAddressForm::NAME_FIELD_KEY] : $addressData['vtsName'] = '';
                 $addressData['address1'] = $address['addressLine1'];
@@ -138,6 +139,7 @@ class CardOrderAddressAction
     /**
      * @param SecurityCardAddressForm $form
      * @param $userId
+     *
      * @return SecurityCardAddressForm
      */
     private function populateForm(SecurityCardAddressForm $form, $userId)
@@ -151,22 +153,26 @@ class CardOrderAddressAction
                 $form->getAddressRadios()->setValue($addressData['addressChoice']);
             }
         }
+
         return $form;
     }
 
     /**
      * @param $indexKey
+     *
      * @return mixed
+     *
      * @throws \Exception
      */
-    private function getAddressInformationByAddressChoice($indexKey, $userId) {
+    private function getAddressInformationByAddressChoice($indexKey, $userId)
+    {
         $addresses = $this->sessionService->loadByGuid($userId)[OrderNewSecurityCardSessionService::ADDRESS_SESSION_STORE];
 
-        foreach($addresses as $key => $address) {
-            if($indexKey == $key) {
+        foreach ($addresses as $key => $address) {
+            if ($indexKey == $key) {
                 return $address;
             }
         }
-        throw new \Exception('Address option of ' . $indexKey . ' not found in session data');
+        throw new \Exception('Address option of '.$indexKey.' not found in session data');
     }
 }

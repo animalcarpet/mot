@@ -3,7 +3,7 @@
 namespace UserApi\Dashboard\Dto;
 
 /**
- * Vts representation
+ * Vts representation.
  */
 class Site
 {
@@ -45,7 +45,7 @@ class Site
     }
 
     /**
-     * Array representation of this object
+     * Array representation of this object.
      *
      * @return array
      */
@@ -59,10 +59,10 @@ class Site
         }
 
         return [
-            'id'         => $this->getId(),
-            'name'       => $this->getName(),
+            'id' => $this->getId(),
+            'name' => $this->getName(),
             'siteNumber' => $this->getSiteNumber(),
-            'positions'  => $roles
+            'positions' => $roles,
         ];
     }
 
@@ -74,6 +74,7 @@ class Site
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -93,6 +94,7 @@ class Site
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -112,6 +114,7 @@ class Site
     public function setSiteNumber($siteNumber)
     {
         $this->siteNumber = $siteNumber;
+
         return $this;
     }
 

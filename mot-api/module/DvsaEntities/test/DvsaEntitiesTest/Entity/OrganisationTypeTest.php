@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\OrganisationType;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class OrganisationTypeTest
+ * Class OrganisationTypeTest.
  */
 class OrganisationTypeTest extends PHPUnit_Framework_TestCase
 {

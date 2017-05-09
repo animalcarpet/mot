@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\Controller;
 
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
@@ -20,7 +21,7 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 use DvsaMotTestTest\TestHelper\Fixture;
 
 /**
- * Class BrakeTestResultsControllerTest
+ * Class BrakeTestResultsControllerTest.
  */
 class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
 {
@@ -61,6 +62,7 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -69,6 +71,7 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 
@@ -81,6 +84,7 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
      * @param null $expectedLocation
      *
      * @dataProvider brakeTestConfigurationTestItems
+     *
      * @param $motTestNumber
      * @param $vehicleClass
      * @param $isPost
@@ -135,57 +139,57 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     public static function brakeTestConfigurationTestItems()
     {
         $postParamsClass1 = [
-            'brakeTestType'      => BrakeTestTypeCode::ROLLER,
+            'brakeTestType' => BrakeTestTypeCode::ROLLER,
             'vehicleWeightFront' => '100',
-            'vehicleWeightRear'  => '50',
-            'riderWeight'        => '80',
-            'isSidecarAttached'  => '1',
-            'sidecarWeight'      => '40',
+            'vehicleWeightRear' => '50',
+            'riderWeight' => '80',
+            'isSidecarAttached' => '1',
+            'sidecarWeight' => '40',
         ];
         $postParamsClass4 = [
-            'serviceBrake1TestType'     => BrakeTestTypeCode::ROLLER,
-            'serviceBrake2TestType'     => BrakeTestTypeCode::ROLLER,
-            'parkingBrakeTestType'      => BrakeTestTypeCode::PLATE,
-            'weightType'                => 'presented',
-            'vehicleWeight'             => '1000',
-            'brakeLineType'             => 'single',
-            'numberOfAxles'             => '2',
+            'serviceBrake1TestType' => BrakeTestTypeCode::ROLLER,
+            'serviceBrake2TestType' => BrakeTestTypeCode::ROLLER,
+            'parkingBrakeTestType' => BrakeTestTypeCode::PLATE,
+            'weightType' => 'presented',
+            'vehicleWeight' => '1000',
+            'brakeLineType' => 'single',
+            'numberOfAxles' => '2',
             'parkingBrakeNumberOfAxles' => '0',
-            'serviceBrakeIsSingleLine'  => true,
-            'weightIsUnladen'           => '1',
-            'isCommercialVehicle'       => false,
+            'serviceBrakeIsSingleLine' => true,
+            'weightIsUnladen' => '1',
+            'isCommercialVehicle' => false,
         ];
 
         return [
             [
-                'motTestNumber'    => 1,
-                'vehicleClass'     => VehicleClassCode::CLASS_4,
-                'isPost'           => false,
-                'postParams'       => null,
+                'motTestNumber' => 1,
+                'vehicleClass' => VehicleClassCode::CLASS_4,
+                'isPost' => false,
+                'postParams' => null,
                 'expectedTemplate' => BrakeTestResultsController::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE,
             ],
             [
-                'motTestNumber'    => 1,
-                'vehicleClass'     => VehicleClassCode::CLASS_1,
-                'isPost'           => false,
-                'postParams'       => null,
+                'motTestNumber' => 1,
+                'vehicleClass' => VehicleClassCode::CLASS_1,
+                'isPost' => false,
+                'postParams' => null,
                 'expectedTemplate' => BrakeTestResultsController::TEMPLATE_CONFIG_CLASS_1_2,
             ],
             [
-                'motTestNumber'    => 1,
-                'vehicleClass'     => VehicleClassCode::CLASS_1,
-                'isPost'           => true,
-                'postParams'       => $postParamsClass1,
+                'motTestNumber' => 1,
+                'vehicleClass' => VehicleClassCode::CLASS_1,
+                'isPost' => true,
+                'postParams' => $postParamsClass1,
                 'expectedTemplate' => null,
-                'expectedLocation' => '/mot-test/1/brake-test-results'
+                'expectedLocation' => '/mot-test/1/brake-test-results',
             ],
             [
-                'motTestNumber'    => 1,
-                'vehicleClass'     => VehicleClassCode::CLASS_4,
-                'isPost'           => true,
-                'postParams'       => $postParamsClass4,
+                'motTestNumber' => 1,
+                'vehicleClass' => VehicleClassCode::CLASS_4,
+                'isPost' => true,
+                'postParams' => $postParamsClass4,
                 'expectedTemplate' => null,
-                'expectedLocation' => '/mot-test/1/brake-test-results'
+                'expectedLocation' => '/mot-test/1/brake-test-results',
             ],
         ];
     }
@@ -196,14 +200,14 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
 
         $vehicleWeight = '1000';
         $queryData = [
-            'vehicleWeight'             => $vehicleWeight,
-            'weightType'                => 'vsi',
-            'serviceBrake1TestType'     => BrakeTestTypeCode::ROLLER,
-            'parkingBrakeTestType'      => BrakeTestTypeCode::ROLLER,
-            'brakeLineType'             => 'dual',
-            'numberOfAxles'             => '2',
+            'vehicleWeight' => $vehicleWeight,
+            'weightType' => 'vsi',
+            'serviceBrake1TestType' => BrakeTestTypeCode::ROLLER,
+            'parkingBrakeTestType' => BrakeTestTypeCode::ROLLER,
+            'brakeLineType' => 'dual',
+            'numberOfAxles' => '2',
             'parkingBrakeNumberOfAxles' => '1',
-            'vehicleClass' => VehicleClassCode::CLASS_4
+            'vehicleClass' => VehicleClassCode::CLASS_4,
         ];
 
         $this->brakeTestConfigurationContainerMock->expects($this->any())
@@ -255,14 +259,14 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
             ->will($this->returnValue($vehicleData));
 
         $queryData = [
-            'vehicleWeight'             => $vehicleWeight,
-            'weightType'                => 'vsi',
-            'serviceBrake1TestType'     => BrakeTestTypeCode::ROLLER,
-            'parkingBrakeTestType'      => BrakeTestTypeCode::ROLLER,
-            'brakeLineType'             => 'dual',
-            'numberOfAxles'             => '2',
+            'vehicleWeight' => $vehicleWeight,
+            'weightType' => 'vsi',
+            'serviceBrake1TestType' => BrakeTestTypeCode::ROLLER,
+            'parkingBrakeTestType' => BrakeTestTypeCode::ROLLER,
+            'brakeLineType' => 'dual',
+            'numberOfAxles' => '2',
             'parkingBrakeNumberOfAxles' => '1',
-            'vehicleClass' => VehicleClassCode::CLASS_4
+            'vehicleClass' => VehicleClassCode::CLASS_4,
         ];
 
         $this->brakeTestConfigurationContainerMock
@@ -272,48 +276,48 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
 
         $postData = [
             'serviceBrakeEffortNearsideAxle1' => $brakeTestValue,
-            'serviceBrakeEffortOffsideAxle1'  => $brakeTestValue,
+            'serviceBrakeEffortOffsideAxle1' => $brakeTestValue,
             'serviceBrakeEffortNearsideAxle2' => $brakeTestValue,
-            'serviceBrakeEffortOffsideAxle2'  => $brakeTestValue,
-            'parkingBrakeEffortNearside'      => $brakeTestValue,
-            'parkingBrakeEffortOffside'       => $brakeTestValue,
-            'parkingBrakeLockOffside'         => '1',
-            'parkingBrakeLockNearside'        => '0',
-            'vehicleClass' => VehicleClassCode::CLASS_4
+            'serviceBrakeEffortOffsideAxle2' => $brakeTestValue,
+            'parkingBrakeEffortNearside' => $brakeTestValue,
+            'parkingBrakeEffortOffside' => $brakeTestValue,
+            'parkingBrakeLockOffside' => '1',
+            'parkingBrakeLockNearside' => '0',
+            'vehicleClass' => VehicleClassCode::CLASS_4,
         ];
 
         $expectedRestPostData = [
-            'vehicleWeight'              => $vehicleWeight,
-            'weightType'                 => 'vsi',
-            'serviceBrake1TestType'      => BrakeTestTypeCode::ROLLER,
-            'parkingBrakeTestType'       => BrakeTestTypeCode::ROLLER,
-            'numberOfAxles'              => 2,
-            'parkingBrakeNumberOfAxles'  => 1,
+            'vehicleWeight' => $vehicleWeight,
+            'weightType' => 'vsi',
+            'serviceBrake1TestType' => BrakeTestTypeCode::ROLLER,
+            'parkingBrakeTestType' => BrakeTestTypeCode::ROLLER,
+            'numberOfAxles' => 2,
+            'parkingBrakeNumberOfAxles' => 1,
             'parkingBrakeEffortNearside' => $brakeTestValue,
-            'parkingBrakeEffortOffside'  => $brakeTestValue,
-            'parkingBrakeLockNearside'   => null,
-            'parkingBrakeLockOffside'    => true,
-            'serviceBrakeIsSingleLine'   => false,
-            'weightIsUnladen'            => false,
-            'isCommercialVehicle'        => false,
-            'serviceBrake1Data'          => [
+            'parkingBrakeEffortOffside' => $brakeTestValue,
+            'parkingBrakeLockNearside' => null,
+            'parkingBrakeLockOffside' => true,
+            'serviceBrakeIsSingleLine' => false,
+            'weightIsUnladen' => false,
+            'isCommercialVehicle' => false,
+            'serviceBrake1Data' => [
                 'effortNearsideAxle1' => $brakeTestValue,
-                'effortOffsideAxle1'  => $brakeTestValue,
+                'effortOffsideAxle1' => $brakeTestValue,
                 'effortNearsideAxle2' => $brakeTestValue,
-                'effortOffsideAxle2'  => $brakeTestValue,
-                'lockNearsideAxle1'   => false,
-                'lockOffsideAxle1'    => false,
-                'lockNearsideAxle2'   => false,
-                'lockOffsideAxle2'    => false,
+                'effortOffsideAxle2' => $brakeTestValue,
+                'lockNearsideAxle1' => false,
+                'lockOffsideAxle1' => false,
+                'lockNearsideAxle2' => false,
+                'lockOffsideAxle2' => false,
             ],
-            'serviceBrakeControlsCount'  => 0,
-            'parkingBrakeEffortSingle'   => null,
-            'parkingBrakeLockSingle'     => null,
-            'isParkingBrakeOnTwoWheels'  => true,
-            'isSingleInFront'            => null,
-            'serviceBrake2TestType'      => null,
-            '_class'                     => BrakeTestConfigurationClass3AndAboveDto::class,
-            'vehicleClass' => VehicleClassCode::CLASS_4
+            'serviceBrakeControlsCount' => 0,
+            'parkingBrakeEffortSingle' => null,
+            'parkingBrakeLockSingle' => null,
+            'isParkingBrakeOnTwoWheels' => true,
+            'isSingleInFront' => null,
+            'serviceBrake2TestType' => null,
+            '_class' => BrakeTestConfigurationClass3AndAboveDto::class,
+            'vehicleClass' => VehicleClassCode::CLASS_4,
         ];
 
         $this->getBrakeTestResultsResourcesMock()
@@ -353,10 +357,10 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
 
         $queryData = [
             'vehicleWeightFront' => $brakeTestValue,
-            'vehicleWeightRear'  => $brakeTestValue,
-            'riderWeight'        => $brakeTestValue,
-            'isSidecarAttached'  => '0',
-            'brakeTestType'      => BrakeTestTypeCode::ROLLER,
+            'vehicleWeightRear' => $brakeTestValue,
+            'riderWeight' => $brakeTestValue,
+            'isSidecarAttached' => '0',
+            'brakeTestType' => BrakeTestTypeCode::ROLLER,
         ];
 
         $this->brakeTestConfigurationContainerMock->expects($this->any())
@@ -365,34 +369,34 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
 
         $postData = [
             'control1EffortFront' => $brakeTestValue,
-            'control1EffortRear'  => $brakeTestValue,
+            'control1EffortRear' => $brakeTestValue,
             'control2EffortFront' => $brakeTestValue,
-            'control2EffortRear'  => $brakeTestValue,
-            'control1LockFront'   => 1,
-            'control1LockRear'    => 0,
-            'vehicleClass'        => VehicleClassCode::CLASS_1
+            'control2EffortRear' => $brakeTestValue,
+            'control1LockFront' => 1,
+            'control1LockRear' => 0,
+            'vehicleClass' => VehicleClassCode::CLASS_1,
         ];
         $this->setPostAndPostParams($postData);
 
         $expectedRestPostData = array_merge(
             [
                 'control1EffortFront' => $brakeTestValue,
-                'control1EffortRear'  => $brakeTestValue,
+                'control1EffortRear' => $brakeTestValue,
                 'control2EffortFront' => $brakeTestValue,
-                'control2EffortRear'  => $brakeTestValue,
-                'vehicleWeightFront'    => $brakeTestValue,
-                'vehicleWeightRear'     => $brakeTestValue,
-                'riderWeight'           => $brakeTestValue,
-                'isSidecarAttached'     => false,
-                'brakeTestType'         => BrakeTestTypeCode::ROLLER,
-                'control1LockFront'     => true,
-                'control1LockRear'      => false,
+                'control2EffortRear' => $brakeTestValue,
+                'vehicleWeightFront' => $brakeTestValue,
+                'vehicleWeightRear' => $brakeTestValue,
+                'riderWeight' => $brakeTestValue,
+                'isSidecarAttached' => false,
+                'brakeTestType' => BrakeTestTypeCode::ROLLER,
+                'control1LockFront' => true,
+                'control1LockRear' => false,
                 'control1EffortSidecar' => null,
-                'control2LockFront'     => false,
-                'control2LockRear'      => false,
+                'control2LockFront' => false,
+                'control2LockRear' => false,
                 'control2EffortSidecar' => null,
-                'sidecarWeight'         => null,
-                '_class'                => BrakeTestConfigurationClass1And2Dto::class
+                'sidecarWeight' => null,
+                '_class' => BrakeTestConfigurationClass1And2Dto::class,
             ]
         );
 
@@ -514,7 +518,7 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     {
         $motTestNumber = 1;
         $data = Fixture::getMotTestDataVehicleClass4(true);
-        $data->status = "PASSED";
+        $data->status = 'PASSED';
         $testMotTestData = new MotTest($data);
 
         $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
@@ -543,88 +547,78 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         return [
             [
                 [
-                    "input"  =>
-                        [
+                    'input' => [
                             'gradientControl1' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_ABOVE_30,
                             'gradientControl2' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_ABOVE_30,
-                            'vehicleClass'     => VehicleClassCode::CLASS_1
+                            'vehicleClass' => VehicleClassCode::CLASS_1,
                         ],
-                    "output" =>
-                        [
+                    'output' => [
                             'gradientControl1AboveUpperMinimum' => true,
                             'gradientControl2AboveUpperMinimum' => true,
-                            'gradientControl1BelowMinimum'      => false,
-                            'gradientControl2BelowMinimum'      => false,
-                        ]
-                ]
+                            'gradientControl1BelowMinimum' => false,
+                            'gradientControl2BelowMinimum' => false,
+                        ],
+                ],
             ],
             [
                 [
-                    "input"  =>
-                        [
+                    'input' => [
                             'gradientControl1' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_BETWEEN_30_AND_25,
                             'gradientControl2' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_ABOVE_30,
-                            'vehicleClass'     => VehicleClassCode::CLASS_1
+                            'vehicleClass' => VehicleClassCode::CLASS_1,
                         ],
-                    "output" =>
-                        [
+                    'output' => [
                             'gradientControl1AboveUpperMinimum' => false,
-                            'gradientControl1BelowMinimum'      => false,
+                            'gradientControl1BelowMinimum' => false,
                             'gradientControl2AboveUpperMinimum' => true,
-                            'gradientControl2BelowMinimum'      => false,
-                        ]
-                ]
+                            'gradientControl2BelowMinimum' => false,
+                        ],
+                ],
             ],
             [
                 [
-                    "input"  =>
-                        [
+                    'input' => [
                             'gradientControl1' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_BELOW_25,
                             'gradientControl2' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_ABOVE_30,
-                            'vehicleClass'     => VehicleClassCode::CLASS_1
+                            'vehicleClass' => VehicleClassCode::CLASS_1,
                         ],
-                    "output" =>
-                        [
+                    'output' => [
                             'gradientControl1AboveUpperMinimum' => false,
-                            'gradientControl1BelowMinimum'      => true,
+                            'gradientControl1BelowMinimum' => true,
                             'gradientControl2AboveUpperMinimum' => true,
-                            'gradientControl2BelowMinimum'      => false,
-                        ]
-                ]
+                            'gradientControl2BelowMinimum' => false,
+                        ],
+                ],
             ],
             [
                 [
-                    "input"  =>
-                        [
+                    'input' => [
                             'gradientControl1' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_BELOW_25,
                             'gradientControl2' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_BELOW_25,
-                            'vehicleClass'     => VehicleClassCode::CLASS_1
+                            'vehicleClass' => VehicleClassCode::CLASS_1,
                         ],
-                    "output" =>
-                        [
+                    'output' => [
                             'gradientControl1AboveUpperMinimum' => false,
-                            'gradientControl1BelowMinimum'      => true,
+                            'gradientControl1BelowMinimum' => true,
                             'gradientControl2AboveUpperMinimum' => false,
-                            'gradientControl2BelowMinimum'      => true,
-                        ]
-                ]
+                            'gradientControl2BelowMinimum' => true,
+                        ],
+                ],
             ],
             [
                 [
-                    "input"  =>
-                        [
+                    'input' => [
                             'gradientControl1' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_BETWEEN_30_AND_25,
                             'gradientControl2' => BrakeTestResultClass1And2ViewModel::EFFICIENCY_BETWEEN_30_AND_25,
-                            'vehicleClass'     => VehicleClassCode::CLASS_1
+                            'vehicleClass' => VehicleClassCode::CLASS_1,
                         ],
-                    "output" =>
-                        [
+                    'output' => [
                             'gradientControl1AboveUpperMinimum' => false,
-                            'gradientControl1BelowMinimum'      => false,
+                            'gradientControl1BelowMinimum' => false,
                             'gradientControl2AboveUpperMinimum' => false,
-                            'gradientControl2BelowMinimum'      => false,
-                        ]
-                ]
+                            'gradientControl2BelowMinimum' => false,
+                        ],
+                ],
             ],
         ];
     }
@@ -660,7 +654,7 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
 
         $queryData = [
             'isSidecarAttached' => '0',
-            'brakeTestType'     => BrakeTestTypeCode::GRADIENT,
+            'brakeTestType' => BrakeTestTypeCode::GRADIENT,
         ];
         $this->brakeTestConfigurationContainerMock
             ->expects($this->any())
@@ -672,19 +666,19 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
 
         $expectedRestPostData = array_replace_recursive(
             [
-                'isSidecarAttached'     => false,
-                'brakeTestType'         => BrakeTestTypeCode::GRADIENT,
-                'sidecarWeight'         => null,
+                'isSidecarAttached' => false,
+                'brakeTestType' => BrakeTestTypeCode::GRADIENT,
+                'sidecarWeight' => null,
                 'control1EffortSidecar' => null,
                 'control2EffortSidecar' => null,
-                'control2EffortFront'   => null,
-                'control2EffortRear'    => null,
-                'vehicleWeightFront'    => null,
-                'vehicleWeightRear'     => null,
-                'riderWeight'           => null,
-                'control1EffortFront'   => null,
-                'control1EffortRear'    => null,
-                '_class'                => BrakeTestConfigurationClass1And2Dto::class,
+                'control2EffortFront' => null,
+                'control2EffortRear' => null,
+                'vehicleWeightFront' => null,
+                'vehicleWeightRear' => null,
+                'riderWeight' => null,
+                'control1EffortFront' => null,
+                'control1EffortRear' => null,
+                '_class' => BrakeTestConfigurationClass1And2Dto::class,
             ],
             $testCase['output']
         );

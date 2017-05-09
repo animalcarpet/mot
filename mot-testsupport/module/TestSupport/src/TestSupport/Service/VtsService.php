@@ -25,9 +25,8 @@ use Doctrine\DBAL\DBALException;
 
 class VtsService
 {
-
     const STATUS_APPROVED = 2;
-    const NON_WORKING_DAY_COUNTRY_CODE = "GBENG";
+    const NON_WORKING_DAY_COUNTRY_CODE = 'GBENG';
 
     /**
      * @var TestSupportRestClientHelper
@@ -48,8 +47,7 @@ class VtsService
         TestSupportRestClientHelper $restClientHelper,
         EntityManager $em,
         UrlBuilder $urlBuilder
-    )
-    {
+    ) {
         $this->restClientHelper = $restClientHelper;
         $this->em = $em;
         $this->urlBuilder = $urlBuilder;
@@ -68,7 +66,7 @@ class VtsService
             'postcode' => ArrayUtils::tryGet($data, 'postcode', 'BT2 4RR'),
             'email' => ArrayUtils::tryGet($data, 'email', $email),
             'phoneNumber' => ArrayUtils::tryGet($data, 'phoneNumber', $dataGenerator->phoneNumber()),
-            'startDate' =>  ArrayUtils::tryGet($data, 'startDate', $dataGenerator->startDate()),
+            'startDate' => ArrayUtils::tryGet($data, 'startDate', $dataGenerator->startDate()),
             'classes' => VehicleClassCode::getAll(),
         ];
         $data = array_merge($data, $default);
@@ -84,12 +82,12 @@ class VtsService
 
         return TestDataResponseHelper::jsonOk(
             [
-                "message" => "VTS created",
-                "id" => $siteId,
-                "siteNumber" => $siteNumber,
-                "name" => $data["name"],
-                "town" => $data["town"],
-                "postcode" => $data["postcode"]
+                'message' => 'VTS created',
+                'id' => $siteId,
+                'siteNumber' => $siteNumber,
+                'name' => $data['name'],
+                'town' => $data['town'],
+                'postcode' => $data['postcode'],
             ]
         );
     }
@@ -138,7 +136,7 @@ class VtsService
     }
 
     /**
-     * @param int $siteId
+     * @param int   $siteId
      * @param array $data
      *
      * @throws \Exception
@@ -147,7 +145,7 @@ class VtsService
     {
         if (isset($data['aeId'])) {
             $this->em->getConnection()->executeUpdate(
-                "UPDATE site SET organisation_id = ? WHERE id = ?",
+                'UPDATE site SET organisation_id = ? WHERE id = ?',
                 [$data['aeId'], $siteId]
             );
 
@@ -178,7 +176,7 @@ class VtsService
         }
 
         $openingTimes = [];
-        for ($i = 1; $i < 8; $i++) {
+        for ($i = 1; $i < 8; ++$i) {
 
             /*
              * This isn't ideal. There is a half-hour closed window always. Overnight tests could well choke unless
@@ -192,7 +190,7 @@ class VtsService
                 'weekday' => $i,
                 'openTime' => $openTime,
                 'closeTime' => $closeTime,
-                'isClosed' => $isClosed
+                'isClosed' => $isClosed,
             ];
         }
 
@@ -203,9 +201,9 @@ class VtsService
 
     public function changeAssociatedDate($aeId, $siteId, \DateTime $startDate, \DateTime $endDate = null)
     {
-        $data = ["start_date" => $startDate->format("Y-m-d H:i:s")];
+        $data = ['start_date' => $startDate->format('Y-m-d H:i:s')];
         if ($endDate !== null) {
-            $data["end_date"] = $endDate->format("Y-m-d H:i:s");
+            $data['end_date'] = $endDate->format('Y-m-d H:i:s');
         }
 
         $this->em->getConnection()->update(
@@ -219,7 +217,7 @@ class VtsService
     {
         $this->em->getConnection()->update(
             'organisation_site_map',
-            ["end_date" => $endDate->format("Y-m-d H:i:s")],
+            ['end_date' => $endDate->format('Y-m-d H:i:s')],
             ['organisation_id' => $aeId, 'site_id' => $siteId]
         );
     }
@@ -232,30 +230,27 @@ class VtsService
             try {
                 $siteNumber = $this->updateAreaOfficeNumber($siteId);
                 $created = true;
-            } catch(DBALException $e) {
-
+            } catch (DBALException $e) {
             }
-
         } while ($created === false);
 
         return $siteNumber;
-
     }
 
     private function updateAreaOfficeNumber($siteId)
     {
-        $siteNumber =  (int) $this->em->getConnection()->fetchColumn(
-            "SELECT MAX(site_number) FROM site INNER JOIN site_type ON site.type_id = site_type.id WHERE site_type.code = ? AND LENGTH(site.site_number) = ?",
+        $siteNumber = (int) $this->em->getConnection()->fetchColumn(
+            'SELECT MAX(site_number) FROM site INNER JOIN site_type ON site.type_id = site_type.id WHERE site_type.code = ? AND LENGTH(site.site_number) = ?',
             [SiteTypeCode::AREA_OFFICE, 2]
         );
 
         $siteNumber += 1;
-        $siteNumber = str_pad($siteNumber, 2, "0", STR_PAD_LEFT);
+        $siteNumber = str_pad($siteNumber, 2, '0', STR_PAD_LEFT);
 
         $this->em->getConnection()->update(
-            "site",
-            ["site_number" => $siteNumber],
-            ["id" => $siteId]
+            'site',
+            ['site_number' => $siteNumber],
+            ['id' => $siteId]
         );
 
         return $siteNumber;

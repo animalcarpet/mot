@@ -10,7 +10,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class NonMotInspectionControllerFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceLocatorInterface $controllerManager
      *
@@ -30,5 +29,4 @@ class NonMotInspectionControllerFactory implements FactoryInterface
             $authService
         );
     }
-
 }

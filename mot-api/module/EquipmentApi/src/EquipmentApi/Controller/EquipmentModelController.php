@@ -5,12 +5,9 @@ namespace EquipmentApi\Controller;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use EquipmentApi\Service\EquipmentModelService;
-use EquipmentApi\Mapper\EquipmentModelMapper;
 
 /**
- * Class EquipmentModelController
- *
- * @package EquipmentApi\Controller
+ * Class EquipmentModelController.
  */
 class EquipmentModelController extends AbstractDvsaRestfulController
 {

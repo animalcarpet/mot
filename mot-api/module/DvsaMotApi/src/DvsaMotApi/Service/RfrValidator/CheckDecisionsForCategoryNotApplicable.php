@@ -6,9 +6,7 @@ use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class CheckDecisionsForCategoryNotApplicable
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class CheckDecisionsForCategoryNotApplicable.
  */
 class CheckDecisionsForCategoryNotApplicable extends BaseValidator
 {
@@ -16,7 +14,7 @@ class CheckDecisionsForCategoryNotApplicable extends BaseValidator
      * Pattern for validation of an RFR.
      * - Do the relevant check,
      * - set the error if required
-     * - return true if passed
+     * - return true if passed.
      *
      * @return bool|ErrorMessage
      */
@@ -31,6 +29,7 @@ class CheckDecisionsForCategoryNotApplicable extends BaseValidator
                 ['mappedRfrs' => [$this->mappedRfrId => ['decision' => null]]]
             );
         }
+
         return $this->error === null;
     }
 }

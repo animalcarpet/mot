@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -10,9 +11,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class EnforcementSiteAssessmentValidatorFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -15,7 +15,7 @@ use UserApi\HelpDesk\Service\HelpDeskPersonService;
 use UserApi\HelpDesk\Service\Validator\SearchPersonValidator;
 
 /**
- * Unit tests for HelpDeskPersonService
+ * Unit tests for HelpDeskPersonService.
  */
 class HelpDeskPersonServiceTest extends AbstractServiceTestCase
 {
@@ -55,7 +55,7 @@ class HelpDeskPersonServiceTest extends AbstractServiceTestCase
 
         $personRepo->expects($this->any())->method('searchAll')->willReturn($dataRetrievedFromDb);
         $personRepo->expects($this->any())->method('get')->with(self::PERSON_ID)->will(
-            $this->returnValue((new Person())->setDateOfBirth(new \DateTime))
+            $this->returnValue((new Person())->setDateOfBirth(new \DateTime()))
         );
         $personHelpDeskProfileMapperMock->expects($this->any())->method('fromPersonEntityToDto')->will(
             $this->returnValue(new PersonHelpDeskProfileDto())

@@ -10,7 +10,7 @@ use DvsaCommonApi\Service\Exception\DataValidationException;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class CheckResultExceptionTranslatorTest
+ * Class CheckResultExceptionTranslatorTest.
  */
 class CheckResultExceptionTranslatorTest extends PHPUnit_Framework_TestCase
 {
@@ -25,18 +25,18 @@ class CheckResultExceptionTranslatorTest extends PHPUnit_Framework_TestCase
     public function testTryThrowDataValidationExceptionGivenMessagesOfDifferentSeverityShouldThrowAndOnlyIncludeMessagesOfRequiredSeverity()
     {
         $checkResult = CheckResult::with(
-            CheckMessage::withError()->text("errorMessage"),
-            CheckMessage::withInfo()->text("infoMessage"),
-            CheckMessage::withWarn()->text("warnMessage")
+            CheckMessage::withError()->text('errorMessage'),
+            CheckMessage::withInfo()->text('infoMessage'),
+            CheckMessage::withWarn()->text('warnMessage')
         );
         try {
             CheckResultExceptionTranslator::tryThrowDataValidationException($checkResult, Severity::WARN);
         } catch (DataValidationException $e) {
-            $this->assertCount(1, $e->getErrors(), "Exception contains more errors than expected!");
+            $this->assertCount(1, $e->getErrors(), 'Exception contains more errors than expected!');
             $this->assertEquals(
-                "warnMessage",
-                current($e->getErrors())["message"],
-                "Exception does not contain expected message!"
+                'warnMessage',
+                current($e->getErrors())['message'],
+                'Exception does not contain expected message!'
             );
         }
     }

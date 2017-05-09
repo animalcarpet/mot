@@ -4,7 +4,6 @@
  *
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
-
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddManualAdvisoryController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\ContingencyTestController;

@@ -5,13 +5,13 @@ namespace DvsaCommonApi\Service\Exception;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class ServiceException
+ * Class ServiceException.
  */
 class ServiceException extends \Exception
 {
     const DEFAULT_STATUS_CODE = 500;
     const BAD_REQUEST_STATUS_CODE = 400;
-    const ERROR_GENERIC_MSG   = 'An error has occurred';
+    const ERROR_GENERIC_MSG = 'An error has occurred';
 
     protected $_errors = [];
     protected $_errorData = [];
@@ -24,6 +24,7 @@ class ServiceException extends \Exception
     public function setStatusCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -100,9 +101,9 @@ class ServiceException extends \Exception
         $fieldName = null
     ) {
         $err = [
-            "message"        => $errorMessage,
-            "code"           => $code,
-            "displayMessage" => $displayMessage
+            'message' => $errorMessage,
+            'code' => $code,
+            'displayMessage' => $displayMessage,
         ];
 
         if (!empty($fieldName)) {
@@ -114,16 +115,17 @@ class ServiceException extends \Exception
 
     public function getJsonModel()
     {
-        $responseData = ["errors" => $this->getErrors()];
+        $responseData = ['errors' => $this->getErrors()];
         $errorData = $this->getErrorData();
         if (!empty($errorData)) {
             $responseData['errorData'] = $errorData;
         }
+
         return new JsonModel($responseData);
     }
 
     /**
-     * Populate the leaves of a multi-dimensional array with data
+     * Populate the leaves of a multi-dimensional array with data.
      *
      * This is designed to allow the errorData structure to reference the index of the
      * main errors array.
@@ -150,8 +152,7 @@ class ServiceException extends \Exception
     }
 
     /**
-     *
-     * array_merge_recursive will reindex numeric keys.  This works better for our use case
+     * array_merge_recursive will reindex numeric keys.  This works better for our use case.
      *
      * E.g. Merge
      *
@@ -185,7 +186,9 @@ class ServiceException extends \Exception
      *
      * @param array $array1
      * @param array $array2
+     *
      * @return array
+     *
      * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
      * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
      */

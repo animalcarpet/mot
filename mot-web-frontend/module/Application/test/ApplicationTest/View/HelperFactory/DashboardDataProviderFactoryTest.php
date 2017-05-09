@@ -13,7 +13,6 @@ use Zend\View\HelperPluginManager;
 
 class DashboardDataProviderFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testCreateService()
     {
         $identityProviderMock = XMock::of(MotIdentityProviderInterface::class);
@@ -33,5 +32,4 @@ class DashboardDataProviderFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(DashboardDataProvider::class, $service);
     }
-
 }

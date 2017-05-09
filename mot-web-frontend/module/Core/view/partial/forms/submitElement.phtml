@@ -1,4 +1,5 @@
 <?php
+
 $id = isset($id) ? $id : '';
 $name = isset($name) ? $name : $id;
 $label = isset($label) ? $label : 'Submit form';
@@ -9,18 +10,7 @@ $toggle = isset($toggle) ? $toggle : false;
 $target = isset($target) ? $target : false;
 
 $t = [
-    '<button'
-    , ' name="', $this->escapeHtml($name), '"'
-    , ' id="', $this->escapeHtml($id), '"'
-    , ' value="', $this->escapeHtml($value), '"'
-    , ' type="submit"'
-    , ' class="', $this->escapeHtml($cssClass), '"'
-    , ($disabled ? ' disabled' : '')
-    , ($toggle ? ' data-toggle="' . $this->escapeHtml($toggle) . '"' : '')
-    , ($target ? ' data-target="' . $this->escapeHtml($target) . '"' : '')
-    , '>'
-    , $this->escapeHtml($label)
-    , '</button>'
+    '<button', ' name="', $this->escapeHtml($name), '"', ' id="', $this->escapeHtml($id), '"', ' value="', $this->escapeHtml($value), '"', ' type="submit"', ' class="', $this->escapeHtml($cssClass), '"', ($disabled ? ' disabled' : ''), ($toggle ? ' data-toggle="'.$this->escapeHtml($toggle).'"' : ''), ($target ? ' data-target="'.$this->escapeHtml($target).'"' : ''), '>', $this->escapeHtml($label), '</button>',
 ];
 
 echo implode('', $t);

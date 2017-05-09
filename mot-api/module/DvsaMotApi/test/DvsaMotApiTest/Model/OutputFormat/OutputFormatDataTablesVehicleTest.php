@@ -3,13 +3,10 @@
 namespace DvsaMotApiTest\Model\OutputFormat;
 
 use DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesVehicle;
-use \PHPUnit_Framework_TestCase;
 use DvsaCommon\Date\DateUtils;
 
 /**
- * Class OutputFormatDataTablesVehicleTest
- *
- * @package DvsaMotApiTest\Model\OutputFormat
+ * Class OutputFormatDataTablesVehicleTest.
  */
 class OutputFormatDataTablesVehicleTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,7 +40,7 @@ class OutputFormatDataTablesVehicleTest extends \PHPUnit_Framework_TestCase
                 'displayDate' => DateUtils::toIsoString($this->date),
                 'updatedDate_display' => $this->date->format('d M Y'),
                 'updatedDate_timestamp' => strtotime($this->date->format('d M Y h:i')),
-            ]
+            ],
         ];
     }
 
@@ -56,7 +53,7 @@ class OutputFormatDataTablesVehicleTest extends \PHPUnit_Framework_TestCase
                 'make' => 'Renault',
                 'model' => 'Clio',
                 'displayDate' => $this->date->format('d M Y'),
-            ]
+            ],
         ];
     }
 }

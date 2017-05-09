@@ -2,8 +2,8 @@
 use DvsaCommon\Enum\MotTestTypeCode;
 
 if (!isset($defaultValue['score'])) {
-        $defaultValue['score'] = 0;
-    }
+    $defaultValue['score'] = 0;
+}
     if (!isset($defaultValue['decision'])) {
         $defaultValue['decision'] = 1;
     }
@@ -22,7 +22,9 @@ if (!isset($defaultValue['score'])) {
     : 'vehicle-examiner-row'; ?>
 <tr id="<?php echo $this->htmlId('rfr-%s-%s-%s', $this->id, $this->testType, $this->type); ?>"
     class="<?php echo $escRowClass; ?> sel-rfr-<?php echo $escSeleniumIndex; ?> sel-type-<?php echo $this->escapeHtmlAttr($testType); ?>
-    <?php if (!empty($formError)) { echo ' has-error '; } ?>">
+    <?php if (!empty($formError)) {
+        echo ' has-error ';
+    } ?>">
     <td>
         <?php
         // Add an internal anchor for the link from the top of the page error message.
@@ -32,7 +34,7 @@ if (!isset($defaultValue['score'])) {
         if (!empty($formError) && is_array($formError)) {
             foreach ($formError as $key => $data) {
                 if (is_array($data) && isset($data['ref'])) {
-                    echo '<span id="error-' . $this->escapeHtmlAttr($data['ref']) . '"></span>' . PHP_EOL;
+                    echo '<span id="error-'.$this->escapeHtmlAttr($data['ref']).'"></span>'.PHP_EOL;
                 }
             }
         }
@@ -49,7 +51,7 @@ if (!isset($defaultValue['score'])) {
                 <?php echo $this->escapeHtml($this->inspectionManualReference); ?></a>
 
             <?php echo $this->partial(
-                "dvsa-mot-enforcement/mot-test/differences-found-between-tests/partials/manual-reference-modal",
+                'dvsa-mot-enforcement/mot-test/differences-found-between-tests/partials/manual-reference-modal',
                 array(
                     'inspectionManualReference' => $this->inspectionManualReference,
                     'inspectionManualDescription' => $this->inspectionManualDescription,
@@ -66,11 +68,11 @@ if (!isset($defaultValue['score'])) {
             (<?php echo $this->escapeHtml($this->comment); ?>)
         <?php endif; ?>
 
-        <?php if ("ADVISORY" === $this->type): ?>
+        <?php if ('ADVISORY' === $this->type): ?>
             <br/><strong>ADVISORY</strong>
-        <?php elseif("FAIL" === $this->type): ?>
+        <?php elseif ('FAIL' === $this->type): ?>
             <br/><strong>FAIL</strong>
-        <?php elseif("PRS" === $this->type): ?>
+        <?php elseif ('PRS' === $this->type): ?>
             <br/><strong>PRS</strong>
         <?php endif; ?>
     </td>
@@ -93,7 +95,7 @@ if (!isset($defaultValue['score'])) {
                     'cssClass' => $this->htmlId('form-control point-score %s %s', $this->testType, $this->inspectionManualReference),
                     'options' => $this->dataCatalog->getScores(),
                     'value' => $defaultValue['score'],
-                    'inputErrorClass' => (current(array_keys($formError)) == 'score' ? 'inputError' : '')
+                    'inputErrorClass' => (current(array_keys($formError)) == 'score' ? 'inputError' : ''),
                 )); ?>
         <?php endif; ?>
     </td>
@@ -113,7 +115,7 @@ if (!isset($defaultValue['score'])) {
         <?php else: ?>
             <?php
             $decisionTypeOptions = $this->dataCatalog->getDecisions($this->testType);
-            $decisionTypeOptions[""] = "Please select";
+            $decisionTypeOptions[''] = 'Please select';
             ksort($decisionTypeOptions);
             echo $this->partial('selectElement',
                 array(
@@ -122,7 +124,7 @@ if (!isset($defaultValue['score'])) {
                     'cssClass' => $this->htmlId('form-control defects-decisions %s %s', $this->testType, $this->inspectionManualReference),
                     'options' => $decisionTypeOptions,
                     'value' => $defaultValue['decision'],
-                    'inputErrorClass' => (current(array_keys($formError)) == 'decision' ? 'inputError' : '')
+                    'inputErrorClass' => (current(array_keys($formError)) == 'decision' ? 'inputError' : ''),
                 )); ?>
         <?php endif; ?>
 
@@ -142,7 +144,7 @@ if (!isset($defaultValue['score'])) {
             <?php
 
             $categoriesOptions = $this->dataCatalog->getCategories();
-            $categoriesOptions[""] = "Please select";
+            $categoriesOptions[''] = 'Please select';
             ksort($categoriesOptions);
 
             echo $this->partial('selectElement',
@@ -153,7 +155,7 @@ if (!isset($defaultValue['score'])) {
                             $this->testType, $this->inspectionManualReference),
                     'options' => $categoriesOptions,
                     'value' => $defaultValue['category'],
-                    'inputErrorClass' => (current(array_keys($formError)) == 'category' ? 'inputError' : '')
+                    'inputErrorClass' => (current(array_keys($formError)) == 'category' ? 'inputError' : ''),
                 )); ?>
         <?php endif; ?>
     </td>
@@ -165,7 +167,7 @@ if (!isset($defaultValue['score'])) {
                 array(
                     'id' => $this->htmlId('mappedRfr-%s-%s-%s-justification', $this->id, $this->testType, $this->type),
                     'name' => $this->htmlId('mappedRfrs[%s][justification]', $this->id),
-                    'value' => ''
+                    'value' => '',
                 )); ?>
         <?php else: ?>
             <div class="form-group"><textarea name="<?php echo  $this->htmlId('mappedRfrs[%s][justification]', $this->id); ?>"
@@ -173,7 +175,9 @@ if (!isset($defaultValue['score'])) {
                       cols="30"
                       rows="3"
                       class="<?php echo $this->htmlId('form-control flexible-vert justification %s %s', $this->testType, $this->inspectionManualReference);
-                      if (!empty($formError) && 'justification' == current(array_keys($formError))) { echo ' inputError'; }
+                      if (!empty($formError) && 'justification' == current(array_keys($formError))) {
+                          echo ' inputError';
+                      }
                       ?>"><?php echo $this->escapeHtml($defaultValue['justification']); ?></textarea></div>
         <?php endif; ?>
     </td>

@@ -13,11 +13,10 @@ use Zend\View\Model\JsonModel;
 use Zend\Http\Response as HttpResponse;
 
 /**
- * Class RestUnauthorizedStrategy
+ * Class RestUnauthorizedStrategy.
  */
 class RestUnauthorizedStrategy extends AbstractListenerAggregate
 {
-
     /** @var AuthenticationService $motIdentityProvider */
     private $motIdentityProvider;
 
@@ -36,20 +35,20 @@ class RestUnauthorizedStrategy extends AbstractListenerAggregate
             return;
         }
 
-        /** @var Response $response */
+        /* @var Response $response */
         if ($this->motIdentityProvider->getIdentity() == null) {
             $model = new JsonModel(
                 [
                     'errors' => [[
                         'message' => 'Unauthorized',
-                        'code'    => 401
-                    ]]
+                        'code' => 401,
+                    ]],
                 ]
             );
             $response->setStatusCode(401);
             $response->getHeaders()->addHeaders(
                 [
-                    'WWW-Authenticate' => 'Bearer'
+                    'WWW-Authenticate' => 'Bearer',
                 ]
             );
         } else {
@@ -57,9 +56,9 @@ class RestUnauthorizedStrategy extends AbstractListenerAggregate
                 [
                     'errors' => [[
                         'message' => 'Forbidden',
-                        'code'    => ApiErrorCodes::UNAUTHORISED
+                        'code' => ApiErrorCodes::UNAUTHORISED,
                     ]],
-                    'debugInfo' => $exception->getDebugInfo()
+                    'debugInfo' => $exception->getDebugInfo(),
                 ]
             );
             $response->setStatusCode(403);
@@ -71,7 +70,7 @@ class RestUnauthorizedStrategy extends AbstractListenerAggregate
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function attach(EventManagerInterface $events)
     {

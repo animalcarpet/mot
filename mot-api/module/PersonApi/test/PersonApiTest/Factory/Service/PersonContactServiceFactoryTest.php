@@ -14,14 +14,10 @@ use PersonApi\Helper\PersonDetailsChangeNotificationHelper;
 use PersonApi\Service\PersonContactService;
 use PersonApi\Service\Validator\PersonalDetailsValidator;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonContactServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class PersonContactServiceFactoryTest.
  */
 class PersonContactServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

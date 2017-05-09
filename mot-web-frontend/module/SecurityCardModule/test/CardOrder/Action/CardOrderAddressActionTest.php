@@ -12,9 +12,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderAddressVie
 use DvsaCommonTest\TestUtils\XMock;
 use Core\Action\RedirectToRoute;
 use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Form\SecurityCardAddressForm;
-use Zend\Http\Request as HttpRequest;
 use Zend\Stdlib\ParametersInterface;
 
 class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
@@ -46,7 +44,8 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
         $this->request = XMock::of(Request::class);
     }
 
-    public function testReturnsToNewPage_WhenUserNotAllowedOnStep() {
+    public function testReturnsToNewPage_WhenUserNotAllowedOnStep()
+    {
         $this->setUpProtection();
         $this->mockIsAllowedOnStep(false);
 
@@ -58,7 +57,8 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::USER_ID, $actionResult->getRouteParams()['userId']);
     }
 
-    public function testReturnsPopulatedAddressForm_WhenNotAPostRequest() {
+    public function testReturnsPopulatedAddressForm_WhenNotAPostRequest()
+    {
         $this->setUpProtection();
         $this->mockIsAllowedOnStep(true);
         $this->mockGetSecurityCardOrderAddresses([]);
@@ -87,7 +87,8 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(CardOrderAddressAction::ADDRESS_PAGE_SUBTITLE, $actionResult->layout()->getPageSubTitle());
     }
 
-    public function testPostWithAnInvalidForm_RedirectsToAddress() {
+    public function testPostWithAnInvalidForm_RedirectsToAddress()
+    {
         $this->setUpProtection();
         $this->mockIsAllowedOnStep(true);
         $this->mockGetSecurityCardOrderAddresses([]);
@@ -107,7 +108,8 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(CardOrderAddressAction::ADDRESS_PAGE_SUBTITLE, $actionResult->layout()->getPageSubTitle());
     }
 
-    public function testPostWithAValidForm_AndNonCustomAddress_SavesPostDataToSession() {
+    public function testPostWithAValidForm_AndNonCustomAddress_SavesPostDataToSession()
+    {
         $this->setUpProtection();
         $this->mockIsAllowedOnStep(true);
         $this->mockGetSecurityCardOrderAddresses([]);
@@ -136,7 +138,6 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
             ->method('saveToGuid')
             ->with(self::USER_ID, $this->getPostAddressDataWithHyperlinkOperatorsRemoved());
 
-
         /** @var RedirectToRoute $actionResult */
         $actionResult = $this->buildAction()->execute($this->request, self::USER_ID);
 
@@ -144,7 +145,8 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('security-card-order/review', $actionResult->getRouteName());
     }
 
-    private function mockIsPost($isPost, $postData) {
+    private function mockIsPost($isPost, $postData)
+    {
         if ($isPost) {
             $params = XMock::of(ParametersInterface::class);
             $params->expects($this->once())
@@ -166,6 +168,7 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
             $this->stepService,
             $this->cardOrderProtection
         );
+
         return $action;
     }
 
@@ -177,7 +180,8 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
             ->willReturn(null);
     }
 
-    private function mockIsAllowedOnStep($allowed) {
+    private function mockIsAllowedOnStep($allowed)
+    {
         $this->stepService
             ->expects($this->once())
             ->method('isAllowedOnStep')
@@ -188,11 +192,12 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
     private function getFakeDetailsArray()
     {
         return [
-            'some_test'     => "some_test_value",
+            'some_test' => 'some_test_value',
         ];
     }
 
-    private function mockGetSecurityCardOrderAddresses($return) {
+    private function mockGetSecurityCardOrderAddresses($return)
+    {
         $this->orderSecurityCardAddressService
             ->expects($this->once())
             ->method('getSecurityCardOrderAddresses')
@@ -208,7 +213,7 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
             'address3' => 'address 3',
             'townOrCity' => 'Northolt',
             'postcode' => 'ng1 6lp',
-            'addressChoice' => $addressChoiceCustom
+            'addressChoice' => $addressChoiceCustom,
         ];
 
         return $data;
@@ -239,10 +244,9 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
                 'postcode' => 'NG1 6LP',
                 'addressChoice' => 'addressChoiceCustom',
                 'vtsName' => '',
-            ]
+            ],
         ];
 
         return $data;
     }
-
 }

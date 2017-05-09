@@ -56,11 +56,11 @@ class VehicleService
     const KEY_WIGHT = 'weight';
     const KEY_WIGHT_SOURCE_ID = 'weightSurce';
 
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     private $authService;
-    /** @var  VehicleRepository */
+    /** @var VehicleRepository */
     private $vehicleRepository;
-    /** @var  DvlaVehicleRepository */
+    /** @var DvlaVehicleRepository */
     private $dvlaVehicleRepository;
     /** @var DvlaVehicleImportChangesRepository */
     private $dvlaVehicleImportChangesRepository;
@@ -70,7 +70,7 @@ class VehicleService
     private $vehicleV5CRepository;
     /** @var VehicleCatalogService */
     private $vehicleCatalog;
-    /** @var  VehicleValidator */
+    /** @var VehicleValidator */
     private $validator;
 
     private $motTestServiceProvider;
@@ -102,8 +102,7 @@ class VehicleService
         PersonRepository $personRepository,
         Transaction $transaction,
         NewVehicleService $newVehicleService
-    )
-    {
+    ) {
         $this->authService = $authService;
         $this->vehicleRepository = $repository;
         $this->vehicleV5CRepository = $vehicleV5CRepository;
@@ -133,7 +132,7 @@ class VehicleService
         $this->transaction->begin();
 
         try {
-            $data["fuelType"] = $data['fuelTypeCode'];
+            $data['fuelType'] = $data['fuelTypeCode'];
             $motTest = $this->startMotTest($data, $dvsaVehicleCreatedUsingJavaService->getId());
 
             $this->transaction->commit();
@@ -157,7 +156,8 @@ class VehicleService
 
     /**
      * @param array $data
-     * @param int $vehicleId
+     * @param int   $vehicleId
+     *
      * @return \DvsaEntities\Entity\MotTest
      */
     private function startMotTest(array $data, $vehicleId)
@@ -226,6 +226,7 @@ class VehicleService
     /**
      * @param $dvlaVehicleId
      * @param $vehicleClassCode
+     *
      * @return DvsaVehicle
      */
     public function createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode)
@@ -258,12 +259,12 @@ class VehicleService
     }
 
     /**
-     * @param Person $person
+     * @param Person          $person
      * @param VehicleFromDvla $vehicle
-     * @param int $vehicleClassCode
-     * @param int $primaryColourCode
-     * @param int $secondaryColourCode
-     * @param string $fuelTypeCode
+     * @param int             $vehicleClassCode
+     * @param int             $primaryColourCode
+     * @param int             $secondaryColourCode
+     * @param string          $fuelTypeCode
      */
     public function logDvlaVehicleImportChanges(
         Person $person,
@@ -272,8 +273,7 @@ class VehicleService
         $primaryColourCode,
         $secondaryColourCode,
         $fuelTypeCode
-    )
-    {
+    ) {
         $vehicleClass = $this->vehicleCatalog->getVehicleClassByCode($vehicleClassCode);
 
         $importChanges = (new DvlaVehicleImportChangeLog())
@@ -301,7 +301,6 @@ class VehicleService
         if (!ctype_digit($data['cylinderCapacity'])) {
             $data['cylinderCapacity'] = null;
         }
-
 
         $modelDetail = new ModelDetail();
         $modelDetail
@@ -357,8 +356,7 @@ class VehicleService
     private function createVehicleFromDvlaVehicleUsingJavaService(
         DvlaVehicle $dvlaVehicle,
         $vehicleClassCode
-    )
-    {
+    ) {
         $vehicleClass = $this->vehicleCatalog->getVehicleClassByCode($vehicleClassCode);
 
         $fuelType = $this->vehicleCatalog->findFuelTypeByPropulsionCode($dvlaVehicle->getFuelType());
@@ -374,7 +372,6 @@ class VehicleService
 
         $secondaryColour = $this->vehicleCatalog->findColourByCode($dvlaVehicle->getSecondaryColour());
         $secondaryColourCode = $secondaryColour ? $secondaryColour->getCode() : ColourCode::NOT_STATED;
-
 
         $countryOfRegistrationId = $this->vehicleCatalog->getCountryOfRegistrationByCode(
             self::DEFAULT_COUNTRY_OF_REGISTRATION
@@ -396,7 +393,7 @@ class VehicleService
             ->setCountryOfRegistrationId($countryOfRegistrationId)
             ->setFirstUsedDate($dvlaVehicle->getFirstUsedDate())
             ->setFirstRegistrationDate($dvlaVehicle->getFirstRegistrationDate())
-            ->setIsNewAtFirstReg((bool)$dvlaVehicle->isVehicleNewAtFirstRegistration());
+            ->setIsNewAtFirstReg((bool) $dvlaVehicle->isVehicleNewAtFirstRegistration());
 
         if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
             $dvlaVehicleRequest->setCylinderCapacity($dvlaVehicle->getCylinderCapacity());
@@ -432,8 +429,7 @@ class VehicleService
      */
     private function createDvsaVehicleUsingJavaService(
         Vehicle $dvsaVehicle
-    )
-    {
+    ) {
         $fuelTypeCode = $dvsaVehicle->getModelDetail()->getFuelType() ? $dvsaVehicle->getModelDetail()->getFuelType()->getCode() : null;
 
         $dvsaVehicleRequest = new CreateDvsaVehicleRequest();
@@ -460,9 +456,11 @@ class VehicleService
     }
 
     /**
-     * @param DvlaVehicle $dvlaVehicle
+     * @param DvlaVehicle  $dvlaVehicle
      * @param VehicleClass $vehicleClass
+     *
      * @return VehicleWeight
+     *
      * @throws \RangeException
      */
     private function getVehicleWeight(DvlaVehicle $dvlaVehicle, VehicleClass $vehicleClass)
@@ -470,19 +468,19 @@ class VehicleService
         $vehicleWeight = new VehicleWeight();
 
         switch ($vehicleClass->getCode()) {
-            case Vehicle::VEHICLE_CLASS_1 :
-            case Vehicle::VEHICLE_CLASS_2 :
+            case Vehicle::VEHICLE_CLASS_1:
+            case Vehicle::VEHICLE_CLASS_2:
                 // No weight expected to be carried forward for group A.
                 break;
 
-            case Vehicle::VEHICLE_CLASS_3 :
-            case Vehicle::VEHICLE_CLASS_4 :
+            case Vehicle::VEHICLE_CLASS_3:
+            case Vehicle::VEHICLE_CLASS_4:
                 $vehicleWeight->setWeight($dvlaVehicle->getMassInServiceWeight())
                     ->setWeightSource($this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::MISW)->getId());
                 break;
 
-            case Vehicle::VEHICLE_CLASS_5 :
-            case Vehicle::VEHICLE_CLASS_7 :
+            case Vehicle::VEHICLE_CLASS_5:
+            case Vehicle::VEHICLE_CLASS_7:
                 $vehicleWeight->setWeight($dvlaVehicle->getDesignedGrossWeight())
                     ->setWeightSource($this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::DGW)->getId());
                 break;
@@ -497,6 +495,7 @@ class VehicleService
 
     /**
      * @param $dvlaVehicleId
+     *
      * @return int|null
      */
     public function getVehicleIdIfAlreadyImportedFromDvla($dvlaVehicleId)

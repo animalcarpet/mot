@@ -6,12 +6,11 @@ use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 
 /**
- * Class BasePersonValidator
+ * Class BasePersonValidator.
  */
 class BasePersonValidator extends AbstractValidator
 {
-
-    const ERROR_EMAIL_INCORRECT_FORMAT = "Incorrect email address format";
+    const ERROR_EMAIL_INCORRECT_FORMAT = 'Incorrect email address format';
 
     private $requiredFields
         = [

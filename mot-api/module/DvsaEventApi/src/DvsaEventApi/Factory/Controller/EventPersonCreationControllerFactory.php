@@ -13,7 +13,7 @@ class EventPersonCreationControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
         /**
-         * @var EventPersonCreationService $eventPersonCreationService
+         * @var EventPersonCreationService
          */
         $eventPersonCreationService = $serviceLocator->get(EventPersonCreationService::class);
 

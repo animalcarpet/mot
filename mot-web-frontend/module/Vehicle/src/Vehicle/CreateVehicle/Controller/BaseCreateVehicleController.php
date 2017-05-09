@@ -3,7 +3,6 @@
 namespace Vehicle\CreateVehicle\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
-use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 abstract class BaseCreateVehicleController extends AbstractDvsaActionController
 {

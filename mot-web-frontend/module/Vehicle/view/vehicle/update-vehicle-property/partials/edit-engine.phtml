@@ -4,7 +4,6 @@ use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 
 /** @var UpdateVehiclePropertyViewModel $viewModel */
 /** @var UpdateEngineForm $form */
-
 $form = $viewModel->getForm();
 ?>
 
@@ -14,15 +13,15 @@ $form = $viewModel->getForm();
         [
             'element' => $form->getEngineTypeElement(),
         ]
-    );?>
+    ); ?>
 
     <div id="div-cylinder-capacity" aria-hidden="false" class="panel-indent js-hidden">
         <?php echo $this->partial(
             'partial/gds/form/control',
             [
-                'element' => $form->getEngineCapacityElement()
+                'element' => $form->getEngineCapacityElement(),
             ]
-        );?>
+        ); ?>
     </div>
 </fieldset>
 

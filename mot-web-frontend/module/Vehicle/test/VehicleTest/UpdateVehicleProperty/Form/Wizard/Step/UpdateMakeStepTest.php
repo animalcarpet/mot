@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\UpdateVehicleProperty\Form\Step;
 
 use Core\Action\RedirectToRoute;
@@ -12,7 +13,6 @@ use stdClass;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\MakeForm;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateMakeStep;
-use Vehicle\UpdateVehicleProperty\Form\Wizard\Context;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleEditBreadcrumbsBuilder;
 use Zend\View\Helper\Url;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
@@ -23,7 +23,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
     private $makeApiResource;
     private $vehicleEditBreadcrumbsBuilder;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     protected function setUp()
@@ -32,13 +32,13 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         $this->makeApiResource = XMock::of(MakeApiResource::class);
         $this->vehicleEditBreadcrumbsBuilder = XMock::of(VehicleEditBreadcrumbsBuilder::class);
         $this->startTestChangeService = XMock::of(StartTestChangeService::class);
-        $this->makeApiResource->expects($this->any())->method("getList")->willReturn($this->getMakeList());
-        $this->vehicleEditBreadcrumbsBuilder->expects($this->any())->method("getVehicleEditBreadcrumbs")->willReturn(["vehicle", "change"]);
+        $this->makeApiResource->expects($this->any())->method('getList')->willReturn($this->getMakeList());
+        $this->vehicleEditBreadcrumbsBuilder->expects($this->any())->method('getVehicleEditBreadcrumbs')->willReturn(['vehicle', 'change']);
     }
 
     public function testGetMethodReturnsStepResult()
     {
-        $context = new UpdateVehicleContext($this->createDvsaVehicle(), "1w", 'change');
+        $context = new UpdateVehicleContext($this->createDvsaVehicle(), '1w', 'change');
         $step = new UpdateMakeStep(
             $this->url,
             $this->makeApiResource,
@@ -55,7 +55,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
     public function testPrepopulatesFormWithDefaultValuesWhenDataAreNotStoredInContainer()
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new UpdateVehicleContext($dvsaVehicle, "1w", 'change');
+        $context = new UpdateVehicleContext($dvsaVehicle, '1w', 'change');
         $step = new UpdateMakeStep(
             $this->url,
             $this->makeApiResource,
@@ -64,7 +64,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         );
         $step->setContext($context);
 
-        $result = $step->executeGet("form-uuid-674574");
+        $result = $step->executeGet('form-uuid-674574');
 
         /** @var MakeForm $form */
         $form = $result->getViewModel()->getForm();
@@ -76,7 +76,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
     public function testPrePopulateChangeUnderTest_FormWithDefaultValuesWhenUserHasNotUpdatedBothMakeAndModel()
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new UpdateVehicleContext($dvsaVehicle, "1w", 'change-under-test');
+        $context = new UpdateVehicleContext($dvsaVehicle, '1w', 'change-under-test');
         $step = new UpdateMakeStep(
             $this->url,
             $this->makeApiResource,
@@ -87,10 +87,10 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
 
         $this->vehicleEditBreadcrumbsBuilder
             ->expects($this->any())
-            ->method("getChangeVehicleUnderTestBreadcrumbs")
-            ->willReturn(["vehicle", "change"]);
+            ->method('getChangeVehicleUnderTestBreadcrumbs')
+            ->willReturn(['vehicle', 'change']);
 
-        $result = $step->executeGet("form-uuid-674574");
+        $result = $step->executeGet('form-uuid-674574');
 
         /** @var MakeForm $form */
         $form = $result->getViewModel()->getForm();
@@ -102,7 +102,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
     public function testPrePopulateChangeUnderTest_FormWithChangedValuesWhenUserHasUpdatedBothMakeAndModel()
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new UpdateVehicleContext($dvsaVehicle, "1w", 'change-under-test');
+        $context = new UpdateVehicleContext($dvsaVehicle, '1w', 'change-under-test');
         $step = new UpdateMakeStep(
             $this->url,
             $this->makeApiResource,
@@ -113,8 +113,8 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
 
         $this->vehicleEditBreadcrumbsBuilder
             ->expects($this->any())
-            ->method("getChangeVehicleUnderTestBreadcrumbs")
-            ->willReturn(["vehicle", "change"]);
+            ->method('getChangeVehicleUnderTestBreadcrumbs')
+            ->willReturn(['vehicle', 'change']);
 
         $this->startTestChangeService
             ->expects($this->once())
@@ -126,7 +126,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->willReturn(['makeId' => 3]);
 
-        $result = $step->executeGet("form-uuid-674574");
+        $result = $step->executeGet('form-uuid-674574');
 
         /** @var MakeForm $form */
         $form = $result->getViewModel()->getForm();
@@ -138,7 +138,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
     public function testExecutePostReturnsStepResultIfDataAreInvalid()
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new UpdateVehicleContext($dvsaVehicle, "1w", 'change');
+        $context = new UpdateVehicleContext($dvsaVehicle, '1w', 'change');
         $step = new UpdateMakeStep(
             $this->url,
             $this->makeApiResource,
@@ -147,16 +147,16 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         );
         $step->setContext($context);
 
-        $result = $step->executePost([],"form-uuid-674574");
+        $result = $step->executePost([], 'form-uuid-674574');
         $this->assertInstanceOf(StepResult::class, $result);
     }
 
     public function testExecutePostRedirectsToNextStepIfDataAreValid()
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new UpdateVehicleContext($dvsaVehicle, "1w", 'change');
+        $context = new UpdateVehicleContext($dvsaVehicle, '1w', 'change');
 
-        $modelStep = new FakeStep("model step", true);
+        $modelStep = new FakeStep('model step', true);
         $modelStep->setContext($context);
 
         $step = new UpdateMakeStep(
@@ -168,16 +168,16 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         $step->setContext($context);
         $step->setNextStep($modelStep);
 
-        $result = $step->executePost([MakeForm::FIELD_MAKE_NAME => $dvsaVehicle->getMake()->getId()],"form-uuid-674574");
+        $result = $step->executePost([MakeForm::FIELD_MAKE_NAME => $dvsaVehicle->getMake()->getId()], 'form-uuid-674574');
         $this->assertInstanceOf(RedirectToRoute::class, $result);
     }
 
     public function testChangeUnderTest_validPost_redirectedToChangeUnderTestModelStep()
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new UpdateVehicleContext($dvsaVehicle, "1w", 'change-under-test');
+        $context = new UpdateVehicleContext($dvsaVehicle, '1w', 'change-under-test');
 
-        $modelStep = new FakeStep("model step", true);
+        $modelStep = new FakeStep('model step', true);
         $modelStep->setContext($context);
 
         $step = new UpdateMakeStep(
@@ -190,7 +190,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         $step->setNextStep($modelStep);
         $routeName = $step->getRoute();
 
-        $result = $step->executePost([MakeForm::FIELD_MAKE_NAME => $dvsaVehicle->getMake()->getId()],"form-uuid-674574");
+        $result = $step->executePost([MakeForm::FIELD_MAKE_NAME => $dvsaVehicle->getMake()->getId()], 'form-uuid-674574');
         $this->assertInstanceOf(RedirectToRoute::class, $result);
         $this->assertSame('make', $routeName->getRouteParams()['property']);
         $this->assertSame('vehicle/detail/change-under-test/make-and-model', $routeName->getRouteName());
@@ -199,10 +199,10 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
     private function getMakeList()
     {
         return [
-            (new MakeDto())->setId(1)->setName("Audi"),
-            (new MakeDto())->setId(2)->setName("BMW"),
-            (new MakeDto())->setId(3)->setName("Citroen"),
-            (new MakeDto())->setId(4)->setName("Daimler"),
+            (new MakeDto())->setId(1)->setName('Audi'),
+            (new MakeDto())->setId(2)->setName('BMW'),
+            (new MakeDto())->setId(3)->setName('Citroen'),
+            (new MakeDto())->setId(4)->setName('Daimler'),
             (new MakeDto())->setId(MakeForm::OTHER_ID)->setName(MakeForm::OTHER_NAME),
         ];
     }
@@ -211,29 +211,29 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
     {
         $make = new stdClass();
         $make->id = 1;
-        $make->name = "Audi";
+        $make->name = 'Audi';
 
         $model = new stdClass();
         $model->id = 2;
-        $model->name = "A4";
+        $model->name = 'A4';
 
         $fuel = new stdClass();
-        $model->code = "PE";
-        $model->name = "Petrol";
+        $model->code = 'PE';
+        $model->name = 'Petrol';
 
         $colour = new stdClass();
-        $colour->code = "L";
-        $colour->name = "Grey";
+        $colour->code = 'L';
+        $colour->name = 'Grey';
 
         $secondaryColour = new stdClass();
-        $secondaryColour->code = "W";
-        $secondaryColour->name = "Not Stated";
+        $secondaryColour->code = 'W';
+        $secondaryColour->name = 'Not Stated';
 
         $std = new stdClass();
         $std->make = $make;
         $std->model = $model;
-        $std->registration = "reg123XSW";
-        $std->vin = "VIN98798798";
+        $std->registration = 'reg123XSW';
+        $std->vin = 'VIN98798798';
         $std->vehicleClass = null;
         $std->fuelType = $fuel;
         $std->colour = $colour;

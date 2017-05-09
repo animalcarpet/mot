@@ -37,7 +37,6 @@ class SecurityCardValidationForm extends Form
             ->attach((new SecurityCardPinValidator())->setValidationCallback($pinValidationCallback));
         $filter->add($pinInput);
 
-
         $this->setInputFilter($filter);
     }
 
@@ -52,7 +51,6 @@ class SecurityCardValidationForm extends Form
      */
     public function setCustomError($field, $error)
     {
-
         $field->setMessages([$error]);
     }
 }

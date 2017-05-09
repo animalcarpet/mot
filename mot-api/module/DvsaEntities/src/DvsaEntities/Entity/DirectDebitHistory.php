@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * DirectDebitHistory
+ * DirectDebitHistory.
  *
  * @ORM\Table(name="direct_debit_history")
  * @ORM\Entity
@@ -55,11 +55,13 @@ class DirectDebitHistory
 
     /**
      * @param \DvsaEntities\Entity\DirectDebit $directDebit
+     *
      * @return $this
      */
     public function setDirectDebit($directDebit)
     {
         $this->directDebit = $directDebit;
+
         return $this;
     }
 
@@ -73,11 +75,13 @@ class DirectDebitHistory
 
     /**
      * @param \DateTime $incrementDate
+     *
      * @return $this
      */
     public function setIncrementDate($incrementDate)
     {
         $this->incrementDate = $incrementDate;
+
         return $this;
     }
 
@@ -91,11 +95,13 @@ class DirectDebitHistory
 
     /**
      * @param \DvsaEntities\Entity\DirectDebitHistoryStatus $status
+     *
      * @return $this
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -109,11 +115,13 @@ class DirectDebitHistory
 
     /**
      * @param \DvsaEntities\Entity\TestSlotTransaction $transaction
+     *
      * @return $this
      */
     public function setTransaction($transaction)
     {
         $this->transaction = $transaction;
+
         return $this;
     }
 

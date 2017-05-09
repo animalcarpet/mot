@@ -2,16 +2,12 @@
 
 namespace SiteTest\ViewModel;
 
-use Core\ViewModel\Equipment\EquipmentViewModel;
 use DvsaClient\Entity\SiteDailyOpeningHours;
-use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\Date\Time;
 use DvsaCommon\Dto\Equipment\EquipmentDto;
 use DvsaCommon\Dto\Equipment\EquipmentModelDto;
 use DvsaCommon\Dto\MotTesting\MotTestInProgressDto;
 use DvsaCommon\Dto\Site\SiteTestingDailyScheduleDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Authorization\VtsOverviewPagePermissions;
 use Site\ViewModel\SiteViewModel;
@@ -19,8 +15,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Zend\Mvc\Controller\Plugin\Url;
 
 /**
- * Class SiteViewModelTest
- * @package SiteTest\ViewModel
+ * Class SiteViewModelTest.
  */
 class SiteViewModelTest extends \PHPUnit_Framework_TestCase
 {

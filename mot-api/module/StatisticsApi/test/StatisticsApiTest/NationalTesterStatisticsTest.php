@@ -38,7 +38,6 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
     /** @var TimeSpan */
     private $timeoutPeriod;
 
-
     /** @var \DateTime Tells when the report should be already generated.
      * If not, then you report generation should be restarted
      */
@@ -54,10 +53,10 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->timeoutPeriod = new TimeSpan(0, 1, 0, 0);
-        $this->dateTimeHolder = new TestDateTimeHolder(new \DateTime("2016-06-22"));
+        $this->dateTimeHolder = new TestDateTimeHolder(new \DateTime('2016-06-22'));
         $this->timeoutDateTime = $this->timeoutPeriod->addDateTime($this->dateTimeHolder->getCurrent());
-        $this->year = (int)$this->dateTimeHolder->getCurrent()->sub(new \DateInterval("P1M"))->format("Y");
-        $this->month = (int)$this->dateTimeHolder->getCurrent()->sub(new \DateInterval("P1M"))->format("m");
+        $this->year = (int) $this->dateTimeHolder->getCurrent()->sub(new \DateInterval('P1M'))->format('Y');
+        $this->month = (int) $this->dateTimeHolder->getCurrent()->sub(new \DateInterval('P1M'))->format('m');
 
         $this->repository = XMock::of(NationalStatisticsRepository::class);
 
@@ -66,12 +65,12 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->dbResult = (new NationalStatisticsResult())
             ->setGroupATotal(10)
             ->setGroupAFailed(5)
-            ->setGroupACumulativeTestTime("10:10:10")
+            ->setGroupACumulativeTestTime('10:10:10')
             ->setNumberOfGroupATesters(5)
             ->setGroupAAverageVehicleAgeInMonths(3)
             ->setGroupBTotal(8)
             ->setGroupBFailed(3)
-            ->setGroupBCumulativeTestTime("0:10:10")
+            ->setGroupBCumulativeTestTime('0:10:10')
             ->setGroupBAverageVehicleAgeInMonths(6)
             ->setNumberOfGroupBTesters(2);
 
@@ -157,8 +156,8 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->dbResult->setGroupATotal(10);
         $this->dbResult->setGroupBTotal(20);
 
-        $this->dbResult->setGroupACumulativeTestTime("3600");
-        $this->dbResult->setGroupBCumulativeTestTime("3600");
+        $this->dbResult->setGroupACumulativeTestTime('3600');
+        $this->dbResult->setGroupBCumulativeTestTime('3600');
 
         // WHEN I retrieve statistics
         $stats = $this->service->get($this->year, $this->month);
@@ -242,6 +241,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dateProviderAverageVehicleAge
+     *
      * @param $groupAAge
      * @param $groupBAge
      * @param $isGroupAAgeAvailable
@@ -249,8 +249,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
      */
     public function testThatDtosAreCorrectlyPopulatedWithAverageVehicleAge(
         $groupAAge, $groupBAge, $isGroupAAgeAvailable, $isGroupBAgeAvailable
-    )
-    {
+    ) {
         // GIVEN testers didn't do any tests at all
         $this->dbResult->setGroupATotal(0);
         $this->dbResult->setGroupBTotal(0);
@@ -341,7 +340,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($report->getReportStatus()->getIsCompleted());
 
         // AND timeout set
-        $expectedDate= $this->timeoutDateTime;
+        $expectedDate = $this->timeoutDateTime;
         $this->assertEquals($expectedDate, $report->getReportStatus()->getGenerationTimeoutDate());
     }
 
@@ -430,6 +429,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
     private function getReportKey($year, $month)
     {
         $keyGenerator = new S3KeyGenerator();
+
         return $keyGenerator->generateForNationalTesterStatistics($year, $month);
     }
 }

@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: szymonf
  * Date: 24.03.2016
- * Time: 11:33
+ * Time: 11:33.
  */
 
 namespace Dvsa\Mot\Frontend\PersonModule\Model;
@@ -22,7 +22,6 @@ class AnnualAssessmentCertificatesFormContext implements FormContextInterface
 
     public function __construct($targetPersonId, $loggedInPersonId, $group, $certificateId, $controller)
     {
-
         $this->targetPersonId = $targetPersonId;
         $this->group = $group;
         $this->controller = $controller;

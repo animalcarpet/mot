@@ -5,7 +5,6 @@ namespace PersonApi\Service;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\AbstractService;
 use Doctrine\ORM\EntityManager;
-use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommon\Validator\TelephoneNumberValidator;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\PersonContact;
@@ -69,7 +68,6 @@ class TelephoneService extends AbstractService
         /** @var PersonContact $personContactDetails */
         $personContact = ArrayUtils::firstOrNull($person->getContacts());
         if (null !== $personContact) {
-
             if (null === $newPhoneNumber) {
                 $newPhoneNumber = '';
             }

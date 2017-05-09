@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
  * Transaction executor for Doctrine.
  *
  * Class DoctrineTransactionExecutor
- * @package DvsaCommonApi\Transaction
  */
 class DoctrineTransactionExecutor implements TransactionExecutorInterface
 {

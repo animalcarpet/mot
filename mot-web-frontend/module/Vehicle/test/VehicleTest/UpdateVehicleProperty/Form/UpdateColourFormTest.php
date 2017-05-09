@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\UpdateVehicleProperty\Form;
 
 use DvsaCommon\Enum\ColourCode;
@@ -6,15 +7,15 @@ use Vehicle\UpdateVehicleProperty\Form\UpdateColourForm;
 
 class UpdateColourFormTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  UpdateColourForm | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var UpdateColourForm | \PHPUnit_Framework_MockObject_MockObject */
     private $form;
 
     public function setUp()
     {
         $colours = [
-            ColourCode::SILVER => "Silver",
-            ColourCode::BLACK => "Black",
-            ColourCode::NOT_STATED => "Not stated",
+            ColourCode::SILVER => 'Silver',
+            ColourCode::BLACK => 'Black',
+            ColourCode::NOT_STATED => 'Not stated',
         ];
 
         $this->form = new UpdateColourForm($colours);
@@ -34,7 +35,6 @@ class UpdateColourFormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, $this->form->isValid());
     }
 
-
     public function dataProviderTestFormValidation()
     {
         return [
@@ -44,7 +44,7 @@ class UpdateColourFormTest extends \PHPUnit_Framework_TestCase
             [ColourCode::SILVER, ColourCode::NOT_STATED, true],
             [ColourCode::SILVER, null, true],
             //provided values are not in colour list
-            ["notCode", "thisIsNotColourCode", false],
+            ['notCode', 'thisIsNotColourCode', false],
             //primary colour not sent
             [null, ColourCode::SILVER, false],
             [ColourCode::NOT_STATED, ColourCode::SILVER, false],

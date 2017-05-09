@@ -14,12 +14,12 @@ class AddressFormatter
             $address->getAddressLine3(),
             $address->getAddressLine4(),
             $address->getTown(),
-            $address->getPostcode()
+            $address->getPostcode(),
         ];
         if ($showCountry) {
             $addressArray[] = $address->getCountry();
         }
 
-        return join(', ', array_filter($addressArray));
+        return implode(', ', array_filter($addressArray));
     }
 }

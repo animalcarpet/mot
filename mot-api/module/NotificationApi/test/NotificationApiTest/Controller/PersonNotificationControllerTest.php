@@ -7,9 +7,7 @@ use NotificationApi\Controller\PersonNotificationController;
 use NotificationApi\Service\NotificationService;
 
 /**
- * Class PersonNotificationControllerTest
- *
- * @package NotificationApiTest\Controller
+ * Class PersonNotificationControllerTest.
  */
 class PersonNotificationControllerTest extends AbstractNotificationApiControllerTestCase
 {

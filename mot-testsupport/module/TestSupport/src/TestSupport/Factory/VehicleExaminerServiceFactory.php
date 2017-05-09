@@ -13,6 +13,7 @@ class VehicleExaminerServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new VehicleExaminerService($accountService);
+
         return $service;
     }
 }

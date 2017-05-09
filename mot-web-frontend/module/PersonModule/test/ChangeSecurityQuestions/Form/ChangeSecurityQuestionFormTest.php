@@ -15,7 +15,7 @@ class ChangeSecurityQuestionFormTest extends \PHPUnit_Framework_TestCase
 
         $data = [
             ChangeSecurityQuestionForm::FIELD_QUESTION_ANSWER => self::SECURITY_QUESTION_ONE_TEXT,
-            ChangeSecurityQuestionForm::FIELD_QUESTIONS => 'test answer'
+            ChangeSecurityQuestionForm::FIELD_QUESTIONS => 'test answer',
         ];
         $form->setData($data);
         $this->assertTrue($form->isValid());
@@ -70,7 +70,7 @@ class ChangeSecurityQuestionFormTest extends \PHPUnit_Framework_TestCase
 
         $data = [
             ChangeSecurityQuestionForm::FIELD_QUESTION_ANSWER => '',
-            ChangeSecurityQuestionForm::FIELD_QUESTIONS => ''
+            ChangeSecurityQuestionForm::FIELD_QUESTIONS => '',
         ];
 
         $form->setData($data);
@@ -96,7 +96,7 @@ class ChangeSecurityQuestionFormTest extends \PHPUnit_Framework_TestCase
 
         $data = [
             ChangeSecurityQuestionForm::FIELD_QUESTION_ANSWER => $stringExceedingMaxLength,
-            ChangeSecurityQuestionForm::FIELD_QUESTIONS => self::SECURITY_QUESTION_ONE_TEXT
+            ChangeSecurityQuestionForm::FIELD_QUESTIONS => self::SECURITY_QUESTION_ONE_TEXT,
         ];
 
         $form->setData($data);
@@ -112,7 +112,6 @@ class ChangeSecurityQuestionFormTest extends \PHPUnit_Framework_TestCase
 
     private function getSecurityQuestionData()
     {
-
         return [
             '1' => self::SECURITY_QUESTION_ONE_TEXT,
         ];

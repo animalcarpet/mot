@@ -3,7 +3,7 @@
 namespace Core\Presenter;
 
 /**
- * Interface used when displaying address details
+ * Interface used when displaying address details.
  */
 interface AddressPresenterInterface
 {

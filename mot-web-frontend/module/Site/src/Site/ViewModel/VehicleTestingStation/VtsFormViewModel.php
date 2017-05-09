@@ -8,7 +8,7 @@ use Zend\View\Model\ViewModel;
 class VtsFormViewModel extends ViewModel
 {
     /**
-     * @var  VtsCreateForm
+     * @var VtsCreateForm
      */
     private $form;
 
@@ -30,6 +30,7 @@ class VtsFormViewModel extends ViewModel
     public function setForm($form)
     {
         $this->form = $form;
+
         return $this;
     }
 
@@ -47,6 +48,7 @@ class VtsFormViewModel extends ViewModel
     public function setCancelUrl($url)
     {
         $this->cancelUrl = $url;
+
         return $this;
     }
 }

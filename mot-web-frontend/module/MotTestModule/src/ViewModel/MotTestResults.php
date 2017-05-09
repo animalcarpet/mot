@@ -10,7 +10,6 @@ namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResult;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Utility\ArrayUtils;
 
 /**
  * View model class to be used in the MOT Test Results view.
@@ -138,7 +137,7 @@ class MotTestResults
         $brakeResult = $this->motTest->getBrakeTestResult();
 
         return true === $brakeResult->generalPass
-            && $brakeResult->generalPass !== "undefined";
+            && $brakeResult->generalPass !== 'undefined';
     }
 
     /**

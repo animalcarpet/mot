@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonalDetailsControllerFactory
+ * Class PersonalDetailsControllerFactory.
  *
  * Generates the PersonalDetailsController, injecting dependencies
  */

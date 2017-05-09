@@ -9,7 +9,7 @@ use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Provide functionality for receiving Mot Test Log data from api
+ * Provide functionality for receiving Mot Test Log data from api.
  */
 class MotTestLogMapper extends DtoMapper
 {
@@ -39,6 +39,7 @@ class MotTestLogMapper extends DtoMapper
 
     /**
      * @param $testerId
+     *
      * @return MotTestSearchParamsDto
      */
     public function getTesterSummary($testerId)
@@ -62,8 +63,8 @@ class MotTestLogMapper extends DtoMapper
     }
 
     /**
-     * @param int                       $siteId
-     * @param MotTestSearchParamsDto    $searchParams
+     * @param int                    $siteId
+     * @param MotTestSearchParamsDto $searchParams
      *
      * @return \DvsaCommon\Dto\Search\MotTestSearchParamsDto
      */
@@ -77,6 +78,7 @@ class MotTestLogMapper extends DtoMapper
     /**
      * @param int $testerId
      * @param $data
+     *
      * @return SearchResultDto
      */
     public function getTesterData($testerId, $data)

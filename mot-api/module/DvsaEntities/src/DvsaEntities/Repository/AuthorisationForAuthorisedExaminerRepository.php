@@ -15,13 +15,14 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 
 /**
  * Repository for {@link \DvsaEntities\Entity\AuthorisationForAuthorisedExaminer}.
+ *
  * @codeCoverageIgnore
  */
 class AuthorisationForAuthorisedExaminerRepository extends AbstractMutableRepository
 {
     const SEQ_CODE = 'AEREF';
 
-    const ERR_AEREF_NOT_FOUND = "Next reference number of Authorised Examiner was not found";
+    const ERR_AEREF_NOT_FOUND = 'Next reference number of Authorised Examiner was not found';
 
     public function getNextAeRef()
     {
@@ -38,7 +39,7 @@ class AuthorisationForAuthorisedExaminerRepository extends AbstractMutableReposi
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(AuthorisationForAuthorisedExaminer::class, 'afa');
 
-        $sql = "
+        $sql = '
         SELECT afa.* FROM
 auth_for_ae afa
   JOIN organisation o ON (afa.organisation_id = o.id)
@@ -50,7 +51,7 @@ WHERE
   brs.code = :busRoleCode
     AND
   p.id = :personId;
-";
+';
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $query->setParameter('busRoleCode', BusinessRoleStatusCode::ACTIVE);
         $query->setParameter('personId', $person->getId());
@@ -72,7 +73,7 @@ WHERE
          */
         $authorisedExaminer = $this->getEntityManager()
             ->createNativeQuery(
-                "select
+                'select
                     ae.id,
                     p.username,
                     count(mt.id) as slots_in_use
@@ -93,7 +94,7 @@ WHERE
                 GROUP BY
                     ae.id,
                     p.username
-                LIMIT 1",
+                LIMIT 1',
                 $rsm
             )
             ->setParameter('USERNAME', $username)
@@ -111,16 +112,16 @@ WHERE
     public function getByNumber($number)
     {
         $query = $this
-            ->createQueryBuilder("a")
-            ->addSelect("o")
-            ->innerJoin("a.organisation", "o")
-            ->where("a.number = :number")
-            ->setParameter("number", $number)
+            ->createQueryBuilder('a')
+            ->addSelect('o')
+            ->innerJoin('a.organisation', 'o')
+            ->where('a.number = :number')
+            ->setParameter('number', $number)
             ->getQuery();
 
         $auth = $query->getOneOrNullResult();
         if ($auth === null) {
-            throw new NotFoundException("Authorisation For Authorised Examiner");
+            throw new NotFoundException('Authorisation For Authorised Examiner');
         }
 
         return $auth;

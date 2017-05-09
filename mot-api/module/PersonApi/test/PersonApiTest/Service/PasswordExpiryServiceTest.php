@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service;
 
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -6,10 +7,8 @@ use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\PasswordDetail;
-use DvsaEntities\Entity\Person;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaEntities\Repository\PasswordDetailRepository;
-use DvsaEntities\Repository\PersonRepository;
 use PersonApi\Service\PasswordExpiryNotificationService;
 use PersonApi\Service\PasswordExpiryService;
 
@@ -21,7 +20,7 @@ class PasswordExpiryServiceTest extends AbstractServiceTestCase
     private $identityProvider;
 
     private $passwordExpiryNotificationService;
-    
+
     private $config;
 
     public function setUp()
@@ -36,8 +35,8 @@ class PasswordExpiryServiceTest extends AbstractServiceTestCase
         $config
             ->expects($this->any())
             ->method('get')
-            ->willReturnCallback(function($param) {
-                if($param === 'password_expiry_notification_days') {
+            ->willReturnCallback(function ($param) {
+                if ($param === 'password_expiry_notification_days') {
                     return [7, 3, 2, 1];
                 }
             });
@@ -46,13 +45,13 @@ class PasswordExpiryServiceTest extends AbstractServiceTestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUserId")
+            ->method('getUserId')
             ->willReturn(1);
 
         $identityProvider = XMock::of(MotIdentityProviderInterface::class);
         $identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         $this->identityProvider = $identityProvider;
@@ -78,7 +77,7 @@ class PasswordExpiryServiceTest extends AbstractServiceTestCase
         $passwordDetailRepository = $this->getMockWithDisabledConstructor(PasswordDetailRepository::class);
         $passwordDetailRepository
             ->expects($this->any())
-            ->method("findPasswordNotificationSentDateByPersonId")
+            ->method('findPasswordNotificationSentDateByPersonId')
             ->willReturn($passwordNotificationSentOn)
         ;
 
@@ -105,11 +104,11 @@ class PasswordExpiryServiceTest extends AbstractServiceTestCase
             [1,    23,   null],
             [1,    25,   1],
             [20,   25,   1],
-            [24*4, 24*6, null],
-            [24*3, 24*6, null],
-            [24*2, 24*6, 1],
-            [24*1, 24*6, 1],
-            [24*300, 24*30, null],
+            [24 * 4, 24 * 6, null],
+            [24 * 3, 24 * 6, null],
+            [24 * 2, 24 * 6, 1],
+            [24 * 1, 24 * 6, 1],
+            [24 * 300, 24 * 30, null],
         ];
     }
 

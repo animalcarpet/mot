@@ -1,9 +1,9 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form;
 
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\VehicleClassId;
-use DvsaCommon\Utility\ArrayUtils;
 use Zend\Form\Element\Radio;
 use Zend\Form\Form;
 use Zend\InputFilter\Input;
@@ -13,7 +13,7 @@ use Zend\Validator\ValidatorChain;
 
 class UpdateClassForm extends Form
 {
-    const FIELD_CLASS = "class";
+    const FIELD_CLASS = 'class';
 
     public function __construct()
     {
@@ -28,19 +28,19 @@ class UpdateClassForm extends Form
     {
         $class = new Radio();
         $class->setName(self::FIELD_CLASS);
-        $class->setLabel("Change MOT test class");
+        $class->setLabel('Change MOT test class');
 
         $classes = array_combine(VehicleClassId::getAll(), VehicleClassCode::getAll());
 
         $valueOptions = [];
         foreach ($classes as $classId => $classCode) {
             $valueOptions[] = [
-                'value'      => $classId,
-                'inputName'  => self::FIELD_CLASS,
-                'key'        => 'Class ' . $classCode,
+                'value' => $classId,
+                'inputName' => self::FIELD_CLASS,
+                'key' => 'Class '.$classCode,
                 'attributes' => [
-                    'id' => 'class-' . $classCode,
-                ]
+                    'id' => 'class-'.$classCode,
+                ],
             ];
         }
 
@@ -65,7 +65,7 @@ class UpdateClassForm extends Form
 
         $inArrayValidator->setHaystack($values)
             ->setMessages([
-                InArray::NOT_IN_ARRAY => "Please select MOT test class",
+                InArray::NOT_IN_ARRAY => 'Please select MOT test class',
             ]);
 
         $inputFilter = new InputFilter();

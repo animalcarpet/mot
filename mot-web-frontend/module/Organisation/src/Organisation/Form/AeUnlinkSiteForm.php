@@ -18,10 +18,10 @@ class AeUnlinkSiteForm extends AbstractFormModel
      */
     private $statuses;
 
-
     public function fromPost(Parameters $data)
     {
         $this->status = $data->get(self::FIELD_STATUS);
+
         return $this;
     }
 
@@ -36,6 +36,7 @@ class AeUnlinkSiteForm extends AbstractFormModel
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -53,6 +54,7 @@ class AeUnlinkSiteForm extends AbstractFormModel
     public function setStatuses(array $statuses)
     {
         $this->statuses = $statuses;
+
         return $this;
     }
 

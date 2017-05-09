@@ -7,27 +7,30 @@ use DvsaEntities\Entity\IncognitoVehicle;
 use DvsaEntities\Entity\Vehicle;
 
 /**
- * Class IncognitoVehicleRepository
- * @package DvsaEntities\Repository
+ * Class IncognitoVehicleRepository.
  */
 class IncognitoVehicleRepository extends AbstractMutableRepository
 {
     /**
      * @param $id
+     *
      * @return IncognitoVehicle
+     *
      * @throws NotFoundException
      */
     public function get($id)
     {
         $result = $this->find($id);
         if (empty($result)) {
-            throw new NotFoundException("Incognito Vehicle", $id);
+            throw new NotFoundException('Incognito Vehicle', $id);
         }
+
         return $result;
     }
 
     /**
      * @param Vehicle $vehicle
+     *
      * @return array
      */
     public function findAllCampaignsForVehicle(Vehicle $vehicle)
@@ -43,8 +46,9 @@ class IncognitoVehicleRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param Vehicle   $vehicle
-     * @param int       $campaignId
+     * @param Vehicle $vehicle
+     * @param int     $campaignId
+     *
      * @return array|null
      */
     public function findAllCampaignsForVehicleExcept(Vehicle $vehicle, $campaignId)
@@ -60,11 +64,12 @@ class IncognitoVehicleRepository extends AbstractMutableRepository
 
         $result = $queryBuilder->getQuery()->getResult();
 
-        return (empty($result) ? null : $result);
+        return empty($result) ? null : $result;
     }
 
     /**
      * @param Vehicle $vehicle
+     *
      * @return IncognitoVehicle|null
      */
     public function getCurrent(Vehicle $vehicle)
@@ -81,6 +86,6 @@ class IncognitoVehicleRepository extends AbstractMutableRepository
 
         $result = $queryBuilder->getQuery()->getResult();
 
-        return (empty($result) ? null : $result[0]);
+        return empty($result) ? null : $result[0];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Enum\SiteBusinessRoleCode;
@@ -7,10 +8,9 @@ use DvsaMotApi\Controller\MotTestBrakeTestResultController;
 use DvsaMotApi\Service\BrakeTestResultService;
 use DvsaMotApiTest\Service\MotTestServiceTest;
 use Zend\Http\Request;
-use Zend\Http\Response;
 
 /**
- * Class MotTestBrakeTestResultControllerTest
+ * Class MotTestBrakeTestResultControllerTest.
  */
 class MotTestBrakeTestResultControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -51,7 +51,7 @@ class MotTestBrakeTestResultControllerTest extends AbstractMotApiControllerTestC
             $this->request->getPost()->set($fieldName, $value);
         }
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
 
         //  --  check    --
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, ['data' => []], $result);

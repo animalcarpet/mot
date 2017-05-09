@@ -9,20 +9,19 @@ use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
 use Zend\Validator\InArray;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 
 class MakeForm extends Form
 {
-    const OTHER_ID = "other";
-    const OTHER_NAME = "OTHER";
+    const OTHER_ID = 'other';
+    const OTHER_NAME = 'OTHER';
     const FIELD_MAKE_NAME = 'vehicleMake';
     const FIELD_MAKE_ID = 'vehicleMake';
     const FIELD_OTHER_MAKE_NAME = 'otherMake';
     const FIELD_OTHER_MAKE_ID = 'otherMake';
-    const DATA_TARGET_ID = "other-make-field";
+    const DATA_TARGET_ID = 'other-make-field';
     const MAX_OTHER_MAKE_LENGTH = 39;
     const FIELD_OTHER_MAKE_LABEL = 'If other, please specify';
 
@@ -44,6 +43,7 @@ class MakeForm extends Form
     public function getSelectedMakeName()
     {
         $options = $this->getMakeElement()->getValueOptions();
+
         return $options[$this->getMakeElement()->getValue()];
     }
 
@@ -60,7 +60,6 @@ class MakeForm extends Form
         parent::__construct();
 
         TypeCheck::assertCollectionOfClass($modelList, MakeDto::class);
-
 
         $makeOther = new MakeDto();
         $makeOther
@@ -119,11 +118,11 @@ class MakeForm extends Form
 
     private function createMakeValidator(array $makeSelectValue)
     {
-        $notEmptyValidator = (new NotEmpty())->setMessage(" you must choose a make", NotEmpty::IS_EMPTY);
+        $notEmptyValidator = (new NotEmpty())->setMessage(' you must choose a make', NotEmpty::IS_EMPTY);
         $inArrayValidator = (new InArray())
             ->setHaystack(array_keys($makeSelectValue));
 
-        $inArrayValidator->setMessage(" you must choose a make");
+        $inArrayValidator->setMessage(' you must choose a make');
         $makeInput = new Input(self::FIELD_MAKE_ID);
         $makeInput
             ->setRequired(true)
@@ -144,7 +143,7 @@ class MakeForm extends Form
 
         $this->makeOtherElement
             ->setName(self::FIELD_OTHER_MAKE_NAME)
-            ->setLabel("Make")
+            ->setLabel('Make')
             ->setAttribute('id', self::FIELD_OTHER_MAKE_ID)
             ->setAttribute('required', false)
         ;
@@ -154,10 +153,10 @@ class MakeForm extends Form
 
     private function createOtherMakeValidator()
     {
-        $notEmptyValidator = (new NotEmpty())->setMessage(" Enter a name for the unknown make", NotEmpty::IS_EMPTY);
+        $notEmptyValidator = (new NotEmpty())->setMessage(' Enter a name for the unknown make', NotEmpty::IS_EMPTY);
         $stringLengthValidator = new StringLength();
         $stringLengthValidator->setMax(self::MAX_OTHER_MAKE_LENGTH);
-        $stringLengthValidator->setMessage("Must be shorter than 40 characters");
+        $stringLengthValidator->setMessage('Must be shorter than 40 characters');
 
         $input = new Input(self::FIELD_OTHER_MAKE_ID);
         $input

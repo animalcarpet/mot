@@ -5,9 +5,11 @@ namespace DvsaAuthentication\Identity\OpenAM\Utils;
 class IdentityAttributeFinder
 {
     /**
-     * Searches for attribute inside identity attributes map
+     * Searches for attribute inside identity attributes map.
+     *
      * @param string $attribute
-     * @param array $map
+     * @param array  $map
+     *
      * @return string|null attribute value or null if the value was not found
      */
     public static function find($attribute, $map)

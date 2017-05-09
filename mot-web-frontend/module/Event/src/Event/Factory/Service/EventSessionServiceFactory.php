@@ -5,6 +5,7 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
+
 namespace Event\Factory\Service;
 
 use DvsaClient\MapperFactory;

@@ -6,7 +6,7 @@ $this->headTitle('User search');
 <?php
 echo $this->partial('partial/gds/general/system-message.phtml', [
         'messages' => $systemMessage,
-        'type' => 'failure'
+        'type' => 'failure',
     ]
 );
 ?>
@@ -14,7 +14,7 @@ echo $this->partial('partial/gds/general/system-message.phtml', [
 <?php
 if (empty($systemMessage)) {
     echo $this->partial('partial/gds/general/message.phtml', [
-            'message' => (isset($infoMessage) && !empty($infoMessage))? $infoMessage : $message
+            'message' => (isset($infoMessage) && !empty($infoMessage)) ? $infoMessage : $message,
         ]
     );
 }
@@ -27,16 +27,16 @@ if (empty($systemMessage)) {
             [
                 'searchResultsRoute' => $searchResultsRoute,
                 'userSearchExtended' => $userSearchExtended,
-                'username'  => $viewModel->displayUsernameSearchCriteria(),
+                'username' => $viewModel->displayUsernameSearchCriteria(),
                 'firstName' => $viewModel->displayFirstNameSearchCriteria(),
-                'lastName'  => $viewModel->displayLastNameSearchCriteria(),
-                'email'     => $viewModel->displayEmailSearchCriteria(),
-                'town'      => $viewModel->displayTownSearchCriteria(),
-                'postcode'  => $viewModel->displayPostcodeSearchCriteria(),
-                'dob'       => $viewModel->displayDobSearchCriteria(),
-                'dobDay'    => $viewModel->displayDobDaySearchCriteria(),
-                'dobMonth'  => $viewModel->displayDobMonthSearchCriteria(),
-                'dobYear'   => $viewModel->displayDobYearSearchCriteria(),
+                'lastName' => $viewModel->displayLastNameSearchCriteria(),
+                'email' => $viewModel->displayEmailSearchCriteria(),
+                'town' => $viewModel->displayTownSearchCriteria(),
+                'postcode' => $viewModel->displayPostcodeSearchCriteria(),
+                'dob' => $viewModel->displayDobSearchCriteria(),
+                'dobDay' => $viewModel->displayDobDaySearchCriteria(),
+                'dobMonth' => $viewModel->displayDobMonthSearchCriteria(),
+                'dobYear' => $viewModel->displayDobYearSearchCriteria(),
                 'expandAdditionalSearchCriteria' => $viewModel->expandAdditionalSearchCriteria(),
             ]
         ); ?>

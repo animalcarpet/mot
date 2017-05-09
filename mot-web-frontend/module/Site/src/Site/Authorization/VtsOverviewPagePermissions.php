@@ -3,7 +3,6 @@
 namespace Site\Authorization;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
-use DvsaCommon\Auth\Assertion\UpdateVtsAssertion;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
@@ -16,11 +15,9 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class VtsOverviewPagePermissions
+ * Class VtsOverviewPagePermissions.
  *
  * Wraps authorisation service to provide a clean way of verifying what a person can do/see on VTS overview page
- *
- * @package Site\Authorization
  */
 class VtsOverviewPagePermissions
 {
@@ -113,6 +110,7 @@ class VtsOverviewPagePermissions
     public function canTestClass1And2()
     {
         $roles = $this->vts->getTestClasses();
+
         return is_array($roles) && (in_array(1, $roles) || in_array(2, $roles));
     }
 

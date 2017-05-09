@@ -8,15 +8,14 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as SessionContainer;
 
 /**
- * Class LocationSelectContainerFactory
- *
- * @package DvsaMotTest\Factory
+ * Class LocationSelectContainerFactory.
  */
 class LocationSelectContainerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $container = new SessionContainer();
+
         return new LocationSelectContainerHelper($container);
     }
 }

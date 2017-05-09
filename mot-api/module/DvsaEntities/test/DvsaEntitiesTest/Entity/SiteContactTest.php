@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -9,7 +10,7 @@ use DvsaEntities\Entity\SiteContactType;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class SiteContactTest
+ * Class SiteContactTest.
  */
 class SiteContactTest extends PHPUnit_Framework_TestCase
 {
@@ -18,7 +19,7 @@ class SiteContactTest extends PHPUnit_Framework_TestCase
     private $site;
     private $contactDetail;
     private $siteContactType;
-    /** @var  SiteContact */
+    /** @var SiteContact */
     private $siteContact;
 
     public function setUp()

@@ -24,6 +24,7 @@ class AlreadyHasRegisteredCardControllerFactory implements FactoryInterface
         $catalogService = $serviceLocator->get(CatalogService::class);
         $identityProvider = $serviceLocator->get(MotIdentityProviderInterface::class);
         $securityCardGuard = $serviceLocator->get(SecurityCardGuard::class);
+
         return new AlreadyHasRegisteredCardController(
             $securityCardService,
             $contextProvider,

@@ -25,7 +25,7 @@ use Zend\View\Helper\Url;
 class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, AutoWireableInterface
 {
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's country of registration?";
-    const PAGE_TITLE = "Change country of registration";
+    const PAGE_TITLE = 'Change country of registration';
 
     /** @var UpdateVehicleContext */
     private $context;
@@ -40,7 +40,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
 
     private $tertiaryTitleBuilder;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     public function __construct(
@@ -49,8 +49,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
         VehicleService $vehicleService,
         VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         $this->countryCatalog = $countryCatalog;
         $this->url = $url;
         $this->vehicleService = $vehicleService;
@@ -70,7 +69,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
         if ($this->context->isUpdateVehicleDuringTest()) {
             $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_COUNTRY, [
                     StartTestChangeService::CHANGE_COUNTRY => $formData[CountryOfRegistrationForm::FIELD_COUNTRY_OF_REGISTRATION
-                ]
+                ],
             ]);
             $this->startTestChangeService->updateChangedValueStatus(StartTestChangeService::CHANGE_COUNTRY, true);
         } else {
@@ -87,15 +86,16 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
     public function getPrePopulatedData()
     {
         $countryOfRegistrationId = $this->getCountryOfRegistration();
+
         return [
-            'country-of-registration' => $countryOfRegistrationId
+            'country-of-registration' => $countryOfRegistrationId,
         ];
     }
 
     public function getSubmitButtonText()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Continue";
+            return 'Continue';
         }
 
         return self::PAGE_TITLE;
@@ -120,7 +120,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
 
     public function getSuccessfulEditMessage()
     {
-        return "Country of registration has been successfully changed";
+        return 'Country of registration has been successfully changed';
     }
 
     public function getEditStepPageTitle()
@@ -138,7 +138,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
             return self::PAGE_SUBTITLE_UPDATE_DURING_TEST;
         }
 
-        return "Vehicle";
+        return 'Vehicle';
     }
 
     public function buildEditStepViewModel($form)
@@ -153,7 +153,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
         return (new UpdateVehiclePropertyViewModel())
             ->setForm($form)
             ->setSubmitButtonText($this->getSubmitButtonText())
-            ->setPartial("partials/edit-country-country-of-registration")
+            ->setPartial('partials/edit-country-country-of-registration')
             ->setBackUrl($isChangeUnderTest ? $underTestBackUrl : $backUrl)
             ->setBackLinkText($this->getBackButtonText())
             ->setFormActionUrl($isChangeUnderTest ? $underTestActionUrl : $formActionUrl)
@@ -167,9 +167,10 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
                 [
                     'id' => $this->context->getObfuscatedVehicleId(),
                     'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
-                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
+                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source'],
                 ]);
         }
+
         return new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL, ['id' => $this->context->getObfuscatedVehicleId()]);
     }
 
@@ -180,7 +181,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
 
     public function getEditPageLede()
     {
-        return "";
+        return '';
     }
 
     /**
@@ -191,10 +192,10 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
     private function getBackButtonText()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Back";
+            return 'Back';
         }
 
-        return "Cancel and return to vehicle";
+        return 'Cancel and return to vehicle';
     }
 
     private function getCountryOfRegistration()

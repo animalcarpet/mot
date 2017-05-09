@@ -8,9 +8,7 @@ use DvsaMotApi\Service\TesterService;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class TesterControllerTest
- *
- * @package DvsaMotApiTest\Controller
+ * Class TesterControllerTest.
  */
 class TesterControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -138,7 +136,6 @@ class TesterControllerTest extends AbstractMotApiControllerTestCase
         $response = $this->controller->getResponse();
 
         $this->assertEquals(self::HTTP_OK_CODE, $response->getStatusCode());
-
     }
 
     public function testDataReturnedFromGetVtsWithSlotBalance()
@@ -161,8 +158,5 @@ class TesterControllerTest extends AbstractMotApiControllerTestCase
 
         $result = $this->getResultForAction('get', 'getVtsWithSlotBalance', ['id' => $personId]);
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, ['data' => $testInProgressId], $result);
-
     }
-
-
 }

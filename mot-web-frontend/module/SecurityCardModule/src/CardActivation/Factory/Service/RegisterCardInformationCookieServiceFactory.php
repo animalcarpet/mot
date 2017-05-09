@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Factory\Service;
 
-use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardInformationCookieService;

@@ -1,15 +1,13 @@
 <?php
 use Core\Formatting\AddressFormatter;
 use DvsaCommon\Enum\SiteContactTypeCode;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 
 /** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site */
-
 $site = $this->viewModel->site;
 $siteAddress = null;
-if(!is_null($site)){
+if (!is_null($site)) {
     $contact = $site->getContactByType(SiteContactTypeCode::BUSINESS);
-    if(!is_null($contact)){
+    if (!is_null($contact)) {
         $siteAddress = $contact->getAddress();
     }
 }

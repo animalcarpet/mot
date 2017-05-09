@@ -11,9 +11,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SiteServiceFactory
- *
- * @package SiteApi\Factory\Service
+ * Class SiteServiceFactory.
  */
 class SiteContactServiceFactory implements FactoryInterface
 {

@@ -31,13 +31,13 @@ class EventPersonCreationService
         $person = $this->personRepository->find($personId);
 
         if (is_null($person)) {
-            throw new \Exception('Unable to find person with id: ' . $personId);
+            throw new \Exception('Unable to find person with id: '.$personId);
         }
 
         $eventType = $this->eventTypeRepository->findOneBy(['code' => $eventCode]);
 
         if (is_null($eventType)) {
-            throw new \Exception('Unable to find event type with code: ' . $eventCode);
+            throw new \Exception('Unable to find event type with code: '.$eventCode);
         }
 
         $dateTimeHolder = new DateTimeHolder();
@@ -61,11 +61,11 @@ class EventPersonCreationService
             $this->entityManager->persist($personEvent);
             $this->entityManager->flush();
             $this->entityManager->commit();
+
             return new RecordEventResult($event);
         } catch (\Exception $e) {
             $this->entityManager->rollback();
             throw $e;
         }
-
     }
 }

@@ -9,7 +9,7 @@ use SiteApi\Controller\DefaultBrakeTestsController;
 use SiteApi\Service\DefaultBrakeTestsService;
 
 /**
- * Tests for DefaultBrakeTestsController
+ * Tests for DefaultBrakeTestsController.
  *
  * @property-read DefaultBrakeTestsController $controller
  */

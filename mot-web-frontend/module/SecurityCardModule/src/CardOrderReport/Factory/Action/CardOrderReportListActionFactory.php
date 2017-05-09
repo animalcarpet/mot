@@ -2,9 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrderReport\Factory\Action;
 
-
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardOrderReport\Action\CardOrderCsvReportAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrderReport\Action\CardOrderReportListAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Date\DateTimeHolder;
@@ -13,11 +11,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class CardOrderReportListActionFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $featureToggle = $serviceLocator->get(TwoFaFeatureToggle::class);
-        $authService = $serviceLocator->get("AuthorisationService");
+        $authService = $serviceLocator->get('AuthorisationService');
         /** @var $authorisationService AuthorisationService */
         $authorisationService = $serviceLocator->get(AuthorisationService::class);
 

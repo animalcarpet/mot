@@ -2,7 +2,6 @@
 
 namespace PersonApi\Service;
 
-
 use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -14,7 +13,6 @@ use DvsaEntities\Entity\PersonContact;
 use DvsaEntities\Entity\PersonContactType;
 use DvsaCommon\Constants\PersonContactType as ContactType;
 use PersonApi\Helper\PersonDetailsChangeNotificationHelper;
-use Zend\Code\Exception\InvalidArgumentException;
 
 class PersonAddressService extends AbstractService
 {
@@ -43,9 +41,9 @@ class PersonAddressService extends AbstractService
     /**
      * PersonAddressService constructor.
      *
-     * @param EntityManager $entityManager
-     * @param AddressValidator $validator
-     * @param AuthorisationService $authorisationService
+     * @param EntityManager                         $entityManager
+     * @param AddressValidator                      $validator
+     * @param AuthorisationService                  $authorisationService
      * @param PersonDetailsChangeNotificationHelper $notificationHelper
      */
     public function __construct(
@@ -70,7 +68,7 @@ class PersonAddressService extends AbstractService
         }
 
         if (!$this->validator->isValid($data)) {
-            throw new InvalidFieldValueException(implode(", ", $this->validator->getMessages()));
+            throw new InvalidFieldValueException(implode(', ', $this->validator->getMessages()));
         }
         $person = $this->findPerson($personId);
 
@@ -111,7 +109,7 @@ class PersonAddressService extends AbstractService
             ->findOneBy(
                 [
                     'person' => $person,
-                    'type'   => $personContactType,
+                    'type' => $personContactType,
                 ]
             );
     }

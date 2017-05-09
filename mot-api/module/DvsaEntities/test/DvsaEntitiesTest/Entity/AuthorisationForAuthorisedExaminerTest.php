@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class AuthorisationForAuthorisedExaminerTest
+ * Class AuthorisationForAuthorisedExaminerTest.
  */
 class AuthorisationForAuthorisedExaminerTest extends PHPUnit_Framework_TestCase
 {
@@ -21,7 +22,7 @@ class AuthorisationForAuthorisedExaminerTest extends PHPUnit_Framework_TestCase
     {
         $authorisedExaminer = new AuthorisationForAuthorisedExaminer();
 
-        $organisationId =  1;
+        $organisationId = 1;
         $authorisedExaminer->setOrganisation($organisationId);
 
         $this->assertEquals($organisationId, $authorisedExaminer->getOrganisation());

@@ -8,9 +8,8 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\SiteTestingFacilitiesService;
 
-
 /**
- * Controller for getting / updating site's testing facilities
+ * Controller for getting / updating site's testing facilities.
  */
 class SiteTestingFacilitiesController extends AbstractDvsaRestfulController
 {

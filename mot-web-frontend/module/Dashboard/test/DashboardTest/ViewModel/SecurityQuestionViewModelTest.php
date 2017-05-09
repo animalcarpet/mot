@@ -8,7 +8,6 @@ use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
 use DvsaClient\Entity\Person;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommonTest\TestUtils\XMock;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
@@ -19,18 +18,18 @@ use Zend\Mvc\Controller\Plugin\FlashMessenger;
 class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
 {
     const QUESTION_NB = 1;
-    const PERSON_ID   = 1;
+    const PERSON_ID = 1;
 
     /** @var SecurityQuestionViewModel */
     private $view;
 
-    /** @var  SecurityQuestionService */
+    /** @var SecurityQuestionService */
     private $service;
 
-    /** @var  \DvsaClient\Entity\Person */
+    /** @var \DvsaClient\Entity\Person */
     private $person;
 
-    /** @var  \DvsaCommon\Dto\Security\SecurityQuestionDto */
+    /** @var \DvsaCommon\Dto\Security\SecurityQuestionDto */
     private $question;
     private $messenger;
 
@@ -45,7 +44,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
         $this->person = new Person();
         $this->question = new SecurityQuestionDto();
 
-        /** @var PersonProfileUrlGenerator $personProfileUrlGenerator */
+        /* @var PersonProfileUrlGenerator $personProfileUrlGenerator */
         $this->personProfileUrlGenerator = $this
             ->getMockBuilder(PersonProfileUrlGenerator::class)
             ->disableOriginalConstructor()
@@ -136,6 +135,6 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
         return $this->personProfileUrlGenerator
             ->expects($this->once())
             ->method('fromPersonProfile')
-            ->willReturn('/profile/security-question/' . $questionNumber);
+            ->willReturn('/profile/security-question/'.$questionNumber);
     }
 }

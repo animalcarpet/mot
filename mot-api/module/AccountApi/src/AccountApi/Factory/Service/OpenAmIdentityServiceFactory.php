@@ -22,7 +22,7 @@ class OpenAmIdentityServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $openAMClient = $serviceLocator->get(OpenAMClientInterface::class);
-        $realm        = $serviceLocator->get(OpenAMClientOptions::class)->getRealm();
+        $realm = $serviceLocator->get(OpenAMClientOptions::class)->getRealm();
         $passwordExpiryNotificationService = $serviceLocator->get(PasswordExpiryNotificationService::class);
 
         return new OpenAmIdentityService($openAMClient, $passwordExpiryNotificationService, $realm);

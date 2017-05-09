@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\Form;
 
 use DvsaClient\ViewModel\AbstractFormModel;
@@ -39,7 +40,7 @@ class VtsUpdateTestingFacilitiesForm extends AbstractFormModel
     {
         $facilities = [];
 
-        for ($i = 0, $len = $this->getTestingFacilityOptl(); $i < $len; $i++) {
+        for ($i = 0, $len = $this->getTestingFacilityOptl(); $i < $len; ++$i) {
             $facilities[] = (new FacilityDto())
                 ->setType(
                     (new FacilityTypeDto())
@@ -47,7 +48,7 @@ class VtsUpdateTestingFacilitiesForm extends AbstractFormModel
                 );
         }
 
-        for ($i = 0, $len = $this->getTestingFacilityTptl(); $i < $len; $i++) {
+        for ($i = 0, $len = $this->getTestingFacilityTptl(); $i < $len; ++$i) {
             $facilities[] = (new FacilityDto())
                 ->setType((new FacilityTypeDto())->setCode(FacilityTypeCode::TWO_PERSON_TEST_LANE));
         }
@@ -64,7 +65,6 @@ class VtsUpdateTestingFacilitiesForm extends AbstractFormModel
 
         return $siteDto;
     }
-
 
     public function fromDto(VehicleTestingStationDto $vtsDto)
     {
@@ -92,11 +92,13 @@ class VtsUpdateTestingFacilitiesForm extends AbstractFormModel
 
     /**
      * @param int $testingFacilityOptl
+     *
      * @return $this
      */
     public function setTestingFacilityOptl($testingFacilityOptl)
     {
         $this->testingFacilityOptl = $testingFacilityOptl;
+
         return $this;
     }
 
@@ -110,11 +112,13 @@ class VtsUpdateTestingFacilitiesForm extends AbstractFormModel
 
     /**
      * @param int $testingFacilityTptl
+     *
      * @return $this
      */
     public function setTestingFacilityTptl($testingFacilityTptl)
     {
         $this->testingFacilityTptl = $testingFacilityTptl;
+
         return $this;
     }
 
@@ -128,11 +132,13 @@ class VtsUpdateTestingFacilitiesForm extends AbstractFormModel
 
     /**
      * @param string $formUrl
+     *
      * @return $this
      */
     public function setFormUrl($formUrl)
     {
         $this->formUrl = $formUrl;
+
         return $this;
     }
 
@@ -147,5 +153,4 @@ class VtsUpdateTestingFacilitiesForm extends AbstractFormModel
             0, 1, 2, 3, 4, '5 or more',
         ];
     }
-
 }

@@ -64,7 +64,7 @@ class StartTestConfirmationControllerNotLoggedInTest extends AbstractDvsaMotTest
     {
         $config = ['security' => ['obfuscate' => ['key' => 'ggg', 'entries' => ['vehicleId' => true]]]];
         $paramEncrypter = new ParamEncrypter(new EncryptionKey($config['security']['obfuscate']['key']));
-        $paramEncoder   = new ParamEncoder();
+        $paramEncoder = new ParamEncoder();
 
         return new ParamObfuscator($paramEncrypter, $paramEncoder, $config);
     }
@@ -76,7 +76,7 @@ class StartTestConfirmationControllerNotLoggedInTest extends AbstractDvsaMotTest
     {
         $fixture = json_decode(
             file_get_contents(
-                __DIR__ . '/../../DvsaMotEnforcementTest/Controller/fixtures/catalog.json'
+                __DIR__.'/../../DvsaMotEnforcementTest/Controller/fixtures/catalog.json'
             ),
             true
         );
@@ -92,6 +92,7 @@ class StartTestConfirmationControllerNotLoggedInTest extends AbstractDvsaMotTest
         $this->service = new CatalogService($appCache, $client);
 
         $catalogService = new CatalogService($appCache, $client);
+
         return new CountryOfRegistrationCatalog($catalogService);
     }
 }

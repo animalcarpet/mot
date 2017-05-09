@@ -16,38 +16,38 @@ use DvsaMotTest\Controller\MotTestController;
 
 return [
     // This route is defined in Application module (DvsaMotTest)
-    'mot-test'                                    => [
-        'type'          => 'segment',
-        'options'       => [
-            'route'       => '/mot-test/:motTestNumber',
+    'mot-test' => [
+        'type' => 'segment',
+        'options' => [
+            'route' => '/mot-test/:motTestNumber',
             'constraints' => [
                 'motTestNumber' => MotTestNumberConstraint::FORMAT_REGEX,
             ],
-            'defaults'    => [
+            'defaults' => [
                 'controller' => MotTestController::class,
-                'action'     => 'index',
+                'action' => 'index',
             ],
         ],
         'may_terminate' => true,
-        'child_routes'  => [],
+        'child_routes' => [],
     ],
-    'contingency'                                 => [
-        'type'    => 'segment',
+    'contingency' => [
+        'type' => 'segment',
         'options' => [
-            'route'    => '/contingency',
+            'route' => '/contingency',
             'defaults' => [
                 'controller' => ContingencyTestController::class,
-                'action'     => 'index',
+                'action' => 'index',
             ],
         ],
     ],
-    'contingency-error'                           => [
-        'type'    => 'segment',
+    'contingency-error' => [
+        'type' => 'segment',
         'options' => [
-            'route'    => '/contingency-error',
+            'route' => '/contingency-error',
             'defaults' => [
                 'controller' => ContingencyTestController::class,
-                'action'     => 'error',
+                'action' => 'error',
             ],
         ],
     ],
@@ -60,7 +60,7 @@ return [
             ],
             'defaults' => [
                 'controller' => DefectCategoriesController::class,
-                'action'     => 'redirectToCategoriesIndex',
+                'action' => 'redirectToCategoriesIndex',
             ],
         ],
         'may_terminate' => true,
@@ -74,7 +74,7 @@ return [
                     ],
                     'defaults' => [
                         'controller' => EditDefectController::class,
-                        'action'     => 'edit',
+                        'action' => 'edit',
                     ],
                 ],
             ],
@@ -87,7 +87,7 @@ return [
                     ],
                     'defaults' => [
                         'controller' => RemoveDefectController::class,
-                        'action'     => 'remove',
+                        'action' => 'remove',
                     ],
                 ],
             ],
@@ -97,7 +97,7 @@ return [
                     'route' => '/categories',
                     'defaults' => [
                         'controller' => DefectCategoriesController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
@@ -109,7 +109,7 @@ return [
                             'route' => '/add/0/advisory',
                             'defaults' => [
                                 'controller' => AddManualAdvisoryController::class,
-                                'action'     => 'add',
+                                'action' => 'add',
                             ],
                         ],
                     ],
@@ -122,7 +122,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => EditDefectController::class,
-                                'action'     => 'edit',
+                                'action' => 'edit',
                             ],
                         ],
                     ],
@@ -135,7 +135,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => RemoveDefectController::class,
-                                'action'     => 'remove',
+                                'action' => 'remove',
                             ],
                         ],
                     ],
@@ -148,7 +148,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => DefectCategoriesController::class,
-                                'action'     => 'category',
+                                'action' => 'category',
                             ],
                         ],
                         'may_terminate' => true,
@@ -160,7 +160,7 @@ return [
                                     'route' => '/add/0/advisory',
                                     'defaults' => [
                                         'controller' => AddManualAdvisoryController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                             ],
@@ -174,7 +174,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => AddDefectController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                             ],
@@ -187,7 +187,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => EditDefectController::class,
-                                        'action'     => 'edit',
+                                        'action' => 'edit',
                                     ],
                                 ],
                             ],
@@ -200,7 +200,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => RemoveDefectController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                             ],
@@ -214,7 +214,7 @@ return [
                     'route' => '/search',
                     'defaults' => [
                         'controller' => SearchDefectsController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
@@ -226,7 +226,7 @@ return [
                             'route' => '/add/0/advisory',
                             'defaults' => [
                                 'controller' => AddManualAdvisoryController::class,
-                                'action'     => 'add',
+                                'action' => 'add',
                             ],
                         ],
                     ],
@@ -240,7 +240,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => AddDefectController::class,
-                                'action'     => 'add',
+                                'action' => 'add',
                             ],
                         ],
                     ],
@@ -253,7 +253,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => EditDefectController::class,
-                                'action'     => 'edit',
+                                'action' => 'edit',
                             ],
                         ],
                     ],
@@ -266,7 +266,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => RemoveDefectController::class,
-                                'action'     => 'remove',
+                                'action' => 'remove',
                             ],
                         ],
                     ],
@@ -280,7 +280,7 @@ return [
             'route' => '/survey',
             'defaults' => [
                 'controller' => SurveyPageController::class,
-                'action'     => 'index',
+                'action' => 'index',
             ],
         ],
         'may_terminate' => true,
@@ -291,17 +291,17 @@ return [
                     'route' => '/thanks',
                     'defaults' => [
                         'controller' => SurveyPageController::class,
-                        'action'     => 'thanks',
+                        'action' => 'thanks',
                     ],
                 ],
             ],
-            'reports'                           => [
-                'type'    => 'segment',
+            'reports' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/reports',
+                    'route' => '/reports',
                     'defaults' => [
                         'controller' => SurveyPageController::class,
-                        'action'     => 'reports',
+                        'action' => 'reports',
                     ],
                 ],
                 'may_terminate' => true,
@@ -320,16 +320,16 @@ return [
             ],
         ],
     ],
-    'odometer'                           => [
-        'type'    => 'segment',
+    'odometer' => [
+        'type' => 'segment',
         'options' => [
-            'route'    => '/mot-test/:tID/odometer/update',
+            'route' => '/mot-test/:tID/odometer/update',
             'constraints' => [
                 'tID' => MotTestNumberConstraint::FORMAT_REGEX,
             ],
             'defaults' => [
                 'controller' => OdometerController::class,
-                'action'     => 'index',
+                'action' => 'index',
             ],
         ],
     ],

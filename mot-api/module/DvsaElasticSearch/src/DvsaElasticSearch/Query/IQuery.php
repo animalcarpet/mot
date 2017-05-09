@@ -3,11 +3,9 @@
 namespace DvsaElasticSearch\Query;
 
 /**
- * Interface IQuery
+ * Interface IQuery.
  *
  * All children od SuperSearchQuery MUST implement me to be functional.
- *
- * @package DvsaElasticSearch\Query
  */
 interface IQuery
 {

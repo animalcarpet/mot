@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Dto\Person\PersonDto;

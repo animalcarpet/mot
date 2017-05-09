@@ -9,11 +9,10 @@ use DvsaCommonApi\Service\Validator\DrivingLicenceValidator;
 use PersonApi\Service\Validator\BasePersonValidator;
 
 /**
- * Class AccountValidator
+ * Class AccountValidator.
  */
 class AccountValidator extends BasePersonValidator
 {
-
     const ERROR_EMAIL_CONFIRMATION = 'Email address and Confirm email address must match';
     const ERROR_PASSWORD_CONFIRMATION = 'Password and Confirm Password must match';
     const ERROR_PASSWORD_TOO_SHORT = 'Password must be at least 8 characters long';

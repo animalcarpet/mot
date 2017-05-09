@@ -3,13 +3,11 @@
 namespace Application\Helper;
 
 use DvsaCommon\Guid\Guid;
-use DvsaCommon\UrlBuilder\AbstractUrlBuilder;
 use Zend\Http\Request;
 use Zend\Session\Container;
-use Zend\View\Helper\Escaper\AbstractHelper;
 
 /**
- * Post-Redirect-Get helper. Protect a form from double post
+ * Post-Redirect-Get helper. Protect a form from double post.
  */
 class PrgHelper
 {
@@ -22,7 +20,7 @@ class PrgHelper
     {
         $this->session = new Container('prgHelperSession');
 
-        $this->isPost = (boolean)$request->isPost();
+        $this->isPost = (bool) $request->isPost();
         if ($this->isPost) {
             $this->guid = $request->getPost(self::FORM_GUID_FIELD_NAME);
         }
@@ -32,7 +30,7 @@ class PrgHelper
     {
         $guid = Guid::newGuid();
 
-        return '<input type="hidden" name="' . self::FORM_GUID_FIELD_NAME . '" value="' . $guid . '">';
+        return '<input type="hidden" name="'.self::FORM_GUID_FIELD_NAME.'" value="'.$guid.'">';
     }
 
     public function isRepeatPost()

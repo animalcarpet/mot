@@ -5,21 +5,18 @@ namespace NonWorkingDaysApi;
 use NonWorkingDaysApi\Provider\NonWorkingDaysProvider;
 
 /**
- * Takes the resposibility of managing non working days' lists while testing if a day is a non working one
+ * Takes the resposibility of managing non working days' lists while testing if a day is a non working one.
  *
  * Class NonWorkingDaysLookupManager
- * @package NonWorkingDaysApi
  */
 class NonWorkingDaysLookupManager
 {
-
     private $provider;
     private $nonWorkingDaysLookupStore = [];
 
     /**
-     *
      * @param NonWorkingDaysProvider $provider
-     *      a component providing non working days list
+     *                                         a component providing non working days list
      */
     public function __construct(NonWorkingDaysProvider $provider)
     {
@@ -27,18 +24,19 @@ class NonWorkingDaysLookupManager
     }
 
     /**
-     * Checks if a given date is a non working day in a given country
+     * Checks if a given date is a non working day in a given country.
      *
      * @param \DateTime $date
-     *      a date the check is performed against
+     *                        a date the check is performed against
      * @param $countryCode
      *      a country identifier
+     *
      * @return bool
-     *      an answer whether a day is a non working day
+     *              an answer whether a day is a non working day
      */
     public function isNonWorkingDay(\DateTime $date, $countryCode)
     {
-        $year = $date->format("Y");
+        $year = $date->format('Y');
 
         if (!array_key_exists($year, $this->nonWorkingDaysLookupStore)) {
             $this->nonWorkingDaysLookupStore[$year] = $this->getHashedCollectionOfDateTimes($year, $countryCode);
@@ -51,22 +49,25 @@ class NonWorkingDaysLookupManager
     }
 
     /**
-     * Calculate hash to ease off days lookups
+     * Calculate hash to ease off days lookups.
+     *
      * @param \DateTime $date
-     *      date
+     *                        date
      * @param $countryCode
      *      country code
+     *
      * @return string
-     *      a hash uniquely identifying a date in a given country
+     *                a hash uniquely identifying a date in a given country
      */
     private static function calculateWorkingDayHash(\DateTime $date, $countryCode)
     {
-        return $countryCode . $date->format("Ymd");
+        return $countryCode.$date->format('Ymd');
     }
 
     /**
      * @param $year
      * @param $countryCode
+     *
      * @return array
      */
     private function getHashedCollectionOfDateTimes($year, $countryCode)
@@ -76,6 +77,7 @@ class NonWorkingDaysLookupManager
         foreach ($datesColl as $date) {
             $hashedColl[] = self::calculateWorkingDayHash($date, $countryCode);
         }
+
         return $hashedColl;
     }
 }

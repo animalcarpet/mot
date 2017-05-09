@@ -13,6 +13,7 @@ class ClaimAccountServiceFactory implements FactoryInterface
     {
         $entityManager = $serviceLocator->get(EntityManager::class);
         $service = new ClaimAccountService($entityManager);
+
         return $service;
     }
 }

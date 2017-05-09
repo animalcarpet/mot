@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardOrder\Service;
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardNotificationService;
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\UrlBuilder\NotificationUrlBuilder;
@@ -26,7 +25,7 @@ class OrderSecurityCardNotificationServiceTest extends PHPUnit_Framework_TestCas
             'recipient' => $recipientId,
             'fields' => [
                 'dateTimeOrdered' => self::DATETIME_STRING,
-            ]
+            ],
         ];
 
         $dateTimeHolder

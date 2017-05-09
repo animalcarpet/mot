@@ -36,6 +36,7 @@ class CpmsNotificationType extends Entity
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)

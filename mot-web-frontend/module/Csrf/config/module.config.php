@@ -2,6 +2,6 @@
 
 return [
     'csrf' => [
-        'enabled' => true
-    ]
+        'enabled' => true,
+    ],
 ];

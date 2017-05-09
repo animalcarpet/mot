@@ -11,23 +11,13 @@ use DvsaCommon\Dto\Site\SiteListDto;
 use DvsaCommon\UrlBuilder\SiteUrlBuilderWeb;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Report\Table\Table;
 use Site\Controller\SiteSearchController;
 use Zend\View\Model\ViewModel;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\Session\Container;
-use Zend\Stdlib\Parameters;
 use Site\Service\SiteSearchService;
 
 /**
- * Class SiteSearchControllerTest
- *
- * @package SiteTest\Controller
+ * Class SiteSearchControllerTest.
  */
 class SiteSearchControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -35,7 +25,6 @@ class SiteSearchControllerTest extends AbstractFrontendControllerTestCase
     const PERSON_ID = 999999;
     const QUESTION_ONE = 'question1';
     const ANSWER = 'blah';
-
 
     protected $mapper;
     protected $siteMapper;
@@ -86,13 +75,12 @@ class SiteSearchControllerTest extends AbstractFrontendControllerTestCase
         if (!empty($expect['viewModel'])) {
             $this->assertInstanceOf(ViewModel::class, $result);
             $this->assertResponseStatus(self::HTTP_OK_CODE);
-
         }
 
         if (!empty($expect['errors'])) {
             $this->assertInstanceOf(ViewModel::class, $result);
 
-            /** @var  PasswordResetFormModel $form */
+            /** @var PasswordResetFormModel $form */
             $form = $result->getVariable('viewModel');
 
             foreach ($expect['errors'] as $field => $error) {
@@ -110,87 +98,87 @@ class SiteSearchControllerTest extends AbstractFrontendControllerTestCase
         return [
             //  --  search: access action  --
             [
-                'method'   => 'get',
-                'action'   => 'search',
+                'method' => 'get',
+                'action' => 'search',
                 'postData' => [],
-                'mocks'    => [],
-                'expect'   => [
+                'mocks' => [],
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
             //  --  result: get with invalid data   --
             [
-                'method'   => 'get',
-                'action'   => 'result',
+                'method' => 'get',
+                'action' => 'result',
                 'query' => [],
-                'mocks'    => [],
-                'expect'   => [
+                'mocks' => [],
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
             //  --  result: get with valid data Exact match   --
             [
-                'method'   => 'get',
-                'action'   => 'result',
+                'method' => 'get',
+                'action' => 'result',
                 'query' => [
-                    SiteSearchParamsDto::SITE_NUMBER => 'v1234'
+                    SiteSearchParamsDto::SITE_NUMBER => 'v1234',
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'siteMapper',
+                        'class' => 'siteMapper',
                         'method' => 'search',
                         'params' => [],
                         'result' => (
                             new SiteListDto())
                             ->setTotalResultCount(1)
                             ->setData([['id' => 1]]),
-                    ]
+                    ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'url' => SiteUrlBuilderWeb::of(1),
                 ],
             ],
             //  --  result: get with valid data No result   --
             [
-                'method'   => 'get',
-                'action'   => 'result',
+                'method' => 'get',
+                'action' => 'result',
                 'query' => [
-                    SiteSearchParamsDto::SITE_NUMBER => 'v1234'
+                    SiteSearchParamsDto::SITE_NUMBER => 'v1234',
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'siteMapper',
+                        'class' => 'siteMapper',
                         'method' => 'search',
                         'params' => [],
                         'result' => (new SiteListDto())->setTotalResultCount(0),
-                    ]
+                    ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
             //  --  result: get with valid data Multiple result   --
             [
-                'method'   => 'get',
-                'action'   => 'result',
+                'method' => 'get',
+                'action' => 'result',
                 'query' => [
-                    SiteSearchParamsDto::SITE_NUMBER => 'v1234'
+                    SiteSearchParamsDto::SITE_NUMBER => 'v1234',
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'siteMapper',
+                        'class' => 'siteMapper',
                         'method' => 'search',
                         'params' => [],
                         'result' => (new SiteListDto())->setTotalResultCount(2),
                     ],
                     [
-                        'class'  => 'service',
+                        'class' => 'service',
                         'method' => 'initTable',
                         'params' => [],
                         'result' => new Table(),
-                    ]
+                    ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],

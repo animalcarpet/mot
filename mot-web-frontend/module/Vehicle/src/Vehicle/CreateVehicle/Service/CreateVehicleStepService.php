@@ -4,8 +4,7 @@ namespace Vehicle\CreateVehicle\Service;
 
 use Application\Service\CatalogService;
 use DvsaCommon\UrlBuilder\UrlBuilder;
-use Vehicle\CreateVehicle\Service\CreateVehicleSessionService;
-use Vehicle\Helper\ColoursContainer;
+
 use DvsaCommon\HttpRestJson\Client;
 
 class CreateVehicleStepService
@@ -32,12 +31,10 @@ class CreateVehicleStepService
     public function __construct(CreateVehicleSessionService $sessionService,
                                 CatalogService $catalogService,
                                 Client $client
-    )
-    {
+    ) {
         $this->createVehicleSessionService = $sessionService;
         $this->catalogService = $catalogService;
         $this->client = $client;
-
     }
 
     public function updateStepStatus($step, $status)
@@ -51,7 +48,7 @@ class CreateVehicleStepService
         }
 
         if (!isset($steps[$step])) {
-            throw new \Exception('Step: ' .$step. ' is not a valid step');
+            throw new \Exception('Step: '.$step.' is not a valid step');
         }
 
         if (!is_bool($status)) {
@@ -63,7 +60,6 @@ class CreateVehicleStepService
         $sessionStore[CreateVehicleSessionService::STEP_KEY] = $steps;
 
         $this->createVehicleSessionService->save(CreateVehicleSessionService::UNIQUE_KEY, $sessionStore);
-
     }
 
     public function getStaticData()
@@ -85,7 +81,7 @@ class CreateVehicleStepService
             'make' => $makes['data'],
             'colour' => $colours,
             'fuelType' => $fuelTypes,
-            CreateVehicleStepService::COUNTRY_STEP => $catalogData['countryOfRegistration'],
+            self::COUNTRY_STEP => $catalogData['countryOfRegistration'],
             'vehicleClass' => $catalogData['vehicleClass'],
         ];
 
@@ -96,8 +92,9 @@ class CreateVehicleStepService
     }
 
     /**
-     * @param String $step
-     * @param array $stepData
+     * @param string $step
+     * @param array  $stepData
+     *
      * @throws \Exception
      */
     public function saveStep($step, array $stepData)
@@ -116,7 +113,8 @@ class CreateVehicleStepService
     }
 
     /**
-     * @param String $step
+     * @param string $step
+     *
      * @throws \Exception
      */
     public function getStep($step)
@@ -133,6 +131,7 @@ class CreateVehicleStepService
 
     /**
      * @param $step
+     *
      * @return bool
      */
     public function isAllowedOnStep($step)
@@ -158,6 +157,7 @@ class CreateVehicleStepService
             }
             $previousValue = $value;
         }
+
         return false;
     }
 
@@ -178,7 +178,8 @@ class CreateVehicleStepService
     }
 
     /**
-     * Returns a list of steps in the journey
+     * Returns a list of steps in the journey.
+     *
      * @return array
      */
     public function getSteps()

@@ -6,13 +6,11 @@ use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use Zend\Authentication\AuthenticationService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\JsonModel;
 use DvsaAuthentication\Identity;
 
 /**
- * That controller should be deleted once OpenAM session and PHP session timeouts are realigned
+ * That controller should be deleted once OpenAM session and PHP session timeouts are realigned.
  */
 class IdentityDataController extends AbstractDvsaRestfulController
 {
@@ -26,14 +24,14 @@ class IdentityDataController extends AbstractDvsaRestfulController
         $identity = $motIdentityProvider->getIdentity();
 
         $personData = [
-            'userId'                   => $identity->getUserId(),
-            'username'                 => $identity->getUsername(),
-            'displayName'              => $identity->getDisplayName(),
-            'role'                     => '',
-            'isAccountClaimRequired'   => $identity->isAccountClaimRequired(),
+            'userId' => $identity->getUserId(),
+            'username' => $identity->getUsername(),
+            'displayName' => $identity->getDisplayName(),
+            'role' => '',
+            'isAccountClaimRequired' => $identity->isAccountClaimRequired(),
             'isPasswordChangeRequired' => $identity->isPasswordChangeRequired(),
-            'isSecondFactorRequired'   => $identity->isSecondFactorRequired(),
-            'passwordExpiryDate'       => DateTimeApiFormat::dateTime($identity->getPasswordExpiryDate())
+            'isSecondFactorRequired' => $identity->isSecondFactorRequired(),
+            'passwordExpiryDate' => DateTimeApiFormat::dateTime($identity->getPasswordExpiryDate()),
         ];
         $returnStruct['user'] = $personData;
         $returnStruct['identity'] = $identity->getUsername();

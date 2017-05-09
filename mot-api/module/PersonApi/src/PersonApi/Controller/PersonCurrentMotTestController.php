@@ -7,9 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\PersonService;
 
 /**
- * Class PersonCurrentMotTestController
- *
- * @package PersonApi\Controller
+ * Class PersonCurrentMotTestController.
  */
 class PersonCurrentMotTestController extends AbstractDvsaRestfulController
 {

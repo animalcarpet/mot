@@ -7,11 +7,11 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Repository\BrakeTestTypeRepository;
 
 /**
- * Class BrakeTestResultClass12Mapper
+ * Class BrakeTestResultClass12Mapper.
  */
 class BrakeTestResultClass12Mapper
 {
-    /** @var BrakeTestTypeRepository  */
+    /** @var BrakeTestTypeRepository */
     private $brakeTestTypeRepository;
 
     public function __construct(BrakeTestTypeRepository $brakeTestTypeRepository)
@@ -56,8 +56,7 @@ class BrakeTestResultClass12Mapper
             ->setGradientControl2AboveUpperMinimum(ArrayUtils::tryGet($data, 'gradientControl2AboveUpperMinimum'))
             ->setGradientControl2BelowMinimum(ArrayUtils::tryGet($data, 'gradientControl2BelowMinimum'));
 
-        if (isset($data['riderWeight']) && !empty($data['riderWeight']))
-        {
+        if (isset($data['riderWeight']) && !empty($data['riderWeight'])) {
             $brakeTestResult->setRiderWeight($data['riderWeight']);
         }
 

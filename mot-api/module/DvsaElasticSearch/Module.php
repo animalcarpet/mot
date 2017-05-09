@@ -2,20 +2,14 @@
 
 namespace DvsaElasticSearch;
 
-use Doctrine\ORM\EntityManager;
 use DvsaElasticSearch\Service\ElasticSearchService;
-
 use DvsaEntities\Repository\SiteRepository;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class
- *
- * @package ElasticSearch
+ * Class.
  */
 class Module implements AutoloaderProviderInterface, ServiceProviderInterface
 {
@@ -39,7 +33,7 @@ class Module implements AutoloaderProviderInterface, ServiceProviderInterface
                         $sm->get(SiteRepository::class),
                         $sm->get('Feature\FeatureToggles')
                     );
-                }
+                },
             ],
         ];
     }

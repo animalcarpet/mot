@@ -9,13 +9,10 @@ use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommon\Enum\OrganisationContactTypeCode;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
-use Organisation\Presenter;
-use DvsaCommon\Dto\Organisation;
 use Organisation\Presenter\AuthorisedExaminerPresenter;
 
 /**
- * Class PresenterTest
- * @package OrganisationTest\Presenter
+ * Class PresenterTest.
  */
 class AuthorisedExaminerPresenterTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,7 +41,6 @@ class AuthorisedExaminerPresenterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::AE_COMPANY_NUMBER, $presenter->getCompanyNumber());
         $this->assertEquals(self::AE_TYPE, $presenter->getCompanyType());
         $this->assertEquals(self::AE_ORG_TYPE, $presenter->getOrganisationType());
-
     }
 
     public function testUrls()
@@ -64,7 +60,7 @@ class AuthorisedExaminerPresenterTest extends \PHPUnit_Framework_TestCase
             ->setAddressLine1(self::ADDRESS_LINE_1)
             ->setTown(self::TOWN)
             ->setPostcode(self::POSTCODE);
-        $contact = (new OrganisationContactDto)
+        $contact = (new OrganisationContactDto())
             ->setType(OrganisationContactTypeCode::REGISTERED_COMPANY)
             ->setAddress($address);
 

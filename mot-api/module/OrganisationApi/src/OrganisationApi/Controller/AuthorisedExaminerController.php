@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Controller;
 
 use DvsaCommon\Dto\Organisation\OrganisationDto;
@@ -10,7 +11,7 @@ use OrganisationApi\Service\AuthorisedExaminerService;
 use OrganisationApi\Service\UpdateAeDetailsService;
 
 /**
- * Api controller for AuthorisedExaminers
+ * Api controller for AuthorisedExaminers.
  */
 class AuthorisedExaminerController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
@@ -35,7 +36,7 @@ class AuthorisedExaminerController extends AbstractDvsaRestfulController impleme
     public function create($data)
     {
         /** @var OrganisationDto $dto */
-        $dto    = DtoHydrator::jsonToDto($data);
+        $dto = DtoHydrator::jsonToDto($data);
         $result = $this->service->create($dto);
 
         return ApiResponse::jsonOk($result);

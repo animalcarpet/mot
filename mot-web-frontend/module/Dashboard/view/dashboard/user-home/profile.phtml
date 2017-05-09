@@ -2,15 +2,13 @@
 
 use Dashboard\Controller\UserHomeController;
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 
 /**
- * @var \Dashboard\Model\PersonalDetails       $personalDetails
+ * @var \Dashboard\Model\PersonalDetails
  * @var array                                  $motAuthorisations
  * @var \DvsaClient\Entity\TesterAuthorisation $authorisation
  */
-
 $isAllowEdit = $this->isAllowEdit;
 $motAuthorisations = $this->motAuthorisations;
 
@@ -22,20 +20,20 @@ $fullAddressArray = array_filter([
         $personalDetails->getPostcode(),
     ],
     'strlen');
-$escFullAddress = $this->escapeHtml(implode(", ", $fullAddressArray)) ?: null;
+$escFullAddress = $this->escapeHtml(implode(', ', $fullAddressArray)) ?: null;
 
 $this->layout()->setVariable('pageSubTitle', $isViewingOwnProfile ? 'Your profile' : 'Profile of');
 $this->layout()->setVariable('pageTitle', $personalDetails->getFullName());
 
 echo $this->partial('errorMessages', ['getFromFlash' => true]);
 
-echo $this->partial('partial/gds/general/system-message', ['messages' =>  $this->layout()->flashMessenger->getSuccessMessages(), 'type' => 'success']);
+echo $this->partial('partial/gds/general/system-message', ['messages' => $this->layout()->flashMessenger->getSuccessMessages(), 'type' => 'success']);
 ?>
 
 <h3 class="heading-medium">Personal details</h3>
 <table class="key-value-list">
     <tbody>
-        <?php if($canViewUsername): ?>
+        <?php if ($canViewUsername): ?>
             <tr>
                 <th class="key-value-list__key">
                     Username
@@ -61,7 +59,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' =>  $this-
                 <?php echo DateTimeDisplayFormat::textDate($personalDetails->getDateOfBirth()); ?>
             </td>
         </tr>
-        <?php if (!empty ($drivingLicenceNumber) && !empty($drivingLicenceRegion)): ?>
+        <?php if (!empty($drivingLicenceNumber) && !empty($drivingLicenceRegion)): ?>
             <tr>
                 <th class="key-value-list__key">
                     Driving licence
@@ -113,11 +111,11 @@ echo $this->partial('partial/gds/general/system-message', ['messages' =>  $this-
 </table>
 
 <?php if ($systemRoles) : ?>
-    <h3 id="roles-internal" class="heading-medium"><?php echo($this->escapeHtml("Roles")); ?></h3>
-    <?php echo $this->partial('dashboard/partials/profile/system-roles.phtml', [ 'roles' => $systemRoles]) ?>
+    <h3 id="roles-internal" class="heading-medium"><?php echo $this->escapeHtml('Roles'); ?></h3>
+    <?php echo $this->partial('dashboard/partials/profile/system-roles.phtml', ['roles' => $systemRoles]) ?>
 <?php endif; ?>
 
-<?php if(!$rolesAndAssociations && !$systemRoles) : ?>
+<?php if (!$rolesAndAssociations && !$systemRoles) : ?>
     <h3 id="roles" class="heading-medium">Roles</h3>
     <div class="text">
         <p>No roles assigned</p>
@@ -125,7 +123,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' =>  $this-
 <?php endif; ?>
 
 
-<?php if($authorisation->hasAnyTestingAuthorisation()) : ?>
+<?php if ($authorisation->hasAnyTestingAuthorisation()) : ?>
     <h3 id="tester-qualification-status" class="heading-medium">Tester qualification status</h3>
     <table class="key-value-list">
         <tbody>
@@ -168,7 +166,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' =>  $this-
                     PIN
                 </th>
                 <td class="key-value-list__value">
-                    <a href="<?php echo $this->escapeHtmlAttr(PersonUrlBuilderWeb::securityQuestions());?>" id="change-security-settings">Reset PIN</a>
+                    <a href="<?php echo $this->escapeHtmlAttr(PersonUrlBuilderWeb::securityQuestions()); ?>" id="change-security-settings">Reset PIN</a>
                 </td>
             </tr>
         </tbody>
@@ -178,7 +176,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' =>  $this-
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
         <li>
-            <a href="<?php echo $this->escapeHtmlAttr($this->url(UserHomeController::ROUTE));?>">Return home</a>
+            <a href="<?php echo $this->escapeHtmlAttr($this->url(UserHomeController::ROUTE)); ?>">Return home</a>
         </li>
     </ul>
 </nav>

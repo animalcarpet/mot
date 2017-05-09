@@ -23,17 +23,10 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Authn\AuthenticationResultCode;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
-use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\Result;
 use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Session\ManagerInterface;
 use Zend\Stdlib\Parameters;
-use Zend\View\Model\ViewModel;
-
 
 class SecurityControllerTest extends AbstractLightWebControllerTest
 {
@@ -45,24 +38,24 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
     /** @var GotoUrlService */
     private $gotoService;
 
-    /** @var  IdentitySessionStateService $identitySessionStateService */
+    /** @var IdentitySessionStateService $identitySessionStateService */
     private $identitySessionStateService;
 
     /** @var AuthenticationService $authenticationService */
     private $authenticationService;
 
-    /** @var  LoginCsrfCookieService $loginCsrfCookieService */
+    /** @var LoginCsrfCookieService $loginCsrfCookieService */
     private $loginCsrfCookieService;
 
-    /** @var  Request */
+    /** @var Request */
     private $request;
 
-    /** @var  Response */
+    /** @var Response */
     private $response;
 
     private $failureViewModelBuilder;
 
-    /** @var  WebLoginService $webLoginService */
+    /** @var WebLoginService $webLoginService */
     private $webLoginService;
 
     /** @var Identity $$identity */
@@ -70,9 +63,8 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
 
     private $featureToggle;
 
-    /** @var  SuccessLoginResultRoutingService */
+    /** @var SuccessLoginResultRoutingService */
     private $successLoginResultRoutingService;
-
 
     protected function setUp()
     {
@@ -141,7 +133,8 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
     }
 
     /** @dataProvider dataProvider_authnCodes */
-    public function testOnPostLoginAction_givenAuthenticationFailure_shouldShowErrorOnScreen($authnCode) {
+    public function testOnPostLoginAction_givenAuthenticationFailure_shouldShowErrorOnScreen($authnCode)
+    {
         $this->withValidPOST();
         $authenticationDto = (new WebLoginResult())->setCode($authnCode);
         $this->withLoginResult($authenticationDto);
@@ -161,7 +154,6 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->getController()->loginAction();
     }
 
-
     public function testOnPostLoginAction_givenLoginSuccess_and_failedCsrfValidation_shouldRedirectToLoginPage()
     {
         $this->withValidPOST();
@@ -172,8 +164,8 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->getController()->loginAction();
     }
 
-    public function testOnPostLogin_whenInvalidForm_shouldShowTheSamePageWithErrorForm() {
-
+    public function testOnPostLogin_whenInvalidForm_shouldShowTheSamePageWithErrorForm()
+    {
         $this->withInvalidPOST();
 
         $vm = $this->getController()->loginAction();
@@ -193,8 +185,8 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->withValidLoginResult();
     }
 
-    private function withRoutingServiceInvoked($returnObject) {
-
+    private function withRoutingServiceInvoked($returnObject)
+    {
         $this->successLoginResultRoutingService
             ->expects($this->once())
             ->method('route')
@@ -238,7 +230,6 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
             ->method('getIdentity')
             ->willReturn($this->identity);
 
-
         $controller = new SecurityController(
             $this->request,
             $this->response,
@@ -277,11 +268,12 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->request->setPost(new Parameters(['IDToken1' => '', 'IDToken2' => '']));
     }
 
-    public function dataProvider_authnCodes() {
+    public function dataProvider_authnCodes()
+    {
         return [
             [AuthenticationResultCode::INVALID_CREDENTIALS],
             [AuthenticationResultCode::ERROR],
-            [AuthenticationResultCode::UNRESOLVABLE_IDENTITY]
+            [AuthenticationResultCode::UNRESOLVABLE_IDENTITY],
         ];
     }
 }

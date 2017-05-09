@@ -23,8 +23,7 @@ class ConfirmationAction
         MotAuthorisationServiceInterface $authorisationService,
         CreateVehicleStepService $createVehicleStepService,
         CreateVehicleModelService $createVehicleModelService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->createVehicleStepService = $createVehicleStepService;
         $this->createVehicleModelService = $createVehicleModelService;
@@ -42,7 +41,7 @@ class ConfirmationAction
 
         $viewModel = (new ViewModel())
             ->setVariables([
-                'makeAndModel' => $this->getVehicleMakeNameById() . ' ' . $this->getVehicleModelNameById(),
+                'makeAndModel' => $this->getVehicleMakeNameById().' '.$this->getVehicleModelNameById(),
                 'registration' => $this->createVehicleStepService->getStep('reg-vin')['reg-input'],
                 'dateAndTime' => (new DateTime())->format(DateTimeDisplayFormat::FORMAT_DATETIME_SHORT),
                 'testNumber' => $vehicle['startedMotTestNumber'],

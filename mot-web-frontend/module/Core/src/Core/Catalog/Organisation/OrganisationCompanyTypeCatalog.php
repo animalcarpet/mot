@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Core\Catalog\Organisation;
-
 
 use Application\Service\CatalogService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -22,6 +20,7 @@ class OrganisationCompanyTypeCatalog implements AutoWireableInterface
 
     /**
      * @param $code
+     *
      * @return OrganisationCompanyType
      */
     public function getByCode($code)
@@ -31,12 +30,13 @@ class OrganisationCompanyTypeCatalog implements AutoWireableInterface
 
     /**
      * @param $name
+     *
      * @return OrganisationCompanyType|null
      */
     public function getByName($name)
     {
         foreach ($this->organisationCompanyType->value() as $companyType) {
-            if($companyType->getName() == $name){
+            if ($companyType->getName() == $name) {
                 return $companyType;
             }
         }
@@ -52,6 +52,7 @@ class OrganisationCompanyTypeCatalog implements AutoWireableInterface
 
     /**
      * @param CatalogService $catalog
+     *
      * @return OrganisationCompanyType[]
      */
     private function buildOrganisationCompanyTypeCatalog(CatalogService $catalog)

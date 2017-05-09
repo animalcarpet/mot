@@ -3,7 +3,6 @@
 namespace UserApi\Message\Service;
 
 use AccountApi\Service\OpenAmIdentityService;
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateTimeHolder;
@@ -86,7 +85,7 @@ class MessageService
         $person = $this->personRepository->get($personId);
         $messageType = $this->messageTypeRepository->getByCode($messageTypeCode);
 
-        if($messageTypeCode === MessageTypeCode::PASSWORD_RESET_BY_LETTER) {
+        if ($messageTypeCode === MessageTypeCode::PASSWORD_RESET_BY_LETTER) {
             $this->assertCreationOfNewPasswordResetIsPossible($person, $messageType);
         } elseif ($messageTypeCode === MessageTypeCode::ACCOUNT_RESET_BY_LETTER) {
             $this->assertCreationOfNewAccountResetIsPossible($person, $messageType);
@@ -117,8 +116,8 @@ class MessageService
             $messageType->isPasswordResetByLetter()
             && $this->messageRepository->hasAlreadyRequestedMessage($person, $messageType, $this->dateTimeHolder->getCurrentDate())
         ) {
-            $errorMessage = 'A password reset letter has already been requested for ' .
-                $person->getDisplayName() .
+            $errorMessage = 'A password reset letter has already been requested for '.
+                $person->getDisplayName().
                 ' today.';
 
             throw new BadRequestException($errorMessage, BadRequestException::ERROR_CODE_BUSINESS_FAILURE);

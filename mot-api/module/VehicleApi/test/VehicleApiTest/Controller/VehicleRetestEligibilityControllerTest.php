@@ -41,7 +41,7 @@ class VehicleRetestEligibilityControllerTest extends AbstractMotApiControllerTes
             $this->request->getPost()->set(
                 VehicleRetestEligibilityController::FIELD_CONTINGENCY_DTO,
                 [
-                    "_class" => ContingencyTestDto::class,
+                    '_class' => ContingencyTestDto::class,
                 ]
             );
         }
@@ -51,7 +51,7 @@ class VehicleRetestEligibilityControllerTest extends AbstractMotApiControllerTes
             null,
             [
                 VehicleRetestEligibilityController::FIELD_VEHICLE_ID => 3,
-                VehicleRetestEligibilityController::FIELD_SITE_ID    => 1,
+                VehicleRetestEligibilityController::FIELD_SITE_ID => 1,
             ]
         );
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, ['data' => ['isEligible' => true]], $result);

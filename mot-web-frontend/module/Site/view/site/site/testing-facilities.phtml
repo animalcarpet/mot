@@ -1,14 +1,9 @@
 <?php
 /**
- * @var \Site\Form\VtsUpdateTestingFacilitiesForm   $form
- * @var string                                      $cancelUrl
+ * @var \Site\Form\VtsUpdateTestingFacilitiesForm
+ * @var string                                    $cancelUrl
  */
-
-use DvsaCommon\Enum\VehicleClassCode;
 use Site\Form\VtsCreateForm;
-use DvsaCommon\Enum\SiteContactTypeCode;
-use DvsaClient\ViewModel\PhoneFormModel;
-
 
 //  show api errors
 $flashMessenger = $this->layout()->flashMessenger;
@@ -30,23 +25,23 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
-                'id'           => VtsCreateForm::FIELD_TESTING_FACILITY_TPTL,
-                'label'        => 'How many two-person test lanes (TPTL) does the site have?',
+                'id' => VtsCreateForm::FIELD_TESTING_FACILITY_TPTL,
+                'label' => 'How many two-person test lanes (TPTL) does the site have?',
                 'errorMessage' => $form->getError(VtsCreateForm::FIELD_TESTING_FACILITY_TPTL),
-                'value'        => (string) $form->getTestingFacilityTptl(),
-                'options'      => $form->getTestingFacilities(),
-                'inputModifier'=> '1-4',
+                'value' => (string) $form->getTestingFacilityTptl(),
+                'options' => $form->getTestingFacilities(),
+                'inputModifier' => '1-4',
             ]
         );
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
-                'id'           => VtsCreateForm::FIELD_TESTING_FACILITY_OPTL,
-                'label'        => 'How many one-person test lanes (OPTL) does the site have?',
+                'id' => VtsCreateForm::FIELD_TESTING_FACILITY_OPTL,
+                'label' => 'How many one-person test lanes (OPTL) does the site have?',
                 'errorMessage' => $form->getError(VtsCreateForm::FIELD_TESTING_FACILITY_OPTL),
-                'value'        => (string) $form->getTestingFacilityOptl(),
-                'options'      => $form->getTestingFacilities(),
-                'inputModifier'=> '1-4',
+                'value' => (string) $form->getTestingFacilityOptl(),
+                'options' => $form->getTestingFacilities(),
+                'inputModifier' => '1-4',
             ]
         );
         ?>
@@ -56,9 +51,9 @@ echo $this->partial(
     echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'submitTestingFacilitiesUpdate',
-            'name'       => 'submitTestingFacilitiesUpdate',
-            'value'      => 'Continue',
+            'id' => 'submitTestingFacilitiesUpdate',
+            'name' => 'submitTestingFacilitiesUpdate',
+            'value' => 'Continue',
             'navigation' => [
                 'Cancel and return to Vehicle Testing Station' => $cancelUrl,
             ],

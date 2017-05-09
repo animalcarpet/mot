@@ -9,23 +9,22 @@ use IntegrationApi\TransportForLondon\Service\TransportForLondonMotTestService;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class TransportForLondonMotTestController
+ * Class TransportForLondonMotTestController.
  */
 class TransportForLondonMotTestController extends AbstractDvsaRestfulController
 {
-
     /**
-     * Returns MOT Test data with additional flags (expiredWarning, laterTestInScope and laterTestOutScope).
-     *
-     * @return JsonModel
-     */
+ * Returns MOT Test data with additional flags (expiredWarning, laterTestInScope and laterTestOutScope).
+ *
+ * @return JsonModel
+ */
     //TODO PT: confirm identity, roles, permissions?
     public function getList()
     {
         $request = $this->getRequest();
 
-        $vrm = $request->getQuery("vrm");
-        $v5c = $request->getQuery("v5c");
+        $vrm = $request->getQuery('vrm');
+        $v5c = $request->getQuery('v5c');
 
         $errors = new ErrorSchema();
         if (!$vrm) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\Tester\Repository;
 
 use Doctrine\ORM\EntityManager;
@@ -16,7 +17,7 @@ class TesterSingleGroupStatisticsRepositoryTest /* extends \PHPUnit_Framework_Te
 
     /** @var TesterSingleGroupStatisticsRepository */
     private $sut;
-    /** @var  EntityManager */
+    /** @var EntityManager */
     private $entityManager;
 
     public function setUp()

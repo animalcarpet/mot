@@ -3,8 +3,7 @@
 namespace DvsaAuthorisation\Model;
 
 /**
- * Class OrganisationRole
- * @package DvsaAuthorisation\Model
+ * Class OrganisationRole.
  */
 class OrganisationRole extends Role
 {

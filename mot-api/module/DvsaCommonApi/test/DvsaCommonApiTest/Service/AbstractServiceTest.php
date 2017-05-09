@@ -1,11 +1,11 @@
 <?php
+
 namespace DvsaCommonApiTest\Service;
 
 use DvsaCommonApi\Service\AbstractService;
-use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class AbstractServiceTest
+ * Class AbstractServiceTest.
  */
 class AbstractServiceTest extends AbstractServiceTestCase
 {
@@ -17,7 +17,7 @@ class AbstractServiceTest extends AbstractServiceTestCase
 }
 
 /**
- * Class TestAbstractService
+ * Class TestAbstractService.
  */
 class TestAbstractService extends AbstractService
 {

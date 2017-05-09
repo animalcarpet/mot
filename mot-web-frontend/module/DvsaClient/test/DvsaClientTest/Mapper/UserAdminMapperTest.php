@@ -13,9 +13,9 @@ use DvsaCommon\HttpRestJson\Client;
  */
 class UserAdminMapperTest extends \PHPUnit_Framework_TestCase
 {
-    const PERSON_ID     = 1;
-    const QUESTION_ID   = 1;
-    const ANSWER        = 'answer';
+    const PERSON_ID = 1;
+    const QUESTION_ID = 1;
+    const ANSWER = 'answer';
 
     /**
      * @var UserAdminMapper

@@ -5,7 +5,6 @@ namespace UserApiTest\SpecialNotice\Service;
 use DateTime;
 use DvsaCommon\Auth\MotIdentity;
 use DvsaCommon\Constants\SpecialNoticeAudience as SpecialNoticeAudienceConstant;
-use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\Date\TestDateTimeHolder;
@@ -16,7 +15,6 @@ use DvsaEntities\Entity\SpecialNoticeContent;
 use DvsaEntities\Repository\SpecialNoticeRepository;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 use UserApi\SpecialNotice\Service\Validator\SpecialNoticeValidator;
-use Zend\Authentication\AuthenticationService;
 
 /**
  * Class SpecialNoticeServiceTest.
@@ -24,10 +22,10 @@ use Zend\Authentication\AuthenticationService;
 class SpecialNoticeServiceTest extends AbstractServiceTestCase
 {
     const METHOD_SET_PARAMETER = 'setParameter';
-    const METHOD_GET_RESULT    = 'getResult';
-    const METHOD_CREATE_QUERY  = 'createQuery';
-    const STATUS_DRAFT         = 'DRAFT';
-    const STATUS_FINAL         = 'FINAL';
+    const METHOD_GET_RESULT = 'getResult';
+    const METHOD_CREATE_QUERY = 'createQuery';
+    const STATUS_DRAFT = 'DRAFT';
+    const STATUS_FINAL = 'FINAL';
 
     /**
      * @var SpecialNoticeService
@@ -42,9 +40,9 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
 
     public function setUp()
     {
-        $this->specialNoticeRepository        = $this->getMockRepository(SpecialNoticeRepository::class);
+        $this->specialNoticeRepository = $this->getMockRepository(SpecialNoticeRepository::class);
         $this->specialNoticeContentRepository = $this->getMockRepository();
-        $this->entityManager                  = $this->getMockEntityManager();
+        $this->entityManager = $this->getMockEntityManager();
         $this->entityManager->expects($this->at(0))
             ->method('getRepository')
             ->with(\DvsaEntities\Entity\SpecialNotice::class)
@@ -58,7 +56,7 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
         $authService = $this->getMockAuthorizationService(false);
         $authService
             ->expects($this->any())
-            ->method("isGranted")
+            ->method('isGranted')
             ->willReturn(false);
         $this->authService = $authService;
 
@@ -71,9 +69,10 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
 
     private function mockSpecialNoticeServiceWithDate(DateTime $dateTime = null)
     {
-        if(is_null($dateTime)){
+        if (is_null($dateTime)) {
             $dateTime = new DateTime();
         }
+
         return new SpecialNoticeService(
             $this->entityManager,
             $this->objectHydrator,
@@ -105,15 +104,15 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
     public function testExtractShouldFormatDates()
     {
         //given
-        $specialNotice        = $this->createTestSpecialNotice();
+        $specialNotice = $this->createTestSpecialNotice();
         $specialNoticeContent = $specialNotice->getContent();
-        $issueDate            = '2014-04-21';
+        $issueDate = '2014-04-21';
         $specialNoticeContent->setIssueDate(DateUtils::toDate($issueDate));
         $expiryDate = '2014-05-04';
         $specialNoticeContent->setExpiryDate(DateUtils::toDate($expiryDate));
 
         //when
-        $data    = $this->sut->extract($specialNotice);
+        $data = $this->sut->extract($specialNotice);
         $content = $data['content'];
 
         //then
@@ -151,7 +150,7 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
     public function testExtractShouldProvideRolesAsString()
     {
         //given
-        $specialNotice        = $this->createTestSpecialNotice();
+        $specialNotice = $this->createTestSpecialNotice();
         $specialNoticeContent = $specialNotice->getContent();
         $specialNoticeContent->addSpecialNoticeAudience(
             (new SpecialNoticeAudience())
@@ -225,7 +224,7 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
     public function testSpecialNoticeSummaryForUserWhenUnreadNoticesShouldCalculateDeadline()
     {
         //given
-        $laterExpiryDate   = '2114-01-01';
+        $laterExpiryDate = '2114-01-01';
         $earlierExpiryDate = '2113-01-01';
 
         $unreadSpecialNotice1 = $this->createTestSpecialNotice();
@@ -251,7 +250,7 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
     public function testRemoveSpecialNoticeContentShouldRemoveContentAndAllAssociatedNotices()
     {
         //given
-        $specialNoticeContentId   = 1234;
+        $specialNoticeContentId = 1234;
         $mockSpecialNoticeContent = new SpecialNoticeContent();
         $mockSpecialNoticeContent->setIsDeleted(false);
 
@@ -270,16 +269,16 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
     public function testCreateSpecialNoticeWithValidDataShouldCreateSpecialNotice()
     {
         // given
-        $internalPublishDate = new DateTime("tomorrow");
-        $externalPublishDate = new DateTime("tomorrow + 1day");
+        $internalPublishDate = new DateTime('tomorrow');
+        $externalPublishDate = new DateTime('tomorrow + 1day');
 
         $noticeData = [
-            'noticeTitle'           => 'Tilte',
-            'noticeText'            => 'Le Text',
+            'noticeTitle' => 'Tilte',
+            'noticeText' => 'Le Text',
             'acknowledgementPeriod' => 5,
-            'internalPublishDate'   => $internalPublishDate->format('Y-m-d'),
-            'externalPublishDate'   => $externalPublishDate->format('Y-m-d'),
-            'targetRoles'           => [
+            'internalPublishDate' => $internalPublishDate->format('Y-m-d'),
+            'externalPublishDate' => $externalPublishDate->format('Y-m-d'),
+            'targetRoles' => [
                 SpecialNoticeAudienceConstant::DVSA,
                 SpecialNoticeAudienceConstant::VTS,
                 SpecialNoticeAudienceConstant::TESTER_CLASS_1,
@@ -301,7 +300,7 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
      */
     public function test_update_on_published_notice_throws_an_exception()
     {
-        $id              = 1;
+        $id = 1;
         $publishedNotice = (new SpecialNoticeContent())->setIsPublished(true);
         $this->setupMockForSingleCall($this->entityManager, 'find', $publishedNotice);
 
@@ -413,5 +412,4 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
             ->method('getAllCurrentSpecialNoticesForUser')
             ->will($this->returnValue($specialNotices));
     }
-
 }

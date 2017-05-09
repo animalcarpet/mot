@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Service\Helper;
 
 use Doctrine\ORM\EntityManager;
@@ -7,7 +8,7 @@ use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 
 /**
- * Class BrakeTestResultsHelper
+ * Class BrakeTestResultsHelper.
  */
 class BrakeTestResultsHelper
 {
@@ -19,7 +20,8 @@ class BrakeTestResultsHelper
      *
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManager $entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 

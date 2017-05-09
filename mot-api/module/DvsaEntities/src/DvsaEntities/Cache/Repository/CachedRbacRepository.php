@@ -71,7 +71,7 @@ class CachedRbacRepository implements RbacRepository
      */
     private function calculatePersonAuthorizationCacheId($personId)
     {
-        return 'person_authorization_' . $personId;
+        return 'person_authorization_'.$personId;
     }
 
     /**

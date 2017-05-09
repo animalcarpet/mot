@@ -12,7 +12,7 @@ class ChangeSecurityQuestionsSessionServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sessionContainer =  new Container(ChangeSecurityQuestionsSessionService::UNIQUE_KEY);
+        $sessionContainer = new Container(ChangeSecurityQuestionsSessionService::UNIQUE_KEY);
 
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 

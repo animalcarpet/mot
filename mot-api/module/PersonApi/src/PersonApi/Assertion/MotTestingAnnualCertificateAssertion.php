@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Assertion;
 
 use DvsaCommon\Exception\UnauthorisedException;
@@ -12,7 +13,7 @@ use PersonApi\Service\PersonalDetailsService;
 
 class MotTestingAnnualCertificateAssertion implements AutoWireableInterface
 {
-    const ERROR_DVSA_USER = "Can not create mot testing certificate for DVSA user";
+    const ERROR_DVSA_USER = 'Can not create mot testing certificate for DVSA user';
 
     /**
      * @var MotAuthorisationServiceInterface
@@ -74,7 +75,7 @@ class MotTestingAnnualCertificateAssertion implements AutoWireableInterface
     {
         $personDetails = $this->personalDetailsService->get($personId);
 
-        return $personDetails->getRoles()["system"]["roles"];
+        return $personDetails->getRoles()['system']['roles'];
     }
 
     private function hasDvsaRole(array $personSystemRoles)

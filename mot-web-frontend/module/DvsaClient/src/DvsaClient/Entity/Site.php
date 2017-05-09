@@ -3,13 +3,10 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class Site
- *
- * @package DvsaClient\Entity
+ * Class Site.
  */
 class Site
 {
-
     private $name;
     private $contactDetails;
 
@@ -22,6 +19,7 @@ class Site
     public function setContactDetails($contactDetails)
     {
         $this->contactDetails = $contactDetails;
+
         return $this;
     }
 
@@ -43,6 +41,7 @@ class Site
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

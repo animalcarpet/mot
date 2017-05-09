@@ -12,14 +12,16 @@ class MotTestReasonForCancelRepository extends EntityRepository
      * @param int $id
      *
      * @return MotTestReasonForCancel
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
     {
         $entity = $this->find($id);
         if ($entity === null) {
-            throw new NotFoundException("Mot test reason for cancel", $id);
+            throw new NotFoundException('Mot test reason for cancel', $id);
         }
+
         return $entity;
     }
 }

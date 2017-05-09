@@ -8,9 +8,7 @@ use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApiTest\Stub\ApiIdentityProviderStub;
-use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\Auth\GrantAllAuthorisationServiceStub;
 use DvsaCommonTest\TestUtils\XMock;
@@ -24,20 +22,16 @@ use DvsaEntities\Entity\Role;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteBusinessRole;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
-use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\SiteBusinessRoleMapRepository;
 use NotificationApi\Dto\Notification;
 use NotificationApi\Service\NotificationService;
 use NotificationApi\Service\PositionRemovalNotificationService;
 use NotificationApi\Service\UserOrganisationNotificationService;
-use SiteApi\Service\SitePositionService;
 use DvsaEventApi\Service\EventService;
 use DvsaAuthentication\Identity;
 
 /**
- * Class SitePositionServiceTest
- *
- * @package SiteApiTest\Service
+ * Class SitePositionServiceTest.
  */
 class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +46,7 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
      */
     protected $vts;
     /**
-     * @var  AbstractMotAuthorisationService $authorisationService
+     * @var AbstractMotAuthorisationService
      */
     private $authorisationService;
     private $notificationService;
@@ -87,13 +81,13 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
 
     /**
      * @dataProvider organisationPositionDataProvider
+     *
      * @param $removedRole
      * @param $notificationRecipentId
      */
     public function testNotify_givenValidOrganisationPosition_properNotificationSent(
         $removedRole, $notificationRecipentId
-    )
-    {
+    ) {
         $notificationPromise = $this->notificationSent();
 
         $this->userOrganisationNotificationService->notifyOrganisationAboutRoleRemoval($removedRole);
@@ -104,6 +98,7 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
 
     /**
      * @dataProvider sitePositionDataProvider
+     *
      * @param $removedRole
      * @param $notificationRecipentId
      */
@@ -120,7 +115,7 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
     private function notificationSent()
     {
         $capNotification = ArgCapture::create();
-        $this->notificationService->expects($this->atLeastOnce())->method("add")
+        $this->notificationService->expects($this->atLeastOnce())->method('add')
             ->with($capNotification());
 
         return $capNotification;
@@ -148,13 +143,13 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
         $org->addPosition($siteBusinessRoleMap);
 
         foreach (RoleCode::getAll() as $roleCode) {
-            if(RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER == $roleName){
+            if (RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER == $roleName) {
                 continue;
             }
             $roleTmp = new Role();
             $roleTmp->setCode($roleCode);
             $roleMap = (new OrganisationBusinessRoleMap());
-            $roleMap->setPerson((new Person())->setId(rand(100000,2000000))->setFirstName($roleCode));
+            $roleMap->setPerson((new Person())->setId(rand(100000, 2000000))->setFirstName($roleCode));
             $roleMap->setOrganisationBusinessRole((new OrganisationBusinessRole())->setRole($roleTmp));
             $org->addPosition($roleMap);
         }
@@ -208,13 +203,13 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
         $vts->setOrganisation($org);
 
         foreach (RoleCode::getAll() as $roleName) {
-            if(($withoutSiteManager && $roleName == RoleCode::SITE_MANAGER) || RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER == $roleName){
+            if (($withoutSiteManager && $roleName == RoleCode::SITE_MANAGER) || RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER == $roleName) {
                 continue;
             }
             $roleTmp = new SiteBusinessRole();
             $roleTmp->setCode($roleName);
             $siteBusinessRoleMap = (new SiteBusinessRoleMap());
-            $siteBusinessRoleMap->setPerson((new Person())->setId(rand(100000,200000))->setFirstName($roleName));
+            $siteBusinessRoleMap->setPerson((new Person())->setId(rand(100000, 200000))->setFirstName($roleName));
             $positions->add($siteBusinessRoleMap->setSiteBusinessRole($roleTmp));
         }
 
@@ -236,7 +231,8 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
 
     public function organisationPositionDataProvider()
     {
-        $notificationRecipient = rand(1,10000);
+        $notificationRecipient = rand(1, 10000);
+
         return [
             [
                 $this->createMyOrganisationPosition(
@@ -263,12 +259,12 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
                 $notificationRecipient,
             ],
         ];
-
     }
 
     public function sitePositionDataProvider()
     {
-        $notificationRecipient = rand(1,10000);
+        $notificationRecipient = rand(1, 10000);
+
         return [
             [
                 $this->createMySitePosition(
@@ -314,6 +310,5 @@ class UserOrganisationNotificationServiceTest extends \PHPUnit_Framework_TestCas
                 self::AEDM_PERSON_ID,
             ],
         ];
-
     }
 }

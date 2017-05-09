@@ -42,7 +42,7 @@ class UsernameGenerator extends AbstractService
     {
         $userNamePart = $this->generateUserNamePart($forename, $surname);
         $numberPart = $this->generateUserNameNumber($userNamePart);
-        $username =  $userNamePart . $numberPart;
+        $username = $userNamePart.$numberPart;
 
         return $this->checkUsernameDifferentFromPassword($username, $password);
     }
@@ -59,7 +59,7 @@ class UsernameGenerator extends AbstractService
         if ($username === $password) {
             $usernameLetters = mb_substr($username, 0, self::MAX_USERNAME_PART_LENGTH);
 
-            return $usernameLetters . $this->getNextUsernameNumber($username);
+            return $usernameLetters.$this->getNextUsernameNumber($username);
         }
 
         return $username;
@@ -77,8 +77,8 @@ class UsernameGenerator extends AbstractService
      */
     private function generateUsernamePart($forename, $surname)
     {
-        $forename = Stringy::create($forename)->toAscii()->toUpperCase()->regexReplace(self::USERNAME_REGEX_FILTER, "");
-        $surname = Stringy::create($surname)->toAscii()->toUpperCase()->regexReplace(self::USERNAME_REGEX_FILTER, "");
+        $forename = Stringy::create($forename)->toAscii()->toUpperCase()->regexReplace(self::USERNAME_REGEX_FILTER, '');
+        $surname = Stringy::create($surname)->toAscii()->toUpperCase()->regexReplace(self::USERNAME_REGEX_FILTER, '');
 
         if ($forename->length() === 0 || $surname->length() === 0) {
             throw new \InvalidArgumentException('Forename or Surname is empty');

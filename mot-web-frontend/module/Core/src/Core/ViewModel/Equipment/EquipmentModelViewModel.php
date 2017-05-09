@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\ViewModel\Equipment;
 
 use DvsaCommon\Date\DateTimeDisplayFormat;

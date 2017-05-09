@@ -11,11 +11,9 @@ use Zend\Mvc\MvcEvent;
  * User who has claimed account should not has access to claim account page.
  *
  * Class ClaimAccountListener
- * @package Application\Listener
  */
 class ClaimAccountListener
 {
-
     const CLAIM_ACCOUNT_SUCCESS_ROUTE = 'account/claim/success';
 
     /**

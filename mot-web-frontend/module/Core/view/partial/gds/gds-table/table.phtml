@@ -13,12 +13,11 @@ $body = $this->body ?: '';
         ]
     );
 
-
     if (!empty($body)) {
         echo $this->partial(
             'partial/gds/gds-table/body',
             [
-                'body' => $body
+                'body' => $body,
             ]
         );
     }

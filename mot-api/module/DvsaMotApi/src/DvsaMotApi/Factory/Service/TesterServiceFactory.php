@@ -11,14 +11,14 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class TesterServiceFactory
- * @package DvsaMotApi\Factory\Service
+ * Class TesterServiceFactory.
  */
 class TesterServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $entityManager = $serviceLocator->get(EntityManager::class);
+
         return new TesterService(
             $entityManager,
             $serviceLocator->get('Hydrator'),

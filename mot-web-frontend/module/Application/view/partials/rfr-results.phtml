@@ -1,14 +1,14 @@
 <?php
 $rfrFail = isset($reasonsForRejection['FAIL']) ? $reasonsForRejection['FAIL'] : '';
-$rfrPRS  = isset($reasonsForRejection['PRS']) ? $reasonsForRejection['PRS'] : '';
-$rfrAdvisory  = isset($reasonsForRejection['ADVISORY']) ? $reasonsForRejection['ADVISORY'] : '';
+$rfrPRS = isset($reasonsForRejection['PRS']) ? $reasonsForRejection['PRS'] : '';
+$rfrAdvisory = isset($reasonsForRejection['ADVISORY']) ? $reasonsForRejection['ADVISORY'] : '';
 $rfrFailureCount = (array_key_exists('FAIL', $reasonsForRejection)) ? count($reasonsForRejection['FAIL']) : 0;
 $rfrPrsCount = (array_key_exists('PRS', $reasonsForRejection)) ? count($reasonsForRejection['PRS']) : 0;
 $rfrAdvisoryCount = (array_key_exists('ADVISORY', $reasonsForRejection)) ? count($reasonsForRejection['ADVISORY']) : 0;
 $allowEditRfr = isset($allowEditRfr) ? $allowEditRfr : true;
 ?>
 
-<h3 id="failureCount" class="<?php echo $rfrFailureCount ? 'fail' : '';?> result-summary-info" <?php echo ($rfrFailureCount > 0) ? 'data-toggle="collapse" data-target="#showHideFailureResults"' : ''; ?> >
+<h3 id="failureCount" class="<?php echo $rfrFailureCount ? 'fail' : ''; ?> result-summary-info" <?php echo ($rfrFailureCount > 0) ? 'data-toggle="collapse" data-target="#showHideFailureResults"' : ''; ?> >
     <?php echo $this->escapeHtml($rfrFailureCount); ?>
     Failure<?php echo $rfrFailureCount != 1 ? 's' : ''; ?>
 </h3>

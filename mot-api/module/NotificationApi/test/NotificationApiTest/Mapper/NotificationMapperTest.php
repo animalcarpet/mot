@@ -1,4 +1,5 @@
 <?php
+
 namespace NotificationApiTest\NotificationApiTest\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,9 +11,7 @@ use NotificationApi\Mapper\NotificationMapper;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class NotificationMapperTest
- *
- * @package NotificationApiTest\NotificationApiTest\Controller
+ * Class NotificationMapperTest.
  */
 class NotificationMapperTest extends PHPUnit_Framework_TestCase
 {
@@ -70,7 +69,7 @@ class NotificationMapperTest extends PHPUnit_Framework_TestCase
     {
         return [
             'id' => 2,
-            'recipientId'=> 5,
+            'recipientId' => 5,
             'templateId' => 12345,
             'subject' => '',
             'content' => $content,
@@ -78,9 +77,9 @@ class NotificationMapperTest extends PHPUnit_Framework_TestCase
             'createdOn' => '',
             'isArchived' => true,
             'fields' => [
-                'name' => 'John'
+                'name' => 'John',
             ],
-            'updatedOn' => ''
+            'updatedOn' => '',
         ];
     }
 }

@@ -9,7 +9,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use UserApi\HelpDesk\Service\HelpDeskPersonService;
 
 /**
- * Controller for searching user accounts in the system
+ * Controller for searching user accounts in the system.
  */
 class SearchPersonController extends AbstractDvsaRestfulController
 {
@@ -21,7 +21,7 @@ class SearchPersonController extends AbstractDvsaRestfulController
 
         $response = [];
         /**
-         * @var $person SearchPersonResultDto
+         * @var SearchPersonResultDto
          */
         foreach ($resultList as $person) {
             $response[] = $person->toArray();

@@ -19,17 +19,14 @@ use OrganisationApi\Model\NominationVerifier;
 use OrganisationApi\Service\OrganisationNominationNotificationService;
 
 /**
- * Class DirectNominationOperation
+ * Class DirectNominationOperation.
  *
  * Assigns a role to person.
  * Nominee does not need to accept the nomination.
  * He/she gets the role immediately.
- *
- * @package OrganisationApi\Model\Operation
  */
 class DirectNominationOperation implements NominateOperationInterface
 {
-
     private $entityManager;
     private $nominationVerifier;
     private $organisationNominationService;
@@ -103,7 +100,7 @@ class DirectNominationOperation implements NominateOperationInterface
     private function setEvent(OrganisationBusinessRoleMap $nomination)
     {
         $positionName = $nomination->getOrganisationBusinessRole()->getFullName();
-        $organisationId  = $nomination->getOrganisation()->getAuthorisedExaminer()->getNumber();
+        $organisationId = $nomination->getOrganisation()->getAuthorisedExaminer()->getNumber();
         $organisationName = $nomination->getOrganisation()->getName();
 
         $event = $this->eventService->addEvent(

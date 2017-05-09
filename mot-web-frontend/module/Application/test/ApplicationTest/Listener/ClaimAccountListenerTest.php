@@ -7,16 +7,13 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
-use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\SimpleRouteStack;
 use Zend\Mvc\Router\RouteMatch;
-use Zend\Mvc\Service\RouterFactory;
 use Zend\Mvc\Router\RouteStackInterface;
 
 /**
- * Class ClaimAccountListenerTest
+ * Class ClaimAccountListenerTest.
  */
 class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
 {
@@ -67,7 +64,7 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $this
             ->identityProvider
             ->expects($this->atLeast(1))
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($this->identity);
 
         $claimAccountListener = new ClaimAccountListener($this->identityProvider);
@@ -81,14 +78,14 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $routeMatch = XMock::of(RouteMatch::class);
         $routeMatch
             ->expects($this->atLeast(1))
-            ->method("getMatchedRouteName")
-            ->willReturn("some-route");
+            ->method('getMatchedRouteName')
+            ->willReturn('some-route');
 
         $router = XMock::of(RouteStackInterface::class);
         $router
             ->expects($this->atLeast(1))
-            ->method("assemble")
-            ->willReturn("account/claim");
+            ->method('assemble')
+            ->willReturn('account/claim');
 
         $e = new MvcEvent();
         $e->setName(MvcEvent::EVENT_DISPATCH);
@@ -105,7 +102,7 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $this
             ->identityProvider
             ->expects($this->atLeast(1))
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($this->identity);
 
         $claimAccountListener = new ClaimAccountListener($this->identityProvider);
@@ -119,14 +116,14 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $routeMatch = XMock::of(RouteMatch::class);
         $routeMatch
             ->expects($this->atLeast(1))
-            ->method("getMatchedRouteName")
-            ->willReturn("account/claim");
+            ->method('getMatchedRouteName')
+            ->willReturn('account/claim');
 
         $router = XMock::of(RouteStackInterface::class);
         $router
             ->expects($this->atLeast(1))
-            ->method("assemble")
-            ->willReturn("account/claim");
+            ->method('assemble')
+            ->willReturn('account/claim');
 
         $e = new MvcEvent();
         $e->setName(MvcEvent::EVENT_DISPATCH);
@@ -143,7 +140,7 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $this
             ->identityProvider
             ->expects($this->atLeast(1))
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($this->identity);
 
         $claimAccountListener = new ClaimAccountListener($this->identityProvider);

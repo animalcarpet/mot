@@ -10,18 +10,12 @@ use DvsaCommon\Dto\Site\SiteTestingDailyScheduleDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use Site\Traits\SiteServicesTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
 
 /**
- * Class SiteTestingDailyScheduleController
- *
- * @package Site\Controller
+ * Class SiteTestingDailyScheduleController.
  */
 class SiteTestingDailyScheduleController extends AbstractAuthActionController
 {
-
     use SiteServicesTrait;
 
     const ROUTE_SITE_OPENING_HOURS = 'site/edit-opening-hours';
@@ -47,6 +41,7 @@ class SiteTestingDailyScheduleController extends AbstractAuthActionController
             try {
                 $mapperFactory->VehicleTestingStationOpeningHours->update($siteId, $data);
                 $this->addInfoMessages('Opening times successfully updated');
+
                 return $this->redirect()->toRoute('vehicle-testing-station', ['id' => $siteId]);
             } catch (ValidationException $e) {
                 $this->addErrorMessages($e->getDisplayMessages());
@@ -56,18 +51,19 @@ class SiteTestingDailyScheduleController extends AbstractAuthActionController
                 $this->addErrorMessages($e->getDisplayMessages());
             }
         }
+
         return [
-            'siteId'           => $siteId,
+            'siteId' => $siteId,
             'siteOpeningHours' => $data,
-            'errorData'        => $errorData,
-            'vtsName'          => $vtsName
+            'errorData' => $errorData,
+            'vtsName' => $vtsName,
         ];
     }
 
     /**
      * @param SiteTestingDailyScheduleDto[] $data
      *
-     * @return Array $extractedData
+     * @return array $extractedData
      */
     private function extractOpeningHours($data)
     {
@@ -86,11 +82,11 @@ class SiteTestingDailyScheduleController extends AbstractAuthActionController
                 $isCloseTimeAm = Time::fromIso8601($day->getCloseTime())->isAm();
             }
 
-            $extractedData[$idPrefix . 'OpenTime'] = $openTime;
-            $extractedData[$idPrefix . 'OpenTimePeriod'] = $isOpenTimeAm ? 'am' : 'pm';
-            $extractedData[$idPrefix . 'CloseTime'] = $closeTime;
-            $extractedData[$idPrefix . 'CloseTimePeriod'] = $isCloseTimeAm ? 'am' : 'pm';
-            $extractedData[$idPrefix . 'IsClosed'] = $isClosed;
+            $extractedData[$idPrefix.'OpenTime'] = $openTime;
+            $extractedData[$idPrefix.'OpenTimePeriod'] = $isOpenTimeAm ? 'am' : 'pm';
+            $extractedData[$idPrefix.'CloseTime'] = $closeTime;
+            $extractedData[$idPrefix.'CloseTimePeriod'] = $isCloseTimeAm ? 'am' : 'pm';
+            $extractedData[$idPrefix.'IsClosed'] = $isClosed;
         }
 
         return $extractedData;

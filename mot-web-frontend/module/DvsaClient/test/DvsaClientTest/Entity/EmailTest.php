@@ -5,9 +5,7 @@ namespace DvsaClientTest\Entity;
 use DvsaClient\Entity\Email;
 
 /**
- * Class EmailTest
- *
- * @package DvsaClientTest\Entity
+ * Class EmailTest.
  */
 class EmailTest extends BaseEntityTestCase
 {

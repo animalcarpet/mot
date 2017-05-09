@@ -3,7 +3,6 @@
 namespace DvsaCommonApi\Transaction;
 
 use Doctrine\ORM\EntityManager;
-use Zend\ServiceManager\Exception;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -12,8 +11,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * into components implementing it.
  *
  * Class ControllerTransactionAwareInitializer
- *
- * @package DvsaCommonApi\Transaction
  */
 class ControllerTransactionAwareInitializer implements InitializerInterface
 {

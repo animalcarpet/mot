@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * VehicleTestingStationPlanningPermission
+ * VehicleTestingStationPlanningPermission.
  *
  * @ORM\Table(
  * name="application_site_planning_permission",
@@ -42,28 +43,28 @@ class VehicleTestingStationPlanningPermission
     private $vehicleTestingStationDetails = '';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="planning_permission", type="boolean", nullable=false)
      */
     private $planningPermission;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="exemption_document", type="boolean", nullable=false)
      */
     private $exemptionDocument;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="existing_approval", type="boolean", nullable=false)
      */
     private $existingApproval;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="solicitors_letter", type="boolean", nullable=false)
      */
@@ -77,24 +78,25 @@ class VehicleTestingStationPlanningPermission
     private $methodOfDelivery;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="document_received", type="boolean", nullable=false)
      */
     private $documentReceived = false;
     /**
-     * @param boolean $exemptionDocument
+     * @param bool $exemptionDocument
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationPlanningPermission
      */
     public function setExemptionDocument($exemptionDocument)
     {
         $this->exemptionDocument = $exemptionDocument;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getExemptionDocument()
     {
@@ -102,18 +104,19 @@ class VehicleTestingStationPlanningPermission
     }
 
     /**
-     * @param boolean $existingApproval
+     * @param bool $existingApproval
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationPlanningPermission
      */
     public function setExistingApproval($existingApproval)
     {
         $this->existingApproval = $existingApproval;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getExistingApproval()
     {
@@ -121,18 +124,19 @@ class VehicleTestingStationPlanningPermission
     }
 
     /**
-     * @param boolean $planningPermission
+     * @param bool $planningPermission
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationPlanningPermission
      */
     public function setPlanningPermission($planningPermission)
     {
         $this->planningPermission = $planningPermission;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getPlanningPermission()
     {
@@ -140,18 +144,19 @@ class VehicleTestingStationPlanningPermission
     }
 
     /**
-     * @param boolean $solicitorsLetter
+     * @param bool $solicitorsLetter
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationPlanningPermission
      */
     public function setSolicitorsLetter($solicitorsLetter)
     {
         $this->solicitorsLetter = $solicitorsLetter;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSolicitorsLetter()
     {
@@ -166,6 +171,7 @@ class VehicleTestingStationPlanningPermission
     public function setVehicleTestingStationDetails($vehicleTestingStationDetails)
     {
         $this->vehicleTestingStationDetails = $vehicleTestingStationDetails;
+
         return $this;
     }
 
@@ -185,6 +191,7 @@ class VehicleTestingStationPlanningPermission
     public function setMethodOfDelivery($methodOfDelivery)
     {
         $this->methodOfDelivery = $methodOfDelivery;
+
         return $this;
     }
 
@@ -197,7 +204,7 @@ class VehicleTestingStationPlanningPermission
     }
 
     /**
-     * @param boolean $documentReceived
+     * @param bool $documentReceived
      *
      * @return VehicleTestingStationPlanningPermission
      */
@@ -209,7 +216,7 @@ class VehicleTestingStationPlanningPermission
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDocumentReceived()
     {

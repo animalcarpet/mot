@@ -16,7 +16,7 @@ class AccountSummaryStep extends AbstractRegistrationStep
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "ACCOUNT_SUMMARY";
+    const STEP_ID = 'ACCOUNT_SUMMARY';
 
     const QUESTIONS_GROUP_A = 'securityQuestionsGroupA';
     const QUESTIONS_GROUP_B = 'securityQuestionsGroupB';
@@ -61,7 +61,7 @@ class AccountSummaryStep extends AbstractRegistrationStep
     /**
      * Export the step values as a flattened array of all the stored session values.
      *
-     * @todo Used private functions will move to a helper class.
+     * @todo Used private functions will move to a helper class
      *
      * @return array
      */
@@ -184,6 +184,7 @@ class AccountSummaryStep extends AbstractRegistrationStep
         $dateString = implode('-', array_filter([$values['year'], $values['month'], $values['day']]));
 
         $date = new \DateTime($dateString);
+
         return $date->format('j F Y');
     }
 

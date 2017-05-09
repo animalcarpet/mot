@@ -23,7 +23,6 @@ use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Model\OrganisationBusinessRoleCode;
 use DvsaCommon\Model\TradeRole;
-use DvsaFeature\FeatureToggles;
 use InvalidArgumentException;
 use PersonApi\Dto\PersonDetails;
 
@@ -77,7 +76,7 @@ class PersonProfileGuard
      */
     private $loggedInPersonRoles;
 
-    /** @var  TwoFaFeatureToggle */
+    /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
     private static $dvsaRoles = [
@@ -106,13 +105,13 @@ class PersonProfileGuard
      * PersonProfileGuard constructor.
      *
      * @param MotFrontendAuthorisationServiceInterface $authorisationService
-     * @param MotIdentityProviderInterface     $identityProvider
-     * @param PersonalDetails                  $targetPersonDetails
-     * @param TesterAuthorisation              $testerAuthorisation
-     * @param array                            $tradeRolesAndAssociations
-     * @param string                           $context                   The context in which we are viewing the profile. Could be AE, VE
-     *                                                                    or User Search.
-     * @param TwoFaFeatureToggle                   $twoFaFeatureToggle
+     * @param MotIdentityProviderInterface             $identityProvider
+     * @param PersonalDetails                          $targetPersonDetails
+     * @param TesterAuthorisation                      $testerAuthorisation
+     * @param array                                    $tradeRolesAndAssociations
+     * @param string                                   $context                   The context in which we are viewing the profile. Could be AE, VE
+     *                                                                            or User Search
+     * @param TwoFaFeatureToggle                       $twoFaFeatureToggle
      */
     public function __construct(MotFrontendAuthorisationServiceInterface $authorisationService,
                                 MotIdentityProviderInterface $identityProvider, PersonalDetails $targetPersonDetails,
@@ -164,9 +163,9 @@ class PersonProfileGuard
      */
     public function canViewDrivingLicence()
     {
-        return ($this->authorisationService->isGranted(PermissionInSystem::VIEW_DRIVING_LICENCE)
+        return $this->authorisationService->isGranted(PermissionInSystem::VIEW_DRIVING_LICENCE)
             && $this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles)
-            || ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles())));
+            || ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles()));
     }
 
     /**
@@ -179,9 +178,9 @@ class PersonProfileGuard
      */
     public function canViewDateOfBirth()
     {
-        return ($this->authorisationService->isGranted(PermissionInSystem::VIEW_DATE_OF_BIRTH)
+        return $this->authorisationService->isGranted(PermissionInSystem::VIEW_DATE_OF_BIRTH)
             && $this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles)
-            || ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles())));
+            || ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles()));
     }
 
     /**
@@ -226,7 +225,7 @@ class PersonProfileGuard
     {
         return $this->context === ContextProvider::USER_SEARCH_CONTEXT && $this->loggedInPersonHasAnyRoleOf([
             RoleCode::CUSTOMER_SERVICE_MANAGER,
-            RoleCode::CUSTOMER_SERVICE_OPERATIVE
+            RoleCode::CUSTOMER_SERVICE_OPERATIVE,
         ]);
     }
 
@@ -287,11 +286,11 @@ class PersonProfileGuard
      */
     public function canViewTradeRoles()
     {
-        return (
+        return
             ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles()))
             || ($this->authorisationService->isGranted(PermissionInSystem::VIEW_TRADE_ROLES_OF_ANY_USER)
                 && $this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles))
-        );
+        ;
     }
 
     /**
@@ -299,11 +298,11 @@ class PersonProfileGuard
      */
     public function canManageDvsaRoles()
     {
-        return (
+        return
             !($this->authorisationService->isGranted(PermissionInSystem::MANAGE_DVSA_ROLES) && $this->isViewingHimself())
             && ($this->authorisationService->isGranted(PermissionInSystem::MANAGE_DVSA_ROLES)
                 && ($this->targetPersonHasNoneOrAnyRoleOf(self::$dvsaRoles)))
-        );
+        ;
     }
 
     /**
@@ -402,6 +401,7 @@ class PersonProfileGuard
         $hasActiveCard = $this->identityProvider->getIdentity()->isSecondFactorRequired();
         $hasAuthWith2FaPermission = $this->authorisationService->isGranted(PermissionInSystem::AUTHENTICATE_WITH_2FA);
         $isDvsa = $this->authorisationService->isDvsa();
+
         return ($hasAuthWith2FaPermission && !$isDvsa && !$hasActiveCard) ||
         (!$hasActiveCard && $hasACardOrder) ||
         ($hasACardOrder && $hasADeactivatedCard && $isAuthenticatedWithLostAndForgotten);
@@ -521,7 +521,7 @@ class PersonProfileGuard
     }
 
     /**
-     * Rule:
+     * Rule:.
      *
      * When SM, SU, AO1, AO2, VE View ANYONE
      * EXCEPT
@@ -588,7 +588,7 @@ class PersonProfileGuard
         return $this->isViewingOwnProfile() ?
             (($this->canCreateQualificationDetails($vehicleClassAGroupCode)) ||
                 ($this->canCreateQualificationDetails($vehicleClassBGroupCode))) :
-            false ;
+            false;
     }
 
     private function getStatusForGroup($vehicleClassGroupCode)

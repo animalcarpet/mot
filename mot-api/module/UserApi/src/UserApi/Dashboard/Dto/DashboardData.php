@@ -7,7 +7,7 @@ use DvsaEntities\Entity\Notification;
 use NotificationApi\Mapper\NotificationMapper;
 
 /**
- * All data for dashboard
+ * All data for dashboard.
  */
 class DashboardData
 {
@@ -26,7 +26,7 @@ class DashboardData
     /** @var $notifications Notification[] */
     private $notifications;
 
-    /** @var  $inProgressTestNumber integer */
+    /** @var $inProgressTestNumber integer */
     private $inProgressTestNumber;
 
     /** @var string */
@@ -35,7 +35,7 @@ class DashboardData
     /** @var int */
     private $inProgressNonMotTestNumber;
 
-    /** @var  $inProgressTestTypeCode string */
+    /** @var $inProgressTestTypeCode string */
     private $inProgressTestTypeCode;
 
     /** @var $authorisationService MotAuthorisationServiceInterface */
@@ -50,15 +50,15 @@ class DashboardData
      * @param AuthorisationForAuthorisedExaminer[] $authorisedExaminers
      * @param                                      $specialNotice
      * @param                                      $overdueSpecialNotices
-     * @param Notification[] $notifications
-     * @param int $unreadNotificationsCount
+     * @param Notification[]                       $notifications
+     * @param int                                  $unreadNotificationsCount
      * @param                                      $inProgressTestNumber
      * @param                                      $inProgressDemoTestNumber
      * @param                                      $inProgressNonMotTestNumber
      * @param                                      $isTesterQualified
      * @param                                      $isTesterActive
      * @param                                      $inProgressTestTypeCode
-     * @param MotAuthorisationServiceInterface $authorisationService
+     * @param MotAuthorisationServiceInterface     $authorisationService
      * @param $testedVehicleId
      * @param $isTechnicalAdvicePresent
      */
@@ -112,13 +112,13 @@ class DashboardData
         }
 
         return [
-            'hero'                   => $this->getHero(),
-            'authorisedExaminers'    => $authorisedExaminers,
-            'specialNotice'          => $this->getSpecialNotice()->toArray(),
-            'overdueSpecialNotices'  => $this->overdueSpecialNotices,
-            'notifications'          => $notificationExtractedList,
+            'hero' => $this->getHero(),
+            'authorisedExaminers' => $authorisedExaminers,
+            'specialNotice' => $this->getSpecialNotice()->toArray(),
+            'overdueSpecialNotices' => $this->overdueSpecialNotices,
+            'notifications' => $notificationExtractedList,
             'unreadNotificationsCount' => $this->unreadNotificationsCount,
-            'inProgressTestNumber'   => $this->inProgressTestNumber,
+            'inProgressTestNumber' => $this->inProgressTestNumber,
             'inProgressTestTypeCode' => $this->inProgressTestTypeCode,
             'inProgressDemoTestNumber' => $this->inProgressDemoTestNumber,
             'inProgressNonMotTestNumber' => $this->inProgressNonMotTestNumber,
@@ -189,6 +189,7 @@ class DashboardData
 
     /**
      * @param array $overdueSpecialNotices
+     *
      * @return DashboardData
      */
     public function setOverdueSpecialNotices(array $overdueSpecialNotices)
@@ -227,7 +228,7 @@ class DashboardData
     }
 
     /**
-     * @param integer $inProgressTestNumber
+     * @param int $inProgressTestNumber
      *
      * @return DashboardData
      */
@@ -239,7 +240,7 @@ class DashboardData
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getInProgressTestNumber()
     {
@@ -248,6 +249,7 @@ class DashboardData
 
     /**
      * @param string $testNumber
+     *
      * @return $this
      */
     public function setInProgressDemoTestNumber($testNumber)
@@ -275,6 +277,7 @@ class DashboardData
 
     /**
      * @param int $inProgressNonMotTestNumber
+     *
      * @return $this
      */
     public function setInProgressNonMotTestNumber($inProgressNonMotTestNumber)

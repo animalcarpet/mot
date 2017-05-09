@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Application;
@@ -7,7 +8,7 @@ use DvsaEntities\Entity\Person;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ApplicationTest
+ * Class ApplicationTest.
  */
 class ApplicationTest extends PHPUnit_Framework_TestCase
 {
@@ -32,16 +33,16 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 
         $data = [
             'applicationReference' => 'ABC123',
-            'submittedOn' => new \DateTime,
+            'submittedOn' => new \DateTime(),
             'createdBy' => $person,
-            'createdOn' => new \DateTime,
+            'createdOn' => new \DateTime(),
             'lastUpdatedBy' => $person,
-            'lastUpdatedOn' => new \DateTime,
+            'lastUpdatedOn' => new \DateTime(),
             'status' => $status,
             'lockedBy' => $person,
-            'lockedOn' => new \DateTime,
+            'lockedOn' => new \DateTime(),
             'person' => $person,
-            'version' => '1'
+            'version' => '1',
         ];
 
         $application->setApplicationReference($data['applicationReference'])

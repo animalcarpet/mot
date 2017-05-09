@@ -1,13 +1,11 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
-use DvsaEntitiesTest\Entity\BaseEntityTestCase;
 use DvsaEntities\Entity\SpecialNotice;
 
 /**
- * Class SpecialNoticeTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class SpecialNoticeTest.
  */
 class SpecialNoticeTest extends BaseEntityTestCase
 {
@@ -27,5 +25,4 @@ class SpecialNoticeTest extends BaseEntityTestCase
         $this->assertAttributeInstanceOf(\DateTime::class, 'acknowledgedOn', $specialNotice);
         $this->assertTrue($specialNotice->getIsAcknowledged());
     }
-
 }

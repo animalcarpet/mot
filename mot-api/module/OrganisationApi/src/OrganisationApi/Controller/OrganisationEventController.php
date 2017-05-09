@@ -6,7 +6,6 @@ use DvsaCommon\Http\HttpStatus;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\OrganisationEventService;
-use Zend\Http\Response;
 
 class OrganisationEventController extends AbstractDvsaRestfulController
 {
@@ -22,20 +21,23 @@ class OrganisationEventController extends AbstractDvsaRestfulController
     }
 
     /**
-     * Helper function to send error codes back to recipient
+     * Helper function to send error codes back to recipient.
      *
      * @param $code
      * @param $message
+     *
      * @return \Zend\View\Model\JsonModel
      */
     protected function sendError($code, $message)
     {
         $this->getResponse()->setStatusCode($code);
+
         return ApiResponse::jsonError(['errors' => $message]);
     }
 
     /**
      * @param mixed $data
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function create($data)
@@ -51,7 +53,6 @@ class OrganisationEventController extends AbstractDvsaRestfulController
             if (true === $result->isSuccessful()) {
                 return ApiResponse::jsonOk(['eventId' => $result->getEventId()]);
             }
-
         } catch (\InvalidArgumentException $e) {
             return $this->sendError(HttpStatus::HTTP_UNPROCESSABLE_ENTITY, $e->getMessage());
         }

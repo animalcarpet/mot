@@ -6,7 +6,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * MotFrontendIdentityProviderInterface that delegates to Zend Framework
+ * MotFrontendIdentityProviderInterface that delegates to Zend Framework.
  */
 class MotFrontendIdentityProvider implements MotFrontendIdentityProviderInterface
 {

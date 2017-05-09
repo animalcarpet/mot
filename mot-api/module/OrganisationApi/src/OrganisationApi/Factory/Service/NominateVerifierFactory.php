@@ -8,12 +8,10 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class NominateVerifierFactory
- * @package OrganisationApi\Factory\Service
+ * Class NominateVerifierFactory.
  */
 class NominateVerifierFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new NominationVerifier(

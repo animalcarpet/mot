@@ -3,7 +3,7 @@
 namespace Core\Service;
 
 /**
- * Exposes authorization refresh functionality
+ * Exposes authorization refresh functionality.
  */
 interface MotAuthorizationRefresherInterface
 {

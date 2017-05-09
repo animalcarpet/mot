@@ -2,7 +2,6 @@
 
 namespace DvsaEventApiTest\Service\Mapper;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Dto\Event\EventDto;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -14,8 +13,7 @@ use DvsaEventApi\Service\Mapper\EventListMapper;
 use Zend\Stdlib\DateTime;
 
 /**
- * Class EventListMapperTest
- * @package DvsaEventApiTest\Service\Mapper
+ * Class EventListMapperTest.
  */
 class EventListMapperTest extends AbstractServiceTestCase
 {

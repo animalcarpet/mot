@@ -11,6 +11,7 @@ interface GdsRowFlowInterface extends GdsTableFlowInterface
     /**
      * @param $content
      * @param bool $escape
+     *
      * @return GdsRowLabel
      */
     public function setLabel($content, $escape = true);
@@ -23,6 +24,7 @@ interface GdsRowFlowInterface extends GdsTableFlowInterface
     /**
      * @param $content
      * @param bool $escape
+     *
      * @return GdsRowValue
      */
     public function setValue($content, $escape = true);
@@ -35,6 +37,7 @@ interface GdsRowFlowInterface extends GdsTableFlowInterface
     /**
      * @param $content
      * @param bool $escape
+     *
      * @return GdsRowValueMetaData
      */
     public function setValueMetaData($content, $escape = true);
@@ -48,6 +51,7 @@ interface GdsRowFlowInterface extends GdsTableFlowInterface
      * @param $text
      * @param $url
      * @param string $tooltip
+     *
      * @return GdsTableActionLink
      */
     public function addActionLink($text, $url, $tooltip = ' ');

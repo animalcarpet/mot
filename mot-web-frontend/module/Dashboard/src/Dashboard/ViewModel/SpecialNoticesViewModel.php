@@ -9,7 +9,7 @@ class SpecialNoticesViewModel
     /** @var DashboardGuard $dashboardGuard */
     private $dashboardGuard;
 
-    /** @var $unreadCount*/
+    /** @var $unreadCount */
     private $unreadCount;
 
     /** @var $dayLeftToView */
@@ -64,6 +64,7 @@ class SpecialNoticesViewModel
             $this->canAcknowledge()) {
             return true;
         }
+
         return false;
     }
 

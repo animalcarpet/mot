@@ -10,24 +10,24 @@ use DvsaEventApi\Service\EventService;
 /**
  * This function is the main controller for the Event module
  * He is used for:
- * - Listing all the event for the AE/SITE/PERSON
+ * - Listing all the event for the AE/SITE/PERSON.
  *
  * Class EventController
- * @package DvsaEventApi\Controller
  */
 class EventController extends AbstractDvsaRestfulController
 {
     /**
      * This function allow us to post the search form in the event history list
-     * It is returning the list of the event for the AE/SITE/PERSON
+     * It is returning the list of the event for the AE/SITE/PERSON.
      *
      * @param array $data
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function create($data)
     {
-        $id     = $this->params()->fromRoute('id');
-        $type   = $this->params()->fromRoute('type');
+        $id = $this->params()->fromRoute('id');
+        $type = $this->params()->fromRoute('type');
 
         $dto = DtoHydrator::jsonToDto($data);
 
@@ -38,6 +38,7 @@ class EventController extends AbstractDvsaRestfulController
         $jsonResponse['events'] = array_map(
             function ($each) {
                 $each['description'] = htmlentities($each['description']);
+
                 return $each;
             }, $jsonResponse['events']
         );
@@ -46,9 +47,10 @@ class EventController extends AbstractDvsaRestfulController
     }
 
     /**
-     * This function allow us to get the information about an event
+     * This function allow us to get the information about an event.
      *
      * @param int $id
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function get($id)
@@ -58,7 +60,7 @@ class EventController extends AbstractDvsaRestfulController
 
     /**
      * This function get the EventService from the service locator
-     * and returns it
+     * and returns it.
      *
      * @return \DvsaEventApi\Service\EventService
      */

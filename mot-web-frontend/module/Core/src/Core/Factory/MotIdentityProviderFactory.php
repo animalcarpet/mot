@@ -8,7 +8,6 @@ use Core\Service\MotFrontendIdentityProvider;
 
 class MotIdentityProviderFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new MotFrontendIdentityProvider($serviceLocator->get('ZendAuthenticationService'));

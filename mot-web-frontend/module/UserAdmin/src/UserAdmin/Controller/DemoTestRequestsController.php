@@ -1,6 +1,5 @@
 <?php
 
-
 namespace UserAdmin\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
@@ -24,8 +23,7 @@ class DemoTestRequestsController extends AbstractDvsaActionController implements
         MotAuthorisationServiceInterface $authorisationService,
         QualificationDetailsMapper $qualificationDetailsMapper,
         DemoTestRequestService $demoTestRequestService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->demoTestRequestService = $demoTestRequestService;
         $this->qualificationDetailsMapper = $qualificationDetailsMapper;
@@ -55,6 +53,7 @@ class DemoTestRequestsController extends AbstractDvsaActionController implements
         $this->assertUserCanViewDemoTestRequests();
         $sortParamsForCsv = $this->demoTestRequestService->getSortParamsForCsv($this->getRequest()->getQuery());
         $users = $this->qualificationDetailsMapper->getDemoTestRequests($sortParamsForCsv);
+
         return $this->demoTestRequestService->getCsvResponse($users, $this->getResponse());
     }
 

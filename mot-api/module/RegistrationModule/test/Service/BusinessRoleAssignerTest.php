@@ -39,7 +39,7 @@ class BusinessRoleAssignerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($mockConnection);
 
         /** @var PersonSystemRoleRepository $mockPersonSystemRoleRepository */
-        $mockPersonSystemRoleRepository =  XMock::of(PersonSystemRoleRepository::class);
+        $mockPersonSystemRoleRepository = XMock::of(PersonSystemRoleRepository::class);
 
         /** @var EntityRepository $mockEntityRepository */
         $mockEntityRepository = XMock::of(EntityRepository::class);

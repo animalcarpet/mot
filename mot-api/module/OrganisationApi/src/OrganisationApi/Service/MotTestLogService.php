@@ -8,16 +8,15 @@ use DvsaEntities\Repository\MotTestRepository;
 use OrganisationApi\Service\Mapper\MotTestLogSummaryMapper;
 
 /**
- * Class MotTestLogService
- * @package OrganisationApi\Service
+ * Class MotTestLogService.
  */
 class MotTestLogService
 {
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     protected $authSrv;
-    /** @var  MotTestRepository */
+    /** @var MotTestRepository */
     private $motTestRepository;
-    /** @var  MotTestLogSummaryMapper */
+    /** @var MotTestLogSummaryMapper */
     private $mapper;
 
     public function __construct(
@@ -25,14 +24,14 @@ class MotTestLogService
         MotTestRepository $motTestRepository,
         MotTestLogSummaryMapper $mapper
     ) {
-        $this->authSrv           = $authSrv;
+        $this->authSrv = $authSrv;
         $this->motTestRepository = $motTestRepository;
-        $this->mapper            = $mapper;
+        $this->mapper = $mapper;
     }
 
     /**
      * This function is responsible to get the mot tests logs for
-     * an authorised examiner
+     * an authorised examiner.
      *
      * @param int $organisationId
      *

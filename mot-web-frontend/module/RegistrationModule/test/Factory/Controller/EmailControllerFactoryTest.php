@@ -19,7 +19,7 @@ class EmailControllerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $stepServiceService  =  XMock::of(RegistrationStepService::class);
+        $stepServiceService = XMock::of(RegistrationStepService::class);
         $isEmailDuplicateService = XMock::of(IsEmailDuplicateService::class);
         $serviceManager->setService(RegistrationStepService::class, $stepServiceService);
         $serviceManager->setService(IsEmailDuplicateService::class, $isEmailDuplicateService);

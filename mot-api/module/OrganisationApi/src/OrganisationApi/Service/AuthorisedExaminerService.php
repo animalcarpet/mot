@@ -3,15 +3,12 @@
 namespace OrganisationApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Date\DateTimeHolder;
-use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationContactDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
@@ -20,14 +17,12 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\ContactDetailsService;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\AuthForAeStatus;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\EventOrganisationMap;
 use DvsaEntities\Entity\Organisation;
-use DvsaEntities\Entity\OrganisationContact;
 use DvsaEntities\Entity\OrganisationContactType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
@@ -44,7 +39,7 @@ use OrganisationApi\Service\Mapper\OrganisationMapper;
 use OrganisationApi\Service\Validator\AuthorisedExaminerValidator;
 
 /**
- * Service to deal with creating, editing and viewing AuthorisedExaminers
+ * Service to deal with creating, editing and viewing AuthorisedExaminers.
  */
 class AuthorisedExaminerService extends AbstractService
 {
@@ -64,7 +59,7 @@ class AuthorisedExaminerService extends AbstractService
      */
     private $contactDetailService;
     /**
-     * @var EventService $eventService
+     * @var EventService
      */
     private $eventService;
     /**
@@ -72,19 +67,19 @@ class AuthorisedExaminerService extends AbstractService
      */
     private $organisationRepository;
     /**
-     * @var PersonRepository $personRepository
+     * @var PersonRepository
      */
     private $personRepository;
     /**
-     * @var OrganisationTypeRepository $organisationTypeRepository
+     * @var OrganisationTypeRepository
      */
     private $organisationTypeRepository;
     /**
-     * @var SiteRepository $siteRepository
+     * @var SiteRepository
      */
     private $siteRepository;
     /**
-     * @var CompanyTypeRepository $companyTypeRepository
+     * @var CompanyTypeRepository
      */
     private $companyTypeRepository;
     /**
@@ -92,7 +87,7 @@ class AuthorisedExaminerService extends AbstractService
      */
     private $organisationContactTypeRepository;
     /**
-     * @var OrganisationMapper $mapper
+     * @var OrganisationMapper
      */
     private $mapper;
     /**
@@ -117,22 +112,22 @@ class AuthorisedExaminerService extends AbstractService
     private $validator;
 
     /**
-     * @param EntityManager $entityManager
-     * @param AuthorisationServiceInterface $authService
-     * @param MotIdentityInterface $motIdentity
-     * @param ContactDetailsService $contactDetailService
-     * @param EventService $eventService
-     * @param OrganisationRepository $organisationRepository
-     * @param PersonRepository $personRepository
-     * @param OrganisationTypeRepository $organisationTypeRepository
-     * @param CompanyTypeRepository $companyTypeRepository
-     * @param OrganisationContactTypeRepository $organisationContactTypeRepository
-     * @param OrganisationMapper $mapper
-     * @param AuthForAeStatusRepository $authForAeStatusRepository
-     * @param XssFilter $xssFilter
+     * @param EntityManager                                $entityManager
+     * @param AuthorisationServiceInterface                $authService
+     * @param MotIdentityInterface                         $motIdentity
+     * @param ContactDetailsService                        $contactDetailService
+     * @param EventService                                 $eventService
+     * @param OrganisationRepository                       $organisationRepository
+     * @param PersonRepository                             $personRepository
+     * @param OrganisationTypeRepository                   $organisationTypeRepository
+     * @param CompanyTypeRepository                        $companyTypeRepository
+     * @param OrganisationContactTypeRepository            $organisationContactTypeRepository
+     * @param OrganisationMapper                           $mapper
+     * @param AuthForAeStatusRepository                    $authForAeStatusRepository
+     * @param XssFilter                                    $xssFilter
      * @param AuthorisationForAuthorisedExaminerRepository $authorisationForAuthorisedExaminerRepository
-     * @param AuthorisedExaminerValidator $validator
-     * @param DateTimeHolder $dateTimeHolder
+     * @param AuthorisedExaminerValidator                  $validator
+     * @param DateTimeHolder                               $dateTimeHolder
      */
     public function __construct(
         EntityManager $entityManager,
@@ -179,6 +174,7 @@ class AuthorisedExaminerService extends AbstractService
      * @param OrganisationDto $orgDto
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function create(OrganisationDto $orgDto)
@@ -266,16 +262,17 @@ class AuthorisedExaminerService extends AbstractService
         $this->entityManager->flush();
 
         return [
-            'id'    => $orgEntity->getId(),
+            'id' => $orgEntity->getId(),
             'aeRef' => $authorisedExaminer->getNumber(),
         ];
     }
 
     /**
      * @param OrganisationDto $dto
-     * @param Organisation $orgEntity
+     * @param Organisation    $orgEntity
      *
      * @return array [ Organisation entity, Site entity (Area Office) ]
+     *
      * @throws NotFoundException
      */
     private function populateOrganisationFromDto(OrganisationDto $dto, Organisation $orgEntity)
@@ -308,13 +305,14 @@ class AuthorisedExaminerService extends AbstractService
     private function getAreaOfficeIdByNumber($aoNumber)
     {
         $allAreaOffices = $this->siteRepository->getAllAreaOffices();
-        $aoNumber = (int)$aoNumber;
+        $aoNumber = (int) $aoNumber;
 
         foreach ($allAreaOffices as $areaOffice) {
             if ($aoNumber == $areaOffice['areaOfficeNumber']) {
                 return $areaOffice['id'];
             }
         }
+
         return null;
     }
 
@@ -349,6 +347,7 @@ class AuthorisedExaminerService extends AbstractService
      * @param $id
      *
      * @return OrganisationDto
+     *
      * @throws NotFoundException
      */
     public function get($id)
@@ -368,6 +367,7 @@ class AuthorisedExaminerService extends AbstractService
      * @param string $aeNumber Organisation the identifying number code
      *
      * @return OrganisationDto
+     *
      * @throws NotFoundException
      */
     public function getByNumber($aeNumber)
@@ -381,7 +381,7 @@ class AuthorisedExaminerService extends AbstractService
             ->findOneBy(['number' => $aeNumber]);
 
         if (is_null($data)) {
-            throw new NotFoundException('Organisation ID: ' . $aeNumber);
+            throw new NotFoundException('Organisation ID: '.$aeNumber);
         }
 
         return $this->mapper->toDto($data->getOrganisation());
@@ -397,7 +397,7 @@ class AuthorisedExaminerService extends AbstractService
         $this->authService->assertGranted(PermissionInSystem::AUTHORISED_EXAMINER_LIST);
 
         /** @var Person $manager */
-        $manager       = $this->personRepository->get($personId);
+        $manager = $this->personRepository->get($personId);
         $organisations = $manager->findAuthorisedExaminers();
 
         foreach ($organisations as $org) {
@@ -416,8 +416,10 @@ class AuthorisedExaminerService extends AbstractService
      * @param $username
      *
      * @return mixed
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
-     * @deprecated Should be removed at all cost.
+     *
+     * @deprecated Should be removed at all cost
      */
     public function getAuthorisedExaminerData($username)
     {

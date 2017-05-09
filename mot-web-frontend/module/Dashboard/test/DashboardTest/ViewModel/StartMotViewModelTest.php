@@ -6,7 +6,6 @@ use Dashboard\Security\DashboardGuard;
 use Dashboard\Model\Dashboard;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_TestCase;
 use Zend\Mvc\Controller\Plugin\Url;
 
 class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
@@ -27,13 +26,13 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider statMotViewModelDataProviderForHasSlotsAvailable
      *
-     * @param bool $isTesterAtAnySite
-     * @param bool $hasTestInProgress
+     * @param bool   $isTesterAtAnySite
+     * @param bool   $hasTestInProgress
      * @param string $enterResultsLabel
-     * @param int $testNumberInProgress
-     * @param bool $isTestingEnabled
-     * @param int $slotsNumber
-     * @param bool $expectedResult
+     * @param int    $testNumberInProgress
+     * @param bool   $isTestingEnabled
+     * @param int    $slotsNumber
+     * @param bool   $expectedResult
      */
     public function testIfTesterHasSlotsAvailable(
         $isTesterAtAnySite,
@@ -43,8 +42,7 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
         $isTestingEnabled,
         $slotsNumber,
         $expectedResult
-    )
-    {
+    ) {
         $this->mockVehicleTestingStation
             ->method('getSlots')
             ->willReturn($slotsNumber);
@@ -66,12 +64,12 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider statMotViewModelDataProviderForCanPerformMotTest
      *
-     * @param bool $isTesterAtAnySite
-     * @param bool $hasTestInProgress
+     * @param bool   $isTesterAtAnySite
+     * @param bool   $hasTestInProgress
      * @param string $enterResultsLabel
-     * @param int $testNumberInProgress
-     * @param bool $isTestingEnabled
-     * @param bool $expectedResult
+     * @param int    $testNumberInProgress
+     * @param bool   $isTestingEnabled
+     * @param bool   $expectedResult
      */
     public function testIfUserCanStartMotTest(
         $isTesterAtAnySite,
@@ -80,8 +78,7 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
         $testNumberInProgress,
         $isTestingEnabled,
         $expectedResult
-    )
-    {
+    ) {
         $startMotViewModel = $this->startMotViewModel(
             $this->mockUrl,
             $isTesterAtAnySite,
@@ -102,8 +99,8 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
     public function statMotViewModelDataProviderForHasSlotsAvailable()
     {
         return [
-            [true, true, "Enter MOT", 999, true, 0, false],
-            [true, true, "Enter MOT", 999, true, 1, true]
+            [true, true, 'Enter MOT', 999, true, 0, false],
+            [true, true, 'Enter MOT', 999, true, 1, true],
         ];
     }
 
@@ -113,10 +110,10 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
     public function statMotViewModelDataProviderForCanPerformMotTest()
     {
         return [
-            [true,  true, "Enter MOT", 999, true,  true],
-            [true,  true, "Enter MOT", 999, false, false],
-            [false, true, "Enter MOT", 999, true,  false],
-            [false, true, "Enter MOT", 999, false, false]
+            [true,  true, 'Enter MOT', 999, true,  true],
+            [true,  true, 'Enter MOT', 999, false, false],
+            [false, true, 'Enter MOT', 999, true,  false],
+            [false, true, 'Enter MOT', 999, false, false],
         ];
     }
 
@@ -129,8 +126,7 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
         $isTestingEnabled,
         $testerAtCurrentVts,
         $expectedResult
-    )
-    {
+    ) {
         $startMotViewModel = new StartMotViewModel(
             $url,
             $isTesterAtAnySite,
@@ -143,5 +139,4 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
 
         return $startMotViewModel;
     }
-
 }

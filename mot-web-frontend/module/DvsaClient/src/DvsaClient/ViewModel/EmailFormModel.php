@@ -7,7 +7,7 @@ use DvsaCommon\Validator\EmailAddressValidator;
 use Zend\Stdlib\Parameters;
 
 /**
- * Model for changing email address in web forms
+ * Model for changing email address in web forms.
  */
 class EmailFormModel extends AbstractFormModel
 {
@@ -22,22 +22,21 @@ class EmailFormModel extends AbstractFormModel
     const ERR_CONF_NOT_SAME = 'Both email addresses need to be the same';
 
     /**
-     * @var  string
+     * @var string
      */
     private $email;
     /**
-     * @var  string
+     * @var string
      */
     private $emailConfirm;
     /**
-     * @var  boolean
+     * @var bool
      */
     private $isPrimary;
     /**
-     * @var  boolean
+     * @var bool
      */
     private $isSupplied = true;
-
 
     public function fromPost(Parameters $postData)
     {
@@ -91,7 +90,7 @@ class EmailFormModel extends AbstractFormModel
         if ($this->isSupplied()) {
             $email = $this->getEmail();
 
-            $field = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_EMAIL) :  self::FIELD_EMAIL;
+            $field = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_EMAIL) : self::FIELD_EMAIL;
             $fieldConfirm = $type
                 ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_EMAIL_CONFIRM)
                 : self::FIELD_EMAIL_CONFIRM;
@@ -150,7 +149,7 @@ class EmailFormModel extends AbstractFormModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSupplied()
     {
@@ -158,18 +157,19 @@ class EmailFormModel extends AbstractFormModel
     }
 
     /**
-     * @param boolean $isSupply
+     * @param bool $isSupply
      *
      * @return $this
      */
     public function setIsSupplied($isSupply)
     {
         $this->isSupplied = ($isSupply === null ? true : (bool) $isSupply);
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPrimary()
     {
@@ -177,13 +177,14 @@ class EmailFormModel extends AbstractFormModel
     }
 
     /**
-     * @param boolean $isPrimary
+     * @param bool $isPrimary
      *
      * @return $this
      */
     public function setIsPrimary($isPrimary)
     {
         $this->isPrimary = (bool) $isPrimary;
+
         return $this;
     }
 }

@@ -23,12 +23,9 @@ use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use DvsaEntities\Entity\AuthorisedExaminerPrincipal;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\Organisation;
-use DvsaEntities\Entity\Person;
-use DvsaEntities\Entity\PersonContact;
 use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\AuthorisedExaminerPrincipalRepository;
 use OrganisationApi\Service\AuthorisedExaminerPrincipalService;
-use UserApi\Application\Service\AccountService;
 use DvsaEventApi\Service\EventService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
@@ -37,14 +34,14 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Constants\EventDescription;
 
 /**
- * Unit tests for AuthorisedExaminerPrincipalService
+ * Unit tests for AuthorisedExaminerPrincipalService.
  */
 class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
 {
     const AUTH_FOR_AE_ID = 1;
     const AE_ID = 1;
-    const AE_NAME = "AEname";
-    const AE_NUMBER = "1333";
+    const AE_NAME = 'AEname';
+    const AE_NUMBER = '1333';
 
     /** @var AuthorisedExaminerPrincipalService */
     private $authorisedExaminerPrincipalService;
@@ -56,7 +53,7 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
     private $authorisedExaminer;
     /** @var MotIdentityProviderInterface */
     private $identityProvider;
-    /** @var  MotAuthorisationServiceInterface */
+    /** @var MotAuthorisationServiceInterface */
     private $authorisationService;
     /** @var EventService */
     private $eventService;
@@ -75,18 +72,18 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUsername")
-            ->willReturn("johnRambo");
+            ->method('getUsername')
+            ->willReturn('johnRambo');
 
         $this->authorisedExaminerPrincipalRepository = XMock::of(AuthorisedExaminerPrincipalRepository::class);
         $this->identityProvider = XMock::of(MotIdentityProviderInterface::class);
         $this
             ->identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
-        /** @var AuthorisationService $authorisationService */
+        /* @var AuthorisationService $authorisationService */
         $this->authorisationService = XMock::of(MotAuthorisationServiceInterface::class);
         $this->eventService = XMock::of(EventService::class);
 
@@ -98,8 +95,6 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
             $this->identityProvider,
             new AuthorisedExaminerPrincipalValidator()
         );
-
-
     }
 
     public function testGetAuthorisedExaminerPrincipalsReturnsArrayOfAeps()
@@ -107,7 +102,7 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
         $this
             ->authorisedExaminerPrincipalRepository
             ->expects($this->any())
-            ->method("findAllByAuthForAe")
+            ->method('findAllByAuthForAe')
             ->willReturn([$this->createAep(1), $this->createAep(2)]);
 
         $aeps = $this->authorisedExaminerPrincipalService->getForAuthorisedExaminer(self::AE_ID);
@@ -120,29 +115,30 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
         $aepId = 23;
 
         $data = [
-            AddressLine1Input::FIELD => "address 1",
-            AddressLine2Input::FIELD => "address 2",
-            AddressLine3Input::FIELD => "address 3",
-            PostcodeInput::FIELD     => "postcode",
-            FirstNameInput::FIELD    => "first name",
-            MiddleNameInput::FIELD   => "middle name",
-            FamilyNameInput::FIELD   => "family name",
-            DateOfBirthInput::FIELD  => "2001-12-12",
-            TownInput::FIELD         => "town",
-            CountryInput::FIELD      => "country",
+            AddressLine1Input::FIELD => 'address 1',
+            AddressLine2Input::FIELD => 'address 2',
+            AddressLine3Input::FIELD => 'address 3',
+            PostcodeInput::FIELD => 'postcode',
+            FirstNameInput::FIELD => 'first name',
+            MiddleNameInput::FIELD => 'middle name',
+            FamilyNameInput::FIELD => 'family name',
+            DateOfBirthInput::FIELD => '2001-12-12',
+            TownInput::FIELD => 'town',
+            CountryInput::FIELD => 'country',
         ];
 
         $this
             ->eventService
             ->expects($eventServiceSpy = $this->once())
-            ->method("addOrganisationEvent");
+            ->method('addOrganisationEvent');
 
         $this
             ->authorisedExaminerPrincipalRepository
             ->expects($aepRepositorySpy = $this->once())
-            ->method("persist")
+            ->method('persist')
             ->willReturnCallback(function (AuthorisedExaminerPrincipal $aep) use ($aepId) {
                 $aep->setId($aepId);
+
                 return $aep;
             });
 
@@ -167,7 +163,6 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
         );
 
         $this->assertEquals($expectedDescription, $eventDescription);
-
     }
 
     public function testDeletePrincipalForAuthorisedExaminer()
@@ -178,14 +173,13 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
         $this
             ->eventService
             ->expects($eventServiceSpy = $this->once())
-            ->method("addOrganisationEvent");
+            ->method('addOrganisationEvent');
 
         $this
             ->authorisedExaminerPrincipalRepository
             ->expects($aepRepositorySpy = $this->once())
-            ->method("findByIdAndAuthForAe")
+            ->method('findByIdAndAuthForAe')
             ->willReturn($aep);
-
 
         $this->authorisedExaminerPrincipalService->deletePrincipalForAuthorisedExaminer(self::AE_ID, $aepId);
 
@@ -215,7 +209,7 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
         $personalContactType = new \DvsaEntities\Entity\PersonContactType();
         $personalContactType->setName(PersonContactType::PERSONAL);
 
-        $workContactType     = new \DvsaEntities\Entity\PersonContactType();
+        $workContactType = new \DvsaEntities\Entity\PersonContactType();
         $workContactType->setName(PersonContactType::WORK);
 
         $AuthorisationForAuthorisedExaminer = new AuthorisationForAuthorisedExaminer();
@@ -236,12 +230,12 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
     {
         $address = new Address();
         $address
-            ->setAddressLine1(ArrayUtils::tryGet($data, AddressLine1Input::FIELD, "address line 1"))
-            ->setAddressLine2(ArrayUtils::tryGet($data, AddressLine2Input::FIELD, "address line 2"))
-            ->setAddressLine3(ArrayUtils::tryGet($data, AddressLine3Input::FIELD, "address line 3"))
-            ->setPostcode(ArrayUtils::tryGet($data, PostcodeInput::FIELD, "postcode"))
-            ->setTown(ArrayUtils::tryGet($data, PostcodeInput::FIELD, "toen"))
-            ->setCountry(ArrayUtils::tryGet($data, CountryInput::FIELD, "country"))
+            ->setAddressLine1(ArrayUtils::tryGet($data, AddressLine1Input::FIELD, 'address line 1'))
+            ->setAddressLine2(ArrayUtils::tryGet($data, AddressLine2Input::FIELD, 'address line 2'))
+            ->setAddressLine3(ArrayUtils::tryGet($data, AddressLine3Input::FIELD, 'address line 3'))
+            ->setPostcode(ArrayUtils::tryGet($data, PostcodeInput::FIELD, 'postcode'))
+            ->setTown(ArrayUtils::tryGet($data, PostcodeInput::FIELD, 'toen'))
+            ->setCountry(ArrayUtils::tryGet($data, CountryInput::FIELD, 'country'))
             ;
 
         $contactDetails = new ContactDetail();
@@ -250,10 +244,10 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
         $aep = new AuthorisedExaminerPrincipal();
         $aep
             ->setId($id)
-            ->setFirstName(ArrayUtils::tryGet($data, FirstNameInput::FIELD, "first name"))
-            ->setFirstName(ArrayUtils::tryGet($data, MiddleNameInput::FIELD, "middle name"))
-            ->setFirstName(ArrayUtils::tryGet($data, FamilyNameInput::FIELD, "family name"))
-            ->setDateOfBirth(new \DateTime(ArrayUtils::tryGet($data, DateOfBirthInput::FIELD, "2002-11-11")))
+            ->setFirstName(ArrayUtils::tryGet($data, FirstNameInput::FIELD, 'first name'))
+            ->setFirstName(ArrayUtils::tryGet($data, MiddleNameInput::FIELD, 'middle name'))
+            ->setFirstName(ArrayUtils::tryGet($data, FamilyNameInput::FIELD, 'family name'))
+            ->setDateOfBirth(new \DateTime(ArrayUtils::tryGet($data, DateOfBirthInput::FIELD, '2002-11-11')))
             ->setContactDetails($contactDetails)
         ;
 
@@ -264,6 +258,7 @@ class AuthorisedExaminerPrincipalServiceTest extends AbstractServiceTestCase
     {
         $spyInvocations = $spy->getInvocations();
         $lastInvocation = end($spyInvocations);
+
         return $lastInvocation->parameters[$paramIndex];
     }
 }

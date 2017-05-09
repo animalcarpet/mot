@@ -12,7 +12,6 @@ use OrganisationApi\Model\OutputFormat\OutputFormatOrganisationSlotUsage;
 
 class OutputFormatOrganisationSlotUsageTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var OutputFormatOrganisationSlotUsage
      */
@@ -27,7 +26,7 @@ class OutputFormatOrganisationSlotUsageTest extends \PHPUnit_Framework_TestCase
     {
         $siteId = 1;
 
-        $site          = new Site();
+        $site = new Site();
         $contactDetail = (new ContactDetail())->setAddress(new Address());
 
         $site
@@ -36,8 +35,8 @@ class OutputFormatOrganisationSlotUsageTest extends \PHPUnit_Framework_TestCase
             ->setContact($contactDetail, (new SiteContactType())->setCode(SiteContactTypeCode::BUSINESS));
 
         $results = [];
-        $item    = [
-            0       => $site,
+        $item = [
+            0 => $site,
             'usage' => 10,
         ];
 

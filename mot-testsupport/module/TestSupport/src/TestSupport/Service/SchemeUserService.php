@@ -3,13 +3,11 @@
 namespace TestSupport\Service;
 
 use TestSupport\Helper\TestSupportAccessTokenManager;
-use TestSupport\Service\AccountDataService;
 use DvsaCommon\Constants\Role;
 use Zend\View\Model\JsonModel;
 
 class SchemeUserService
 {
-
     /**
      * @var AccountDataService
      */
@@ -21,9 +19,10 @@ class SchemeUserService
     }
 
     /**
-     * Create a Scheme User with the data supplied
+     * Create a Scheme User with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -31,6 +30,7 @@ class SchemeUserService
         TestSupportAccessTokenManager::addSchemeManagerAsRequestorIfNecessary($data);
         $resultJson = $this->accountDataService->create($data, Role::DVSA_SCHEME_USER);
         $this->accountDataService->addRole($resultJson->data['personId'], Role::DVSA_SCHEME_USER);
+
         return $resultJson;
     }
 }

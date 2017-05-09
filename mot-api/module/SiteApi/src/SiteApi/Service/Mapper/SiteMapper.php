@@ -21,14 +21,12 @@ use OrganisationApi\Service\Mapper\PersonMapper;
 
 /**
  * Map data from Site Entity to SiteDto.
- *
- * @package SiteApi\Service\Mapper
  */
 class SiteMapper extends AbstractApiMapper
 {
-    /** @var  ContactMapper */
+    /** @var ContactMapper */
     private $contactMapper;
-    /** @var  PersonMapper */
+    /** @var PersonMapper */
     protected $personMapper;
 
     public function __construct()
@@ -38,7 +36,7 @@ class SiteMapper extends AbstractApiMapper
     }
 
     /**
-     * @param Site $site
+     * @param Site    $site
      * @param SiteDto $dto
      *
      * @return SiteDto
@@ -93,7 +91,7 @@ class SiteMapper extends AbstractApiMapper
 
         /** @var SiteContact $contact */
         foreach ($contacts as $contact) {
-            /** @var  SiteContactDto $contactDto */
+            /** @var SiteContactDto $contactDto */
             $contactDto = new SiteContactDto();
             $contactDto = $this->contactMapper->toDto($contact->getDetails(), $contactDto);
             $contactDto
@@ -126,7 +124,6 @@ class SiteMapper extends AbstractApiMapper
 
         return $dtos;
     }
-
 
     /**
      * @param Organisation $organisation
@@ -174,7 +171,7 @@ class SiteMapper extends AbstractApiMapper
         $dto
             ->setId($assessment->getId())
             ->setAeRepresentativesFullName($assessment->getAeRepresentativeName())
-            ->setAeRepresentativesUserId(is_object($representative) ? $assessment->getRepresentative()->getUsername() : "")
+            ->setAeRepresentativesUserId(is_object($representative) ? $assessment->getRepresentative()->getUsername() : '')
             ->setAeRepresentativesRole($assessment->getAeRepresentativePosition())
             ->setDvsaExaminersUserId($assessment->getExaminer()->getUsername())
             ->setDvsaExaminersFullName($assessment->getExaminer()->getDisplayName())
@@ -189,7 +186,7 @@ class SiteMapper extends AbstractApiMapper
 
     private function mapSiteStatus($siteStatus)
     {
-        if(!$siteStatus instanceof SiteStatus){
+        if (!$siteStatus instanceof SiteStatus) {
             return null;
         }
 

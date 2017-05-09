@@ -30,7 +30,7 @@ use UserApi\SpecialNotice\Service\SpecialNoticeService;
 use DvsaEntities\Entity\MotTest;
 
 /**
- * Data for dashboard
+ * Data for dashboard.
  */
 class DashboardService extends AbstractService
 {
@@ -44,7 +44,7 @@ class DashboardService extends AbstractService
     private $personalAuthorisationService;
     /** @var $testerService TesterService */
     private $testerService;
-    /** @var  $authorisationService AuthorisationServiceInterface */
+    /** @var $authorisationService AuthorisationServiceInterface */
     private $authorisationService;
     /** @var $authForAeRepository AuthorisationForAuthorisedExaminerRepository */
     private $authForAeRepository;
@@ -132,7 +132,7 @@ class DashboardService extends AbstractService
             $plainVehicleId = $motTest->getVehicle()->getId();
 
             return $this->paramObfuscator->obfuscate($plainVehicleId);
-        }  else {
+        } else {
             return $motTest;
         }
     }
@@ -359,13 +359,10 @@ class DashboardService extends AbstractService
             ) {
                 $orgId = $ae->getId();
                 if (in_array($orgId, $aesForDesignatedManagerIds)) {
-
                     return $aedmRoleName;
                 } elseif (in_array($orgId, $aesForDelegateIds)) {
-
                     return $aedRoleName;
                 } else {
-
                     return '';
                 }
             }
@@ -395,7 +392,6 @@ class DashboardService extends AbstractService
                 $sitesWithPositions = ArrayUtils::map(
                     $sitesByAe[$authorisedExaminer->getId()],
                     function (Site $site) use ($positionsBySite) {
-
                         return new \UserApi\Dashboard\Dto\Site(
                             $site,
                             ArrayUtils::tryGet($positionsBySite, $site->getId(), [])

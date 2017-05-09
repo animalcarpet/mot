@@ -1,4 +1,5 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Process;
 
 use Core\Action\AbstractRedirectActionResult;
@@ -21,9 +22,9 @@ use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
 use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 use Zend\View\Helper\Url;
 
-class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterface
+class UpdateClassProcess implements UpdateVehicleInterface, AutoWireableInterface
 {
-    const PAGE_TITLE = "Change MOT test class";
+    const PAGE_TITLE = 'Change MOT test class';
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's test class?";
 
     /** @var UpdateVehicleContext */
@@ -32,7 +33,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     private $vehicleService;
     private $breadcrumbsBuilder;
     private $tertiaryTitleBuilder;
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     public function __construct(
@@ -62,7 +63,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
         if ($this->context->isUpdateVehicleDuringTest()) {
             $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_CLASS, [
                     StartTestChangeService::CHANGE_CLASS => $formData[UpdateClassForm::FIELD_CLASS
-                ]
+                ],
             ]);
             $this->startTestChangeService->updateChangedValueStatus(StartTestChangeService::CHANGE_CLASS, true);
         } else {
@@ -80,7 +81,8 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
 
     /**
      * Gets the values that the form should be pre-populated with.
-     * (e.g. old values)
+     * (e.g. old values).
+     *
      * @return array
      */
     public function getPrePopulatedData()
@@ -105,7 +107,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     public function getSubmitButtonText()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Continue";
+            return 'Continue';
         }
 
         return self::PAGE_TITLE;
@@ -119,10 +121,10 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     public function getBackButtonText()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Back";
+            return 'Back';
         }
 
-        return "Cancel and return to vehicle";
+        return 'Cancel and return to vehicle';
     }
 
     /**
@@ -130,6 +132,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
      * Returning null means there are no breadcrumbs to display.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return array
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
@@ -144,7 +147,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     }
 
     /**
-     * Zend form used to edit values
+     * Zend form used to edit values.
      *
      * @return UpdateClassForm
      */
@@ -154,21 +157,21 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     }
 
     /**
-     * Tells what message should be shown to the user when the form has been successfully submitted
+     * Tells what message should be shown to the user when the form has been successfully submitted.
      *
      * @return string
      */
     public function getSuccessfulEditMessage()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Vehicle test class has been successfully changed";
+            return 'Vehicle test class has been successfully changed';
         }
 
-        return "MOT test class has been successfully changed.";
+        return 'MOT test class has been successfully changed.';
     }
 
     /**
-     * The title that will be displayed on the form page
+     * The title that will be displayed on the form page.
      *
      * @return string
      */
@@ -182,22 +185,23 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     }
 
     /**
-     * The sub title that will be displayed on the edit and review pages
+     * The sub title that will be displayed on the edit and review pages.
      *
      * @return string
      */
     public function getPageSubTitle()
     {
-        if ( $this->context->isUpdateVehicleDuringTest()) {
+        if ($this->context->isUpdateVehicleDuringTest()) {
             return self::PAGE_SUBTITLE_UPDATE_DURING_TEST;
         }
 
-        return "Vehicle";
+        return 'Vehicle';
     }
 
     /**
      * @param $form
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildEditStepViewModel($form)
     {
@@ -227,7 +231,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
                 [
                     'id' => $this->context->getObfuscatedVehicleId(),
                     'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
-                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
+                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source'],
                 ]);
         }
 
@@ -236,9 +240,10 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     }
 
     /**
-     * Says if the users is authorised to reach the page
+     * Says if the users is authorised to reach the page.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return bool
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
@@ -260,7 +265,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     }
 
     /**
-     * @param bool $isValueChanged
+     * @param bool        $isValueChanged
      * @param DvsaVehicle $vehicle
      *
      * @return array

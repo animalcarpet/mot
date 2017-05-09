@@ -7,7 +7,7 @@ use DvsaEntities\Mapper\AddressMapper;
 use DvsaEntities\Entity\Address;
 
 /**
- * Class AddressMapperTest
+ * Class AddressMapperTest.
  */
 class AddressMapperTest extends \PHPUnit_Framework_TestCase
 {

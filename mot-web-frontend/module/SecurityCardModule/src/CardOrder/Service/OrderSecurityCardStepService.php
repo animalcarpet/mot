@@ -2,8 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service;
 
-use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
-
 class OrderSecurityCardStepService
 {
     const NEW_STEP = 'new';
@@ -28,7 +26,7 @@ class OrderSecurityCardStepService
         }
 
         if (!isset($steps[$step])) {
-            throw new \Exception('Step: ' .$step. ' is not a valid step');
+            throw new \Exception('Step: '.$step.' is not a valid step');
         }
 
         if (!is_bool($status)) {
@@ -40,12 +38,12 @@ class OrderSecurityCardStepService
         $sessionStore[OrderNewSecurityCardSessionService::STEP_SESSION_STORE] = $steps;
 
         $this->orderNewSecurityCardSessionService->saveToGuid($guid, $sessionStore);
-
     }
 
     /**
      * @param $guid
      * @param $step
+     *
      * @return bool
      */
     public function isAllowedOnStep($guid, $step)
@@ -70,11 +68,13 @@ class OrderSecurityCardStepService
             }
             $previousValue = $value;
         }
+
         return false;
     }
 
     /**
-     * Returns a list of steps in the journey
+     * Returns a list of steps in the journey.
+     *
      * @return array
      */
     public function getSteps()

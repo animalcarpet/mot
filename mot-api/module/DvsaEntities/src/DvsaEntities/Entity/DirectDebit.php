@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * DirectDebit
+ * DirectDebit.
  *
  * @ORM\Table(name="direct_debit")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\DirectDebitRepository")
@@ -56,7 +56,7 @@ class DirectDebit extends Entity
     private $status;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="slots", type="integer", length=50, nullable=false)
      */
@@ -110,7 +110,7 @@ class DirectDebit extends Entity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
      *
@@ -124,7 +124,7 @@ class DirectDebit extends Entity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */
@@ -134,7 +134,7 @@ class DirectDebit extends Entity
     }
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param \DvsaEntities\Entity\Organisation $organisation
      *
@@ -148,7 +148,7 @@ class DirectDebit extends Entity
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return \DvsaEntities\Entity\Organisation
      */

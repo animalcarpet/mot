@@ -3,9 +3,7 @@
 namespace DvsaMotApi\Service\RfrValidator;
 
 /**
- * Class BaseValidator
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class BaseValidator.
  */
 class BaseValidator
 {
@@ -100,12 +98,10 @@ class BaseValidator
     public function setError($error)
     {
         $this->error = $error;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getError()
     {
         return $this->error;
@@ -119,12 +115,10 @@ class BaseValidator
     public function setRfrId($rfrId)
     {
         $this->rfrId = $rfrId;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getRfrId()
     {
         return $this->rfrId;
@@ -138,12 +132,10 @@ class BaseValidator
     public function setMappedRfrId($mappedRfrId)
     {
         $this->mappedRfrId = $mappedRfrId;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getMappedRfrId()
     {
         return $this->mappedRfrId;
@@ -161,9 +153,6 @@ class BaseValidator
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getValues()
     {
         return $this->values;

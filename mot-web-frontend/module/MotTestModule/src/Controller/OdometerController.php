@@ -21,13 +21,13 @@ class OdometerController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
     const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
 
-    const ODOMETER_VALUE_REQUIRED_MESSAGE = "Odometer value must be entered to update odometer reading";
-    const ODOMETER_FORM_ERROR_MESSAGE = "The odometer reading should be a valid number between 0 and 999,999";
-    const ODOMETER_FORM_SUCCESS_MESSAGE = "The odometer reading has been updated";
+    const ODOMETER_VALUE_REQUIRED_MESSAGE = 'Odometer value must be entered to update odometer reading';
+    const ODOMETER_FORM_ERROR_MESSAGE = 'The odometer reading should be a valid number between 0 and 999,999';
+    const ODOMETER_FORM_SUCCESS_MESSAGE = 'The odometer reading has been updated';
 
     public function indexAction()
     {
-        $motTestNumber = (int)$this->params('tID');
+        $motTestNumber = (int) $this->params('tID');
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -41,12 +41,13 @@ class OdometerController extends AbstractDvsaMotTestController
                     if ($readingResultType === OdometerReadingResultType::OK) {
                         if (!isset($validatedData['odometer']) || trim($validatedData['odometer']) === '') {
                             $this->addErrorMessages(self::ODOMETER_VALUE_REQUIRED_MESSAGE);
+
                             return $this->redirect()->toUrl($this->url()->fromRoute('odometer', ['tID' => $motTestNumber]));
                         }
                         $data = [
-                            'value' => (int)$validatedData['odometer'],
+                            'value' => (int) $validatedData['odometer'],
                             'unit' => $validatedData['unit'],
-                            'resultType' => $readingResultType
+                            'resultType' => $readingResultType,
                         ];
                     } else {
                         $data = ['resultType' => $readingResultType];
@@ -59,9 +60,11 @@ class OdometerController extends AbstractDvsaMotTestController
                 }
 
                 $this->addSuccessMessage(self::ODOMETER_FORM_SUCCESS_MESSAGE);
+
                 return $this->redirect()->toRoute('mot-test', ['motTestNumber' => $motTestNumber]);
             } else {
                 $this->addErrorMessages(self::ODOMETER_FORM_ERROR_MESSAGE);
+
                 return $this->redirect()->toRoute('odometer', ['tID' => $motTestNumber]);
             }
         }
@@ -73,7 +76,7 @@ class OdometerController extends AbstractDvsaMotTestController
         /** @var MotTest $motTest */
         $motTest = null;
 
-        /** @var DvsaVehicle $vehicle*/
+        /** @var DvsaVehicle $vehicle */
         $vehicle = null;
 
         try {
@@ -106,9 +109,9 @@ class OdometerController extends AbstractDvsaMotTestController
     /**
      * Get the breadcrumbs given the context of the url.
      *
-     * @param boolean $isDemo
-     * @param boolean $isReinspection
-     * @param boolean $isNonMotTest
+     * @param bool $isDemo
+     * @param bool $isReinspection
+     * @param bool $isNonMotTest
      *
      * @return array
      */

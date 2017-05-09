@@ -2,12 +2,10 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\View;
 
-
 use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
 
 class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @param $type
      * @param $description
@@ -52,7 +50,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @param $type
      * @param $description
@@ -66,7 +63,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-
     public function defectEditedSuccessfullyProvider()
     {
         return [
@@ -76,7 +72,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
             ['Advisory', '<IMG SRC=javascript:alert("XSS")>', '<strong>This Advisory has been edited:</strong><br> &lt;IMG SRC=javascript:alert(&quot;XSS&quot;)&gt;'],
         ];
     }
-
 
     /**
      * @param $type
@@ -90,7 +85,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
         $actual = FlashMessageBuilder::defectRemovedSuccessfully($type, $description);
         $this->assertEquals($expected, $actual);
     }
-
 
     public function defectRemovedSuccessfullyProvider()
     {
@@ -115,7 +109,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-
     public function defectRepairedSuccessfullyProvider()
     {
         return [
@@ -139,7 +132,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-
     public function defectRepairedUnsuccessfullyProvider()
     {
         return [
@@ -149,7 +141,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
             ['Advisory', '<IMG SRC=javascript:alert("XSS")>', 'The Advisory <strong>&lt;IMG SRC=javascript:alert(&quot;XSS&quot;)&gt;</strong> has not been repaired. Try again.'],
         ];
     }
-
 
     /**
      * @param $type
@@ -164,7 +155,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-
     public function undoDefectRepairSuccessfullyProvider()
     {
         return [
@@ -174,7 +164,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
             ['Advisory', '<IMG SRC=javascript:alert("XSS")>', 'The Advisory <strong>&lt;IMG SRC=javascript:alert(&quot;XSS&quot;)&gt;</strong> has been added'],
         ];
     }
-
 
     /**
      * @param $type
@@ -188,7 +177,6 @@ class FlashMessageBuilderTest extends \PHPUnit_Framework_TestCase
         $actual = FlashMessageBuilder::undoDefectRepairUnsuccessfully($type, $description);
         $this->assertEquals($expected, $actual);
     }
-
 
     public function undoDefectRepairUnsuccessfullyProvider()
     {

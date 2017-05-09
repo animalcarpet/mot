@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Service;
 
-
 use Dvsa\OpenAM\OpenAMClientInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\IdentitySessionState;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\IdentitySessionStateService;
@@ -16,11 +15,9 @@ use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Log\Logger;
-use Zend\Session\SessionManager;
 
 class IdentitySessionStateServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     /** @var OpenAMClientInterface */
     private $client;
 
@@ -28,7 +25,6 @@ class IdentitySessionStateServiceTest extends \PHPUnit_Framework_TestCase
     private $motIdentityProvider;
     /** @var WebAuthenticationCookieService $cookieService */
     private $cookieService;
-
 
     public function setUp()
     {
@@ -63,8 +59,7 @@ class IdentitySessionStateServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testGetState_givenValidToken_and_identityWithDifferentToken_shouldSayAuthenticated_and_clearSession(
-    )
-    {
+    ) {
         $token = 'g09erg90re09gre9g';
         $tokenOnIdentity = 'zzzzzzzzzzzz';
         $this->tokenValueOnRequestIs($token);
@@ -75,8 +70,7 @@ class IdentitySessionStateServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testGetState_givenValidToken_and_identityWithIdenticalToken_shouldSayAuthenticated_and_sessionValid(
-    )
-    {
+    ) {
         $token = 'g09erg90re09gre9g';
 
         $this->tokenValueOnRequestIs($token);

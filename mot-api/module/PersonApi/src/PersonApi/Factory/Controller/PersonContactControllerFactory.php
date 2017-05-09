@@ -10,7 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonContactControllerFactory
+ * Class PersonContactControllerFactory.
  *
  * Generates the PersonContactController, injecting dependencies
  */

@@ -14,9 +14,7 @@ use DvsaMotApiTest\Factory\VehicleObjectsFactory as VOF;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ReplacementCertificateDraftMappingHelperTest
- *
- * @package DvsaMotApiTest\Helper\ReplacementCertificate
+ * Class ReplacementCertificateDraftMappingHelperTest.
  */
 class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_TestCase
 {
@@ -29,12 +27,12 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
             [
                 'countryOfRegistration.id',
                 $draft->getCountryOfRegistration()->getId(),
-                $arr['countryOfRegistration']['id']
+                $arr['countryOfRegistration']['id'],
             ],
             [
                 'countryOfRegistration.name',
                 $draft->getCountryOfRegistration()->getName(),
-                $arr['countryOfRegistration']['name']
+                $arr['countryOfRegistration']['name'],
             ],
             ['primaryColour.code', $draft->getPrimaryColour()->getCode(), $arr['primaryColour']['code']],
             ['primaryColour.name', $draft->getPrimaryColour()->getName(), $arr['primaryColour']['name']],
@@ -64,11 +62,11 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
             ['vts.address.line4', $vts->getAddress()->getAddressLine4(), $arr['vts']['address']['addressLine4']],
             ['vts.address.town', $vts->getAddress()->getTown(), $arr['vts']['address']['town']],
             ['vts.address.country', $vts->getAddress()->getCountry(), $arr['vts']['address']['country']],
-            ['vts.address.postcode', $vts->getAddress()->getPostcode(), $arr['vts']['address']['postcode']]
+            ['vts.address.postcode', $vts->getAddress()->getPostcode(), $arr['vts']['address']['postcode']],
         ];
 
         foreach ($eqTable as $row) {
-            $this->assertEquals($row[1], $row[2], 'Incorrect mapping for: ' . $row[0]);
+            $this->assertEquals($row[1], $row[2], 'Incorrect mapping for: '.$row[0]);
         }
     }
 
@@ -89,7 +87,7 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
         ];
 
         foreach ($eqTable as $row) {
-            $this->assertEquals($row[1], $row[2], 'Incorrect mapping for: ' . $row[0]);
+            $this->assertEquals($row[1], $row[2], 'Incorrect mapping for: '.$row[0]);
         }
     }
 
@@ -103,14 +101,14 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
             'primaryColour',
             'secondaryColour',
             'isLatestPassedMotTest',
-            'expiryDate'
+            'expiryDate',
         ];
         $result = array_intersect_key(array_keys($arr), $allowedProperties);
 
         $this->assertEquals(
             0,
             count(array_diff($result, $allowedProperties)),
-            "Other than specified properties have been returned"
+            'Other than specified properties have been returned'
         );
     }
 
@@ -119,7 +117,7 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
         $draft = $this->buildReplacementCertificateDraft()->setSecondaryColour(null);
 
         $arr = ReplacementCertificateDraftMappingHelper::toJsonArray($draft, false);
-        $this->assertNull($arr['secondaryColour'], "Secondary colour should be returned as null if not defined");
+        $this->assertNull($arr['secondaryColour'], 'Secondary colour should be returned as null if not defined');
     }
 
     public function testToJsonArray_givenFullRights_returnsStrictSetOfProperties()
@@ -139,35 +137,35 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
             'model',
             'countryOfRegistration',
             'isLatestPassedMotTest',
-            'expiryDate'
+            'expiryDate',
         ];
         $result = array_intersect_key(array_keys($arr), $allowedProperties);
         $this->assertEquals(
             0,
             count(array_diff($result, $allowedProperties)),
-            "Other than specified properties have been returned"
+            'Other than specified properties have been returned'
         );
     }
 
     private function buildReplacementCertificateDraft()
     {
         return (new CertificateReplacementDraft())
-            ->setCountryOfRegistration(VOF::countryOfRegistration(1, "cor"))
-            ->setPrimaryColour(VOF::colour(2, "R", "red"))
-            ->setSecondaryColour(VOF::colour(3, "G", "green"))
-            ->setExpiryDate(DateUtils::toDate("2014-05-01"))
-            ->setMake(VOF::make(4, 'BMW', "BMW"))
-            ->setModel(VOF::model(5, "M3", "M3"))
+            ->setCountryOfRegistration(VOF::countryOfRegistration(1, 'cor'))
+            ->setPrimaryColour(VOF::colour(2, 'R', 'red'))
+            ->setSecondaryColour(VOF::colour(3, 'G', 'green'))
+            ->setExpiryDate(DateUtils::toDate('2014-05-01'))
+            ->setMake(VOF::make(4, 'BMW', 'BMW'))
+            ->setModel(VOF::model(5, 'M3', 'M3'))
             ->setMakeName('TOYOTA UK')
             ->setModelName('SUPRA 3')
             ->setOdometerValue(333)
             ->setOdometerUnit(OdometerUnit::MILES)
             ->setOdometerResultType(OdometerReadingResultType::OK)
-            ->setDifferentTesterReason("reasonForDifferentTester")
-            ->setReasonForReplacement("reasonForReplacement")
-            ->setVin("vin")
+            ->setDifferentTesterReason('reasonForDifferentTester')
+            ->setReasonForReplacement('reasonForReplacement')
+            ->setVin('vin')
             ->setMotTest((new MotTest())->setId(1))
-            ->setVrm("vrm")
+            ->setVrm('vrm')
             ->setVehicleTestingStation(MotTestObjectsFactory::vts(4));
     }
 }

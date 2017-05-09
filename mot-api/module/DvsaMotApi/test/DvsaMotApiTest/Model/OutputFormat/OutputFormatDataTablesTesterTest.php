@@ -4,13 +4,9 @@ namespace DvsaMotApiTest\Model\OutputFormat;
 
 use DvsaEntities\Entity\Person;
 use DvsaMotApi\Model\OutputFormat\OutputFormatTypeAheadTester;
-use \PHPUnit_Framework_TestCase;
-use DvsaCommon\Date\DateUtils;
 
 /**
- * Class OutputFormatDataTablesTesterTest
- *
- * @package DvsaMotApiTest\Model\OutputFormat
+ * Class OutputFormatDataTablesTesterTest.
  */
 class OutputFormatDataTablesTesterTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,7 +42,7 @@ class OutputFormatDataTablesTesterTest extends \PHPUnit_Framework_TestCase
     protected function getTesterJsonTypeAhead()
     {
         return [
-            '1' => 'username, firstname middlename familyname'
+            '1' => 'username, firstname middlename familyname',
         ];
     }
 }

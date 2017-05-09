@@ -1,8 +1,6 @@
 <?php
 
-
 namespace SiteTest\ViewModel;
-
 
 use Core\Formatting\VehicleAgeFormatter;
 use DateTime;
@@ -43,7 +41,6 @@ class GroupStatisticsTableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedSiteAverage, $table->getAverageVehicleAge());
         $this->assertEquals($expectedNationalAverage, $table->getNationalStatistic()->getAverageVehicleAge());
     }
-
 
     public static function buildEmptySitePerformanceDto()
     {
@@ -90,25 +87,24 @@ class GroupStatisticsTableTest extends \PHPUnit_Framework_TestCase
         $nationalWithTestsOnlyWithoutManufactureDate->setIsAverageVehicleAgeAvailable(false);
         $nationalWithTestsOnlyWithoutManufactureDate->setAverageVehicleAgeInMonths(0);
 
-
         return [
             [
                 self::buildEmptySitePerformanceDto(),
                 self::buildNationalStatisticsPerformanceDto(),
                 GroupStatisticsTable::TEXT_NOT_AVAILABLE,
-                ''
+                '',
             ],
             [
                 self::buildNotEmptySiteDto(),
                 $nationalWithTestsOnlyWithoutManufactureDate,
                 VehicleAgeFormatter::calculateVehicleAge(self::AVERAGE_VEHICLE_AGE_SITE),
-                GroupStatisticsTable::TEXT_NOT_AVAILABLE
+                GroupStatisticsTable::TEXT_NOT_AVAILABLE,
             ],
             [
                 self::buildNotEmptySiteDto(),
                 self::buildNotEmptyNationalDto(),
                 VehicleAgeFormatter::calculateVehicleAge(self::AVERAGE_VEHICLE_AGE_SITE),
-                VehicleAgeFormatter::calculateVehicleAge(self::AVERAGE_VEHICLE_AGE_NATIONAL)
+                VehicleAgeFormatter::calculateVehicleAge(self::AVERAGE_VEHICLE_AGE_NATIONAL),
             ],
         ];
     }

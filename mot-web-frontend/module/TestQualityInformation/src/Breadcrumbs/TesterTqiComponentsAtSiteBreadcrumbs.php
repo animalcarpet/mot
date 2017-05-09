@@ -15,13 +15,11 @@ class TesterTqiComponentsAtSiteBreadcrumbs implements AutoWireableInterface
     private $contextProvider;
     private $url;
 
-
     public function __construct(
         ApiPersonalDetails $apiPersonalDetails,
         ContextProvider $contextProvider,
         Url $url
-    )
-    {
+    ) {
         $this->apiPersonalDetails = $apiPersonalDetails;
         $this->contextProvider = $contextProvider;
         $this->url = $url;
@@ -31,15 +29,15 @@ class TesterTqiComponentsAtSiteBreadcrumbs implements AutoWireableInterface
     {
         $breadcrumbs = [];
         if ($this->contextProvider->isYourProfileContext()) {
-            $breadcrumbs["Your profile"] = ProfileRoutes::of($this->url)->yourProfile();
-            $breadcrumbs["Test quality information"] = ProfileRoutes::of($this->url)->yourProfileTqi($month, $year);
+            $breadcrumbs['Your profile'] = ProfileRoutes::of($this->url)->yourProfile();
+            $breadcrumbs['Test quality information'] = ProfileRoutes::of($this->url)->yourProfileTqi($month, $year);
         } else {
             $personalDetails = new PersonalDetails($this
                 ->apiPersonalDetails
                 ->getPersonalDetailsData($testerId));
 
             $breadcrumbs[$personalDetails->getFullName()] = ProfileRoutes::of($this->url)->userSearch($testerId);
-            $breadcrumbs["Test quality information"] = ProfileRoutes::of($this->url)->userSearchTqi($testerId, $month, $year);
+            $breadcrumbs['Test quality information'] = ProfileRoutes::of($this->url)->userSearchTqi($testerId, $month, $year);
         }
 
         return $breadcrumbs;

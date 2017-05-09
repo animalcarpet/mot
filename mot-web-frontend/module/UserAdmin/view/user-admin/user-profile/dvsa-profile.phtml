@@ -7,9 +7,8 @@ use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 /** @var string $searchResultsUrl */
 /** @var string $passwordResetUrl */
 /** @var string $usernameRecoverUrl */
-
-$errorMessages      = $this->layout()->flashMessenger->getErrorMessages();
-$successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
+$errorMessages = $this->layout()->flashMessenger->getErrorMessages();
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
 
 echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
@@ -118,10 +117,10 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
     <?php echo $this->partial(
         'partial/gds/form/control-navigation-secondary',
         [
-            'navigation'    => [
-                'Cancel and return to search results'   => $searchResultsUrl,
-                'Return to home'                        => $this->url(UserHomeController::ROUTE),
-            ]
+            'navigation' => [
+                'Cancel and return to search results' => $searchResultsUrl,
+                'Return to home' => $this->url(UserHomeController::ROUTE),
+            ],
         ]
     ); ?>
 </nav>

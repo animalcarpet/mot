@@ -37,12 +37,12 @@ class VehicleHistoryService
     protected $mysteryShopperHelper;
 
     /**
-     * @param PersonRepository $personRepository
-     * @param \DvsaEntities\Repository\MotTestRepository $motTestRepository
+     * @param PersonRepository                                  $personRepository
+     * @param \DvsaEntities\Repository\MotTestRepository        $motTestRepository
      * @param \DvsaCommon\Auth\MotAuthorisationServiceInterface $authService
-     * @param \DvsaEntities\Repository\ConfigurationRepository $configurationRepository
-     * @param \DvsaEntities\Repository\SiteRepository $siteRepository
-     * @param \DvsaMotApi\Helper\MysteryShopperHelper $mysteryShopperHelper
+     * @param \DvsaEntities\Repository\ConfigurationRepository  $configurationRepository
+     * @param \DvsaEntities\Repository\SiteRepository           $siteRepository
+     * @param \DvsaMotApi\Helper\MysteryShopperHelper           $mysteryShopperHelper
      */
     public function __construct(
         PersonRepository $personRepository,
@@ -51,8 +51,7 @@ class VehicleHistoryService
         ConfigurationRepository $configurationRepository,
         SiteRepository $siteRepository,
         MysteryShopperHelper $mysteryShopperHelper
-    )
-    {
+    ) {
         $this->personRepository = $personRepository;
         $this->motTestRepository = $motTestRepository;
         $this->authService = $authService;
@@ -66,9 +65,9 @@ class VehicleHistoryService
     /**
      * Returns a list of tests for a given vehicle as of a specified date.
      *
-     * @param int       $vehicleId
-     * @param int       $personId
-     * @param DateTime  $startDate    (optional)
+     * @param int      $vehicleId
+     * @param int      $personId
+     * @param DateTime $startDate (optional)
      *
      * @return \DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto
      */
@@ -88,6 +87,7 @@ class VehicleHistoryService
      * @param $personId
      * @param $motTestNumber
      * @param \DateTime|null $startDate
+     *
      * @return MotTestDuplicateCertificateEditAllowedDto
      */
     public function getEditAllowedPermissionsDto($vehicleId, $personId, $motTestNumber, \DateTime $startDate = null)
@@ -96,6 +96,7 @@ class VehicleHistoryService
         $motTestEditAllowed->setEditAllowed(
             $this->checkEditPermissionsForSpecificTest($vehicleId, $personId, $motTestNumber, $startDate))
             ->setIsAllowedToEditAllCertificates($this->isAllowedAsDvsaUser());
+
         return $motTestEditAllowed;
     }
 
@@ -104,6 +105,7 @@ class VehicleHistoryService
      * @param $personId
      * @param $motTestNumber
      * @param \DateTime|null $startDate
+     *
      * @return bool
      */
     private function checkEditPermissionsForSpecificTest($vehicleId, $personId, $motTestNumber, $startDate)
@@ -137,7 +139,6 @@ class VehicleHistoryService
         return $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_FULL);
     }
 
-
     private function personHasCorrectGroupRoles($personId, $testHistory, $motTestNumber)
     {
         $person = $this->personRepository->get($personId);
@@ -148,6 +149,7 @@ class VehicleHistoryService
                 return $person->isQualifiedTesterForVehicleClass($test->getVehicleClass());
             }
         }
+
         return false;
     }
 
@@ -156,8 +158,9 @@ class VehicleHistoryService
         $history = $vehicleHistoryDto->getIterator();
 
         foreach ($history as $index => $item) {
-            if ($item->getMotTestNumber() == $motTestNumber)
+            if ($item->getMotTestNumber() == $motTestNumber) {
                 return $item;
+            }
         }
 
         return null;
@@ -167,6 +170,7 @@ class VehicleHistoryService
      * @param $vehicleId
      * @param $personId
      * @param $startDate
+     *
      * @return \DvsaEntities\Entity\MotTest[]
      */
     private function getTestHistoryForVehicle($vehicleId, $personId, $startDate)
@@ -203,7 +207,7 @@ class VehicleHistoryService
             !$this->authService->isGranted(PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW)
             && $startDate === null
         ) {
-            $maxHistoryLength = (int)$this->configurationRepository->getValue(
+            $maxHistoryLength = (int) $this->configurationRepository->getValue(
                 MotTestService::CONFIG_PARAM_MAX_VISIBLE_VEHICLE_TEST_HISTORY_IN_MONTHS
             );
             $startDate = DateUtils::subtractCalendarMonths($this->dateTimeHolder->getCurrentDate(), $maxHistoryLength);
@@ -225,7 +229,7 @@ class VehicleHistoryService
     {
         if (!$this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT)) {
             return;
-        };
+        }
 
         $grantedFullCertReplacement = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_FULL);
 
@@ -236,7 +240,6 @@ class VehicleHistoryService
         }
 
         $history->uasort(function (VehicleHistoryItemDto $a, VehicleHistoryItemDto $b) {
-
             if ($a->getPrsMotTestId() &&
                 $a->getPrsMotTestId() == $b->getId() &&
                 $b->getPrsMotTestId() == $a->getId()
@@ -254,7 +257,7 @@ class VehicleHistoryService
             return $a->getIssuedDate() < $b->getIssuedDate() ? 1 : -1;
         });
 
-        $alreadyAssigned = FALSE;
+        $alreadyAssigned = false;
 
         foreach ($history as $index => $item) {
             $allowedEdit = $this->isEditAllowedForHistoryItem($item);
@@ -262,8 +265,8 @@ class VehicleHistoryService
             if ($grantedFullCertReplacement) {
                 $item->setAllowEdit($allowedEdit);
             } else {
-                $item->setAllowEdit($alreadyAssigned ? FALSE : $allowedEdit);
-                $alreadyAssigned = $alreadyAssigned ? TRUE : $allowedEdit;
+                $item->setAllowEdit($alreadyAssigned ? false : $allowedEdit);
+                $alreadyAssigned = $alreadyAssigned ? true : $allowedEdit;
             }
 
             if (in_array($item->getTestType(), [
@@ -271,7 +274,7 @@ class VehicleHistoryService
                 MotTestTypeCode::STATUTORY_APPEAL,
                 MotTestTypeCode::INVERTED_APPEAL,
             ])) {
-                $alreadyAssigned = TRUE;
+                $alreadyAssigned = true;
             }
         }
 
@@ -305,11 +308,11 @@ class VehicleHistoryService
         $grantedFullCertReplacement = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_FULL);
 
         if (!$this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT)) {
-            return FALSE;
+            return false;
         }
 
         if (!in_array($item->getStatus(), [MotTestStatusName::PASSED, MotTestStatusName::FAILED])) {
-            return FALSE;
+            return false;
         }
 
         if ($grantedFullCertReplacement) {
@@ -320,19 +323,19 @@ class VehicleHistoryService
             [
                 MotTestTypeCode::NORMAL_TEST,
                 MotTestTypeCode::RE_TEST,
-                MotTestTypeCode::MYSTERY_SHOPPER
+                MotTestTypeCode::MYSTERY_SHOPPER,
             ])
         ) {
-            return FALSE;
-        };
-
-        $currentDate = DateUtils::today();
-        $expiryDate = $item->getExpiryDate() ?: NULL;
-
-        if ($expiryDate && DateUtils::compareDates($expiryDate, $currentDate) <= 0) {
-            return FALSE;
+            return false;
         }
 
-        return TRUE;
+        $currentDate = DateUtils::today();
+        $expiryDate = $item->getExpiryDate() ?: null;
+
+        if ($expiryDate && DateUtils::compareDates($expiryDate, $currentDate) <= 0) {
+            return false;
+        }
+
+        return true;
     }
 }

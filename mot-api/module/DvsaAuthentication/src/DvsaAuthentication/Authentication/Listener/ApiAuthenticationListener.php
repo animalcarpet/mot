@@ -4,9 +4,7 @@ namespace DvsaAuthentication\Authentication\Listener;
 
 use DvsaAuthentication\Identity;
 use Dvsa\Mot\AuditApi\Service\HistoryAuditService;
-use Zend\Authentication\Adapter\AbstractAdapter;
 use Zend\Authentication\AuthenticationService;
-use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Response;
 use Zend\Log\LoggerInterface;
@@ -19,8 +17,6 @@ use Zend\View\Model\JsonModel;
  * Class ApiAuthenticationListener. This listener will be applied to every http
  * request. It will check for authentication and will force a 401 to be
  * returned when an unauthenticated request is made.
- *
- * @package DvsaAuthentication\Authentication\Listener
  */
 class ApiAuthenticationListener
 {
@@ -52,7 +48,7 @@ class ApiAuthenticationListener
     public function __construct(
         AuthenticationService $authService,
         LoggerInterface $logger,
-        $whitelist = [],
+        $whitelist,
         HistoryAuditService $historyAuditService
     ) {
         $this->authService = $authService;
@@ -95,6 +91,7 @@ class ApiAuthenticationListener
             $this->logger->debug(
                 sprintf('%s controller is whitelisted', $controller)
             );
+
             return false;
         }
 
@@ -107,6 +104,7 @@ class ApiAuthenticationListener
             $response->setStatusCode(Response::STATUS_CODE_401);
             $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
             $response->setContent($this->createJsonModel()->serialize());
+
             return $response;
         }
 
@@ -133,7 +131,7 @@ class ApiAuthenticationListener
             [
                 'errors' => [
                     'message' => $message,
-                    'code'    => $code,
+                    'code' => $code,
                 ],
             ]
         );

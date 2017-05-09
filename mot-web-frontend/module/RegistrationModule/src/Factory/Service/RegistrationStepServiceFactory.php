@@ -20,7 +20,6 @@ use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use Zend\InputFilter\InputFilter;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class RegistrationStepServiceFactory extends StepServiceFactory

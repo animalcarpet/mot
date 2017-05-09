@@ -2,7 +2,7 @@
 use Site\UpdateVtsProperty\Process\Form\ClassesPropertyForm;
 use Site\UpdateVtsProperty\UpdateVtsPropertyViewModel;
 
-/** @var UpdateVtsPropertyViewModel $viewModel */
+/* @var UpdateVtsPropertyViewModel $viewModel */
 
 $this->headTitle('Change classes');
 
@@ -14,7 +14,7 @@ $form = $viewModel->getForm();
         <?php echo $this->partial(
             'partial/gds/zend-form/control-multi-checkbox',
             [
-                'element' => $form->getClassesElement()
+                'element' => $form->getClassesElement(),
             ]
         );
         ?>

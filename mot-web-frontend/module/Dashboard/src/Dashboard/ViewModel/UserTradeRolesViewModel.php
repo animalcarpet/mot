@@ -206,7 +206,7 @@ class UserTradeRolesViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getPersonIsViewingOwnProfile()
     {

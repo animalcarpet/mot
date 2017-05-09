@@ -5,7 +5,7 @@ namespace DvsaMotTest\Model;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
 
 /**
- * Interface for Brake Test Config Helpers
+ * Interface for Brake Test Config Helpers.
  */
 interface BrakeTestConfigurationHelperInterface
 {

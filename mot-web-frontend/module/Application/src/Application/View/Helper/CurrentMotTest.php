@@ -3,15 +3,11 @@
 namespace Application\View\Helper;
 
 use Application\Data\ApiCurrentMotTest;
-
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * Class CurrentMotTest
- *
- * @package Application\View\Helper
+ * Class CurrentMotTest.
  */
 class CurrentMotTest extends AbstractHelper
 {

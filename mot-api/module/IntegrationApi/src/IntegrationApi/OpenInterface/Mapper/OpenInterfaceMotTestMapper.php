@@ -12,7 +12,7 @@ use DvsaEntities\Entity\MotTest;
 use IntegrationApi\MotTestCommon\Mapper\AbstractMotTestMapper;
 
 /**
- * Class OpenInterfaceMotTestMapper
+ * Class OpenInterfaceMotTestMapper.
  */
 class OpenInterfaceMotTestMapper extends AbstractMotTestMapper
 {
@@ -22,20 +22,20 @@ class OpenInterfaceMotTestMapper extends AbstractMotTestMapper
         $colour2 = $motTest->getSecondaryColour();
 
         return [
-            'vrm'          => $motTest->getRegistration(),
-            'make'         => $motTest->getMakeName(),
-            'model'        => $motTest->getModelName(),
-            'colourCode1'  => null === $colour ? null : $colour->getCode(),
-            'colour1'      => null === $colour ? null : $colour->getName(),
-            'colourCode2'  => null === $colour2 ? null : $colour2->getCode(),
-            'colour2'      => null === $colour2 ? null : $colour2->getName(),
-            'odometer'     => $motTest->getOdometerValue(),
+            'vrm' => $motTest->getRegistration(),
+            'make' => $motTest->getMakeName(),
+            'model' => $motTest->getModelName(),
+            'colourCode1' => null === $colour ? null : $colour->getCode(),
+            'colour1' => null === $colour ? null : $colour->getName(),
+            'colourCode2' => null === $colour2 ? null : $colour2->getCode(),
+            'colour2' => null === $colour2 ? null : $colour2->getName(),
+            'odometer' => $motTest->getOdometerValue(),
             'odometerUnit' => $motTest->getOdometerUnit(),
-            'testNumber'   => $motTest->getNumber(),
-            'testDate'     => $this->returnFormattedDateOrNull($motTest->getIssuedDate()),
-            'expiryDate'   => $this->returnFormattedDateOrNull($motTest->getExpiryDate()),
-            'vtsNumber'    => $motTest->getVehicleTestingStation()->getSiteNumber(),
-            'vtsTelNo'     => $this->extractPhoneNumber($motTest->getVehicleTestingStation()),
+            'testNumber' => $motTest->getNumber(),
+            'testDate' => $this->returnFormattedDateOrNull($motTest->getIssuedDate()),
+            'expiryDate' => $this->returnFormattedDateOrNull($motTest->getExpiryDate()),
+            'vtsNumber' => $motTest->getVehicleTestingStation()->getSiteNumber(),
+            'vtsTelNo' => $this->extractPhoneNumber($motTest->getVehicleTestingStation()),
         ];
     }
 
@@ -45,6 +45,7 @@ class OpenInterfaceMotTestMapper extends AbstractMotTestMapper
      * @param string|null $secondaryColourName
      * @param string|null $dvlaMakeName
      * @param string|null $dvlaModelName
+     *
      * @return array
      */
     public function pre1960VehicleWithNoMotTestToArray(
@@ -54,25 +55,24 @@ class OpenInterfaceMotTestMapper extends AbstractMotTestMapper
         $dvlaMakeName,
         $dvlaModelName
     ) {
-
         $colour = $vehicle->getPrimaryColour();
         $colour2 = $vehicle->getSecondaryColour();
 
         return [
-            'vrm'          => $vehicle->getRegistration(),
-            'make'         => $dvlaMakeName,
-            'model'        => $dvlaModelName,
-            'colourCode1'  => $colour,
-            'colour1'      => $primaryColourName,
-            'colourCode2'  => $colour2,
-            'colour2'      => $secondaryColourName,
-            'odometer'     => 1960,
+            'vrm' => $vehicle->getRegistration(),
+            'make' => $dvlaMakeName,
+            'model' => $dvlaModelName,
+            'colourCode1' => $colour,
+            'colour1' => $primaryColourName,
+            'colourCode2' => $colour2,
+            'colour2' => $secondaryColourName,
+            'odometer' => 1960,
             'odometerUnit' => 'M',
-            'testNumber'   => '196019601960',
-            'testDate'     => date('Y-01-01'),
-            'expiryDate'   => date('Y-01-01', strtotime('+1 year')),
-            'vtsNumber'    => 'PRE1960',
-            'vtsTelNo'     => 'PRE1960'
+            'testNumber' => '196019601960',
+            'testDate' => date('Y-01-01'),
+            'expiryDate' => date('Y-01-01', strtotime('+1 year')),
+            'vtsNumber' => 'PRE1960',
+            'vtsTelNo' => 'PRE1960',
         ];
     }
 }

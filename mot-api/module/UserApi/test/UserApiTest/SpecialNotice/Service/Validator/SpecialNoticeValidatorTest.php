@@ -7,7 +7,7 @@ use PHPUnit_Framework_TestCase;
 use UserApi\SpecialNotice\Service\Validator\SpecialNoticeValidator;
 
 /**
- * I'm building my professional career on comments
+ * I'm building my professional career on comments.
  */
 class SpecialNoticeValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -103,7 +103,6 @@ class SpecialNoticeValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->executeValidate($input);
     }
-
 
     /**
      * @param $input

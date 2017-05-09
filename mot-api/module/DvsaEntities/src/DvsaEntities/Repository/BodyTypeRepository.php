@@ -6,8 +6,8 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\BodyType;
 
 /**
- * Class BodyTypeRepository
- * @package DvsaEntities\Repository
+ * Class BodyTypeRepository.
+ *
  * @method BodyType|null findOneByCode(string $code)
  * @codeCoverageIgnore
  */
@@ -24,6 +24,7 @@ class BodyTypeRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return BodyType
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
@@ -32,6 +33,7 @@ class BodyTypeRepository extends AbstractMutableRepository
         if (!$entity) {
             throw new NotFoundException($this->getEntityName(), $id);
         }
+
         return $entity;
     }
 }

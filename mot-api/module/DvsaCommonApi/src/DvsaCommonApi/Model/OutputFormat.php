@@ -3,9 +3,7 @@
 namespace DvsaCommonApi\Model;
 
 /**
- * Class OutputFormat
- *
- * @package DvsaCommonApi\Model
+ * Class OutputFormat.
  */
 abstract class OutputFormat
 {
@@ -16,7 +14,7 @@ abstract class OutputFormat
     protected $sourceType;
 
     /**
-     * Extract the required data from the passed items data array
+     * Extract the required data from the passed items data array.
      *
      * @param $items
      *
@@ -36,7 +34,7 @@ abstract class OutputFormat
 
     /**
      * Responsible for extracting the current item into the required format
-     * and adding to the passed results array
+     * and adding to the passed results array.
      *
      * @param $results
      * @param $key
@@ -45,7 +43,6 @@ abstract class OutputFormat
      * @return mixed
      */
     abstract public function extractItem(&$results, $key, $item);
-
 
     /**
      * @return int
@@ -58,7 +55,7 @@ abstract class OutputFormat
     /**
      * Set type of date source.
      *
-     * @param int $sourceType   type ES (Elastic Search), NATIVE (db native query), ENTITY (db doctrine)
+     * @param int $sourceType type ES (Elastic Search), NATIVE (db native query), ENTITY (db doctrine)
      *
      * @return $this
      */

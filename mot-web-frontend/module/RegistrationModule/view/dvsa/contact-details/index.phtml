@@ -3,9 +3,9 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
 ?>
 
-<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
+<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorsSummary]); ?>
 
-<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>"
+<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep()); ?>"
       method="post" autocomplete="off" novalidate="">
     <?php echo $this->csrfToken(); ?>
 
@@ -75,17 +75,17 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
     <legend class="form-title heading-large" id="phone-legend">Phone number</legend>
     <fieldset>
         <?php
-        $classFormGroup =  $phoneHasError ? 'has-error' : '';
+        $classFormGroup = $phoneHasError ? 'has-error' : '';
         echo $this->partial(
             'partial/forms/inputBox.phtml', [
-                'id'    => 'phone',
+                'id' => 'phone',
                 'label' => 'Enter your home, mobile or work number',
                 'labelId' => 'phone-number-label',
-                'type'  => 'text',
+                'type' => 'text',
                 'classFormGroup' => $classFormGroup,
                 'errors' => $errors['phone'],
                 'classLabel' => 'form-label',
-                'value' => $phone ? : '',
+                'value' => $phone ?: '',
                 'optional' => false,
             ]
         ); ?>
@@ -96,7 +96,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>"
+                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep()); ?>"
                    id="back">Back
                 </a>
             </li>

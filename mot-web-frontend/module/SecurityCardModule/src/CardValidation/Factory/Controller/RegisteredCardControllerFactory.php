@@ -3,14 +3,12 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Factory\Controller;
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
-
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Configuration\MotConfig;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\SessionManager;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
@@ -45,8 +43,7 @@ class RegisteredCardControllerFactory implements FactoryInterface
         /** @var MotConfig $motConfig */
         $motConfig = $serviceLocator->get(MotConfig::class);
 
-        return new RegisteredCardController
-        (
+        return new RegisteredCardController(
             $service,
             $authenticationService,
             $request,

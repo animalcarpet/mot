@@ -11,7 +11,6 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEventApi\Service\EventService;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
 use NotificationApi\Service\NotificationService;
 use NotificationApi\Service\UserOrganisationNotificationService;
@@ -55,14 +54,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 return [
-    'factories'  => [
-        Hydrator::class                        =>
-            function (ServiceLocatorInterface $sm) {
-                return new Hydrator();
-            },
-        SiteBusinessRoleService::class         =>
-            function (ServiceLocatorInterface $sm) {
-                return new SiteBusinessRoleService(
+    'factories' => [
+        Hydrator::class => function (ServiceLocatorInterface $sm) {
+            return new Hydrator();
+        },
+        SiteBusinessRoleService::class => function (ServiceLocatorInterface $sm) {
+            return new SiteBusinessRoleService(
                     new SiteBusinessRoleMapper(),
                     $sm->get(\Doctrine\ORM\EntityManager::class)
                         ->getRepository(\DvsaEntities\Entity\SiteBusinessRole::class),
@@ -70,11 +67,11 @@ return [
                         ->getRepository(\DvsaEntities\Entity\SiteBusinessRoleMap::class),
                     $sm->get('DvsaAuthorisationService')
                 );
-            },
-        SitePositionService::class             =>
-            function (ServiceManager $sm) {
-                $entityManager = $sm->get(EntityManager::class);
-                return new SitePositionService(
+        },
+        SitePositionService::class => function (ServiceManager $sm) {
+            $entityManager = $sm->get(EntityManager::class);
+
+            return new SitePositionService(
                     $sm->get(EventService::class),
                     $entityManager->getRepository(SiteBusinessRoleMap::class),
                     $sm->get('DvsaAuthorisationService'),
@@ -84,46 +81,41 @@ return [
                     $sm->get(MotTestRepository::class),
                     $sm->get(UserOrganisationNotificationService::class)
                 );
-            },
-        NominateRoleService::class             =>
-            function (ServiceManager $sm) {
-                $em = $sm->get(EntityManager::class);
+        },
+        NominateRoleService::class => function (ServiceManager $sm) {
+            $em = $sm->get(EntityManager::class);
 
-                return new NominateRoleService(
+            return new NominateRoleService(
                     $sm->get(\Doctrine\ORM\EntityManager::class),
                     $sm->get('DvsaAuthenticationService'),
                     $sm->get('DvsaAuthorisationService'),
                     $sm->get(NominateOperation::class),
                     new Transaction($em)
                 );
-            },
-        EquipmentService::class                =>
-            function (ServiceLocatorInterface $sm) {
-                return new EquipmentService(
+        },
+        EquipmentService::class => function (ServiceLocatorInterface $sm) {
+            return new EquipmentService(
                     $sm->get(EntityManager::class)->getRepository(Site::class),
                     $sm->get('DvsaAuthorisationService')
                 );
-            },
-        NominateOperation::class               =>
-            function (ServiceLocatorInterface $sm) {
-                return new NominateOperation(
+        },
+        NominateOperation::class => function (ServiceLocatorInterface $sm) {
+            return new NominateOperation(
                     $sm->get(EntityManager::class),
                     $sm->get(NominationVerifier::class),
                     $sm->get(SiteNominationService::class)
                 );
-            },
-        NominationVerifier::class              => NominationVerifierFactory::class,
-        SiteNominationService::class           =>
-            function (ServiceLocatorInterface $sm) {
-                return new SiteNominationService(
+        },
+        NominationVerifier::class => NominationVerifierFactory::class,
+        SiteNominationService::class => function (ServiceLocatorInterface $sm) {
+            return new SiteNominationService(
                     $sm->get(NotificationService::class),
                     $sm->get(TwoFactorStatusService::class),
                     $sm->get('Feature\FeatureToggles')
                 );
-            },
-        SiteTestingDailyScheduleService::class =>
-            function (ServiceLocatorInterface $sm) {
-                return new SiteTestingDailyScheduleService(
+        },
+        SiteTestingDailyScheduleService::class => function (ServiceLocatorInterface $sm) {
+            return new SiteTestingDailyScheduleService(
                     $sm->get(EntityManager::class)->getRepository(
                         SiteTestingDailySchedule::class
                     ),
@@ -131,30 +123,29 @@ return [
                     new SiteTestingDailyScheduleValidator(),
                     $sm->get('DvsaAuthorisationService')
                 );
-            },
-        DefaultBrakeTestsService::class        =>
-            function (ServiceLocatorInterface $sm) {
-                return new DefaultBrakeTestsService(
+        },
+        DefaultBrakeTestsService::class => function (ServiceLocatorInterface $sm) {
+            return new DefaultBrakeTestsService(
                     $sm->get(EntityManager::class)->getRepository(Site::class),
                     $sm->get(EntityManager::class)->getRepository(BrakeTestType::class),
                     new BrakeTestConfigurationValidator(),
                     $sm->get('DvsaAuthorisationService')
                 );
-            },
-        MotTestInProgressService::class         => MotTestInProgressServiceFactory::class,
-        SiteSlotUsageService::class             => SiteSlotUsageServiceFactory::class,
-        SiteContactService::class               => SiteContactServiceFactory::class,
-        SiteSearchService::class                => SiteSearchServiceFactory::class,
-        SiteService::class                      => SiteServiceFactory::class,
-        SiteTestingFacilitiesService::class     => SiteTestingFacilitiesServiceFactory::class,
-        SiteDetailsService::class               => SiteDetailsServiceFactory::class,
-        SiteEventService::class                 => SiteEventServiceFactory::class,
+        },
+        MotTestInProgressService::class => MotTestInProgressServiceFactory::class,
+        SiteSlotUsageService::class => SiteSlotUsageServiceFactory::class,
+        SiteContactService::class => SiteContactServiceFactory::class,
+        SiteSearchService::class => SiteSearchServiceFactory::class,
+        SiteService::class => SiteServiceFactory::class,
+        SiteTestingFacilitiesService::class => SiteTestingFacilitiesServiceFactory::class,
+        SiteDetailsService::class => SiteDetailsServiceFactory::class,
+        SiteEventService::class => SiteEventServiceFactory::class,
         EnforcementSiteAssessmentService::class => EnforcementSiteAssessmentServiceFactory::class,
         EnforcementSiteAssessmentValidator::class => EnforcementSiteAssessmentValidatorFactory::class,
-        MotTestLogService::class                => MotTestLogServiceFactory::class,
+        MotTestLogService::class => MotTestLogServiceFactory::class,
     ],
     'invokables' => [
         TestingFacilitiesValidator::class => TestingFacilitiesValidator::class,
         SiteDetailsValidator::class => SiteDetailsValidator::class,
-    ]
+    ],
 ];

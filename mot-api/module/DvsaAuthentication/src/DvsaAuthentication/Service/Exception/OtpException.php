@@ -5,7 +5,7 @@ namespace DvsaAuthentication\Service\Exception;
 use DvsaCommonApi\Service\Exception\ServiceException;
 
 /**
- * Class OtpException
+ * Class OtpException.
  */
 class OtpException extends ServiceException
 {
@@ -14,14 +14,14 @@ class OtpException extends ServiceException
     const OTP_TOKEN_INVALID_ERROR_CODE = 140;
 
     const MESSAGE_INVALID = 'The PIN you have entered is incorrect';
-    const MESSAGE_RESET = "The PIN you have entered does not match the PIN for this user account, you can reset your PIN in Your profile";
+    const MESSAGE_RESET = 'The PIN you have entered does not match the PIN for this user account, you can reset your PIN in Your profile';
     const MESSAGE_OTP_REQUIRED = 'PIN required';
 
     /**
      * @description Acceptance criteria: VM-5189
      *
      * @param string $attemptsTotal
-     * @param int $attemptsLeft
+     * @param int    $attemptsLeft
      */
     public function __construct($attemptsTotal, $attemptsLeft)
     {
@@ -45,8 +45,8 @@ class OtpException extends ServiceException
             'shortMessage' => $shortMessage,
             'attempts' => [
                 'total' => $attemptsTotal,
-                'left'  => $attemptsLeft
-            ]
+                'left' => $attemptsLeft,
+            ],
         ];
     }
 }

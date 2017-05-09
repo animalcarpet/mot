@@ -8,7 +8,7 @@ use DvsaCommon\Validator\EmailAddressValidator;
 use UserAdmin\Presenter\UserProfilePresenter;
 
 /**
- * Unit tests for UserProfilePresenter
+ * Unit tests for UserProfilePresenter.
  */
 class UserProfilePresenterTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,7 +37,7 @@ class UserProfilePresenterTest extends \PHPUnit_Framework_TestCase
             'Address line 1, Address line 2, Address line 3, Address line 4, Bristol, Postcode',
             $presenter->displayFullAddress()
         );
-        $this->assertEquals('userprofilepresentertest@' . EmailAddressValidator::TEST_DOMAIN, $presenter->displayEmail());
+        $this->assertEquals('userprofilepresentertest@'.EmailAddressValidator::TEST_DOMAIN, $presenter->displayEmail());
         $this->assertEquals('+768-45-4433630', $presenter->displayTelephone());
 
         $this->assertEquals('/event/list/person/1', $presenter->displayEventsHistoryLink());
@@ -45,11 +45,11 @@ class UserProfilePresenterTest extends \PHPUnit_Framework_TestCase
         $roles = [
             0 => [
                 'roles' => ['Authorised Examiner Designated Manager'],
-                'route' => AuthorisedExaminerUrlBuilderWeb::of(0)
+                'route' => AuthorisedExaminerUrlBuilderWeb::of(0),
             ],
             1 => [
                 'roles' => ['Tester'],
-                'route' => VehicleTestingStationUrlBuilderWeb::byId(0)
+                'route' => VehicleTestingStationUrlBuilderWeb::byId(0),
             ],
         ];
         $this->assertEquals($roles, $presenter->getSiteAndOrganisationRoles());

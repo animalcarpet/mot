@@ -48,5 +48,5 @@ return [
         RegisterCardHardStopController::class => RegisterCardHardStopControllerFactory::class,
         AlreadyOrderedNewCardController::class => AlreadyOrderedNewCardControllerFactory::class,
         AlreadyHasRegisteredCardController::class => AlreadyHasRegisteredCardControllerFactory::class,
-    ]
+    ],
 ];

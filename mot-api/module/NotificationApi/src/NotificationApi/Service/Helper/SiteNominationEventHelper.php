@@ -1,4 +1,5 @@
 <?php
+
 namespace NotificationApi\Service\Helper;
 
 use DvsaEntities\Repository\EventSiteMapRepository;
@@ -8,7 +9,6 @@ use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaEventApi\Service\EventService;
 use DvsaEntities\Entity\EventSiteMap;
-use Doctrine\ORM\EntityManager;
 use DvsaEntities\Entity\Notification;
 
 class SiteNominationEventHelper
@@ -35,13 +35,14 @@ class SiteNominationEventHelper
 
     /**
      * @param Notification $notification
+     *
      * @return EventSiteMap
      */
     public function create(Notification $notification)
     {
-        $positionName = $notification->getFieldValue("positionName");
-        $siteName = $notification->getFieldValue("siteName");
-        $siteId = $notification->getFieldValue("siteOrOrganisationId");
+        $positionName = $notification->getFieldValue('positionName');
+        $siteName = $notification->getFieldValue('siteName');
+        $siteId = $notification->getFieldValue('siteOrOrganisationId');
         $person = $notification->getRecipient();
         $description = sprintf(
             EventDescription::ROLE_NOMINATION_ACCEPT,

@@ -14,9 +14,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class NominationVerifierFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return NominationVerifier
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -5,7 +5,7 @@ namespace NotificationApiTest\Controller;
 use NotificationApi\Controller\NotificationActionController;
 
 /**
- * Unit tests for NotificationActionController
+ * Unit tests for NotificationActionController.
  */
 class NotificationActionControllerTest extends AbstractNotificationApiControllerTestCase
 {

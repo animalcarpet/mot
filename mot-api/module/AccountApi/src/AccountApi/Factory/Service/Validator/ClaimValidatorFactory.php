@@ -10,8 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use AccountApi\Service\SecurityQuestionService;
 
 /**
- * Class ClaimValidatorFactory
- * @package AccountApi\Factory\Service\Validator
+ * Class ClaimValidatorFactory.
  */
 class ClaimValidatorFactory implements FactoryInterface
 {

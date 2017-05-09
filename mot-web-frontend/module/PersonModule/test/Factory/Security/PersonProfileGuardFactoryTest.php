@@ -15,7 +15,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
-use DvsaFeature\FeatureToggles;
 
 class PersonProfileGuardFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +28,7 @@ class PersonProfileGuardFactoryTest extends \PHPUnit_Framework_TestCase
                 'MotIdentityProvider' => MotIdentityProviderInterface::class,
                 TesterGroupAuthorisationMapper::class => TesterGroupAuthorisationMapper::class,
                 TradeRolesAssociationsService::class => TradeRolesAssociationsService::class,
-                TwoFaFeatureToggle::class
+                TwoFaFeatureToggle::class,
             ]
         );
     }

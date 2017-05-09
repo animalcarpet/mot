@@ -68,13 +68,13 @@ class ChangeAddressController extends AbstractDvsaMotTestController
     /**
      * ChangeAddressController constructor.
      *
-     * @param PersonProfileGuardBuilder $personProfileGuardBuilder
+     * @param PersonProfileGuardBuilder   $personProfileGuardBuilder
      * @param HelpdeskAccountAdminService $accountAdminService
-     * @param PersonProfileUrlGenerator $personProfileUrlGenerator
-     * @param ContextProvider $contextProvider
-     * @param ApiPersonalDetails $personalDetailsService
-     * @param MapperFactory $mapperFactory
-     * @param SessionService $sessionService
+     * @param PersonProfileUrlGenerator   $personProfileUrlGenerator
+     * @param ContextProvider             $contextProvider
+     * @param ApiPersonalDetails          $personalDetailsService
+     * @param MapperFactory               $mapperFactory
+     * @param SessionService              $sessionService
      */
     public function __construct(
         PersonProfileGuardBuilder $personProfileGuardBuilder,
@@ -84,8 +84,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
         ApiPersonalDetails $personalDetailsService,
         MapperFactory $mapperFactory,
         SessionService $sessionService
-    )
-    {
+    ) {
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
         $this->accountAdminService = $accountAdminService;
         $this->personProfileUrl = $personProfileUrlGenerator;
@@ -97,6 +96,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
 
     /**
      * @return \Zend\Http\Response|ViewModel
+     *
      * @throws UnauthorisedException
      */
     public function indexAction()
@@ -129,7 +129,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
                 ? 'Your profile'
                 : 'User profile');
 
-        $data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX . $personId);
+        $data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX.$personId);
         if (!empty($data)) {
             $firstLine = $data['firstLine'];
             $secondLine = $data['secondLine'];
@@ -154,23 +154,23 @@ class ChangeAddressController extends AbstractDvsaMotTestController
                 'thirdLine' => trim($this->getRequest()->getPost('thirdLine')),
                 'townOrCity' => trim($this->getRequest()->getPost('townOrCity')),
                 'country' => trim($this->getRequest()->getPost('country')),
-                'postcode' =>  strtoupper(preg_replace('/ \s+/', ' ', trim($this->getRequest()->getPost('postcode')))),
+                'postcode' => strtoupper(preg_replace('/ \s+/', ' ', trim($this->getRequest()->getPost('postcode')))),
             ];
 
             if ($this->validate($params) && $this->saveToSession($personId, $params)) {
                 $summaryRoute = '';
                 switch ($this->contextProvider->getContext()) {
                     case ContextProvider::AE_CONTEXT:
-                        $summaryRoute = ContextProvider::AE_PARENT_ROUTE . '/address/review-address';
+                        $summaryRoute = ContextProvider::AE_PARENT_ROUTE.'/address/review-address';
                         break;
                     case ContextProvider::VTS_CONTEXT:
-                        $summaryRoute = ContextProvider::VTS_PARENT_ROUTE . '/address/review-address';
+                        $summaryRoute = ContextProvider::VTS_PARENT_ROUTE.'/address/review-address';
                         break;
                     case ContextProvider::USER_SEARCH_CONTEXT:
-                        $summaryRoute = ContextProvider::USER_SEARCH_PARENT_ROUTE . '/address/review-address';
+                        $summaryRoute = ContextProvider::USER_SEARCH_PARENT_ROUTE.'/address/review-address';
                         break;
                     case ContextProvider::YOUR_PROFILE_CONTEXT:
-                        $summaryRoute = ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/address/review-address';
+                        $summaryRoute = ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/address/review-address';
                 }
 
                 return $this->redirect()->toRoute($summaryRoute, ['id' => $personId]);
@@ -183,6 +183,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
                 $postcode = $this->getRequest()->getPost('postcode');
             }
         }
+
         return $this->createViewModel('profile/address/index.phtml', [
             'firstLine' => $firstLine,
             'secondLine' => $secondLine,
@@ -191,7 +192,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
             'country' => $country,
             'postcode' => $postcode,
             'errors' => $this->validationErrors,
-            'viewingOwnProfile' => $personProfileGuard->isViewingOwnProfile()
+            'viewingOwnProfile' => $personProfileGuard->isViewingOwnProfile(),
         ]);
     }
 
@@ -211,11 +212,11 @@ class ChangeAddressController extends AbstractDvsaMotTestController
         if (!$personProfileGuard->canChangeEmailAddress()) {
             throw new UnauthorisedException('');
         }
-        
+
         $breadcrumbs = $this->generateBreadcrumbsFromRequest($personId, $personalDetails);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
-        if (!$data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX . $personId)) {
+        if (!$data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX.$personId)) {
             return $this->redirect()->toUrl($this->personProfileUrl->toPersonProfile());
         }
 
@@ -236,6 +237,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
                     $this->flashMessenger()->addErrorMessage(self::MSG_ADDRESS_CHANGED_FAILURE);
                 }
             }
+
             return $this->redirect()->toUrl($this->personProfileUrl->toPersonProfile());
         }
         $this->layout('layout/layout-govuk.phtml');
@@ -248,16 +250,16 @@ class ChangeAddressController extends AbstractDvsaMotTestController
 
         switch ($this->contextProvider->getContext()) {
             case ContextProvider::AE_CONTEXT:
-                $backButtonUrl = $this->url()->fromRoute(ContextProvider::AE_PARENT_ROUTE . '/address/change-address', ['id' => $personId]);
+                $backButtonUrl = $this->url()->fromRoute(ContextProvider::AE_PARENT_ROUTE.'/address/change-address', ['id' => $personId]);
                 break;
             case ContextProvider::VTS_CONTEXT:
-                $backButtonUrl = $this->url()->fromRoute(ContextProvider::VTS_PARENT_ROUTE . '/address/change-address', ['id' => $personId]);
+                $backButtonUrl = $this->url()->fromRoute(ContextProvider::VTS_PARENT_ROUTE.'/address/change-address', ['id' => $personId]);
                 break;
             case ContextProvider::USER_SEARCH_CONTEXT:
-                $backButtonUrl = $this->url()->fromRoute(ContextProvider::USER_SEARCH_PARENT_ROUTE . '/address/change-address', ['id' => $personId]);
+                $backButtonUrl = $this->url()->fromRoute(ContextProvider::USER_SEARCH_PARENT_ROUTE.'/address/change-address', ['id' => $personId]);
                 break;
             case ContextProvider::YOUR_PROFILE_CONTEXT:
-                $backButtonUrl = $this->url()->fromRoute(ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/address/change-address', ['id' => $personId]);
+                $backButtonUrl = $this->url()->fromRoute(ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/address/change-address', ['id' => $personId]);
                 break;
             default:
                 $backButtonUrl = '';
@@ -293,11 +295,11 @@ class ChangeAddressController extends AbstractDvsaMotTestController
      */
     private function validate(array $params)
     {
-        $validator = new AddressValidator;
+        $validator = new AddressValidator();
         if (!$validator->isValid($params)) {
             $this->validationErrors = $validator->getMessages();
             foreach ($this->validationErrors as $field => $errorMessage) {
-                $message = $validator->getFieldLabel($field) . ' - ' . $errorMessage;
+                $message = $validator->getFieldLabel($field).' - '.$errorMessage;
                 $this->flashMessenger()->addErrorMessage([$message]);
             }
 
@@ -325,8 +327,8 @@ class ChangeAddressController extends AbstractDvsaMotTestController
     /**
      * Get the breadcrumbs given the context of the url.
      *
-     * @param int                  $personId
-     * @param PersonalDetails      $personalDetails
+     * @param int             $personId
+     * @param PersonalDetails $personalDetails
      *
      * @return array
      */
@@ -395,15 +397,17 @@ class ChangeAddressController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Save the driving licence number and region to the session
-     * @param int $personId
+     * Save the driving licence number and region to the session.
+     *
+     * @param int   $personId
      * @param array $params
+     *
      * @return bool
      */
     private function saveToSession($personId, array $params)
     {
-        $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX . $personId, $params);
+        $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX.$personId, $params);
+
         return true;
     }
-
 }

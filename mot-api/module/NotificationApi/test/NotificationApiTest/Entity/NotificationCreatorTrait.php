@@ -27,6 +27,7 @@ trait NotificationCreatorTrait
         }
 
         $notification->setFields(new ArrayCollection($notificationFields));
+
         return $notification;
     }
 

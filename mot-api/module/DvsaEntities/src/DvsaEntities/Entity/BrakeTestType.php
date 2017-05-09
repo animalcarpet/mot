@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * BrakeTestType
+ * BrakeTestType.
  *
  * @ORM\Table(name="brake_test_type")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\BrakeTestTypeRepository", readOnly=true)
@@ -19,7 +19,7 @@ class BrakeTestType extends Entity
     use EnumType1EntityTrait;
 
     /**
-     * Do not remove! This value is used in DataCatalogService, but shouldn't be used in application
+     * Do not remove! This value is used in DataCatalogService, but shouldn't be used in application.
      *
      * @var string
      *

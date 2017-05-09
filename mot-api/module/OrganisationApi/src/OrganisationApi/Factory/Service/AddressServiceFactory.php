@@ -11,8 +11,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class AddressServiceFactory
- * @package OrganisationApi\Factory\Service
+ * Class AddressServiceFactory.
  */
 class AddressServiceFactory implements FactoryInterface
 {

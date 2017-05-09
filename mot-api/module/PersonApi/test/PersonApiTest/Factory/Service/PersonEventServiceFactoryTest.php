@@ -7,14 +7,14 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEventApi\Service\EventService;
 use PersonApi\Factory\Service\PersonEventServiceFactory;
 use PersonApi\Service\PersonEventService;
-use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Entity\Person;
 use DvsaAuthorisation\Service\AuthorisationService;
 
 /**
- * Class PersonEventServiceFactoryTest
+ * Class PersonEventServiceFactoryTest.
+ *
  * @group event
  */
 class PersonEventServiceFactoryTest extends \PHPUnit_Framework_TestCase

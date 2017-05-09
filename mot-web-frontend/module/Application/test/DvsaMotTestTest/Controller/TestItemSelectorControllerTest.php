@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\Controller;
 
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
@@ -16,7 +17,7 @@ use DvsaMotTestTest\TestHelper\Fixture;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class TestItemSelectorControllerTest
+ * Class TestItemSelectorControllerTest.
  */
 class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 {
@@ -49,6 +50,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -57,6 +59,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 
@@ -73,7 +76,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'tis-id'        => $testItemSelectorId,
+            'tis-id' => $testItemSelectorId,
         ];
 
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
@@ -111,7 +114,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'tis-id'        => $testItemSelectorId,
+            'tis-id' => $testItemSelectorId,
         ];
 
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
@@ -148,7 +151,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'tis-id'        => $testItemSelectorId,
+            'tis-id' => $testItemSelectorId,
         ];
 
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
@@ -181,7 +184,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'tis-id'        => $testItemSelectorId,
+            'tis-id' => $testItemSelectorId,
         ];
 
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
@@ -252,19 +255,19 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     public function testSearchGetData()
     {
         $motTestNumber = 1;
-        $searchString = "stop lamp";
-        $start = "0";
-        $end = "10";
+        $searchString = 'stop lamp';
+        $start = '0';
+        $end = '10';
         $hasMore = true;
 
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
         $rfrs = [['id' => 1], ['id' => 2]];
         $restData = [
             'data' => [
-                'searchDetails'       => ['hasMore' => $hasMore],
+                'searchDetails' => ['hasMore' => $hasMore],
                 'reasonsForRejection' => $rfrs,
-                'motTest'             => $testMotTestData,
-            ]
+                'motTest' => $testMotTestData,
+            ],
         ];
 
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
@@ -284,7 +287,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
                 [
                     'search' => $searchString,
                     'start' => $start,
-                    'end' => $end
+                    'end' => $end,
                 ]
             )
         );
@@ -295,8 +298,8 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             new Parameters(
                 [
                     'search' => $searchString,
-                    'start'  => $start,
-                    'end'    => $end
+                    'start' => $start,
+                    'end' => $end,
                 ]
             )
         );
@@ -316,18 +319,18 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     public function testSearchGetDataInvalidCharacters()
     {
         $motTestNumber = 1;
-        $searchString = "!@£$%^&*()<>";
-        $start = "0";
-        $end = "10";
+        $searchString = '!@£$%^&*()<>';
+        $start = '0';
+        $end = '10';
         $hasMore = true;
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
         $rfrs = [['id' => 1], ['id' => 2]];
         $restData = [
             'data' => [
-                'searchDetails'       => ['hasMore' => $hasMore],
+                'searchDetails' => ['hasMore' => $hasMore],
                 'reasonsForRejection' => $rfrs,
-                'motTest'             => $testMotTestData,
-            ]
+                'motTest' => $testMotTestData,
+            ],
         ];
 
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
@@ -347,7 +350,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
                 [
                     'search' => $searchString,
                     'start' => $start,
-                    'end' => $end
+                    'end' => $end,
                 ]
             )
         );
@@ -358,8 +361,8 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             new Parameters(
                 [
                     'search' => $searchString,
-                    'start'  => $start,
-                    'end'    => $end
+                    'start' => $start,
+                    'end' => $end,
                 ]
             )
         );
@@ -371,9 +374,9 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $this->request->setQuery(
             new Parameters(
                 [
-                    'search' => "&",
-                    'start'  => $start,
-                    'end'    => $end
+                    'search' => '&',
+                    'start' => $start,
+                    'end' => $end,
                 ]
             )
         );
@@ -388,13 +391,13 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
 
         $motTestNumber = 1;
-        $searchString = "No results will be found for this";
+        $searchString = 'No results will be found for this';
         $restData = [
             'data' => [
-                'searchDetails'        => ['hasMore' => false],
+                'searchDetails' => ['hasMore' => false],
                 'reasonsForRejection' => [],
-                'motTest'              => $testMotTestData,
-            ]
+                'motTest' => $testMotTestData,
+            ],
         ];
 
         $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
@@ -424,7 +427,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     public function testSearchDisplaysRestException()
     {
         $motTestNumber = 1;
-        $searchString = "something about this search is wrong";
+        $searchString = 'something about this search is wrong';
 
         $this->getRestClientMockThrowingException('getWithParamsReturnDto');
         $this->getFlashMessengerMockForAddErrorMessage('REST ERROR!');
@@ -527,17 +530,17 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $locationLateral = 'nearside';
         $locationLongitudinal = 'front';
         $locationVertical = 'top';
-        $comment = "Test comment";
+        $comment = 'Test comment';
         $failureDangerous = true;
 
         $expectedRestPostData = [
-            'rfrId'                => $rfrId,
-            'type'                 => $type,
-            'locationLateral'      => $locationLateral,
+            'rfrId' => $rfrId,
+            'type' => $type,
+            'locationLateral' => $locationLateral,
             'locationLongitudinal' => $locationLongitudinal,
-            'locationVertical'     => $locationVertical,
-            'comment'              => $comment,
-            'failureDangerous'     => $failureDangerous,
+            'locationVertical' => $locationVertical,
+            'comment' => $comment,
+            'failureDangerous' => $failureDangerous,
         ];
 
         $this->routeMatch->setParam('action', 'addReasonForRejection');
@@ -558,7 +561,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             ->with("mot-test/$motTestNumber/reasons-for-rejection", $expectedRestPostData);
 
         /**
-         * @var JsonModel $result
+         * @var JsonModel
          */
         $result = $this->controller->dispatch($this->request);
 
@@ -577,8 +580,8 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $testItemSelectorId = 502;
         $rfrId = 2;
         $type = 'FAIL';
-        $searchString = "Stop lamp";
-        $searchStringUri = "Stop%20lamp";
+        $searchString = 'Stop lamp';
+        $searchStringUri = 'Stop%20lamp';
 
         $this->routeMatch->setParam('action', 'addReasonForRejection');
         $this->routeMatch->setParam('motTestNumber', $motTestNumber);
@@ -607,7 +610,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $motTestNumber = 1;
         $testItemSelectorId = 502;
         $rfrId = 2;
-        $errorMessage = "Bad RFR";
+        $errorMessage = 'Bad RFR';
 
         $this->routeMatch->setParam('action', 'addReasonForRejection');
         $this->routeMatch->setParam('motTestNumber', $motTestNumber);
@@ -650,7 +653,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'tis-id'        => $testItemSelectorId,
+            'tis-id' => $testItemSelectorId,
         ];
 
         $this->getResultForAction('testItemSelectors', $routeParams);
@@ -661,7 +664,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     public function test_suggestionsAction_transfers_data_from_api()
     {
         $motTestNumber = 4;
-        $apiReturnData = [ 'data' => ['xxx' => 'yyy'] ];
+        $apiReturnData = ['data' => ['xxx' => 'yyy']];
 
         $this->routeMatch->setParam('action', 'suggestions');
         $this->routeMatch->setParam('motTestNumber', $motTestNumber);
@@ -682,76 +685,76 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
     protected function getTestDataItemSelectors($id)
     {
-        return ["data" => [
-            "testItemSelector"        => [
-                "id"                        => 0,
-                "name"                      => "Vehicle",
-                "description"               => "Vehicle",
-                "vehicleClass"              => "4",
-                "sectionTestItemSelectorId" => 0,
-                "parentTestItemSelectorId"  => 0
+        return ['data' => [
+            'testItemSelector' => [
+                'id' => 0,
+                'name' => 'Vehicle',
+                'description' => 'Vehicle',
+                'vehicleClass' => '4',
+                'sectionTestItemSelectorId' => 0,
+                'parentTestItemSelectorId' => 0,
             ],
-            "parentTestItemSelectors" => [],
-            "testItemSelectors"       => [
+            'parentTestItemSelectors' => [],
+            'testItemSelectors' => [
                 [
-                    "id"                        => $id,
-                    "name"                      => "Towbar",
-                    "description"               => "Towbar",
-                    "vehicleClass"              => "4",
-                    "sectionTestItemSelectorId" => 501,
-                    "parentTestItemSelectorId"  => 501
+                    'id' => $id,
+                    'name' => 'Towbar',
+                    'description' => 'Towbar',
+                    'vehicleClass' => '4',
+                    'sectionTestItemSelectorId' => 501,
+                    'parentTestItemSelectorId' => 501,
                 ],
                 [
-                    "id"                        => $id,
-                    "name"                      => "Bowbar",
-                    "description"               => "Bowbar",
-                    "vehicleClass"              => "4",
-                    "sectionTestItemSelectorId" => 660,
-                    "parentTestItemSelectorId"  => 666
+                    'id' => $id,
+                    'name' => 'Bowbar',
+                    'description' => 'Bowbar',
+                    'vehicleClass' => '4',
+                    'sectionTestItemSelectorId' => 660,
+                    'parentTestItemSelectorId' => 666,
                 ],
             ],
-            "reasonsForRejection" => [],
-            "motTest"                 => [
+            'reasonsForRejection' => [],
+            'motTest' => [
                 'status' => 'ACTIVE',
-                'tester' => ['userId' => 1]
-            ]
+                'tester' => ['userId' => 1],
+            ],
         ],
         ];
     }
 
     private function getTestDataItemSelectorsDto($id)
     {
-        return ["data" => [
+        return ['data' => [
             [
-            "testItemSelector"        => [
-                "id"                        => 0,
-                "name"                      => "Vehicle",
-                "description"               => "Vehicle",
-                "vehicleClass"              => "4",
-                "sectionTestItemSelectorId" => 0,
-                "parentTestItemSelectorId"  => 0
+            'testItemSelector' => [
+                'id' => 0,
+                'name' => 'Vehicle',
+                'description' => 'Vehicle',
+                'vehicleClass' => '4',
+                'sectionTestItemSelectorId' => 0,
+                'parentTestItemSelectorId' => 0,
             ],
-            "parentTestItemSelectors" => [],
-            "testItemSelectors"       => [
+            'parentTestItemSelectors' => [],
+            'testItemSelectors' => [
                 [
-                    "id"                        => $id,
-                    "name"                      => "Towbar",
-                    "description"               => "Towbar",
-                    "vehicleClass"              => "4",
-                    "sectionTestItemSelectorId" => 501,
-                    "parentTestItemSelectorId"  => 501
+                    'id' => $id,
+                    'name' => 'Towbar',
+                    'description' => 'Towbar',
+                    'vehicleClass' => '4',
+                    'sectionTestItemSelectorId' => 501,
+                    'parentTestItemSelectorId' => 501,
                 ],
                 [
-                    "id"                        => $id,
-                    "name"                      => "Bowbar",
-                    "description"               => "Bowbar",
-                    "vehicleClass"              => "4",
-                    "sectionTestItemSelectorId" => 660,
-                    "parentTestItemSelectorId"  => 666
+                    'id' => $id,
+                    'name' => 'Bowbar',
+                    'description' => 'Bowbar',
+                    'vehicleClass' => '4',
+                    'sectionTestItemSelectorId' => 660,
+                    'parentTestItemSelectorId' => 666,
                 ],
             ],
-            "reasonsForRejection" => [],
-            "motTest"                 => $this->getMotTest(MotTestStatusName::ACTIVE, 1),
+            'reasonsForRejection' => [],
+            'motTest' => $this->getMotTest(MotTestStatusName::ACTIVE, 1),
         ],
         ],
         ];
@@ -760,87 +763,85 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     protected function getTestDataItemRfrsDto($id, $status = 'ACTIVE', $testerId = 1)
     {
         return [
-            "data" => [
+            'data' => [
                 [
-                "testItemSelector"        => [
-                    "id"                        => 0,
-                    "name"                      => "Vehicle",
-                    "description"               => "Vehicle",
-                    "vehicleClass"              => "4",
-                    "sectionTestItemSelectorId" => 0,
-                    "parentTestItemSelectorId"  => 0
+                'testItemSelector' => [
+                    'id' => 0,
+                    'name' => 'Vehicle',
+                    'description' => 'Vehicle',
+                    'vehicleClass' => '4',
+                    'sectionTestItemSelectorId' => 0,
+                    'parentTestItemSelectorId' => 0,
                 ],
-                "testItemSelectors"       => [],
-                "parentTestItemSelectors" => [],
-                "reasonsForRejection" => [
+                'testItemSelectors' => [],
+                'parentTestItemSelectors' => [],
+                'reasonsForRejection' => [
                     [
-                        "rfrId"                       => $id,
-                        "inspectionManualReference"   => "1.7.2",
-                        "minorItem"                   => false,
-                        "description"                 => "inoperative",
-                        "locationMarker"              => false,
-                        "qtMarker"                    => true,
-                        "note"                        => true,
-                        "manual"                      => "4",
-                        "specProc"                    => false,
-                        "inspectionManualDescription" =>
-                            "A headlamp levelling or cleaning device inoperative or otherwise obviously defective",
-                        "advisoryText"                => "",
-                        "vehicleClass"                => "4",
-                        "testItemSelector"            => "507",
-                        "sectionTestItemSelector"     => "5000"
+                        'rfrId' => $id,
+                        'inspectionManualReference' => '1.7.2',
+                        'minorItem' => false,
+                        'description' => 'inoperative',
+                        'locationMarker' => false,
+                        'qtMarker' => true,
+                        'note' => true,
+                        'manual' => '4',
+                        'specProc' => false,
+                        'inspectionManualDescription' => 'A headlamp levelling or cleaning device inoperative or otherwise obviously defective',
+                        'advisoryText' => '',
+                        'vehicleClass' => '4',
+                        'testItemSelector' => '507',
+                        'sectionTestItemSelector' => '5000',
                     ],
                 ],
-                "motTest"                 => $this->getMotTest($status, $testerId),
-            ]
-            ]
+                'motTest' => $this->getMotTest($status, $testerId),
+            ],
+            ],
         ];
     }
 
     protected function getTestDataItemRfrs($id, $status = 'ACTIVE', $testerId = 1)
     {
         return [
-            "data" => [
-                "testItemSelector"        => [
-                    "id"                        => 0,
-                    "name"                      => "Vehicle",
-                    "description"               => "Vehicle",
-                    "vehicleClass"              => "4",
-                    "sectionTestItemSelectorId" => 0,
-                    "parentTestItemSelectorId"  => 0
+            'data' => [
+                'testItemSelector' => [
+                    'id' => 0,
+                    'name' => 'Vehicle',
+                    'description' => 'Vehicle',
+                    'vehicleClass' => '4',
+                    'sectionTestItemSelectorId' => 0,
+                    'parentTestItemSelectorId' => 0,
                 ],
-                "testItemSelectors"       => [],
-                "parentTestItemSelectors" => [],
-                "reasonsForRejection" => [
+                'testItemSelectors' => [],
+                'parentTestItemSelectors' => [],
+                'reasonsForRejection' => [
                     [
-                        "rfrId"                       => $id,
-                        "inspectionManualReference"   => "1.7.2",
-                        "minorItem"                   => false,
-                        "description"                 => "inoperative",
-                        "locationMarker"              => false,
-                        "qtMarker"                    => true,
-                        "note"                        => true,
-                        "manual"                      => "4",
-                        "specProc"                    => false,
-                        "inspectionManualDescription" =>
-                            "A headlamp levelling or cleaning device inoperative or otherwise obviously defective",
-                        "advisoryText"                => "",
-                        "vehicleClass"                => "4",
-                        "testItemSelector"            => "507",
-                        "sectionTestItemSelector"     => "5000"
+                        'rfrId' => $id,
+                        'inspectionManualReference' => '1.7.2',
+                        'minorItem' => false,
+                        'description' => 'inoperative',
+                        'locationMarker' => false,
+                        'qtMarker' => true,
+                        'note' => true,
+                        'manual' => '4',
+                        'specProc' => false,
+                        'inspectionManualDescription' => 'A headlamp levelling or cleaning device inoperative or otherwise obviously defective',
+                        'advisoryText' => '',
+                        'vehicleClass' => '4',
+                        'testItemSelector' => '507',
+                        'sectionTestItemSelector' => '5000',
                     ],
                 ],
-                "motTest"                 => [
+                'motTest' => [
                     'status' => $status,
                     'tester' => ['userId' => $testerId],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
     /**
      * Simulate the test_item_selectors data returned from the API that will
-     * be used on the RFT home page
+     * be used on the RFT home page.
      *
      * @return array
      */
@@ -851,13 +852,13 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $items['data'][0]['testItemSelector'] = [
             [
                 'name' => 'RFR Home',
-                'nameCy' => '' ,
+                'nameCy' => '',
                 'description' => '',
                 'sectionTestItemSelectorId' => 0,
                 'parentTestItemSelectorId' => 0,
                 'id' => 0,
-                'vehicleClasses' => []
-            ]
+                'vehicleClasses' => [],
+            ],
         ];
 
         return $items;
@@ -869,13 +870,13 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $items['data'][0]['testItemSelector'] = [
             [
                 'name' => 'RFR Home',
-                'nameCy' => '' ,
+                'nameCy' => '',
                 'description' => '',
                 'sectionTestItemSelectorId' => 0,
                 'parentTestItemSelectorId' => 0,
                 'id' => 0,
-                'vehicleClasses' => []
-            ]
+                'vehicleClasses' => [],
+            ],
         ];
 
         return $items;
@@ -892,6 +893,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $items = $this->getSingleResultTestItemSelectorsData();
         // make it look like we are 2 levels deep
         $items['data'][0]['parentTestItemSelectors'][] = $items['data'][0]['testItemSelector'];
+
         return $items;
     }
 
@@ -900,32 +902,33 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $items = $this->getSingleResultTestItemSelectorsDataDto();
         // make it look like we are 2 levels deep
         $items['data'][0]['parentTestItemSelectors'][] = $items['data'][0]['testItemSelector'];
+
         return $items;
     }
 
     protected function getEmptyTestItems()
     {
-        return ["data" => [
+        return ['data' => [
             [
-            "testItemSelector"        => [],
-            "testItemSelectors"       => [],
-            "parentTestItemSelectors" => [],
-            "reasonsForRejection" => [],
-            "motTest"                 => [
-                "status" => 'ACTIVE',
-                'tester' => ['userId' => 1]
+            'testItemSelector' => [],
+            'testItemSelectors' => [],
+            'parentTestItemSelectors' => [],
+            'reasonsForRejection' => [],
+            'motTest' => [
+                'status' => 'ACTIVE',
+                'tester' => ['userId' => 1],
             ],
-        ]]];
+        ], ]];
     }
 
     private function getEmptyTestItemsDto()
     {
-        return ["data" => [[
-            "testItemSelector"        => [],
-            "testItemSelectors"       => [],
-            "parentTestItemSelectors" => [],
-            "reasonsForRejection"     => [],
-            "motTest"                 => new MotTest(Fixture::getMotTestDataVehicleClass4(true)),
+        return ['data' => [[
+            'testItemSelector' => [],
+            'testItemSelectors' => [],
+            'parentTestItemSelectors' => [],
+            'reasonsForRejection' => [],
+            'motTest' => new MotTest(Fixture::getMotTestDataVehicleClass4(true)),
         ]]];
     }
 
@@ -939,11 +942,10 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             $data->status = $status;
         }
 
-        if($testerId !== null) {
+        if ($testerId !== null) {
             $data->tester->id = $testerId;
         }
 
         return new MotTest($data);
     }
-
 }

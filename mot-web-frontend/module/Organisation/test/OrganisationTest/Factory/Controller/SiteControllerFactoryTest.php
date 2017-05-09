@@ -7,11 +7,10 @@ use DvsaClient\MapperFactory;
 use DvsaCommonTest\TestUtils\XMock;
 use Organisation\Controller\SiteController;
 use Organisation\Factory\Controller\SiteControllerFactory;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SiteControllerFactoryTest
+ * Class SiteControllerFactoryTest.
  */
 class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +19,7 @@ class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         $authorisationService = XMock::of(MotFrontendAuthorisationServiceInterface::class);
-        $serviceManager->setService("AuthorisationService", $authorisationService);
+        $serviceManager->setService('AuthorisationService', $authorisationService);
 
         $mapperFactory = XMock::of(MapperFactory::class);
         $serviceManager->setService(MapperFactory::class, $mapperFactory);

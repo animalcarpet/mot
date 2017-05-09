@@ -30,7 +30,6 @@ use DvsaEntities\Repository\PersonRepository;
 use MailerApi\Logic\AbstractMailerLogic;
 use MailerApi\Service\MailerService;
 use Zend\Log\LoggerInterface;
-use Zend\ServiceManager\ServiceManager;
 use DvsaAuthorisation\Service\AuthorisationService;
 use Zend\Authentication\AuthenticationService;
 
@@ -46,7 +45,7 @@ class TokenServiceTest extends AbstractServiceTestCase
     const CFG_EXPIRE_TIME = 1000;
     const ISSUED_DATE_TS = 1428569861.654321;
 
-    /**  @var TokenService */
+    /** @var TokenService */
     private $tokenService;
 
     /** @var \DvsaEntities\Repository\MessageRepository */
@@ -55,21 +54,21 @@ class TokenServiceTest extends AbstractServiceTestCase
     private $mockMessageTypeRepo;
     /** @var \DvsaEntities\Repository\PersonRepository */
     private $mockPersonRepo;
-    /** @var  EntityManager */
+    /** @var EntityManager */
     private $mockEntityManager;
-    /** @var  array */
+    /** @var array */
     private $mockConfig;
-    /** @var  DateTimeHolder */
+    /** @var DateTimeHolder */
     private $mockDateTimeHolder;
     /** @var OpenAmIdentityService */
     private $mockOpenAmIdentityService;
-    /** @var  MailerService */
+    /** @var MailerService */
     private $mockMailerService;
-    /** @var  ParamObfuscator */
+    /** @var ParamObfuscator */
     private $mockObfuscator;
-    /** @var  AuthenticationService */
+    /** @var AuthenticationService */
     private $authenticationService;
-    /** @var  AuthorisationService */
+    /** @var AuthorisationService */
     private $authorisationService;
 
     public function setUp()
@@ -101,12 +100,12 @@ class TokenServiceTest extends AbstractServiceTestCase
             = 'sha256';
         $this->mockConfig[AbstractMailerLogic::CONFIG_KEY] = [
             'sendingAllowed' => true,
-            'recipient'   => 'tokenservicetest@' . EmailAddressValidator::TEST_DOMAIN,
+            'recipient' => 'tokenservicetest@'.EmailAddressValidator::TEST_DOMAIN,
             AbstractMailerLogic::CONFIG_KEY_BASE_URL => 'http://mot-web-frontend.mot.gov.uk',
         ];
         $this->mockConfig[TokenService::CFG_HELPDESK] = [
             'name' => 'TEST HELPDESK',
-            'phoneNumber' => '42424242'
+            'phoneNumber' => '42424242',
         ];
 
         //  --  mock date time holder --
@@ -169,9 +168,9 @@ class TokenServiceTest extends AbstractServiceTestCase
 
         return [
             [
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPersonRepo',
+                        'class' => 'mockPersonRepo',
                         'method' => 'getByIdOrUsername',
                         'params' => [self::USER_ID],
                         'result' => new NotFoundException('Person'),
@@ -179,21 +178,21 @@ class TokenServiceTest extends AbstractServiceTestCase
                 ],
                 'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
+                        'class' => NotFoundException::class,
                         'message' => 'Person not found',
                     ],
                 ],
             ],
             [
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPersonRepo',
+                        'class' => 'mockPersonRepo',
                         'method' => 'getByIdOrUsername',
                         'params' => [self::USER_ID],
                         'result' => $person,
                     ],
                     [
-                        'class'  => 'mockMessageTypeRepo',
+                        'class' => 'mockMessageTypeRepo',
                         'method' => 'getByCode',
                         'params' => [MessageTypeCode::PASSWORD_RESET_BY_EMAIL],
                         'result' => new NotFoundException('MessageType'),
@@ -201,88 +200,88 @@ class TokenServiceTest extends AbstractServiceTestCase
                 ],
                 'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
+                        'class' => NotFoundException::class,
                         'message' => 'MessageType not found',
                     ],
                 ],
             ],
             [
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPersonRepo',
+                        'class' => 'mockPersonRepo',
                         'method' => 'getByIdOrUsername',
                         'params' => [self::USER_ID],
                         'result' => $person,
                     ],
                     [
-                        'class'  => 'mockMessageTypeRepo',
+                        'class' => 'mockMessageTypeRepo',
                         'method' => 'getByCode',
                         'params' => [MessageTypeCode::PASSWORD_RESET_BY_EMAIL],
                         'result' => new MessageType(),
                     ],
                     [
-                        'class'      => 'mockDateTimeHolder',
-                        'method'     => 'getTimestamp',
-                        'params'     => [true],
+                        'class' => 'mockDateTimeHolder',
+                        'method' => 'getTimestamp',
+                        'params' => [true],
                         'invocation' => $this->any(),
-                        'result'     => self::ISSUED_DATE_TS,
+                        'result' => self::ISSUED_DATE_TS,
                     ],
                     [
-                        'class'      => 'mockMessageRepo',
-                        'method'     => 'getHydratedMessageByToken',
-                        'params'     => [self::TOKEN],
+                        'class' => 'mockMessageRepo',
+                        'method' => 'getHydratedMessageByToken',
+                        'params' => [self::TOKEN],
                         'invocation' => $this->any(),
-                        'result'     => (new Message()),
+                        'result' => (new Message()),
                     ],
                     [
-                        'class'      => 'mockMessageRepo',
-                        'method'     => 'findBy',
-                        'params'     => [['person' => $person, 'isAcknowledged' => false]],
+                        'class' => 'mockMessageRepo',
+                        'method' => 'findBy',
+                        'params' => [['person' => $person, 'isAcknowledged' => false]],
                         'invocation' => $this->any(),
-                        'result'     => [(new Message())],
+                        'result' => [(new Message())],
                     ],
                 ],
                 'expect' => [
                     'exception' => [
-                        'class'   => \Exception::class,
+                        'class' => \Exception::class,
                         'message' => TokenService::ERROR_GENERATION_TOKEN,
                     ],
                 ],
             ],
             [
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPersonRepo',
+                        'class' => 'mockPersonRepo',
                         'method' => 'getByIdOrUsername',
                         'params' => [self::USER_ID],
                         'result' => $person,
                     ],
                     [
-                        'class'  => 'mockMessageTypeRepo',
+                        'class' => 'mockMessageTypeRepo',
                         'method' => 'getByCode',
                         'params' => [MessageTypeCode::PASSWORD_RESET_BY_EMAIL],
                         'result' => new MessageType(),
                     ],
                     [
-                        'class'      => 'mockDateTimeHolder',
-                        'method'     => 'getTimestamp',
-                        'params'     => [true],
+                        'class' => 'mockDateTimeHolder',
+                        'method' => 'getTimestamp',
+                        'params' => [true],
                         'invocation' => $this->once(),
-                        'result'     => self::ISSUED_DATE_TS,
+                        'result' => self::ISSUED_DATE_TS,
                     ],
                     [
-                        'class'      => 'mockMessageRepo',
-                        'method'     => 'getHydratedMessageByToken',
-                        'params'     => [self::TOKEN],
+                        'class' => 'mockMessageRepo',
+                        'method' => 'getHydratedMessageByToken',
+                        'params' => [self::TOKEN],
                         'invocation' => $this->once(),
-                        'result'     => new NotFoundException('Token not found'),
+                        'result' => new NotFoundException('Token not found'),
                     ],
                     [
-                        'class'      => 'mockMessageRepo',
-                        'method'     => 'findBy',
-                        'params'     => [['person' => $person, 'isAcknowledged' => false]],
+                        'class' => 'mockMessageRepo',
+                        'method' => 'findBy',
+                        'params' => [['person' => $person, 'isAcknowledged' => false]],
                         'invocation' => $this->any(),
-                        'result'     => [(new Message())],
+                        'result' => [(new Message())],
                     ],
                 ],
                 'expect' => [
@@ -378,8 +377,9 @@ class TokenServiceTest extends AbstractServiceTestCase
 
     private function getMessageDto(Person $person, $issuedDateTs = null, $expiryDateTs = null)
     {
-        $message  = $this->getMessage($person, $issuedDateTs, $expiryDateTs);
-        return (new MessageMapper)->toDto($message);
+        $message = $this->getMessage($person, $issuedDateTs, $expiryDateTs);
+
+        return (new MessageMapper())->toDto($message);
     }
 
     public function testAcknowledge()
@@ -441,6 +441,5 @@ class TokenServiceTest extends AbstractServiceTestCase
         $this->setExpectedException(OpenAmChangePasswordException::class);
         //  --  call    --
         $this->tokenService->changePassword(self::TOKEN, self::USER_PASSWORD);
-
     }
 }

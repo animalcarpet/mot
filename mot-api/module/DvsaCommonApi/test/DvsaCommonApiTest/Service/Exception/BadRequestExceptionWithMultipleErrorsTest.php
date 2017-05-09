@@ -1,17 +1,16 @@
 <?php
+
 namespace DvsaCommonApiTest\Service\Exception;
 
 use DvsaCommonApi\Service\Exception\BadRequestExceptionWithMultipleErrors;
 use DvsaCommonApi\Error\Message as ErrorMessage;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class BadRequestExceptionWithMultipleErrorsTest
+ * Class BadRequestExceptionWithMultipleErrorsTest.
  */
 class BadRequestExceptionWithMultipleErrorsTest extends PHPUnit_Framework_TestCase
 {
-
     const TEST_MESSAGE = 'Invalid parameter';
     const TEST_MESSAGE_2 = 'Cat is not a colour';
     const TEST_MAIN_ERROR_MESSAGE = 'There were errors';
@@ -47,6 +46,7 @@ class BadRequestExceptionWithMultipleErrorsTest extends PHPUnit_Framework_TestCa
         $errors = [];
         $errors[] = new ErrorMessage(self::TEST_MESSAGE, self::TEST_CODE, ['postParameter' => null]);
         $errors[] = new ErrorMessage(self::TEST_MESSAGE_2, self::TEST_CODE, ['catColour' => null]);
+
         return $errors;
     }
 
@@ -55,6 +55,7 @@ class BadRequestExceptionWithMultipleErrorsTest extends PHPUnit_Framework_TestCa
         $errors = [];
         $errors[] = new ErrorMessage(self::TEST_MAIN_ERROR_MESSAGE, self::TEST_CODE);
         $errors[] = new ErrorMessage(self::TEST_MAIN_ERROR_MESSAGE_2, self::TEST_CODE);
+
         return $errors;
     }
 }

@@ -15,7 +15,7 @@ if ($this->pageCount > 1): ?>
                     Previous
                     <span class="data-paging__page">page</span>
                     <span class="data-paging__numbers">
-                        <?php echo $this->escapeHtml($this->previous .' of ' . $this->pageCount); ?>
+                        <?php echo $this->escapeHtml($this->previous.' of '.$this->pageCount); ?>
                     </span>
                 </a>
             </li>
@@ -31,7 +31,7 @@ if ($this->pageCount > 1): ?>
                    href="<?php echo $this->url($this->route, [], $routeParams, true); ?>">
                     <span class="data-paging__page">Next page</span>
                     <span class="data-paging__numbers">
-                        <?php echo $this->escapeHtml($this->next .' of ' . $this->pageCount); ?>
+                        <?php echo $this->escapeHtml($this->next.' of '.$this->pageCount); ?>
                     </span>
                 </a>
             </li>

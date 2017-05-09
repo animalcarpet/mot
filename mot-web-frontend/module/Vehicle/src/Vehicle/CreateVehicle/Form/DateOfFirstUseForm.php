@@ -138,12 +138,13 @@ class DateOfFirstUseForm extends Form
     {
         try {
             $dateFormatValidator = new Date();
-            $dateFormatValidator->setFormat("Y-m-d");
+            $dateFormatValidator->setFormat('Y-m-d');
             $isValidFormat = $dateFormatValidator->isValid($value);
 
             if (!$isValidFormat) {
                 $this->addErrorMessage('Date of first use - enter a valid date');
                 $this->setCustomError($this->getDayElement(), self::ERROR_ENTER_VALID_DATE);
+
                 return false;
             }
 
@@ -153,12 +154,13 @@ class DateOfFirstUseForm extends Form
             if ($convertedDate > $today) {
                 $this->addErrorMessage('Date of first use - enter a date in the past');
                 $this->setCustomError($this->getDayElement(), self::ERROR_DATE_IS_IN_FUTURE);
+
                 return false;
             }
-
         } catch (\Exception $e) {
             $this->addErrorMessage('Date of first use - enter a valid date');
             $this->setCustomError($this->getDayElement(), self::ERROR_ENTER_VALID_DATE);
+
             return false;
         }
 
@@ -172,15 +174,16 @@ class DateOfFirstUseForm extends Form
         $day = $this->get(self::FIELD_DAY)->getValue();
 
         if (empty($year) || empty($month) || empty($day)) {
-            return "";
+            return '';
         }
 
-        return join("-", [$year, $month, $day]);
+        return implode('-', [$year, $month, $day]);
     }
 
     private function createTextElement($elementLabel, $elementId, $maxLength, $value)
     {
         $element = new Text();
+
         return $element
             ->setName($elementId)
             ->setLabel($elementLabel)

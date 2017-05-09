@@ -9,7 +9,6 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  * @ORM\Table(name="empty_reason_map")
  * @ORM\Entity
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
- *
  */
 class EmptyReasonMap extends Entity
 {
@@ -49,11 +48,13 @@ class EmptyReasonMap extends Entity
 
     /**
      * @param Vehicle $vehicleId
+     *
      * @return EmptyReasonMap
      */
     public function setVehicleId($vehicleId)
     {
         $this->vehicleId = $vehicleId;
+
         return $this;
     }
 
@@ -67,11 +68,13 @@ class EmptyReasonMap extends Entity
 
     /**
      * @param EmptyVinReason $emptyVinReasonLookupId
+     *
      * @return EmptyReasonMap
      */
     public function setEmptyVinReason($emptyVinReasonLookupId)
     {
         $this->emptyVinReason = $emptyVinReasonLookupId;
+
         return $this;
     }
 
@@ -85,11 +88,13 @@ class EmptyReasonMap extends Entity
 
     /**
      * @param EmptyVrmReason $emptyVrmReason
+     *
      * @return EmptyReasonMap
      */
     public function setEmptyVrmReason($emptyVrmReason)
     {
         $this->emptyVrmReason = $emptyVrmReason;
+
         return $this;
     }
 }

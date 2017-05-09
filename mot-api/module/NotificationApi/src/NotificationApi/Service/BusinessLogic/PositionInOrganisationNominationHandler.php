@@ -13,34 +13,32 @@ use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEventApi\Service\EventService;
 use NotificationApi\Dto\Notification as DtoNotification;
 use NotificationApi\Service\NotificationService;
-use Zend\ServiceManager\ServiceManager;
 use DvsaEntities\Entity\NotificationAction;
-use Zend\ServiceManager\AbstractFactoryInterface;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaCommon\Constants\EventDescription;
 use NotificationApi\Service\Helper\OrganisationNominationEventHelper;
 
 /**
- * Handles nomination for a tester in organisation
+ * Handles nomination for a tester in organisation.
  */
 class PositionInOrganisationNominationHandler extends AbstractNotificationActionHandler
 {
     use EntityFinderTrait;
 
     /**
-     * values from database `notification_template_action`
+     * values from database `notification_template_action`.
      */
     const ACCEPTED = 'ORGANISATION-NOMINATION-ACCEPTED';
     const REJECTED = 'ORGANISATION-NOMINATION-REJECTED';
 
     /**
-     * values from database `notification_action_lookup`
+     * values from database `notification_action_lookup`.
      */
     const ACTION_ACCEPTED_ID = NotificationActionLookup::ORGANISATION_NOMINATION_ACCEPTED;
     const ACTION_REJECTED_ID = NotificationActionLookup::ORGANISATION_NOMINATION_REJECTED;
 
     /**
-     * notification fields
+     * notification fields.
      */
     const ORGANISATION_NAME = 'organisationName';
     const ORGANISATION_NUMBER = 'organisationNumber';
@@ -52,16 +50,16 @@ class PositionInOrganisationNominationHandler extends AbstractNotificationAction
     /** @var \DvsaEventApi\Service\EventService $eventService */
     protected $eventService;
 
-    /** @var OrganisationNominationEventHelper  */
+    /** @var OrganisationNominationEventHelper */
     private $organisationNominationEventHelper;
 
     /**
-     * $action === self::ACCEPT or self::REJECT
+     * $action === self::ACCEPT or self::REJECT.
      *
-     * @param EventService        $eventService
-     * @param EntityManager       $entityManger
-     * @param NotificationService $notificationService
-     * @param string              $action
+     * @param EventService                      $eventService
+     * @param EntityManager                     $entityManger
+     * @param NotificationService               $notificationService
+     * @param string                            $action
      * @param OrganisationNominationEventHelper $organisationNominationEventHelper
      */
     public function __construct(
@@ -79,7 +77,7 @@ class PositionInOrganisationNominationHandler extends AbstractNotificationAction
     }
 
     /**
-     * Updates association status between person and site
+     * Updates association status between person and site.
      *
      * @param Notification $notification
      *
@@ -123,9 +121,9 @@ class PositionInOrganisationNominationHandler extends AbstractNotificationAction
     }
 
     /**
-     * Updates notification and nomination status, adds RBAC role (if nomination accepted)
+     * Updates notification and nomination status, adds RBAC role (if nomination accepted).
      *
-     * @param Notification      $notification
+     * @param Notification                $notification
      * @param OrganisationBusinessRoleMap $position
      */
     protected function update(Notification $notification, OrganisationBusinessRoleMap $position)
@@ -180,5 +178,4 @@ class PositionInOrganisationNominationHandler extends AbstractNotificationAction
 
         $this->notificationService->add($data);
     }
-
 }

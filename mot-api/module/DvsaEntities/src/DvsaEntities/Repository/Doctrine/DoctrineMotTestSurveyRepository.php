@@ -9,7 +9,6 @@ namespace DvsaEntities\Repository\Doctrine;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\Expr\Join;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestSurvey;

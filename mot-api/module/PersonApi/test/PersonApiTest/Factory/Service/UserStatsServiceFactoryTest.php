@@ -11,9 +11,7 @@ use PersonApi\Service\UserStatsService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class UserStatsServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class UserStatsServiceFactoryTest.
  */
 class UserStatsServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -14,9 +14,7 @@ use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class FormsController
- *
- * @package Application\Controller
+ * Class FormsController.
  */
 class FormsController extends AbstractAuthActionController
 {
@@ -32,10 +30,10 @@ class FormsController extends AbstractAuthActionController
             $loggedInUserManager = $this->getServiceLocator()->get('LoggedInUserManager');
             $tester = $loggedInUserManager->getTesterData();
             $client = $this->getServiceLocator()->get(Client::class);
-            $authorisationsForTestingMot = (!is_null($tester["authorisationsForTestingMot"]))? $tester["authorisationsForTestingMot"]: [];
+            $authorisationsForTestingMot = (!is_null($tester['authorisationsForTestingMot'])) ? $tester['authorisationsForTestingMot'] : [];
 
             $url = (new UrlBuilder())->specialNoticeOverdue()->toString();
-            $overdueSpecialNotices = $client->get($url)["data"];
+            $overdueSpecialNotices = $client->get($url)['data'];
 
             $overdueSpecialNotices = new OverdueSpecialNoticeAssertion($overdueSpecialNotices, $authorisationsForTestingMot);
             $overdueSpecialNotices->assertPerformTest();
@@ -45,12 +43,12 @@ class FormsController extends AbstractAuthActionController
         $view = new ViewModel(
             [
                 'userDetails' => $userDetails,
-                'isVE'        => $authService->hasRole(Role::VEHICLE_EXAMINER)
+                'isVE' => $authService->hasRole(Role::VEHICLE_EXAMINER),
             ]
         );
 
         $this->layout('layout/layout-govuk.phtml');
-        $this->layout()->setVariable("breadcrumbs", ["breadcrumbs" => ["MOT forms" => ""]]);
+        $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => ['MOT forms' => '']]);
         $this->layout()->setVariable('pageTitle', 'MOT forms');
         $this->layout()->setVariable('pageLede', 'Download and print blank copies of common forms.');
 
@@ -87,6 +85,7 @@ class FormsController extends AbstractAuthActionController
             $route = $routeMatch->getMatchedRouteName();
             $container = $this->getServiceLocator()->get('LocationSelectContainerHelper');
             $container->persistConfig(['route' => $route, 'params' => $routeMatch->getParams()]);
+
             return $this->redirect()->toRoute('location-select');
         } else {
             // We have a location, we can ask for the certificate...
@@ -94,7 +93,7 @@ class FormsController extends AbstractAuthActionController
                 $certificateUrl = ReportUrlBuilder::printContingencyCertificate($name)
                     ->queryParams(
                         [
-                            'testStation'   => $vts->getSiteNumber(),
+                            'testStation' => $vts->getSiteNumber(),
                             'inspAuthority' => $this->formatAddress($vts),
                         ]
                     );
@@ -108,7 +107,7 @@ class FormsController extends AbstractAuthActionController
                 throw $e;
             }
 
-            $response = new Response;
+            $response = new Response();
             $response->setContent($result);
             $response->getHeaders()->addHeaderLine('Content-Type', 'application/pdf');
 
@@ -123,6 +122,6 @@ class FormsController extends AbstractAuthActionController
      */
     protected function formatAddress($vts)
     {
-        return $vts->getName() . PHP_EOL . preg_replace("/,\s*/", PHP_EOL, $vts->getAddress());
+        return $vts->getName().PHP_EOL.preg_replace("/,\s*/", PHP_EOL, $vts->getAddress());
     }
 }

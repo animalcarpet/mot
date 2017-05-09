@@ -3,7 +3,6 @@
 namespace AccountApiTest\Controller;
 
 use AccountApi\Controller\ValidateUsernameController;
-use Doctrine\ORM\EntityManager;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
 use DvsaCommonTest\TestUtils\XMock;
@@ -11,15 +10,13 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use PersonApi\Service\PersonService;
 
 /**
- * Class ValidateUsernameControllerTest
- *
- * @package AccountApiTest\Controller
+ * Class ValidateUsernameControllerTest.
  */
 class ValidateUsernameControllerTest extends AbstractRestfulControllerTestCase
 {
     const USERNAME = 'tester1';
 
-    /** @var  PersonService|MockObj */
+    /** @var PersonService|MockObj */
     private $mockPersonSrv;
 
     protected function setUp()
@@ -58,7 +55,6 @@ class ValidateUsernameControllerTest extends AbstractRestfulControllerTestCase
         if (!empty($expect['result'])) {
             $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, $expect['result'], $result);
         }
-
     }
 
     public function dataProviderTestActionsResultAndAccess()
@@ -69,9 +65,9 @@ class ValidateUsernameControllerTest extends AbstractRestfulControllerTestCase
                 'method' => 'get',
                 'action' => null,
                 'params' => [
-                    'get' => ['username' => self::USERNAME]
+                    'get' => ['username' => self::USERNAME],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'assertUsernameIsValidAndHasAnEmail',
                         'params' => self::USERNAME,
@@ -80,9 +76,9 @@ class ValidateUsernameControllerTest extends AbstractRestfulControllerTestCase
                 ],
                 'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
-                        'message' => 'Person ' . self::USERNAME . ' not found',
-                        'code'    => NotFoundException::ERROR_CODE_NOT_FOUND,
+                        'class' => NotFoundException::class,
+                        'message' => 'Person '.self::USERNAME.' not found',
+                        'code' => NotFoundException::ERROR_CODE_NOT_FOUND,
                     ],
                 ],
             ],
@@ -93,7 +89,7 @@ class ValidateUsernameControllerTest extends AbstractRestfulControllerTestCase
                 'params' => [
                     'get' => ['username' => self::USERNAME],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'assertUsernameIsValidAndHasAnEmail',
                         'params' => self::USERNAME,

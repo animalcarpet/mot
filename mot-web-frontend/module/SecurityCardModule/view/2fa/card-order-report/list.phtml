@@ -1,6 +1,6 @@
 <?php
 $this->layout('layout/layout-govuk.phtml');
-$this->layout()->setVariables(['pageTitle' => "List of ordered security cards from the last 7 days"]);
+$this->layout()->setVariables(['pageTitle' => 'List of ordered security cards from the last 7 days']);
 
 $rows = $viewModel['rows'];
 ?>
@@ -18,7 +18,7 @@ $rows = $viewModel['rows'];
     <tbody>
     <?php use DvsaCommon\Date\DateTimeDisplayFormat;
 
-    foreach ($rows as $idx => $row) : ?>
+foreach ($rows as $idx => $row) : ?>
         <tr id="order-list-row-<?php echo $idx; ?>">
             <td class=""><?php echo DateTimeDisplayFormat::textDateShort($row['date']) ?></td>
             <td class="numeric"><?php echo $row['count'] ?></td>

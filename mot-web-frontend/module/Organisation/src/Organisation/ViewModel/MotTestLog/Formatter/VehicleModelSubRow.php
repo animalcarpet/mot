@@ -7,9 +7,7 @@ use Report\Table\Formatter\FormatterInterface;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class Vehicle Model SubRow
- *
- * @package Report\Table\Formatter
+ * Class Vehicle Model SubRow.
  */
 class VehicleModelSubRow implements FormatterInterface
 {

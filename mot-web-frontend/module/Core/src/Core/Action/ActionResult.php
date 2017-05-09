@@ -5,12 +5,11 @@ namespace Core\Action;
 use Core\ViewModel\Sidebar\SidebarInterface;
 
 /**
- * Class ActionResult
- * @package Core\Action
+ * Class ActionResult.
  *
  * @deprecated Please use ViewActionResult instead of this class.
  * ActionResult class name is not enough descriptive, so please switch to new ViewActionResult.
- * ViewActionResult will replace shortly ActionResult and ActionResult will be removed.
+ * ViewActionResult will replace shortly ActionResult and ActionResult will be removed
  */
 class ActionResult extends AbstractActionResult
 {
@@ -36,6 +35,7 @@ class ActionResult extends AbstractActionResult
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -47,6 +47,7 @@ class ActionResult extends AbstractActionResult
     public function setViewModel($viewModel)
     {
         $this->viewModel = $viewModel;
+
         return $this;
     }
 
@@ -58,6 +59,7 @@ class ActionResult extends AbstractActionResult
     public function setSidebar(SidebarInterface $sidebar)
     {
         $this->sidebar = $sidebar;
+
         return $this;
     }
 

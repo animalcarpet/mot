@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ApplicationAuthorisedExaminer
+ * ApplicationAuthorisedExaminer.
  *
  * @ORM\Table(name="application_authorised_examiner", indexes={@ORM\Index(name="fk_organisation", columns={"organisation_id"})})
  * @ORM\Entity
@@ -26,7 +26,7 @@ class ApplicationAuthorisedExaminer
     private $organisation;
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param \DvsaEntities\Entity\Organisation $organisation
      *
@@ -40,7 +40,7 @@ class ApplicationAuthorisedExaminer
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return \DvsaEntities\Entity\Organisation
      */

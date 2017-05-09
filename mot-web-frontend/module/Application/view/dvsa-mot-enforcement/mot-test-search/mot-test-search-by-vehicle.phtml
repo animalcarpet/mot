@@ -74,7 +74,7 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
                                 [
                                     'status' => $motTest['status'],
                                     'url' => $testSummaryUrl,
-                                    'motTestNumber' => $motTest['motTestNumber']
+                                    'motTestNumber' => $motTest['motTestNumber'],
                                 ]
                             );
                             ?>
@@ -115,6 +115,6 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
 
 <script type="text/javascript">
     MotTestSeachByVehicle.isEnableExpandBtn = !!'<?php
-        echo (string)(!empty ($comparedTest['motTestNumber']) && !empty ($comparedTest['motTestNumberToCompare']));
+        echo (string) (!empty($comparedTest['motTestNumber']) && !empty($comparedTest['motTestNumberToCompare']));
     ?>';
 </script>

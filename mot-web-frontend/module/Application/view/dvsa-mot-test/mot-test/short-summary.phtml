@@ -10,7 +10,7 @@ $vts = $motTest->getSiteId();
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\Tester $tester */
 $tester = $motTest->getTester();
 
-/** @var  \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle */
 $vehicle = $this->vehicle;
 
 $testStatus = $motTest->getStatus();
@@ -38,12 +38,12 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
         echo $this->partial(
             'dldtdd', [
                 'dlCssClass' => 'vertical is-secondary',
-                'items'      => [
+                'items' => [
                     [
                         'Mot Test Status',
-                        'Test <span id="sln-test-status">' . $this->escapeHtml($testStatus) . '</span>',
-                        'escape'     => false,
-                        'cssClass'   => 'font-bold24',
+                        'Test <span id="sln-test-status">'.$this->escapeHtml($testStatus).'</span>',
+                        'escape' => false,
+                        'cssClass' => 'font-bold24',
                         'dtCssClass' => 'visually-hidden',
                     ],
                     ['MOT Test Number', $motTestNumber],
@@ -60,17 +60,17 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
         echo $this->partial(
             'dldtdd', [
                 'dlCssClass' => 'vertical',
-                'items'      => [
+                'items' => [
                     [
                         'Vehicle',
-                        '<span class="compound-value_primary">' .
-                            $this->escapeHtml($vehicle->getRegistration()) .
-                        '</span>' .
-                        '<span class="compound-value_secondary">' .
-                            $this->escapeHtml($vehicle->getMakeAndModel()) .
+                        '<span class="compound-value_primary">'.
+                            $this->escapeHtml($vehicle->getRegistration()).
+                        '</span>'.
+                        '<span class="compound-value_secondary">'.
+                            $this->escapeHtml($vehicle->getMakeAndModel()).
                         '</span>',
-                        'escape'     => false,
-                        'cssClass'   => 'compound-value',
+                        'escape' => false,
+                        'cssClass' => 'compound-value',
                         'dtCssClass' => 'visually-hidden',
                     ],
                     ['Vehicle Identification Number', $vehicle->getVin()],
@@ -83,7 +83,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
 </div>
 
 <nav class="module-content-navigation">
-    <?php if($this->canAbortTest): ?>
+    <?php if ($this->canAbortTest): ?>
         <a class="button-warning" id="sln-action-abort" href="<?php echo $urlToReasonForAborting ?>">Abort MOT Test</a>
     <?php endif; ?>
     <ul class="content-navigation_secondary">

@@ -12,8 +12,6 @@ use Core\Form\View\Helper\MotFormRow;
 use Zend\Form\Element;
 use Zend\Form\View\HelperConfig;
 use Zend\View\Renderer\PhpRenderer;
-use Zend\View\View;
-use Zend\Form\View\Helper\FormRow as FormRowHelper;
 
 class MotFormRowTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,13 +62,13 @@ class MotFormRowTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Element $element
-     * @param string $expectedMarkup
+     * @param string  $expectedMarkup
      * @dataProvider dataProvider
      */
     public function testWrapperAndLabelGeneratedAsExpectedForDifferentTypes(Element $element, $expectedMarkup)
     {
         $helper = new MotFormRow();
-        $renderer = new PhpRenderer;
+        $renderer = new PhpRenderer();
         $helpers = $renderer->getHelperPluginManager();
         $config = new HelperConfig();
         $config->configureServiceManager($helpers);
@@ -86,44 +84,43 @@ class MotFormRowTest extends \PHPUnit_Framework_TestCase
                 'element' => (new Element\Submit('foo'))
                     ->setLabel('bar')
                     ->setOption(MotFormConstant::KEY_DISABLE_WRAPPER, true),
-                'expectedMarkup' => '<label>bar<input type="submit" name="foo" value=""></label>'
+                'expectedMarkup' => '<label>bar<input type="submit" name="foo" value=""></label>',
             ],
             [
                 'element' => (new Element\Checkbox('foo'))
                     ->setLabel('bar')
                     ->setOption(MotFormConstant::KEY_DISABLE_WRAPPER, true),
-                'expectedMarkup' => '<label>bar<input type="hidden" name="foo" value="0"><input type="checkbox" name="foo" value="1"></label>'
+                'expectedMarkup' => '<label>bar<input type="hidden" name="foo" value="0"><input type="checkbox" name="foo" value="1"></label>',
             ],
             [
                 'element' => (new Element\Hidden('foo'))->setLabel('bar'),
-                'expectedMarkup' => '<input type="hidden" name="foo" value="">'
+                'expectedMarkup' => '<input type="hidden" name="foo" value="">',
             ],
             [
                 'element' => (new Element\Button('foo'))->setLabel('bar')
                     ->setOption(MotFormConstant::KEY_DISABLE_WRAPPER, true),
-                'expectedMarkup' => '<button type="button" name="foo" value="">bar</button>'
+                'expectedMarkup' => '<button type="button" name="foo" value="">bar</button>',
             ],
             [
                 'element' => (new Element\Select('foo'))->setOption(MotFormConstant::KEY_DISABLE_WRAPPER, true),
-                'expectedMarkup' => '<select name="foo"></select>'
+                'expectedMarkup' => '<select name="foo"></select>',
             ],
             [
                 'element' => (new Element\Submit('foo'))->setLabel('bar'),
-                'expectedMarkup' => '<div class="form-group"><label>bar<input type="submit" name="foo" value=""></label></div>'
+                'expectedMarkup' => '<div class="form-group"><label>bar<input type="submit" name="foo" value=""></label></div>',
             ],
             [
                 'element' => (new Element\Checkbox('foo'))->setLabel('bar'),
-                'expectedMarkup' => '<div class="form-group"><label>bar<input type="hidden" name="foo" value="0"><input type="checkbox" name="foo" value="1"></label></div>'
+                'expectedMarkup' => '<div class="form-group"><label>bar<input type="hidden" name="foo" value="0"><input type="checkbox" name="foo" value="1"></label></div>',
             ],
             [
                 'element' => (new Element\Button('foo'))->setLabel('bar'),
-                'expectedMarkup' => '<button type="button" name="foo" value="">bar</button>'
+                'expectedMarkup' => '<button type="button" name="foo" value="">bar</button>',
             ],
             [
                 'element' => (new Element\Select('foo'))->setLabel('bar'),
-                'expectedMarkup' => '<div class="form-group"><label>bar<select name="foo"></select></label></div>'
+                'expectedMarkup' => '<div class="form-group"><label>bar<select name="foo"></select></label></div>',
             ],
         ];
     }
 }
-

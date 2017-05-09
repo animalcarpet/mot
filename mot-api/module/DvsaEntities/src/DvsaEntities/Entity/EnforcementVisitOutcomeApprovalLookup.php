@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * EnforcementVisitOutcomeApprovalLookup
+ * EnforcementVisitOutcomeApprovalLookup.
  *
  * @ORM\Table(name="enforcement_visit_outcome_approval_lookup", uniqueConstraints={@ORM\UniqueConstraint(name="position", columns={"position"})})
  * @ORM\Entity
@@ -23,14 +23,14 @@ class EnforcementVisitOutcomeApprovalLookup
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="smallint", nullable=false)
      */
     private $position = '1';
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -44,7 +44,7 @@ class EnforcementVisitOutcomeApprovalLookup
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -54,9 +54,9 @@ class EnforcementVisitOutcomeApprovalLookup
     }
 
     /**
-     * Set position
+     * Set position.
      *
-     * @param integer $position
+     * @param int $position
      *
      * @return EnforcementVisitOutcomeApprovalLookup
      */
@@ -68,9 +68,9 @@ class EnforcementVisitOutcomeApprovalLookup
     }
 
     /**
-     * Get position
+     * Get position.
      *
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * AuthorisationForTestingMotAtSiteStatus
+ * AuthorisationForTestingMotAtSiteStatus.
  *
  * @ORM\Table(name="auth_for_testing_mot_at_site_status")
  * @ORM\Entity(
@@ -42,7 +42,7 @@ class AuthorisationForTestingMotAtSiteStatus extends Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -56,7 +56,7 @@ class AuthorisationForTestingMotAtSiteStatus extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -66,7 +66,7 @@ class AuthorisationForTestingMotAtSiteStatus extends Entity
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
      *
@@ -80,7 +80,7 @@ class AuthorisationForTestingMotAtSiteStatus extends Entity
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */

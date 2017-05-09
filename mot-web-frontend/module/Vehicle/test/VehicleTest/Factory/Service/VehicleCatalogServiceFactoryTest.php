@@ -1,16 +1,15 @@
 <?php
+
 namespace VehicleTest\Factory\Service;
 
 use Vehicle\Factory\Service\VehicleCatalogServiceFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Application\Factory\ApplicationWideCacheFactory;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\Service\VehicleCatalogService;
-use Zend\Cache\StorageFactory;
 
-class VehicleCatalogServiceFactoryTest extends \PHPUnit_Framework_TestCase {
-
+class VehicleCatalogServiceFactoryTest extends \PHPUnit_Framework_TestCase
+{
     public function testFactory()
     {
         $mockServiceLocator = XMock::of(ServiceLocatorInterface::class, ['get']);
@@ -25,5 +24,4 @@ class VehicleCatalogServiceFactoryTest extends \PHPUnit_Framework_TestCase {
             $factory->createService($mockServiceLocator)
         );
     }
-
 }

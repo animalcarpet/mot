@@ -1,5 +1,5 @@
 <?php
-use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsController;
+
 $this->layout('layout/layout-govuk.phtml');
 $form = $viewModel->getForm();
 ?>
@@ -22,7 +22,7 @@ $form = $viewModel->getForm();
         echo $this->partial(
             'partial/gds/form/control',
             [
-                'element' => $form->getPassword()
+                'element' => $form->getPassword(),
             ]
         );
         ?>

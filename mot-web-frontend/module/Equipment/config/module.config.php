@@ -3,28 +3,28 @@
 use Equipment\Controller\EquipmentController;
 
 return [
-    'router'       => [
+    'router' => [
         'routes' => [
             'equipment' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/equipment',
+                    'route' => '/equipment',
                     'defaults' => [
                         'controller' => EquipmentController::class,
-                        'action'     => 'displayEquipmentList',
+                        'action' => 'displayEquipmentList',
                     ],
                 ],
             ],
         ],
     ],
-    'controllers'  => [
+    'controllers' => [
         'invokables' => [
             EquipmentController::class => EquipmentController::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
     ],
 ];

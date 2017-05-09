@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\MotTestingCertificate;
 
 use DvsaCommon\Date\DateTimeDisplayFormat;
@@ -28,6 +29,7 @@ class MotTestingCertificateNotification implements AutoWireableInterface
 
     /**
      * @param QualificationAward $motTestingCertificate
+     *
      * @return int
      */
     public function sendRemoveNotification(QualificationAward $motTestingCertificate)
@@ -40,10 +42,10 @@ class MotTestingCertificateNotification implements AutoWireableInterface
         $data = (new Notification())
             ->setRecipient($motTestingCertificate->getPerson()->getId())
             ->setTemplate($templateId)
-            ->addField("group", $motTestingCertificate->getVehicleClassGroup()->getCode())
-            ->addField("user", $this->motIdentityProvider->getIdentity()->getUsername())
-            ->addField("certificateNumber", $motTestingCertificate->getCertificateNumber())
-            ->addField("dateOfQualification", DateTimeDisplayFormat::date($motTestingCertificate->getDateOfQualification()))
+            ->addField('group', $motTestingCertificate->getVehicleClassGroup()->getCode())
+            ->addField('user', $this->motIdentityProvider->getIdentity()->getUsername())
+            ->addField('certificateNumber', $motTestingCertificate->getCertificateNumber())
+            ->addField('dateOfQualification', DateTimeDisplayFormat::date($motTestingCertificate->getDateOfQualification()))
             ->toArray();
 
         return $this->notificationService->add($data);

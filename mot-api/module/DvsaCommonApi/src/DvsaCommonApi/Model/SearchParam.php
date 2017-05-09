@@ -1,14 +1,14 @@
 <?php
+
 namespace DvsaCommonApi\Model;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\AbstractDataTransferObject;
 use DvsaCommon\Dto\Search\SearchParamsDto;
 use Zend\Http\Request;
 
 /**
- * Class SearchParam
+ * Class SearchParam.
  */
 class SearchParam
 {
@@ -27,14 +27,13 @@ class SearchParam
     protected $start = 0;
 
     protected $format = SearchParamConst::FORMAT_DATA_OBJECT;
-    /** @var bool   Tell to API is Es enable for this search */
+    /** @var bool Tell to API is Es enable for this search */
     protected $isEsEnabled;
 
-    /** @var bool   Tell to API get data */
+    /** @var bool Tell to API get data */
     protected $isApiGetData = true;
-    /** @var bool   Tell to API get total count of records */
+    /** @var bool Tell to API get total count of records */
     protected $isApiGetTotalCount = true;
-
 
     /**
      * Performs processing of the passed search string into
@@ -51,13 +50,13 @@ class SearchParam
     public function toArray()
     {
         return [
-            "" => ""
+            '' => '',
         ];
     }
 
     /**
      * Loads all the standard Data Tables request variables into
-     * the current search params object from the passed Request object
+     * the current search params object from the passed Request object.
      *
      * @param Request $request
      *
@@ -96,7 +95,7 @@ class SearchParam
     }
 
     /**
-     * Remove words with invalid characters in them
+     * Remove words with invalid characters in them.
      *
      * @param $words
      *
@@ -111,7 +110,7 @@ class SearchParam
     }
 
     /**
-     * Add a string as an array element if it is not null or empty
+     * Add a string as an array element if it is not null or empty.
      *
      * @param $parts
      * @param $string
@@ -125,18 +124,19 @@ class SearchParam
     }
 
     /**
-     * Map parameters values from Dto object
+     * Map parameters values from Dto object.
      *
      * @param SearchParamsDto $dto
      *
      * @return $this
+     *
      * @throws \Exception
      */
     public function fromDto($dto)
     {
         if (!$dto instanceof SearchParamsDto) {
             throw new \InvalidArgumentException(
-                __METHOD__ . ' Expects instance of SearchParamsDto, you passed ' . get_class($dto)
+                __METHOD__.' Expects instance of SearchParamsDto, you passed '.get_class($dto)
             );
         }
 
@@ -154,11 +154,12 @@ class SearchParam
     }
 
     /**
-     * Map parameters values to Dto object
+     * Map parameters values to Dto object.
      *
      * @param AbstractDataTransferObject $dto
      *
      * @return SearchParamsDto
+     *
      * @throws \Exception
      */
     public function toDto(AbstractDataTransferObject &$dto = null)
@@ -204,14 +205,15 @@ class SearchParam
      * @param $rowCount
      *
      * @return $this
+     *
      * @throws \Exception
      */
     public function setRowCount($rowCount)
     {
-        $rowCount = (int)$rowCount;
+        $rowCount = (int) $rowCount;
 
         if ($rowCount < 0) {
-            throw new \Exception("Invalid row count, must be 0 or more");
+            throw new \Exception('Invalid row count, must be 0 or more');
         }
 
         $this->rowCount = $rowCount;
@@ -330,7 +332,7 @@ class SearchParam
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isApiGetData()
     {
@@ -338,21 +340,21 @@ class SearchParam
     }
 
     /**
-     * Tell to API to get data in during request
+     * Tell to API to get data in during request.
      *
-     * @param boolean $isGetData
+     * @param bool $isGetData
      *
      * @return $this
      */
     public function setIsApiGetData($isGetData)
     {
-        $this->isApiGetData = (boolean)$isGetData;
+        $this->isApiGetData = (bool) $isGetData;
 
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isApiGetTotalCount()
     {
@@ -360,15 +362,15 @@ class SearchParam
     }
 
     /**
-     * Tell to API to get total records count in during request
+     * Tell to API to get total records count in during request.
      *
-     * @param boolean $isGetTotalCount
+     * @param bool $isGetTotalCount
      *
      * @return $this
      */
     public function setIsApiGetTotalCount($isGetTotalCount)
     {
-        $this->isApiGetTotalCount = (boolean)$isGetTotalCount;
+        $this->isApiGetTotalCount = (bool) $isGetTotalCount;
 
         return $this;
     }

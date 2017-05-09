@@ -7,13 +7,10 @@ use DvsaCommon\Date\Time;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 
 /**
- * Class VehicleTestingStationOpeningHoursMapper
- *
- * @package DvsaClient\Mapper
+ * Class VehicleTestingStationOpeningHoursMapper.
  */
 class VehicleTestingStationOpeningHoursMapper extends Mapper
 {
-
     protected $entityClass = SiteDailyOpeningHours::class;
 
     public function update($siteId, $data)
@@ -34,29 +31,29 @@ class VehicleTestingStationOpeningHoursMapper extends Mapper
             4 => 'thursday',
             5 => 'friday',
             6 => 'saturday',
-            7 => 'sunday'
+            7 => 'sunday',
         ];
 
         foreach ($days as $dayAsInt => $day) {
-            $openTime12h = isset($data[$day . 'OpenTime']) ? $data[$day . 'OpenTime'] : '';
-            $closeTime12h = isset($data[$day . 'CloseTime']) ? $data[$day . 'CloseTime'] : '';
+            $openTime12h = isset($data[$day.'OpenTime']) ? $data[$day.'OpenTime'] : '';
+            $closeTime12h = isset($data[$day.'CloseTime']) ? $data[$day.'CloseTime'] : '';
 
-            if ($data[$day . 'IsClosed']) {
+            if ($data[$day.'IsClosed']) {
                 $openTime = '';
                 $closeTime = '';
             } else {
-                $openTimePeriod = isset($data[$day . 'OpenTimePeriod']) ? $data[$day . 'OpenTimePeriod'] : '';
-                $closeTimePeriod = isset($data[$day . 'CloseTimePeriod']) ? $data[$day . 'CloseTimePeriod'] : '';
+                $openTimePeriod = isset($data[$day.'OpenTimePeriod']) ? $data[$day.'OpenTimePeriod'] : '';
+                $closeTimePeriod = isset($data[$day.'CloseTimePeriod']) ? $data[$day.'CloseTimePeriod'] : '';
 
-                $openTime = $this->toIsoFormat($openTime12h . $openTimePeriod);
-                $closeTime = $this->toIsoFormat($closeTime12h . $closeTimePeriod);
+                $openTime = $this->toIsoFormat($openTime12h.$openTimePeriod);
+                $closeTime = $this->toIsoFormat($closeTime12h.$closeTimePeriod);
             }
 
-            $jsonArray["weeklySchedule"][] = [
-                "weekday"   => $dayAsInt,
-                'openTime'  => $openTime,
+            $jsonArray['weeklySchedule'][] = [
+                'weekday' => $dayAsInt,
+                'openTime' => $openTime,
                 'closeTime' => $closeTime,
-                'isClosed'  => $data[$day . 'IsClosed'] === 'true'
+                'isClosed' => $data[$day.'IsClosed'] === 'true',
             ];
         }
 
@@ -70,9 +67,9 @@ class VehicleTestingStationOpeningHoursMapper extends Mapper
 
         if ($timeFormatIsValid) {
             if (empty($splitTime[2])) {
-                $dateTime = \DateTime::createFromFormat('h a', $splitTime[1] . $splitTime[3]);
+                $dateTime = \DateTime::createFromFormat('h a', $splitTime[1].$splitTime[3]);
             } else {
-                $dateTime = \DateTime::createFromFormat('h:i a', $splitTime[1] . ":" . $splitTime[2] . $splitTime[3]);
+                $dateTime = \DateTime::createFromFormat('h:i a', $splitTime[1].':'.$splitTime[2].$splitTime[3]);
             }
             $timeObject = Time::fromDateTime($dateTime);
             $isoTime = $timeObject->toIso8601();

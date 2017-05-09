@@ -2,7 +2,6 @@
 
 namespace DvsaMotTestTest\Factory\Controller;
 
-use Application\Service\CatalogService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;

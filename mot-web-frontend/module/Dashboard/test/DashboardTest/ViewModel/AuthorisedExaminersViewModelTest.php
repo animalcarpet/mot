@@ -13,10 +13,11 @@ class AuthorisedExaminersViewModelTest extends PHPUnit_Framework_TestCase
     /** @var DashboardGuard | \PHPUnit_Framework_MockObject_MockObject */
     private $dashboardGuardMock;
 
-    /** @var AuthorisedExaminerViewModel | \PHPUnit_Framework_MockObject_MockObject  */
+    /** @var AuthorisedExaminerViewModel | \PHPUnit_Framework_MockObject_MockObject */
     private $authorisedExaminerViewModelMock;
 
-    public function setup() {
+    public function setup()
+    {
         $this->dashboardGuardMock = XMock::of(DashboardGuard::class);
         $this->authorisedExaminerViewModelMock = XMock::of(AuthorisedExaminerViewModel::class);
     }

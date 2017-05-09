@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\DqlBuilder\SearchParam;
 
 use DvsaCommon\Dto\Search\SearchParamsDto;
@@ -7,9 +8,7 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaEntities\DqlBuilder\SearchParam\SiteSearchParam;
 
 /**
- * Class SiteSearchParamTest
- *
- * @package DvsaEntitiesTest\DqlBuilder\SearchParam
+ * Class SiteSearchParamTest.
  */
 class SiteSearchParamTest extends AbstractServiceTestCase
 {

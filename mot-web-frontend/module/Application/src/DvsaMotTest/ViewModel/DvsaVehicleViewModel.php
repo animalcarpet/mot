@@ -2,7 +2,6 @@
 
 namespace DvsaMotTest\ViewModel;
 
-
 use Dvsa\Mot\ApiClient\Resource\Item\Colour;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\FuelType;
@@ -13,70 +12,70 @@ use DvsaCommon\Enum\ColourCode;
 
 class DvsaVehicleViewModel
 {
-    /** @var  string */
+    /** @var string */
     private $amendedOn;
 
-    /** @var  string|null */
+    /** @var string|null */
     private $emptyVrmReason;
 
-    /** @var  string|null */
+    /** @var string|null */
     private $emptyVinReason;
 
-    /** @var  int|null */
+    /** @var int|null */
     private $weight;
 
-    /** @var  int */
+    /** @var int */
     private $version;
 
-    /** @var  int */
+    /** @var int */
     private $id;
 
-    /** @var  string */
+    /** @var string */
     private $registration;
 
-    /** @var  string */
+    /** @var string */
     private $vin;
 
-    /** @var  Make */
+    /** @var Make */
     private $make;
 
-    /** @var  Model */
+    /** @var Model */
     private $model;
 
-    /** @var  Colour */
+    /** @var Colour */
     private $colour;
 
-    /** @var  Colour */
+    /** @var Colour */
     private $colourSecondary;
 
-    /** @var  int */
+    /** @var int */
     private $countryofRegistrationId;
 
-    /** @var  FuelType */
+    /** @var FuelType */
     private $fuelType;
 
-    /** @var  VehicleClass */
+    /** @var VehicleClass */
     private $vehicleClass;
 
-    /** @var  string */
+    /** @var string */
     private $bodyType;
 
-    /** @var  int */
+    /** @var int */
     private $cylinderCapacity;
 
-    /** @var  string */
+    /** @var string */
     private $transmissionType;
 
-    /** @var  string */
+    /** @var string */
     private $firstRegistrationDate;
 
-    /** @var  string */
+    /** @var string */
     private $firstUsedDate;
 
-    /** @var  string */
+    /** @var string */
     private $manufactureDate;
 
-    /** @var  bool */
+    /** @var bool */
     private $isNewAtFirstReg;
 
     public function __construct(DvsaVehicle $dvsaVehicle)
@@ -323,7 +322,7 @@ class DvsaVehicleViewModel
         $primaryColourName = $this->getColour()->getName();
         $secondaryColourName = $this->getSecondaryColourName();
 
-        return !empty($secondaryColourName) ? $primaryColourName . ' and ' . $secondaryColourName :
+        return !empty($secondaryColourName) ? $primaryColourName.' and '.$secondaryColourName :
             $primaryColourName;
     }
 
@@ -472,7 +471,7 @@ class DvsaVehicleViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNewAtFirstReg()
     {
@@ -480,7 +479,7 @@ class DvsaVehicleViewModel
     }
 
     /**
-     * @param boolean $isNewAtFirstReg
+     * @param bool $isNewAtFirstReg
      */
     public function setIsNewAtFirstReg($isNewAtFirstReg)
     {

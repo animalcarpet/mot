@@ -4,7 +4,6 @@ namespace Vehicle\UpdateVehicleProperty\ViewModel;
 
 use Core\ViewModel\Gds\Table\GdsTable;
 use Core\ViewModel\Header\HeaderTertiaryList;
-use Zend\Form\Form;
 
 class ReviewVehiclePropertyViewModel
 {
@@ -48,11 +47,13 @@ class ReviewVehiclePropertyViewModel
 
     /**
      * @param GdsTable $summary
+     *
      * @return ReviewVehiclePropertyViewModel
      */
     public function setSummary(GdsTable $summary)
     {
         $this->summary = $summary;
+
         return $this;
     }
 
@@ -66,11 +67,13 @@ class ReviewVehiclePropertyViewModel
 
     /**
      * @param string $formActionUrl
+     *
      * @return ReviewVehiclePropertyViewModel
      */
     public function setFormActionUrl($formActionUrl)
     {
         $this->formActionUrl = $formActionUrl;
+
         return $this;
     }
 
@@ -84,11 +87,13 @@ class ReviewVehiclePropertyViewModel
 
     /**
      * @param string $submitButtonText
+     *
      * @return ReviewVehiclePropertyViewModel
      */
     public function setSubmitButtonText($submitButtonText)
     {
         $this->submitButtonText = $submitButtonText;
+
         return $this;
     }
 
@@ -102,11 +107,13 @@ class ReviewVehiclePropertyViewModel
 
     /**
      * @param string $cancelUrl
+     *
      * @return ReviewVehiclePropertyViewModel
      */
     public function setCancelUrl($cancelUrl)
     {
         $this->cancelUrl = $cancelUrl;
+
         return $this;
     }
 
@@ -120,14 +127,15 @@ class ReviewVehiclePropertyViewModel
 
     /**
      * @param string $cancelLinkLabel
+     *
      * @return ReviewVehiclePropertyViewModel
      */
     public function setCancelLinkLabel($cancelLinkLabel)
     {
         $this->cancelLinkLabel = $cancelLinkLabel;
+
         return $this;
     }
-
 
     /**
      * @return HeaderTertiaryList
@@ -139,11 +147,13 @@ class ReviewVehiclePropertyViewModel
 
     /**
      * @param HeaderTertiaryList $pageTertiaryTitle
+     *
      * @return ReviewVehiclePropertyViewModel
      */
     public function setPageTertiaryTitle($pageTertiaryTitle)
     {
         $this->pageTertiaryTitle = $pageTertiaryTitle;
+
         return $this;
     }
 }

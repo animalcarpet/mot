@@ -3,22 +3,20 @@
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 
 /**
- * @var \Dashboard\Model\PersonalDetails  $personalDetails
- * @var array                             $motAuthorisations
- * @var MotAuthorisationServiceInterface  $authorisationService
- * @var array                             $systemRoles
- * @var PersonProfileGuard                $personProfileGuard
- * @var string                            $routeName
- * @var array                             $routeParams
- * @var string                            $context
- * @var string                            $userSearchResultUrl
- * @var bool                              $displayResetAccountError
+ * @var \Dashboard\Model\PersonalDetails
+ * @var array                            $motAuthorisations
+ * @var MotAuthorisationServiceInterface $authorisationService
+ * @var array                            $systemRoles
+ * @var PersonProfileGuard               $personProfileGuard
+ * @var string                           $routeName
+ * @var array                            $routeParams
+ * @var string                           $context
+ * @var string                           $userSearchResultUrl
+ * @var bool                             $displayResetAccountError
  */
-
 $motAuthorisations = $this->motAuthorisations;
 $fullAddressArray = array_filter([
     $personalDetails->getAddressLine1(),
@@ -28,7 +26,7 @@ $fullAddressArray = array_filter([
     $personalDetails->getPostcode(),
 ],
     'strlen');
-$escFullAddress = $this->escapeHtml(implode(", ", $fullAddressArray)) ?: null;
+$escFullAddress = $this->escapeHtml(implode(', ', $fullAddressArray)) ?: null;
 
 $this->layout()->setVariable('pageSubTitle', $personProfileGuard->isViewingOwnProfile() ? 'Your profile' : 'User profile');
 $this->layout()->setVariable('pageTitle', $personalDetails->getFullName());
@@ -40,14 +38,16 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
 ?>
 <?php if (true === $personProfileGuard->canChangeEmailAddress()) :
-    $emailUrl = $this->url($routeName, $routeParams) . '/email/change';
+    $emailUrl = $this->url($routeName, $routeParams).'/email/change';
 endif ?>
-<?php if (!$displayResetAccountError) { ?>
+<?php if (!$displayResetAccountError) {
+    ?>
     <div class="banner--error">
         <span class="banner__heading-large">No email address</span>
         <span><a href="<?php echo $emailUrl ?>">Add email address</a> to be able to reset account security</span>
     </div>
-<?php }
+<?php 
+}
 
 ?>
 <h3 class="summary-heading">Personal details</h3>
@@ -58,10 +58,10 @@ endif ?>
             <td class="table-summary__value" id="display-name">
                 <?php echo $this->escapeHtml($personalDetails->getFullName()); ?>
                 <?php if ($personProfileGuard->canEditName()) {
-                    $url = $this->personProfileUrl()->fromPersonProfile('change-person-name');
-                    echo '<a href="' . $url .
+    $url = $this->personProfileUrl()->fromPersonProfile('change-person-name');
+    echo '<a href="'.$url.
                         '" class="table-summary__action">Change<span class="visuallyhidden"> Name </span></a>';
-                } ?>
+} ?>
             </td>
         </tr>
         <tr>
@@ -77,11 +77,11 @@ endif ?>
                 <?php echo !empty($personalDetails->getDateOfBirth()) ? DateTimeDisplayFormat::textDate($personalDetails->getDateOfBirth())
                     : '<span class="table-summary__meta">Unknown</span>'; ?>
 
-                <?php if($personProfileGuard->canChangeDateOfBirth()){
-                    $url = $this->personProfileUrl()->fromPersonProfile('change-person-date-of-birth');
-                    echo '<a href="' . $url .
+                <?php if ($personProfileGuard->canChangeDateOfBirth()) {
+                        $url = $this->personProfileUrl()->fromPersonProfile('change-person-date-of-birth');
+                        echo '<a href="'.$url.
                         '" class="table-summary__action">Change<span class="visuallyhidden"> Date of birth </span></a>';
-                } ?>
+                    } ?>
             </td>
         </tr>
         <?php endif ?>
@@ -96,12 +96,12 @@ endif ?>
                 }
                 echo !empty($personalDetails->getDrivingLicenceNumber())
                         ? $this->escapeHtml($personalDetails->getDrivingLicenceNumber())
-                            . '<br>'
-                            . '<span class="table-summary__meta">' .  $this->escapeHtml($licenceRegionCode) .' licence</span>'
+                            .'<br>'
+                            .'<span class="table-summary__meta">'.$this->escapeHtml($licenceRegionCode).' licence</span>'
                         : '<span class="table-summary__meta">None recorded</span>'; ?>
                 <?php if (true === $personProfileGuard->canChangeDrivingLicence()) :
                     $url = $this->personProfileUrl()->fromPersonProfile('driving-licence-change');
-                    echo '<a href="' . $url .
+                    echo '<a href="'.$url.
                         '" class="table-summary__action">Change<span class="visuallyhidden"> Driving licence </span></a>';
                 endif ?>
             </td>
@@ -119,7 +119,7 @@ endif ?>
                 <?php echo !empty($personalDetails->getEmail()) ? $this->escapeHtml($personalDetails->getEmail())
                     : '<span class="table-summary__meta">Unknown</span>'; ?>
                 <?php
-                    echo '<a href="' . $emailUrl . '" class="table-summary__action">Change<span class="visuallyhidden"> Email</span></a>';
+                    echo '<a href="'.$emailUrl.'" class="table-summary__action">Change<span class="visuallyhidden"> Email</span></a>';
                 ?>
             </td>
         </tr>
@@ -127,15 +127,15 @@ endif ?>
             <th class="table-summary__key">Address</th>
             <td class="table-summary__value" id="full-address">
                 <?php if (!empty($fullAddressArray)) : ?>
-                    <?php echo ($personalDetails->getAddressLine1() != '') ? $this->escapeHtml($personalDetails->getAddressLine1()) . ', <br>'
+                    <?php echo ($personalDetails->getAddressLine1() != '') ? $this->escapeHtml($personalDetails->getAddressLine1()).', <br>'
                         : ''; ?>
-                    <?php echo ($personalDetails->getAddressLine2() != '') ? $this->escapeHtml($personalDetails->getAddressLine2()) . ', <br>'
+                    <?php echo ($personalDetails->getAddressLine2() != '') ? $this->escapeHtml($personalDetails->getAddressLine2()).', <br>'
                         : ''; ?>
-                    <?php echo ($personalDetails->getAddressLine3() != '') ? $this->escapeHtml($personalDetails->getAddressLine3()) . ', <br>'
+                    <?php echo ($personalDetails->getAddressLine3() != '') ? $this->escapeHtml($personalDetails->getAddressLine3()).', <br>'
                         : ''; ?>
-                    <?php echo ($personalDetails->getTown() != '') ? $this->escapeHtml($personalDetails->getTown()) . ', <br>'
+                    <?php echo ($personalDetails->getTown() != '') ? $this->escapeHtml($personalDetails->getTown()).', <br>'
                         : ''; ?>
-                    <?php echo ($personalDetails->getPostcode() != '') ? $this->escapeHtml($personalDetails->getPostcode()) . '<br>'
+                    <?php echo ($personalDetails->getPostcode() != '') ? $this->escapeHtml($personalDetails->getPostcode()).'<br>'
                         : ''; ?>
                 <?php else :
                     echo '<span class="table-summary__meta">Unknown</span>';
@@ -144,7 +144,7 @@ endif ?>
                 if ($personProfileGuard->canChangeAddress()) {
                     $url = $personProfileGuard->isViewingHimself() ? $this->url('newProfile/address/change-address', ['id' => $personalDetails->getId()])
                         : $this->personProfileUrl()->fromPersonProfile('address/change-address');
-                    echo '<a href="' . $url . '" class="table-summary__action">Change</a>';
+                    echo '<a href="'.$url.'" class="table-summary__action">Change</a>';
                 }
                 ?>
             </td>
@@ -156,7 +156,7 @@ endif ?>
                     : '<span class="table-summary__meta">Unknown</span>';
                     if ($personProfileGuard->canChangeTelephoneNumber()) {
                         $url = $this->personProfileUrl()->fromPersonProfile('change-telephone-number');
-                        echo '<a href="' . $url .'" class="table-summary__action" title="Change Telephone">Change<span class="visuallyhidden"> Telephone</span></a>';
+                        echo '<a href="'.$url.'" class="table-summary__action" title="Change Telephone">Change<span class="visuallyhidden"> Telephone</span></a>';
                     }
                 ?>
             </td>
@@ -171,7 +171,7 @@ endif ?>
         <tbody>
         <?php foreach ($systemRoles as $role) : ?>
             <tr>
-                <th class="table-summary__key" id="role"> <?php echo $role["nicename"]; ?> </th>
+                <th class="table-summary__key" id="role"> <?php echo $role['nicename']; ?> </th>
             </tr>
         </tbody>
         <?php endforeach ?>
@@ -205,13 +205,13 @@ endif ?>
 
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
-        <?php if($context === ContextProvider::USER_SEARCH_CONTEXT): ?>
+        <?php if ($context === ContextProvider::USER_SEARCH_CONTEXT): ?>
             <li>
-                <a href="<?php echo $this->escapeHtmlAttr($userSearchResultUrl);?>">Cancel and return to search results</a>
+                <a href="<?php echo $this->escapeHtmlAttr($userSearchResultUrl); ?>">Cancel and return to search results</a>
             </li>
         <?php endif; ?>
         <li>
-            <a href="<?php echo $this->escapeHtmlAttr($this->url($userHomeRoute));?>">Return home</a>
+            <a href="<?php echo $this->escapeHtmlAttr($this->url($userHomeRoute)); ?>">Return home</a>
         </li>
     </ul>
 </nav>

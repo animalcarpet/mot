@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\Action;
 
 use Core\Action\FlashMessage;
@@ -12,7 +13,6 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto;
 use DvsaCommon\Enum\MotTestStatusName;
-use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
@@ -32,28 +32,28 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
     /** @var MethodSpy */
     private $searchSpy;
 
-    /** @var  Client| \PHPUnit_Framework_MockObject_MockObject */
+    /** @var Client| \PHPUnit_Framework_MockObject_MockObject */
     private $httpClient;
 
     /** @var MethodSpy */
     private $httpClientGetSpy;
 
-    /** @var  AuthorisationServiceMock */
+    /** @var AuthorisationServiceMock */
     private $authorisationService;
 
-    /** @var  MotFrontendIdentityProviderInterface| \PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotFrontendIdentityProviderInterface| \PHPUnit_Framework_MockObject_MockObject */
     private $motFrontendIdentityProviderInterface;
 
     private $vehicleId = 10853;
-    private $vehicleMake = "Sabre";
-    private $vehicleModel = "Turbo";
-    private $vehicleVin = "12VIN21";
-    private $vehicleVrm = "12REG56";
-    private $certificateSiteName = "Site-name";
+    private $vehicleMake = 'Sabre';
+    private $vehicleModel = 'Turbo';
+    private $vehicleVin = '12VIN21';
+    private $vehicleVrm = '12REG56';
+    private $certificateSiteName = 'Site-name';
     private $certificateStatus = MotTestStatusName::PASSED;
-    private $issuedDate = "2010-12-13";
-    private $siteAddress = "London, Jump Street 12";
-    private $testNumber = "984309183";
+    private $issuedDate = '2010-12-13';
+    private $siteAddress = 'London, Jump Street 12';
+    private $testNumber = '984309183';
     private $expectedNumberOfVehicles = 2;
     private $expectedNumberOfCertificates = 2;
 
@@ -73,6 +73,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testListCertificatesProvider
+     *
      * @param $vrm
      * @param $vin
      * @param $cleanedVrm
@@ -96,27 +97,27 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $actionResult = $this->action->execute($vrm, $vin, []);
 
         // THEN a call to API is made for vehicles
-        $this->assertEquals(1, $this->searchSpy->invocationCount(), "There was supposed to be one call to API for vehicle search");
+        $this->assertEquals(1, $this->searchSpy->invocationCount(), 'There was supposed to be one call to API for vehicle search');
 
         // with correct, cleaned parameters
-        $this->assertSame($cleanedVrm, $this->searchSpy->paramsForLastInvocation()[0], "The search parameter VRM is incorrect");
-        $this->assertSame($cleanedVin, $this->searchSpy->paramsForLastInvocation()[1], "The search parameter VIN is incorrect");
+        $this->assertSame($cleanedVrm, $this->searchSpy->paramsForLastInvocation()[0], 'The search parameter VRM is incorrect');
+        $this->assertSame($cleanedVin, $this->searchSpy->paramsForLastInvocation()[1], 'The search parameter VIN is incorrect');
 
         // AND a call to API is made for certificates per each vehicle
-        $this->assertEquals($this->expectedNumberOfCertificates, $this->httpClientGetSpy->invocationCount(), "We expect two calls to API for each of the 2 vehicle in test set ups");
+        $this->assertEquals($this->expectedNumberOfCertificates, $this->httpClientGetSpy->invocationCount(), 'We expect two calls to API for each of the 2 vehicle in test set ups');
 
         // AND the correct ID of a vehicle is used for the call
-        $actualApiUrl = "vehicle/" . $this->vehicleId . "/test-history";
-        $this->assertEquals($actualApiUrl, $this->httpClientGetSpy->paramsForInvocation(0)[0]->toString(), "We expect to call API for a specific vehicle");
+        $actualApiUrl = 'vehicle/'.$this->vehicleId.'/test-history';
+        $this->assertEquals($actualApiUrl, $this->httpClientGetSpy->paramsForInvocation(0)[0]->toString(), 'We expect to call API for a specific vehicle');
 
         // AND the result of action is to view page
-        $this->assertInstanceOf(ViewActionResult::class, $actionResult, "The happy path of this test case assumes the user will be shown a page, not redirected etc.");
+        $this->assertInstanceOf(ViewActionResult::class, $actionResult, 'The happy path of this test case assumes the user will be shown a page, not redirected etc.');
 
         /** @var MotTestCertificateListViewModel $viewModel */
         $viewModel = $actionResult->getViewModel();
 
         // with correct view model
-        $this->assertInstanceOf(MotTestCertificateListViewModel::class, $viewModel, "The view expects a certain view model class");
+        $this->assertInstanceOf(MotTestCertificateListViewModel::class, $viewModel, 'The view expects a certain view model class');
 
         // AND a properly mapped vehicle
         $this->assertVehicleCorrectness($viewModel);
@@ -125,22 +126,22 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->assertCertificateCorrectness($viewModel);
 
         // AND layout template is set
-        $this->assertEquals('layout/layout-govuk.phtml', $actionResult->layout()->getTemplate(), "Proper layout is selected");
-        $this->assertEquals('MOT test certificates', $actionResult->layout()->getPageTitle(), "Check if page title is set");
-        $this->assertEquals('Duplicate or replacement certificate', $actionResult->layout()->getPageSubTitle(), "Check if subtitle is set");
+        $this->assertEquals('layout/layout-govuk.phtml', $actionResult->layout()->getTemplate(), 'Proper layout is selected');
+        $this->assertEquals('MOT test certificates', $actionResult->layout()->getPageTitle(), 'Check if page title is set');
+        $this->assertEquals('Duplicate or replacement certificate', $actionResult->layout()->getPageSubTitle(), 'Check if subtitle is set');
     }
 
     private function assertVehicleCorrectness(MotTestCertificateListViewModel $viewModel)
     {
         // with two vehicles
-        $this->assertEquals($this->expectedNumberOfVehicles, $viewModel->getFoundVehiclesCount(), "Two vehicles returned from API shouls be mapped to two view tables");
+        $this->assertEquals($this->expectedNumberOfVehicles, $viewModel->getFoundVehiclesCount(), 'Two vehicles returned from API shouls be mapped to two view tables');
 
         $vehicleTable = $viewModel->getTables()[0];
         // AND the vehicle has correct values
-        $this->assertEquals($this->vehicleMake, $vehicleTable->getMake(), "Vehicle make needs to be mapped.");
-        $this->assertEquals($this->vehicleModel, $vehicleTable->getModel(), "Vehicle model needs to be mapped.");
-        $this->assertEquals($this->vehicleVin, $vehicleTable->getVin(), "Vehicle VIN needs to be mapped.");
-        $this->assertEquals($this->vehicleVrm, $vehicleTable->getRegistration(), "Vehicle registration needs to be mapped.");
+        $this->assertEquals($this->vehicleMake, $vehicleTable->getMake(), 'Vehicle make needs to be mapped.');
+        $this->assertEquals($this->vehicleModel, $vehicleTable->getModel(), 'Vehicle model needs to be mapped.');
+        $this->assertEquals($this->vehicleVin, $vehicleTable->getVin(), 'Vehicle VIN needs to be mapped.');
+        $this->assertEquals($this->vehicleVrm, $vehicleTable->getRegistration(), 'Vehicle registration needs to be mapped.');
     }
 
     private function assertCertificateCorrectness(MotTestCertificateListViewModel $viewModel)
@@ -148,16 +149,16 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $vehicleTable = $viewModel->getTables()[0];
 
         // AND vehicle has proper number of certificates
-        $this->assertEquals($this->expectedNumberOfVehicles, $vehicleTable->getTotalTestCount(), "As two certificates have been returned by API, the view should contain both");
+        $this->assertEquals($this->expectedNumberOfVehicles, $vehicleTable->getTotalTestCount(), 'As two certificates have been returned by API, the view should contain both');
 
         // AND certificates have correct values
         $certificate = $vehicleTable->getFirstTest();
-        $this->assertEquals($this->certificateSiteName, $certificate->getSiteName(), "Site name is mapped");
-        $this->assertEquals('Pass', $certificate->getStatus(), "Test status is mapped");
+        $this->assertEquals($this->certificateSiteName, $certificate->getSiteName(), 'Site name is mapped');
+        $this->assertEquals('Pass', $certificate->getStatus(), 'Test status is mapped');
         $expectedDate = (new \DateTime($this->issuedDate))->format(VehicleHistoryItemDto::HISTORY_ITEM_DATE_FORMAT);
-        $this->assertEquals($expectedDate, $certificate->getDateOfTest(), "Date of test is mapped");
-        $this->assertEquals($this->siteAddress, $certificate->getSiteAddress(), "Address of test is mapped");
-        $this->assertEquals($this->testNumber, $certificate->getTestNumber(), "Test number is mapped");
+        $this->assertEquals($expectedDate, $certificate->getDateOfTest(), 'Date of test is mapped');
+        $this->assertEquals($this->siteAddress, $certificate->getSiteAddress(), 'Address of test is mapped');
+        $this->assertEquals($this->testNumber, $certificate->getTestNumber(), 'Test number is mapped');
     }
 
     private function prepareVehicles()
@@ -182,29 +183,29 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
     private function preperaCertificateData()
     {
         $certificate1Data = [
-            'id'            => null,
-            'status'        => $this->certificateStatus,
-            'issuedDate'    => $this->issuedDate,
+            'id' => null,
+            'status' => $this->certificateStatus,
+            'issuedDate' => $this->issuedDate,
             'motTestNumber' => $this->testNumber,
-            'testType'      => null,
-            'allowEdit'     => null,
-            'site'          => [
-                'id'      => null,
-                'name'    => $this->certificateSiteName,
+            'testType' => null,
+            'allowEdit' => null,
+            'site' => [
+                'id' => null,
+                'name' => $this->certificateSiteName,
                 'address' => $this->siteAddress,
             ],
         ];
 
         $certificate2Data = [
-            'id'            => null,
-            'status'        => null,
-            'issuedDate'    => null,
+            'id' => null,
+            'status' => null,
+            'issuedDate' => null,
             'motTestNumber' => null,
-            'testType'      => null,
-            'allowEdit'     => null,
-            'site'          => [
-                'id'      => null,
-                'name'    => null,
+            'testType' => null,
+            'allowEdit' => null,
+            'site' => [
+                'id' => null,
+                'name' => null,
                 'address' => null,
             ],
         ];
@@ -217,8 +218,8 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
     public function testListCertificatesProvider()
     {
         return [
-            ['vrm' => '  12VRM34 ', 'vin' => '', 'cleanedVrm' => '12VRM34', 'cleanedVin' => null,],
-            ['vrm' => '', 'vin' => ' 12VIN34  ', 'cleanedVrm' => null, 'cleanedVin' => '12VIN34',],
+            ['vrm' => '  12VRM34 ', 'vin' => '', 'cleanedVrm' => '12VRM34', 'cleanedVin' => null],
+            ['vrm' => '', 'vin' => ' 12VIN34  ', 'cleanedVrm' => null, 'cleanedVin' => '12VIN34'],
         ];
     }
 
@@ -227,11 +228,11 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         // SCENARIO Someone manually added both vin and reg into query params (we never have both);
 
         // GIVEN I provide both VIN and VRM
-        $vin = "ANY";
-        $vrm = "THING";
+        $vin = 'ANY';
+        $vrm = 'THING';
 
         // WHEN I search for vehicles
-        $actionResult = $this->action->execute($vrm, $vin ,[]);
+        $actionResult = $this->action->execute($vrm, $vin, []);
 
         // I get Page Not Found
         $this->assertInstanceOf(NotFoundActionResult::class, $actionResult);
@@ -242,8 +243,8 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         // SCENARIO all the links that go to this page have either vin or vrm in query params
 
         // GIVEN I have no VIN and VRM provided
-        $vin = "";
-        $vrm = "";
+        $vin = '';
+        $vrm = '';
 
         // WHEN I search for vehicles
         $actionResult = $this->action->execute($vrm, $vin, []);
@@ -275,12 +276,12 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($vrm, $actionResult->getQueryParams()['vrm']);
 
         // AND a flash message is set
-        $this->assertTrue( ArrayUtils::anyMatch(
+        $this->assertTrue(ArrayUtils::anyMatch(
             $actionResult->getFlashMessages(),
             function (FlashMessage $message) {
                 return $message->getContent() == VehicleCertificateSearchFlashMessage::NOT_FOUND;
             }
-        ) , "It's expected that a flash message will be set");
+        ), "It's expected that a flash message will be set");
     }
 
     public function testNoResultsByVinRedirectsBackToSearch()
@@ -306,12 +307,12 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($vin, $actionResult->getQueryParams()['vin']);
 
         // AND a flash message is set
-        $this->assertTrue( ArrayUtils::anyMatch(
+        $this->assertTrue(ArrayUtils::anyMatch(
             $actionResult->getFlashMessages(),
             function (FlashMessage $message) {
                 return $message->getContent() == VehicleCertificateSearchFlashMessage::NOT_FOUND;
             }
-        ) , "It's expected that a flash message will be set");
+        ), "It's expected that a flash message will be set");
     }
 
     /**
@@ -323,7 +324,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService->clearAll();
 
         // WHEN I perform search
-        $this->action->execute("ABC", "DEF", []);
+        $this->action->execute('ABC', 'DEF', []);
 
         // THEN I get an authorisation exception
     }

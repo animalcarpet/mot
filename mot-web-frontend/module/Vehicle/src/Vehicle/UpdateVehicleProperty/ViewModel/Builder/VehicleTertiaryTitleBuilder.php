@@ -1,4 +1,5 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\ViewModel\Builder;
 
 use Core\ViewModel\Header\HeaderTertiaryList;
@@ -7,9 +8,9 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class VehicleTertiaryTitleBuilder implements AutoWireableInterface
 {
-
     /**
      * @param DvsaVehicle $vehicle
+     *
      * @return HeaderTertiaryList
      */
     public function getTertiaryTitleForVehicle(DvsaVehicle $vehicle)
@@ -27,13 +28,13 @@ class VehicleTertiaryTitleBuilder implements AutoWireableInterface
         if ($this->hasMake($vehicle)) {
             return $vehicle->getMake()->getName();
         } else {
-            return "";
+            return '';
         }
     }
 
     private function hasMake(DvsaVehicle $vehicle)
     {
-        return ($vehicle->getMake() !== null);
+        return $vehicle->getMake() !== null;
     }
 
     private function getModelName(DvsaVehicle $vehicle)
@@ -41,13 +42,13 @@ class VehicleTertiaryTitleBuilder implements AutoWireableInterface
         if ($this->hasModel($vehicle)) {
             return $vehicle->getModel()->getName();
         } else {
-            return "";
+            return '';
         }
     }
 
     private function hasModel(DvsaVehicle $vehicle)
     {
-        return ($vehicle->getModel() !== null);
+        return $vehicle->getModel() !== null;
     }
 
     private function getMakeAndModel(DvsaVehicle $vehicle)
@@ -61,6 +62,6 @@ class VehicleTertiaryTitleBuilder implements AutoWireableInterface
             $elements[] = $this->getModelName($vehicle);
         }
 
-        return join(", ", $elements);
+        return implode(', ', $elements);
     }
 }

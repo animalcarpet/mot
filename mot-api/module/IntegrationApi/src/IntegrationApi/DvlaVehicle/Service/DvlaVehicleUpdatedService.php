@@ -15,7 +15,7 @@ use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
 
 /**
- * Class DvlaVehicleUpdatedService
+ * Class DvlaVehicleUpdatedService.
  */
 class DvlaVehicleUpdatedService implements TransactionAwareInterface
 {
@@ -39,25 +39,26 @@ class DvlaVehicleUpdatedService implements TransactionAwareInterface
     private $vehicleService;
 
     /**
-     * @param MotTestRepository $motTestRepository
+     * @param MotTestRepository             $motTestRepository
      * @param ReplacementCertificateService $replacementCertificateService
-     * @param VehicleService $vehicleService
+     * @param VehicleService                $vehicleService
      */
     public function __construct(
         MotTestRepository $motTestRepository,
         ReplacementCertificateService $replacementCertificateService,
         VehicleService $vehicleService
-    )
-    {
+    ) {
         $this->motTestRepository = $motTestRepository;
         $this->replacementCertificateService = $replacementCertificateService;
         $this->vehicleService = $vehicleService;
     }
 
     /**
-     * Get the latest passed MOT test number for a vehicle ID
+     * Get the latest passed MOT test number for a vehicle ID.
+     *
      * @param int $vehicleId
      * @param int $userId
+     *
      * @return bool
      */
     public function createReplacementCertificate($vehicleId, $userId, $isDvlaImport)

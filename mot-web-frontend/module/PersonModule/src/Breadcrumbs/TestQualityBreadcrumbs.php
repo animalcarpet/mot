@@ -1,9 +1,9 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Breadcrumbs;
 
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaCommon\Utility\TypeCheck;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class TestQualityBreadcrumbs implements AutoWireableInterface
@@ -23,7 +23,7 @@ class TestQualityBreadcrumbs implements AutoWireableInterface
     {
         $breadcrumbs = $this->personProfileBreadcrumbs->getBreadcrumbs($personId, $controller);
         $breadcrumbs += [
-            "Test quality information" => $controller->url()->fromRoute(
+            'Test quality information' => $controller->url()->fromRoute(
                 $this->personProfileRoutes->getTestQualityRoute(),
                 $controller->params()->fromRoute()
             ),

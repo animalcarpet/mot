@@ -1,13 +1,9 @@
 <?php
+
 namespace DvsaCommonApi\Service\Validator;
 
-use DvsaCommonApi\Service\Validator\AbstractValidator;
-use DvsaCommonApi\Service\Validator\ValidatorInterface;
-
 /**
- * Class AddressValidator
- *
- * @package DvsaCommonApi\Service\Validator
+ * Class AddressValidator.
  */
 class AddressValidator extends AbstractValidator implements ValidatorInterface
 {

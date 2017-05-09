@@ -5,7 +5,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ApplicationLock
+ * ApplicationLock.
  *
  * @ORM\Table(
  * name="application_lock",

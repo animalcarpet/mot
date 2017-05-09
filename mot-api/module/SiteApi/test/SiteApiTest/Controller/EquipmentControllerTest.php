@@ -5,9 +5,7 @@ namespace SiteApiTest\Controller;
 use SiteApi\Controller\EquipmentController;
 
 /**
- * Class EquipmentControllerTest
- *
- * @package SiteApiTest\Controller
+ * Class EquipmentControllerTest.
  */
 class EquipmentControllerTest extends AbstractSiteApiControllerTest
 {

@@ -5,7 +5,7 @@ namespace Dashboard\Model;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Data about site (VTS) link to person
+ * Data about site (VTS) link to person.
  */
 class Site
 {
@@ -30,7 +30,7 @@ class Site
     }
 
     /**
-     * Converts array of hash arrays to array of AuthorisedExaminer objects
+     * Converts array of hash arrays to array of AuthorisedExaminer objects.
      *
      * @param array $data
      *
@@ -54,6 +54,7 @@ class Site
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -73,6 +74,7 @@ class Site
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -92,6 +94,7 @@ class Site
     public function setSiteNumber($siteNumber)
     {
         $this->siteNumber = $siteNumber;
+
         return $this;
     }
 
@@ -111,6 +114,7 @@ class Site
     public function setPositions($positions)
     {
         $this->positions = $positions;
+
         return $this;
     }
 

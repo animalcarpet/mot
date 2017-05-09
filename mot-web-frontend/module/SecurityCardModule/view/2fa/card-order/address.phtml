@@ -1,6 +1,7 @@
 <?php
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Form\SecurityCardAddressForm;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderAddressViewModel;
+
 $this->layout('layout/layout-govuk.phtml');
 /** @var CardOrderAddressViewModel $viewModel */
 /** @var SecurityCardAddressForm $form */
@@ -18,7 +19,7 @@ $this->headTitle('Choose a delivery address');
 </noscript>
 <div class="grid-row">
     <div class="column-two-thirds">
-        <?php if($form->getAddressRadios()->getMessages()) : ?>
+        <?php if ($form->getAddressRadios()->getMessages()) : ?>
             <div id="validationBox">
                 <div id="validationErrors" class="validation-summary">
                     <ol><?php echo $form->getAddressRadios()->getMessages()[0]; ?></ol>
@@ -28,22 +29,22 @@ $this->headTitle('Choose a delivery address');
         <form method="post" action="<?php echo $this->url('security-card-order/address', ['userId' => $viewModel->getUserId()])?>">
             <?php echo $this->csrfToken(); ?>
             <p class="lede">Your security card will be sent to this address.</p>
-            <div class="form-group <?php echo ($form->getAddressRadios()->getMessages()) ? "has-error" : "" ?>">
+            <div class="form-group <?php echo ($form->getAddressRadios()->getMessages()) ? 'has-error' : '' ?>">
 
                 <?php
                 echo $this->partial(
                     'partial/gds/form/control-radio-meta-group', [
                         'options' => $form->getAddressRadios()->getValueOptions(),
                         'splitLastOption' => true,
-                        'checked' => $form->getAddressRadios()->getValue()
+                        'checked' => $form->getAddressRadios()->getValue(),
                     ]
                 );
                 ?>
 
                 <div id="customAddressContainer"
                      class="panel-indent inline customAddressJavascriptDisplay"
-                     aria-hidden="<?php echo $addressIsCustom ? "false" : "true" ?>">
-                    <?php if($form->isCustomAddressChosen()) : ?>
+                     aria-hidden="<?php echo $addressIsCustom ? 'false' : 'true' ?>">
+                    <?php if ($form->isCustomAddressChosen()) : ?>
                         <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
                     <?php endif; ?>
 

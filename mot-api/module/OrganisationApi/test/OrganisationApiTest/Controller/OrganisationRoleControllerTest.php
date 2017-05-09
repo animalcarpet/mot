@@ -9,19 +9,17 @@ use OrganisationApi\Controller\OrganisationRoleController;
 use OrganisationApi\Service\OrganisationRoleService;
 
 /**
- * Class OrganisationRoleControllerTest
- *
- * @package OrganisationApiTest\Controller
+ * Class OrganisationRoleControllerTest.
  */
 class OrganisationRoleControllerTest extends AbstractRestfulControllerTestCase
 {
     private $organisationId = 1;
-    /** @var  OrganisationRoleService|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var OrganisationRoleService|\PHPUnit_Framework_MockObject_MockObject */
     private $organisationRoleServiceMock;
 
     protected function setUp()
     {
-        $this->controller                  = new OrganisationRoleController();
+        $this->controller = new OrganisationRoleController();
         $this->organisationRoleServiceMock = $this->getOrganisationRoleServiceMock();
         $this->setupServiceManager();
 
@@ -42,6 +40,7 @@ class OrganisationRoleControllerTest extends AbstractRestfulControllerTestCase
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getOrganisationRoleServiceMock()

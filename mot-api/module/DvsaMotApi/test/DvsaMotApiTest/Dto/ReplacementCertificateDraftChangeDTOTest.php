@@ -8,31 +8,31 @@ use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ReplacementCertificateDraftChangeDTOTest
+ * Class ReplacementCertificateDraftChangeDTOTest.
  */
 class ReplacementCertificateDraftChangeDTOTest extends PHPUnit_Framework_TestCase
 {
     public function testFromDataArrayGivenArrayAsInputShouldMapDataCorrectly()
     {
         $data = [
-            'primaryColour'             => 1,
-            'secondaryColour'           => 2,
-            'vin'                       => 'VIN',
-            'vrm'                       => 'VRM',
-            'expiryDate'                => '2019-12-12',
-            'make'                      => 1,
-            'model'                     => 2,
-            'vtsSiteNumber'             => 'F123A',
-            'odometerReading'   => [
-                'value'         => 12,
-                'unit'          => OdometerUnit::KILOMETERS,
-                'resultType'    => OdometerReadingResultType::OK
+            'primaryColour' => 1,
+            'secondaryColour' => 2,
+            'vin' => 'VIN',
+            'vrm' => 'VRM',
+            'expiryDate' => '2019-12-12',
+            'make' => 1,
+            'model' => 2,
+            'vtsSiteNumber' => 'F123A',
+            'odometerReading' => [
+                'value' => 12,
+                'unit' => OdometerUnit::KILOMETERS,
+                'resultType' => OdometerReadingResultType::OK,
             ],
             'countryOfRegistration' => 2,
-            'reasonForReplacement'      => 'reason1',
-            'reasonForDifferentTester'  => 'reason2',
+            'reasonForReplacement' => 'reason1',
+            'reasonForDifferentTester' => 'reason2',
             'customMake' => 'CUSTOMC',
-            'customModel' => 'CUSTOMD'
+            'customModel' => 'CUSTOMD',
         ];
 
         $change = ReplacementCertificateDraftChangeDTO::fromDataArray($data);

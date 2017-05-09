@@ -31,16 +31,15 @@ use DvsaMotApiTest\Factory\VehicleObjectsFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ReplacementCertificateUpdaterTest
+ * Class ReplacementCertificateUpdaterTest.
  */
 class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
 {
-
     private $authorizationService;
     private $motTestSecurityService;
     private $motIdentityService;
-    private $mockVehicleService ;
-    private $mockMotTestRepository ;
+    private $mockVehicleService;
+    private $mockMotTestRepository;
 
     public function setUp()
     {
@@ -86,7 +85,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setReasonForReplacement("Reason");
+            ->setReasonForReplacement('Reason');
 
 //        when
         $motTest = $this->createSut()->update($draft);
@@ -110,42 +109,41 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
 
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
 
-        $draft->setReasonForReplacement("Reason")
-            ->setVin(rand(0,999999999999))
+        $draft->setReasonForReplacement('Reason')
+            ->setVin(rand(0, 999999999999))
             ->setVrm(rand(0, 999999));
-        $draft->setOdometerValue(rand(0,999999));
+        $draft->setOdometerValue(rand(0, 999999));
         $draft->setExpiryDate(new DateTime());
-        $draft->getMake()->setCode(rand(0,999999));
+        $draft->getMake()->setCode(rand(0, 999999));
         $draft->getMotTest()->setPrsMotTest(MotTestObjectsFactory::motTest());
 
         $motTest = $this->createSut()->update($draft);
 
-        $checkIfTestIsUpdatedFromDraft = function(CertificateReplacementDraft $draft, MotTest $motTest){
-            $this->assertEquals($draft->getOdometerValue(),$motTest->getOdometerValue());
+        $checkIfTestIsUpdatedFromDraft = function (CertificateReplacementDraft $draft, MotTest $motTest) {
+            $this->assertEquals($draft->getOdometerValue(), $motTest->getOdometerValue());
         };
 
         $checkIfTestIsUpdatedFromDraft($draft, $motTest);
         $checkIfTestIsUpdatedFromDraft($draft, $motTest->getPrsMotTest());
         $this->assertEquals($draft->getExpiryDate(), $motTest->getExpiryDate());
         $this->assertNotEquals($draft->getExpiryDate(), $motTest->getPrsMotTest()->getExpiryDate());
-
     }
 
-    public function testUserWhoUpdatesOdomoterWithPartialPermissionsDoesNotCallUpdateVehicle() {
-
+    public function testUserWhoUpdatesOdomoterWithPartialPermissionsDoesNotCallUpdateVehicle()
+    {
         $this->userAssignedToVts();
         $this->userHasId(2);
         $this->permissionsGranted([PermissionInSystem::CERTIFICATE_REPLACEMENT]);
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
         $draft->setOdometerValue(6464);
-        $draft->setPrimaryColour(VehicleObjectsFactory::colour(1, "p", "p"));
-        $draft->setSecondaryColour(VehicleObjectsFactory::colour(2, "p", "p"));
+        $draft->setPrimaryColour(VehicleObjectsFactory::colour(1, 'p', 'p'));
+        $draft->setSecondaryColour(VehicleObjectsFactory::colour(2, 'p', 'p'));
 
         $this->mockVehicleService->expects($this->never())
-            ->method("updateDvsaVehicleAtVersion");
+            ->method('updateDvsaVehicleAtVersion');
 
         $this->motTestSecurityService->expects($this->once())
-            ->method("validateOdometerReadingModificationWindowOpen")
+            ->method('validateOdometerReadingModificationWindowOpen')
             ->wilLReturn(CheckResult::ok());
 
         $this->createSut()->update($draft);
@@ -228,7 +226,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
     private function permissionsGranted($permissions)
     {
         $this->authorizationService->expects($this->any())
-            ->method("isGranted")
+            ->method('isGranted')
             ->will(
                 $this->returnCallback(
                     function ($arg) use (&$permissions) {
@@ -254,7 +252,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
 
     private function userHasId($id = null)
     {
-        $this->motIdentityService->expects($this->any())->method("getIdentity")
+        $this->motIdentityService->expects($this->any())->method('getIdentity')
             ->will($this->returnValue(new MotIdentity($id, null)));
     }
 }

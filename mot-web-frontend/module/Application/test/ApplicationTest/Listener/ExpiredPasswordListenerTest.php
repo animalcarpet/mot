@@ -2,7 +2,6 @@
 
 namespace ApplicationTest\Listener;
 
-
 use Account\Service\ExpiredPasswordService;
 use Application\Listener\ExpiredPasswordListener;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -17,32 +16,32 @@ use Zend\ServiceManager\ServiceManager;
 class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var MotIdentityProviderInterface $identityProvider 
+     * @var MotIdentityProviderInterface
      */
     private $identityProvider;
 
     /**
-     * @var DateTimeHolder $timeHolder
+     * @var DateTimeHolder
      */
     private $timeHolder;
 
     /**
-     * @var LoggerInterface $logger
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * @var ExpiredPasswordService $expiredPasswordService
+     * @var ExpiredPasswordService
      */
     private $expiredPasswordService;
-    
+
     /**
-     * @var ServiceManager $serviceManager
+     * @var ServiceManager
      */
     private $serviceManager;
 
     /**
-     * @var TreeRouteStack $router
+     * @var TreeRouteStack
      */
     private $router;
 
@@ -51,7 +50,7 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
         $this->identityProvider = $this
             ->getMockBuilder(MotIdentityProviderInterface::class)
             ->getMock();
-        
+
         $this->timeHolder = $this
             ->getMockBuilder(DateTimeHolder::class)
             ->disableOriginalConstructor()
@@ -64,11 +63,11 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
                     new \DateTime('2016-01-01')
                 )
             );
-        
+
         $this->logger = $this
             ->getMockBuilder(LoggerInterface::class)
             ->getMock();
-        
+
         $this->expiredPasswordService = $this
             ->getMockBuilder(ExpiredPasswordService::class)
             ->disableOriginalConstructor()

@@ -63,8 +63,7 @@ class PersonContactService extends AbstractService
         AuthorisationService $authorisationService,
         EntityManager $em,
         PersonDetailsChangeNotificationHelper $notificationHelper
-    )
-    {
+    ) {
         parent::__construct($em);
 
         $this->personContactRepository = $repository;
@@ -78,10 +77,11 @@ class PersonContactService extends AbstractService
     }
 
     /**
-     * @param int $personId
+     * @param int   $personId
      * @param array $data
      *
      * @return \DvsaCommon\Dto\Person\PersonContactDto
+     *
      * @throws DataValidationException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
@@ -115,7 +115,7 @@ class PersonContactService extends AbstractService
             $email->setIsPrimary(true);
             $this->entityManager->persist($email);
         } else {
-            /** @var Email $primaryEmail */
+            /* @var Email $primaryEmail */
             if (count($primaryEmails) > 1) {
                 $this->markExcessivePrimaryEmailsAsNotPrimary($primaryEmails);
             }
@@ -131,6 +131,7 @@ class PersonContactService extends AbstractService
         }
 
         $dto = $this->personContactMapper->toDto($contact);
+
         return $dto;
     }
 

@@ -1,15 +1,13 @@
 <?php
+
 namespace DvsaMotApiTest\Service\RfrValidator;
 
 use DvsaMotApiTest\Service\AbstractMotTestServiceTest;
-use PHPUnit_Framework_TestCase;
-use \DvsaMotApi\Service\RfrValidator\BaseValidator;
-use \DvsaMotApi\Service\EnforcementMotTestResultService;
+use DvsaMotApi\Service\RfrValidator\BaseValidator;
+use DvsaMotApi\Service\EnforcementMotTestResultService;
 
 /**
- * Class CheckAllValidatorsTest
- *
- * @package DvsaMotApiTest\Service\RfrValidator
+ * Class CheckAllValidatorsTest.
  */
 class CheckAllValidatorsTest extends AbstractMotTestServiceTest
 {
@@ -101,7 +99,6 @@ class CheckAllValidatorsTest extends AbstractMotTestServiceTest
     }
 
     /**
-     *
      * @return CheckScoreForCategoryNotApplicable
      */
     protected function getValidatorTests()
@@ -112,6 +109,7 @@ class CheckAllValidatorsTest extends AbstractMotTestServiceTest
         $tests[] = new CheckDecisionsForCategoryNotApplicableTest();
         $tests[] = new CheckJustificationForScoreDisregardTest();
         $tests[] = new CheckScoreForDefectNotApplicableTest();
+
         return $tests;
     }
 
@@ -120,14 +118,15 @@ class CheckAllValidatorsTest extends AbstractMotTestServiceTest
      */
     public function getAllFixtures()
     {
-        $tests      = $this->getValidatorTests();
-        $fixtures   = [];
+        $tests = $this->getValidatorTests();
+        $fixtures = [];
         foreach ($tests as $test) {
             $fixtures[get_class($test)] = [
                 'name' => $test->getFixtureName(),
-                'fixtures' => $test->getFixtures()
+                'fixtures' => $test->getFixtures(),
             ];
         }
+
         return $fixtures;
     }
 }

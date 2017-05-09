@@ -143,7 +143,7 @@ class PersonContactServiceTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new UnauthorisedException('Not allowed')));
         $this->setExpectedException(UnauthorisedException::class);
         $service = $this->createService();
-        $service->updateEmailForPerson($personId, ['email' => 'personcontactservicetest@' . EmailAddressValidator::TEST_DOMAIN]);
+        $service->updateEmailForPerson($personId, ['email' => 'personcontactservicetest@'.EmailAddressValidator::TEST_DOMAIN]);
     }
 
     public function testPrimaryEmailIsCreatedWhenTheOnlyExistingEmailsAreNonPrimary()

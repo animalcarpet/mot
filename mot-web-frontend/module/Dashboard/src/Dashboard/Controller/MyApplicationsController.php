@@ -1,4 +1,5 @@
 <?php
+
 namespace Dashboard\Controller;
 
 use Core\Controller\AbstractAuthActionController;
@@ -6,11 +7,10 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class MyApplicationsController
+ * Class MyApplicationsController.
  */
 class MyApplicationsController extends AbstractAuthActionController
 {
-
     const ROUTE_MY_APPLICATIONS = 'user-home/my-applications';
     const PUBLIC_API_CLIENT = 'PublicApiClient';
 

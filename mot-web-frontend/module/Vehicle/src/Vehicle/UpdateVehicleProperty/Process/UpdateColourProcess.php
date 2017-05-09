@@ -1,10 +1,10 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Process;
 
 use Application\Service\CatalogService;
 use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
-use Core\Routing\MotTestRoutes;
 use Core\Routing\VehicleRouteList;
 use Core\Routing\VehicleRoutes;
 use Core\TwoStepForm\FormContextInterface;
@@ -24,18 +24,18 @@ use Zend\View\Helper\Url;
 
 class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterface
 {
-    const PAGE_TITLE = "Change colour";
+    const PAGE_TITLE = 'Change colour';
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's colour?";
 
     private $urlHelper;
     private $vehicleService;
     private $breadcrumbsBuilder;
     private $tertiaryTitleBuilder;
-    /** @var  UpdateVehicleContext */
+    /** @var UpdateVehicleContext */
     private $context;
     private $catalogService;
     private $colours;
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     public function __construct(
@@ -59,7 +59,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     }
 
     /**
-     * Will make a call to API to update the data from the form
+     * Will make a call to API to update the data from the form.
      *
      * @param $formData
      */
@@ -68,7 +68,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
         if ($this->context->isUpdateVehicleDuringTest()) {
             $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_COLOUR, [
                 StartTestChangeService::PRIMARY_COLOUR => $formData[UpdateColourForm::FIELD_COLOUR],
-                StartTestChangeService::SECONDARY_COLOUR => $formData[UpdateColourForm::FIELD_SECONDARY_COLOUR]
+                StartTestChangeService::SECONDARY_COLOUR => $formData[UpdateColourForm::FIELD_SECONDARY_COLOUR],
             ]);
             $this->startTestChangeService->updateChangedValueStatus(StartTestChangeService::CHANGE_COLOUR, true);
         } else {
@@ -86,7 +86,8 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
 
     /**
      * Gets the values that the form should be pre-populated with.
-     * (e.g. old values)
+     * (e.g. old values).
+     *
      * @return array
      */
     public function getPrePopulatedData()
@@ -113,7 +114,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     public function getSubmitButtonText()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Continue";
+            return 'Continue';
         }
 
         return self::PAGE_TITLE;
@@ -127,10 +128,10 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     public function getBackButtonText()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Back";
+            return 'Back';
         }
 
-        return "Cancel and return to vehicle";
+        return 'Cancel and return to vehicle';
     }
 
     /**
@@ -138,6 +139,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
      * Returning null means there are no breadcrumbs to display.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return array
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
@@ -152,7 +154,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     }
 
     /**
-     * Zend form used to edit values
+     * Zend form used to edit values.
      *
      * @return Form
      */
@@ -162,21 +164,21 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     }
 
     /**
-     * Tells what message should be shown to the user when the form has been successfully submitted
+     * Tells what message should be shown to the user when the form has been successfully submitted.
      *
      * @return string
      */
     public function getSuccessfulEditMessage()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Vehicle colour has been successfully changed";
+            return 'Vehicle colour has been successfully changed';
         }
 
-        return "Colour has been successfully changed";
+        return 'Colour has been successfully changed';
     }
 
     /**
-     * The title that will be displayed on the form page
+     * The title that will be displayed on the form page.
      *
      * @return string
      */
@@ -190,7 +192,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     }
 
     /**
-     * The sub title that will be displayed on the edit and review pages
+     * The sub title that will be displayed on the edit and review pages.
      *
      * @return string
      */
@@ -200,12 +202,13 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
             return self::PAGE_SUBTITLE_UPDATE_DURING_TEST;
         }
 
-        return "Vehicle";
+        return 'Vehicle';
     }
 
     /**
      * @param $form
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildEditStepViewModel($form)
     {
@@ -235,9 +238,10 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
                 [
                     'id' => $this->context->getObfuscatedVehicleId(),
                     'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
-                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
+                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source'],
                 ]);
         }
+
         return new RedirectToRoute(
             VehicleRouteList::VEHICLE_DETAIL,
             ['id' => $this->context->getObfuscatedVehicleId()]
@@ -245,9 +249,10 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     }
 
     /**
-     * Says if the users is authorised to reach the page
+     * Says if the users is authorised to reach the page.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return bool
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
@@ -262,7 +267,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
 
     private function getColours()
     {
-        if($this->colours == null) {
+        if ($this->colours == null) {
             $this->colours = $this->catalogService->getColours();
         }
 

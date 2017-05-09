@@ -2,11 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\Support;
 
-use DvsaFeature\Exception\FeatureNotAvailableException;
-use DvsaFeature\FeatureToggleAwareInterface;
-use DvsaFeature\FeatureToggles;
 use Zend\View\Helper\AbstractHelper;
-
 
 class TwoFaFeatureToggleViewHelper extends AbstractHelper
 {

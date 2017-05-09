@@ -22,15 +22,15 @@ use Vehicle\CreateVehicle\Service\CreateVehicleStepService;
 
 class CreateNewVehicleServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  CreateVehicleStepService */
+    /** @var CreateVehicleStepService */
     private $createVehicleStepService;
-    /** @var  VehicleService */
+    /** @var VehicleService */
     private $vehicleService;
-    /** @var  MotFrontendIdentityProviderInterface */
+    /** @var MotFrontendIdentityProviderInterface */
     private $identityProvider;
-    /** @var  ContingencySessionManager */
+    /** @var ContingencySessionManager */
     private $contingencySessionManager;
-    /** @var  Client */
+    /** @var Client */
     private $client;
     /** @var AuthorisedClassesService */
     private $authorisedClassesService;
@@ -174,7 +174,7 @@ class CreateNewVehicleServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getStaticData')
             ->willReturn($this->mockStaticData());
 
-        $request = new CreateDvsaVehicleRequest;
+        $request = new CreateDvsaVehicleRequest();
         $request
             ->setRegistration('TESTREG')
             ->setVin('TESTVIN')
@@ -182,17 +182,17 @@ class CreateNewVehicleServiceTest extends \PHPUnit_Framework_TestCase
             ->setModelId('104096')
             ->setFuelTypeCode('PE')
             ->setCylinderCapacity(1200)
-            ->setColourCode("S")
-            ->setVehicleClassCode("3")
-            ->setSecondaryColourCode("W")
+            ->setColourCode('S')
+            ->setVehicleClassCode('3')
+            ->setSecondaryColourCode('W')
             ->setCountryOfRegistrationId(1)
             ->setFirstUsedDate(new \DateTime('2010-10-10'));
 
         $dvsaVehicleBuilder = new DvsaVehicleBuilder();
         $data = $dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $vehicleClassData = new \stdClass();
-        $vehicleClassData->code =  VehicleClassCode::CLASS_3;
-        $vehicleClassData->name =  VehicleClassCode::CLASS_3;
+        $vehicleClassData->code = VehicleClassCode::CLASS_3;
+        $vehicleClassData->name = VehicleClassCode::CLASS_3;
         $data->id = 1;
         $data->vehicleClass = $vehicleClassData;
         $data->emptyVrmReason = 3;

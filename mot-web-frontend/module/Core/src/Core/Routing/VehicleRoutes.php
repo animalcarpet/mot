@@ -17,7 +17,7 @@ class VehicleRoutes extends AbstractRoutes
      */
     public static function of($object)
     {
-        return new VehicleRoutes($object);
+        return new self($object);
     }
 
     public function vehicleMotTestHistory($obfuscatedVehicleId, $searchParams)
@@ -101,12 +101,12 @@ class VehicleRoutes extends AbstractRoutes
 
     public function changeMake($obfuscatedVehicleId)
     {
-        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL, ['id' => $obfuscatedVehicleId, "property" => UpdateMakeStep::NAME]);
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL, ['id' => $obfuscatedVehicleId, 'property' => UpdateMakeStep::NAME]);
     }
 
     public function changeModel($obfuscatedVehicleId)
     {
-        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL, ['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL, ['id' => $obfuscatedVehicleId, 'property' => UpdateModelStep::NAME]);
     }
 
     /**
@@ -171,7 +171,7 @@ class VehicleRoutes extends AbstractRoutes
 
     public function changeColour($obfuscatedVehicleId)
     {
-        return $this->url(VehicleRouteList::VEHICLE_CHANGE_COLOUR,['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_COLOUR, ['id' => $obfuscatedVehicleId, 'property' => UpdateModelStep::NAME]);
     }
 
     public function testingAdvice($obfuscatedVehicleId)
@@ -181,11 +181,11 @@ class VehicleRoutes extends AbstractRoutes
 
     public function testingAdviceWithMotTestNumberParam($obfuscatedVehicleId, $motTestNumber)
     {
-        return $this->url(VehicleRouteList::VEHICLE_TESTING_ADVICE, ['id' => $obfuscatedVehicleId], ["query" => ["motTestNumber" => $motTestNumber]]);
+        return $this->url(VehicleRouteList::VEHICLE_TESTING_ADVICE, ['id' => $obfuscatedVehicleId], ['query' => ['motTestNumber' => $motTestNumber]]);
     }
 
     public function testingAdviceWithParams($obfuscatedVehicleId, $noRegistration, $source)
     {
-        return $this->url(VehicleRouteList::VEHICLE_TESTING_ADVICE, ['id' => $obfuscatedVehicleId], ["query" => ["noRegistration" => $noRegistration, "source" => $source]]);
+        return $this->url(VehicleRouteList::VEHICLE_TESTING_ADVICE, ['id' => $obfuscatedVehicleId], ['query' => ['noRegistration' => $noRegistration, 'source' => $source]]);
     }
 }

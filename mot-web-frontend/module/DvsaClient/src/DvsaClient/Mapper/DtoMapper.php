@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaClient\Mapper;
 
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 
 /**
- * Class DtoMapper
+ * Class DtoMapper.
  */
 class DtoMapper
 {

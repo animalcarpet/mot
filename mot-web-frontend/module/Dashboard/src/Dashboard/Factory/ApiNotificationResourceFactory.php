@@ -9,7 +9,6 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 
 class ApiNotificationResourceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ApiNotificationResource($serviceLocator->get(HttpRestJsonClient::class));

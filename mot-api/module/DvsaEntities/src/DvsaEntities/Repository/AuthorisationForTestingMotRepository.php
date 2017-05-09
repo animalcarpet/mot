@@ -3,14 +3,12 @@
 namespace DvsaEntities\Repository;
 
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
-use DvsaEntities\Entity\AuthorisationForTestingMot;
 use DvsaEntities\Entity\AuthorisationForTestingMotStatus;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class AuthorisationForTestingMotRepository
+ * Class AuthorisationForTestingMotRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class AuthorisationForTestingMotRepository extends AbstractMutableRepository

@@ -3,11 +3,9 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class Phone
+ * Class Phone.
  *
  * TODO duplicates \DvsaCommon\Dto\Contact\PhoneDto, remove
- *
- * @package DvsaClient\Entity
  */
 class Phone
 {
@@ -24,6 +22,7 @@ class Phone
     public function setContactType($contactType)
     {
         $this->contactType = $contactType;
+
         return $this;
     }
 
@@ -43,6 +42,7 @@ class Phone
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -62,6 +62,7 @@ class Phone
     public function setIsPrimary($isPrimary)
     {
         $this->isPrimary = $isPrimary;
+
         return $this;
     }
 
@@ -81,6 +82,7 @@ class Phone
     public function setNumber($number)
     {
         $this->number = $number;
+
         return $this;
     }
 

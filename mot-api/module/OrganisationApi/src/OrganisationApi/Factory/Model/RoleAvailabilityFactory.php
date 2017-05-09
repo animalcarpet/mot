@@ -11,7 +11,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class RoleAvailabilityFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $authService = $serviceLocator->get('DvsaAuthorisationService');
@@ -20,7 +19,7 @@ class RoleAvailabilityFactory implements FactoryInterface
             new RoleRestrictionsSet(
                 [
                     new AedRestriction($authService),
-                    new AedmRestriction($authService)
+                    new AedmRestriction($authService),
                 ]
             ),
             $authService,

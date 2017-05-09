@@ -2,7 +2,7 @@
 
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 
-$this->layout()->setVariable('pageSubTitle', 'Your profile' );
+$this->layout()->setVariable('pageSubTitle', 'Your profile');
 $this->layout()->setVariable('pageTitle', 'Change details');
 ?>
 <form action="<?php echo PersonUrlBuilderWeb::profileEdit(); ?>" class="form-horizontal"
@@ -18,8 +18,8 @@ $this->layout()->setVariable('pageTitle', 'Change details');
                 <?php echo $this->partial(
                     'addressAndContactDetailsFragment',
                     [
-                        'values'    => $personalDetails,
-                        'showEmail' => true
+                        'values' => $personalDetails,
+                        'showEmail' => true,
                     ]
                 ); ?>
             </fieldset>
@@ -29,7 +29,7 @@ $this->layout()->setVariable('pageTitle', 'Change details');
                 [
                     'label' => 'Update',
                     'value' => 'update-profile',
-                    'id'    => 'update-profile'
+                    'id' => 'update-profile',
                 ]
             ); ?>
         </div>

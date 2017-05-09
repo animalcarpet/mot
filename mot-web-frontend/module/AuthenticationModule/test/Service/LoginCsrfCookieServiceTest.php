@@ -13,18 +13,15 @@ use Zend\Stdlib\Parameters;
 
 class LoginCsrfCookieServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     private static $CONFIG = [
-        'csrf' =>
-            [
-                'cookie' =>
-                    [
+        'csrf' => [
+                'cookie' => [
                         'name' => 'my_cookie',
                         'path' => '/my_path',
                         'domain' => '.my.domain.com',
-                        'secure' => true
-                    ]
-            ]
+                        'secure' => true,
+                    ],
+            ],
     ];
 
     private function createService()
@@ -39,7 +36,7 @@ class LoginCsrfCookieServiceTest extends \PHPUnit_Framework_TestCase
         $service = new LoginCsrfCookieService(new MotConfig([]));
 
         $service->addCsrfCookie($response);
-        /** @var SetCookie $setCookieHeader  */
+        /** @var SetCookie $setCookieHeader */
         $setCookieHeader = $response->getHeaders()->get('Set-Cookie')[0];
 
         $this->assertEquals('_csrf_token', $setCookieHeader->getName());
@@ -56,7 +53,7 @@ class LoginCsrfCookieServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = $this->createService();
         $service->addCsrfCookie($response);
-        /** @var SetCookie $setCookieHeader  */
+        /** @var SetCookie $setCookieHeader */
         $setCookieHeader = $response->getHeaders()->get('Set-Cookie')[0];
 
         $this->assertEquals('my_cookie', $setCookieHeader->getName());
@@ -66,7 +63,6 @@ class LoginCsrfCookieServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($setCookieHeader->isHttponly());
         $this->assertTrue($setCookieHeader->isSessionCookie());
     }
-
 
     public function testValidate_givenPostParamAndCookieMatch_shouldReturnTrue()
     {

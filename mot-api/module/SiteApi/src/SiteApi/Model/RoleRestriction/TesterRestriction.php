@@ -11,7 +11,7 @@ use DvsaEntities\Entity\Person;
 use SiteApi\Model\SitePersonnel;
 
 /**
- * Class TesterRestriction
+ * Class TesterRestriction.
  */
 class TesterRestriction extends AbstractSiteRoleRestriction
 {
@@ -50,16 +50,17 @@ class TesterRestriction extends AbstractSiteRoleRestriction
                     [
                         AuthorisationForTestingMotStatusCode::QUALIFIED,
                         AuthorisationForTestingMotStatusCode::REFRESHER_NEEDED,
-                        AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED
+                        AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED,
                     ]
                 );
+
                 return $isAllowed;
             }
         );
     }
 
     /**
-     * @return String The role this restriction applies to
+     * @return string The role this restriction applies to
      */
     public function getRole()
     {

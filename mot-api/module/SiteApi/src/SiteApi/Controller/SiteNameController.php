@@ -1,11 +1,10 @@
 <?php
+
 namespace SiteApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\SiteService;
-use Zend\Http\Request;
-use Zend\View\Model\JsonModel;
 
 class SiteNameController extends AbstractDvsaRestfulController
 {

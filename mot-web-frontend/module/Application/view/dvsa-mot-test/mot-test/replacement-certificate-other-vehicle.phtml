@@ -1,7 +1,7 @@
 <?php
 use DvsaMotTest\View\ReplacementVehicleViewModel;
-/** @var ReplacementVehicleViewModel $vehicle */
 
+/** @var ReplacementVehicleViewModel $vehicle */
 $title = 'Duplicate and replacement certificates';
 
 $this->headTitle($title);
@@ -43,12 +43,12 @@ $this->layout()->setVariable('pageTitle', $buttonAndPageTitle);
             <label for="otherMake" class="form-label">Make</label>
 
             <?php echo $this->partial(
-            "inputElement", [
-            "id"        => "input-make",
-            "name"      => "make",
-            "value"     => '',
-            "maxLength" => 25,
-            "cssClass"  => "form-control-1-4"
+            'inputElement', [
+            'id' => 'input-make',
+            'name' => 'make',
+            'value' => '',
+            'maxLength' => 25,
+            'cssClass' => 'form-control-1-4',
             ]
             ); ?>
             <input type="hidden" name="action" value="updateCustomMakeModel" />
@@ -68,12 +68,12 @@ $this->layout()->setVariable('pageTitle', $buttonAndPageTitle);
         <?php
         $vehicleModel = $vehicle->getModel();
         echo $this->partial(
-            "inputElement", [
-                "id"        => "input-model",
-                "name"      => "model",
-                "value"     => '',
-                "maxLength" => 25,
-                "cssClass"  => "form-control-1-4"
+            'inputElement', [
+                'id' => 'input-model',
+                'name' => 'model',
+                'value' => '',
+                'maxLength' => 25,
+                'cssClass' => 'form-control-1-4',
             ]
         ); ?>
     </div>

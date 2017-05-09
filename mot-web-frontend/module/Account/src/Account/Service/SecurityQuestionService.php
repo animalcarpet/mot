@@ -59,15 +59,16 @@ class SecurityQuestionService
     private $incorrectAnswerQuestionIds;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $verified;
 
     /**
      * SecurityQuestionService constructor.
-     * @param PersonMapper $personMapper
-     * @param UserAdminMapper $userAdminMapper
-     * @param AccountMapper $accountMapper
+     *
+     * @param PersonMapper            $personMapper
+     * @param UserAdminMapper         $userAdminMapper
+     * @param AccountMapper           $accountMapper
      * @param UserAdminSessionManager $session
      */
     public function __construct(
@@ -75,8 +76,7 @@ class SecurityQuestionService
         UserAdminMapper $userAdminMapper,
         AccountMapper $accountMapper,
         UserAdminSessionManager $session
-    )
-    {
+    ) {
         $this->personMapper = $personMapper;
         $this->userAdminMapper = $userAdminMapper;
         $this->accountMapper = $accountMapper;
@@ -86,8 +86,9 @@ class SecurityQuestionService
     }
 
     /**
-     * @param int $personId
+     * @param int   $personId
      * @param array $answers
+     *
      * @return bool
      */
     public function areBothAnswersCorrectForPerson($personId, array $answers)
@@ -109,9 +110,11 @@ class SecurityQuestionService
     }
 
     /**
-     * @param integer $personId
+     * @param int   $personId
      * @param array $questionsAndAnswersMap
+     *
      * @return array
+     *
      * @throws \Exception
      */
     public function verifyAnswers($personId, array $questionsAndAnswersMap)
@@ -132,8 +135,10 @@ class SecurityQuestionService
     }
 
     /**
-     * @param integer $personId
+     * @param int $personId
+     *
      * @return string the person email address in event of successful API call
+     *
      * @throws \RuntimeException
      */
     public function resetPersonPassword($personId)
@@ -143,13 +148,12 @@ class SecurityQuestionService
 
         if (!$response instanceof MessageDto || !$response->hasPerson()) {
             throw new \RuntimeException(
-                'Can\'t confirm if the reset password email has been sent. ' .
+                'Can\'t confirm if the reset password email has been sent. '.
                 sprintf(self::EXCEPTION_RESET_PASS, MessageDto::class)
             );
         }
 
         if ($contactDetails = $response->getPerson()->getContactDetails()) {
-
             $contactDetail = reset($contactDetails);
 
             if (!$contactDetail instanceof ContactDto) {
@@ -157,7 +161,6 @@ class SecurityQuestionService
             }
 
             if ($emails = $contactDetail->getEmails()) {
-
                 $email = reset($emails);
 
                 if (!$email instanceof EmailDto) {
@@ -173,6 +176,7 @@ class SecurityQuestionService
 
     /**
      * @param array $response
+     *
      * @return array
      */
     private function mapVerificationResponse($response)
@@ -185,13 +189,14 @@ class SecurityQuestionService
                     }
                 }, $response),
             function ($element) {
-                return (!empty($element));
+                return !empty($element);
             }
         );
     }
 
     /**
-     * @return boolean
+     * @return bool
+     *
      * @throws \RuntimeException
      */
     public function isVerified()
@@ -205,6 +210,7 @@ class SecurityQuestionService
 
     /**
      * @param array $answerResponse
+     *
      * @return bool
      */
     private function mapAnswerResponse(array $answerResponse)
@@ -257,8 +263,6 @@ class SecurityQuestionService
         }
     }
 
-    /**
-     */
     private function decrementRemainingAttempts()
     {
         $this->session->updateUserAdminSession(
@@ -277,6 +281,7 @@ class SecurityQuestionService
 
     /**
      * @param $personId
+     *
      * @return SecurityQuestionDto[]
      */
     public function getQuestionsForPerson($personId)
@@ -293,7 +298,8 @@ class SecurityQuestionService
     public function setUserAndQuestion($personId, $questionNumber)
     {
         $this->personId = $personId;
-        $this->questionNumber = (int)$questionNumber;
+        $this->questionNumber = (int) $questionNumber;
+
         return $this;
     }
 

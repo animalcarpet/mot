@@ -2,22 +2,20 @@
 
 namespace SiteApiTest\Factory\Controller;
 
-
 use DvsaCommonTest\TestUtils\XMock;
 use SiteApi\Controller\EnforcementSiteAssessmentValidateController;
 use SiteApi\Factory\Controller\EnforcementSiteAssessmentValidateControllerFactory;
 use SiteApi\Service\EnforcementSiteAssessmentService;
 use Zend\ServiceManager\ServiceManager;
 
-class EnforcementSiteAssessmentValidateControllerFactoryTest  extends \PHPUnit_Framework_TestCase
+class EnforcementSiteAssessmentValidateControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
 
         $enforcementSiteAssessmentService = XMock::of(EnforcementSiteAssessmentService::class);
-        $serviceManager->setService(EnforcementSiteAssessmentService::class,$enforcementSiteAssessmentService);
+        $serviceManager->setService(EnforcementSiteAssessmentService::class, $enforcementSiteAssessmentService);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

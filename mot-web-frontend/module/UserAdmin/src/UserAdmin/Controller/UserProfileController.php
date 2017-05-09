@@ -17,7 +17,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\MessageTypeCode;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
@@ -78,7 +77,6 @@ class UserProfileController extends AbstractDvsaMotTestController
      * @var TwoFaFeatureToggle
      */
     private $twoFaFeatureToggle;
-
 
     /**
      * @param MotAuthorisationServiceInterface $authorisationService
@@ -158,8 +156,8 @@ class UserProfileController extends AbstractDvsaMotTestController
             $this->catalogService
         );
         $presenter->setPersonId($personId);
-        $pageTitleSuccess = 'Reset password for ' . $presenter->displayFullName();
-        $pageTitleFailure = 'Unable to reset password for ' . $presenter->displayFullName();
+        $pageTitleSuccess = 'Reset password for '.$presenter->displayFullName();
+        $pageTitleFailure = 'Unable to reset password for '.$presenter->displayFullName();
 
         return $this->processRequest(
             MessageTypeCode::PASSWORD_RESET_BY_LETTER,
@@ -186,7 +184,7 @@ class UserProfileController extends AbstractDvsaMotTestController
             $this->catalogService
         );
         $presenter->setPersonId($personId);
-        $pageTitleSuccess = 'Recover username for ' . $presenter->displayFullName();
+        $pageTitleSuccess = 'Recover username for '.$presenter->displayFullName();
 
         return $this->processRequest(
             MessageTypeCode::USERNAME_REMINDER_BY_LETTER,
@@ -212,7 +210,7 @@ class UserProfileController extends AbstractDvsaMotTestController
 
         try {
             $params = [
-                'personId'        => $presenter->getPersonId(),
+                'personId' => $presenter->getPersonId(),
                 'messageTypeCode' => $messageTypeCode,
             ];
             $this->userAccountAdminService->postMessage($params);
@@ -241,7 +239,7 @@ class UserProfileController extends AbstractDvsaMotTestController
         $prgHelper = new PrgHelper($this->getRequest());
         if ($prgHelper->isRepeatPost()) {
             return $this->redirect()->toUrl($prgHelper->getRedirectUrl());
-        };
+        }
 
         if ($this->getRequest()->isPost() === true) {
             return $this->claimAccountProcess($personId, $prgHelper);
@@ -335,7 +333,7 @@ class UserProfileController extends AbstractDvsaMotTestController
                     UserAdminUrlBuilderWeb::userProfileClaimAccountPost($personId)
                 ),
                 'userProfileUrl' => $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]),
-                'reclaimSystemMessage' =>  self::RESET_ACCOUNT_SYSTEM_MESSAGE,
+                'reclaimSystemMessage' => self::RESET_ACCOUNT_SYSTEM_MESSAGE,
             ]
         );
 
@@ -356,7 +354,7 @@ class UserProfileController extends AbstractDvsaMotTestController
             return $url;
         }
 
-        return $url . '?' . http_build_query($params);
+        return $url.'?'.http_build_query($params);
     }
 
     private function getTesterAuthorisationViewModel($personId)

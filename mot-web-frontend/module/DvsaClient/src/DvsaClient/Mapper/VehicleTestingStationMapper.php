@@ -9,9 +9,8 @@ use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Class VehicleTestingStationMapper
+ * Class VehicleTestingStationMapper.
  *
- * @package DvsaClient\Mapper
  * @deprecated Use SiteMapper. This class left for back compatibility with Slots
  */
 class VehicleTestingStationMapper extends Mapper
@@ -22,6 +21,7 @@ class VehicleTestingStationMapper extends Mapper
      * @param int $vtsId
      *
      * @return array
+     *
      * @deprecated do not use it
      */
     public function getById($vtsId)
@@ -33,10 +33,10 @@ class VehicleTestingStationMapper extends Mapper
         $dto = DtoHydrator::jsonToDto($result['data']);
 
         return [
-            'id'         => $dto->getId(),
+            'id' => $dto->getId(),
             'siteNumber' => $dto->getSiteNumber(),
-            'name'       => $dto->getName(),
-            'address'    => $dto->getContactByType(SiteContactTypeCode::BUSINESS)->getAddress(),
+            'name' => $dto->getName(),
+            'address' => $dto->getContactByType(SiteContactTypeCode::BUSINESS)->getAddress(),
         ];
     }
 }

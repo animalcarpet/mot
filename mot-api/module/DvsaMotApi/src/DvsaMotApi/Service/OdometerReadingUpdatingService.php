@@ -16,8 +16,7 @@ use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingValidator;
 
 /**
- *
- * Class OdometerReadingUpdatingService
+ * Class OdometerReadingUpdatingService.
  */
 class OdometerReadingUpdatingService
 {
@@ -26,27 +25,26 @@ class OdometerReadingUpdatingService
      */
     private $authService;
     /**
-     * @var MotTestSecurityService $motTestSecurityService
+     * @var MotTestSecurityService
      */
     private $motTestSecurityService;
 
-    /** @var  MotTestValidator $motTestValidator */
+    /** @var MotTestValidator $motTestValidator */
     private $motTestValidator;
 
     private $performMotTestAssertion;
 
     /**
      * @param AuthorisationServiceInterface $authService
-     * @param MotTestSecurityService $motTestSecurityService
-     * @param Validator\MotTestValidator $motTestValidator
+     * @param MotTestSecurityService        $motTestSecurityService
+     * @param Validator\MotTestValidator    $motTestValidator
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
         MotTestSecurityService $motTestSecurityService,
         MotTestValidator $motTestValidator,
         ApiPerformMotTestAssertion $performMotTestAssertion
-    )
-    {
+    ) {
         $this->authService = $authService;
         $this->motTestSecurityService = $motTestSecurityService;
         $this->motTestValidator = $motTestValidator;
@@ -54,10 +52,10 @@ class OdometerReadingUpdatingService
     }
 
     /**
-     * Updates odometer reading for a given MOT test
+     * Updates odometer reading for a given MOT test.
      *
      * @param OdometerReadingDto $newReading
-     * @param MotTest $motTest
+     * @param MotTest            $motTest
      *
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
@@ -74,7 +72,7 @@ class OdometerReadingUpdatingService
         );
         CheckResultExceptionTranslator::tryThrowDataValidationException($checkResult);
 
-        /** NEED TO FIGURE OUT RULES
+        /* NEED TO FIGURE OUT RULES
          * if (!$this->motTestSecurityService->canModifyOdometerForTest($motTest)
          * || !$this->motTestSecurityService->isCurrentTesterAssignedToVts(
          * $motTest->getVehicleTestingStation()->getId()

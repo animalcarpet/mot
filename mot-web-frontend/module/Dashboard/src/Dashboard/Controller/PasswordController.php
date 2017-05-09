@@ -8,7 +8,6 @@ use Dashboard\Form\ChangePasswordForm;
 use Dashboard\Service\PasswordService;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Configuration\MotConfig;
-use DvsaCommon\Constants\FeatureToggle;
 
 class PasswordController extends AbstractAuthActionController
 {
@@ -35,12 +34,12 @@ class PasswordController extends AbstractAuthActionController
     public function changePasswordAction()
     {
         $this->layout('layout/layout-govuk.phtml');
-        $this->layout()->setVariable('pageSubTitle', "Your profile");
-        $this->layout()->setVariable('pageTitle', "Change your password");
+        $this->layout()->setVariable('pageSubTitle', 'Your profile');
+        $this->layout()->setVariable('pageTitle', 'Change your password');
         $this->setHeadTitle('Change your password');
-        
+
         $breadcrumbs = [
-            'Your profile'         => '/your-profile',
+            'Your profile' => '/your-profile',
             'Change your password' => '',
         ];
 
@@ -48,7 +47,7 @@ class PasswordController extends AbstractAuthActionController
 
         $hasPasswordExpired = $this->hasPasswordExpired();
         if ($hasPasswordExpired) {
-            $this->layout()->setVariable('pageLede', "You need to change your password because it has expired");
+            $this->layout()->setVariable('pageLede', 'You need to change your password because it has expired');
         }
 
         $form = $this->form;
@@ -58,12 +57,13 @@ class PasswordController extends AbstractAuthActionController
                 if ($this->passwordService->changePassword($form->getData())) {
                     if ($hasPasswordExpired) {
                         $url = ContextProvider::YOUR_PROFILE_PARENT_ROUTE
-                                . '/change-password/confirmation';
+                                .'/change-password/confirmation';
+
                         return  $this->redirect()->toRoute(
                             $url,
                             ['id' => $this->identityProvider->getIdentity()->getUserId()]);
                     } else {
-                        $this->addSuccessMessage("Your password has been changed.");
+                        $this->addSuccessMessage('Your password has been changed.');
                         $url = ContextProvider::YOUR_PROFILE_PARENT_ROUTE;
 
                         return $this->redirect()->toRoute($url);
@@ -78,12 +78,12 @@ class PasswordController extends AbstractAuthActionController
         }
 
         $form->obfuscateOldPasswordElementName();
-        
+
         return [
-            'form'        => $form,
-            'username'    => $this->getIdentity()->getUsername(),
-            'cancelRoute' => $hasPasswordExpired ? "logout" : 'newProfile',
-            'cancelText'  => $hasPasswordExpired ? "Cancel and return to sign in" : "Cancel and return to your profile"
+            'form' => $form,
+            'username' => $this->getIdentity()->getUsername(),
+            'cancelRoute' => $hasPasswordExpired ? 'logout' : 'newProfile',
+            'cancelText' => $hasPasswordExpired ? 'Cancel and return to sign in' : 'Cancel and return to your profile',
         ];
     }
 
@@ -96,8 +96,8 @@ class PasswordController extends AbstractAuthActionController
     public function confirmationAction()
     {
         $this->layout('layout/layout-govuk.phtml');
-        $this->layout()->setVariable('pageSubTitle', "MOT testing service");
-        $this->layout()->setVariable('pageTitle', "Your password has been changed");
+        $this->layout()->setVariable('pageSubTitle', 'MOT testing service');
+        $this->layout()->setVariable('pageTitle', 'Your password has been changed');
 
         return [];
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\Repository;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository\AbstractStatisticsRepository;
@@ -10,9 +11,9 @@ use DvsaCommon\Enum\OrganisationSiteStatusCode;
 
 class SingleGroupStatisticsRepository extends AbstractStatisticsRepository
 {
-    const PARAM_YEAR = "year";
-    const PARAM_MONTH = "month";
-    const PARAM_GROUP_CODE = "groupCode";
+    const PARAM_YEAR = 'year';
+    const PARAM_MONTH = 'month';
+    const PARAM_GROUP_CODE = 'groupCode';
 
     protected function getByParams($params)
     {
@@ -32,7 +33,7 @@ class SingleGroupStatisticsRepository extends AbstractStatisticsRepository
             ->setParameter('irrelevantAssociationCodes',
                 [
                     OrganisationSiteStatusCode::APPLIED,
-                    OrganisationSiteStatusCode::UNKNOWN
+                    OrganisationSiteStatusCode::UNKNOWN,
                 ]
             );
 
@@ -59,11 +60,11 @@ class SingleGroupStatisticsRepository extends AbstractStatisticsRepository
     protected function createTesterPerformanceResult(array $row)
     {
         $dbResult = new TesterPerformanceResult();
-        $dbResult->setTotalTime((double)$row['totalTime'])
-            ->setFailedCount((int)$row['failedCount'])
-            ->setAverageVehicleAgeInMonths((float)$row['averageVehicleAgeInMonths'])
+        $dbResult->setTotalTime((float) $row['totalTime'])
+            ->setFailedCount((int) $row['failedCount'])
+            ->setAverageVehicleAgeInMonths((float) $row['averageVehicleAgeInMonths'])
             ->setIsAverageVehicleAgeAvailable(!is_null($row['averageVehicleAgeInMonths']))
-            ->setTotalCount((int)$row ['totalCount']);
+            ->setTotalCount((int) $row ['totalCount']);
 
         return $dbResult;
     }

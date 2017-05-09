@@ -70,11 +70,9 @@ class AuthenticationResponseMapperTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataProvider_passwordChangeRequired
      */
-    public function testMapToDto_givenPasswordChangeRequired_shouldSetPasswordChangeRequiredFlagAccordingly
-    (
+    public function testMapToDto_givenPasswordChangeRequired_shouldSetPasswordChangeRequiredFlagAccordingly(
         $passwordChangeRequired, $passwordChangeRequiredFlag
-    )
-    {
+    ) {
         $person = $this->defaultPerson()->setPasswordChangeRequired($passwordChangeRequired);
         $identity = (new Identity($person))->setPasswordExpiryDate($this->aDate());
         $successfulResponse = new AuthenticationSuccess($identity);
@@ -93,11 +91,9 @@ class AuthenticationResponseMapperTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataProvider_accountClaimRequired
      */
-    public function testMapToDto_givenAccountClaimRequired_shouldSetAccountClaimFlagAccordingly
-    (
+    public function testMapToDto_givenAccountClaimRequired_shouldSetAccountClaimFlagAccordingly(
         $accountClaimRequired, $accountClaimRequiredFlag
-    )
-    {
+    ) {
         $person = $this->defaultPerson()->setAccountClaimRequired($accountClaimRequired);
         $identity = (new Identity($person))->setPasswordExpiryDate($this->aDate());
         $successfulResponse = new AuthenticationSuccess($identity);
@@ -191,9 +187,9 @@ class AuthenticationResponseMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('customUsername1', $result->getIdentity());
     }
 
-
     /**
      * @param $code
+     *
      * @return AuthenticationMethod
      */
     private function authenticationType($code)
@@ -203,7 +199,7 @@ class AuthenticationResponseMapperTest extends \PHPUnit_Framework_TestCase
 
     private function defaultPerson()
     {
-        return (new Person)
+        return (new Person())
             ->setId(43434)
             ->setUsername('customUsername')
             ->setFirstName('customFirstName')
@@ -211,8 +207,8 @@ class AuthenticationResponseMapperTest extends \PHPUnit_Framework_TestCase
             ->setPasswordChangeRequired(false);
     }
 
-    private function aDate() {
+    private function aDate()
+    {
         return new \DateTime('20001212121212');
     }
-
 }

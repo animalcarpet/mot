@@ -22,7 +22,7 @@ use DvsaMotApi\Service\OdometerReadingUpdatingService;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 
 /**
- * Class OdometerReadingUpdatingServiceTest
+ * Class OdometerReadingUpdatingServiceTest.
  *
  * Unit test exemplar
  */
@@ -36,7 +36,7 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
     /** @var OverridableMockBuilder $motTestSecurityService */
     private $motTestSecurityServiceMockBuilder;
 
-    /** @var  OverridableMockBuilder $motTestValidatorMockBuilder */
+    /** @var OverridableMockBuilder $motTestValidatorMockBuilder */
     private $motTestValidatorMockBuilder;
 
     /** @var OverridableMockBuilder */
@@ -79,7 +79,7 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             OdometerReadingResultType::NO_ODOMETER,
             $test->getOdometerResultType(),
-            "Incorrect result type has not been saved!"
+            'Incorrect result type has not been saved!'
         );
     }
 
@@ -96,7 +96,7 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             OdometerReadingResultType::NOT_READABLE,
             $test->getOdometerResultType(),
-            "Incorrect result type has not been saved!"
+            'Incorrect result type has not been saved!'
         );
     }
 
@@ -123,7 +123,7 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->motTestSecurityServiceMockBuilder->setExpectation(
             OverridableExpectationBuilder::withMethodResult(
-                "canModifyOdometerForTest",
+                'canModifyOdometerForTest',
                 $this->returnValue($decision)
             )
         );
@@ -133,7 +133,7 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->motTestSecurityServiceMockBuilder->setExpectation(
             OverridableExpectationBuilder::withMethodResult(
-                "isCurrentTesterAssignedToVts",
+                'isCurrentTesterAssignedToVts',
                 $this->returnValue($decision)
             )
         );

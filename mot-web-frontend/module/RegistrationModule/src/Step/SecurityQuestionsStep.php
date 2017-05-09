@@ -14,7 +14,7 @@ class SecurityQuestionsStep extends AbstractRegistrationStep
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "SECURITY_QUESTIONS";
+    const STEP_ID = 'SECURITY_QUESTIONS';
 
     const SECURITY_QUESTIONS_GROUP_A = 'securityQuestionsGroupA';
     const SECURITY_QUESTIONS_GROUP_B = 'securityQuestionsGroupB';
@@ -93,9 +93,9 @@ class SecurityQuestionsStep extends AbstractRegistrationStep
     {
         return [
             SecurityQuestionsInputFilter::FIELD_QUESTION_1 => $this->getQuestion1(),
-            SecurityQuestionsInputFilter::FIELD_ANSWER_1   => $this->getAnswer1(),
+            SecurityQuestionsInputFilter::FIELD_ANSWER_1 => $this->getAnswer1(),
             SecurityQuestionsInputFilter::FIELD_QUESTION_2 => $this->getQuestion2(),
-            SecurityQuestionsInputFilter::FIELD_ANSWER_2   => $this->getAnswer2(),
+            SecurityQuestionsInputFilter::FIELD_ANSWER_2 => $this->getAnswer2(),
         ];
     }
 

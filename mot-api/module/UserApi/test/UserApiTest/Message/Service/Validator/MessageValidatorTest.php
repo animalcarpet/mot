@@ -7,8 +7,8 @@ use UserApi\Message\Service\Validator\MessageValidator;
 class MessageValidatorTest extends \PHPUnit_Framework_TestCase
 {
     private $correctData = [
-        'personId'        => 'not relevant',
-        'messageTypeCode' => 'PRL'
+        'personId' => 'not relevant',
+        'messageTypeCode' => 'PRL',
     ];
 
     public function testValidateCorrectDataDoesNotThrowException()

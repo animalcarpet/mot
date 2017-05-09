@@ -7,8 +7,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaCommonApi\Listener\RestUnauthorizedStrategy;
 
 /**
- * Class UnauthorizedStrategyFactory
- * @package DvsaCommonApi\Factory\Listener
+ * Class UnauthorizedStrategyFactory.
  */
 class UnauthorizedStrategyFactory implements FactoryInterface
 {

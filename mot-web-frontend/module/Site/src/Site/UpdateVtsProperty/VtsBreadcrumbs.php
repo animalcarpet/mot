@@ -16,9 +16,9 @@ class VtsBreadcrumbs
     private $url;
 
     /**
-     * @param VehicleTestingStationDto $vts
+     * @param VehicleTestingStationDto         $vts
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param Url $url
+     * @param Url                              $url
      */
     public function __construct(VehicleTestingStationDto $vts, MotAuthorisationServiceInterface $authorisationService, Url $url)
     {

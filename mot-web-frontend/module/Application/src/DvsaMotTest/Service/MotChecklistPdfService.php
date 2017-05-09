@@ -39,8 +39,7 @@ class MotChecklistPdfService
         MotTestService $motTestServiceClient,
         array $pdfConfig,
         VehicleService $vehicleServiceClient
-    )
-    {
+    ) {
         $this->jsonClient = $jsonClient;
         $this->authorisationService = $authorisationService;
         $this->pdfService = $zendPdfTemplate;
@@ -51,9 +50,12 @@ class MotChecklistPdfService
     }
 
     /**
-     * Generates PDF checklist for given MOT test number
+     * Generates PDF checklist for given MOT test number.
+     *
      * @param $motTestNumber
+     *
      * @return string PDF as a string
+     *
      * @throws NotFoundException
      */
     public function getChecklistPdf($motTestNumber)
@@ -77,11 +79,13 @@ class MotChecklistPdfService
 
     /**
      * @param $motTestNumber
+     *
      * @return MotTest
      */
     protected function getMotTestFromApi($motTestNumber)
     {
         $data = $this->motTestServiceClient->getMotTestByTestNumber($motTestNumber);
+
         return $data;
     }
 
@@ -118,6 +122,7 @@ class MotChecklistPdfService
 
     /**
      * @param string|int $originalText
+     *
      * @return string
      */
     protected function getNotEmptyText($originalText)
@@ -128,5 +133,4 @@ class MotChecklistPdfService
             return '';
         }
     }
-
 }

@@ -4,7 +4,6 @@
  *
  * @link https://github.com/dvsa/mot
  */
-
 use AccountApi\Controller\ClaimController;
 use AccountApi\Controller\SecurityQuestionController;
 use AccountApi\Factory\Controller\PasswordChangeControllerFactory;
@@ -22,8 +21,8 @@ return [
         'options' => [
             'route' => '/account',
             'defaults' => [
-                'controller' => 'Index'
-            ]
+                'controller' => 'Index',
+            ],
         ],
         'may_terminate' => true,
         'child_routes' => [
@@ -54,14 +53,14 @@ return [
                 'options' => [
                     'route' => '/claim[/:id]',
                     'constraints' => [
-                        'id' => '[0-9_-]*'
+                        'id' => '[0-9_-]*',
                     ],
                     'defaults' => [
-                        'controller' => ClaimController::class
-                    ]
-                ]
-            ]
-        ]
+                        'controller' => ClaimController::class,
+                    ],
+                ],
+            ],
+        ],
     ],
     'send-reset-password' => [
         'type' => Literal::class,
@@ -126,7 +125,7 @@ return [
                     ],
                     'defaults' => [
                         'controller' => SecurityQuestionController::class,
-                        'action' => 'verifyAnswer'
+                        'action' => 'verifyAnswer',
                     ],
                 ],
             ],
@@ -140,7 +139,7 @@ return [
                     ],
                     'defaults' => [
                         'controller' => SecurityQuestionController::class,
-                        'action' => 'getQuestionForPerson'
+                        'action' => 'getQuestionForPerson',
                     ],
                 ],
             ],
@@ -169,7 +168,7 @@ return [
                             'route' => '/security-questions',
                             'defaults' => [
                                 'controller' => SecurityQuestionController::class,
-                                'action' => 'getQuestionsForPerson'
+                                'action' => 'getQuestionsForPerson',
                             ],
                         ],
                         'may_terminate' => true,
@@ -189,7 +188,7 @@ return [
                             'route' => '/security-questions/verify',
                             'defaults' => [
                                 'controller' => SecurityQuestionController::class,
-                                'action' => 'verifyAnswers'
+                                'action' => 'verifyAnswers',
                             ],
                         ],
                         'may_terminate' => true,

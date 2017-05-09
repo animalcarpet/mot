@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationTest\Controller;
 
 use DvsaClient\Mapper\OrganisationMapper;
@@ -10,14 +11,11 @@ use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\TestUtils\XMock;
 use Organisation\Controller\SearchController;
-use Zend\View\Model\ViewModel;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SearchControllerTest
- *
- * @package Organisation\Test
+ * Class SearchControllerTest.
  */
 class SearchControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -40,12 +38,12 @@ class SearchControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Test has user access to page or not with/out auth and permission
+     * Test has user access to page or not with/out auth and permission.
      *
-     * @param array   $params               Action parameters
-     * @param array   $permissions          User has permissions
-     * @param string  $expectedUrl          Expect redirect if failure
-     * @param boolean $expectedException    Expect Entity Error
+     * @param array  $params            Action parameters
+     * @param array  $permissions       User has permissions
+     * @param string $expectedUrl       Expect redirect if failure
+     * @param bool   $expectedException Expect Entity Error
      *
      * @dataProvider dataProviderSearchQuestionControllerTestCanAccessHasRight
      */
@@ -115,6 +113,7 @@ class SearchControllerTest extends AbstractFrontendControllerTestCase
                 ->with(['number' => self::AE_NUMBER])
                 ->will($this->returnValue((new OrganisationDto())->setId(1)));
         }
+
         return $mapper;
     }
 }

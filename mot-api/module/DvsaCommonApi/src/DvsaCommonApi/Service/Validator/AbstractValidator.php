@@ -8,7 +8,7 @@ use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use Zend\Validator\Between as ValidateBetween;
 
 /**
- * Class AbstractValidator
+ * Class AbstractValidator.
  */
 abstract class AbstractValidator
 {
@@ -33,6 +33,7 @@ abstract class AbstractValidator
             BadRequestException::ERROR_CODE_INVALID_DATA
         );
         $exception->clearErrors();
+
         return $exception;
     }
 
@@ -108,6 +109,7 @@ abstract class AbstractValidator
                 return true;
             }
         }
+
         return false;
     }
 
@@ -115,11 +117,10 @@ abstract class AbstractValidator
     {
         if ($requiredFields && TypeCheck::isCollectionOfClass($requiredFields, RequiredField::class)) {
             /** @var RequiredField[] $requiredFields */
-
             $missingFieldNames = [];
             foreach ($requiredFields as $requiredField) {
                 if (!array_key_exists($requiredField->getDataName(), $data)
-                    || $data[$requiredField->getDataName()] === ""
+                    || $data[$requiredField->getDataName()] === ''
                     || is_null($data[$requiredField->getDataName()])
                 ) {
                     $missingFieldNames[] = $requiredField->getDisplayName();
@@ -160,12 +161,13 @@ abstract class AbstractValidator
 
     protected function isRequiredValueMissing($fieldName, $data)
     {
-        return (!array_key_exists($fieldName, $data) || empty($data[$fieldName]));
+        return !array_key_exists($fieldName, $data) || empty($data[$fieldName]);
     }
 
     protected function isValueBetween($value, $min, $max)
     {
         $validator = new ValidateBetween(['min' => $min, 'max' => $max]);
+
         return $validator->isValid($value);
     }
 }

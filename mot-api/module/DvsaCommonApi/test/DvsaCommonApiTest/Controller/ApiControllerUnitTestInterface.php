@@ -4,7 +4,7 @@ namespace DvsaCommonApiTest\Controller;
 
 /**
  * Interface for ApiControllerUnitTestTrait
- * Should be used together
+ * Should be used together.
  */
 interface ApiControllerUnitTestInterface
 {

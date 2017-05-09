@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Date\DateTimeApiFormat;
@@ -13,9 +14,7 @@ use DvsaEntities\Entity\OrganisationContact;
 use DvsaCommon\Dto\AreaOffice\AreaOfficeDto;
 
 /**
- * Class OrganisationMapper
- *
- * @package OrganisationApi\Service\Mapper
+ * Class OrganisationMapper.
  */
 class OrganisationMapper extends AbstractApiMapper
 {
@@ -56,7 +55,7 @@ class OrganisationMapper extends AbstractApiMapper
             ->setDataMayBeDisclosed($organisation->getDataMayBeDisclosed());
 
         if ($organisation->isAuthorisedExaminer()) {
-            $ae       = $organisation->getAuthorisedExaminer();
+            $ae = $organisation->getAuthorisedExaminer();
             $aeStatus = $ae->getStatus();
 
             $statusDto = new AuthForAeStatusDto();
@@ -119,7 +118,7 @@ class OrganisationMapper extends AbstractApiMapper
     {
         $hasContactType = [
             OrganisationContactTypeCode::REGISTERED_COMPANY => false,
-            OrganisationContactTypeCode::CORRESPONDENCE     => false,
+            OrganisationContactTypeCode::CORRESPONDENCE => false,
         ];
 
         $contactsDtos = [];

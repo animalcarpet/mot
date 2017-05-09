@@ -48,14 +48,14 @@ echo $this->partial('errorMessages', array('getFromFlash' => true));
                             <td><?php echo $this->escapeHtml($vehicle->getRegistration()); ?></td>
                             <td>
                                 <a href="<?php echo
-                                    VehicleUrlBuilderWeb::historyMotTests($this->paramObfuscator->obfuscate($vehicle->getId())) .
-                                        '?' . http_build_query($this->searchData) . '&backTo=result';
+                                    VehicleUrlBuilderWeb::historyMotTests($this->paramObfuscator->obfuscate($vehicle->getId())).
+                                        '?'.http_build_query($this->searchData).'&backTo=result';
                                 ?>">History</a>
                             </td>
                             <td>
                                 <a href="<?php echo
-                                    VehicleUrlBuilderWeb::vehicle($this->paramObfuscator->obfuscate($vehicle->getId())) .
-                                        '?' . http_build_query($this->searchData);
+                                    VehicleUrlBuilderWeb::vehicle($this->paramObfuscator->obfuscate($vehicle->getId())).
+                                        '?'.http_build_query($this->searchData);
                                 ?>">Details</a></td>
                             <td title="<?php echo $this->escapeHtmlAttr($vehicle->getMake()); ?>"><?php echo $this->escapeHtml($vehicle->getMake()); ?></td>
                             <td title="<?php echo $this->escapeHtmlAttr($vehicle->getModel()); ?>"><?php echo $this->escapeHtml($vehicle->getModel()); ?></td>

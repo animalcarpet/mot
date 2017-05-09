@@ -1,5 +1,5 @@
 <?php $this->layout('layout/layout-govuk.phtml');
-/** @var \Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardSuccessViewModel $viewModel */
+/* @var \Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardSuccessViewModel $viewModel */
 $this->headTitle('Your security card has been activated');
 ?>
 <div></div>
@@ -21,7 +21,7 @@ $this->headTitle('Your security card has been activated');
             <p><a href="<?php echo $this->url('logout')?>">Sign out</a> and in again for the role to take effect.</p>
         </div>
         <?php endif; ?>
-        <?php if($viewModel->getHasPendingNominations()): ?>
+        <?php if ($viewModel->getHasPendingNominations()): ?>
         <div id="role-nominations">
             <h3 class="heading-small">Role nomination(s)</h3>
             <p></p><a href="<?php echo $this->url('user-home/notification/list')?>">Accept or Reject your role nomination</a> from your list of notifications.</p>

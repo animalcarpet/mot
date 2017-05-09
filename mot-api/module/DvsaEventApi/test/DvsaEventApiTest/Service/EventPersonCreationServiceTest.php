@@ -4,15 +4,12 @@ namespace DvsaEventApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\EventType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEventApi\Service\EventPersonCreationService;
 use DvsaEventApi\Service\RecordEventResult;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class EventPersonCreationServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +32,7 @@ class EventPersonCreationServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenPersonNotFoundExceptionThrown()
     {
-        $this->setExpectedException(\Exception::class, 'Unable to find person with id: ' . self::USER_ID);
+        $this->setExpectedException(\Exception::class, 'Unable to find person with id: '.self::USER_ID);
 
         $this->personRepository
             ->expects($this->once())
@@ -49,7 +46,7 @@ class EventPersonCreationServiceTest extends \PHPUnit_Framework_TestCase
     public function testWhenEventTypeNotFoundExceptionThrown()
     {
         $this->withPersonFound();
-        $this->setExpectedException(\Exception::class, 'Unable to find event type with code: ' . self::EVENT_CODE);
+        $this->setExpectedException(\Exception::class, 'Unable to find event type with code: '.self::EVENT_CODE);
 
         $this->eventTypeRepository
             ->expects($this->once())

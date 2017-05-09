@@ -11,7 +11,6 @@ use Application\Data\ApiPersonalDetails;
 use Application\Service\CatalogService;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Data\ApiDashboardResource;
-use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
@@ -23,7 +22,6 @@ use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
-use Application\Service\CanTestWithoutOtpService;
 
 /**
  * Factory for PersonProfileController instances.

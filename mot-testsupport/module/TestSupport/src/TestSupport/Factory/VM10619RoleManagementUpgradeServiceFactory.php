@@ -13,6 +13,7 @@ class VM10619RoleManagementUpgradeServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new VM10619RoleManagementUpgradeService($accountService);
+
         return $service;
     }
 }

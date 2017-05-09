@@ -13,7 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MotTestDateHelperFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var EntityManager $entityManager */
@@ -26,10 +25,9 @@ class MotTestDateHelperFactory implements FactoryInterface
         $motTestStatusService = $serviceLocator->get('MotTestStatusService');
 
         return new MotTestDateHelperService(
-            new DateTimeHolder,
+            new DateTimeHolder(),
             $motRepository,
             $motTestStatusService
         );
     }
 }
-

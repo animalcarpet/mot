@@ -5,7 +5,7 @@ namespace Dashboard\Model;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Data for Special Notice component
+ * Data for Special Notice component.
  */
 class SpecialNotice
 {
@@ -28,9 +28,9 @@ class SpecialNotice
     public function toArray()
     {
         return [
-            'unreadCount'    => $this->getUnreadCount(),
+            'unreadCount' => $this->getUnreadCount(),
             'daysLeftToView' => $this->getDaysLeftToView(),
-            'overdueCount'   => $this->getOverdueCount(),
+            'overdueCount' => $this->getOverdueCount(),
         ];
     }
 
@@ -42,6 +42,7 @@ class SpecialNotice
     public function setDaysLeftToView($daysLeftToView)
     {
         $this->daysLeftToView = $daysLeftToView;
+
         return $this;
     }
 
@@ -61,6 +62,7 @@ class SpecialNotice
     public function setOverdueCount($overdueCount)
     {
         $this->overdueCount = $overdueCount;
+
         return $this;
     }
 
@@ -80,6 +82,7 @@ class SpecialNotice
     public function setUnreadCount($unreadCount)
     {
         $this->unreadCount = $unreadCount;
+
         return $this;
     }
 

@@ -9,7 +9,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Enum\MotTestTypeCode;
 
 /**
- * Class CreateMotTestRequestValidator
+ * Class CreateMotTestRequestValidator.
  */
 class CreateMotTestRequestValidator
 {
@@ -46,7 +46,7 @@ class CreateMotTestRequestValidator
         $requiredKeys = [
             self::FIELD_VEHICLE_ID,
             self::FIELD_COLOURS_PRIMARY,
-            self::FIELD_HAS_REGISTRATION
+            self::FIELD_HAS_REGISTRATION,
         ];
 
         self::checkRequiredKeys($data, $requiredKeys);
@@ -57,7 +57,7 @@ class CreateMotTestRequestValidator
         $requiredKeys = [
             self::FIELD_VEHICLE_ID,
             self::FIELD_COLOURS_PRIMARY,
-            self::FIELD_HAS_REGISTRATION
+            self::FIELD_HAS_REGISTRATION,
         ];
 
         self::checkRequiredKeys($data, $requiredKeys);
@@ -69,7 +69,7 @@ class CreateMotTestRequestValidator
             self::FIELD_VEHICLE_ID,
             self::FIELD_VTS_ID,
             self::FIELD_COLOURS_PRIMARY,
-            self::FIELD_HAS_REGISTRATION
+            self::FIELD_HAS_REGISTRATION,
         ];
 
         self::checkRequiredKeys($data, $requiredKeys);
@@ -96,7 +96,7 @@ class CreateMotTestRequestValidator
             self::FIELD_COLOURS_PRIMARY,
             self::FIELD_HAS_REGISTRATION,
             self::FIELD_VTS_ID,
-            self::FIELD_VEHICLE_CLASS_CODE
+            self::FIELD_VEHICLE_CLASS_CODE,
         ];
 
         foreach ($requiredKeys as $key) {

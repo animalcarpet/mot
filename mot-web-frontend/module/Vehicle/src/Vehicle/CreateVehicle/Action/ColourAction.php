@@ -2,10 +2,8 @@
 
 namespace Vehicle\CreateVehicle\Action;
 
-use Core\Action\ActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
-use Doctrine\DBAL\Schema\View;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use Vehicle\CreateVehicle\Controller\ClassController;
@@ -24,8 +22,7 @@ class ColourAction
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         CreateVehicleStepService $createVehicleStepService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->createVehicleStepService = $createVehicleStepService;
     }

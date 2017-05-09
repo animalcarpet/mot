@@ -4,20 +4,15 @@ namespace DvsaClient\Mapper;
 
 use DvsaClient\Entity\VehicleTestingStation;
 use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
-use DvsaCommon\Dto\Site\OldSiteContactDto;
-use DvsaCommon\Dto\Site\SiteContactDto;
 use DvsaCommon\Dto\Site\SiteListDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Dto\Site\SiteContactPatchDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
- * Class SiteMapper
- *
- * @package DvsaClient\Mapper
+ * Class SiteMapper.
  */
 class SiteMapper extends DtoMapper implements AutoWireableInterface
 {
@@ -25,6 +20,7 @@ class SiteMapper extends DtoMapper implements AutoWireableInterface
 
     /**
      * @param int
+     *
      * @return VehicleTestingStationDto
      */
     public function getById($vtsId)
@@ -63,8 +59,9 @@ class SiteMapper extends DtoMapper implements AutoWireableInterface
     }
 
     /**
-     * @param int $id
+     * @param int   $id
      * @param array $data
+     *
      * @return int
      */
     public function update($id, $data)
@@ -72,14 +69,16 @@ class SiteMapper extends DtoMapper implements AutoWireableInterface
         $apiUrl = VehicleTestingStationUrlBuilder::vtsById($id);
 
         $response = $this->put($apiUrl, $data);
+
         return $response['id'];
     }
 
     /**
-     * Update testing facilities for specified site
+     * Update testing facilities for specified site.
      *
      * @param $siteId
      * @param VehicleTestingStationDto $dto
+     *
      * @return mixed
      */
     public function updateTestingFacilities($siteId, VehicleTestingStationDto $dto)
@@ -90,7 +89,7 @@ class SiteMapper extends DtoMapper implements AutoWireableInterface
     }
 
     /**
-     * @param int $id
+     * @param int   $id
      * @param array $data
      */
     public function saveDefaultBrakeTests($id, $data)
@@ -101,11 +100,13 @@ class SiteMapper extends DtoMapper implements AutoWireableInterface
 
     /**
      * @param array $params
+     *
      * @return SiteListDto
      */
     public function search($params)
     {
         $apiUrl = VehicleTestingStationUrlBuilder::search();
+
         return $this->post($apiUrl, $params);
     }
 
@@ -140,6 +141,7 @@ class SiteMapper extends DtoMapper implements AutoWireableInterface
 
     /**
      * @param string
+     *
      * @return VehicleTestingStationDto
      */
     public function getByNumber($vtsNumber)

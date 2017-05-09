@@ -1,4 +1,5 @@
 <?php
+
 namespace AccountTest\Factory\Service;
 
 use DvsaClient\MapperFactory;
@@ -8,8 +9,7 @@ use Account\Service\PasswordResetService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class PasswordResetServiceFactoryTest
- * @package AccountTest\Factory
+ * Class PasswordResetServiceFactoryTest.
  */
 class PasswordResetServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

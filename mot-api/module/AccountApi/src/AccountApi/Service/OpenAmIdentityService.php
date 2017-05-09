@@ -7,7 +7,6 @@ use Dvsa\OpenAM\Model\OpenAMExistingIdentity;
 use Dvsa\OpenAM\Model\OpenAMLoginDetails;
 use Dvsa\OpenAM\OpenAMClientInterface;
 use DvsaCommonApi\Service\Exception\ServiceException;
-use DvsaEntities\Repository\PersonRepository;
 use PersonApi\Service\PasswordExpiryNotificationService;
 
 /**
@@ -32,7 +31,7 @@ class OpenAmIdentityService
     private $passwordExpiryNotificationService;
 
     /**
-     * @param OpenAMClientInterface $openAMClient
+     * @param OpenAMClientInterface             $openAMClient
      * @param PasswordExpiryNotificationService $passwordExpiryNotificationService
      * @param $realm
      */
@@ -42,7 +41,7 @@ class OpenAmIdentityService
         $realm
     ) {
         $this->openAMClient = $openAMClient;
-        $this->realm        = $realm;
+        $this->realm = $realm;
         $this->passwordExpiryNotificationService = $passwordExpiryNotificationService;
     }
 
@@ -72,7 +71,7 @@ class OpenAmIdentityService
     public function unlockAccount($username)
     {
         $userDetails = new OpenAMLoginDetails($username, null, $this->realm);
-        $status      = $this->openAMClient->unlockAccount($userDetails);
+        $status = $this->openAMClient->unlockAccount($userDetails);
 
         return $status;
     }

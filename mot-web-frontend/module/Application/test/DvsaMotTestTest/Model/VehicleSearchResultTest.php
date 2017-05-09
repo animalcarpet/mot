@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Model;
 
 use Application\Service\CatalogService;
@@ -7,18 +8,13 @@ use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Constants\VehicleSearchSource;
-use DvsaMotTest\Model\VehicleSearchResult;
 use PHPUnit_Framework_TestCase;
-use Tree\Fixture\Transport\Vehicle;
 
 /**
- * Class VehicleSearchResultTest
- *
- * @package DvsaMotTest\Model
+ * Class VehicleSearchResultTest.
  */
 class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
 {
-
     /** @var VehicleSearchResult */
     private $vehicleSearchResultModel;
 
@@ -73,7 +69,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($result->getVin(), $apiVehicles[$i]['vin']);
             $this->assertEquals($result->getMake(), $apiVehicles[$i]['make']);
             $this->assertEquals($result->getModel(), $apiVehicles[$i]['model']);
-            $this->assertEquals($result->getMakeAndModel(), $apiVehicles[$i]['make'] . ' ' . $apiVehicles[$i]['model']);
+            $this->assertEquals($result->getMakeAndModel(), $apiVehicles[$i]['make'].' '.$apiVehicles[$i]['model']);
             $this->assertEquals($result->getMotTestCount(), $apiVehicles[$i]['total_mot_tests']);
 
             if ($apiVehicles[$i]['total_mot_tests'] == 0) {
@@ -97,7 +93,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals($result->getSource(), VehicleSearchSource::VTR);
             }
 
-            $i++;
+            ++$i;
         }
     }
 
@@ -130,7 +126,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             $this->assertTrue($result->isRetest());
             $this->assertFalse($result->isNormalTest());
 
-            $i++;
+            ++$i;
         }
     }
 
@@ -155,7 +151,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($result->isRetest());
             $this->assertTrue($result->isNormalTest());
 
-            $i++;
+            ++$i;
         }
     }
 
@@ -174,18 +170,15 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'model' => 'WXE50',
             'modelDetail' => null,
             'vehicleClass' => '4',
-            'primaryColour' =>
-                [
+            'primaryColour' => [
                     'id' => 2,
                     'name' => 'Black',
                 ],
-            'secondaryColour' =>
-                [
+            'secondaryColour' => [
                     'id' => 2,
                     'name' => 'Black',
                 ],
-            'fuelType' =>
-                [
+            'fuelType' => [
                     'id' => 1,
                     'name' => 'Petrol',
                 ],
@@ -197,7 +190,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'mot_id' => null,
             'mot_completed_date' => null,
             'total_mot_tests' => '0',
-            'isIncognito' => false
+            'isIncognito' => false,
         ];
 
         $vehicleTwo = [
@@ -213,18 +206,15 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'model' => 'Mondeo',
             'modelDetail' => null,
             'vehicleClass' => '4',
-            'primaryColour' =>
-                [
+            'primaryColour' => [
                     'id' => 2,
                     'name' => 'Black',
                 ],
-            'secondaryColour' =>
-                [
+            'secondaryColour' => [
                     'id' => 2,
                     'name' => 'YELLOW',
                 ],
-            'fuelType' =>
-                [
+            'fuelType' => [
                     'id' => 1,
                     'name' => 'Petrol',
                 ],
@@ -236,7 +226,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'mot_id' => null,
             'mot_completed_date' => null,
             'total_mot_tests' => '0',
-            'isIncognito' => true
+            'isIncognito' => true,
         ];
 
         $vehicleThree = [
@@ -252,18 +242,15 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'model' => 'WXE50',
             'modelDetail' => null,
             'vehicleClass' => '4',
-            'primaryColour' =>
-                [
+            'primaryColour' => [
                     'id' => 2,
                     'name' => 'Black',
                 ],
-            'secondaryColour' =>
-                [
+            'secondaryColour' => [
                     'id' => 2,
                     'name' => 'Black',
                 ],
-            'fuelType' =>
-                [
+            'fuelType' => [
                     'id' => 1,
                     'name' => 'Petrol',
                 ],
@@ -275,7 +262,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'mot_id' => null,
             'mot_completed_date' => '2015-01-02',
             'total_mot_tests' => '8',
-            'isIncognito' => null
+            'isIncognito' => null,
         ];
 
         return [
@@ -283,10 +270,9 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
                 'vehicles' => [
                     $vehicleOne,
                     $vehicleTwo,
-                    $vehicleThree
-                ]
-            ]
+                    $vehicleThree,
+                ],
+            ],
         ];
     }
-
 }

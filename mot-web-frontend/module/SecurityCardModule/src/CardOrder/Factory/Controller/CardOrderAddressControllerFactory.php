@@ -5,7 +5,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Controller;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderAddressAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller\CardOrderAddressController;
 use DvsaCommon\Auth\MotIdentityProvider;
-use Zend\Http\Request;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardAddressService;

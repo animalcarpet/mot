@@ -35,8 +35,8 @@ class SearchPersonSqlBuilder
     public function __construct(EntityManager $entityManager, SearchPersonModel $model)
     {
         $this->entityManager = $entityManager;
-        $this->model         = $model;
-        $this->params        = [];
+        $this->model = $model;
+        $this->params = [];
         $this->buildSqlAndParamsList();
     }
 
@@ -63,7 +63,7 @@ class SearchPersonSqlBuilder
      */
     private function buildSqlAndParamsList()
     {
-        $conn         = $this->entityManager->getConnection();
+        $conn = $this->entityManager->getConnection();
         $queryBuilder = $conn->createQueryBuilder();
 
         $queryBuilder

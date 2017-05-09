@@ -19,6 +19,7 @@ class LostOrForgottenCardControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return LostOrForgottenCardController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -35,7 +36,7 @@ class LostOrForgottenCardControllerFactory implements FactoryInterface
         /** @var MotIdentityProviderInterface $identityProvider */
         $identityProvider = $serviceLocator->get('MotIdentityProvider');
 
-        /** @var TwoFaFeatureToggle $twoFaFeatureToggle*/
+        /** @var TwoFaFeatureToggle $twoFaFeatureToggle */
         $twoFaFeatureToggle = $serviceLocator->get(TwoFaFeatureToggle::class);
 
         /** @var LostOrForgottenService $securityQuestionService */

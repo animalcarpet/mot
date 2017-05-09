@@ -9,11 +9,10 @@ use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use Event\ViewModel\Event\EventDetailViewModel;
-use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class EventDetailViewModelTest
+ * Class EventDetailViewModelTest.
  */
 class EventDetailViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -104,17 +103,17 @@ class EventDetailViewModelTest extends \PHPUnit_Framework_TestCase
         $organisation = new OrganisationDto();
         $organisation->setId(self::AE_ID);
         $data = [
-            'search'        => 'search',
-            'isShowDate'    => true,
-            'dateFrom'      => [
-                'Day'   => 01,
+            'search' => 'search',
+            'isShowDate' => true,
+            'dateFrom' => [
+                'Day' => 01,
                 'Month' => 01,
-                'Year'  => 2015,
+                'Year' => 2015,
             ],
-            'dateTo'        => [
-                'Day'   => 01,
+            'dateTo' => [
+                'Day' => 01,
                 'Month' => 01,
-                'Year'  => 2015,
+                'Year' => 2015,
             ],
         ];
         $site = (new VehicleTestingStationDto())
@@ -149,16 +148,16 @@ class EventDetailViewModelTest extends \PHPUnit_Framework_TestCase
 
         $this->viewModel = new EventDetailViewModel($organisation, $site, $person, null, 'ae', new EventFormDto(), false, '');
         $this->assertEquals('AE Event for', $this->viewModel->getTitle());
-        $this->assertEquals(self::AE_NUMBER . ' - ' . self::AE_NAME, $this->viewModel->getName());
+        $this->assertEquals(self::AE_NUMBER.' - '.self::AE_NAME, $this->viewModel->getName());
         $this->viewModel->setEventType('site');
         $this->assertEquals('Site Event for', $this->viewModel->getTitle());
-        $this->assertEquals(self::SITE_NUMBER . ' - ' . self::SITE_NAME, $this->viewModel->getName());
+        $this->assertEquals(self::SITE_NUMBER.' - '.self::SITE_NAME, $this->viewModel->getName());
         $this->viewModel->setEventType('person');
         $this->assertEquals('Person Event for', $this->viewModel->getTitle());
         $this->assertSame(
-            self::PERSON_USERNAME . ' - ' .
-            self::PERSON_FIRSTNAME . ' ' .
-            self::PERSON_MIDDLENAME . ' ' .
+            self::PERSON_USERNAME.' - '.
+            self::PERSON_FIRSTNAME.' '.
+            self::PERSON_MIDDLENAME.' '.
             self::PERSON_FAMILYNAME,
             $this->viewModel->getName()
         );

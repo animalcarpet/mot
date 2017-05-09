@@ -2,13 +2,11 @@
 
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * DvlaMake
+ * DvlaMake.
  *
  * @ORM\Table(
  *  name="dvla_make",
@@ -46,6 +44,7 @@ class DvlaMake extends Entity
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 

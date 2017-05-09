@@ -1,4 +1,5 @@
 <?php
+
 namespace AccountTest\Factory\Controller;
 
 use Account\Controller\PasswordResetController;
@@ -9,12 +10,10 @@ use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\XMock;
 use Account\Service\PasswordResetService;
 use UserAdmin\Service\UserAdminSessionManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PasswordResetControllerFactoryTest
- * @package AccountTest\Factory
+ * Class PasswordResetControllerFactoryTest.
  */
 class PasswordResetControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -9,15 +10,12 @@ use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
-use PHPUnit_Framework_ExpectationFailedException;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
 
 /**
- * Class AbstractServiceTestCase
- *
- * @package DvsaCommonApiTest\Service
+ * Class AbstractServiceTestCase.
  */
 abstract class AbstractServiceTestCase extends PHPUnit_Framework_TestCase
 {
@@ -171,6 +169,7 @@ abstract class AbstractServiceTestCase extends PHPUnit_Framework_TestCase
      * @param bool $isAuthorized
      *
      * @return AuthorisationServiceInterface|MockObj
+     *
      * @throws \Exception
      */
     protected function getMockAuthorizationService($isAuthorized = true)
@@ -251,9 +250,9 @@ abstract class AbstractServiceTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Mock class protected or private property
+     * Mock class protected or private property.
      *
-     * @param Object $instance Instance of class
+     * @param object $instance Instance of class
      * @param string $property Name of property
      * @param mixed  $value    Set value to property
      * @param string $class    Name of class, if not provided then take name of class from instance
@@ -272,7 +271,7 @@ abstract class AbstractServiceTestCase extends PHPUnit_Framework_TestCase
     protected function assertGrantedAtSite(MockObj $authService, $permissions, $siteId)
     {
         $authService->expects($this->any())
-            ->method("assertGrantedAtSite")
+            ->method('assertGrantedAtSite')
             ->willReturnCallback(
                 function ($chkPermission, $chkSiteId) use (&$permissions, $siteId) {
                     if ($chkSiteId == $siteId && !in_array($chkPermission, $permissions)) {
@@ -287,7 +286,7 @@ abstract class AbstractServiceTestCase extends PHPUnit_Framework_TestCase
     protected function assertGrantedAtOrganisation(MockObj $authService, $permissions, $orgId)
     {
         $authService->expects($this->any())
-            ->method("assertGrantedAtOrganisation")
+            ->method('assertGrantedAtOrganisation')
             ->willReturnCallback(
                 function ($chkPermission, $chkOrgId) use (&$permissions, $orgId) {
                     if ($chkOrgId === $orgId && !in_array($chkPermission, $permissions)) {

@@ -8,11 +8,11 @@ return [
         'abstract_factories' => [
             \DvsaCommonApi\Service\Hydrator\HydratorFactory::class,
         ],
-        'factories'          => [
-            DateTimeHolderInterface::class   => DateTimeHolderFactory::class,
+        'factories' => [
+            DateTimeHolderInterface::class => DateTimeHolderFactory::class,
         ],
     ],
-    'view_manager'    => [
+    'view_manager' => [
         'strategies' => [
             'ViewJsonStrategy',
         ],

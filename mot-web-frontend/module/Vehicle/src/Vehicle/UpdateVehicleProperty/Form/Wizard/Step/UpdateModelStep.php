@@ -1,19 +1,16 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form\Wizard\Step;
 
 use Core\Action\RedirectToRoute;
 use Core\FormWizard\LayoutData;
 use Core\FormWizard\WizardContextInterface;
 use Core\Routing\VehicleRouteList;
-use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\ApiClient\Vehicle\Dictionary\ModelApiResource;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaMotTest\Service\StartTestChangeService;
-use PhpParser\Node\Expr\AssignOp\Mod;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\MakeForm;
 use Vehicle\UpdateVehicleProperty\Form\ModelForm;
@@ -27,18 +24,18 @@ use Zend\View\Helper\Url;
 
 class UpdateModelStep extends AbstractStep implements AutoWireableInterface
 {
-    const NAME = "model";
-    const PARTIAL_EDIT_MODEL = "partials/edit-model.phtml";
-    const PARTIAL_EDIT_OTHER_MODEL = "partials/edit-other-model.phtml";
+    const NAME = 'model';
+    const PARTIAL_EDIT_MODEL = 'partials/edit-model.phtml';
+    const PARTIAL_EDIT_OTHER_MODEL = 'partials/edit-other-model.phtml';
     const PAGE_TITLE = 'Change make and model';
-    const PAGE_SUBTITLE_UPDATE_DURING_TEST = "Change vehicle record";
+    const PAGE_SUBTITLE_UPDATE_DURING_TEST = 'Change vehicle record';
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's model?";
 
     private $modelApiResource;
     private $breadcrumbsBuilder;
     private $tertiaryTitleBuilder;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     /**
@@ -51,8 +48,7 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
         ModelApiResource $modelApiResource,
         VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct($url);
 
         $this->modelApiResource = $modelApiResource;
@@ -70,13 +66,15 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
     public function setContext(WizardContextInterface $context)
     {
         TypeCheck::assertInstance($context, UpdateVehicleContext::class);
+
         return parent::setContext($context);
     }
 
     protected function dataExists($formUuid)
     {
         $storedData = $this->getStoredData($formUuid);
-        return (empty($storedData) === false);
+
+        return empty($storedData) === false;
     }
 
     protected function getLayoutData()
@@ -87,7 +85,7 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
         $layout = new LayoutData();
         $layout->setBreadcrumbs($breadcrumbs);
         $layout->setPageTitle($isUpdateUnderTest ? self::PAGE_TITLE_UPDATE_DURING_TEST : self::PAGE_TITLE);
-        $layout->setPageSubTitle($isUpdateUnderTest ? self::PAGE_SUBTITLE_UPDATE_DURING_TEST : "Vehicle");
+        $layout->setPageSubTitle($isUpdateUnderTest ? self::PAGE_SUBTITLE_UPDATE_DURING_TEST : 'Vehicle');
 
         return $layout;
     }
@@ -95,7 +93,7 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
     protected function createViewModel(Form $form, $formUuid)
     {
         $isUpdateUnderTest = $this->context->isUpdateVehicleDuringTest();
-        $formActionUrl = $this->getRoute(["formUuid" => $formUuid])->toString($this->url);
+        $formActionUrl = $this->getRoute(['formUuid' => $formUuid])->toString($this->url);
         $backUrl = $this->getBackUrl($formUuid);
 
         $tertiaryTitle = $this->getTertiaryTitleForVehicle();
@@ -108,10 +106,10 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
 
         return (new UpdateVehiclePropertyViewModel())
             ->setForm($form)
-            ->setSubmitButtonText($isUpdateUnderTest ? 'Continue' : "Review make and model")
+            ->setSubmitButtonText($isUpdateUnderTest ? 'Continue' : 'Review make and model')
             ->setPartial($partial)
             ->setBackUrl($backUrl)
-            ->setBackLinkText("Back")
+            ->setBackLinkText('Back')
             ->setFormActionUrl($formActionUrl)
             ->setPageTertiaryTitle($tertiaryTitle);
     }
@@ -137,7 +135,8 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
 
     /**
      * @param OtherModelForm $form
-     * @param string $formUuid
+     * @param string         $formUuid
+     *
      * @return string
      */
     protected function saveData(Form $form, $formUuid)
@@ -162,13 +161,13 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
             $this->startTestChangeService
                 ->saveChange(StartTestChangeService::CHANGE_MODEL, [
                     'modelId' => $modelId,
-                    'modelName'  => $modelName,
+                    'modelName' => $modelName,
                 ]);
             $this->startTestChangeService->updateChangedValueStatus(StartTestChangeService::CHANGE_MODEL, true);
         }
 
         $data = $this->getAllStoredData($formUuid);
-        $data[$this->getName()] = array_merge($form->getData(), ["name" => $form->getSelectedModelName()]);
+        $data[$this->getName()] = array_merge($form->getData(), ['name' => $form->getSelectedModelName()]);
 
         return $this->formContainer->store($this->getSessionStoreKey(), $data, $formUuid);
     }
@@ -178,14 +177,14 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
         if ($this->context->isUpdateVehicleDuringTest()) {
             return new RedirectToRoute(
                 VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_MAKE_AND_MODEL,
-                ["id" => $this->context->getObfuscatedVehicleId(), "property" => self::NAME],
+                ['id' => $this->context->getObfuscatedVehicleId(), 'property' => self::NAME],
                 $queryParams
             );
         }
 
         return new RedirectToRoute(
             VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,
-            ["id" => $this->context->getObfuscatedVehicleId(), "property" => self::NAME],
+            ['id' => $this->context->getObfuscatedVehicleId(), 'property' => self::NAME],
             $queryParams
         );
     }
@@ -198,8 +197,8 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
             // need to default to please select when updating under test
             return [ModelForm::FIELD_MODEL_NAME => ''];
         } else {
-            $makeId = ($this->context->getVehicle()->getMake() === null)? null : $this->context->getVehicle()->getMake()->getId();
-            $modelId = ($this->context->getVehicle()->getModel() === null)? null : $this->context->getVehicle()->getModel()->getId();
+            $makeId = ($this->context->getVehicle()->getMake() === null) ? null : $this->context->getVehicle()->getMake()->getId();
+            $modelId = ($this->context->getVehicle()->getModel() === null) ? null : $this->context->getVehicle()->getModel()->getId();
 
             $modelId = $this->getMakeId() == $makeId ? $modelId : null;
 
@@ -209,7 +208,7 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
 
     private function hasOtherMakeId()
     {
-        return ($this->getMakeId() === MakeForm::OTHER_ID);
+        return $this->getMakeId() === MakeForm::OTHER_ID;
     }
 
     private function getMakeId()
@@ -234,11 +233,11 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
             return $data['name'];
         }
 
-        if (array_key_exists("name", $data)) {
-            return $data["name"];
+        if (array_key_exists('name', $data)) {
+            return $data['name'];
         }
 
-        return "";
+        return '';
     }
 
     /**

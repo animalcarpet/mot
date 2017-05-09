@@ -1,28 +1,30 @@
 <?php
 /**
- * Version trait
+ * Version trait.
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
+
 namespace DvsaEntities\EntityTrait;
 
 /**
- * Version trait
+ * Version trait.
  */
 trait VersionTrait
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="version", type="integer", nullable=false)
+     *
      * @version
      */
     private $version = '1';
 
     /**
-     * Set version
+     * Set version.
      *
-     * @param integer $version
+     * @param int $version
      *
      * @return $this
      */
@@ -34,9 +36,9 @@ trait VersionTrait
     }
 
     /**
-     * Get version
+     * Get version.
      *
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {

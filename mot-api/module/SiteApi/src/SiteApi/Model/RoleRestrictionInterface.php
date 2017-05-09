@@ -6,7 +6,7 @@ use DvsaCommonApi\Service\Validator\ErrorSchema;
 use DvsaEntities\Entity\Person;
 
 /**
- * Interface RoleRestrictionInterface
+ * Interface RoleRestrictionInterface.
  */
 interface RoleRestrictionInterface
 {
@@ -22,7 +22,7 @@ interface RoleRestrictionInterface
     public function verify(Person $person, SitePersonnel $personnel);
 
     /**
-     * @return String The role this restriction applies to
+     * @return string The role this restriction applies to
      */
     public function getRole();
 }

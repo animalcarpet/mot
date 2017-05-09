@@ -31,7 +31,7 @@ class DefectCategoriesControllerFactory implements FactoryInterface
         /** @var AuthorisationService $authorisationService */
         $authorisationService = $mainServiceManager->get('AuthorisationService');
         /**
-         * @var DefectsContentBreadcrumbsBuilder $breadcrumbsBuilder
+         * @var DefectsContentBreadcrumbsBuilder
          */
         $breadcrumbsBuilder = $mainServiceManager->get(DefectsContentBreadcrumbsBuilder::class);
 

@@ -16,6 +16,7 @@ class UserStatsServiceFactory implements FactoryInterface
         $entityManager = $serviceLocator->get(EntityManager::class);
         /** @var MotTestRepository $motTestRepository */
         $motTestRepository = $entityManager->getRepository(\DvsaEntities\Entity\MotTest::class);
+
         return new UserStatsService($entityManager, $motTestRepository);
     }
 }

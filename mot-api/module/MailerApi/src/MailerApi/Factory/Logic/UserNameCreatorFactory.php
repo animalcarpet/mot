@@ -7,7 +7,6 @@ use MailerApi\Service\TemplateResolverService;
 use MailerApi\Service\MailerService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Resolver\AggregateResolver;
 
 class UserNameCreatorFactory implements FactoryInterface
 {

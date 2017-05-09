@@ -7,23 +7,18 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
 use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaCommonTest\Bootstrap;
-use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\BusinessRoleStatus;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteBusinessRole;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
-use SiteApi\Controller\SitePositionController;
 use SiteApi\Controller\SitePositionValidateController;
 use SiteApi\Service\NominateRoleService;
 use SiteApi\Service\SitePositionService;
-use Zend\Stdlib\Parameters;
 
 /**
- * Class SitePositionValidateControllerTest
- *
- * @package SiteApiTest\Controller
+ * Class SitePositionValidateControllerTest.
  */
 class SitePositionValidateControllerTest extends AbstractRestfulControllerTestCase
 {
@@ -52,7 +47,7 @@ class SitePositionValidateControllerTest extends AbstractRestfulControllerTestCa
         $result = $this->controller->create(
             [
                 'nomineeId' => $this->nomineeId,
-                'roleCode'  => SiteBusinessRoleCode::TESTER
+                'roleCode' => SiteBusinessRoleCode::TESTER,
             ]
         );
         //then
@@ -62,6 +57,7 @@ class SitePositionValidateControllerTest extends AbstractRestfulControllerTestCa
     private function getSitePositionServiceMock()
     {
         $organisationPositionServiceMock = XMock::of(SitePositionService::class);
+
         return $organisationPositionServiceMock;
     }
 

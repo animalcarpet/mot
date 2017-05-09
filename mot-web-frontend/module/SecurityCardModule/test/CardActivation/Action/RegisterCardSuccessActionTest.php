@@ -13,16 +13,8 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardSu
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\TwoFactorNominationNotificationService;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
-use DvsaFeature\FeatureToggles;
-use Zend\Di\ServiceLocator;
-use Zend\EventManager\Exception\DomainException;
 use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\View\Model\ViewModel;
 
 class RegisterCardSuccessActionTest extends \PHPUnit_Framework_TestCase
 {

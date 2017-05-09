@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -6,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SpecialNoticeContent
+ * SpecialNoticeContent.
  *
  * @ORM\Table(
  *  name="special_notice_content",
@@ -26,14 +27,14 @@ class SpecialNoticeContent extends Entity
     private $title;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="issue_number", type="integer", nullable=false)
      */
     private $issueNumber;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="issue_year", type="integer", nullable=false)
      */
@@ -75,13 +76,13 @@ class SpecialNoticeContent extends Entity
     private $noticeText;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_published", type="boolean", nullable=false)
      */
     private $isPublished = '0';
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_deleted", type="boolean", nullable=false)
      */
@@ -100,7 +101,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * @param boolean $isDeleted
+     * @param bool $isDeleted
      *
      * @return $this
      * @codeCoverageIgnore
@@ -113,7 +114,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @codeCoverageIgnore
      */
     public function getIsDeleted()
@@ -122,7 +123,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -136,7 +137,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -146,7 +147,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set noticeText
+     * Set noticeText.
      *
      * @param string $noticeText
      *
@@ -160,7 +161,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get noticeText
+     * Get noticeText.
      *
      * @return string
      */
@@ -170,7 +171,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * @param boolean $isPublished
+     * @param bool $isPublished
      *
      * @return $this
      */
@@ -182,7 +183,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPublished()
     {
@@ -190,7 +191,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set issueDate
+     * Set issueDate.
      *
      * @param \DateTime $issueDate
      *
@@ -204,7 +205,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get issueDate
+     * Get issueDate.
      *
      * @return \DateTime
      */
@@ -214,9 +215,9 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set issueNumber
+     * Set issueNumber.
      *
-     * @param integer $issueNumber
+     * @param int $issueNumber
      *
      * @return SpecialNoticeContent
      */
@@ -228,9 +229,9 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get issueNumber
+     * Get issueNumber.
      *
-     * @return integer
+     * @return int
      */
     public function getIssueNumber()
     {
@@ -238,9 +239,9 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set issueYear
+     * Set issueYear.
      *
-     * @param integer $issueYear
+     * @param int $issueYear
      *
      * @return SpecialNoticeContent
      */
@@ -252,9 +253,9 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get issueYear
+     * Get issueYear.
      *
-     * @return integer
+     * @return int
      */
     public function getIssueYear()
     {
@@ -262,7 +263,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set expiryDate
+     * Set expiryDate.
      *
      * @param \DateTime $expiryDate
      *
@@ -276,7 +277,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get expiryDate
+     * Get expiryDate.
      *
      * @return \DateTime
      */
@@ -286,7 +287,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set externalPublishDate
+     * Set externalPublishDate.
      *
      * @param \DateTime $externalPublishDate
      *
@@ -300,7 +301,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get externalPublishDate
+     * Get externalPublishDate.
      *
      * @return \DateTime
      */
@@ -310,7 +311,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Set internalPublishDate
+     * Set internalPublishDate.
      *
      * @param \DateTime $internalPublishDate
      *
@@ -324,7 +325,7 @@ class SpecialNoticeContent extends Entity
     }
 
     /**
-     * Get internalPublishDate
+     * Get internalPublishDate.
      *
      * @return \DateTime
      */

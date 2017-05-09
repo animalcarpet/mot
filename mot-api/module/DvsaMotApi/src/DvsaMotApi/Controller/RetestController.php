@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -8,7 +9,7 @@ use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\CreateMotTestService;
 
 /**
- * Class RetestController
+ * Class RetestController.
  */
 class RetestController extends AbstractDvsaRestfulController
 {
@@ -20,6 +21,6 @@ class RetestController extends AbstractDvsaRestfulController
         $motTestService = $this->getServiceLocator()->get('MotTestService');
         $motTest = $motTestService->createMotTest($data);
 
-        return ApiResponse::jsonOk(["motTestNumber" => $motTest->getNumber()]);
+        return ApiResponse::jsonOk(['motTestNumber' => $motTest->getNumber()]);
     }
 }

@@ -2,26 +2,21 @@
 
 namespace SiteApi\Service;
 
-use Doctrine\ORM\EntityManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Date\Time;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
-use DvsaEntities\Entity;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaEntities\Repository\SiteTestingDailyScheduleRepository;
 use SiteApi\Service\Validator\SiteTestingDailyScheduleValidator;
 
 /**
- * Class SiteTestingDailyScheduleService
+ * Class SiteTestingDailyScheduleService.
  *
  * Provides functionality to get, manipulate and write the site weekly opening times schedule.
- *
- * @package SiteApi\Service
  */
 class SiteTestingDailyScheduleService implements TransactionAwareInterface
 {
@@ -29,10 +24,10 @@ class SiteTestingDailyScheduleService implements TransactionAwareInterface
 
     /** @var SiteTestingDailyScheduleRepository $scheduleRepository */
     private $scheduleRepository;
-    /** @var  SiteRepository $siteRepository */
+    /** @var SiteRepository $siteRepository */
     private $siteRepository;
 
-    /** @var SiteTestingDailyScheduleValidator $scheduleValidator  */
+    /** @var SiteTestingDailyScheduleValidator $scheduleValidator */
     private $scheduleValidator;
 
     private $authorisationService;
@@ -53,6 +48,7 @@ class SiteTestingDailyScheduleService implements TransactionAwareInterface
      * @param $siteId
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getSchedule($siteId)
@@ -71,6 +67,7 @@ class SiteTestingDailyScheduleService implements TransactionAwareInterface
      * @param $data
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      * @throws \DvsaCommonApi\Service\Exception\BadRequestExceptionWithMultipleErrors
      * @throws \DvsaCommonApi\Service\Exception\RequiredFieldException
@@ -132,7 +129,7 @@ class SiteTestingDailyScheduleService implements TransactionAwareInterface
     private function updateCurrentSchedule($existingWeeklySchedule, $updatedWeekSchedule)
     {
         foreach ($updatedWeekSchedule as $dailyScheduleData) {
-            $weekday = (int)$dailyScheduleData['weekday'];
+            $weekday = (int) $dailyScheduleData['weekday'];
             $dailySchedule = SiteTestingDailySchedule::getScheduleForWeekday($existingWeeklySchedule, $weekday);
             $dailySchedule
                 ->setOpenTime($this->resolveOpeningTime($dailyScheduleData))

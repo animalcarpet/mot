@@ -1,15 +1,13 @@
 <?php
+
 namespace DvsaMotApiTest\Service\RfrValidator;
 
-use PHPUnit_Framework_TestCase;
 use DvsaMotApi\Service\RfrValidator\BaseValidator;
 use DvsaMotApi\Service\RfrValidator\BaseResultValidator;
-use \DvsaMotApi\Service\RfrValidator\CheckDisciplinaryActionHasJustificationAgainstScore;
+use DvsaMotApi\Service\RfrValidator\CheckDisciplinaryActionHasJustificationAgainstScore;
 
 /**
- * Class CheckAdvisoryWarningHasJustificationAgainstScoreTest
- *
- * @package DvsaMotApiTest\Service\RfrValidator
+ * Class CheckAdvisoryWarningHasJustificationAgainstScoreTest.
  */
 class CheckDisciplinaryActionHasJustificationAgainstScoreTest extends AbstractResultValidatorTest
 {
@@ -22,17 +20,18 @@ class CheckDisciplinaryActionHasJustificationAgainstScoreTest extends AbstractRe
     protected function getValidator($mappedRfrId, $fixture)
     {
         $mappedRfrId = null;
+
         return new CheckDisciplinaryActionHasJustificationAgainstScore($fixture, $fixture['totalScore']);
     }
 
     /**
-     * Get the name for this fixture to appear in generated tests
+     * Get the name for this fixture to appear in generated tests.
      *
      * @return array|string
      */
     public function getFixtureName()
     {
-        return "Check Disciplinary Action Has Justification Against Score";
+        return 'Check Disciplinary Action Has Justification Against Score';
     }
 
     /**
@@ -59,44 +58,44 @@ class CheckDisciplinaryActionHasJustificationAgainstScoreTest extends AbstractRe
     protected function makeFixtureWhereJustificationMustPass($totalScore, $scoreValue, $fitnesse = false)
     {
         $this->fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"          => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[count($this->fixtures)] = [
-                    "rfrId"         => $this->validRfrIds[count($this->fixtures)],
-                    "score"         => $scoreValue,
-                    "decision"      => BaseValidator::DEFECT_MISSED,
-                    "category"      => BaseValidator::CATEGORY_IMMEDIATE,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rfrId' => $this->validRfrIds[count($this->fixtures)],
+                    'score' => $scoreValue,
+                    'decision' => BaseValidator::DEFECT_MISSED,
+                    'category' => BaseValidator::CATEGORY_IMMEDIATE,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
-            "finalJustification"  => "",
-            "totalScore"          => $totalScore,
-            "error"               => 1,
-            "message"             => BaseValidator::INVALID_MISSING_REQUIRED_JUSTIFICATION,
-            "failedItem"          => "finalJustification",
-            "fitnesse"            => (bool) $fitnesse
+            'caseOutcome' => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
+            'finalJustification' => '',
+            'totalScore' => $totalScore,
+            'error' => 1,
+            'message' => BaseValidator::INVALID_MISSING_REQUIRED_JUSTIFICATION,
+            'failedItem' => 'finalJustification',
+            'fitnesse' => (bool) $fitnesse,
         ];
         $this->fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"          => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[count($this->fixtures)] = [
-                    "rfrId"         => $this->validRfrIds[count($this->fixtures)],
-                    "score"         => $scoreValue,
-                    "decision"      => BaseValidator::DEFECT_MISSED,
-                    "category"      => BaseValidator::CATEGORY_IMMEDIATE,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rfrId' => $this->validRfrIds[count($this->fixtures)],
+                    'score' => $scoreValue,
+                    'decision' => BaseValidator::DEFECT_MISSED,
+                    'category' => BaseValidator::CATEGORY_IMMEDIATE,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
-            "finalJustification"  => "has a value",
-            "totalScore"          => $totalScore,
-            "error"               => 0,
-            "fitnesse"            => (bool) $fitnesse
+            'caseOutcome' => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
+            'finalJustification' => 'has a value',
+            'totalScore' => $totalScore,
+            'error' => 0,
+            'fitnesse' => (bool) $fitnesse,
         ];
     }
 
@@ -110,43 +109,44 @@ class CheckDisciplinaryActionHasJustificationAgainstScoreTest extends AbstractRe
     protected function makeFixtureWhereJustificationMayPass($totalScore, $scoreValue, $fitnesse = false)
     {
         $fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"          => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[count($this->fixtures)] = [
-                    "rfrId"         => $this->validRfrIds[count($this->fixtures)],
-                    "score"         => $scoreValue,
-                    "decision"      => BaseValidator::DEFECT_MISSED,
-                    "category"      => BaseValidator::CATEGORY_IMMEDIATE,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rfrId' => $this->validRfrIds[count($this->fixtures)],
+                    'score' => $scoreValue,
+                    'decision' => BaseValidator::DEFECT_MISSED,
+                    'category' => BaseValidator::CATEGORY_IMMEDIATE,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
-            "finalJustification"  => "",
-            "totalScore"          => $totalScore,
-            "error"               => 0,
-            "fitnesse"            => (bool) $fitnesse
+            'caseOutcome' => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
+            'finalJustification' => '',
+            'totalScore' => $totalScore,
+            'error' => 0,
+            'fitnesse' => (bool) $fitnesse,
         ];
         $fixtures[] = [
-            "reinspectionMotTest" => 2037,
-            "mappedRfrs"          => [
+            'reinspectionMotTest' => 2037,
+            'mappedRfrs' => [
                 $this->validMappedRfrIds[count($this->fixtures)] = [
-                    "rdrId"         => $this->validRfrIds[count($this->fixtures)],
-                    "score"         => BaseValidator::SCORE_DAMAGE_MISSED_VALUE,
-                    "decision"      => BaseValidator::DEFECT_MISSED,
-                    "category"      => BaseValidator::CATEGORY_IMMEDIATE,
-                    "justification" => "we passed a value",
-                    "error"         => 0,
-                    "message"       => ""
-                ]
+                    'rdrId' => $this->validRfrIds[count($this->fixtures)],
+                    'score' => BaseValidator::SCORE_DAMAGE_MISSED_VALUE,
+                    'decision' => BaseValidator::DEFECT_MISSED,
+                    'category' => BaseValidator::CATEGORY_IMMEDIATE,
+                    'justification' => 'we passed a value',
+                    'error' => 0,
+                    'message' => '',
+                ],
             ],
-            "caseOutcome"         => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
-            "finalJustification"  => "has a value",
-            "totalScore"          => $totalScore,
-            "error"               => 0,
-            "fitnesse"            => (bool) $fitnesse
+            'caseOutcome' => BaseResultValidator::CASE_OUTCOME_DISCIPLINARY_ACTION_REPORT,
+            'finalJustification' => 'has a value',
+            'totalScore' => $totalScore,
+            'error' => 0,
+            'fitnesse' => (bool) $fitnesse,
         ];
+
         return $fixtures;
     }
 }

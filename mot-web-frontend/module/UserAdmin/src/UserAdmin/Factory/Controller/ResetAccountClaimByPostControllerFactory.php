@@ -24,7 +24,7 @@ class ResetAccountClaimByPostControllerFactory implements FactoryInterface
         /** @var TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper */
         $testerGroupAuthorisationMapper = $appServiceLocator->get(TesterGroupAuthorisationMapper::class);
         /** @var MotAuthorisationServiceInterface $authorisationService */
-        $authorisationService = $appServiceLocator->get("AuthorisationService");
+        $authorisationService = $appServiceLocator->get('AuthorisationService');
 
         return new ResetAccountClaimByPostController(
             $accountAdminService,

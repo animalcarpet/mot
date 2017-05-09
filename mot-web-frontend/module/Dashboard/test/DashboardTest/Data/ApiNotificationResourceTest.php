@@ -6,9 +6,7 @@ use DvsaCommon\HttpRestJson\Client;
 use Dashboard\Data\ApiNotificationResource;
 
 /**
- * Class ApiNotificationResourceTest
- *
- * @package DashboardTest\Data
+ * Class ApiNotificationResourceTest.
  */
 class ApiNotificationResourceTest extends \PHPUnit_Framework_TestCase
 {

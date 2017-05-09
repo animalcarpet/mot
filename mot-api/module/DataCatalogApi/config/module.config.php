@@ -1,69 +1,70 @@
 <?php
+
 use \DataCatalogApi\Controller;
 
 return [
-    'controllers'     => [
+    'controllers' => [
         'invokables' => [
             'DataCatalogApi\Controller\DataCatalog' => Controller\DataCatalogController::class,
-            'DataCatalogApi\Controller\Make'        => Controller\MakeController::class,
-            'DataCatalogApi\Controller\Model'       => Controller\ModelController::class,
+            'DataCatalogApi\Controller\Make' => Controller\MakeController::class,
+            'DataCatalogApi\Controller\Model' => Controller\ModelController::class,
             'DataCatalogApi\Controller\ModelDetail' => Controller\ModelDetailController::class,
             'DataCatalogApi\Controller\VehicleDictionary' => Controller\VehicleDictionaryController::class,
         ],
     ],
-    'router'          => [
+    'router' => [
         'routes' => [
             'catalog' => [
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/catalog',
+                    'route' => '/catalog',
                     'defaults' => [
                         'controller' => 'DataCatalogApi\Controller\DataCatalog',
                     ],
                 ],
             ],
-            'vehicle-dictionary'              => [
-                'type'          => 'Segment',
-                'options'       => [
-                    'route'    => '/vehicle-dictionary',
+            'vehicle-dictionary' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/vehicle-dictionary',
                     'defaults' => [
                         'controller' => 'DataCatalogApi\Controller\VehicleDictionary',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'make'          => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/make[/:id]',
+                'child_routes' => [
+                    'make' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/make[/:id]',
                             'defaults' => [
-                                'controller' => 'DataCatalogApi\Controller\Make'
+                                'controller' => 'DataCatalogApi\Controller\Make',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'sub' => [
-                                'type'          => 'Segment',
-                                'options'       => [
-                                    'route'    => '/model[/:model]',
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/model[/:model]',
                                     'defaults' => [
                                         'controller' => 'DataCatalogApi\Controller\Model',
-                                        'action'     => 'getModels'
+                                        'action' => 'getModels',
                                     ],
                                 ],
                                 'may_terminate' => true,
-                                'child_routes'  => [
+                                'child_routes' => [
                                     'sub' => [
-                                        'type'    => 'Segment',
+                                        'type' => 'Segment',
                                         'options' => [
-                                            'route'    => '/model-details',
+                                            'route' => '/model-details',
                                             'defaults' => [
                                                 'controller' => 'DataCatalogApi\Controller\ModelDetail',
-                                                'action'     => 'getModelDetails'
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                                                'action' => 'getModelDetails',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                             'modelByMakeId' => [
                                 'type' => 'Segment',
@@ -71,11 +72,11 @@ return [
                                     'route' => '/models',
                                     'defaults' => [
                                         'controller' => 'DataCatalogApi\Controller\Model',
-                                        'action' => 'getModelsByMakeId'
+                                        'action' => 'getModelsByMakeId',
                                     ],
                                 ],
                                 'may_terminate' => true,
-                            ]
+                            ],
                         ],
                     ],
                 ],

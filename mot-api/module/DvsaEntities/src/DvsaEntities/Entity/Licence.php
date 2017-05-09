@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Licence
+ * Licence.
  *
  * @ORM\Table(name="licence")
  * @ORM\Entity
@@ -68,11 +68,13 @@ class Licence extends Entity
 
     /**
      * @param \DateTime $expiryDate
+     *
      * @return $this
      */
     public function setExpiryDate($expiryDate)
     {
         $this->expiryDate = $expiryDate;
+
         return $this;
     }
 
@@ -90,21 +92,25 @@ class Licence extends Entity
 
     /**
      * @param LicenceType $licenceType
+     *
      * @return $this
      */
     public function setLicenceType($licenceType)
     {
         $this->licenceType = $licenceType;
+
         return $this;
     }
 
     /**
      * @param \DateTime $validFrom
+     *
      * @return $this
      */
     public function setValidFrom($validFrom)
     {
         $this->validFrom = $validFrom;
+
         return $this;
     }
 
@@ -125,7 +131,7 @@ class Licence extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasCountry()
     {

@@ -12,7 +12,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use Zend\View\Model\ViewModel;
 
 /**
- * View model for displaying search user result list
+ * View model for displaying search user result list.
  */
 class UserSearchViewModel extends ViewModel
 {
@@ -69,7 +69,7 @@ class UserSearchViewModel extends ViewModel
      */
     public function isAnythingFound()
     {
-        return ($this->getTotalResultNumber() > 0);
+        return $this->getTotalResultNumber() > 0;
     }
 
     /**
@@ -137,6 +137,7 @@ class UserSearchViewModel extends ViewModel
             || false === DateUtils::isValidDate($this->searchCriteriaDob)) {
             return '';
         }
+
         return DateTimeDisplayFormat::textDate(
             $this->searchCriteriaDob
         );
@@ -167,11 +168,11 @@ class UserSearchViewModel extends ViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasSearchCriteria()
     {
-        return (count($this->searchCriteria) > 0);
+        return count($this->searchCriteria) > 0;
     }
 
     /**

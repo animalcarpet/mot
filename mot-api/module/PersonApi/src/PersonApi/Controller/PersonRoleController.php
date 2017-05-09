@@ -22,19 +22,21 @@ class PersonRoleController extends AbstractDvsaRestfulController
     }
 
     /**
-     * Add a role to a user
-     * @var array $data
+     * Add a role to a user.
+     *
+     * @var array
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function create($data)
     {
         $personSystemRoleMap = $this->personRoleService->create($this->getPersonIdFromRoute(), $data);
+
         return ApiResponse::jsonOk($personSystemRoleMap);
     }
 
     /**
-     * Delete a role from a user
-     *
+     * Delete a role from a user.
      */
     public function delete($id)
     {
@@ -46,19 +48,22 @@ class PersonRoleController extends AbstractDvsaRestfulController
     }
 
     /**
-     * Get the roles available for a specific user
+     * Get the roles available for a specific user.
+     *
      * @param int $personId Person id
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function get($personId)
     {
         $roles = $this->personRoleService->getRoles($personId);
-        
+
         return ApiResponse::jsonOk($roles);
     }
 
     /**
-     * Returns the ID of the person from the route
+     * Returns the ID of the person from the route.
+     *
      * @return int
      */
     private function getPersonIdFromRoute()

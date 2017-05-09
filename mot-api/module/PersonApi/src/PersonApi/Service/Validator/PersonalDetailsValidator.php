@@ -3,7 +3,6 @@
 namespace PersonApi\Service\Validator;
 
 use DvsaCommon\Date\DateUtils;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 use Zend\Validator\EmailAddress as EmailValidator;
@@ -13,10 +12,10 @@ use Zend\Validator\EmailAddress as EmailValidator;
  */
 class PersonalDetailsValidator extends AbstractValidator
 {
-    const ERROR_INCORRECT_DATE            = 'Invalid date of birth';
-    const ERROR_DATE_IN_FUTURE            = 'Date in future';
+    const ERROR_INCORRECT_DATE = 'Invalid date of birth';
+    const ERROR_DATE_IN_FUTURE = 'Date in future';
     const ERROR_EMAIL_CONFIRMATION_FAILED = 'Email confirmation does not match the email provided';
-    const ERROR_EMAIL_ADDRESS_INVALID     = 'Email address is not valid';
+    const ERROR_EMAIL_ADDRESS_INVALID = 'Email address is not valid';
 
     /**
      * @var array
@@ -70,8 +69,6 @@ class PersonalDetailsValidator extends AbstractValidator
      *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      * @throws \DvsaCommonApi\Service\Exception\RequiredFieldException
-     *
-     * @return null
      */
     public function validateContactDetails(array $data, $throwExceptions = false)
     {

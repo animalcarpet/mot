@@ -5,7 +5,6 @@ namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Service;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\PasswordValidationService;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Http\Response;
 use DvsaCommon\HttpRestJson\Client;
 
 class PasswordValidationServiceTest extends \PHPUnit_Framework_TestCase

@@ -5,9 +5,7 @@ namespace ApplicationTest\View\Helper;
 use Application\View\Helper\CamelCaseToReadable;
 
 /**
- * Class CamelCaseToReadableTest
- *
- * @package ApplicationTest\View\Helper
+ * Class CamelCaseToReadableTest.
  */
 class CamelCaseToReadableTest extends \PHPUnit_Framework_TestCase
 {

@@ -11,8 +11,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class OrganisationRoleServiceFactory
- * @package OrganisationApi\Factory\Service
+ * Class OrganisationRoleServiceFactory.
  */
 class OrganisationRoleServiceFactory implements FactoryInterface
 {

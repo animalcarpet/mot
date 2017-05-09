@@ -9,7 +9,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use PHPUnit_Framework_TestCase;
 use Application\Service\CanTestWithoutOtpService;
 
@@ -24,7 +23,7 @@ class CanTestWithoutOtpTest extends PHPUnit_Framework_TestCase
     /** @var TwoFaFeatureToggle */
     private $featureTogglesMock;
 
-    /** @var CanTestWithoutOtpService $canTestWithoutOtpService*/
+    /** @var CanTestWithoutOtpService $canTestWithoutOtpService */
     private $canTestWithoutOtpService;
 
     public function setUp()
@@ -32,7 +31,6 @@ class CanTestWithoutOtpTest extends PHPUnit_Framework_TestCase
         $this->identityProvider = XMock::of(MotFrontendIdentityProvider::class);
         $this->authorisationServiceMock = XMock::of(MotAuthorisationServiceInterface::class);
         $this->featureTogglesMock = XMock::of(TwoFaFeatureToggle::class);
-
     }
 
     public function testCanTestWithoutOtpIfToggleEnabledAndUserHasTwoFactorAuth()
@@ -108,6 +106,7 @@ class CanTestWithoutOtpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param bool $signedUp
+     *
      * @return CanTestWithoutOtpTest
      */
     private function withUserSignedUpToTwoFactorAuth($signedUp)
@@ -124,6 +123,7 @@ class CanTestWithoutOtpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param bool $testWithoutOtp
+     *
      * @return CanTestWithoutOtpTest
      */
     private function withTestWithoutOtpPermissionGranted($testWithoutOtp)
@@ -138,6 +138,7 @@ class CanTestWithoutOtpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param bool $toggleEnabled
+     *
      * @return CanTestWithoutOtpTest
      */
     private function withTwoFactorAuthToggleEnabled($toggleEnabled)

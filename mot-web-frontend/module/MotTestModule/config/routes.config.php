@@ -4,7 +4,6 @@
  *
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
-
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddManualAdvisoryController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\ContingencyTestController;
@@ -22,23 +21,23 @@ use DvsaCommon\Constants\MotTestNumberConstraint;
 return [
     'router' => [
         'routes' => [
-            'contingency'                                 => [
-                'type'    => 'segment',
+            'contingency' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/contingency',
+                    'route' => '/contingency',
                     'defaults' => [
                         'controller' => ContingencyTestController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
-            'contingency-error'                           => [
-                'type'    => 'segment',
+            'contingency-error' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/contingency-error',
+                    'route' => '/contingency-error',
                     'defaults' => [
                         'controller' => ContingencyTestController::class,
-                        'action'     => 'error',
+                        'action' => 'error',
                     ],
                 ],
             ],
@@ -51,7 +50,7 @@ return [
                     ],
                     'defaults' => [
                         'controller' => DefectCategoriesController::class,
-                        'action'     => 'redirectToCategoriesIndex',
+                        'action' => 'redirectToCategoriesIndex',
                     ],
                 ],
                 'may_terminate' => true,
@@ -65,7 +64,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => EditDefectController::class,
-                                'action'     => 'edit',
+                                'action' => 'edit',
                             ],
                         ],
                     ],
@@ -78,7 +77,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => RemoveDefectController::class,
-                                'action'     => 'remove',
+                                'action' => 'remove',
                             ],
                         ],
                     ],
@@ -91,7 +90,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => RepairDefectController::class,
-                                'action'     => 'repair',
+                                'action' => 'repair',
                             ],
                         ],
                     ],
@@ -104,7 +103,7 @@ return [
                             ],
                             'defaults' => [
                                 'controller' => RepairDefectController::class,
-                                'action'     => 'undoRepair',
+                                'action' => 'undoRepair',
                             ],
                         ],
                     ],
@@ -114,7 +113,7 @@ return [
                             'route' => '/categories',
                             'defaults' => [
                                 'controller' => DefectCategoriesController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -126,7 +125,7 @@ return [
                                     'route' => '/add/0/advisory',
                                     'defaults' => [
                                         'controller' => AddManualAdvisoryController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                             ],
@@ -139,7 +138,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => EditDefectController::class,
-                                        'action'     => 'edit',
+                                        'action' => 'edit',
                                     ],
                                 ],
                             ],
@@ -152,7 +151,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => RemoveDefectController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                             ],
@@ -166,7 +165,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => RepairDefectController::class,
-                                        'action'     => 'repair',
+                                        'action' => 'repair',
                                     ],
                                 ],
                             ],
@@ -180,7 +179,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => RepairDefectController::class,
-                                        'action'     => 'undoRepair',
+                                        'action' => 'undoRepair',
                                     ],
                                 ],
                             ],
@@ -193,7 +192,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => DefectCategoriesController::class,
-                                        'action'     => 'category',
+                                        'action' => 'category',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -205,7 +204,7 @@ return [
                                             'route' => '/add/0/advisory',
                                             'defaults' => [
                                                 'controller' => AddManualAdvisoryController::class,
-                                                'action'     => 'add',
+                                                'action' => 'add',
                                             ],
                                         ],
                                     ],
@@ -219,7 +218,7 @@ return [
                                             ],
                                             'defaults' => [
                                                 'controller' => AddDefectController::class,
-                                                'action'     => 'add',
+                                                'action' => 'add',
                                             ],
                                         ],
                                     ],
@@ -232,7 +231,7 @@ return [
                                             ],
                                             'defaults' => [
                                                 'controller' => EditDefectController::class,
-                                                'action'     => 'edit',
+                                                'action' => 'edit',
                                             ],
                                         ],
                                     ],
@@ -245,7 +244,7 @@ return [
                                             ],
                                             'defaults' => [
                                                 'controller' => RemoveDefectController::class,
-                                                'action'     => 'remove',
+                                                'action' => 'remove',
                                             ],
                                         ],
                                     ],
@@ -259,7 +258,7 @@ return [
                                             ],
                                             'defaults' => [
                                                 'controller' => RepairDefectController::class,
-                                                'action'     => 'repair',
+                                                'action' => 'repair',
                                             ],
                                         ],
                                     ],
@@ -273,7 +272,7 @@ return [
                                             ],
                                             'defaults' => [
                                                 'controller' => RepairDefectController::class,
-                                                'action'     => 'undoRepair',
+                                                'action' => 'undoRepair',
                                             ],
                                         ],
                                     ],
@@ -287,7 +286,7 @@ return [
                             'route' => '/search',
                             'defaults' => [
                                 'controller' => SearchDefectsController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -299,7 +298,7 @@ return [
                                     'route' => '/add/0/advisory',
                                     'defaults' => [
                                         'controller' => AddManualAdvisoryController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                             ],
@@ -313,7 +312,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => AddDefectController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                             ],
@@ -326,7 +325,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => EditDefectController::class,
-                                        'action'     => 'edit',
+                                        'action' => 'edit',
                                     ],
                                 ],
                             ],
@@ -339,7 +338,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => RemoveDefectController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                             ],
@@ -353,7 +352,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => RepairDefectController::class,
-                                        'action'     => 'repair',
+                                        'action' => 'repair',
                                     ],
                                 ],
                             ],
@@ -367,7 +366,7 @@ return [
                                     ],
                                     'defaults' => [
                                         'controller' => RepairDefectController::class,
-                                        'action'     => 'undoRepair',
+                                        'action' => 'undoRepair',
                                     ],
                                 ],
                             ],
@@ -381,7 +380,7 @@ return [
                     'route' => '/survey/[:token]',
                     'defaults' => [
                         'controller' => SurveyPageController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
@@ -392,19 +391,19 @@ return [
                             'route' => '/thanks',
                             'defaults' => [
                                 'controller' => SurveyPageController::class,
-                                'action'     => 'thanks',
+                                'action' => 'thanks',
                             ],
                         ],
                     ],
                 ],
             ],
             'survey-reports' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/survey/reports',
+                    'route' => '/survey/reports',
                     'defaults' => [
                         'controller' => SurveyPageController::class,
-                        'action'     => 'reports',
+                        'action' => 'reports',
                     ],
                 ],
                 'may_terminate' => true,
@@ -425,16 +424,16 @@ return [
                     ],
                 ],
             ],
-            'odometer'                           => [
-                'type'    => 'segment',
+            'odometer' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/mot-test/:tID/odometer/update',
+                    'route' => '/mot-test/:tID/odometer/update',
                     'constraints' => [
                         'tID' => MotTestNumberConstraint::FORMAT_REGEX,
                     ],
                     'defaults' => [
                         'controller' => OdometerController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],

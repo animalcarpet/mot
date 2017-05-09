@@ -7,7 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\UserStatsService;
 
 /**
- * Returns testing statistics
+ * Returns testing statistics.
  */
 class UserStatsController extends AbstractDvsaRestfulController
 {

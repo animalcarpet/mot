@@ -10,17 +10,15 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
 
 /**
- * Class FbQueryMotTest
+ * Class FbQueryMotTest.
  *
  * I answer as a fallback for all MotTest that match the set search criteria.
- *
- * @package DvsaElasticSearch\Query
  */
 class FbQueryMotTest implements IFbQuery
 {
     /**
      * @param SearchParam $searchParams
-     * @param array $optionalMotTestTypes
+     * @param array       $optionalMotTestTypes
      *
      * @return array
      *

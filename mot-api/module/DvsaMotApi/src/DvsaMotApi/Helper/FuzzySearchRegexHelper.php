@@ -1,18 +1,18 @@
 <?php
+
 namespace DvsaMotApi\Helper;
 
 /**
- * Class FuzzySearchRegexHelper
+ * Class FuzzySearchRegexHelper.
  */
 class FuzzySearchRegexHelper
 {
-
     /**
      * For string given generates a regex matching similar strings where chars might have been substituted with
      * others similar looking chars. Assumes that $string contains only alphanumeric characters.
      *
-     * @param string $string alphanumeric string
-     * @param array $similarCharMapping map char to array of it's similar looking counterparts (including itself)
+     * @param string $string             alphanumeric string
+     * @param array  $similarCharMapping map char to array of it's similar looking counterparts (including itself)
      *
      * @return string regex
      */
@@ -20,11 +20,12 @@ class FuzzySearchRegexHelper
     {
         $mappedStringArray = array_map(
             function ($char) use ($similarCharMapping) {
-                return isset($similarCharMapping[$char]) ? ('[' . join('', $similarCharMapping[$char]) . ']') : $char;
+                return isset($similarCharMapping[$char]) ? ('['.implode('', $similarCharMapping[$char]).']') : $char;
             },
             str_split($string)
         );
-        return join('', $mappedStringArray);
+
+        return implode('', $mappedStringArray);
     }
 
     /**
@@ -46,6 +47,7 @@ class FuzzySearchRegexHelper
                 }
             }
         }
+
         return $charMapping;
     }
 

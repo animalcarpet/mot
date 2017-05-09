@@ -6,9 +6,7 @@ use DvsaCommon\Dto\Common\AbstractStaticDataDto;
 use DvsaEntities\Entity\Entity;
 
 /**
- * Class AbstractStaticDataMapper
- *
- * @package DvsaCommonApi\Service\Mapper
+ * Class AbstractStaticDataMapper.
  */
 abstract class AbstractStaticDataMapper
 {
@@ -29,7 +27,7 @@ abstract class AbstractStaticDataMapper
         }
 
         /** @var AbstractStaticDataDto $dto */
-        $dto = new $dtoClazz;
+        $dto = new $dtoClazz();
 
         $dto
             ->setId($entity->getId())

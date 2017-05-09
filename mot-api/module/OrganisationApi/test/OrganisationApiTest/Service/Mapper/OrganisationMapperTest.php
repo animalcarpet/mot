@@ -18,12 +18,9 @@ use DvsaEntities\Entity\OrganisationType;
 use DvsaEntities\Entity\Phone;
 use DvsaEntities\Entity\PhoneContactType;
 use OrganisationApi\Service\Mapper\OrganisationMapper;
-use PHPUnit_Framework_TestCase;
 
 /**
- * Class OrganisationMapperTest
- *
- * @package OrganisationApiTest\Service\Mapper
+ * Class OrganisationMapperTest.
  */
 class OrganisationMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -63,7 +60,7 @@ class OrganisationMapperTest extends \PHPUnit_Framework_TestCase
             ->setPostcode('postcode');
         $email = (new Email())
             ->setIsPrimary(true)
-            ->setEmail('organisationmappertest@' . EmailAddressValidator::TEST_DOMAIN);
+            ->setEmail('organisationmappertest@'.EmailAddressValidator::TEST_DOMAIN);
         $phone = (new Phone())
             ->setIsPrimary(true)
             ->setNumber('0123456789')

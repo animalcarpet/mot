@@ -2,7 +2,7 @@
 
 use Core\ViewModel\Sidebar\SidebarInterface;
 
-/** @var $sidebar SidebarInterface */
+/* @var $sidebar SidebarInterface */
 
 ?>
 
@@ -105,7 +105,7 @@ use Core\ViewModel\Sidebar\SidebarInterface;
     [
         'hideUserNav' => $this->hideUserNav,
         'isHomePage' => $this->isHomePage,
-        'isYourProfile' => $this->isYourProfile
+        'isYourProfile' => $this->isYourProfile,
     ]); ?>
 
 <div id="global-header-bar">
@@ -143,7 +143,7 @@ use Core\ViewModel\Sidebar\SidebarInterface;
 
         <?php endif; ?>
 
-        <?php if(isset($showOrganisationLogo)): ?>
+        <?php if (isset($showOrganisationLogo)): ?>
             <div class="organisation-logo organisation-logo--md">Driver &amp; Vehicle Standards Agency</div>
         <?php endif; ?>
         <!-- Titles -->
@@ -151,10 +151,10 @@ use Core\ViewModel\Sidebar\SidebarInterface;
             <?php echo $this->partial(
                 'partial/gds/general/header',
                 [
-                    'type'  => $this->pageSubTitle,
+                    'type' => $this->pageSubTitle,
                     'title' => $this->pageTitle,
                     'tertiary' => $this->pageTertiaryTitle,
-                    'progress'  => $this->progress,
+                    'progress' => $this->progress,
                 ]
             ); ?>
         <?php endif; ?>
@@ -166,7 +166,7 @@ use Core\ViewModel\Sidebar\SidebarInterface;
                 <?php echo $this->partial('applicationSteps', ['applicationNavigator' => $applicationNavigator]); ?>
                 <div class="col-sm-8  col-sm-offset-1" id="content">
                     <h1><?php echo $this->escapeHtml($title); ?></h1>
-                    <?php echo $this->content; // should be escaped in controller ?>
+                    <?php echo $this->content; // should be escaped in controller?>
                 </div>
             </div>
 
@@ -181,7 +181,7 @@ use Core\ViewModel\Sidebar\SidebarInterface;
                     <?php endif; ?>
                     <!-- end    -->
 
-                    <?php echo $this->content; // should be escaped in controller ?>
+                    <?php echo $this->content; // should be escaped in controller?>
                 </div>
             </div>
         <?php endif; ?>

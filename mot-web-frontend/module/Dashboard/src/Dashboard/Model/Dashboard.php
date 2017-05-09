@@ -8,7 +8,7 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Stores all data that can be displayed on dashboard
+ * Stores all data that can be displayed on dashboard.
  */
 class Dashboard
 {
@@ -35,7 +35,7 @@ class Dashboard
     /** @var $unreadNotificationsCount integer */
     private $unreadNotificationsCount;
 
-    /** @var  $inProgressTestId integer */
+    /** @var $inProgressTestId integer */
     private $inProgressTestNumber;
 
     /** @var $inProgressDemoTestNumber string */
@@ -44,7 +44,7 @@ class Dashboard
     /** @var $inProgressNonMotTestNumber integer */
     private $inProgressNonMotTestNumber;
 
-    /** @var  $inProgressTestTypeCode string */
+    /** @var $inProgressTestTypeCode string */
     private $inProgressTestTypeCode;
 
     private $testedVehicleId;
@@ -110,7 +110,7 @@ class Dashboard
     }
 
     /**
-     * Is the person employed as a tester at any site in any AE
+     * Is the person employed as a tester at any site in any AE.
      *
      * @return bool
      */
@@ -124,6 +124,7 @@ class Dashboard
                 }
             }
         }
+
         return false;
     }
 
@@ -134,6 +135,7 @@ class Dashboard
                 return true;
             }
         }
+
         return false;
     }
 
@@ -143,14 +145,15 @@ class Dashboard
      * @return bool
      *
      * @deprecated
+     *
      * @throws \LogicException
      */
     public function canDisplay($piece)
     {
         if ($this->getPermissions() && in_array($piece, array_keys($this->getPermissions()))) {
-            return (bool)$this->getPermissions()[$piece];
+            return (bool) $this->getPermissions()[$piece];
         }
-        throw new \LogicException('Display permission ' . $piece . ' does not exist');
+        throw new \LogicException('Display permission '.$piece.' does not exist');
     }
 
     /**
@@ -161,6 +164,7 @@ class Dashboard
     public function setAuthorisedExaminers($authorisedExaminers)
     {
         $this->authorisedExaminers = $authorisedExaminers;
+
         return $this;
     }
 
@@ -180,6 +184,7 @@ class Dashboard
     public function setHero($displayRole)
     {
         $this->hero = $displayRole;
+
         return $this;
     }
 
@@ -199,6 +204,7 @@ class Dashboard
     public function setPermissions($permissions)
     {
         $this->permissions = $permissions;
+
         return $this;
     }
 
@@ -218,6 +224,7 @@ class Dashboard
     public function setSpecialNotice($specialNotice)
     {
         $this->specialNotice = $specialNotice;
+
         return $this;
     }
 
@@ -231,11 +238,13 @@ class Dashboard
 
     /**
      * @param array $overdueSpecialNotices
+     *
      * @return Dashboard
      */
     public function setOverdueSpecialNotices(array $overdueSpecialNotices)
     {
         $this->overdueSpecialNotices = $overdueSpecialNotices;
+
         return $this;
     }
 
@@ -255,6 +264,7 @@ class Dashboard
     public function setNotifications($notifications)
     {
         $this->notifications = $notifications;
+
         return $this;
     }
 
@@ -274,11 +284,12 @@ class Dashboard
     public function setInProgressTestNumber($inProgressTestNumber)
     {
         $this->inProgressTestNumber = $inProgressTestNumber;
+
         return $this;
     }
 
     /**
-     * @return integer|null
+     * @return int|null
      */
     public function getInProgressTestNumber()
     {
@@ -309,6 +320,7 @@ class Dashboard
     public function setInProgressDemoTestNumber($inProgressTestNumber)
     {
         $this->inProgressDemoTestNumber = $inProgressTestNumber;
+
         return $this;
     }
 
@@ -336,6 +348,7 @@ class Dashboard
     public function setInProgressNonMotTestNumber($inProgressTestNumber)
     {
         $this->inProgressNonMotTestNumber = $inProgressTestNumber;
+
         return $this;
     }
 
@@ -355,6 +368,7 @@ class Dashboard
     public function setTestedVehicleId($testedVehicleId)
     {
         $this->testedVehicleId = $testedVehicleId;
+
         return $this;
     }
 
@@ -366,6 +380,7 @@ class Dashboard
     public function setIsTechnicalAdvicePresent($isTechnicalAdvicePresent)
     {
         $this->isTechnicalAdvicePresent = $isTechnicalAdvicePresent;
+
         return $this;
     }
 
@@ -379,11 +394,13 @@ class Dashboard
 
     /**
      * @param string $inProgressTestTypeCode
+     *
      * @return $this
      */
     public function setInProgressTestTypeCode($inProgressTestTypeCode)
     {
         $this->inProgressTestTypeCode = $inProgressTestTypeCode;
+
         return $this;
     }
 
@@ -400,15 +417,15 @@ class Dashboard
      */
     public function getEnterTestResultsLabel()
     {
-        if($this->isInProgressTestARetest()) {
-            return "Enter retest results";
+        if ($this->isInProgressTestARetest()) {
+            return 'Enter retest results';
         } else {
-            return "Enter test results";
+            return 'Enter test results';
         }
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getUnreadNotificationsCount()
     {
@@ -416,7 +433,7 @@ class Dashboard
     }
 
     /**
-     * @param integer $count
+     * @param int $count
      */
     private function setUnreadNotificationsCount($count)
     {

@@ -19,6 +19,7 @@ class BusinessRoleCatalog
 
     /**
      * @param $code
+     *
      * @return BusinessRole
      */
     public function getByCode($code)
@@ -28,6 +29,7 @@ class BusinessRoleCatalog
 
     /**
      * @param CatalogService $catalog
+     *
      * @return BusinessRole[]
      */
     private function buildRolesFromCatalog(CatalogService $catalog)

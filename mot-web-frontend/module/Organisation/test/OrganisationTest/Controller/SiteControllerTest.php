@@ -32,9 +32,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class SiteControllerTest
- *
- * @package OrganisationTest\Controller
+ * Class SiteControllerTest.
  */
 class SiteControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -52,13 +50,12 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
     private $auth;
     /** @var MapperFactory|MockObj $mapper */
     private $mapperFactory;
-    /** @var  OrganisationMapper|MockObj */
+    /** @var OrganisationMapper|MockObj */
     private $mockOrgMapper;
-    /** @var  SiteMapper|MockObj */
+    /** @var SiteMapper|MockObj */
     private $mockSiteMapper;
-    /** @var  OrganisationSitesMapper|MockObj */
+    /** @var OrganisationSitesMapper|MockObj */
     private $mockOrgSitesMapper;
-
 
     public function setUp()
     {
@@ -79,7 +76,6 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
         $this->serviceManager->setService('Feature\FeatureToggles', $featureToggle);
         $this->mockMethod($featureToggle, 'isEnabled', $this->any(), true);
     }
-
 
     /**
      * @dataProvider dataProviderTestActionsResult
@@ -151,14 +147,14 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
         $orgDto = (new OrganisationDto())
             ->setId(self::ORG_ID)
             ->setAuthorisedExaminerAuthorisation(
-                (new AuthorisedExaminerAuthorisationDto)
+                (new AuthorisedExaminerAuthorisationDto())
                     ->setAuthorisedExaminerRef(self::AE_REF)
             )
             ->setContacts(
                 [
                     (new OrganisationContactDto())
                         ->setType(OrganisationContactTypeCode::REGISTERED_COMPANY)
-                        ->setAddress(new AddressDto())
+                        ->setAddress(new AddressDto()),
                 ]
             );
 
@@ -171,7 +167,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
             ->setSite($siteDto);
 
         $unauthException = [
-            'class'   => UnauthorisedException::class,
+            'class' => UnauthorisedException::class,
             'message' => 'You not have permissions',
         ];
 
@@ -184,23 +180,23 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'route' => [
                         'linkId' => self::LINK_ID,
-                        'id' => self::ORG_ID
+                        'id' => self::ORG_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'getSiteLink',
                         'params' => [self::LINK_ID],
                         'result' => $linkDto,
                     ],
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'changeSiteLinkStatus',
                         'params' => [self::LINK_ID],
                         'result' => new ValidationException(
                             '/', 'post', [], 10, [
-                                ['field' => AeUnlinkSiteForm::FIELD_STATUS, 'displayMessage' => 'error msg']
+                                ['field' => AeUnlinkSiteForm::FIELD_STATUS, 'displayMessage' => 'error msg'],
                             ]
                         ),
                     ],
@@ -208,7 +204,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'permissions' => null,
                 'expect' => [
                     'viewModel' => true,
-                    'errors'    => [
+                    'errors' => [
                         AeUnlinkSiteForm::FIELD_STATUS => 'error msg',
                     ],
                     'debug' => true,
@@ -221,10 +217,10 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'link',
                 'params' => [
                     'route' => [
-                        'id' => self::ORG_ID
-                    ]
+                        'id' => self::ORG_ID,
+                    ],
                 ],
-                'mocks'  => [],
+                'mocks' => [],
                 'permissions' => null,
                 'expect' => [
                     'viewModel' => true,
@@ -236,21 +232,21 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'link',
                 'params' => [
                     'route' => [
-                        'id' => self::ORG_ID
+                        'id' => self::ORG_ID,
                     ],
-                    'post'  => ['siteNumber' => self::SITE_NUMBER]
+                    'post' => ['siteNumber' => self::SITE_NUMBER],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'createSiteLink',
                         'params' => [self::ORG_ID, self::SITE_NUMBER],
-                        'result' => true
-                    ]
+                        'result' => true,
+                    ],
                 ],
                 'permissions' => null,
                 'expect' => [
-                    'url' => AuthorisedExaminerUrlBuilderWeb::of(self::ORG_ID)
+                    'url' => AuthorisedExaminerUrlBuilderWeb::of(self::ORG_ID),
                 ],
             ],
             // Fail to link site
@@ -259,20 +255,20 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'link',
                 'params' => [
                     'route' => [
-                        'id' => self::ORG_ID
+                        'id' => self::ORG_ID,
                     ],
-                    'post'  => ['siteNumber' => self::SITE_NUMBER]
+                    'post' => ['siteNumber' => self::SITE_NUMBER],
 
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'createSiteLink',
                         'params' => [self::ORG_ID, self::SITE_NUMBER],
                         'result' => new ValidationException(
                             '/', 'post', [], 10, [['displayMessage' => 'something wrong']]
-                        )
-                    ]
+                        ),
+                    ],
                 ],
                 'permissions' => null,
                 'expect' => [
@@ -288,11 +284,11 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'route' => [
                         'linkId' => self::LINK_ID,
-                    ]
+                    ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'getSiteLink',
                         'params' => [self::LINK_ID],
                         'result' => new NotFoundException('/', 'post', [], 10, 'Link not found'),
@@ -301,7 +297,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'permissions' => null,
                 'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
+                        'class' => NotFoundException::class,
                         'message' => 'Link not found',
                     ],
                 ],
@@ -313,11 +309,11 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'route' => [
                         'linkId' => self::LINK_ID,
-                    ]
+                    ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'getSiteLink',
                         'params' => [self::LINK_ID],
                         'result' => $linkDto,
@@ -337,11 +333,11 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'route' => [
                         'linkId' => self::LINK_ID,
-                    ]
+                    ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'getSiteLink',
                         'params' => [self::LINK_ID],
                         'result' => $linkDto,
@@ -349,7 +345,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 ],
                 'permissions' => null,
                 'expect' => [
-                    'viewModel'  => true,
+                    'viewModel' => true,
                 ],
             ],
 
@@ -360,18 +356,18 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'route' => [
                         'linkId' => self::LINK_ID,
-                        'id' => self::ORG_ID
+                        'id' => self::ORG_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'getSiteLink',
                         'params' => [self::LINK_ID],
                         'result' => $linkDto,
                     ],
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'changeSiteLinkStatus',
                         'params' => [self::LINK_ID],
                         'result' => new GeneralRestException('/', 'post', [], 10, 'error msg 2'),
@@ -391,21 +387,21 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'route' => [
                         'linkId' => self::LINK_ID,
-                        'id' => self::ORG_ID
+                        'id' => self::ORG_ID,
                     ],
-                    'post'  => [
+                    'post' => [
                         AeUnlinkSiteForm::FIELD_STATUS => self::STATUS,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'getSiteLink',
                         'params' => [self::LINK_ID],
                         'result' => $linkDto,
                     ],
                     [
-                        'class'  => 'mockOrgSitesMapper',
+                        'class' => 'mockOrgSitesMapper',
                         'method' => 'changeSiteLinkStatus',
                         'params' => [self::LINK_ID],
                         'result' => null,
@@ -432,7 +428,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
             )->setContacts(
                 [(new OrganisationContactDto())
                     ->setType(OrganisationContactTypeCode::REGISTERED_COMPANY)
-                     ->setAddress(new AddressDto())
+                     ->setAddress(new AddressDto()),
                 ]
             );
 

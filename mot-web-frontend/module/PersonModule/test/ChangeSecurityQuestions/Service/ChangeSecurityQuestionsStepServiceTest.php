@@ -8,7 +8,7 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class ChangeSecurityQuestionsStepServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService */
+    /** @var ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService */
     private $changeSecurityQuestionsSessionService;
 
     public function setUp()
@@ -56,7 +56,7 @@ class ChangeSecurityQuestionsStepServiceTest extends \PHPUnit_Framework_TestCase
         $this->changeSecurityQuestionsSessionService
             ->expects($this->once())
             ->method('load')
-            ->willReturn([ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES => [] ]);
+            ->willReturn([ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES => []]);
 
         $this->changeSecurityQuestionsSessionService
             ->expects($this->once())
@@ -72,7 +72,7 @@ class ChangeSecurityQuestionsStepServiceTest extends \PHPUnit_Framework_TestCase
         $this->changeSecurityQuestionsSessionService
             ->expects($this->once())
             ->method('load')
-            ->willReturn([ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES => [] ]);
+            ->willReturn([ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES => []]);
 
         $this->changeSecurityQuestionsSessionService
             ->expects($this->once())
@@ -166,6 +166,7 @@ class ChangeSecurityQuestionsStepServiceTest extends \PHPUnit_Framework_TestCase
         $stepService = new ChangeSecurityQuestionsStepService(
             $this->changeSecurityQuestionsSessionService
         );
+
         return $stepService;
     }
 
@@ -189,9 +190,9 @@ class ChangeSecurityQuestionsStepServiceTest extends \PHPUnit_Framework_TestCase
                 'questionOneAnswer' => 'ham',
             ],
         ];
+
         return $steps;
     }
-
 
     public function mockQuestionsSessionStoreQuestionTwo()
     {
@@ -202,6 +203,7 @@ class ChangeSecurityQuestionsStepServiceTest extends \PHPUnit_Framework_TestCase
                 'questionTwoAnswer' => 'ham',
             ],
         ];
+
         return $steps;
     }
 
@@ -216,6 +218,7 @@ class ChangeSecurityQuestionsStepServiceTest extends \PHPUnit_Framework_TestCase
                 ChangeSecurityQuestionsStepService::CONFIRMATION_STEP => $stepFive,
             ],
         ];
+
         return $steps;
     }
 }

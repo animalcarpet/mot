@@ -17,7 +17,7 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class EventViewModelTest
+ * Class EventViewModelTest.
  */
 class EventViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -73,7 +73,7 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
         $organisationDto->setId(self::AE_ID);
         $this->viewModel = new EventViewModel($organisationDto, [], [], $this->getEventFormModel(), 'ae', self::AE_ID, false);
         $this->assertInstanceOf(AuthorisedExaminerUrlBuilderWeb::class, $this->viewModel->getGoBackLink());
-        $this->assertSame('/authorised-examiner/' . self::AE_ID, $this->viewModel->getGoBackLink()->toString());
+        $this->assertSame('/authorised-examiner/'.self::AE_ID, $this->viewModel->getGoBackLink()->toString());
 
         $site = (new VehicleTestingStationDto())
             ->setId(self::SITE_ID);
@@ -87,7 +87,7 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
             false
         );
         $this->assertInstanceOf(SiteUrlBuilderWeb::class, $this->viewModel->getGoBackLink());
-        $this->assertSame('/vehicle-testing-station/' . self::SITE_ID, $this->viewModel->getGoBackLink()->toString());
+        $this->assertSame('/vehicle-testing-station/'.self::SITE_ID, $this->viewModel->getGoBackLink()->toString());
 
         $person = (new Person())
             ->setId(1);
@@ -101,7 +101,7 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
         $organisationDto->setId(self::AE_ID);
         $this->viewModel = new EventViewModel($organisationDto, [], [], $this->getEventFormModel(), 'ae', self::AE_ID, false);
         $this->assertInstanceOf(EventUrlBuilderWeb::class, $this->viewModel->getCurrentPage());
-        $this->assertSame('/event/list/ae/' . self::AE_ID, $this->viewModel->getCurrentPage()->toString());
+        $this->assertSame('/event/list/ae/'.self::AE_ID, $this->viewModel->getCurrentPage()->toString());
 
         $site = (new VehicleTestingStationDto())
             ->setId(self::SITE_ID);
@@ -115,13 +115,13 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
             false
         );
         $this->assertInstanceOf(EventUrlBuilderWeb::class, $this->viewModel->getCurrentPage());
-        $this->assertSame('/event/list/site/' . self::SITE_ID, $this->viewModel->getCurrentPage()->toString());
+        $this->assertSame('/event/list/site/'.self::SITE_ID, $this->viewModel->getCurrentPage()->toString());
 
         $person = new Person();
         $person->setId(self::PERSON_ID);
         $this->viewModel = new EventViewModel(new OrganisationDto(), [], $person, $this->getEventFormModel(), 'person', self::PERSON_ID, false);
         $this->assertInstanceOf(EventUrlBuilderWeb::class, $this->viewModel->getCurrentPage());
-        $this->assertSame('/event/list/person/' . self::PERSON_ID, $this->viewModel->getCurrentPage()->toString());
+        $this->assertSame('/event/list/person/'.self::PERSON_ID, $this->viewModel->getCurrentPage()->toString());
 
         $this->viewModel = new EventViewModel(new OrganisationDto(), [], [], $this->getEventFormModel(), 'invalidType', self::INVALID_ID, false);
         $this->assertEmpty($this->viewModel->getCurrentPage());
@@ -136,7 +136,7 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
         $organisationDto->setName(self::AE_NAME);
         $this->viewModel = new EventViewModel($organisationDto, [], [], $this->getEventFormModel(), 'ae', self::AE_ID, false);
         $this->assertSame(
-            self::AE_NUMBER . ' - ' . self::AE_NAME,
+            self::AE_NUMBER.' - '.self::AE_NAME,
             $this->viewModel->getTitle()
         );
 
@@ -154,7 +154,7 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
             false
         );
         $this->assertSame(
-            self::SITE_NUMBER . ' - ' . self::SITE_NAME,
+            self::SITE_NUMBER.' - '.self::SITE_NAME,
             $this->viewModel->getTitle()
         );
 
@@ -165,8 +165,8 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
         $person->setFamilyName(self::PERSON_FAMILYNAME);
         $this->viewModel = new EventViewModel(new OrganisationDto(), [], $person, $this->getEventFormModel(), 'person', self::PERSON_ID, false);
         $this->assertSame(
-            self::PERSON_FIRSTNAME . ' ' .
-            self::PERSON_MIDDLENAME . ' ' .
+            self::PERSON_FIRSTNAME.' '.
+            self::PERSON_MIDDLENAME.' '.
             self::PERSON_FAMILYNAME,
             $this->viewModel->getTitle()
         );
@@ -226,7 +226,7 @@ class EventViewModelTest extends \PHPUnit_Framework_TestCase
     public function testGetEventDetailLink()
     {
         $this->viewModel = new EventViewModel(null, [], [], $this->getEventFormModel(), 'ae', self::AE_ID, false);
-        $this->assertEquals('/event/ae/' . self::AE_ID . '/' . self::EVENT_ID . '?goBack=', $this->viewModel->getEventDetailLink(self::EVENT_ID));
+        $this->assertEquals('/event/ae/'.self::AE_ID.'/'.self::EVENT_ID.'?goBack=', $this->viewModel->getEventDetailLink(self::EVENT_ID));
     }
 
     public function testGetViewOrJson()

@@ -3,20 +3,19 @@
 use Organisation\Controller\SlotsUsageController;
 
 /**
- * @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site
+ * @var \DvsaCommon\Dto\Site\VehicleTestingStationDto
  */
-
 $contact = $site->getContactByType(\DvsaCommon\Enum\SiteContactTypeCode::BUSINESS);
 
 $subTitle = implode(
-        ', ', 
+        ', ',
         [
             $this->escapeHtml($contact->getAddress()->getAddressLine1()),
             $this->escapeHtml($contact->getAddress()->getTown()),
             $this->escapeHtml($contact->getAddress()->getPostCode()),
         ]
 );
-        
+
 $this->layout()->setVariable('pageTitle', 'Slot usage');
 $this->layout()->setVariable('pageSubTitle', $this->escapeHtml($subTitle));
 ?>
@@ -62,7 +61,7 @@ $this->layout()->setVariable('pageSubTitle', $this->escapeHtml($subTitle));
                 'currentParams' => $params,
                 'legendFrom' => 'Start date',
                 'legendTo' => 'End date',
-                'dateRanges' => $dateRanges
+                'dateRanges' => $dateRanges,
             )
         );
         ?>

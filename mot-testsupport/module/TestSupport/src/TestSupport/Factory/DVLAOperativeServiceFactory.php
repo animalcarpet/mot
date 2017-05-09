@@ -13,6 +13,7 @@ class DVLAOperativeServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new DVLAOperativeService($accountService);
+
         return $service;
     }
 }

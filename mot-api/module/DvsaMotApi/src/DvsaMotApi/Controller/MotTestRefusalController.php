@@ -19,8 +19,7 @@ use SiteApi\Service\SiteService;
 use VehicleApi\Service\VehicleService;
 
 /**
- * Class MotTestRefusalController
- * @package DvsaMotApi\Controller
+ * Class MotTestRefusalController.
  */
 class MotTestRefusalController extends AbstractDvsaRestfulController implements TransactionAwareInterface
 {
@@ -28,6 +27,7 @@ class MotTestRefusalController extends AbstractDvsaRestfulController implements 
 
     /**
      * @param array $data
+     *
      * @return void|\Zend\View\Model\JsonModel
      */
     public function create($data)
@@ -42,9 +42,9 @@ class MotTestRefusalController extends AbstractDvsaRestfulController implements 
 
         $site = $this->getVtsData($data['siteId']);
         $vts = [
-            'name'         => '',
-            'address'      => '',
-            'siteNumber'   => '',
+            'name' => '',
+            'address' => '',
+            'siteNumber' => '',
             'dualLanguage' => false,
         ];
 
@@ -66,9 +66,9 @@ class MotTestRefusalController extends AbstractDvsaRestfulController implements 
         if ($site) {
             $contact = $site->getContactByType(SiteContactTypeCode::BUSINESS);
             $vts = [
-                'name'         => $site->getName(),
-                'address'      => $contact->getAddress()->toArray(),
-                'siteNumber'   => $site->getSiteNumber(),
+                'name' => $site->getName(),
+                'address' => $contact->getAddress()->toArray(),
+                'siteNumber' => $site->getSiteNumber(),
                 'dualLanguage' => $site->isDualLanguage(),
             ];
         }
@@ -78,7 +78,7 @@ class MotTestRefusalController extends AbstractDvsaRestfulController implements 
             ->setTester((new PersonMapper())->toDto($person))
             ->setReasonForCancel($reasonForRefusal)
             ->setIssuedDate(DateUtils::nowAsUserDateTime())
-			->setMake($vehicle->getMakeName())
+            ->setMake($vehicle->getMakeName())
             ->setModel($vehicle->getModelName())
             ->setVehicleTestingStation($vts)
             ->setPrimaryColour($vehicle->getColour())
@@ -108,14 +108,16 @@ class MotTestRefusalController extends AbstractDvsaRestfulController implements 
      * Get the Vehicle Testing Station data.
      *
      * @param int $vtsId the vehicle testing station ID
+     *
      * @return VehicleTestingStationDto|false this will return an associative array if VTS exists, false
-     * otherwise
+     *                                        otherwise
      */
     protected function getVtsData($vtsId)
     {
         if (is_int($vtsId) && $vtsId > 0) {
             /** @var SiteService $service */
             $service = $this->getServiceLocator()->get(SiteService::class);
+
             return $service->getSite($vtsId);
         }
 
@@ -129,6 +131,7 @@ class MotTestRefusalController extends AbstractDvsaRestfulController implements 
     {
         $service = $this->getServiceLocator()->get('DocumentService');
         $service->setServiceLocator($this->getServiceLocator());
+
         return $service;
     }
 }

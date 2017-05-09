@@ -7,7 +7,7 @@
     <body>
         <?php
         if ($renderHeader) {
-        ?>
+            ?>
         <header class="module-global-header">
             <div class="container" id="user-info">
                 <a class="global-header_home-link" href="/"><img src="<?php echo $escBase; ?>/img/logo_mot2.gif" alt="MOT"></a>
@@ -18,6 +18,7 @@
             </div>
         </header>
         <?php
+
         }
         echo $content; // escaped in controller
         ?>

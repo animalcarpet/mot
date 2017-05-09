@@ -44,6 +44,6 @@ class CsvFileIterator implements \Iterator
     public function next()
     {
         $this->current = fgetcsv($this->file);
-        $this->key++;
+        ++$this->key;
     }
 }

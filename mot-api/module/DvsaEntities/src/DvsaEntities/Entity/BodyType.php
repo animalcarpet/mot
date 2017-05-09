@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * BodyType
+ * BodyType.
  *
  * @ORM\Table(name="body_type")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\BodyTypeRepository", readOnly=true)
@@ -35,6 +35,7 @@ class BodyType extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

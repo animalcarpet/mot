@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\ViewModel\TestQuality;
 
 use Core\Formatting\VehicleAgeFormatter;
@@ -17,7 +18,7 @@ class GroupStatisticsTable
     private $averageTestDuration;
     private $failurePercentage;
     const TEXT_NOT_AVAILABLE = 'Not available';
-    /** @var  TestQualityStatisticRow[] */
+    /** @var TestQualityStatisticRow[] */
     private $testerRows;
     private $groupCode;
     private $groupDescription;
@@ -31,9 +32,9 @@ class GroupStatisticsTable
 
     private $groupPerformanceDto;
     private $nationalTestingPerformanceDto;
-    /** @var  VehicleTestingStationDto */
+    /** @var VehicleTestingStationDto */
     private $site;
-    /** @var  int */
+    /** @var int */
     private $csvFileSize;
     private $isNationalDataAvailable;
 
@@ -47,8 +48,7 @@ class GroupStatisticsTable
         $site,
         DateTime $viewedDate,
         $csvFileSize
-    )
-    {
+    ) {
         $this->timeSpanFormatter = new TimeSpanFormatter();
         $this->site = $site;
         $this->groupCode = $groupCode;
@@ -113,7 +113,7 @@ class GroupStatisticsTable
     public function getFailurePercentage()
     {
         if (is_numeric($this->failurePercentage)) {
-            return number_format($this->failurePercentage, 0) . '%';
+            return number_format($this->failurePercentage, 0).'%';
         } else {
             return $this->failurePercentage;
         }
@@ -142,7 +142,9 @@ class GroupStatisticsTable
 
     /**
      * @param $testers EmployeePerformanceDto[]
+     *
      * @return MotTestingPerformanceDto
+     *
      * @internal param MotTestingPerformanceDto $national
      */
     private function createTesterRows($testers)
@@ -193,6 +195,7 @@ class GroupStatisticsTable
 
     /**
      * @param MotTestingPerformanceDto $groupPerformanceDto
+     *
      * @return int
      */
     private function determineVtsGroupAverageVehicleAge(MotTestingPerformanceDto $groupPerformanceDto)
@@ -210,6 +213,7 @@ class GroupStatisticsTable
 
     /**
      * @param MotTestingPerformanceDto $nationalPerformanceDto
+     *
      * @return string
      */
     protected function determineNationalAverageVehicleAge(MotTestingPerformanceDto $nationalPerformanceDto)
@@ -231,7 +235,7 @@ class GroupStatisticsTable
     {
         $kb = $this->csvFileSize / 1024;
         if ($kb > 1) {
-            return round($kb) . 'KB';
+            return round($kb).'KB';
         } else {
             return '1KB';
         }
@@ -239,12 +243,12 @@ class GroupStatisticsTable
 
     public function getMonth()
     {
-        return (int)$this->viewedDate->format('m');
+        return (int) $this->viewedDate->format('m');
     }
 
     public function getYear()
     {
-        return (int)$this->viewedDate->format('Y');
+        return (int) $this->viewedDate->format('Y');
     }
 
     public function isNationalDataAvailable()

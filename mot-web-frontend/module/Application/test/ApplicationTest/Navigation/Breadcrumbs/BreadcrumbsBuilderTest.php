@@ -38,7 +38,7 @@ class BreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
         $resolvers = [
             'site' => 'site',
             'organisationBySite' => 'organisation',
-            'simple' => 'simple'
+            'simple' => 'simple',
         ];
         $this->builder = new BreadcrumbsBuilder($resolvers, $this->serviceLocator, $theLayout);
     }
@@ -78,8 +78,8 @@ class BreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedBreadcrumbs = [
             'breadcrumbs' => [
                 ['SiteName' => 'siteLink'],
-                ['OrganisationName' => 'organisationLink']
-            ]
+                ['OrganisationName' => 'organisationLink'],
+            ],
         ];
         $this->assertEquals($expectedBreadcrumbs, $this->viewModel->getVariables()['breadcrumbs']);
     }
@@ -94,8 +94,8 @@ class BreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->builder->site(5)->organisationBySiteId(3)->build();
         $expectedBreadcrumbs = [
             'breadcrumbs' => [
-                ['OrganisationName' => 'organisationLink']
-            ]
+                ['OrganisationName' => 'organisationLink'],
+            ],
         ];
         $this->assertEquals($expectedBreadcrumbs, $this->viewModel->getVariables()['breadcrumbs']);
     }

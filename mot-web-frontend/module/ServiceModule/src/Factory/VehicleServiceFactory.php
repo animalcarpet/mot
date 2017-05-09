@@ -15,12 +15,13 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\ServiceModule\Model\ApiServicesConfigOptions;
 
 /**
- * Class VehicleServiceFactory
+ * Class VehicleServiceFactory.
  */
 class VehicleServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return VehicleService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -33,7 +34,7 @@ class VehicleServiceFactory implements FactoryInterface
         $configOptions = $serviceLocator->get(ApiServicesConfigOptions::class);
         $vehicleServiceUrl = $configOptions->getVehicleServiceUrl();
 
-        $configOverride = isset($vehicleServiceUrl) ? ['http_client' => ['base_uri' =>  $vehicleServiceUrl]] : null;
+        $configOverride = isset($vehicleServiceUrl) ? ['http_client' => ['base_uri' => $vehicleServiceUrl]] : null;
 
         return new VehicleService($token, $configOverride);
     }

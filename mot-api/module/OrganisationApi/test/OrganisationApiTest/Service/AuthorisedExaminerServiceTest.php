@@ -1,11 +1,10 @@
 <?php
+
 namespace OrganisationApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NoResultException;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
-use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Constants\OrganisationType as OrganisationTypeConst;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Dto\Organisation\OrganisationContactDto;
@@ -49,9 +48,7 @@ use OrganisationApi\Service\Validator\AuthorisedExaminerValidator;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class AuthorisedExaminerServiceTest
- *
- * @package OrganisationApiTest\Service
+ * Class AuthorisedExaminerServiceTest.
  */
 class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
 {
@@ -63,7 +60,7 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
     const PERSON_ID = 7777;
 
     /**
-     * @var  AuthorisationServiceInterface|MockObj
+     * @var AuthorisationServiceInterface|MockObj
      */
     private $mockAuthService;
     /**
@@ -72,27 +69,27 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
     private $mockIdentity;
     /** @var AuthorisedExaminerService */
     private $authorisedExaminerService;
-    /** @var  PersonRepository|MockObj */
+    /** @var PersonRepository|MockObj */
     private $mockPersonRepo;
-    /** @var  SiteRepository|MockObj */
+    /** @var SiteRepository|MockObj */
     private $mockSiteRepo;
-    /** @var  OrganisationRepository|MockObj */
+    /** @var OrganisationRepository|MockObj */
     private $mockOrganisationRepo;
-    /** @var  OrganisationTypeRepository|MockObj */
+    /** @var OrganisationTypeRepository|MockObj */
     private $mockOrganisationTypeRepo;
-    /** @var  OrganisationContactTypeRepository|MockObj */
+    /** @var OrganisationContactTypeRepository|MockObj */
     private $mockOrgContactTypeRepo;
-    /** @var  CompanyTypeRepository|MockObj */
+    /** @var CompanyTypeRepository|MockObj */
     private $mockCompanyTypeRepo;
-    /** @var  ContactDetailsService|MockObj */
+    /** @var ContactDetailsService|MockObj */
     private $contactDetailsService;
-    /** @var  EntityManager|MockObj */
+    /** @var EntityManager|MockObj */
     private $entityManager;
-    /** @var  AuthorisationForAuthorisedExaminerRepository|MockObj */
+    /** @var AuthorisationForAuthorisedExaminerRepository|MockObj */
     private $mockAuthForAeRepo;
-    /** @var  AuthForAeStatusRepository|MockObj */
+    /** @var AuthForAeStatusRepository|MockObj */
     private $authForAeStatusRepository;
-    /** @var  XssFilter|MockObj */
+    /** @var XssFilter|MockObj */
     private $mockXssFilter;
     /**
      * @var EventService|MockObj
@@ -101,7 +98,7 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
 
     /** @var Organisation */
     private $authorisedExaminer;
-    /** @var  AuthorisedExaminerValidator|MockObj */
+    /** @var AuthorisedExaminerValidator|MockObj */
     private $validator;
 
     public function setUp()
@@ -126,7 +123,6 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
         $this->mockSiteRepo->expects($this->any())
             ->method('getAllAreaOffices')
             ->willReturn($aoList);
-
 
         $this->authorisedExaminerService = new AuthorisedExaminerService(
             $this->entityManager,
@@ -298,7 +294,7 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
 
         $this->mockSiteRepo->expects($this->any())
             ->method('find')
-            ->with("3000")
+            ->with('3000')
             ->willReturn($site);
 
         $actual = $this->authorisedExaminerService->create($orgDto);
@@ -328,21 +324,21 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
     public static function getData()
     {
         return [
-            "organisationName" => "Name",
-            "tradingAs" => "my name company",
-            "authorisedExaminerReference" => "AE1234556",
-            "companyType" => "Limited Company",
-            "organisationType" => "Examining Body",
-            "registeredCompanyNumber" => "13123123",
-            "addressLine1" => "qqqq",
-            "addressLine2" => "qqqq",
-            "addressLine3" => "Qqqq",
-            "town" => "qqqq",
-            "postcode" => "qqqqq",
-            "email" => "authorisedexaminerservicetest@dvsa.test",
-            "emailConfirmation" => "authorisedexaminerservicetest@dvsa.test",
-            "phoneNumber" => "1111111111111",
-            "faxNumber" => "2222222222",
+            'organisationName' => 'Name',
+            'tradingAs' => 'my name company',
+            'authorisedExaminerReference' => 'AE1234556',
+            'companyType' => 'Limited Company',
+            'organisationType' => 'Examining Body',
+            'registeredCompanyNumber' => '13123123',
+            'addressLine1' => 'qqqq',
+            'addressLine2' => 'qqqq',
+            'addressLine3' => 'Qqqq',
+            'town' => 'qqqq',
+            'postcode' => 'qqqqq',
+            'email' => 'authorisedexaminerservicetest@dvsa.test',
+            'emailConfirmation' => 'authorisedexaminerservicetest@dvsa.test',
+            'phoneNumber' => '1111111111111',
+            'faxNumber' => '2222222222',
             AuthorisedExaminerService::FIELD_CORRESPONDENCE_CONTACT_DETAILS_SAME => true,
         ];
     }
@@ -353,16 +349,16 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
             self::getData(),
             [
                 AuthorisedExaminerService::FIELD_CORRESPONDENCE_CONTACT_DETAILS_SAME => false,
-                "correspondenceAddressLine1" => "Perferendis modi quis aut qui",
-                "correspondenceAddressLine2" => "Dolore aut at illum dolorem illum ipsam mol",
-                "correspondenceAddressLine3" => "Exercitationem et tempora sapiente vitae quid",
-                "correspondenceTown" => "Odit quia tempor corrupti quasi Nam ipsum rem do",
-                "correspondencePostcode" => "Quis fugia",
-                "correspondenceEmail" => "authorisedexaminerservicetest@dvsa.test",
-                "correspondenceEmailConfirmation" => "authorisedexaminerservicetest@dvsa.test",
-                "correspondencePhoneNumber" => "+173-78-9018207",
-                "correspondenceFaxNumber" => "+978-77-5435043",
-                "areaOfficeNumber" => 9,
+                'correspondenceAddressLine1' => 'Perferendis modi quis aut qui',
+                'correspondenceAddressLine2' => 'Dolore aut at illum dolorem illum ipsam mol',
+                'correspondenceAddressLine3' => 'Exercitationem et tempora sapiente vitae quid',
+                'correspondenceTown' => 'Odit quia tempor corrupti quasi Nam ipsum rem do',
+                'correspondencePostcode' => 'Quis fugia',
+                'correspondenceEmail' => 'authorisedexaminerservicetest@dvsa.test',
+                'correspondenceEmailConfirmation' => 'authorisedexaminerservicetest@dvsa.test',
+                'correspondencePhoneNumber' => '+173-78-9018207',
+                'correspondenceFaxNumber' => '+978-77-5435043',
+                'areaOfficeNumber' => 9,
             ]
         );
     }
@@ -427,23 +423,21 @@ class AuthorisedExaminerServiceTest extends AbstractServiceTestCase
         ];
     }
 
-
     protected function fakedAreaOfficeList()
     {
         return [
             [
-                "id" => "3000",
-                "name" => "Area Office 01",
-                "siteNumber" => "01FOO",
-                "areaOfficeNumber" => "01"
+                'id' => '3000',
+                'name' => 'Area Office 01',
+                'siteNumber' => '01FOO',
+                'areaOfficeNumber' => '01',
             ],
             [
-                "id" => "3001",
-                "name" => "Area Office 02",
-                "siteNumber" => "02BAR",
-                "areaOfficeNumber" => "02"
-            ]
+                'id' => '3001',
+                'name' => 'Area Office 02',
+                'siteNumber' => '02BAR',
+                'areaOfficeNumber' => '02',
+            ],
         ];
     }
 }
-

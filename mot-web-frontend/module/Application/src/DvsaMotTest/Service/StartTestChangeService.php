@@ -26,10 +26,10 @@ class StartTestChangeService
     const VALUE_CHANGED = true;
     const VALUE_NOT_CHANGED = false;
 
-    /** @var  StartTestSessionService */
+    /** @var StartTestSessionService */
     private $startTestSessionService;
 
-    /** @var  Url */
+    /** @var Url */
     private $url;
 
     /**
@@ -41,8 +41,7 @@ class StartTestChangeService
     public function __construct(
         StartTestSessionService $startTestSessionService,
         Url $url
-    )
-    {
+    ) {
         $this->startTestSessionService = $startTestSessionService;
         $this->url = $url;
     }
@@ -64,7 +63,7 @@ class StartTestChangeService
         }
 
         if (!isset($changes[$value])) {
-            throw new \Exception('Change value: ' .$value. ' is not an allowed change');
+            throw new \Exception('Change value: '.$value.' is not an allowed change');
         }
 
         if (!is_bool($status)) {
@@ -82,6 +81,7 @@ class StartTestChangeService
      * @param $value
      *
      * @return mixed
+     *
      * @throws \Exception
      */
     public function getChangedValue($value)
@@ -151,12 +151,13 @@ class StartTestChangeService
         if (!isset($changes[$changedValue])) {
             return false;
         }
-        
+
         foreach ($changes as $key => $value) {
             if ($changedValue == $key) {
                 return $value;
             }
         }
+
         return false;
     }
 
@@ -175,7 +176,7 @@ class StartTestChangeService
 
     public function isDvlaVehicle()
     {
-        if ($this->getChangedValue(StartTestChangeService::SOURCE)['source'] == VehicleSearchSource::DVLA) {
+        if ($this->getChangedValue(self::SOURCE)['source'] == VehicleSearchSource::DVLA) {
             return true;
         }
 
@@ -191,10 +192,10 @@ class StartTestChangeService
     public function underTestReturnUrl($obfuscatedVehicleId, $property = null)
     {
         return MotTestRoutes::of($this->url)->vehicleMotTest(
-            $this->getChangedValue(StartTestChangeService::URL)['url'],
+            $this->getChangedValue(self::URL)['url'],
             $obfuscatedVehicleId,
-            $this->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
-            $this->getChangedValue(StartTestChangeService::SOURCE)['source'],
+            $this->getChangedValue(self::NO_REGISTRATION)['noRegistration'],
+            $this->getChangedValue(self::SOURCE)['source'],
             $property
         );
     }
@@ -223,7 +224,7 @@ class StartTestChangeService
             self::CHANGE_MODEL,
             self::NO_REGISTRATION,
             self::SOURCE,
-            self::URL
+            self::URL,
         ];
     }
 }

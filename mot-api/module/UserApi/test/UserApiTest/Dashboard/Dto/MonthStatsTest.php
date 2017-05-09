@@ -2,13 +2,10 @@
 
 namespace UserApiTest\Dashboard\Dto;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use UserApi\Dashboard\Dto\MonthStats;
 
 /**
- * Class MonthStatsTest
- *
- * @package UserApiTest\Dashboard\Dto
+ * Class MonthStatsTest.
  */
 class MonthStatsTest extends \PHPUnit_Framework_TestCase
 {

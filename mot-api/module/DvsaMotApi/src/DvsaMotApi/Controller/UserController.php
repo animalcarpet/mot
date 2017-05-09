@@ -7,7 +7,6 @@ use DvsaCommon\Validator\UsernameValidator;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaMotApi\Service\UserService;
-use Zend\View\Model\JsonModel;
 
 /**
  * Class UserController.

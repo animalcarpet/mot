@@ -7,23 +7,18 @@ use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Vehicle\CountryDto;
-use DvsaCommon\Dto\Vehicle\MakeDto;
-use DvsaCommon\Dto\Vehicle\ModelDetailDto;
-use DvsaCommon\Dto\Vehicle\ModelDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
-use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaMotApi\Mapper\AbstractMotTestMapper;
 use DvsaMotApi\Mapper\MotTestCertificateMapper;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Mot Test Certificate Mapper Tests
+ * Mot Test Certificate Mapper Tests.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -41,11 +36,11 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test map data for certificate
+     * Test map data for certificate.
      *
      * @param array $data
      * @param array $additionalData
-     * @param bool $dualLanguage
+     * @param bool  $dualLanguage
      * @param array $expected
      *
      * @dataProvider mapDataForCertificateProvider
@@ -73,7 +68,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->setDualLanguage($aTest[2]);
         $this->mapper->addDataSource('MotTestData', $aTest[0]);
 
-        $aTest[3]['Odometer'] = "-1 mi";     // set the new expectation for the check
+        $aTest[3]['Odometer'] = '-1 mi';     // set the new expectation for the check
         $this->mapper->addDataSource('Additional', $aTest[1]);
 
         $results = $this->mapper->mapData();
@@ -81,7 +76,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider
+     * Data provider.
      *
      * @return array
      */
@@ -104,7 +99,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'  => '134564_1',
+                    'motTestNumber' => '134564_1',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -117,7 +112,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                                 'locationVertical' => 'pos3',
                                 'locationLongitudinal' => 'pos2',
                                 'locationLateral' => 'Pos1',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                             [
                                 'name' => 'ABS',
@@ -126,7 +121,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                                 'inspectionManualReference' => '1.1.1',
                                 'locationLongitudinal' => 'pos2',
                                 'locationLateral' => 'Pos1',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                         ],
                     ],
@@ -140,8 +135,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerValue'      => 10000,
-                    'odometerUnit'       => 'mi',
+                    'odometerValue' => 10000,
+                    'odometerUnit' => 'mi',
                     'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
@@ -150,14 +145,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => '2014-01-29',
-                                'value'      => 10000,
-                                'unit'       => 'mi',
+                                'value' => 10000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                             [
                                 'issuedDate' => '2011-12-13',
-                                'value'      => 8000,
-                                'unit'       => 'mi',
+                                'value' => 8000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                         ]
@@ -172,12 +167,11 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
                     'Colour' => 'Blue',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
                     'AdvisoryInformation' => '001 Pos1 pos2 pos3 (Some comment)
 002 Failed Pos1 pos2 pos3 (Some comment) [1.1.1]',
                     'Odometer' => '10000 mi',
-                    'OdometerHistory' =>
-                        '29 1 2014: 10000 mi' . PHP_EOL .
+                    'OdometerHistory' => '29 1 2014: 10000 mi'.PHP_EOL.
                         '13 12 2011: 8000 mi',
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
                     'TestClass' => VehicleClassCode::CLASS_4,
@@ -185,7 +179,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December 2014.',
+                        .' present your vehicle for test is 2 December 2014.',
                 ],
             ],
             [
@@ -197,7 +191,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'         => '134564_2',
+                    'motTestNumber' => '134564_2',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -213,14 +207,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                                 'inspectionManualReference' => '1.1.1',
                                 'locationLongitudinal' => 'pos2',
                                 'locationLateral' => 'Pos1',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                             [
                                 'name' => 'Manual Advisory',
                                 'locationVertical' => 'pos3',
                                 'locationLongitudinal' => 'pos2',
                                 'locationLateral' => 'Pos1',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                         ],
                     ],
@@ -234,8 +228,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerValue'      => 10000,
-                    'odometerUnit'       => 'mi',
+                    'odometerValue' => 10000,
+                    'odometerUnit' => 'mi',
                     'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
@@ -244,14 +238,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => new \DateTime('2014-01-01'),
-                                'value'      => 10000,
-                                'unit'       => 'mi',
+                                'value' => 10000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                             [
                                 'issuedDate' => new \DateTime('2011-12-13'),
-                                'value'      => null,
-                                'unit'       => null,
+                                'value' => null,
+                                'unit' => null,
                                 'resultType' => OdometerReadingResultType::NO_ODOMETER,
                             ],
                         ]
@@ -266,21 +260,19 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
                     'Colour' => 'Black and Yellow',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
-                    'AdvisoryInformation' =>
-                        '001 Failed Pos1 pos2 pos3 (Some comment) [1.1.1]' . PHP_EOL .
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'AdvisoryInformation' => '001 Failed Pos1 pos2 pos3 (Some comment) [1.1.1]'.PHP_EOL.
                         '002 Pos1 pos2 pos3 (Some comment)',
                     'Odometer' => '10000 mi',
-                    'OdometerHistory' =>
-                        '1 1 2014: 10000 mi' . PHP_EOL .
-                        '13 12 2011: ' . AbstractMotTestMapper::TEXT_NO_ODOMETER,
+                    'OdometerHistory' => '1 1 2014: 10000 mi'.PHP_EOL.
+                        '13 12 2011: '.AbstractMotTestMapper::TEXT_NO_ODOMETER,
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
                     'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December 2014.',
+                        .' present your vehicle for test is 2 December 2014.',
                 ],
             ],
             [
@@ -292,7 +284,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'                => '134564_3',
+                    'motTestNumber' => '134564_3',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -311,7 +303,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                                 'name' => 'Manual Advisory',
                                 'locationVertical' => 'pos3',
                                 'locationLongitudinal' => 'pos2',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                         ],
                     ],
@@ -325,8 +317,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerValue'      => 10000,
-                    'odometerUnit'       => 'mi',
+                    'odometerValue' => 10000,
+                    'odometerUnit' => 'mi',
                     'odometerResultType' => OdometerReadingResultType::NOT_READABLE,
                 ],
                 [
@@ -335,14 +327,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => new \DateTime('2014-01-01'),
-                                'value'      => 10000,
-                                'unit'       => 'mi',
+                                'value' => 10000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::NOT_READABLE,
                             ],
                             [
                                 'issuedDate' => new \DateTime('2011-12-13'),
-                                'value'      => 8000,
-                                'unit'       => 'mi',
+                                'value' => 8000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                         ]
@@ -357,13 +349,11 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
                     'Colour' => 'Black and Yellow',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
-                    'AdvisoryInformation' =>
-                            '001 Failed pos2 pos3 [1.1.1]' . PHP_EOL .
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'AdvisoryInformation' => '001 Failed pos2 pos3 [1.1.1]'.PHP_EOL.
                             '002 pos2 pos3 (Some comment)',
                     'Odometer' => AbstractMotTestMapper::TEXT_NOT_READABLE,
-                    'OdometerHistory' =>
-                        '1 1 2014: '. AbstractMotTestMapper::TEXT_NOT_READABLE . PHP_EOL .
+                    'OdometerHistory' => '1 1 2014: '.AbstractMotTestMapper::TEXT_NOT_READABLE.PHP_EOL.
                         '13 12 2011: 8000 mi',
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
                     'TestClass' => VehicleClassCode::CLASS_4,
@@ -371,7 +361,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December 2014.',
+                        .' present your vehicle for test is 2 December 2014.',
                 ],
             ],
             [
@@ -383,7 +373,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'                => '134564_4',
+                    'motTestNumber' => '134564_4',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -396,7 +386,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                                 'locationVertical' => 'pos1',
                                 'locationLongitudinal' => 'pos2',
                                 'locationLateral' => 'pos3',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                             [
                                 'name' => 'ABS',
@@ -405,7 +395,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                                 'inspectionManualReference' => '1.1.1',
                                 'locationLongitudinal' => 'pos2',
                                 'locationLateral' => 'pos3',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                         ],
                     ],
@@ -419,8 +409,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerValue'      => 10000,
-                    'odometerUnit'       => 'mi',
+                    'odometerValue' => 10000,
+                    'odometerUnit' => 'mi',
                     'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
@@ -429,14 +419,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => new \DateTime('2014-01-01'),
-                                'value'      => 10000,
-                                'unit'       => 'mi',
+                                'value' => 10000,
+                                'unit' => 'mi',
                                 'resultType' => odometerReadingResultType::NO_ODOMETER,
                             ],
                             [
                                 'issuedDate' => new \DateTime('2011-12-13'),
-                                'value'      => 8000,
-                                'unit'       => 'mi',
+                                'value' => 8000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                         ]
@@ -451,12 +441,11 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
                     'Colour' => 'Black and Yellow',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
                     'AdvisoryInformation' => '001 pos3 pos2 pos1 (Some comment)
 002 Failed pos3 pos2 pos1 (Some comment) [1.1.1]',
                     'Odometer' => AbstractMotTestMapper::TEXT_NO_ODOMETER,
-                    'OdometerHistory' =>
-                        '1 1 2014: '. AbstractMotTestMapper::TEXT_NO_ODOMETER . PHP_EOL .
+                    'OdometerHistory' => '1 1 2014: '.AbstractMotTestMapper::TEXT_NO_ODOMETER.PHP_EOL.
                         '13 12 2011: 8000 mi',
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
                     'TestClass' => VehicleClassCode::CLASS_4,
@@ -464,7 +453,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December 2014.',
+                        .' present your vehicle for test is 2 December 2014.',
                 ],
             ],
             [
@@ -476,7 +465,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'         => '134564_5',
+                    'motTestNumber' => '134564_5',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -512,8 +501,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerValue'      => 10000,
-                    'odometerUnit'       => 'mi',
+                    'odometerValue' => 10000,
+                    'odometerUnit' => 'mi',
                     'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
@@ -522,14 +511,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => new \DateTime('2014-01-01'),
-                                'value'      => 10000,
-                                'unit'       => 'mi',
+                                'value' => 10000,
+                                'unit' => 'mi',
                                 'resultType' => odometerReadingResultType::NO_ODOMETER,
                             ],
                             [
                                 'issuedDate' => new \DateTime('2013-12-11'),
-                                'value'      => 8000,
-                                'unit'       => 'mi',
+                                'value' => 8000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                         ]
@@ -544,12 +533,11 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
                     'Colour' => 'Black and Yellow',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
-                    'AdvisoryInformation' => '001 pos3 pos2 pos1 (Some comment)' . PHP_EOL .
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'AdvisoryInformation' => '001 pos3 pos2 pos1 (Some comment)'.PHP_EOL.
                         '002 Failed pos3 pos2 pos1 (Some comment) [1.1.1]',
                     'Odometer' => AbstractMotTestMapper::TEXT_NO_ODOMETER,
-                    'OdometerHistory' =>
-                        '1 1 2014: '. AbstractMotTestMapper::TEXT_NO_ODOMETER . PHP_EOL .
+                    'OdometerHistory' => '1 1 2014: '.AbstractMotTestMapper::TEXT_NO_ODOMETER.PHP_EOL.
                         '11 12 2013: 8000 mi',
                     'ExpiryDate' => '1 January 2099 (NINETY-NINE)',
                     'TestClass' => VehicleClassCode::CLASS_4,
@@ -557,7 +545,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December 2098.',
+                        .' present your vehicle for test is 2 December 2098.',
                 ],
             ],
             [
@@ -569,7 +557,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'                => '134564_6',
+                    'motTestNumber' => '134564_6',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -629,14 +617,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => new \DateTime('2014-01-01'),
-                                'value'      => null,
-                                'unit'       => null,
+                                'value' => null,
+                                'unit' => null,
                                 'resultType' => odometerReadingResultType::NOT_READABLE,
                             ],
                             [
                                 'issuedDate' => new \DateTime('2013-12-11'),
-                                'value'      => 8000,
-                                'unit'       => 'mi',
+                                'value' => 8000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                         ]
@@ -651,14 +639,13 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
                     'Colour' => 'Black and Yellow',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
                     'AdvisoryInformation' => '001 pos3 pos2 pos1 (Some comment)
 002 Failed pos3 pos2 pos1 (Some dangerous) [1.1.4] * DANGEROUS *
 003 Failed pos3 pos2 pos1 (Some comment) [1.1.1]
 004 pos3 pos2 pos1 (Some blah blah)',
                     'Odometer' => AbstractMotTestMapper::TEXT_NOT_RECORDED,
-                    'OdometerHistory' =>
-                        '1 1 2014: '. AbstractMotTestMapper::TEXT_NOT_READABLE . PHP_EOL .
+                    'OdometerHistory' => '1 1 2014: '.AbstractMotTestMapper::TEXT_NOT_READABLE.PHP_EOL.
                         '11 12 2013: 8000 mi',
                     'ExpiryDate' => '1 January 2099 (NINETY-NINE)',
                     'TestClass' => VehicleClassCode::CLASS_4,
@@ -666,7 +653,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December 2098.',
+                        .' present your vehicle for test is 2 December 2098.',
                 ],
             ],
             [
@@ -678,12 +665,12 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'                => '134564_7',
+                    'motTestNumber' => '134564_7',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
                         'dualLanguage' => true,
-                        'primaryTelephone' => '011712013243'
+                        'primaryTelephone' => '011712013243',
                     ],
                     'reasonsForRejection' => [
                         'ADVISORY' => [
@@ -696,7 +683,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                                 'inspectionManualReference' => '1.1.1',
                                 'locationLongitudinal' => 'pos2',
                                 'locationLateral' => 'pos3',
-                                'comment' => 'Some comment'
+                                'comment' => 'Some comment',
                             ],
                         ],
                     ],
@@ -710,8 +697,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerValue'      => 10000,
-                    'odometerUnit'       => 'mi',
+                    'odometerValue' => 10000,
+                    'odometerUnit' => 'mi',
                     'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
@@ -720,14 +707,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => new \DateTime('2014-01-29'),
-                                'value'      => 10000,
-                                'unit'       => 'mi',
+                                'value' => 10000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                             [
                                 'issuedDate' => new \DateTime('2011-12-13'),
-                                'value'      => 8000,
-                                'unit'       => 'mi',
+                                'value' => 8000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                         ]
@@ -742,20 +729,19 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
                     'Colour' => 'Orange',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
-                    'AdvisoryInformation' => '001 Failed pos3 pos2 pos1 (Some comment) [1.1.1]' . PHP_EOL
-                        . '001 Failed(W) pos3 pos2 pos1 (Some comment) [1.1.1]',
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'AdvisoryInformation' => '001 Failed pos3 pos2 pos1 (Some comment) [1.1.1]'.PHP_EOL
+                        .'001 Failed(W) pos3 pos2 pos1 (Some comment) [1.1.1]',
                     'Odometer' => '10000 mi',
-                    'OdometerHistory' =>
-                        '29 1 2014: 10000 mi' . PHP_EOL .
+                    'OdometerHistory' => '29 1 2014: 10000 mi'.PHP_EOL.
                         '13 12 2011: 8000 mi',
-                    'ExpiryDate' => '1 January/Ionawr 2015' . PHP_EOL . '(FIFTEEN / UN DEG PUMP)',
+                    'ExpiryDate' => '1 January/Ionawr 2015'.PHP_EOL.'(FIFTEEN / UN DEG PUMP)',
                     'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan/Ion 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December/Rhagfyr 2014.',
+                        .' present your vehicle for test is 2 December/Rhagfyr 2014.',
                 ],
             ],
             [
@@ -767,7 +753,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
-                    'motTestNumber'                => '134564_8',
+                    'motTestNumber' => '134564_8',
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -825,8 +811,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerValue'      => 10000,
-                    'odometerUnit'       => 'mi',
+                    'odometerValue' => 10000,
+                    'odometerUnit' => 'mi',
                     'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
@@ -835,14 +821,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         [
                             [
                                 'issuedDate' => new \DateTime('2014-01-01'),
-                                'value'      => 10000,
-                                'unit'       => 'mi',
+                                'value' => 10000,
+                                'unit' => 'mi',
                                 'resultType' => odometerReadingResultType::NO_ODOMETER,
                             ],
                             [
                                 'issuedDate' => new \DateTime('2013-12-11'),
-                                'value'      => 8000,
-                                'unit'       => 'mi',
+                                'value' => 8000,
+                                'unit' => 'mi',
                                 'resultType' => OdometerReadingResultType::OK,
                             ],
                         ]
@@ -850,33 +836,32 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                 ],
                 true,
                 [
-                    'TestNumber'            => '134564_8',
-                    'VRM'                   => 'AB15 ADS',
-                    'VIN'                   => 'BJS45646',
-                    'Make'                  => 'German',
-                    'Model'                 => 'Whip',
+                    'TestNumber' => '134564_8',
+                    'VRM' => 'AB15 ADS',
+                    'VIN' => 'BJS45646',
+                    'Make' => 'German',
+                    'Model' => 'Whip',
                     'CountryOfRegistration' => 'UK',
-                    'Colour'                => 'Black and Yellow',
-                    'InspectionAuthority'   => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
+                    'Colour' => 'Black and Yellow',
+                    'InspectionAuthority' => "Some Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
                     // @NOTE: we don't expect manual advisories to repeat, since there's no translation
-                    'AdvisoryInformation'   => '001 pos3 pos2 pos1 (Some comment)' . PHP_EOL
-                        . '002 Failed pos3 pos2 pos1 (Some dangerous) [1.1.4] * DANGEROUS *' . PHP_EOL
-                        . '002 Failed pos3 pos2 pos1 (Some dangerous) [1.1.4] * PERYGLUS *' . PHP_EOL . PHP_EOL
-                        . '003 Failed pos3 pos2 pos1 (Some comment) [1.1.1]' . PHP_EOL
-                        . '003 Failed (W) pos3 pos2 pos1 (Some comment) [1.1.1]' . PHP_EOL . PHP_EOL
-                        . '004 pos3 pos2 pos1 (Some blah blah)',
-                    'Odometer'              => AbstractMotTestMapper::TEXT_NO_ODOMETER . '/' .
+                    'AdvisoryInformation' => '001 pos3 pos2 pos1 (Some comment)'.PHP_EOL
+                        .'002 Failed pos3 pos2 pos1 (Some dangerous) [1.1.4] * DANGEROUS *'.PHP_EOL
+                        .'002 Failed pos3 pos2 pos1 (Some dangerous) [1.1.4] * PERYGLUS *'.PHP_EOL.PHP_EOL
+                        .'003 Failed pos3 pos2 pos1 (Some comment) [1.1.1]'.PHP_EOL
+                        .'003 Failed (W) pos3 pos2 pos1 (Some comment) [1.1.1]'.PHP_EOL.PHP_EOL
+                        .'004 pos3 pos2 pos1 (Some blah blah)',
+                    'Odometer' => AbstractMotTestMapper::TEXT_NO_ODOMETER.'/'.
                         AbstractMotTestMapper::TEXT_NO_ODOMETER_CY,
-                    'OdometerHistory'       =>
-                        '1 1 2014: ' . AbstractMotTestMapper::TEXT_NO_ODOMETER . '/' .
-                        AbstractMotTestMapper::TEXT_NO_ODOMETER_CY . PHP_EOL .
+                    'OdometerHistory' => '1 1 2014: '.AbstractMotTestMapper::TEXT_NO_ODOMETER.'/'.
+                        AbstractMotTestMapper::TEXT_NO_ODOMETER_CY.PHP_EOL.
                         '11 12 2013: 8000 mi',
-                    'ExpiryDate'            => '1 January/Ionawr 2099' . PHP_EOL . '(NINETY-NINE / NAW DEG NAW)',
-                    'IssuedDate'            => '1 Jan/Ion 2014',
-                    'IssuersName'           => 'B. Tester',
-                    'TestStation'           => 'V1234',
+                    'ExpiryDate' => '1 January/Ionawr 2099'.PHP_EOL.'(NINETY-NINE / NAW DEG NAW)',
+                    'IssuedDate' => '1 Jan/Ion 2014',
+                    'IssuersName' => 'B. Tester',
+                    'TestStation' => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
-                        . ' present your vehicle for test is 2 December/Rhagfyr 2098.',
+                        .' present your vehicle for test is 2 December/Rhagfyr 2098.',
                     'TestClass' => VehicleClassCode::CLASS_4,
                 ],
             ],

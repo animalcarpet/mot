@@ -3,8 +3,6 @@
 namespace Account\Service;
 
 use Core\Service\MotFrontendIdentityProviderInterface;
-use Dvsa\OpenAM\Model\OpenAMLoginDetails;
-use Dvsa\OpenAM\OpenAMClientInterface;
 use DvsaClient\Mapper\ExpiredPasswordMapper;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Date\DateUtils;
@@ -31,7 +29,7 @@ class ExpiredPasswordService
     {
         $expirationDate = DateUtils::roundUp($expirationDate);
 
-        $expirationDate = $expirationDate->modify("- " . $this->getGracePeriod());
+        $expirationDate = $expirationDate->modify('- '.$this->getGracePeriod());
 
         return $expirationDate;
     }
@@ -62,7 +60,7 @@ class ExpiredPasswordService
         $expiryDate = $this->calculatePasswordChangePromptDate($passwordExpiryDate);
         $now = new \DateTime();
         $whenToSendNotifications = clone $expiryDate;
-        $whenToSendNotifications = $whenToSendNotifications->modify('- ' . $longestNotificationPeriod . 'days');
+        $whenToSendNotifications = $whenToSendNotifications->modify('- '.$longestNotificationPeriod.'days');
 
         if ($now > $expiryDate) {
             return false;

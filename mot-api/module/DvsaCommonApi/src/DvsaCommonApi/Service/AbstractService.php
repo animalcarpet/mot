@@ -3,10 +3,9 @@
 namespace DvsaCommonApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use DvsaCommonApi\Service\Exception\NotFoundException;
 
 /**
- * Abstract for all services that require EntityManager
+ * Abstract for all services that require EntityManager.
  */
 abstract class AbstractService
 {

@@ -1,14 +1,14 @@
 <?php
+
 namespace Dashboard;
 
 use Application\Data\ApiPersonalDetails;
 
 /**
- * Class PersonStore
+ * Class PersonStore.
  */
 class PersonStore
 {
-
     private $apiPersonalDetails;
 
     public function __construct(ApiPersonalDetails $apiPersonalDetails)

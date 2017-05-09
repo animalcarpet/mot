@@ -7,27 +7,22 @@ use DvsaEntities\Entity\MotTest;
 use DvsaMotApi\Controller\MotTestController;
 
 /**
- * Class MotTestControllerMockSupport
- *
- * @package DvsaMotApiTest\Controller
+ * Class MotTestControllerMockSupport.
  */
 class MotTestControllerMockSupport extends MotTestController
 {
     /**
-     * Avoids three levels of mock setup just to get a string
+     * Avoids three levels of mock setup just to get a string.
      *
      * @param MotTest $motTest
      *
-     * @return String fixed for test
+     * @return string fixed for test
      */
     protected function getMotTestType($motTest)
     {
         return MotTestTypeCode::TARGETED_REINSPECTION;
     }
 
-    /**
-     *
-     */
     public function getId()
     {
         return 31415;

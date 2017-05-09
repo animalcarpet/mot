@@ -4,7 +4,6 @@ namespace Core\TwoStepForm;
 
 use Core\Action\AbstractRedirectActionResult;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use Zend\Form\Form;
 
 interface SingleStepProcessInterface
@@ -12,16 +11,18 @@ interface SingleStepProcessInterface
     public function setContext(FormContextInterface $context);
 
     /**
-     * Will make a call to API to update the data from the form
+     * Will make a call to API to update the data from the form.
      *
      * @param $formData
+     *
      * @return
      */
     public function update($formData);
 
     /**
      * Gets the values that the form should be pre-populated with.
-     * (e.g. old values)
+     * (e.g. old values).
+     *
      * @return array
      */
     public function getPrePopulatedData();
@@ -38,33 +39,34 @@ interface SingleStepProcessInterface
      * Returning null means there are no breadcrumbs to display.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return array
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService);
 
     /**
-     * Zend form used to edit values
+     * Zend form used to edit values.
      *
      * @return Form
      */
     public function createEmptyForm();
 
     /**
-     * Tells what message should be shown to the user when the form has been successfully submitted
+     * Tells what message should be shown to the user when the form has been successfully submitted.
      *
      * @return string
      */
     public function getSuccessfulEditMessage();
 
     /**
-     * The title that will be displayed on the form page
+     * The title that will be displayed on the form page.
      *
      * @return string
      */
     public function getEditStepPageTitle();
 
     /**
-     * The sub title that will be displayed on the edit and review pages
+     * The sub title that will be displayed on the edit and review pages.
      *
      * @return string
      */
@@ -73,7 +75,8 @@ interface SingleStepProcessInterface
     /**
      * @param $form
      * @param string $requestUrl
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildEditStepViewModel($form);
 
@@ -83,9 +86,10 @@ interface SingleStepProcessInterface
     public function redirectToStartPage();
 
     /**
-     * Says if the users is authorised to reach the page
+     * Says if the users is authorised to reach the page.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return bool
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService);

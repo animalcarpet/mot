@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult;
 
 class ComponentFailRateResult
@@ -15,6 +16,7 @@ class ComponentFailRateResult
     public function setTestItemCategoryName($testItemCategoryName)
     {
         $this->testItemCategoryName = $testItemCategoryName;
+
         return $this;
     }
 
@@ -25,7 +27,8 @@ class ComponentFailRateResult
 
     public function setTestItemCategoryId($testItemCategoryId)
     {
-        $this->testItemCategoryId = (int)$testItemCategoryId;
+        $this->testItemCategoryId = (int) $testItemCategoryId;
+
         return $this;
     }
 
@@ -36,7 +39,8 @@ class ComponentFailRateResult
 
     public function setFailedCount($failedCount)
     {
-        $this->failedCount = (int)$failedCount;
+        $this->failedCount = (int) $failedCount;
+
         return $this;
     }
 }

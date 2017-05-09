@@ -6,7 +6,7 @@ use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 
 /**
- * "YEAR" "(" SimpleArithmeticExpression ")"
+ * "YEAR" "(" SimpleArithmeticExpression ")".
  *
  * @author Rafael Kassner <kassner@gmail.com>
  */
@@ -18,7 +18,7 @@ class Year extends FunctionNode
      */
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-        return "YEAR(" . $sqlWalker->walkArithmeticPrimary($this->date) . ")";
+        return 'YEAR('.$sqlWalker->walkArithmeticPrimary($this->date).')';
     }
     /**
      * @override

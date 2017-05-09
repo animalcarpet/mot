@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * PersonSystemRoleMap
+ * PersonSystemRoleMap.
  *
  * @ORM\Table(name="person_system_role_map")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\PersonSystemRoleMapRepository")
@@ -67,9 +67,10 @@ class PersonSystemRoleMap extends Entity
     private $businessRoleStatus;
 
     /**
-     * Set statusChangedOn
+     * Set statusChangedOn.
      *
      * @param \DateTime $statusChangedOn
+     *
      * @return PersonSystemRoleMap
      */
     public function setStatusChangedOn(\DateTime $statusChangedOn)
@@ -80,7 +81,7 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Get statusChangedOn
+     * Get statusChangedOn.
      *
      * @return \DateTime
      */
@@ -90,9 +91,10 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Set validFrom
+     * Set validFrom.
      *
      * @param \DateTime $vaildFrom
+     *
      * @return PersonSystemRoleMap
      */
     public function setValidFrom(\DateTime $vaildFrom)
@@ -103,7 +105,7 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Get validFrom
+     * Get validFrom.
      *
      * @return \DateTime
      */
@@ -113,9 +115,10 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Set expiryDate
+     * Set expiryDate.
      *
      * @param \DateTime $expiryDate
+     *
      * @return PersonSystemRoleMap
      */
     public function setExpiryDate(\DateTime $expiryDate)
@@ -126,7 +129,7 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Get expiryDate
+     * Get expiryDate.
      *
      * @return \DateTime
      */
@@ -136,9 +139,10 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Set personSystemRole
+     * Set personSystemRole.
      *
      * @param \DvsaEntities\Entity\PersonSystemRole $personSystemRole
+     *
      * @return PersonSystemRoleMap
      */
     public function setPersonSystemRole(PersonSystemRole $personSystemRole = null)
@@ -149,7 +153,7 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Get personSystemRole
+     * Get personSystemRole.
      *
      * @return \DvsaEntities\Entity\PersonSystemRole
      */
@@ -159,9 +163,10 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
+     *
      * @return PersonSystemRoleMap
      */
     public function setPerson(Person $person = null)
@@ -172,7 +177,7 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */
@@ -182,9 +187,10 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Set businessRoleStatus
+     * Set businessRoleStatus.
      *
      * @param \DvsaEntities\Entity\BusinessRoleStatus $businessRoleStatus
+     *
      * @return PersonSystemRoleMap
      */
     public function setBusinessRoleStatus(BusinessRoleStatus $businessRoleStatus = null)
@@ -195,7 +201,7 @@ class PersonSystemRoleMap extends Entity
     }
 
     /**
-     * Get businessRoleStatus
+     * Get businessRoleStatus.
      *
      * @return \DvsaEntities\Entity\BusinessRoleStatus
      */

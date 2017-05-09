@@ -19,7 +19,6 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * Class CompleteRegistrationControllerFactoryTest.
  */
-
 class CompletedControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -29,7 +28,7 @@ class CompletedControllerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $service  =  XMock::of(RegistrationStepService::class);
+        $service = XMock::of(RegistrationStepService::class);
         $serviceManager->setService(RegistrationStepService::class, $service);
         $serviceManager->setService(RegisterUserService::class, XMock::of(RegisterUserService::class));
         $serviceManager->setService(RegistrationSessionService::class, XMock::of(RegistrationSessionService::class));

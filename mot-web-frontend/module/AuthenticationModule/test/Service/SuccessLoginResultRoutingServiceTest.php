@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Service;
 
-
 use Core\Action\RedirectToRoute;
 use Core\Action\RedirectToUrl;
 use Core\Service\LazyMotFrontendAuthorisationService;
@@ -99,8 +98,7 @@ class SuccessLoginResultRoutingServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     public function test_whenSecondFactorIsNotRequired_andUserHasTradeRole_shouldRedirectToAccountSecurityChangeInfoPage(
-    )
-    {
+    ) {
         $id = $this->identity(false);
         $this->with2Fa(true);
         $this->withDvsaUser(false);
@@ -226,7 +224,7 @@ class SuccessLoginResultRoutingServiceTest extends \PHPUnit_Framework_TestCase
 
     private function withSecurityCardActive($isActive)
     {
-        $securityCard = new SecurityCard((object)['active' => $isActive]);
+        $securityCard = new SecurityCard((object) ['active' => $isActive]);
         $this->authorisationServiceClient
             ->expects($this->once())
             ->method('getSecurityCardForUser')

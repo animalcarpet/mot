@@ -41,7 +41,7 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     /**
@@ -49,7 +49,7 @@ class Module implements
      */
     public function getViewHelperConfig()
     {
-        return include __DIR__ . '/config/viewhelper.config.php';
+        return include __DIR__.'/config/viewhelper.config.php';
     }
 
     /**
@@ -57,6 +57,6 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/config/services.config.php';
+        return include __DIR__.'/config/services.config.php';
     }
 }

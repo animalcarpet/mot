@@ -2,8 +2,6 @@
 
 namespace DvsaAuthorisationTest\Service;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\UserRoleService;
 use DvsaCommon\Enum\OrganisationContactTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -23,7 +21,6 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Repository\OrganisationBusinessRoleMapRepository;
 use DvsaEntities\Repository\PersonSystemRoleMapRepository;
 use DvsaEntities\Repository\SiteBusinessRoleMapRepository;
-use PHPUnit_Framework_Assert;
 
 class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,7 +59,7 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
                 (new PersonSystemRoleMap())->setPersonSystemRole(
                     (new PersonSystemRole())->setId(1)
                         ->setName('TEST')
-                )
+                ),
             ]
         );
 
@@ -106,7 +103,7 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
                             (new \DvsaEntities\Entity\OrganisationContactType())->setId(1)
                                 ->setCode(OrganisationContactTypeCode::REGISTERED_COMPANY)
                         )
-                )
+                ),
             ]
         );
 
@@ -123,8 +120,8 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
                 'number' => 'AE123',
                 'address' => 'Stoke Gifford Office, Test Road, Bristol, Bristol 2, BS12',
                 'roles' => [
-                    'Test Short'
-                ]
+                    'Test Short',
+                ],
             ],
             current($roles['organisations'])
         );
@@ -157,7 +154,7 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
                                     (new \DvsaEntities\Entity\SiteContactType())->setId(1)
                                         ->setCode(SiteContactTypeCode::BUSINESS)
                                 )
-                )
+                ),
             ]
         );
 
@@ -181,8 +178,8 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
                     'postcode' => 'BS12',
                 ],
                 'roles' => [
-                    'ROLE'
-                ]
+                    'ROLE',
+                ],
             ],
             current($roles['sites'])
         );
@@ -245,5 +242,4 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
     {
         return (new Person())->setId(1)->setUsername('test');
     }
-
 }

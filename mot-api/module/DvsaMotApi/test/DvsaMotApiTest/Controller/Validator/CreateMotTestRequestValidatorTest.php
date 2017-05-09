@@ -8,7 +8,7 @@ use DvsaMotApi\Controller\Validator\CreateMotTestRequestValidator;
 use DvsaMotApi\Service\CreateMotTestService;
 
 /**
- * Class CreateMotTestRequestValidatorTest
+ * Class CreateMotTestRequestValidatorTest.
  */
 class CreateMotTestRequestValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,41 +61,41 @@ class CreateMotTestRequestValidatorTest extends \PHPUnit_Framework_TestCase
         return [
             [ // positive example, vehicleId is set
                 [
-                    'vehicleId'               => 1,
+                    'vehicleId' => 1,
                     'vehicleTestingStationId' => 1,
-                    'hasRegistration'         => true,
-                    'primaryColour'           => 1,
-                    'secondaryColour'         => 2,
-                    'vehicleClassCode'        => VehicleClassCode::CLASS_1
-                ], false
+                    'hasRegistration' => true,
+                    'primaryColour' => 1,
+                    'secondaryColour' => 2,
+                    'vehicleClassCode' => VehicleClassCode::CLASS_1,
+                ], false,
             ],
             [ // positive example, dvlaVehicleId is set
                 [
-                    'dvlaVehicleId'           => 1,
+                    'dvlaVehicleId' => 1,
                     'vehicleTestingStationId' => 1,
-                    'hasRegistration'         => true,
-                    'primaryColour'           => 1,
-                    'secondaryColour'         => 2,
-                    'vehicleClassCode'        => VehicleClassCode::CLASS_1
-                ], false
+                    'hasRegistration' => true,
+                    'primaryColour' => 1,
+                    'secondaryColour' => 2,
+                    'vehicleClassCode' => VehicleClassCode::CLASS_1,
+                ], false,
             ],
             [ // negative, neither vehicleId nor dvlaVehicleId is set
                 [
                     'vehicleTestingStationId' => 1,
-                    'hasRegistration'         => true,
-                    'primaryColour'           => 1,
-                    'secondaryColour'         => 2,
-                    'vehicleClassCode'        => VehicleClassCode::CLASS_1
-                ], true
+                    'hasRegistration' => true,
+                    'primaryColour' => 1,
+                    'secondaryColour' => 2,
+                    'vehicleClassCode' => VehicleClassCode::CLASS_1,
+                ], true,
             ],
             [ // one of other required properties is not set
                 [
                     'vehicleTestingStationId' => 1,
-                    'hasRegistration'         => true,
-                    'secondaryColour'         => 2,
-                    'vehicleClassCode'        => VehicleClassCode::CLASS_1
-                ], true
-            ]
+                    'hasRegistration' => true,
+                    'secondaryColour' => 2,
+                    'vehicleClassCode' => VehicleClassCode::CLASS_1,
+                ], true,
+            ],
         ];
     }
 
@@ -108,28 +108,28 @@ class CreateMotTestRequestValidatorTest extends \PHPUnit_Framework_TestCase
                     CreateMotTestService::FIELD_VEHICLE_ID => 1,
                     CreateMotTestService::FIELD_HAS_REGISTRATION => 1,
                 ],
-                false
+                false,
             ],
             [ // primary colour missing
                 [
-                    CreateMotTestService::FIELD_VEHICLE_ID       => 1,
-                    CreateMotTestService::FIELD_HAS_REGISTRATION => 1
+                    CreateMotTestService::FIELD_VEHICLE_ID => 1,
+                    CreateMotTestService::FIELD_HAS_REGISTRATION => 1,
                 ],
-                true
+                true,
             ],
             [ // vehicle Id missing
                 [
-                    CreateMotTestService::FIELD_COLOURS_PRIMARY   => 1,
-                    CreateMotTestService::FIELD_HAS_REGISTRATION => 1
+                    CreateMotTestService::FIELD_COLOURS_PRIMARY => 1,
+                    CreateMotTestService::FIELD_HAS_REGISTRATION => 1,
                 ],
-                true
+                true,
             ],
             [ // has registration missing
                 [
                     CreateMotTestService::FIELD_COLOURS_PRIMARY => 1,
-                    CreateMotTestService::FIELD_VEHICLE_ID     => 1,
+                    CreateMotTestService::FIELD_VEHICLE_ID => 1,
                 ],
-                true
+                true,
             ],
         ];
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationTest\Controller;
 
 use Core\Routing\AeRoutes;
@@ -30,19 +31,19 @@ use Organisation\UpdateAeProperty\UpdateAePropertyReviewAction;
 use Zend\View\Helper\Url;
 
 /**
- * Class AuthorisedExaminerPrincipalControllerTest
+ * Class AuthorisedExaminerPrincipalControllerTest.
  */
 class AuthorisedExaminerPrincipalControllerTest extends AbstractFrontendControllerTestCase
 {
     const AE_ID = 1;
-    const LINK = "http://link";
+    const LINK = 'http://link';
 
     /**
-     * @var MotFrontendAuthorisationServiceInterface|MockObj $mockAuth
+     * @var MotFrontendAuthorisationServiceInterface|MockObj
      */
     private $mockAuth;
     /**
-     * @var MapperFactory|MockObj $mapper
+     * @var MapperFactory|MockObj
      */
     private $mockMapperFactory;
     /**
@@ -64,7 +65,7 @@ class AuthorisedExaminerPrincipalControllerTest extends AbstractFrontendControll
         $url = XMock::of(Url::class);
         $url
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn(self::LINK);
 
         $this->url = $url;
@@ -89,7 +90,6 @@ class AuthorisedExaminerPrincipalControllerTest extends AbstractFrontendControll
 
         parent::setUp();
     }
-
 
     /**
      * @dataProvider dataProviderTestActionsResult
@@ -144,7 +144,7 @@ class AuthorisedExaminerPrincipalControllerTest extends AbstractFrontendControll
                 'params' => [
                     'route' => [
                         'id' => self::AE_ID,
-                        'principalId' => self::AE_ID
+                        'principalId' => self::AE_ID,
                     ],
                 ],
                 'mocks' => [],
@@ -159,19 +159,19 @@ class AuthorisedExaminerPrincipalControllerTest extends AbstractFrontendControll
                 'params' => [
                     'route' => [
                         'id' => self::AE_ID,
-                        'principalId' => self::AE_ID
+                        'principalId' => self::AE_ID,
                     ],
                 ],
                 'mocks' => [
                     [
-                        'class'  => 'mockAEPrincipalMapper',
+                        'class' => 'mockAEPrincipalMapper',
                         'method' => 'removePrincipalsForOrganisation',
                         'params' => [self::AE_ID, self::AE_ID],
                         'result' => self::AE_ID,
                     ],
                 ],
                 'expect' => [
-                    'url' => AuthorisedExaminerUrlBuilderWeb::of(self::AE_ID)
+                    'url' => AuthorisedExaminerUrlBuilderWeb::of(self::AE_ID),
                 ],
             ],
         ];
@@ -268,7 +268,8 @@ class AuthorisedExaminerPrincipalControllerTest extends AbstractFrontendControll
         return $dto;
     }
 
-    private function getAeRemovePrincipalModel() {
+    private function getAeRemovePrincipalModel()
+    {
         $newAEP = $this->getAEP();
         $aeRemovePrincipalModel = new AeRemovePrincipalViewModel();
         $aeRemovePrincipalModel->setAuthorisedExaminer($this->getOrganisation()->getName())

@@ -16,15 +16,12 @@ use Dashboard\Service\TradeRolesAssociationsService;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use UserAdmin\Service\UserAdminSessionManager;
-use Zend\Mvc\Controller\ControllerManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use Core\Authorisation\Assertion\WebAcknowledgeSpecialNoticeAssertion;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 
 /**
- * Class PasswordResetControllerFactoryTest
- * @package AccountTest\Factory
+ * Class PasswordResetControllerFactoryTest.
  */
 class UserHomeControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

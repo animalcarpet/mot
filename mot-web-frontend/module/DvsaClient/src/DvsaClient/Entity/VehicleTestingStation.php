@@ -3,13 +3,10 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class VehicleTestingStation
- *
- * @package DvsaClient\Entity
+ * Class VehicleTestingStation.
  */
 class VehicleTestingStation extends Site
 {
-
     private $id;
     private $tradingAs;
     private $vehicleTestingStationRef;
@@ -19,12 +16,14 @@ class VehicleTestingStation extends Site
 
     /**
      * @param string $id
+     *
      * @return $this
      * @codeCoverageIgnore
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -46,6 +45,7 @@ class VehicleTestingStation extends Site
     public function setTestClasses($testClasses)
     {
         $this->testClasses = $testClasses;
+
         return $this;
     }
 
@@ -67,6 +67,7 @@ class VehicleTestingStation extends Site
     public function setTestLaneType($testLaneType)
     {
         $this->testLaneType = $testLaneType;
+
         return $this;
     }
 
@@ -88,6 +89,7 @@ class VehicleTestingStation extends Site
     public function setTradingAs($tradingAs)
     {
         $this->tradingAs = $tradingAs;
+
         return $this;
     }
 
@@ -109,6 +111,7 @@ class VehicleTestingStation extends Site
     public function setVehicleTestingStationRef($vehicleTestingStationRef)
     {
         $this->vehicleTestingStationRef = $vehicleTestingStationRef;
+
         return $this;
     }
 
@@ -130,6 +133,7 @@ class VehicleTestingStation extends Site
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 

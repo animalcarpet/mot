@@ -9,14 +9,14 @@ use DvsaCommonTest\TestUtils\Auth\GrantAllAuthorisationServiceStub;
 use UserApi\Dashboard\Dto\DashboardData;
 
 /**
- * Unit tests for Special notice dto
+ * Unit tests for Special notice dto.
  */
 class DashboardDataTest extends AbstractServiceTestCase
 {
     public function test_toArray_basicData_shouldBeOk()
     {
         $specialNotice = SpecialNoticeTest::getInputUnreadOverdueDeadline();
-        $overdueSpecialNotices = array_combine(VehicleClassCode::getAll(), array_fill(0,count(VehicleClassCode::getAll()),0));
+        $overdueSpecialNotices = array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0));
 
         $authorisationMock = new GrantAllAuthorisationServiceStub();
         $motTestType = MotTestTypeCode::NORMAL_TEST;

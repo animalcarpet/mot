@@ -2,16 +2,14 @@
 
 use DvsaCommon\Enum\LicenceCountryCode;
 use UserAdmin\Presenter\DrivingLicenceSummaryPresenter;
-use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
-use DvsaCommon\Constants\FeatureToggle;
 
 /** @var \UserAdmin\Presenter\UserProfilePresenter $presenter */
 
 /** @var DrivingLicenceSummaryPresenter $drivingLicencePresenter */
-$drivingLicencePresenter = new DrivingLicenceSummaryPresenter;
+$drivingLicencePresenter = new DrivingLicenceSummaryPresenter();
 
 $errorMessages = $this->layout()->flashMessenger->getErrorMessages();
-echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorMessages]);
+echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorMessages]);
 
 ?>
 
@@ -28,7 +26,7 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['drivingLicenceNumber']) ? $errors['drivingLicenceNumber'] : null,
                 'label' => 'Driving licence number',
                 'value' => $drivingLicenceNumber,
-                'type' => 'text'
+                'type' => 'text',
             ]
         );
 

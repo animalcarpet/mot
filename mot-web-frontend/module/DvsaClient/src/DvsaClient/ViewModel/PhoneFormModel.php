@@ -55,7 +55,7 @@ class PhoneFormModel extends AbstractFormModel
     public function isValid($type = null)
     {
         $this->resetErrors();
-        $field = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_NUMBER) :  self::FIELD_NUMBER;
+        $field = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_NUMBER) : self::FIELD_NUMBER;
 
         if (empty($this->getNumber())) {
             $this->addError($field, self::ERR_REQUIRE);
@@ -75,6 +75,7 @@ class PhoneFormModel extends AbstractFormModel
     public function setNumber($number)
     {
         $this->number = $number;
+
         return $this;
     }
 
@@ -89,6 +90,7 @@ class PhoneFormModel extends AbstractFormModel
     public function setIsPrimary($isPrimary)
     {
         $this->isPrimary = (bool) $isPrimary;
+
         return $this;
     }
 
@@ -103,6 +105,7 @@ class PhoneFormModel extends AbstractFormModel
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 }

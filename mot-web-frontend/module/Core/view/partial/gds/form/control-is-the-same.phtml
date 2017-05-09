@@ -7,21 +7,21 @@ echo $this->partial(
     'partial/gds/form/control-radio-group',
     [
         'inputModifier' => 'inline',
-        'label'         => $this->title,
-        'options'       => [
+        'label' => $this->title,
+        'options' => [
             [
-                'value'     => '1',
+                'value' => '1',
                 'inputName' => $name,
-                'key'       => 'Yes',
-                'checked'   => (bool) $value,
+                'key' => 'Yes',
+                'checked' => (bool) $value,
             ],
             [
-                'value'      => '0',
-                'inputName'  => $name,
-                'key'        => 'No',
-                'checked'    => !(bool) $value,
+                'value' => '0',
+                'inputName' => $name,
+                'key' => 'No',
+                'checked' => !(bool) $value,
                 'dataTarget' => $this->addressElm,
-            ]
+            ],
         ],
     ]
 );

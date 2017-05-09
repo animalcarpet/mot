@@ -27,8 +27,7 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         UpdateFirstUsedDateAction $updateFirstUsedDateAction,
         UpdateMakeAndModelAction $updateMakeAndModelAction,
         UpdateColourAction $updateColourAction
-    )
-    {
+    ) {
         $this->updateEngineAction = $updateEngineAction;
         $this->updateCountryAction = $updateCountryAction;
         $this->updateClassAction = $updateClassAction;
@@ -140,7 +139,7 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
      */
     private function getFormUuid()
     {
-        return $this->params()->fromQuery("formUuid");
+        return $this->params()->fromQuery('formUuid');
     }
 
     /**

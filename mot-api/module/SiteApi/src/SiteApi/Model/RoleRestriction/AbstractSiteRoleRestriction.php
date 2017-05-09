@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Model\RoleRestriction;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -9,7 +10,7 @@ use SiteApi\Model\RoleRestrictionInterface;
 use SiteApi\Model\SitePersonnel;
 
 /**
- * Class AbstractSiteRoleRestriction
+ * Class AbstractSiteRoleRestriction.
  */
 abstract class AbstractSiteRoleRestriction implements RoleRestrictionInterface
 {
@@ -58,7 +59,7 @@ abstract class AbstractSiteRoleRestriction implements RoleRestrictionInterface
     }
 
     /**
-     * @return String The role this restriction applies to
+     * @return string The role this restriction applies to
      */
     abstract public function getRole();
 }

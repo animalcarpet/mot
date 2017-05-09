@@ -3,14 +3,13 @@
 namespace PersonApi\Factory\Controller;
 
 use PersonApi\Controller\PersonController;
-use PersonApi\Generator\PersonGenerator;
 use PersonApi\Service\PersonService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonControllerFactory
+ * Class PersonControllerFactory.
  *
  * Generates the PersonController, injecting dependencies
  */

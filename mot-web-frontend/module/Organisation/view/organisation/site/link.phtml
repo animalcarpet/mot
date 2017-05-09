@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel $model
+ * @var \Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel
  * @var AeLinkSiteForm                                             $form
  * @var \Zend\Mvc\Controller\Plugin\FlashMessenger                 $flashMessenger
  */
@@ -26,32 +26,32 @@ echo $this->partial(
         <?php echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'           => 'siteNumber',
-                'help'         => 'For example, V1234',
+                'id' => 'siteNumber',
+                'help' => 'For example, V1234',
                 'errorMessage' => $form->getError(AeLinkSiteForm::FIELD_SITE_NR),
-                'label'        => 'Site ID',
-                'value'        => $form->getSiteNumber(),
-                'maxLength'    => $form->getMaxInputLength(),
+                'label' => 'Site ID',
+                'value' => $form->getSiteNumber(),
+                'maxLength' => $form->getMaxInputLength(),
             ]
         ); ?>
     </fieldset>
     <?php echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'submitAeLink',
-            'value'      => 'Associate this site',
+            'id' => 'submitAeLink',
+            'value' => 'Associate this site',
             'navigation' => [
-                'Cancel and return to Authorised Examiner' => $model->getCancelUrl()
-            ]
+                'Cancel and return to Authorised Examiner' => $model->getCancelUrl(),
+            ],
         ]
     ); ?>
 </form>
 
 <?php $this->inlineScript()->captureStart(); ?>
     var sites = [
-        <?php foreach($form->getSites() as $site) {
-            echo '"'. $this->escapeJs($site['site_number']) .'",';
-        }
+        <?php foreach ($form->getSites() as $site) {
+        echo '"'.$this->escapeJs($site['site_number']).'",';
+    }
         ?>
     ];
 <?php $this->inlineScript()->captureEnd();

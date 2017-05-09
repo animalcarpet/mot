@@ -7,15 +7,10 @@ use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Obfuscate\ParamObfuscator;
-use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\Session\Container;
 
 /**
- * Class ClaimAccountService
- *
- * @package Account\Service
+ * Class ClaimAccountService.
  */
 class ClaimAccountService
 {
@@ -27,21 +22,20 @@ class ClaimAccountService
     /** @var \Zend\Session\Container */
     protected $sessionContainer;
 
-    /** @var  \Core\Service\LazyMotFrontendAuthorisationService */
+    /** @var \Core\Service\LazyMotFrontendAuthorisationService */
     private $authService;
     /** @var MapperFactory $mapper */
     private $mapper;
-    /** @var  ParamObfuscator */
+    /** @var ParamObfuscator */
     private $obfuscator;
-    /** @var  \Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity */
+    /** @var \Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity */
     private $identity;
-
 
     /**
      * @param MotFrontendAuthorisationServiceInterface $authService
-     * @param MotFrontendIdentityInterface $identity
-     * @param MapperFactory $mapper
-     * @param ParamObfuscator $obfuscator
+     * @param MotFrontendIdentityInterface             $identity
+     * @param MapperFactory                            $mapper
+     * @param ParamObfuscator                          $obfuscator
      */
     public function __construct(
         MotFrontendAuthorisationServiceInterface $authService,
@@ -54,7 +48,6 @@ class ClaimAccountService
         $this->mapper = $mapper;
         $this->obfuscator = $obfuscator;
     }
-
 
     /**
      * @return Container Zend\Session\Container
@@ -95,6 +88,7 @@ class ClaimAccountService
         ) {
             $this->getSession()->$key = $value;
         }
+
         return $this;
     }
 
@@ -123,7 +117,7 @@ class ClaimAccountService
         $this->saveOnSession(
             $submittingStep,
             $post->getArrayCopy() + [
-                'username' => $this->identity->getUsername()
+                'username' => $this->identity->getUsername(),
             ]
         );
     }
@@ -144,7 +138,7 @@ class ClaimAccountService
      */
     public function isStepRecorded($step)
     {
-        return ($this->getSession()->offsetExists($step));
+        return $this->getSession()->offsetExists($step);
     }
 
     /**
@@ -178,7 +172,7 @@ class ClaimAccountService
             $this->prepareDataForApi($data)
         );
 
-        return ($result === true);
+        return $result === true;
     }
 
     private function prepareDataForApi($data)
@@ -187,16 +181,16 @@ class ClaimAccountService
         $step2Data = $data[ClaimController::STEP_2_NAME];
 
         return [
-            'personId'              => $data['user_id'],
+            'personId' => $data['user_id'],
 
-            'password'              => $step1Data['password'],
-            'passwordConfirmation'  => $step1Data['confirm_password'],
+            'password' => $step1Data['password'],
+            'passwordConfirmation' => $step1Data['confirm_password'],
 
             'securityQuestionOneId' => $step2Data['question_a'],
-            'securityAnswerOne'     => $step2Data['answer_a'],
+            'securityAnswerOne' => $step2Data['answer_a'],
 
             'securityQuestionTwoId' => $step2Data['question_b'],
-            'securityAnswerTwo'     => $step2Data['answer_b'],
+            'securityAnswerTwo' => $step2Data['answer_b'],
         ];
     }
 

@@ -54,7 +54,7 @@ class DateTimeViewModel
     }
 
     /**
-     * Returns correct date or null
+     * Returns correct date or null.
      *
      * @return \DateTime|null
      */
@@ -94,6 +94,7 @@ class DateTimeViewModel
     public function setDay($day)
     {
         $this->day = $day;
+
         return $this;
     }
 
@@ -113,6 +114,7 @@ class DateTimeViewModel
     public function setMonth($month)
     {
         $this->month = $month;
+
         return $this;
     }
 
@@ -124,7 +126,6 @@ class DateTimeViewModel
         return $this->year;
     }
 
-
     /**
      * @param string $year
      *
@@ -133,6 +134,7 @@ class DateTimeViewModel
     public function setYear($year)
     {
         $this->year = $year;
+
         return $this;
     }
 
@@ -150,6 +152,7 @@ class DateTimeViewModel
     public function setHour($hour)
     {
         $this->hour = $hour;
+
         return $this;
     }
 
@@ -169,6 +172,7 @@ class DateTimeViewModel
     public function setMinute($minute)
     {
         $this->minute = $minute;
+
         return $this;
     }
 
@@ -186,6 +190,7 @@ class DateTimeViewModel
     public function setSecond($second)
     {
         $this->second = $second;
+
         return $this;
     }
 }

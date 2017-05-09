@@ -10,13 +10,12 @@ use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
 
 /**
- * A repository for Reasons For Rejection related functionality
+ * A repository for Reasons For Rejection related functionality.
  *
  * @codeCoverageIgnore
  */
 class RfrRepository
 {
-
     /** @var EntityManager */
     private $em;
 
@@ -27,6 +26,7 @@ class RfrRepository
 
     /**
      * @param string $vehicleClassCode see \DvsaCommon\Enum\VehicleClassCode
+     *
      * @return array
      */
     public function getCurrentTestItemCategoriesWithRfrsByVehicleCriteria($vehicleClassCode)
@@ -66,6 +66,7 @@ class RfrRepository
 
     /**
      * Find current RFRs.
+     *
      * @param int    $id
      * @param string $role
      * @param string $vehicleClass
@@ -78,7 +79,7 @@ class RfrRepository
             ->createQuery(
                 '
                 SELECT tRfr
-                FROM ' . ReasonForRejection::class . ' tRfr
+                FROM ' .ReasonForRejection::class.' tRfr
                 JOIN tRfr.vehicleClasses vc
                 WHERE tRfr.testItemSelectorId = ?1
                     AND vc.code = ?2
@@ -180,7 +181,7 @@ class RfrRepository
      */
     private static function getSearchResultSetMapping()
     {
-        $rsm = new ResultSetMapping;
+        $rsm = new ResultSetMapping();
         $rsm->addEntityResult(ReasonForRejection::class, 'rfr');
         $rsm->addFieldResult('rfr', 'rfr_id', 'rfrId');
         $rsm->addFieldResult('rfr', 'test_item_category_id', 'testItemSelectorId');

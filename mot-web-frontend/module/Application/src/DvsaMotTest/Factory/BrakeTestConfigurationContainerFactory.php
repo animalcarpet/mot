@@ -8,15 +8,14 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as SessionContainer;
 
 /**
- * Class BrakeTestConfigurationContainerFactory
- *
- * @package DvsaMotTest\Factory
+ * Class BrakeTestConfigurationContainerFactory.
  */
 class BrakeTestConfigurationContainerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $container = new SessionContainer();
+
         return new BrakeTestConfigurationContainerHelper($container);
     }
 }

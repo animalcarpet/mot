@@ -7,7 +7,6 @@
 
 namespace DvsaEntitiesTest\Repository;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\ServiceException;
@@ -52,7 +51,7 @@ class SecurityQuestionRepositoryTest extends \PHPUnit_Framework_TestCase
         $tooFewResult = [];
         $tooManyResult = [];
 
-        for ($i = 1; $i <= SecurityQuestionRepository::EXPECTED_NUMBER_OF_QUESTIONS_PER_USER + 1; $i++) {
+        for ($i = 1; $i <= SecurityQuestionRepository::EXPECTED_NUMBER_OF_QUESTIONS_PER_USER + 1; ++$i) {
             $mock = XMock::of(PersonSecurityAnswer::class);
 
             if ($i < SecurityQuestionRepository::EXPECTED_NUMBER_OF_QUESTIONS_PER_USER) {

@@ -16,6 +16,7 @@ class SecurityQuestionAnswersForm extends Form
 {
     /**
      * SecurityQuestionAnswersForm constructor.
+     *
      * @param SecurityQuestionDto $firstQuestion
      * @param SecurityQuestionDto $secondQuestion
      */
@@ -37,11 +38,10 @@ class SecurityQuestionAnswersForm extends Form
     public function getMappedQuestionsAndAnswers()
     {
         $data = $this->getData();
+
         return [
-            $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_QUESTION_ID] =>
-                $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_ANSWER],
-            $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_QUESTION_ID] =>
-                $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_ANSWER],
+            $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_QUESTION_ID] => $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_ANSWER],
+            $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_QUESTION_ID] => $data[SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_ANSWER],
         ];
     }
 

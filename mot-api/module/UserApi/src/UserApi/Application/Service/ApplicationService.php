@@ -9,9 +9,7 @@ use DvsaEntities\Entity\Application;
 use DvsaMotApi\Service\UserService;
 
 /**
- * Class ApplicationService
- *
- * @package UserApi\Application\Service
+ * Class ApplicationService.
  */
 class ApplicationService extends AbstractService
 {
@@ -40,10 +38,10 @@ class ApplicationService extends AbstractService
         /** @var $application Application */
         foreach ($applications as $application) {
             $result[] = [
-                'id'         => $application->getId(),
-                'uuid'       => $application->getApplicationReference(),
+                'id' => $application->getId(),
+                'uuid' => $application->getApplicationReference(),
                 'submitDate' => DateTimeApiFormat::dateTime($application->getSubmittedOn()),
-                'status'     => $application->getStatus()->getName(),
+                'status' => $application->getStatus()->getName(),
             ];
         }
 

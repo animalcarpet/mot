@@ -15,7 +15,6 @@ use DvsaEntities\EntityTrait\EnumType1EntityTrait;
  */
 class PaymentStatus
 {
-
     use CommonIdentityTrait;
 
     use EnumType1EntityTrait;
@@ -36,6 +35,7 @@ class PaymentStatus
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -69,6 +69,7 @@ class PaymentStatus
     public function setCpmsCode($cpmsCode)
     {
         $this->cpmsCode = $cpmsCode;
+
         return $this;
     }
 }

@@ -10,11 +10,11 @@ use Zend\Http\PhpEnvironment\Request;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class ClaimControllerTest
+ * Class ClaimControllerTest.
  */
 class ClaimControllerTest extends AbstractRestfulControllerTestCase
 {
-    CONST PIN = '123456';
+    const PIN = '123456';
     const PERSON_ID = 1;
 
     /**
@@ -32,7 +32,6 @@ class ClaimControllerTest extends AbstractRestfulControllerTestCase
 
         $this->serviceManager->setService(ClaimService::class, $this->service);
     }
-
 
     public function testClaimControllerGet()
     {

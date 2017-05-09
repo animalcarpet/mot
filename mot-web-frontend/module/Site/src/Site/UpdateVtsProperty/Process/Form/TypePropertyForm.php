@@ -15,7 +15,7 @@ class TypePropertyForm extends Form
 {
     const FIELD_TYPE = UpdateVtsPropertyAction::VTS_TYPE_PROPERTY;
 
-    const TYPE_EMPTY_MSG = "you must choose a site type";
+    const TYPE_EMPTY_MSG = 'you must choose a site type';
 
     private $typeElement;
 
@@ -33,9 +33,9 @@ class TypePropertyForm extends Form
         foreach (TypeOfVts::getPossibleVtsTypes() as $typeCode) {
             $siteType = $vtsTypeCatalog->getByCode($typeCode);
             $options[] = [
-                'label'     => $siteType->getName(),
-                'value'     => $siteType->getCode(),
-                'key'       => $siteType->getName(),
+                'label' => $siteType->getName(),
+                'value' => $siteType->getCode(),
+                'key' => $siteType->getName(),
                 'inputName' => self::FIELD_TYPE,
             ];
         }
@@ -72,4 +72,3 @@ class TypePropertyForm extends Form
         return $this->typeElement;
     }
 }
-

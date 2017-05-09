@@ -6,7 +6,6 @@ namespace Core\ViewModel\Header;
  * Represents an element inside of a list in a tertiary title of the view header's.
  *
  * Class HeaderTertiaryListElement
- * @package Core\ViewModel\Header
  */
 class HeaderTertiaryListElement implements HeaderTertiaryListElementFlowInterface, HeaderTertiaryListElementInterface
 {
@@ -33,5 +32,4 @@ class HeaderTertiaryListElement implements HeaderTertiaryListElementFlowInterfac
     {
         return $this->text;
     }
-
 }

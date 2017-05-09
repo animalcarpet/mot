@@ -7,13 +7,10 @@ use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\SiteTestingDailyScheduleService;
 
 /**
- * Class SiteTestingDailyScheduleController
- *
- * @package SiteApi\Controller
+ * Class SiteTestingDailyScheduleController.
  */
 class SiteTestingDailyScheduleController extends AbstractDvsaRestfulController
 {
-
     /**
      * @param int $id
      *
@@ -41,6 +38,7 @@ class SiteTestingDailyScheduleController extends AbstractDvsaRestfulController
     public function update($id, $data)
     {
         $schedules = $this->getSiteTestingDailyScheduleService()->updateSchedule($id, $data);
+
         return ApiResponse::jsonOk($schedules);
     }
 }

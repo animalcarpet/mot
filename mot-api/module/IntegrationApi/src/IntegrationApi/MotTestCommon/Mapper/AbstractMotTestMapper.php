@@ -6,7 +6,7 @@ use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaEntities\Entity\Site;
 
 /**
- * Class AbstractMotTestMapper
+ * Class AbstractMotTestMapper.
  */
 abstract class AbstractMotTestMapper
 {

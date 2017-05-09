@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Payment
+ * Payment.
  *
  * @ORM\Table(name="payment", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity
@@ -69,7 +69,7 @@ class Payment extends Entity
     private $created;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -115,13 +115,15 @@ class Payment extends Entity
     public function setDetails($details)
     {
         $this->details = $details;
+
         return $this;
     }
 
     /**
-     * Set amount
+     * Set amount.
      *
      * @param float $amount
+     *
      * @return \DvsaEntities\Entity\Payment
      */
     public function setAmount($amount)
@@ -132,7 +134,7 @@ class Payment extends Entity
     }
 
     /**
-     * Get amount
+     * Get amount.
      *
      * @return float
      */
@@ -142,9 +144,10 @@ class Payment extends Entity
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
+     *
      * @return \DvsaEntities\Entity\Payment
      */
     public function setStatus($status)
@@ -155,7 +158,7 @@ class Payment extends Entity
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return \DvsaEntities\Entity\PaymentStatus
      */
@@ -165,9 +168,10 @@ class Payment extends Entity
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param \DvsaEntities\Entity\PaymentType $type
+     *
      * @return \DvsaEntities\Entity\Payment
      */
     public function setType(\DvsaEntities\Entity\PaymentType $type = null)
@@ -178,7 +182,7 @@ class Payment extends Entity
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return \DvsaEntities\Entity\PaymentType
      */
@@ -188,9 +192,10 @@ class Payment extends Entity
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
+     *
      * @return \DvsaEntities\Entity\Payment
      */
     public function setCreated($created)
@@ -201,7 +206,7 @@ class Payment extends Entity
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */

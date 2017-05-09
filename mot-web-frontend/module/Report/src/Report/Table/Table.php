@@ -8,9 +8,7 @@ use Zend\Paginator\Paginator;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Contains parameters of Table, functionality for setup table and columns parameters, draw table and footer
- *
- * @package Report\Table
+ * Contains parameters of Table, functionality for setup table and columns parameters, draw table and footer.
  */
 class Table
 {
@@ -51,6 +49,7 @@ class Table
     public function setRowsTotalCount($rowsTotalCount)
     {
         $this->rowsTotalCount = (int) $rowsTotalCount;
+
         return $this;
     }
 
@@ -65,6 +64,7 @@ class Table
     public function setSearchParams(SearchParamsDto $searchParams)
     {
         $this->searchParams = $searchParams;
+
         return $this;
     }
 
@@ -82,6 +82,7 @@ class Table
     public function setData($rows)
     {
         $this->data = $rows;
+
         return $this;
     }
 
@@ -120,12 +121,12 @@ class Table
     public function setTableOptions(TableOptions $tableOptions)
     {
         $this->tableOptions = $tableOptions;
+
         return $this;
     }
 
-
     /**
-     * Render table from view script
+     * Render table from view script.
      *
      * @param PhpRenderer $phpRenderer
      *
@@ -135,23 +136,23 @@ class Table
     {
         return $phpRenderer->partial(
             $this->tableOptions->getTableViewScript(), [
-                'table'   => $this,
+                'table' => $this,
             ]
         );
     }
 
-
     /**
-     * Render pagination stuff
+     * Render pagination stuff.
      *
      * @param PhpRenderer $phpRenderer
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function renderFooter(PhpRenderer $phpRenderer)
     {
-        $adapter   = new NullAdapter($this->getRowsTotalCount());
+        $adapter = new NullAdapter($this->getRowsTotalCount());
 
         $searchParams = $this->getSearchParams();
 
@@ -162,7 +163,7 @@ class Table
 
         return $phpRenderer->partial(
             $this->tableOptions->getFooterViewScript(), [
-                'paginator'    => $paginator,
+                'paginator' => $paginator,
                 'searchParams' => $searchParams,
                 'tableOptions' => $this->tableOptions,
             ]

@@ -32,7 +32,7 @@ class IncognitoVehicleTest extends PHPUnit_Framework_TestCase
 
     public function testGettersAndSetters()
     {
-        $date = new \DateTime("2015-07-08");
+        $date = new \DateTime('2015-07-08');
         $this->incognitoVehicle
             ->setEndDate($date)
             ->setExpiryDate($date)

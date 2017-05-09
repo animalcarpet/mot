@@ -68,12 +68,12 @@ class ContactDetailFormModelTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . $method}($value);
+        $result = $this->model->{'set'.$method}($value);
         $this->assertInstanceOf(ContactDetailFormModel::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? '' : 'get') . $method;
+        $method = (is_bool($expect) ? '' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -82,7 +82,7 @@ class ContactDetailFormModelTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'property' => 'emailModel',
-                'value'    => new  EmailFormModel(),
+                'value' => new  EmailFormModel(),
             ],
             ['addressModel', new AddressFormModel()],
             ['phoneModel', new PhoneFormModel()],
@@ -112,7 +112,7 @@ class ContactDetailFormModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'postData'     => [
+                'postData' => [
                     self::TYPE => [
                         'someKey' => 'someData',
                     ],
@@ -120,14 +120,13 @@ class ContactDetailFormModelTest extends \PHPUnit_Framework_TestCase
                 'isExpectCall' => true,
             ],
             [
-                'postData'     => [
+                'postData' => [
                     self::TYPE => [],
                 ],
                 'isExpectCall' => false,
             ],
         ];
     }
-
 
     /**
      * @dataProvider dataProviderTestFromDto
@@ -148,11 +147,11 @@ class ContactDetailFormModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'dto'          => new ContactDto(),
+                'dto' => new ContactDto(),
                 'isExpectCall' => true,
             ],
             [
-                'dto'          => null,
+                'dto' => null,
                 'isExpectCall' => false,
             ],
         ];
@@ -171,18 +170,17 @@ class ContactDetailFormModelTest extends \PHPUnit_Framework_TestCase
         $actual = $this->model->toDto($passDto);
 
         $this->assertInstanceOf($expectInstanceOf, $actual);
-
     }
 
     public function dataProviderTestToDto()
     {
         return [
             [
-                'passDto'          => null,
+                'passDto' => null,
                 'expectInstanceOf' => ContactDto::class,
             ],
             [
-                'passDto'          => new OrganisationContactDto,
+                'passDto' => new OrganisationContactDto(),
                 'expectInstanceOf' => OrganisationContactDto::class,
             ],
         ];
@@ -190,6 +188,6 @@ class ContactDetailFormModelTest extends \PHPUnit_Framework_TestCase
 
     private function isCall($isExpectCall)
     {
-        return ($isExpectCall ? $this->once() : $this->never());
+        return $isExpectCall ? $this->once() : $this->never();
     }
 }

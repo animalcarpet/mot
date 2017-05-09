@@ -5,7 +5,6 @@ namespace UserAdmin\Controller;
 use Core\Controller\AbstractAuthActionController;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 use UserAdmin\Presenter\UserProfilePresenter;
@@ -40,8 +39,7 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
         HelpdeskAccountAdminService $accountAdminService,
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
         MotAuthorisationServiceInterface $authorisationService
-    )
-    {
+    ) {
         $this->accountAdminService = $accountAdminService;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
         $this->authorisationService = $authorisationService;
@@ -94,7 +92,7 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
 
         $breadcrumbs = [
             'User search' => $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userResults()),
-            $profilePresenter->displayTitleAndFullName() => $userProfileUrl
+            $profilePresenter->displayTitleAndFullName() => $userProfileUrl,
         ];
 
         $breadcrumbs += ['Reclaim account' => ''];
@@ -113,7 +111,7 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
     }
 
     /**
-     * Build a url with the query params
+     * Build a url with the query params.
      *
      * @param string $url
      *
@@ -125,7 +123,8 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
         if (empty($params)) {
             return $url;
         }
-        return $url . '?' . http_build_query($params);
+
+        return $url.'?'.http_build_query($params);
     }
 
     private function getTesterAuthorisationViewModel($personId)

@@ -20,7 +20,7 @@ $dashboard = $this->dashboardDataProvider();
 /** @var MotTest $motTest */
 $motTest = $this->motDetails;
 
-/** @var DvsaVehicleViewModel $vehicle */
+/* @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
 $motTestNumber = $motTest->getMotTestNumber();
@@ -28,7 +28,7 @@ $motTestNumber = $motTest->getMotTestNumber();
 /** @var Tester $tester */
 $tester = $motTest->getTester();
 
-/** @var Site $siteData */
+/* @var Site $siteData */
 $siteData;
 
 $responseAdapter = new MotTestServiceResponseAdapter($motTest);
@@ -50,8 +50,8 @@ if (!empty($this->vehicleId)) {
     $escapedBackUrl = $this->url('vehicle/detail/history', ['id' => $this->vehicleId], ['query' => $this->summaryParams]);
 } else {
     $baseUrl = 'mot-test-search';
-    if($this->searchType !== MotTestSearchController::SEARCH_TYPE_TEST_NUMBER) {
-        $baseUrl = $baseUrl . '/' . $this->searchType;
+    if ($this->searchType !== MotTestSearchController::SEARCH_TYPE_TEST_NUMBER) {
+        $baseUrl = $baseUrl.'/'.$this->searchType;
     }
     $escapedBackUrl = $this->url($baseUrl, [], ['query' => $this->summaryParams]);
 }
@@ -59,8 +59,8 @@ if (!empty($this->vehicleId)) {
 //  --  title and header    --
 $testName = AbstractDvsaMotTestController::getTestName($motTestType);
 
-$title = $testName . ' Summary';
-$header = $testName . ' summary';
+$title = $testName.' Summary';
+$header = $testName.' summary';
 
 $this->headTitle($title);
 $this->headScript()->appendFile('/js/dvsa-mot-enforcement/mot-test/display-test-summary.js');
@@ -104,7 +104,7 @@ if (empty($motTest)) {
     <span class="divider"></span>
 
     <div class="row" id="testInformation">
-        <?php echo $this->partial('partials/mot-test-summary/test-status', ['status' => $testStatus]);?>
+        <?php echo $this->partial('partials/mot-test-summary/test-status', ['status' => $testStatus]); ?>
 
         <div class="col-sm-8">
             <div class="row">
@@ -113,7 +113,7 @@ if (empty($motTest)) {
                     'partials/mot-test-summary/field-mot-test-number',
                     [
                         'isReinspection' => $isReinspection,
-                        'motTestNumber'   => $motTestNumber,
+                        'motTestNumber' => $motTestNumber,
                     ]
                 );
                 ?>
@@ -126,7 +126,7 @@ if (empty($motTest)) {
                         'partials/mot-test-summary/field-issued-date.phtml',
                         [
                             'cssDlClass' => 'col-sm-6',
-                            'motTest'    => $motTest,
+                            'motTest' => $motTest,
                         ]
                     );
 
@@ -147,9 +147,9 @@ if (empty($motTest)) {
             $startDate = $motTest->getStartedDate() !== null ? DateUtils::toDateTime($motTest->getStartedDate()) : null;
 
             if ($isTestActive) {
-                $completedDate = new \DateTime;
+                $completedDate = new \DateTime();
             } else {
-                $completedDate = $motTest->getCompletedDate() !== null ? DateUtils::toDateTime($motTest->getCompletedDate()): null;
+                $completedDate = $motTest->getCompletedDate() !== null ? DateUtils::toDateTime($motTest->getCompletedDate()) : null;
             }
 
             if ($completedDate) :
@@ -157,9 +157,9 @@ if (empty($motTest)) {
                 $durationMins = $testDuration['minutes'];
                 $durationSec = $testDuration['seconds'];
                 $escapedTestDuration =
-                    $this->escapeHtml($durationMins) . ' mins ' . $durationSec . ' sec &nbsp;&nbsp;&nbsp;' .
-                    'From&nbsp;' . $this->escapeHtml(DateTimeDisplayFormat::dateTime($startDate)) .
-                    '&nbsp;&nbsp;To&nbsp;' . $this->escapeHtml(DateTimeDisplayFormat::dateTime($completedDate));
+                    $this->escapeHtml($durationMins).' mins '.$durationSec.' sec &nbsp;&nbsp;&nbsp;'.
+                    'From&nbsp;'.$this->escapeHtml(DateTimeDisplayFormat::dateTime($startDate)).
+                    '&nbsp;&nbsp;To&nbsp;'.$this->escapeHtml(DateTimeDisplayFormat::dateTime($completedDate));
                 ?>
                 <div class="row">
                     <dl class="col-sm-12 no-bot-marg">
@@ -195,11 +195,10 @@ echo $this->partial(
     ]
 );
 
-
 echo $this->partial(
     'partials/mot-test-summary/brake-values-in-kg-block', [
-        'vehicle'           => $vehicle,
-        'motTest'       => $motTest,
+        'vehicle' => $vehicle,
+        'motTest' => $motTest,
         'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
         'isEnforcementUser' => true,
     ]
@@ -208,7 +207,7 @@ echo $this->partial(
 //  --  failures    --
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [
-        'id'    => 'fails',
+        'id' => 'fails',
         'title' => 'Fails',
         'items' => $fails,
     ]
@@ -216,7 +215,7 @@ echo $this->partial(
 
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [
-        'id'    => 'prses',
+        'id' => 'prses',
         'title' => 'PRS',
         'items' => $prses,
     ]
@@ -224,7 +223,7 @@ echo $this->partial(
 
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [
-        'id'    => 'advisoryText',
+        'id' => 'advisoryText',
         'title' => 'Advisory text',
         'items' => $advisories,
     ]
@@ -291,7 +290,7 @@ echo $this->partial(
 
     <?php endif; ?>
 
-    <?php if($this->authorisationHelper()->isGranted(PermissionInSystem::CERTIFICATE_PRINT_ANY)): ?>
+    <?php if ($this->authorisationHelper()->isGranted(PermissionInSystem::CERTIFICATE_PRINT_ANY)): ?>
         <div class="row">
             <div class="col-sm-12">
                 <p>&nbsp;</p>

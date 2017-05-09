@@ -26,13 +26,13 @@ class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
 
     private $authorisationService;
 
-    /** @var  SecurityCardGuard */
+    /** @var SecurityCardGuard */
     private $securityCardGuard;
 
-    /** @var  PersonProfileGuardBuilder */
+    /** @var PersonProfileGuardBuilder */
     private $personProfileGuardBuilder;
 
-    /** @var  SecurityCardService */
+    /** @var SecurityCardService */
     private $securityCardService;
 
     private $url;
@@ -93,7 +93,7 @@ class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->withHardStop(true);
         $this->assertEquals([
-            ['Activate your security card' => '']
+            ['Activate your security card' => ''],
         ],
             $this->strategy()->breadcrumbs());
     }
@@ -103,7 +103,7 @@ class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
         $this->withHardStop(false);
         $this->assertEquals([
             ['Your profile' => ProfileRoutes::of($this->url)->yourProfile()],
-            ['Activate your security card' => '']
+            ['Activate your security card' => ''],
         ],
             $this->strategy()->breadcrumbs());
     }

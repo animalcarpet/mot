@@ -15,29 +15,26 @@ use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Session\Container;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class CsrfValidatingListenerTest
- *
- * @package CsrfTest
+ * Class CsrfValidatingListenerTest.
  */
 class CsrfValidatingListenerTest extends \PHPUnit_Framework_TestCase
 {
-    private function buildMvcEvent($isPost = true, $tokenGenerated = "VALID_TOKEN", $tokenInPayload = null)
+    private function buildMvcEvent($isPost = true, $tokenGenerated = 'VALID_TOKEN', $tokenInPayload = null)
     {
         $csrfSupport = XMock::of(CsrfSupport::class);
-        $csrfSupport->expects($this->any())->method("getCsrfToken")->will(
+        $csrfSupport->expects($this->any())->method('getCsrfToken')->will(
             $this->returnValue($tokenGenerated)
         );
 
         $mvcEvent = new MvcEvent();
         $sm = new ServiceManager();
         $sm->setAllowOverride(true);
-        $sm->setService("CsrfSupport", $csrfSupport);
-        $sm->setService("EventManager", new EventManager());
-        $sm->setService("config", ['csrf' => ['enabled' => true]]);
+        $sm->setService('CsrfSupport', $csrfSupport);
+        $sm->setService('EventManager', new EventManager());
+        $sm->setService('config', ['csrf' => ['enabled' => true]]);
         $request = new Request();
         $mvcEvent->setRequest($request);
         if ($isPost) {
@@ -50,8 +47,8 @@ class CsrfValidatingListenerTest extends \PHPUnit_Framework_TestCase
         }
         $mvcEvent->setRouteMatch(new RouteMatch([]));
 
-        $sm->setService("Request", $request);
-        $sm->setService("Response", new Response());
+        $sm->setService('Request', $request);
+        $sm->setService('Response', new Response());
         $mvcEvent->setApplication(new Application(new NumbProbe(), $sm));
 
         return $mvcEvent;
@@ -65,7 +62,6 @@ class CsrfValidatingListenerTest extends \PHPUnit_Framework_TestCase
         $mvcEvent = $this->buildMvcEvent(true);
         $listener->validate($mvcEvent);
     }
-
 
     public function testValidate_givenLoginRoutePosted_shouldPass()
     {
@@ -83,7 +79,7 @@ class CsrfValidatingListenerTest extends \PHPUnit_Framework_TestCase
     public function testValidate_givenWrongToken_shouldThrowException()
     {
         $this->setExpectedException(InvalidCsrfException::class);
-        $token = "XXXXXXXX";
+        $token = 'XXXXXXXX';
         $listener = new CsrfValidatingListener();
         $mvcEvent = $this->buildMvcEvent(true, $token);
         $listener->validate($mvcEvent);
@@ -91,7 +87,7 @@ class CsrfValidatingListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidate_givenValidToken_shouldPass()
     {
-        $generatedToken = $tokenInPayload = "VALID_TOKEN";
+        $generatedToken = $tokenInPayload = 'VALID_TOKEN';
         $listener = new CsrfValidatingListener();
         $mvcEvent = $this->buildMvcEvent(true, $generatedToken, $tokenInPayload);
         $listener->validate($mvcEvent);

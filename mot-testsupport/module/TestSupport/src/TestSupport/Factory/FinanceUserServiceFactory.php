@@ -6,7 +6,6 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use TestSupport\Service\FinanceUserService;
 use TestSupport\Service\AccountDataService;
-use Doctrine\ORM\EntityManager;
 
 class FinanceUserServiceFactory implements FactoryInterface
 {
@@ -14,6 +13,7 @@ class FinanceUserServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new FinanceUserService($accountService);
+
         return $service;
     }
 }

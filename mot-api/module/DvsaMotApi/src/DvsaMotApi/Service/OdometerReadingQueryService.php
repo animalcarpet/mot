@@ -16,18 +16,18 @@ use DvsaMotApi\Service\Validator\Odometer\OdometerReadingDeltaAnomalyChecker;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class OdometerReadinQueryService
+ * Class OdometerReadinQueryService.
  *
  * Retrieves information on odometer reading
  */
 class OdometerReadingQueryService
 {
     /**
-     * @var OdometerReadingDeltaAnomalyChecker $anomalyChecker
+     * @var OdometerReadingDeltaAnomalyChecker
      */
     private $anomalyChecker;
     /**
-     * @var AuthorisationServiceInterface $authService
+     * @var AuthorisationServiceInterface
      */
     private $authService;
 
@@ -48,11 +48,12 @@ class OdometerReadingQueryService
 
     /**
      * OdometerReadingQueryService constructor.
+     *
      * @param OdometerReadingDeltaAnomalyChecker $odometerReadingDeltaAnomalyChecker
-     * @param AuthorisationServiceInterface $authorizationService
-     * @param ReadMotTestAssertion $readMotTestAssertion
-     * @param MotTestRepository $motTestRepository
-     * @param AuthenticationService $authenticationService
+     * @param AuthorisationServiceInterface      $authorizationService
+     * @param ReadMotTestAssertion               $readMotTestAssertion
+     * @param MotTestRepository                  $motTestRepository
+     * @param AuthenticationService              $authenticationService
      */
     public function __construct(
         OdometerReadingDeltaAnomalyChecker $odometerReadingDeltaAnomalyChecker,
@@ -60,8 +61,7 @@ class OdometerReadingQueryService
         ReadMotTestAssertion $readMotTestAssertion,
         MotTestRepository $motTestRepository,
         AuthenticationService $authenticationService
-    )
-    {
+    ) {
         $this->anomalyChecker = $odometerReadingDeltaAnomalyChecker;
         $this->authService = $authorizationService;
         $this->readMotTestAssertion = $readMotTestAssertion;
@@ -76,7 +76,8 @@ class OdometerReadingQueryService
      * @param $motTestNumber
      *
      * @return array
-     *      array of strings (notices)
+     *               array of strings (notices)
+     *
      * @throws UnauthorisedException
      */
     public function getNotices($motTestNumber)
@@ -93,9 +94,10 @@ class OdometerReadingQueryService
         $currentReadingDto = $this->motTestRepository->findReadingForTest($motTestNumber);
         $previousReadingDto = $this->motTestRepository->findPreviousReading($motTestNumber);
 
-        if ($currentReadingDto instanceOf OdometerReadingDto && $previousReadingDto instanceOf OdometerReadingDto) {
+        if ($currentReadingDto instanceof OdometerReadingDto && $previousReadingDto instanceof OdometerReadingDto) {
             $notices = $this->anomalyChecker->check($currentReadingDto, $previousReadingDto)->toArrayOfTexts();
         }
+
         return $notices;
     }
 }

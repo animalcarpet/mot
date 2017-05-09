@@ -2,7 +2,7 @@
 
 namespace DvsaCommonApiTest\Service;
 
-/**
+/*
  * This is a direct copy-paste of IsEqual but it looks only at the passed-in object's timestamp instead of the whole
  * thing.
  */
@@ -16,9 +16,7 @@ use PHPUnit_Util_InvalidArgumentHelper;
 use PHPUnit_Util_Type;
 
 /**
- * Class DateIsEqual
- *
- * @package DvsaCommonApiTest\Service
+ * Class DateIsEqual.
  */
 class DateIsEqual extends PHPUnit_Framework_Constraint
 {
@@ -33,17 +31,17 @@ class DateIsEqual extends PHPUnit_Framework_Constraint
     protected $delta = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $maxDepth = 10;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $canonicalize = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $ignoreCase = false;
 
@@ -55,9 +53,9 @@ class DateIsEqual extends PHPUnit_Framework_Constraint
     /**
      * @param mixed $value
      * @param float $delta
-     * @param integer $maxDepth
-     * @param boolean $canonicalize
-     * @param boolean $ignoreCase
+     * @param int   $maxDepth
+     * @param bool  $canonicalize
+     * @param bool  $ignoreCase
      */
     public function __construct($value, $delta = 0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
     {
@@ -85,7 +83,7 @@ class DateIsEqual extends PHPUnit_Framework_Constraint
     }
 
     /**
-     * Evaluates the constraint for parameter $other
+     * Evaluates the constraint for parameter $other.
      *
      * If $returnResult is set to FALSE (the default), an exception is thrown
      * in case of a failure. NULL is returned otherwise.
@@ -94,10 +92,12 @@ class DateIsEqual extends PHPUnit_Framework_Constraint
      * a boolean value instead: TRUE in case of success, FALSE in case of a
      * failure.
      *
-     * @param  mixed $other Value or object to evaluate.
-     * @param  string $description Additional information about the test
-     * @param  bool $returnResult Whether to return a result or throw an exception
+     * @param mixed  $other        Value or object to evaluate
+     * @param string $description  Additional information about the test
+     * @param bool   $returnResult Whether to return a result or throw an exception
+     *
      * @return mixed
+     *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
     public function evaluate($other, $description = '', $returnResult = false)
@@ -119,7 +119,7 @@ class DateIsEqual extends PHPUnit_Framework_Constraint
                     $this->ignoreCase
                 );
 
-                $tzComparator = new PHPUnit_Framework_Comparator_Scalar;
+                $tzComparator = new PHPUnit_Framework_Comparator_Scalar();
 
                 $tzComparator->assertEquals(
                     $this->value->getTimezone()->getName(),
@@ -144,7 +144,7 @@ class DateIsEqual extends PHPUnit_Framework_Constraint
             }
 
             throw new PHPUnit_Framework_ExpectationFailedException(
-                trim($description . "\n" . $f->getMessage()),
+                trim($description."\n".$f->getMessage()),
                 $f
             );
         }

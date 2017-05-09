@@ -4,7 +4,6 @@ namespace DvsaMotApiTest\Service;
 
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaAuthorisation\Service\RoleProviderService;
-use DvsaCommon\Constants\Role;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
@@ -18,11 +17,11 @@ class UserServiceTest extends AbstractServiceTestCase
 {
     public function testGetAllUserData()
     {
-        $username                    = 'tester1';
-        $users                       = [new Person()];
+        $username = 'tester1';
+        $users = [new Person()];
         $expectedDataWithoutPassword = $this->getExpectedUserData($username, false);
-        $expectedHydratorData        = $this->getExpectedUserData($username);
-        $expectedDataArray           = [$expectedDataWithoutPassword];
+        $expectedHydratorData = $this->getExpectedUserData($username);
+        $expectedDataArray = [$expectedDataWithoutPassword];
 
         $mockRepository = $this->getMockRepository();
         $this->setupMockForSingleCall($mockRepository, 'findAll', $users);
@@ -32,7 +31,7 @@ class UserServiceTest extends AbstractServiceTestCase
 
         $mockEntityManager = $this->getMockEntityManagerWithRepository($mockRepository, Person::class);
 
-        $mockRoleProvider         = XMock::of(RoleProviderService::class);
+        $mockRoleProvider = XMock::of(RoleProviderService::class);
         $authorisationServiceMock = XMock::of(AuthorisationService::class);
 
         $userService = $this->getUserService(
@@ -51,9 +50,9 @@ class UserServiceTest extends AbstractServiceTestCase
         $role = SiteBusinessRoleCode::TESTER;
         $user = new Person();
 
-        $expectedDataWithoutPasswordWithRoles          = $this->getExpectedUserData($username, false);
+        $expectedDataWithoutPasswordWithRoles = $this->getExpectedUserData($username, false);
         $expectedDataWithoutPasswordWithRoles['roles'] = [$role];
-        $expectedHydratorData                          = $this->getExpectedUserData($username);
+        $expectedHydratorData = $this->getExpectedUserData($username);
 
         $mockRepository = $this->getMockRepository();
         $this->setupMockForSingleCall($mockRepository, 'findOneBy', $user, ['username' => $username]);
@@ -109,8 +108,8 @@ class UserServiceTest extends AbstractServiceTestCase
     protected function getExpectedUserData($username, $withPassword = true)
     {
         $expectedData = [
-            'username'    => $username,
-            'password'    => 'Password1',
+            'username' => $username,
+            'password' => 'Password1',
             'displayName' => 'Tester One',
             'displayRole' => 'Tester',
         ];

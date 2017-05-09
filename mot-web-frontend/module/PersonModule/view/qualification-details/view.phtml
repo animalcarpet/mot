@@ -1,7 +1,7 @@
 <?php
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\QualificationDetailsViewModel;
 
-/**
+/*
  * @var QualificationDetailsViewModel $viewModel
  */
 
@@ -34,7 +34,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
         [
             'table' => $viewModel->getQualificationDetailsGroupAViewModel()->getTable('group-A'),
         ]
-    );?>
+    ); ?>
 
     <h3 class="summary-heading">
         Group B
@@ -47,7 +47,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
         [
             'table' => $viewModel->getQualificationDetailsGroupBViewModel()->getTable('group-B'),
         ]
-    );?>
+    ); ?>
 
     <nav class="content-navigation">
         <ul class="content-navigation__secondary">

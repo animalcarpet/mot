@@ -10,18 +10,13 @@ use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEventApi\Service\EventService;
-use SiteApi\Factory\Service\SiteRiskAssessmentServiceFactory;
 use SiteApi\Service\EnforcementSiteAssessmentService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
-use SlotPurchase\Identity\MotIdentityInterface;
-use Zend\Form\Annotation\Hydrator;
 use Zend\ServiceManager\ServiceManager;
-use SiteApi\Service\Validator\SiteRiskAssessmentValidator;
 use SiteApi\Factory\Service\EnforcementSiteAssessmentServiceFactory;
 
 class EnforcementSiteAssessmentServiceFactoryTest extends AbstractServiceTestCase
 {
-
     public function testSiteTestingFacilitiesServiceFactoryReturnsService()
     {
         $config['site_assessment']['green'] = '100';
@@ -49,6 +44,5 @@ class EnforcementSiteAssessmentServiceFactoryTest extends AbstractServiceTestCas
             EnforcementSiteAssessmentService::class,
             $factory->createService($serviceManager)
         );
-
     }
 }

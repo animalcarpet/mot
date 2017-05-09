@@ -17,9 +17,11 @@ class OdometerReadingMapper extends AbstractApiMapper
 {
     /**
      * @param MotTest $motTestOrDraft
+     *
      * @return OdometerReadingDto
+     *
      * @throws \Exception After deprecation of OdometerReading
-     *                      we have MotTest or CertificateReplacementDraft as the container
+     *                    we have MotTest or CertificateReplacementDraft as the container
      */
     public function toDto($motTestOrDraft)
     {
@@ -44,6 +46,7 @@ class OdometerReadingMapper extends AbstractApiMapper
 
     /**
      * @param array $readings
+     *
      * @return array
      */
     public function manyToDtoFromArray($readings)
@@ -61,6 +64,7 @@ class OdometerReadingMapper extends AbstractApiMapper
 
     /**
      * @param $reading
+     *
      * @return OdometerReadingDto
      */
     public function toDtoFromArray($reading)

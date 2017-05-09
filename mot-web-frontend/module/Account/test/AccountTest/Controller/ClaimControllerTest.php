@@ -14,17 +14,12 @@ use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\Session\Container;
 use Zend\Stdlib\Parameters;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class ClaimControllerTest
+ * Class ClaimControllerTest.
  */
 class ClaimControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -57,7 +52,7 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
         $identity = new Identity();
         $identity->setSecondFactorRequired(false);
 
-        $identityProvider->expects($this->any())->method("getIdentity")->willReturn($identity);
+        $identityProvider->expects($this->any())->method('getIdentity')->willReturn($identity);
 
         $this->setController(
             new ClaimController(
@@ -122,7 +117,6 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
         if (!empty($expect['viewModel'])) {
             $this->assertInstanceOf(ViewModel::class, $result);
             $this->assertResponseStatus(self::HTTP_OK_CODE);
-
         }
 
         if (!empty($expect['flashError'])) {
@@ -157,9 +151,9 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'method' => 'get',
                 'action' => 'reset',
                 'params' => [],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'clearSession',
                     ],
                 ],
@@ -173,7 +167,7 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'method' => 'get',
                 'action' => 'confirmPassword',
                 'params' => [],
-                'mocks'  => [],
+                'mocks' => [],
                 'expect' => [
                     'viewModel' => true,
                 ],
@@ -186,9 +180,9 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => $postData,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'validateStep',
                         'params' => [ClaimController::STEP_1_NAME, $postParameters],
                         'result' => false,
@@ -206,9 +200,9 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => $postData,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'validateStep',
                         'params' => [ClaimController::STEP_1_NAME, $postParameters],
                         'result' => true,
@@ -224,9 +218,9 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'method' => 'get',
                 'action' => 'setSecurityQuestion',
                 'params' => [],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'params' => [ClaimController::STEP_1_NAME],
                         'result' => false,
@@ -242,9 +236,9 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'method' => 'get',
                 'action' => 'setSecurityQuestion',
                 'params' => [],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'params' => [ClaimController::STEP_1_NAME],
                         'result' => true,
@@ -262,15 +256,15 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => $postData,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'params' => [ClaimController::STEP_1_NAME],
                         'result' => true,
                     ],
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'validateStep',
                         'params' => [ClaimController::STEP_2_NAME, $postParameters],
                         'result' => false,
@@ -288,9 +282,9 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => $postData,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'validateStep',
                         'params' => [ClaimController::STEP_2_NAME, $postParameters],
                         'result' => true,
@@ -306,9 +300,9 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'method' => 'get',
                 'action' => 'review',
                 'params' => [],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'params' => [ClaimController::STEP_1_NAME],
                         'result' => false,
@@ -326,7 +320,7 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [],
                 'mocks' => [
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'validateStep',
                         'invocation' => $this->any(),
                         'result' => $this->returnValueMap(
@@ -337,7 +331,7 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                         ),
                     ],
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'invocation' => $this->any(),
                         'result' => true,
@@ -353,14 +347,14 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'method' => 'post',
                 'action' => 'review',
                 'params' => [],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'getArrayCopy',
                         'result' => $sessionData,
                     ],
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'validateStep',
                         'invocation' => $this->any(),
                         'result' => $this->returnValueMap(
@@ -371,14 +365,14 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                         ),
                     ],
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'getMessages',
                         'invocation' => $this->any(),
                         'result' => [],
                     ],
 
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'invocation' => $this->any(),
                         'result' => true,
@@ -396,26 +390,26 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => $postData,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'getArrayCopy',
                         'result' => $sessionData,
                     ],
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'validateStep',
                         'invocation' => $this->any(),
                         'result' => true,
                     ],
                     [
-                        'class'  => 'mockClaimValidator',
+                        'class' => 'mockClaimValidator',
                         'method' => 'getMessages',
                         'invocation' => $this->any(),
                         'result' => [],
                     ],
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'invocation' => $this->any(),
                         'result' => true,
@@ -426,15 +420,14 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-
             // generatePin: get: access action
             [
                 'method' => 'get',
                 'action' => 'success',
                 'params' => [],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockClaimAccountSrv',
+                        'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'invocation' => $this->any(),
                         'result' => true,

@@ -10,7 +10,6 @@ use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
-use Zend\Form\Element\DateTime;
 
 class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,7 +48,7 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::DUMMY_SEARCH_VRM, $viewModel->getSearchVrm());
         $this->assertEquals(self::DUMMY_SEARCH_VIN, $viewModel->getVin());
         $this->assertEquals(self::DUMMY_SEARCH_VRM, $viewModel->getRegistration());
-        $this->assertEquals([ 'test' => 'test' ], $viewModel->getEligibilityNotices());
+        $this->assertEquals(['test' => 'test'], $viewModel->getEligibilityNotices());
         $this->assertTrue($viewModel->isEligibleForRetest());
         $this->assertFalse($viewModel->isRetest());
         $this->assertTrue($viewModel->isNormalTest());
@@ -63,7 +62,7 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
     {
         $viewModel = $this->getViewModel();
         $this->assertEquals(
-            '/start-test-confirmation/' . self::DUMMY_OBFUSCATED_VEHICLE_ID . '/' . self::DUMMY_NO_REGISTRATION,
+            '/start-test-confirmation/'.self::DUMMY_OBFUSCATED_VEHICLE_ID.'/'.self::DUMMY_NO_REGISTRATION,
             $viewModel->getConfirmActionUrl()
         );
     }
@@ -73,7 +72,7 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $viewModel = $this->getViewModel();
         $viewModel->setMethod(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
         $this->assertEquals(
-            '/start-training-test-confirmation/' . self::DUMMY_OBFUSCATED_VEHICLE_ID . '/' . self::DUMMY_NO_REGISTRATION,
+            '/start-training-test-confirmation/'.self::DUMMY_OBFUSCATED_VEHICLE_ID.'/'.self::DUMMY_NO_REGISTRATION,
             $viewModel->getConfirmActionUrl()
         );
     }
@@ -83,7 +82,7 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $viewModel = $this->getViewModel();
         $viewModel->setMethod(MotTestTypeCode::NON_MOT_TEST);
         $this->assertEquals(
-            '/start-non-mot-test-confirmation/' . self::DUMMY_OBFUSCATED_VEHICLE_ID . '/' . self::DUMMY_NO_REGISTRATION,
+            '/start-non-mot-test-confirmation/'.self::DUMMY_OBFUSCATED_VEHICLE_ID.'/'.self::DUMMY_NO_REGISTRATION,
             $viewModel->getConfirmActionUrl()
         );
     }
@@ -135,51 +134,59 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($viewModel->shouldShowChangeLinks());
     }
 
-    public function testTestClass() {
+    public function testTestClass()
+    {
         $viewModel = $this->getViewModel();
         $viewModel->setMotTestClass(self::TEST_CLASS);
         $this->assertSame(self::TEST_CLASS, $viewModel->getMotTestClass());
     }
 
-    public function testIsClassUnset() {
+    public function testIsClassUnset()
+    {
         $viewModel = $this->getViewModel();
         $viewModel->setMotTestClass(self::TEST_CLASS_UNKNOWN);
         $this->assertTrue($viewModel->isClassUnset());
     }
 
-    public function testIsClassSet() {
+    public function testIsClassSet()
+    {
         $viewModel = $this->getViewModel();
         $viewModel->setMotTestClass(self::TEST_CLASS);
         $this->assertFalse($viewModel->isClassUnset());
     }
 
-    public function testExpirationDate() {
+    public function testExpirationDate()
+    {
         $viewModel = $this->getViewModel();
         $testExpirationDate = DateTimeConverter::dateTimeToString(new \DateTime());
         $viewModel->setMotExpirationDate($testExpirationDate);
         $this->assertSame(DateTimeDisplayFormat::textDate($testExpirationDate), $viewModel->getMotExpirationDate());
     }
 
-    public function testCountryOfRegistration() {
+    public function testCountryOfRegistration()
+    {
         $viewModel = $this->getViewModel();
         $viewModel->setCountryOfRegistration(self::TEST_COUNTRY_OF_REGISTRATION);
         $this->assertSame(self::TEST_COUNTRY_OF_REGISTRATION, $viewModel->getCountryOfRegistration());
     }
 
-    public function testBrakeTestWeight() {
+    public function testBrakeTestWeight()
+    {
         $viewModel = $this->getViewModel();
         $viewModel->setBrakeTestWeight(self::TEST_BRAKE_TEST_WEIGHT);
         $this->assertSame(self::TEST_BRAKE_TEST_WEIGHT, $viewModel->getBrakeTestWeight());
     }
 
-    public function testFirstUsedDate() {
+    public function testFirstUsedDate()
+    {
         $viewModel = $this->getViewModel();
         $testFirstUsedDate = DateTimeConverter::dateTimeToString(new \DateTime());
         $viewModel->setFirstUsedDate($testFirstUsedDate);
         $this->assertSame(DateTimeDisplayFormat::textDate($testFirstUsedDate), $viewModel->getFirstUsedDate());
     }
 
-    public function testCompoundColour() {
+    public function testCompoundColour()
+    {
         $viewModel = $this->getViewModel();
         $colour = new \stdClass();
         $colour->code = ColourCode::BEIGE;
@@ -191,7 +198,8 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::TEST_COMPOUND_COLOUR, $viewModel->getCompoundedColour());
     }
 
-    public function testCompoundColourSecondaryUnset() {
+    public function testCompoundColourSecondaryUnset()
+    {
         $viewModel = $this->getViewModel();
         $colour = new \stdClass();
         $colour->code = ColourCode::BEIGE;
@@ -203,7 +211,8 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::TEST_PRIMARY_COLOUR, $viewModel->getCompoundedColour());
     }
 
-    public function testEngineDetails() {
+    public function testEngineDetails()
+    {
         $viewModel = $this->getViewModel();
         $fuelType = new \stdClass();
         $fuelType->code = FuelTypeCode::PETROL;
@@ -224,11 +233,12 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $viewModel->setSearchVin(self::DUMMY_SEARCH_VIN);
         $viewModel->setRegistration(self::DUMMY_SEARCH_VRM);
         $viewModel->setVin(self::DUMMY_SEARCH_VIN);
-        $viewModel->setEligibilityNotices([ 'test' => 'test' ]);
+        $viewModel->setEligibilityNotices(['test' => 'test']);
         $viewModel->setEligibleForRetest(true);
         $viewModel->setMotContingency(self::DUMMY_IS_MOT_CONTINGENCY);
         $viewModel->setIsMysteryShopper(self::DUMMY_IS_MYSTERY_SHOPPER);
         $viewModel->setNoTestClassSetOnSubmission(false);
+
         return $viewModel;
     }
 }

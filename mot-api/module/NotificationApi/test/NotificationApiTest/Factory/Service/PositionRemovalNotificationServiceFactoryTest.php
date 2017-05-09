@@ -6,14 +6,12 @@ use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\ServiceManager\ServiceManager;
-use Doctrine\ORM\EntityManager;
 use NotificationApi\Factory\Service\PositionRemovalNotificationServiceFactory;
-use Zend\Authentication\AuthenticationService;
 use NotificationApi\Service\PositionRemovalNotificationService;
 
 class PositionRemovalNotificationServiceFactoryTest extends AbstractServiceTestCase
 {
-    /** @var  ServiceManager */
+    /** @var ServiceManager */
     private $serviceLocator;
 
     public function setUp()
@@ -41,7 +39,7 @@ class PositionRemovalNotificationServiceFactoryTest extends AbstractServiceTestC
     // If roles are empty, throw exception
     public function testFactoryThrowsInvalidArgumentExceptionIfRolesEmpty()
     {
-        $this->setExpectedException("InvalidArgumentException", "Roles are not valid");
+        $this->setExpectedException('InvalidArgumentException', 'Roles are not valid');
 
         $factory = new PositionRemovalNotificationServiceFactory();
 
@@ -60,7 +58,7 @@ class PositionRemovalNotificationServiceFactoryTest extends AbstractServiceTestC
     // If roles are not empty, but one or more of the sites/organisations/system keys not available throw error
     public function testFactoryThrowsInvalidArgumentExceptionIfNoDefinedRolesAvailable()
     {
-        $this->setExpectedException("InvalidArgumentException", "Site/Organisation/System roles must be defined");
+        $this->setExpectedException('InvalidArgumentException', 'Site/Organisation/System roles must be defined');
 
         $factory = new PositionRemovalNotificationServiceFactory();
 
@@ -71,7 +69,7 @@ class PositionRemovalNotificationServiceFactoryTest extends AbstractServiceTestC
                                  [
                                      'test' => '1',
                                      'test2' => '2',
-                                     'organisations' => '3'
+                                     'organisations' => '3',
                                  ]
                              );
 
@@ -91,34 +89,34 @@ class PositionRemovalNotificationServiceFactoryTest extends AbstractServiceTestC
                     'AREA-OFFICE-1-USER',
                     'TESTER',
                     'SITE-ADMIN',
-                    'SITE-MANAGER'
+                    'SITE-MANAGER',
                 ],
             ],
-            "organisations" => [
-                "9" => [
-                    "roles" => [
-                        "AUTHORISED-EXAMINER-DELEGATE",
-                        "AUTHORISED-EXAMINER-DESIGNATED-MANAGER"
+            'organisations' => [
+                '9' => [
+                    'roles' => [
+                        'AUTHORISED-EXAMINER-DELEGATE',
+                        'AUTHORISED-EXAMINER-DESIGNATED-MANAGER',
                     ],
                 ],
-                "10" => [
-                    "roles" => [
-                        "AUTHORISED-EXAMINER-DESIGNATED-MANAGER"
+                '10' => [
+                    'roles' => [
+                        'AUTHORISED-EXAMINER-DESIGNATED-MANAGER',
                     ],
                 ],
-                "12" => [
-                    "roles" => [
-                        "AUTHORISED-EXAMINER-DESIGNATED-MANAGER"
-                    ]
-                ]
+                '12' => [
+                    'roles' => [
+                        'AUTHORISED-EXAMINER-DESIGNATED-MANAGER',
+                    ],
+                ],
             ],
             'sites' => [
                 1 => [
                     'roles' => [
-                        "TESTER"
-                    ]
+                        'TESTER',
+                    ],
                 ],
-            ]
+            ],
         ];
 
         return $roles;

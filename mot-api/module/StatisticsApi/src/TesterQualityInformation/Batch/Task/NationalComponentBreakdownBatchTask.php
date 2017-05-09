@@ -10,7 +10,7 @@ class NationalComponentBreakdownBatchTask extends AbstractBatchTask
     private $service;
     private $vehicleGroup;
 
-    function __construct($vehicleGroup, Month $month, NationalComponentStatisticsService $service)
+    public function __construct($vehicleGroup, Month $month, NationalComponentStatisticsService $service)
     {
         parent::__construct($month);
         $this->service = $service;
@@ -29,11 +29,10 @@ class NationalComponentBreakdownBatchTask extends AbstractBatchTask
     public function getName()
     {
         return sprintf(
-            "National component breakdown batch task (Vehicle Group %s)- %s/%s",
+            'National component breakdown batch task (Vehicle Group %s)- %s/%s',
             $this->vehicleGroup,
             $this->getMonth()->getYear(),
             $this->getMonth()->getMonth()
         );
     }
-
 }

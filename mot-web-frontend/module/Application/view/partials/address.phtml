@@ -9,7 +9,7 @@ foreach ($fields as $field) {
 $count = count($values);
 $i = 0;
 ?>
-<?php for ($i = 0; $i < $count; $i++): ?>
+<?php for ($i = 0; $i < $count; ++$i): ?>
     <span class="nowrap">
         <?php
         echo $this->escapeHtml($values[$i]);

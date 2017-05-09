@@ -15,7 +15,7 @@ class NonMotTestViewModel
     const ACTION_START_NON_MOT = 'action-start-non-mot';
 
     /**
-     * @var DashboardGuard $dashboardGuard
+     * @var DashboardGuard
      */
     private $dashboardGuard;
 
@@ -25,7 +25,7 @@ class NonMotTestViewModel
     private $url;
 
     /**
-     * @var int $inProgressNonMotTestNumber
+     * @var int
      */
     private $inProgressNonMotTestNumber;
 

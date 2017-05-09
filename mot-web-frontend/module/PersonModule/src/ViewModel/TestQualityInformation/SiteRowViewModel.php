@@ -11,7 +11,7 @@ class SiteRowViewModel
 {
     private $siteId;
     private $siteName;
-    /** @var  AddressDto */
+    /** @var AddressDto */
     private $siteAddress;
     private $testsDone;
 
@@ -32,9 +32,7 @@ class SiteRowViewModel
         TimeSpan $averageTestTime,
         $testsFailedPercentage,
         $tqiComponentsAtSiteUrl
-    )
-    {
-
+    ) {
         $this->siteId = $siteId;
         $this->siteName = $siteName;
         $this->siteAddress = $siteAddress;

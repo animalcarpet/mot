@@ -23,6 +23,7 @@ class ContactDetailsController extends RegistrationBaseController
     public function indexAction()
     {
         $this->setHeadTitle('Your contact details');
+
         return $this->doStepLogic(ContactDetailsStep::STEP_ID, self::PAGE_TITLE, self::DEFAULT_SUB_TITLE);
     }
 }

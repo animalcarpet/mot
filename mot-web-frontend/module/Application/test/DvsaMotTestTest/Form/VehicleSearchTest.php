@@ -1,11 +1,11 @@
 <?php
+
 namespace DvsaMotTest\Form;
 
-use DvsaMotTest\Form\VehicleSearch;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class VehicleSearchTest
+ * Class VehicleSearchTest.
  */
 class VehicleSearchTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class VehicleSearchTest extends PHPUnit_Framework_TestCase
     public function testExchangeArraySetsPropertiesCorrectly()
     {
         $vehicleSearch = new VehicleSearch();
-        $data  = self::getTestVehicleSearchData();
+        $data = self::getTestVehicleSearchData();
 
         $vehicleSearch->exchangeArray($data);
 
@@ -49,8 +49,8 @@ class VehicleSearchTest extends PHPUnit_Framework_TestCase
     {
         return [
             'registration' => 'testreg',
-            'vin'          => '123456',
-            'vinType'      => 'partialVin'
+            'vin' => '123456',
+            'vinType' => 'partialVin',
         ];
     }
 }

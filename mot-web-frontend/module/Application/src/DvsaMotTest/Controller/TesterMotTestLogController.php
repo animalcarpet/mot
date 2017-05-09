@@ -19,8 +19,7 @@ use Zend\Http\Headers;
 use Zend\Http\PhpEnvironment\Response;
 
 /**
- * Class TesterMotTestLogController
- * @package DvsaMotTest\Controller
+ * Class TesterMotTestLogController.
  */
 class TesterMotTestLogController extends MotTestLogController
 {
@@ -58,7 +57,7 @@ class TesterMotTestLogController extends MotTestLogController
 
             $apiResult = $this->getTesterLogDataBySearchCriteria($testerId, $searchParams);
 
-            $totalRecordsCount = (int)$apiResult->getTotalResultCount();
+            $totalRecordsCount = (int) $apiResult->getTotalResultCount();
             if ($totalRecordsCount === 0) {
                 $this->addErrorMessages(self::ERR_NO_DATA);
             }
@@ -108,20 +107,20 @@ class TesterMotTestLogController extends MotTestLogController
         // Now we want to fetch the data from the API, and not the total count
         $searchParams->setIsApiGetTotalCount(false)->setIsApiGetData(true);
 
-        $fileName = 'test-log-' .
-            (new \DateTime('@' . $searchParams->getDateFromTs()))->format('dmY') . '-' .
-            (new \DateTime('@' . $searchParams->getDateToTs()))->format('dmY') . '.csv';
+        $fileName = 'test-log-'.
+            (new \DateTime('@'.$searchParams->getDateFromTs()))->format('dmY').'-'.
+            (new \DateTime('@'.$searchParams->getDateToTs()))->format('dmY').'.csv';
 
         // Prepare the headers and send them
-        $headers = (new Headers)->addHeaders([
+        $headers = (new Headers())->addHeaders([
             'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
             'Accept-Ranges' => 'bytes',
             'Cache-Control' => 'no-cache, no-store, max-age=0, must-revalidate',
             'Pragma' => 'no-cache',
         ]);
 
-        $this->response = new Response;
+        $this->response = new Response();
         $this->response->setHeaders($headers);
         $this->response->sendHeaders();
 
@@ -135,7 +134,7 @@ class TesterMotTestLogController extends MotTestLogController
         }
 
         // Grab each page of results and output them
-        for ($i = 1; $i < $lastPageNumber + 1; $i++) {
+        for ($i = 1; $i < $lastPageNumber + 1; ++$i) {
             $searchParams->setPageNr($i);
             $apiResult = $this->getTesterLogDataBySearchCriteria($testerId, $searchParams);
             $this->prepareCsvBody($apiResult->getData());
@@ -151,6 +150,7 @@ class TesterMotTestLogController extends MotTestLogController
     /**
      * @param $testerId
      * @param MotTestSearchParamsDto $searchParams
+     *
      * @return SearchResultDto|null
      */
     protected function getTesterLogDataBySearchCriteria($testerId, MotTestSearchParamsDto $searchParams)
@@ -165,9 +165,10 @@ class TesterMotTestLogController extends MotTestLogController
     }
 
     /**
-     * Get mot tests log summary information from api (year, prev month, prev week, today)
+     * Get mot tests log summary information from api (year, prev month, prev week, today).
      *
      * @param $testerId
+     *
      * @return MotTestLogSummaryDto|null
      */
     protected function getLogSummary($testerId)
@@ -197,7 +198,7 @@ class TesterMotTestLogController extends MotTestLogController
     {
         $breadcrumbs = [
             $this->getPreviousPageLink(),
-            ['Tester Test logs' => '',]
+            ['Tester Test logs' => ''],
         ];
 
         return $breadcrumbs;

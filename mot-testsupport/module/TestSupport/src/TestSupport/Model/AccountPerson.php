@@ -2,14 +2,14 @@
 
 namespace TestSupport\Model;
 
-
 use DvsaCommon\Enum\LicenceCountryCode;
 use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommon\Utility\ArrayUtils;
 use TestSupport\Helper\DataGeneratorHelper;
 use TestSupport\Helper\RequestorParserHelper;
 
-class AccountPerson {
+class AccountPerson
+{
     private $firstName;
     private $middleName;
     private $surname;
@@ -41,7 +41,7 @@ class AccountPerson {
         $this->username = ArrayUtils::tryGet($data, 'username', $dataGeneratorHelper->username());
         $this->emailAddress = ArrayUtils::tryGet($data, 'emailAddress', $dataGeneratorHelper->emailAddress());
         $this->firstName = ArrayUtils::tryGet($data, 'firstName', $dataGeneratorHelper->firstName());
-        $this->middleName= ArrayUtils::tryGet($data, 'middleName', $dataGeneratorHelper->middleName());
+        $this->middleName = ArrayUtils::tryGet($data, 'middleName', $dataGeneratorHelper->middleName());
         $this->phoneNumber = ArrayUtils::tryGet($data, 'phoneNumber', $dataGeneratorHelper->phoneNumber());
         $this->surname = ArrayUtils::tryGet($data, 'surname', $dataGeneratorHelper->surname());
         $this->postcode = ArrayUtils::tryGet($data, 'postcode', 'BA1 5LR');

@@ -35,7 +35,7 @@ class SummaryControllerFactoryTest extends \PHPUnit_Framework_TestCase
             XMock::of(RegisterUserService::class)
         )->setService(
             'Config',
-            ['helpdesk'=>['name' => 'something']]
+            ['helpdesk' => ['name' => 'something']]
         );
 
         $plugins = $this->getMock(ControllerManager::class);

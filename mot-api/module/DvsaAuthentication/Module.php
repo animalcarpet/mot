@@ -3,15 +3,10 @@
 namespace DvsaAuthentication;
 
 use DvsaAuthentication\Authentication\Listener\AuthenticationListenerFactory;
-use Zend\Log\Logger;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\RouteMatch;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class Module
- *
- * @package DvsaAuthentication
+ * Class Module.
  */
 class Module
 {
@@ -21,7 +16,7 @@ class Module
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function onBootstrap(MvcEvent $e)

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApi\Service\Validator;
 
 use DvsaCommonApi\Service\Exception\ServiceException;
@@ -7,8 +8,6 @@ use DvsaCommonApi\Service\Exception\ServiceException;
  * Allows to validate multiple validators at once.
  *
  * Class ValidationChain
- *
- * @package DvsaCommonApi\Service\Validator
  */
 class ValidationChain implements ValidatorInterface
 {
@@ -21,7 +20,7 @@ class ValidationChain implements ValidatorInterface
     }
 
     /**
-     * Will gather validation errors from all validators and throw them in a single BadRequestException
+     * Will gather validation errors from all validators and throw them in a single BadRequestException.
      *
      * @param array $data
      */

@@ -13,6 +13,7 @@ class OrganisationNameBySiteResolverFactory implements FactoryInterface
     {
         $url = $sl->get('viewhelpermanager')->get('url');
         $client = $sl->get(Client::class);
+
         return new OrganisationNameBySiteResolver($client, $url);
     }
 }

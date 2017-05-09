@@ -24,8 +24,8 @@ class WebLogoutServiceFactoryTest extends \PHPUnit_Framework_TestCase
             WebLogoutService::class,
             [
                 OpenAMClientInterface::class,
-                'tokenService'                => WebAuthenticationCookieService::class,
-                'Application\Logger'          => LoggerInterface::class,
+                'tokenService' => WebAuthenticationCookieService::class,
+                'Application\Logger' => LoggerInterface::class,
                 'Zend\Session\SessionManager' => SessionManager::class,
             ]
         );

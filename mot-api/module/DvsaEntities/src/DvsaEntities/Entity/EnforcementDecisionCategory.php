@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -35,6 +36,7 @@ class EnforcementDecisionCategory
     public function setCategory($category)
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -54,6 +56,7 @@ class EnforcementDecisionCategory
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 

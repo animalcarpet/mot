@@ -5,9 +5,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\Controller;
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardInformationController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
-use DvsaFeature\FeatureToggles;
-use Zend\Authentication\Adapter\AdapterInterface;
-use Dvsa\OpenAM\OpenAMAuthProperties;
 use DvsaCommonTest\TestUtils\XMock;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardInformationCookieService;
 use Core\Service\LazyMotFrontendAuthorisationService;
@@ -48,7 +45,6 @@ class RegisterCardInformationControllerTest extends AbstractLightWebControllerTe
     private $authorisationService;
 
     private $featureToggle;
-
 
     protected function setUp()
     {
@@ -128,6 +124,7 @@ class RegisterCardInformationControllerTest extends AbstractLightWebControllerTe
             $this->authorisationService,
             $this->featureToggle
         );
+
         return $controller;
     }
 
@@ -141,7 +138,6 @@ class RegisterCardInformationControllerTest extends AbstractLightWebControllerTe
         return $this;
     }
 
-
     private function setUpAndMockIdentity($userId, $hasActiveCard)
     {
         $identity = new Identity();
@@ -154,7 +150,8 @@ class RegisterCardInformationControllerTest extends AbstractLightWebControllerTe
             ->willReturn($identity);
     }
 
-    private function setUpIsDvsaUser($isDvsa) {
+    private function setUpIsDvsaUser($isDvsa)
+    {
         $this->authorisationService->expects($this->any())
             ->method('isDvsa')
             ->willReturn($isDvsa);
@@ -166,5 +163,4 @@ class RegisterCardInformationControllerTest extends AbstractLightWebControllerTe
             ->method('validate')
             ->willReturn($isValid);
     }
-
 }

@@ -15,10 +15,10 @@ class AnnualAssessmentCertificatesViewModel
     private $addGroupBLink;
     private $isGrantedToAddCertificates;
 
-    /** @var AnnualAssessmentCertificatesGroupViewModel  */
+    /** @var AnnualAssessmentCertificatesGroupViewModel */
     private $annualAssessmentCertificatesGroupAViewModel;
 
-    /** @var AnnualAssessmentCertificatesGroupViewModel  */
+    /** @var AnnualAssessmentCertificatesGroupViewModel */
     private $annualAssessmentCertificatesGroupBViewModel;
 
     /** @var bool */
@@ -33,8 +33,7 @@ class AnnualAssessmentCertificatesViewModel
         $addGroupBLink,
         $isGrantedToAddCertificates,
         $isUserViewingHisOwnProfile
-    )
-    {
+    ) {
         $this->pageSubtitle = $pageSubtitle;
         $this->returnUrl = $returnUrl;
         $this->annualAssessmentCertificatesGroupAViewModel = $annualAssessmentCertificatesGroupAViewModel;
@@ -97,7 +96,7 @@ class AnnualAssessmentCertificatesViewModel
 
     public function getQualificationDetailsLink()
     {
-        return ContextProvider::YOUR_PROFILE_PARENT_ROUTE . "/qualification-details";
+        return ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/qualification-details';
     }
 
     public function isUserViewingHisOwnProfile()

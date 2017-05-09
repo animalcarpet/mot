@@ -17,8 +17,8 @@ class SurveyPageControllerFactoryTest extends \PHPUnit_Framework_TestCase
         ServiceFactoryTestHelper::testCreateServiceForCM(
             SurveyPageControllerFactory::class,
             SurveyPageController::class, [
-                EventManager::class  => EventManager::class,
-                Container::class     => Container::class,
+                EventManager::class => EventManager::class,
+                Container::class => Container::class,
                 SurveyService::class => SurveyService::class,
                 'Application\Logger' => Logger::class,
             ]

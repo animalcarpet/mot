@@ -11,9 +11,9 @@ class AeNameValidator extends AbstractValidator implements ValidatorInterface
 {
     public function validate(array $data)
     {
-        if(empty($data[AuthorisedExaminerPatchModel::NAME])) {
+        if (empty($data[AuthorisedExaminerPatchModel::NAME])) {
             $errorSchema = new ErrorSchema();
-            $errorSchema->add("Name - must not be empty");
+            $errorSchema->add('Name - must not be empty');
             $errorSchema->throwIfAny();
         }
     }

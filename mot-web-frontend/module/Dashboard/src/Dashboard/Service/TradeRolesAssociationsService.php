@@ -19,13 +19,12 @@ class TradeRolesAssociationsService
 
     /**
      * @param ApiPersonalDetails $personalDetailsApi
-     * @param CatalogService $catalogService
+     * @param CatalogService     $catalogService
      */
     public function __construct(
         ApiPersonalDetails $personalDetailsApi,
         CatalogService $catalogService
-    )
-    {
+    ) {
         $this->catalogService = $catalogService;
         $this->personalDetailsApi = $personalDetailsApi;
     }
@@ -58,14 +57,14 @@ class TradeRolesAssociationsService
         return array_merge($viewOrganisationRoles, $viewSiteRoles);
     }
 
-    private function createRoleData($role, $nicename, $roleType, $id = "", $name = "", $address = "")
+    private function createRoleData($role, $nicename, $roleType, $id = '', $name = '', $address = '')
     {
         return [
-            'id'       => $id,
-            'role'     => $role,
+            'id' => $id,
+            'role' => $role,
             'nicename' => $nicename,
-            'name'     => $name,
-            'address'  => $address,
+            'name' => $name,
+            'address' => $address,
             'roletype' => $roleType,
         ];
     }
@@ -74,8 +73,11 @@ class TradeRolesAssociationsService
      * @param $siteAndOrganisationRoles
      * @param $personSiteAndOrganisationRoles
      * @param int $roleType
+     *
      * @return array
+     *
      * @throws \Exception
+     *
      * @internal param $rolesAndAssociations
      */
     protected function viewRolesAndAssociations($siteAndOrganisationRoles, $personSiteAndOrganisationRoles, $roleType)
@@ -92,8 +94,8 @@ class TradeRolesAssociationsService
                     $niceName['name'],
                     $roleType,
                     $id,
-                    $siteAndOrganisation["name"],
-                    $siteAndOrganisation["address"]
+                    $siteAndOrganisation['name'],
+                    $siteAndOrganisation['address']
                 );
             }
         }

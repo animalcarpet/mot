@@ -1,4 +1,4 @@
-<?php if(isset($pin)): ?>
+<?php if (isset($pin)): ?>
 
     <h2>You have successfully reset your PIN</h2>
     <div class="row">
@@ -37,11 +37,11 @@
             <?php echo $this->partial(
                 'partial/gds/form/control-navigation',
                 [
-                    'id'            => 'reset-pin',
-                    'value'         => 'Reset your PIN',
-                    'navigation'    => [
+                    'id' => 'reset-pin',
+                    'value' => 'Reset your PIN',
+                    'navigation' => [
                         'Cancel and return to your profile' => $this->personProfileUrl()->toPersonProfile(),
-                    ]
+                    ],
                 ]
             ); ?>
         </nav>

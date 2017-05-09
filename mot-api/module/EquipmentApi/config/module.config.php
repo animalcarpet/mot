@@ -7,7 +7,7 @@ use EquipmentApi\Factory\Service\EquipmentModelServiceFactory;
 
 return [
     'service_manager' => [
-        'factories'  => [
+        'factories' => [
             EquipmentModelService::class => EquipmentModelServiceFactory::class,
         ],
     ],
@@ -16,12 +16,12 @@ return [
             EquipmentModelController::class => EquipmentModelControllerFactory::class,
         ],
     ],
-    'router'      => [
+    'router' => [
         'routes' => [
             'equipment' => [
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/equipment-model',
+                    'route' => '/equipment-model',
                     'defaults' => [
                         'controller' => EquipmentModelController::class,
                     ],

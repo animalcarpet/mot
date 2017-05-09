@@ -10,7 +10,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class VehicleHistory
+ * Class VehicleHistory.
  *
  * @ORM\Table(name="vehicle_hist")
  * @ORM\Entity(readOnly=true)
@@ -20,7 +20,7 @@ class VehicleHistory extends VehicleAbstract
     const MSG_IMMUTABLE_EXCEPTION = 'VehicleHistory is a readonly entity!';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="hist_id", type="integer")
      * @ORM\Id

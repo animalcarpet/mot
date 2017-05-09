@@ -34,7 +34,7 @@ use DvsaEntities\Repository\VehicleClassRepository;
 return [
     'service_manager' => [
         'invokables' => [
-            \DvsaEntities\Audit\EntityAuditListener::class => \DvsaEntities\Audit\EntityAuditListener::class
+            \DvsaEntities\Audit\EntityAuditListener::class => \DvsaEntities\Audit\EntityAuditListener::class,
         ],
         'factories' => [
             RbacRepository::class => RbacRepositoryFactory::class,
@@ -54,40 +54,40 @@ return [
             QualificationAnnualCertificateRepository::class => QualificationAnnualCertificateRepositoryFactory::class,
         ],
     ],
-    'doctrine'        => [
-        'eventmanager'  => [
+    'doctrine' => [
+        'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
-                    \DvsaEntities\Audit\EntityAuditListener::class
+                    \DvsaEntities\Audit\EntityAuditListener::class,
                 ],
             ],
         ],
-        'driver'        => [
-            'entities'    => [
+        'driver' => [
+            'entities' => [
                 'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => [
-                    __DIR__ . '/../src/DvsaEntities/Entity'
-                ]
+                    __DIR__.'/../src/DvsaEntities/Entity',
+                ],
             ],
             'orm_default' => [
                 'drivers' => [
                     'DvsaEntities\Entity' => 'entities',
-                ]
-            ]
+                ],
+            ],
         ],
         'configuration' => [
             'orm_default' => [
-                'types'            => [
-                    'datetime'                => \Doctrine\DBAL\Types\VarDateTimeType::class,
-                    'datetimemicro'           => \DvsaEntities\Type\DateTimeMicroType::class,
-                    'Time'                    => \DvsaEntities\Type\TimeType::class,
+                'types' => [
+                    'datetime' => \Doctrine\DBAL\Types\VarDateTimeType::class,
+                    'datetimemicro' => \DvsaEntities\Type\DateTimeMicroType::class,
+                    'Time' => \DvsaEntities\Type\TimeType::class,
                 ],
                 'string_functions' => [
                     'REGEXP' => \DvsaEntities\CustomDql\Functions\Regexp::class,
-                    'DATE'   => \DvsaEntities\CustomDql\Functions\Date::class,
-                    'YEAR'   => \DvsaEntities\CustomDql\Functions\Year::class
-                ]
+                    'DATE' => \DvsaEntities\CustomDql\Functions\Date::class,
+                    'YEAR' => \DvsaEntities\CustomDql\Functions\Year::class,
+                ],
             ],
         ],
     ],

@@ -9,7 +9,6 @@ use DvsaCommon\HttpRestJson\Client;
 
 class LazyMotFrontendAuthorisationServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new LazyMotFrontendAuthorisationService(

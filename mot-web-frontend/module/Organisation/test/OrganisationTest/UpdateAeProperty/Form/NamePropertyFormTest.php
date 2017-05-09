@@ -1,9 +1,8 @@
 <?php
 
 namespace OrganisationTest\UpdateAeProperty\Form;
+
 use Organisation\UpdateAeProperty\Process\Form\NamePropertyForm;
-
-
 
 class NamePropertyFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,8 +21,8 @@ class NamePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function validData()
     {
         return [
-            [[NamePropertyForm::FIELD_NAME => "AE name"]],
-            [[NamePropertyForm::FIELD_NAME => "AE name 2 !"]],
+            [[NamePropertyForm::FIELD_NAME => 'AE name']],
+            [[NamePropertyForm::FIELD_NAME => 'AE name 2 !']],
             [[NamePropertyForm::FIELD_NAME => $this->createName(NamePropertyForm::FIELD_NAME_MAX_LENGTH)]],
         ];
     }
@@ -47,20 +46,20 @@ class NamePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[NamePropertyForm::FIELD_NAME => ""], NamePropertyForm::NAME_EMPTY_MSG],
-            [[NamePropertyForm::FIELD_NAME => " "], NamePropertyForm::NAME_EMPTY_MSG],
-            [[NamePropertyForm::FIELD_NAME => $this->createName(NamePropertyForm::FIELD_NAME_MAX_LENGTH, " ")], NamePropertyForm::NAME_EMPTY_MSG],
+            [[NamePropertyForm::FIELD_NAME => ''], NamePropertyForm::NAME_EMPTY_MSG],
+            [[NamePropertyForm::FIELD_NAME => ' '], NamePropertyForm::NAME_EMPTY_MSG],
+            [[NamePropertyForm::FIELD_NAME => $this->createName(NamePropertyForm::FIELD_NAME_MAX_LENGTH, ' ')], NamePropertyForm::NAME_EMPTY_MSG],
             [[NamePropertyForm::FIELD_NAME => $this->createName(NamePropertyForm::FIELD_NAME_MAX_LENGTH + 1)],
-                str_replace("%max%", NamePropertyForm::FIELD_NAME_MAX_LENGTH, NamePropertyForm::NAME_TOO_LONG_MSG)],
+                str_replace('%max%', NamePropertyForm::FIELD_NAME_MAX_LENGTH, NamePropertyForm::NAME_TOO_LONG_MSG), ],
         ];
     }
 
-    private function createName($length, $char = "X")
+    private function createName($length, $char = 'X')
     {
-        $name = "";
+        $name = '';
         while ($length) {
             $name .= $char;
-            $length--;
+            --$length;
         }
 
         return $name;

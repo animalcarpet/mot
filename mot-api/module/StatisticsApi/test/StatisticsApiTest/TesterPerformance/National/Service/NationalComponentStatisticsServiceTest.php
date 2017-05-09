@@ -24,18 +24,18 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        /** @var NationalComponentStatisticsRepository $repository */
+        /* @var NationalComponentStatisticsRepository $repository */
         $this->repository = XMock::of(NationalComponentStatisticsRepository::class);
         $this
             ->repository
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn([$this->createComponentFailRateResult()]);
 
         $this
             ->repository
             ->expects($this->any())
-            ->method("getNationalFailedMotTestCount")
+            ->method('getNationalFailedMotTestCount')
             ->willReturn(1);
 
         $this->storage = new KeyValueStorageFake();
@@ -45,8 +45,8 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     {
         $currentDate = $this->getDateTimeHolder()->getCurrentDate();
         $date = $currentDate->sub(new \DateInterval('P2M'));
-        $year = (int)$date->format("Y");
-        $month = (int)$date->format("m");
+        $year = (int) $date->format('Y');
+        $month = (int) $date->format('m');
 
         $dto = $this->createService()->get($year, $month, VehicleClassGroupCode::CARS_ETC);
         $this->assertInstanceOf(NationalComponentStatisticsDto::class, $dto);
@@ -64,9 +64,9 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetThrowsExceptionIfValidationFailed()
     {
-        $currentYear = (int)DateUtils::firstOfThisMonth()->format("Y");
+        $currentYear = (int) DateUtils::firstOfThisMonth()->format('Y');
         $date = $this->getDateTimeHolder()->getCurrentDate();
-        $nextMonth = (int)$date->modify("next month")->format("m");
+        $nextMonth = (int) $date->modify('next month')->format('m');
 
         $this->createService()->get($currentYear, $nextMonth, VehicleClassGroupCode::BIKES);
     }
@@ -96,18 +96,18 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         $result
             ->setFailedCount(1)
             ->setTestItemCategoryId(1)
-            ->setTestItemCategoryName("Category name");
+            ->setTestItemCategoryName('Category name');
 
         return $result;
     }
 
     private function getDateTimeHolder()
     {
-        /**
+        /*
          * @todo (ABN) the logic behind it has to be studied and then convert it to a dynamically generated, relative date
          * the solution might be something like a date 6 month ago i.e.
          * new \DateTime(date('Y-m-d', strtotime('-6 months')))
          */
-        return new TestDateTimeHolder(new \DateTime("2016-10-21"));
+        return new TestDateTimeHolder(new \DateTime('2016-10-21'));
     }
 }

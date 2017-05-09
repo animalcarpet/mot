@@ -3,10 +3,7 @@
 namespace TestSupport\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\DBAL\Connection;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\CpmsNotification;
-use DvsaEntities\Entity\DvlaVehicle;
 use DvsaEntities\Repository\CpmsNotificationRepository;
 
 class PaymentNotificationsAuditService
@@ -30,7 +27,7 @@ class PaymentNotificationsAuditService
     {
         $cpmsNotificationRep = new CpmsNotificationRepository($this->entityManager,
             $this->entityManager->getClassMetadata(CpmsNotification::class));
+
         return $cpmsNotificationRep->findByNotificationId($notification);
     }
-
 }

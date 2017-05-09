@@ -2,11 +2,9 @@
 
 namespace TestSupport\Controller;
 
-use Doctrine\ORM\EntityManager;
 use TestSupport\Helper\NominatorTrait;
 use TestSupport\Helper\RestClientGetterTrait;
 use TestSupport\Service\AedmService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -22,7 +20,6 @@ class AedmDataController extends BaseTestSupportRestfulController
     protected $accountPerson;
 
     /**
-     *
      * @param mixed $data optional data with differentiator,
      *                    requestor => {username,password} DVSA scheme management user with whom to assign AEDM role
      *                    aeIds => IDs of AEs for which the user is an AEDM

@@ -10,15 +10,13 @@ use DvsaCommon\Utility\ArrayUtils;
 use MailerApi\Logic\UsernameReminder;
 use MailerApi\Service\MailerService;
 use PersonApi\Service\PersonalDetailsService;
-
-use MailerApi\Validator\MailerValidator;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MailerController extends AbstractDvsaRestfulController
 {
     const USERNAME_SUBJECT = 'Username reminder';
 
-    /** @var  ServiceLocatorInterface */
+    /** @var ServiceLocatorInterface */
     protected $serviceLocator;
 
     /**

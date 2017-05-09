@@ -2,17 +2,13 @@
 
 namespace DvsaMotApi\Model\DqlBuilder;
 
-use Doctrine\ORM\EntityManager;
 use DvsaEntities\DqlBuilder\SearchParamDqlBuilder;
 
 /**
- * Class VehicleTestingStationSearchParamDqlBuilder
- *
- * @package DvsaMotApi\Model\DqlBuilder
+ * Class VehicleTestingStationSearchParamDqlBuilder.
  */
 class VehicleTestingStationElasticSearchParamBuilder extends SearchParamDqlBuilder
 {
-
     protected $es;
 
     protected $searchMode = self::SEARCH_MODE_EFFICIENT;
@@ -33,7 +29,7 @@ class VehicleTestingStationElasticSearchParamBuilder extends SearchParamDqlBuild
     const SORT_BY_STATUS = 8;
 
     /**
-     * Provides an opportunity to initialize and values before processing
+     * Provides an opportunity to initialize and values before processing.
      *
      * @return $this
      */
@@ -43,7 +39,7 @@ class VehicleTestingStationElasticSearchParamBuilder extends SearchParamDqlBuild
         $this->es = new Elasticsearch\Client($params);
 
         $search = trim($this->params->getChomped());
-        $this->searchWords = strlen($search) > 0 ? explode(" ", strtoupper($search)) : null;
+        $this->searchWords = strlen($search) > 0 ? explode(' ', strtoupper($search)) : null;
 
         $this->calculateSearchMode();
 
@@ -51,21 +47,21 @@ class VehicleTestingStationElasticSearchParamBuilder extends SearchParamDqlBuild
     }
 
     /**
-     * Build the query from the params
+     * Build the query from the params.
      */
     protected function buildDql($totalCount = false)
     {
-        $dql         = [];
-        $filters     = [];
+        $dql = [];
+        $filters = [];
 
         $dql[] = $this->generateDqlHeader($totalCount);
 
-        $this->addFiltersByValues($filters, $this->params->getTypes(), "vts.type = :TYPE_%d", "OR");
-        $this->addFiltersByValues($filters, $this->params->getStatuses(), "vts.status = :STATUS_%d", "OR");
-        $this->addFiltersByValues($filters, $this->params->getVehicleClasses(), "vts.roles LIKE :CLASS_%d", "AND");
-        $this->addFiltersByValues($filters, $this->searchWords, "vts.search LIKE :WORD_%d", "AND");
+        $this->addFiltersByValues($filters, $this->params->getTypes(), 'vts.type = :TYPE_%d', 'OR');
+        $this->addFiltersByValues($filters, $this->params->getStatuses(), 'vts.status = :STATUS_%d', 'OR');
+        $this->addFiltersByValues($filters, $this->params->getVehicleClasses(), 'vts.roles LIKE :CLASS_%d', 'AND');
+        $this->addFiltersByValues($filters, $this->searchWords, 'vts.search LIKE :WORD_%d', 'AND');
 
-        $dql[] = count($filters) ? join(' AND ', $filters): '1';
+        $dql[] = count($filters) ? implode(' AND ', $filters) : '1';
 
         $this->generateDqlFooter($totalCount, $dql);
     }
@@ -91,17 +87,7 @@ class VehicleTestingStationElasticSearchParamBuilder extends SearchParamDqlBuild
     }
 
     /**
-     * $columnMappings = [
-        "0" => "search",        vts
-        "1" => "name",          vts_full
-        "2" => "address",       vts_address
-        "3" => "city",          vts_address
-        "4" => "postcode",      vts_address
-        "5" => "search",        n/a - telephone not available.. default to search
-        "6" => "roles",         vts
-        "7" => "type",          vts
-        "8" => "status"         vts
-        ];
+     * $columnMappings = [.
      */
     protected function calculateSearchMode()
     {
@@ -134,18 +120,20 @@ class VehicleTestingStationElasticSearchParamBuilder extends SearchParamDqlBuild
 
         if ($this->params->getSortColumnId() == self::SORT_BY_NAME) {
             $this->orderByTableName = 'vts_full';
-            return 'SELECT vts from DvsaMotApi\Entity\VehicleTestingStationSearch vts ' .
-            'LEFT JOIN DvsaMotApi\Entity\VehicleTestingStation vts_full WITH ' .
-            'vts.vehicleTestingStation = vts_full.id ' .
+
+            return 'SELECT vts from DvsaMotApi\Entity\VehicleTestingStationSearch vts '.
+            'LEFT JOIN DvsaMotApi\Entity\VehicleTestingStation vts_full WITH '.
+            'vts.vehicleTestingStation = vts_full.id '.
             'WHERE';
         }
 
         $this->orderByTableName = 'vts_address';
-        return 'SELECT vts from DvsaMotApi\Entity\VehicleTestingStationSearch vts ' .
-                    'LEFT JOIN DvsaMotApi\Entity\VehicleTestingStation vts_full WITH ' .
-                    'vts.vehicleTestingStation = vts_full.id ' .
-                    'LEFT JOIN DvsaMotApi\Entity\VtsAddress vts_address WITH ' .
-                    'vts_full.address = vts_address.id ' .
+
+        return 'SELECT vts from DvsaMotApi\Entity\VehicleTestingStationSearch vts '.
+                    'LEFT JOIN DvsaMotApi\Entity\VehicleTestingStation vts_full WITH '.
+                    'vts.vehicleTestingStation = vts_full.id '.
+                    'LEFT JOIN DvsaMotApi\Entity\VtsAddress vts_address WITH '.
+                    'vts_full.address = vts_address.id '.
                     'WHERE';
     }
 
@@ -156,12 +144,12 @@ class VehicleTestingStationElasticSearchParamBuilder extends SearchParamDqlBuild
     protected function generateDqlFooter($totalCount, $dql)
     {
         if ($totalCount) {
-            $this->searchCountDql = join(" ", $dql);
+            $this->searchCountDql = implode(' ', $dql);
         } else {
-            $dql[] = "ORDER BY {$this->orderByTableName}.{$this->params->getSortColumnName()} " .
+            $dql[] = "ORDER BY {$this->orderByTableName}.{$this->params->getSortColumnName()} ".
                 $this->params->getSortDirection();
 
-            $this->searchDql = join(" ", $dql);
+            $this->searchDql = implode(' ', $dql);
         }
     }
 }

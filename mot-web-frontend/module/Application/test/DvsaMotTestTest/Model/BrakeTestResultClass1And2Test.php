@@ -7,7 +7,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 
 /**
- * Unit tests for BrakeEffort
+ * Unit tests for BrakeEffort.
  */
 class BrakeTestResultClass1And2Test extends \PHPUnit_Framework_TestCase
 {
@@ -81,97 +81,98 @@ class BrakeTestResultClass1And2Test extends \PHPUnit_Framework_TestCase
 
     private function getBrakeTestResultClass1And2()
     {
-        $testDataJSON = "{
-  \"id\" : 1,
-  \"brakeTestResult\" : {
-    \"id\" : 999888001,
-    \"generalPass\" : false,
-    \"isLatest\" : true,
-    \"brakeTestTypeCode\" : \"ROLLR\",
-    \"control1BrakeEfficiency\" : 6,
-    \"control1EfficiencyPass\" : true,
-    \"control1EffortFront\" : 1,
-    \"control1EffortRear\" : 3,
-    \"control1EffortSidecar\" : 5,
-    \"control1LockFront\" : 2,
-    \"control1LockPercent\" : 21,
-    \"control1LockRear\" : true,
-    \"control2BrakeEfficiency\" : 16,
-    \"control2EfficiencyPass\" : false,
-    \"control2EffortFront\" : 11,
-    \"control2EffortRear\" : 13,
-    \"control2EffortSidecar\" : 15,
-    \"control2LockFront\" : 12,
-    \"control2LockPercent\" : 91,
-    \"control2LockRear\" : 14,
-    \"gradientControl1BelowMinimum\" : true,
-    \"gradientControl2BelowMinimum\" : true,
-    \"riderWeight\" : 60,
-    \"sidecarWeight\" : 300,
-    \"vehicleWeightFront\" : 400,
-    \"vehicleWeightRear\" : 450
+        $testDataJSON = '{
+  "id" : 1,
+  "brakeTestResult" : {
+    "id" : 999888001,
+    "generalPass" : false,
+    "isLatest" : true,
+    "brakeTestTypeCode" : "ROLLR",
+    "control1BrakeEfficiency" : 6,
+    "control1EfficiencyPass" : true,
+    "control1EffortFront" : 1,
+    "control1EffortRear" : 3,
+    "control1EffortSidecar" : 5,
+    "control1LockFront" : 2,
+    "control1LockPercent" : 21,
+    "control1LockRear" : true,
+    "control2BrakeEfficiency" : 16,
+    "control2EfficiencyPass" : false,
+    "control2EffortFront" : 11,
+    "control2EffortRear" : 13,
+    "control2EffortSidecar" : 15,
+    "control2LockFront" : 12,
+    "control2LockPercent" : 91,
+    "control2LockRear" : 14,
+    "gradientControl1BelowMinimum" : true,
+    "gradientControl2BelowMinimum" : true,
+    "riderWeight" : 60,
+    "sidecarWeight" : 300,
+    "vehicleWeightFront" : 400,
+    "vehicleWeightRear" : 450
   },
-  \"completedDate\" : \"2015-12-18\",
-  \"expiryDate\" : \"2015-12-18\",
-  \"issuedDate\" : \"2015-12-18\",
-  \"startedDate\" : \"2015-12-18\",
-  \"motTestNumber\" : \"1\",
-  \"reasonForTerminationComment\" : \"comment\",
-  \"reasonsForRejection\" : {
-    \"ADVISORY\" : [ {
-      \"id\" : 1,
-      \"type\" : \"ADVISORY\",
-      \"locationLateral\" : \"locationLateral\",
-      \"locationLongitudinal\" : \"locationLongitudinal\",
-      \"locationVertical\" : \"locationVertical\",
-      \"comment\" : \"comment\",
-      \"failureDangerous\" : false,
-      \"generated\" : false,
-      \"customDescription\" : \"customDescription\",
-      \"onOriginalTest\" : false,
-      \"rfrId\" : 1,
-      \"name\" : \"advisory\",
-      \"nameCy\" : \"advisory\",
-      \"testItemSelectorDescription\" : \"testItemSelectorDescription\",
-      \"testItemSelectorDescriptionCy\" : null,
-      \"failureText\" : \"advisory\",
-      \"failureTextCy\" : \"advisorycy\",
-      \"testItemSelectorId\" : 1,
-      \"inspectionManualReference\" : \"inspectionManualReference\"
+  "completedDate" : "2015-12-18",
+  "expiryDate" : "2015-12-18",
+  "issuedDate" : "2015-12-18",
+  "startedDate" : "2015-12-18",
+  "motTestNumber" : "1",
+  "reasonForTerminationComment" : "comment",
+  "reasonsForRejection" : {
+    "ADVISORY" : [ {
+      "id" : 1,
+      "type" : "ADVISORY",
+      "locationLateral" : "locationLateral",
+      "locationLongitudinal" : "locationLongitudinal",
+      "locationVertical" : "locationVertical",
+      "comment" : "comment",
+      "failureDangerous" : false,
+      "generated" : false,
+      "customDescription" : "customDescription",
+      "onOriginalTest" : false,
+      "rfrId" : 1,
+      "name" : "advisory",
+      "nameCy" : "advisory",
+      "testItemSelectorDescription" : "testItemSelectorDescription",
+      "testItemSelectorDescriptionCy" : null,
+      "failureText" : "advisory",
+      "failureTextCy" : "advisorycy",
+      "testItemSelectorId" : 1,
+      "inspectionManualReference" : "inspectionManualReference"
     } ]
   },
-  \"statusCode\" : \"P\",
-  \"testTypeCode\" : \"NORMAL\",
-  \"tester\" : {
-    \"id\" : 1,
-    \"firstName\" : \"Joe\",
-    \"middleName\" : \"John\",
-    \"lastName\" : \"Bloggs\"
+  "statusCode" : "P",
+  "testTypeCode" : "NORMAL",
+  "tester" : {
+    "id" : 1,
+    "firstName" : "Joe",
+    "middleName" : "John",
+    "lastName" : "Bloggs"
   },
-  \"testerBrakePerformanceNotTested\" : true,
-  \"hasRegistration\" : true,
-  \"siteId\" : 1,
-  \"vehicleId\" : 1001,
-  \"vehicleVersion\" : 1,
-  \"pendingDetails\" : {
-    \"currentSubmissionStatus\" : \"PASSED\",
-    \"issuedDate\" : \"2015-12-18\",
-    \"expiryDate\" : \"2015-12-18\"
+  "testerBrakePerformanceNotTested" : true,
+  "hasRegistration" : true,
+  "siteId" : 1,
+  "vehicleId" : 1001,
+  "vehicleVersion" : 1,
+  "pendingDetails" : {
+    "currentSubmissionStatus" : "PASSED",
+    "issuedDate" : "2015-12-18",
+    "expiryDate" : "2015-12-18"
   },
-  \"reasonForCancel\" : {
-    \"id\" : 1,
-    \"reason\" : \"reason\",
-    \"reasonCy\" : \"reasonCy\",
-    \"abandoned\" : true,
-    \"isDisplayable\" : true
+  "reasonForCancel" : {
+    "id" : 1,
+    "reason" : "reason",
+    "reasonCy" : "reasonCy",
+    "abandoned" : true,
+    "isDisplayable" : true
   },
-  \"motTestOriginalNumber\" : \"12345\",
-  \"prsMotTestNumber\" : \"123456\",
-  \"odometerValue\" : 1000,
-  \"odometerUnit\" : \"mi\",
-  \"odometerResultType\" : \"OK\"
-}";
+  "motTestOriginalNumber" : "12345",
+  "prsMotTestNumber" : "123456",
+  "odometerValue" : 1000,
+  "odometerUnit" : "mi",
+  "odometerResultType" : "OK"
+}';
         $motTest = new MotTest(json_decode($testDataJSON));
+
         return new BrakeTestResultClass1And2($motTest->getBrakeTestResult());
     }
 }

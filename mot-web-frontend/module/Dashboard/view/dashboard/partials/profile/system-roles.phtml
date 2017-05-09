@@ -10,9 +10,9 @@
                 <?php endif ?>
             </th>
             <td class="key-value-list__value" <?php echo
-            ( $role['id'] ? ' id="role-' . $this->escapeHtmlAttr($role["role"]["code"]) . '-' .
-                $this->escapeHtmlAttr($role['id']) . '"' : 'id="role-' . $this->escapeHtmlAttr($role["role"]["code"]) .'"');
-            ?>><?php echo $this->escapeHtml($role["nicename"]); ?></td>
+             $role['id'] ? ' id="role-'.$this->escapeHtmlAttr($role['role']['code']).'-'.
+                $this->escapeHtmlAttr($role['id']).'"' : 'id="role-'.$this->escapeHtmlAttr($role['role']['code']).'"';
+            ?>><?php echo $this->escapeHtml($role['nicename']); ?></td>
         </tr>
         <?php
     endforeach; ?>

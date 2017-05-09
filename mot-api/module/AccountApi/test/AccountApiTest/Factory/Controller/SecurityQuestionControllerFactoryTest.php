@@ -1,18 +1,16 @@
 <?php
+
 namespace AccountApiTest\Factory\Controller;
 
 use AccountApi\Controller\SecurityQuestionController;
 use AccountApi\Factory\Controller\SecurityQuestionControllerFactory;
 use AccountApi\Service\SecurityQuestionService;
-use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SecurityQuestionControllerFactoryTest
- * @package AccountTest\Factory
+ * Class SecurityQuestionControllerFactoryTest.
  */
 class SecurityQuestionControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

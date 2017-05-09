@@ -54,23 +54,23 @@ class SecurityController extends AbstractDvsaActionController
     /** @var AuthenticationAccountLockoutViewModelBuilder */
     private $accountLocketViewModelBuilder;
 
-    /** @var  TwoFaFeatureToggle */
+    /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
-    /** @var  SuccessLoginResultRoutingService */
+    /** @var SuccessLoginResultRoutingService */
     private $successLoginResultRoutingService;
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param GotoUrlService $loginGotoService
-     * @param IdentitySessionStateService $identitySessionStateService
-     * @param WebLoginService $loginService
-     * @param LoginCsrfCookieService $loginCsrfCookieService
-     * @param AuthenticationService $authenticationService
+     * @param Request                                      $request
+     * @param Response                                     $response
+     * @param GotoUrlService                               $loginGotoService
+     * @param IdentitySessionStateService                  $identitySessionStateService
+     * @param WebLoginService                              $loginService
+     * @param LoginCsrfCookieService                       $loginCsrfCookieService
+     * @param AuthenticationService                        $authenticationService
      * @param AuthenticationAccountLockoutViewModelBuilder $accountLocketViewModelBuilder
-     * @param TwoFaFeatureToggle $twoFaFeatureToggle
-     * @param SuccessLoginResultRoutingService $successLoginResultRoutingService
+     * @param TwoFaFeatureToggle                           $twoFaFeatureToggle
+     * @param SuccessLoginResultRoutingService             $successLoginResultRoutingService
      */
     public function __construct(
         Request $request,
@@ -145,8 +145,9 @@ class SecurityController extends AbstractDvsaActionController
             $goto = $this->gotoService->encodeGoto($rawGoto);
             $viewVars = [
                 'gotoUrl' => $goto,
-                'form' => new LoginForm()
+                'form' => new LoginForm(),
             ];
+
             return $this->buildLoginPageViewModel($viewVars);
         }
     }
@@ -165,12 +166,12 @@ class SecurityController extends AbstractDvsaActionController
         $postArray = $request->getPost()->toArray();
         $loginForm->setData($postArray);
         if (false === $loginForm->isValid()) {
-
             $loginForm->resetPassword();
             $viewVars = [
                 'form' => $loginForm,
-                'gotoUrl' => $request->getPost(self::PARAM_GOTO)
+                'gotoUrl' => $request->getPost(self::PARAM_GOTO),
             ];
+
             return $this->buildLoginPageViewModel($viewVars);
         }
 
@@ -196,7 +197,6 @@ class SecurityController extends AbstractDvsaActionController
 
     private function buildLoginPageViewModel($vars)
     {
-
         $vm = new ViewModel($vars);
         $this->setUpLoginCsrfCookie($vm);
         $vm->setTemplate('authentication/login');
@@ -208,8 +208,7 @@ class SecurityController extends AbstractDvsaActionController
     private function showErrorOnAuthFail(WebLoginResult $result, LoginForm $loginForm)
     {
         $resultCode = $result->getCode();
-        if
-        (
+        if (
             $resultCode == AuthenticationResultCode::INVALID_CREDENTIALS ||
             $resultCode == AuthenticationResultCode::ERROR ||
             $resultCode == AuthenticationResultCode::UNRESOLVABLE_IDENTITY

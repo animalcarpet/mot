@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -145,7 +146,7 @@ class DvlaVehicleImportChangeLog extends Entity
     private $tester;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_id", type="integer", nullable=false)
      */

@@ -6,7 +6,7 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * data about special notice
+ * data about special notice.
  */
 class SpecialNotice
 {
@@ -43,9 +43,9 @@ class SpecialNotice
     public function toArray()
     {
         return [
-            'unreadCount'    => $this->getUnreadCount(),
+            'unreadCount' => $this->getUnreadCount(),
             'daysLeftToView' => $this->getDaysLeftToView(),
-            'overdueCount'   => $this->getOverdueCount(),
+            'overdueCount' => $this->getOverdueCount(),
         ];
     }
 
@@ -57,6 +57,7 @@ class SpecialNotice
     public function setDaysLeftToView($daysLeftToView)
     {
         $this->daysLeftToView = intval($daysLeftToView);
+
         return $this;
     }
 
@@ -76,6 +77,7 @@ class SpecialNotice
     public function setOverdueCount($overdueCount)
     {
         $this->overdueCount = intval($overdueCount);
+
         return $this;
     }
 
@@ -95,6 +97,7 @@ class SpecialNotice
     public function setUnreadCount($unreadCount)
     {
         $this->unreadCount = intval($unreadCount);
+
         return $this;
     }
 

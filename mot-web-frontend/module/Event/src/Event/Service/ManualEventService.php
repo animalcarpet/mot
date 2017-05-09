@@ -84,11 +84,11 @@ class ManualEventService
         $outcome = $this->dataExists($sessionData, OutcomeStep::STEP_ID);
 
         return [
-            'eventTypeCode'     => $this->dataExists($record, RecordInputFilter::FIELD_TYPE),
-            'eventOutcomeCode'  => $this->dataExists($outcome, OutcomeInputFilter::FIELD_OUTCOME),
+            'eventTypeCode' => $this->dataExists($record, RecordInputFilter::FIELD_TYPE),
+            'eventOutcomeCode' => $this->dataExists($outcome, OutcomeInputFilter::FIELD_OUTCOME),
             'eventCategoryCode' => $category,
-            'eventDate'         => $this->dataExists($record, RecordInputFilter::FIELD_DATE),
-            'eventDescription'  => $this->dataExists($outcome, OutcomeInputFilter::FIELD_NOTES),
+            'eventDate' => $this->dataExists($record, RecordInputFilter::FIELD_DATE),
+            'eventDescription' => $this->dataExists($outcome, OutcomeInputFilter::FIELD_NOTES),
         ];
     }
 

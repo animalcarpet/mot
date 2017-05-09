@@ -8,10 +8,7 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use Zend\Http\Request;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\SessionManager;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardInformationCookieService;
-use DvsaCommon\HttpRestJson\Client;
-use Core\Service\LazyMotFrontendAuthorisationService;
 
 /**
  * Factory for SecurityController instances.

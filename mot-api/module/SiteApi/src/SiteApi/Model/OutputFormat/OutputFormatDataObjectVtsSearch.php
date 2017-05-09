@@ -7,9 +7,7 @@ use SiteApi\Service\ExtractSiteTrait;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapMapper;
 
 /**
- * Class OutputFormatDataObjectVtsSearch
- *
- * @package SiteApi\Model\OutputFormat
+ * Class OutputFormatDataObjectVtsSearch.
  */
 class OutputFormatDataObjectVtsSearch extends OutputFormat
 {
@@ -22,13 +20,14 @@ class OutputFormatDataObjectVtsSearch extends OutputFormat
     }
 
     /**
-     * Responsible for extracting the current item into the required format
+     * Responsible for extracting the current item into the required format.
      *
      * @param $results
      * @param $key
      * @param $item
      *
      * @return mixed
+     *
      * @throws \Exception
      */
     public function extractItem(&$results, $key, $item)

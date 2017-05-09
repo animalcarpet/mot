@@ -7,8 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use UserApi\HelpDesk\Service\HelpDeskPersonService;
 
 /**
- * Class PersonProfileRestrictedController
- * @package PersonApi\Controller
+ * Class PersonProfileRestrictedController.
  */
 class PersonProfileRestrictedController extends AbstractDvsaRestfulController
 {
@@ -24,6 +23,7 @@ class PersonProfileRestrictedController extends AbstractDvsaRestfulController
 
     /**
      * @param int $personId
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function get($personId)

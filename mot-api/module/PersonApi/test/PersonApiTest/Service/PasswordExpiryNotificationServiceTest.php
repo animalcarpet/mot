@@ -2,10 +2,8 @@
 
 namespace PersonApiTest\Service;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use NotificationApi\Service\NotificationService;
 use NotificationApi\Dto\Notification;
 use DvsaEntities\Entity\Person;
@@ -40,7 +38,7 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
         $personRepository = XMock::of(PersonRepository::class);
         $personRepository
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn($this->user);
 
         $this->service = new PasswordExpiryNotificationService(
@@ -85,10 +83,10 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
             'Wrong template was chosen for the notification');
 
         $this->assertEquals($this->user->getId(), $notification['recipient'],
-            "It was addressed to the wrong person");
+            'It was addressed to the wrong person');
 
         $this->assertEquals($this->getExpiryDay($day), $notification['fields']['expiryDay'],
-            "Wrong expiry day is displayed in the notification");
+            'Wrong expiry day is displayed in the notification');
     }
 
     private function getExpiryDay($day)

@@ -6,8 +6,6 @@ use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardOrder;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\ApiClient\Request\OrderSecurityCardRequest;
-use GuzzleHttp\Exception\RequestException;
-use Zend\Authentication\AuthenticationService;
 
 class SecurityCardService
 {
@@ -22,7 +20,7 @@ class SecurityCardService
     private $nominationService;
 
     /**
-     * @param AuthorisationService $authorisationServiceClient
+     * @param AuthorisationService                   $authorisationServiceClient
      * @param TwoFactorNominationNotificationService $nominationService
      */
     public function __construct(
@@ -40,7 +38,7 @@ class SecurityCardService
     {
         try {
             return $this->authorisationServiceClient->getSecurityCardForUser($username);
-        } catch (ResourceNotFoundException $exception){
+        } catch (ResourceNotFoundException $exception) {
             return null;
         }
     }
@@ -52,6 +50,7 @@ class SecurityCardService
 
     /**
      * @param string $username
+     *
      * @return SecurityCardOrder|null
      */
     public function getMostRecentSecurityCardOrderForUser($username)
@@ -64,10 +63,11 @@ class SecurityCardService
 
         $cardOrders = $cardOrderCollection->getAll();
 
-        usort($cardOrders, function(SecurityCardOrder $a, SecurityCardOrder $b) {
+        usort($cardOrders, function (SecurityCardOrder $a, SecurityCardOrder $b) {
             if ($a->getSubmittedOn() === $b->getSubmittedOn()) {
                 return 0;
             }
+
             return ($a->getSubmittedOn() > $b->getSubmittedOn()) ? -1 : 1;
         });
 
@@ -77,6 +77,7 @@ class SecurityCardService
     /**
      * @param int
      * @param array
+     *
      * @return bool
      */
     public function orderNewCard($recipientUsername, $recipientId, array $address)
@@ -84,7 +85,7 @@ class SecurityCardService
         $orderSecurityCardRequest = $this->buildRequest($recipientUsername, $address);
         $securityCardOrder = $this->authorisationServiceClient->orderSecurityCard($orderSecurityCardRequest);
         $orderSuccess = !empty($securityCardOrder);
-        
+
         if ($orderSuccess) {
             $this->nominationService->sendNotificationsForPendingNominations($recipientId);
         }

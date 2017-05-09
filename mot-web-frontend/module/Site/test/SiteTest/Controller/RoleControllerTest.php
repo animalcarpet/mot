@@ -16,7 +16,6 @@ use DvsaCommon\Validator\UsernameValidator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Controller\RoleController;
-use Zend\View\Model\ViewModel;
 
 /**
  * Class RoleControllerTest.
@@ -45,9 +44,9 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
         $serviceManager->setAllowOverride(true);
 
         $usernameValidatorMock = $this->createUsernameValidatorMock(true);
-        $htmlPurifier          = $this->getMock('HTMLPurifier');
+        $htmlPurifier = $this->getMock('HTMLPurifier');
 
-        $this->controller      = new RoleController($usernameValidatorMock, $htmlPurifier);
+        $this->controller = new RoleController($usernameValidatorMock, $htmlPurifier);
         $this->controller->setServiceLocator($serviceManager);
 
         $this->roleMapperMock = $this->getRoleMapperMock();
@@ -100,7 +99,7 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
             'listUserRoles',
             [
                 'vehicleTestingStationId' => $this->siteId,
-                'personId'                => $this->personId
+                'personId' => $this->personId,
             ]
         );
         $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -111,9 +110,9 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
         $this->getResponseForAction(
             'confirmNomination',
             [
-                'nomineeId'               => $this->nomineeId,
+                'nomineeId' => $this->nomineeId,
                 'vehicleTestingStationId' => $this->siteId,
-                'roleCode'                => $this->roleCode
+                'roleCode' => $this->roleCode,
             ]
         );
 
@@ -137,7 +136,7 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
             ->willReturn($isValid);
 
         if (!$isValid) {
-            $messages = ['stringLengthTooLong' => sprintf("Username must be less than %s characters long.",
+            $messages = ['stringLengthTooLong' => sprintf('Username must be less than %s characters long.',
                 self::MAX_USERNAME_LENGTH)];
 
             $usernameValidatorMock
@@ -151,6 +150,7 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getRoleMapperMock()
@@ -173,6 +173,7 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getPositionMapperMock()
@@ -188,6 +189,7 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getPersonMapperMock()
@@ -227,7 +229,9 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
      * @param $personMapperMock
      * @param $roleMapperMock
      * @param $positionMapperMock
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getMapperFactoryMock(

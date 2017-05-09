@@ -26,11 +26,11 @@ $isParkingBrake = ($brakeType == BRAKE_TYPE_PARKING);
 
 //  --  define brake test type (roller, place or other)     --
 
-if($this->dataKey === 'serviceBrake1') {
+if ($this->dataKey === 'serviceBrake1') {
     $brakeTestType = $brakeResult->getServiceBrake1TestType();
-} elseif($this->dataKey === 'serviceBrake2') {
+} elseif ($this->dataKey === 'serviceBrake2') {
     $brakeTestType = $brakeResult->getServiceBrake2TestType();
-} elseif($this->dataKey === 'parkingBrake') {
+} elseif ($this->dataKey === 'parkingBrake') {
     $brakeTestType = $brakeResult->getParkingBrakeTestType();
 }
 $canLock = ($brakeTestType == \DvsaCommon\Enum\BrakeTestTypeCode::ROLLER);
@@ -52,8 +52,8 @@ if ($effortSingle) {
     $rowSingle = $this->partial(
         'partials/mot-test-summary/brake-values-in-kg-result-by-type-row',
         [
-            'label1'  => 'Single',
-            'val1'    => $effortSingle,
+            'label1' => 'Single',
+            'val1' => $effortSingle,
             'isLock1' => $brakeData->getLockSingle(),
             'canLock' => $canLock,
         ]
@@ -66,9 +66,9 @@ if ($isSingleInFront && $rowSingle) {
 }
 
 //  --  draw data of other axles    --
-for ($i = 1; $i <= 3; $i++) {
-    if($i === 1){
-        if($this->dataKey === 'parkingBrake') {
+for ($i = 1; $i <= 3; ++$i) {
+    if ($i === 1) {
+        if ($this->dataKey === 'parkingBrake') {
             $effortNearsideAxle = $brakeResult->getParkingBrakeEffortNearside();
             $effortOffsideAxle = $brakeResult->getParkingBrakeEffortOffside();
 
@@ -84,8 +84,8 @@ for ($i = 1; $i <= 3; $i++) {
             $imbalanceAxle = $brakeData->getImbalanceAxle1();
         }
     }
-    if($i === 2){
-        if($this->dataKey === 'parkingBrake') {
+    if ($i === 2) {
+        if ($this->dataKey === 'parkingBrake') {
             $effortNearsideAxle = $brakeResult->getParkingBrakeEffortSecondaryNearside();
             $effortOffsideAxle = $brakeResult->getParkingBrakeEffortSecondaryOffside();
 
@@ -121,19 +121,19 @@ for ($i = 1; $i <= 3; $i++) {
     $body[] = $this->partial(
         'partials/mot-test-summary/brake-values-in-kg-result-by-type-row',
         [
-            'index'     => $i,
-            'val1'      => $effortNearsideAxle,
-            'isLock1'   => $lockNearsideAxle,
-            'val2'      => $effortOffsideAxle,
-            'isLock2'   => $lockOffsideAxle,
+            'index' => $i,
+            'val1' => $effortNearsideAxle,
+            'isLock1' => $lockNearsideAxle,
+            'val2' => $effortOffsideAxle,
+            'isLock2' => $lockOffsideAxle,
             'imbalance' => $isParkingBrake ? null : intval($imbalanceAxle),
-            'canLock'   => $canLock,
+            'canLock' => $canLock,
         ]
     );
 }
 
 //  --  draw data of single weel at rear    --
-if (!$isSingleInFront  && $rowSingle) {
+if (!$isSingleInFront && $rowSingle) {
     $body[] = $rowSingle;
 }
 ?>
@@ -155,19 +155,19 @@ if (!$isSingleInFront  && $rowSingle) {
                         <th style="width:20%;">&nbsp;</th>
                         <th style="width:10%;">&nbsp;</th>
                         <th style="width:10%" scope="col">
-                            <?php echo ($canLock ? 'Lock' : ''); ?>
+                            <?php echo $canLock ? 'Lock' : ''; ?>
                         </th>
 
                         <?php if ($isColumnTwoShown) : ?>
                             <th style="width:20%;">&nbsp;</th>
                             <th style="width:10%;">&nbsp;</th>
                             <th style="width:10%;" scope="col">
-                                <?php echo ($canLock ? 'Lock' : ''); ?>
+                                <?php echo $canLock ? 'Lock' : ''; ?>
                             </th>
 
                             <th style="width:20%;" scope="col" style="width: 100px">
                                 <?php
-                                echo ($isServiceBrake ? 'Imbalance' : '&nbsp;');
+                                echo $isServiceBrake ? 'Imbalance' : '&nbsp;';
                                 ?>
                             </th>
                         <?php else : ?>
@@ -176,7 +176,7 @@ if (!$isSingleInFront  && $rowSingle) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php echo join('', $body); ?>
+                    <?php echo implode('', $body); ?>
                 </tbody>
             </table>
         </div>

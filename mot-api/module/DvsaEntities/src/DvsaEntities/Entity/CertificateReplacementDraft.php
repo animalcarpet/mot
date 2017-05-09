@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ReplacementCertificateDraft
+ * ReplacementCertificateDraft.
  *
  * @ORM\Table(name="certificate_replacement_draft",
  * options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
@@ -69,28 +69,28 @@ class CertificateReplacementDraft extends Entity
     private $expiryDate;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="include_in_mismatch_file", type="boolean", length=1, nullable=true)
      */
     private $includeInMismatchFile;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="include_in_passes_file", type="boolean", length=1, nullable=true)
      */
     private $includeInPassFile;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_deleted", type="boolean", length=1, nullable=false)
      */
     private $deleted = 0;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_vin_vrm_expiry_changed", type="boolean", length=1, nullable=true)
      */
@@ -149,7 +149,7 @@ class CertificateReplacementDraft extends Entity
     private $motTest;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="mot_test_version", type="integer", length=11, nullable=false)
      */
@@ -170,7 +170,7 @@ class CertificateReplacementDraft extends Entity
     private $odometerUnit;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="odometer_value", type="integer", length=11, nullable=true)
      */
@@ -245,11 +245,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param CountryOfRegistration $countryOfRegistration
+     *
      * @return CertificateReplacementDraft
      */
     public function setCountryOfRegistration($countryOfRegistration)
     {
         $this->countryOfRegistration = $countryOfRegistration;
+
         return $this;
     }
 
@@ -263,11 +265,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param CertificateChangeDifferentTesterReason $differentTesterReason
+     *
      * @return CertificateReplacementDraft
      */
     public function setDifferentTesterReason($differentTesterReason)
     {
         $this->differentTesterReason = $differentTesterReason;
+
         return $this;
     }
 
@@ -281,11 +285,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param EmptyVinReason $emptyVinReason
+     *
      * @return CertificateReplacementDraft
      */
     public function setEmptyVinReason($emptyVinReason)
     {
         $this->emptyVinReason = $emptyVinReason;
+
         return $this;
     }
 
@@ -299,11 +305,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param EmptyVrmReason $emptyVrmReason
+     *
      * @return CertificateReplacementDraft
      */
     public function setEmptyVrmReason($emptyVrmReason)
     {
         $this->emptyVrmReason = $emptyVrmReason;
+
         return $this;
     }
 
@@ -317,16 +325,18 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param \DateTime $expiryDate
+     *
      * @return CertificateReplacementDraft
      */
     public function setExpiryDate($expiryDate)
     {
         $this->expiryDate = $expiryDate;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIncludeInMismatchFile()
     {
@@ -334,17 +344,19 @@ class CertificateReplacementDraft extends Entity
     }
 
     /**
-     * @param boolean $includeInMismatchFile
+     * @param bool $includeInMismatchFile
+     *
      * @return CertificateReplacementDraft
      */
     public function setIncludeInMismatchFile($includeInMismatchFile)
     {
         $this->includeInMismatchFile = $includeInMismatchFile;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIncludeInPassFile()
     {
@@ -352,17 +364,19 @@ class CertificateReplacementDraft extends Entity
     }
 
     /**
-     * @param boolean $includeInPassFile
+     * @param bool $includeInPassFile
+     *
      * @return CertificateReplacementDraft
      */
     public function setIncludeInPassFile($includeInPassFile)
     {
         $this->includeInPassFile = $includeInPassFile;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDeleted()
     {
@@ -370,17 +384,19 @@ class CertificateReplacementDraft extends Entity
     }
 
     /**
-     * @param boolean $deleted
+     * @param bool $deleted
+     *
      * @return CertificateReplacementDraft
      */
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isVinVrmExpiryChanged()
     {
@@ -388,12 +404,14 @@ class CertificateReplacementDraft extends Entity
     }
 
     /**
-     * @param boolean $vinVrmExpiryChanged
+     * @param bool $vinVrmExpiryChanged
+     *
      * @return CertificateReplacementDraft
      */
     public function setVinVrmExpiryChanged($vinVrmExpiryChanged)
     {
         $this->vinVrmExpiryChanged = $vinVrmExpiryChanged;
+
         return $this;
     }
 
@@ -407,11 +425,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param Make $make
+     *
      * @return CertificateReplacementDraft
      */
     public function setMake($make)
     {
         $this->make = $make;
+
         return $this;
     }
 
@@ -425,11 +445,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param string $makeName
+     *
      * @return CertificateReplacementDraft
      */
     public function setMakeName($makeName)
     {
         $this->makeName = $makeName;
+
         return $this;
     }
 
@@ -443,11 +465,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param ModelDetail $modelDetail
+     *
      * @return CertificateReplacementDraft
      */
     public function setModelDetail($modelDetail)
     {
         $this->modelDetail = $modelDetail;
+
         return $this;
     }
 
@@ -461,11 +485,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param Model $model
+     *
      * @return CertificateReplacementDraft
      */
     public function setModel($model)
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -479,11 +505,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param string $modelName
+     *
      * @return CertificateReplacementDraft
      */
     public function setModelName($modelName)
     {
         $this->modelName = $modelName;
+
         return $this;
     }
 
@@ -497,11 +525,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param MotTest $motTest
+     *
      * @return CertificateReplacementDraft
      */
     public function setMotTest($motTest)
     {
         $this->motTest = $motTest;
+
         return $this;
     }
 
@@ -515,11 +545,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param int $motTestVersion
+     *
      * @return CertificateReplacementDraft
      */
     public function setMotTestVersion($motTestVersion)
     {
         $this->motTestVersion = $motTestVersion;
+
         return $this;
     }
 
@@ -533,11 +565,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param string $odometerResultType
+     *
      * @return CertificateReplacementDraft
      */
     public function setOdometerResultType($odometerResultType)
     {
         $this->odometerResultType = $odometerResultType;
+
         return $this;
     }
 
@@ -551,11 +585,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param string $odometerUnit
+     *
      * @return CertificateReplacementDraft
      */
     public function setOdometerUnit($odometerUnit)
     {
         $this->odometerUnit = $odometerUnit;
+
         return $this;
     }
 
@@ -569,11 +605,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param int $odometerValue
+     *
      * @return CertificateReplacementDraft
      */
     public function setOdometerValue($odometerValue)
     {
         $this->odometerValue = $odometerValue;
+
         return $this;
     }
 
@@ -587,11 +625,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param Colour $primaryColour
+     *
      * @return CertificateReplacementDraft
      */
     public function setPrimaryColour($primaryColour)
     {
         $this->primaryColour = $primaryColour;
+
         return $this;
     }
 
@@ -605,11 +645,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param string $reasonForReplacement
+     *
      * @return CertificateReplacementDraft
      */
     public function setReasonForReplacement($reasonForReplacement)
     {
         $this->reasonForReplacement = $reasonForReplacement;
+
         return $this;
     }
 
@@ -623,11 +665,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param Colour $secondaryColour
+     *
      * @return CertificateReplacementDraft
      */
     public function setSecondaryColour($secondaryColour)
     {
         $this->secondaryColour = $secondaryColour;
+
         return $this;
     }
 
@@ -641,11 +685,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param Site $vehicleTestingStation
+     *
      * @return CertificateReplacementDraft
      */
     public function setVehicleTestingStation($vehicleTestingStation)
     {
         $this->vehicleTestingStation = $vehicleTestingStation;
+
         return $this;
     }
 
@@ -659,11 +705,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param string $vrm
+     *
      * @return CertificateReplacementDraft
      */
     public function setVrm($vrm)
     {
         $this->vrm = $vrm;
+
         return $this;
     }
 
@@ -677,11 +725,13 @@ class CertificateReplacementDraft extends Entity
 
     /**
      * @param string $vin
+     *
      * @return CertificateReplacementDraft
      */
     public function setVin($vin)
     {
         $this->vin = $vin;
+
         return $this;
     }
 }

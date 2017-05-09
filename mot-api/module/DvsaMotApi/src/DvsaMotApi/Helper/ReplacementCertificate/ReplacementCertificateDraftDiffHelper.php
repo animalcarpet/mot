@@ -11,13 +11,13 @@ use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaEntities\Entity\CertificateReplacementDraft;
 
 /**
- * Class ReplacementCertificateDraftDiffHelper
+ * Class ReplacementCertificateDraftDiffHelper.
  */
 class ReplacementCertificateDraftDiffHelper
 {
     /**
      * Returns a list of properties on a draft that are different
-     * from these on a MOT test associaciated with it
+     * from these on a MOT test associaciated with it.
      *
      * @param CertificateReplacementDraft $draft
      *
@@ -53,7 +53,6 @@ class ReplacementCertificateDraftDiffHelper
             $data [] = 'registration';
         }
 
-
         if ($motTest->getMake() && $motTest->getModel()) {
             $testMakeId = $motTest->getMake() ? $motTest->getMake()->getCode() : null;
             $draftMakeId = $draft->getMake() ? $draft->getMake()->getCode() : null;
@@ -79,7 +78,6 @@ class ReplacementCertificateDraftDiffHelper
                 $data[] = 'model';
             }
         }
-
 
         $testCorId = $motTest->getCountryOfRegistration() ? $motTest->getCountryOfRegistration()->getId() : null;
         $draftCorId = $draft->getCountryOfRegistration() ? $draft->getCountryOfRegistration()->getId() : null;

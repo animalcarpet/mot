@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Action;
-
 
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
@@ -20,13 +18,13 @@ use Zend\Stdlib\ParametersInterface;
 
 class ChangeSecurityQuestionTwoActionTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  ChangeSecurityQuestionsService $changeSecurityQuestionsSessionService */
+    /** @var ChangeSecurityQuestionsService $changeSecurityQuestionsSessionService */
     private $changeSecurityQuestionsService;
 
-    /** @var  ChangeSecurityQuestionsStepService $changeSecurityQuestionsStepService */
+    /** @var ChangeSecurityQuestionsStepService $changeSecurityQuestionsStepService */
     private $changeSecurityQuestionsStepService;
 
-    /** @var  SecurityQuestionSet $securityQuestionSet */
+    /** @var SecurityQuestionSet $securityQuestionSet */
     private $securityQuestionSet;
 
     /** @var Request $request */
@@ -147,6 +145,7 @@ class ChangeSecurityQuestionTwoActionTest extends \PHPUnit_Framework_TestCase
             $this->changeSecurityQuestionsService,
             $this->changeSecurityQuestionsStepService
         );
+
         return $action;
     }
 

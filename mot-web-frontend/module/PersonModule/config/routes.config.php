@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\PersonModule\Controller\AddAnnualAssessmentCertificatesController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\TestQualityInformationController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\RemoveAnnualAssessmentCertificatesController;
@@ -37,57 +36,57 @@ return [
     'router' => [
         'routes' => [
             ContextProvider::YOUR_PROFILE_PARENT_ROUTE => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/your-profile',
+                    'route' => '/your-profile',
                     'defaults' => [
                         'controller' => PersonProfileController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
                     'change-security-questions' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'    => '/change-security-questions',
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/change-security-questions',
                             'defaults' => [
                                 'controller' => ChangeSecurityQuestionsController::class,
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'question-one' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/question-one',
+                                    'route' => '/question-one',
                                     'defaults' => [
                                         'controller' => ChangeSecurityQuestionOneController::class,
                                     ],
                                 ],
                             ],
                             'question-two' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/question-two',
+                                    'route' => '/question-two',
                                     'defaults' => [
                                         'controller' => ChangeSecurityQuestionTwoController::class,
                                     ],
                                 ],
                             ],
                             'review' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/review',
+                                    'route' => '/review',
                                     'defaults' => [
                                         'controller' => ChangeSecurityQuestionsReviewController::class,
                                     ],
                                 ],
                             ],
                             'confirmation' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'controller' => ChangeSecurityQuestionsConfirmationController::class,
                                     ],
@@ -147,7 +146,7 @@ return [
                             'route' => '/driving-licence',
                             'defaults' => [
                                 'controller' => DrivingLicenceControllerFactory::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -158,7 +157,7 @@ return [
                                     'route' => '/summary',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'summary'
+                                        'action' => 'summary',
                                     ],
                                 ],
                             ],
@@ -168,7 +167,7 @@ return [
                                     'route' => '/delete',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'delete'
+                                        'action' => 'delete',
                                     ],
                                 ],
                             ],
@@ -185,21 +184,21 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'trade-roles'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/trade-roles',
-                            'defaults'    => [
+                    'trade-roles' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/trade-roles',
+                            'defaults' => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
                             ],
                         ],
                     ],
                     'annual-assessment-certificates' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/annual-assessment-certificates',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/annual-assessment-certificates',
+                            'defaults' => [
                                 'controller' => ViewAnnualAssessmentCertificatesController::class,
                                 'action' => 'view',
                             ],
@@ -207,15 +206,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'A|B',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => AddAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -233,16 +232,16 @@ return [
                                 ],
                             ],
                             'edit' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/:certificateId/edit',
+                                    'route' => '/:group/:certificateId/edit',
                                     'constraints' => [
                                         'group' => 'A|B',
-                                        'certificateId' => '[0-9]+'
+                                        'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => EditAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'edit',
+                                        'action' => 'edit',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -260,16 +259,16 @@ return [
                                 ],
                             ],
                             'remove' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/remove/:certificateId',
+                                    'route' => '/:group/remove/:certificateId',
                                     'constraints' => [
                                         'group' => 'A|B',
                                         'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => RemoveAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -277,10 +276,10 @@ return [
                         ],
                     ],
                     'qualification-details' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/qualification-details',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/qualification-details',
+                            'defaults' => [
                                 'controller' => QualificationDetailsController::class,
                                 'action' => 'view',
                             ],
@@ -288,15 +287,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'a|b',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => QualificationDetailsController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -366,32 +365,32 @@ return [
                         ],
                     ],
                     'remove-ae-role' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/remove-ae-role/:entityId/:positionId',
+                            'route' => '/remove-ae-role/:entityId/:positionId',
                             'constraints' => [
-                                'entityId'   => '[0-9]+',
+                                'entityId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => UserTradeRolesController::class,
-                                'action' => 'removeAeRole'
-                            ]
-                        ]
+                                'action' => 'removeAeRole',
+                            ],
+                        ],
                     ],
                     'remove-vts-role' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/remove-vts-role/:entityId/:positionId',
+                            'route' => '/remove-vts-role/:entityId/:positionId',
                             'constraints' => [
-                                'entityId'   => '[0-9]+',
+                                'entityId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => UserTradeRolesController::class,
-                                'action' => 'removeVtsRole'
-                            ]
-                        ]
+                                'action' => 'removeVtsRole',
+                            ],
+                        ],
                     ],
                     'test-quality-information' => [
                         'type' => 'segment',
@@ -438,21 +437,21 @@ return [
                             ],
                         ],
                     ],
-                    'change-password'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'    => '/change-password',
+                    'change-password' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/change-password',
                             'defaults' => [
                                 'controller' => PasswordControllerFactory::class,
-                                'action' => 'changePassword'
+                                'action' => 'changePassword',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'confirmation' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'action' => 'confirmation',
                                     ],
@@ -462,9 +461,9 @@ return [
 
                     ],
                     'security-settings' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/security-settings',
+                            'route' => '/security-settings',
                             'defaults' => [
                                 'controller' => PersonProfileController::class,
                                 'action' => 'securitySettings',
@@ -477,7 +476,7 @@ return [
                             'route' => '/username-recover',
                             'defaults' => [
                                 'controller' => UserProfileControllerFactory::class,
-                                'action' => 'usernameRecover'
+                                'action' => 'usernameRecover',
                             ],
                         ],
                         'may_terminate' => true,
@@ -488,7 +487,7 @@ return [
                                     'route' => '/ok',
                                     'defaults' => [
                                         'controller' => UserProfileControllerFactory::class,
-                                        'action' => 'usernameRecoverOk'
+                                        'action' => 'usernameRecoverOk',
                                     ],
                                 ],
                             ],
@@ -519,23 +518,23 @@ return [
                         ],
                     ],
                     'tester-mot-test-log' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/mot-test-log',
+                            'route' => '/mot-test-log',
                             'defaults' => [
                                 'controller' => TesterMotTestLogController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'download'    => [
-                                'type'    => 'segment',
+                            'download' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/csv',
-                                    'defaults'    => [
+                                    'route' => '/csv',
+                                    'defaults' => [
                                         'controller' => TesterMotTestLogController::class,
-                                        'action'     => 'downloadCsv',
+                                        'action' => 'downloadCsv',
                                     ],
                                 ],
                             ],
@@ -549,7 +548,7 @@ return [
                     'route' => '/user-admin/user/[:id]',
                     'defaults' => [
                         'controller' => PersonProfileController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
@@ -595,7 +594,7 @@ return [
                             'route' => '/email/change',
                             'defaults' => [
                                 'controller' => EmailAddressController::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may-terminate' => true,
@@ -606,7 +605,7 @@ return [
                             'route' => '/driving-licence',
                             'defaults' => [
                                 'controller' => DrivingLicenceControllerFactory::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -617,7 +616,7 @@ return [
                                     'route' => '/summary',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'summary'
+                                        'action' => 'summary',
                                     ],
                                 ],
                             ],
@@ -627,27 +626,27 @@ return [
                                     'route' => '/delete',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'delete'
+                                        'action' => 'delete',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'trade-roles'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/trade-roles',
-                            'defaults'    => [
+                    'trade-roles' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/trade-roles',
+                            'defaults' => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
                             ],
                         ],
                     ],
                     'annual-assessment-certificates' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/annual-assessment-certificates',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/annual-assessment-certificates',
+                            'defaults' => [
                                 'controller' => ViewAnnualAssessmentCertificatesController::class,
                                 'action' => 'view',
                             ],
@@ -655,15 +654,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'A|B',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => AddAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -681,16 +680,16 @@ return [
                                 ],
                             ],
                             'edit' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/:certificateId/edit',
+                                    'route' => '/:group/:certificateId/edit',
                                     'constraints' => [
                                         'group' => 'A|B',
-                                        'certificateId' => '[0-9]+'
+                                        'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => EditAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'edit',
+                                        'action' => 'edit',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -708,16 +707,16 @@ return [
                                 ],
                             ],
                             'remove' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/remove/:certificateId',
+                                    'route' => '/:group/remove/:certificateId',
                                     'constraints' => [
                                         'group' => 'A|B',
                                         'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => RemoveAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -725,10 +724,10 @@ return [
                         ],
                     ],
                     'qualification-details' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/qualification-details',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/qualification-details',
+                            'defaults' => [
                                 'controller' => QualificationDetailsController::class,
                                 'action' => 'view',
                             ],
@@ -736,15 +735,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'a|b',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => QualificationDetailsController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -814,32 +813,32 @@ return [
                         ],
                     ],
                     'remove-ae-role' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/remove-ae-role/:entityId/:positionId',
+                            'route' => '/remove-ae-role/:entityId/:positionId',
                             'constraints' => [
-                                'entityId'   => '[0-9]+',
+                                'entityId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => UserTradeRolesController::class,
-                                'action' => 'removeAeRole'
-                            ]
-                        ]
+                                'action' => 'removeAeRole',
+                            ],
+                        ],
                     ],
                     'remove-vts-role' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/remove-vts-role/:entityId/:positionId',
+                            'route' => '/remove-vts-role/:entityId/:positionId',
                             'constraints' => [
-                                'entityId'   => '[0-9]+',
+                                'entityId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => UserTradeRolesController::class,
-                                'action' => 'removeVtsRole'
-                            ]
-                        ]
+                                'action' => 'removeVtsRole',
+                            ],
+                        ],
                     ],
                     'manage-user-internal-role' => [
                         'type' => 'Segment',
@@ -880,7 +879,7 @@ return [
                                 ],
                                 'may_terminate' => true,
                             ],
-                        ]
+                        ],
                     ],
                     'test-quality-information' => [
                         'type' => 'segment',
@@ -927,21 +926,21 @@ return [
                             ],
                         ],
                     ],
-                    'change-password'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'    => '/change-password',
+                    'change-password' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/change-password',
                             'defaults' => [
                                 'controller' => PasswordControllerFactory::class,
-                                'action' => 'changePassword'
+                                'action' => 'changePassword',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'confirmation' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'action' => 'confirmation',
                                     ],
@@ -956,7 +955,7 @@ return [
                             'route' => '/username-recover',
                             'defaults' => [
                                 'controller' => UserProfileControllerFactory::class,
-                                'action' => 'usernameRecover'
+                                'action' => 'usernameRecover',
                             ],
                         ],
                         'may_terminate' => true,
@@ -967,7 +966,7 @@ return [
                                     'route' => '/ok',
                                     'defaults' => [
                                         'controller' => UserProfileControllerFactory::class,
-                                        'action' => 'usernameRecoverOk'
+                                        'action' => 'usernameRecoverOk',
                                     ],
                                 ],
                             ],
@@ -1024,7 +1023,7 @@ return [
                             'route' => '/password-reset',
                             'defaults' => [
                                 'controller' => UserProfileControllerFactory::class,
-                                'action' => 'passwordReset'
+                                'action' => 'passwordReset',
                             ],
                         ],
                         'may_terminate' => true,
@@ -1035,7 +1034,7 @@ return [
                                     'route' => '/ok',
                                     'defaults' => [
                                         'controller' => UserProfileControllerFactory::class,
-                                        'action' => 'passwordResetOk'
+                                        'action' => 'passwordResetOk',
                                     ],
                                 ],
                             ],
@@ -1045,7 +1044,7 @@ return [
                                     'route' => '/nok',
                                     'defaults' => [
                                         'controller' => UserProfileControllerFactory::class,
-                                        'action' => 'passwordResetNok'
+                                        'action' => 'passwordResetNok',
                                     ],
                                 ],
                             ],
@@ -1092,7 +1091,7 @@ return [
                     'route' => '/vehicle-testing-station/[:vehicleTestingStationId]/user/[:id]',
                     'defaults' => [
                         'controller' => PersonProfileController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
@@ -1138,7 +1137,7 @@ return [
                             'route' => '/email/change',
                             'defaults' => [
                                 'controller' => EmailAddressController::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may-terminate' => true,
@@ -1149,7 +1148,7 @@ return [
                             'route' => '/driving-licence',
                             'defaults' => [
                                 'controller' => DrivingLicenceControllerFactory::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -1160,7 +1159,7 @@ return [
                                     'route' => '/summary',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'summary'
+                                        'action' => 'summary',
                                     ],
                                 ],
                             ],
@@ -1170,27 +1169,27 @@ return [
                                     'route' => '/delete',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'delete'
+                                        'action' => 'delete',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'trade-roles'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/trade-roles',
-                            'defaults'    => [
+                    'trade-roles' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/trade-roles',
+                            'defaults' => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
                             ],
                         ],
                     ],
                     'annual-assessment-certificates' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/annual-assessment-certificates',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/annual-assessment-certificates',
+                            'defaults' => [
                                 'controller' => ViewAnnualAssessmentCertificatesController::class,
                                 'action' => 'view',
                             ],
@@ -1198,15 +1197,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'A|B',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => AddAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1224,16 +1223,16 @@ return [
                                 ],
                             ],
                             'edit' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/:certificateId/edit',
+                                    'route' => '/:group/:certificateId/edit',
                                     'constraints' => [
                                         'group' => 'A|B',
                                         'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => EditAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'edit',
+                                        'action' => 'edit',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1251,16 +1250,16 @@ return [
                                 ],
                             ],
                             'remove' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/remove/:certificateId',
+                                    'route' => '/:group/remove/:certificateId',
                                     'constraints' => [
                                         'group' => 'A|B',
                                         'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => RemoveAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1268,10 +1267,10 @@ return [
                         ],
                     ],
                     'qualification-details' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/qualification-details',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/qualification-details',
+                            'defaults' => [
                                 'controller' => QualificationDetailsController::class,
                                 'action' => 'view',
                             ],
@@ -1279,15 +1278,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'a|b',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => QualificationDetailsController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1341,15 +1340,15 @@ return [
                                 ],
                             ],
                             'remove' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/remove',
+                                    'route' => '/:group/remove',
                                     'constraints' => [
                                         'group' => 'a|b',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => QualificationDetailsController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1357,32 +1356,32 @@ return [
                         ],
                     ],
                     'remove-ae-role' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/remove-ae-role/:entityId/:positionId',
+                            'route' => '/remove-ae-role/:entityId/:positionId',
                             'constraints' => [
-                                'entityId'   => '[0-9]+',
+                                'entityId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => UserTradeRolesController::class,
-                                'action' => 'removeAeRole'
-                            ]
-                        ]
+                                'action' => 'removeAeRole',
+                            ],
+                        ],
                     ],
                     'remove-vts-role' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/remove-vts-role/:entityId/:positionId',
+                            'route' => '/remove-vts-role/:entityId/:positionId',
                             'constraints' => [
-                                'entityId'   => '[0-9]+',
+                                'entityId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => UserTradeRolesController::class,
-                                'action' => 'removeVtsRole'
-                            ]
-                        ]
+                                'action' => 'removeVtsRole',
+                            ],
+                        ],
                     ],
                     'test-quality-information' => [
                         'type' => 'segment',
@@ -1414,21 +1413,21 @@ return [
                             ],
                         ],
                     ],
-                    'change-password'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'    => '/change-password',
+                    'change-password' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/change-password',
                             'defaults' => [
                                 'controller' => PasswordControllerFactory::class,
-                                'action' => 'changePassword'
+                                'action' => 'changePassword',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'confirmation' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'action' => 'confirmation',
                                     ],
@@ -1442,7 +1441,7 @@ return [
                             'route' => '/username-recover',
                             'defaults' => [
                                 'controller' => UserProfileControllerFactory::class,
-                                'action' => 'usernameRecover'
+                                'action' => 'usernameRecover',
                             ],
                         ],
                         'may_terminate' => true,
@@ -1453,7 +1452,7 @@ return [
                                     'route' => '/ok',
                                     'defaults' => [
                                         'controller' => UserProfileControllerFactory::class,
-                                        'action' => 'usernameRecoverOk'
+                                        'action' => 'usernameRecoverOk',
                                     ],
                                 ],
                             ],
@@ -1524,7 +1523,7 @@ return [
                     'route' => '/authorised-examiner/[:authorisedExaminerId]/user/[:id]',
                     'defaults' => [
                         'controller' => PersonProfileController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
@@ -1570,7 +1569,7 @@ return [
                             'route' => '/email/change',
                             'defaults' => [
                                 'controller' => EmailAddressController::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may-terminate' => true,
@@ -1581,7 +1580,7 @@ return [
                             'route' => '/driving-licence',
                             'defaults' => [
                                 'controller' => DrivingLicenceControllerFactory::class,
-                                'action' => 'index'
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -1592,7 +1591,7 @@ return [
                                     'route' => '/summary',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'summary'
+                                        'action' => 'summary',
                                     ],
                                 ],
                             ],
@@ -1602,27 +1601,27 @@ return [
                                     'route' => '/delete',
                                     'defaults' => [
                                         'controller' => DrivingLicenceControllerFactory::class,
-                                        'action' => 'delete'
+                                        'action' => 'delete',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'trade-roles'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/trade-roles',
-                            'defaults'    => [
+                    'trade-roles' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/trade-roles',
+                            'defaults' => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
                             ],
                         ],
                     ],
                     'annual-assessment-certificates' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/annual-assessment-certificates',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/annual-assessment-certificates',
+                            'defaults' => [
                                 'controller' => ViewAnnualAssessmentCertificatesController::class,
                                 'action' => 'view',
                             ],
@@ -1630,15 +1629,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'A|B',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => AddAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1656,16 +1655,16 @@ return [
                                 ],
                             ],
                             'edit' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/:certificateId/edit',
+                                    'route' => '/:group/:certificateId/edit',
                                     'constraints' => [
                                         'group' => 'A|B',
-                                        'certificateId' => '[0-9]+'
+                                        'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => EditAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'edit',
+                                        'action' => 'edit',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1683,16 +1682,16 @@ return [
                                 ],
                             ],
                             'remove' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/remove/:certificateId',
+                                    'route' => '/:group/remove/:certificateId',
                                     'constraints' => [
                                         'group' => 'A|B',
                                         'certificateId' => '[0-9]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => RemoveAnnualAssessmentCertificatesController::class,
-                                        'action'     => 'remove',
+                                        'action' => 'remove',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1700,10 +1699,10 @@ return [
                         ],
                     ],
                     'qualification-details' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/qualification-details',
-                            'defaults'    => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/qualification-details',
+                            'defaults' => [
                                 'controller' => QualificationDetailsController::class,
                                 'action' => 'view',
                             ],
@@ -1711,15 +1710,15 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [
                             'add' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/:group/add',
+                                    'route' => '/:group/add',
                                     'constraints' => [
                                         'group' => 'a|b',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => QualificationDetailsController::class,
-                                        'action'     => 'add',
+                                        'action' => 'add',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -1789,18 +1788,18 @@ return [
                         ],
                     ],
                     'remove-vts-role' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/remove-vts-role/:entityId/:positionId',
+                            'route' => '/remove-vts-role/:entityId/:positionId',
                             'constraints' => [
-                                'entityId'   => '[0-9]+',
+                                'entityId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => UserTradeRolesController::class,
-                                'action' => 'removeVtsRole'
-                            ]
-                        ]
+                                'action' => 'removeVtsRole',
+                            ],
+                        ],
                     ],
                     'test-quality-information' => [
                         'may_terminate' => true,
@@ -1832,21 +1831,21 @@ return [
                             ],
                         ],
                     ],
-                    'change-password'              => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'    => '/change-password',
+                    'change-password' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/change-password',
                             'defaults' => [
                                 'controller' => PasswordControllerFactory::class,
-                                'action' => 'changePassword'
+                                'action' => 'changePassword',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'confirmation' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'action' => 'confirmation',
                                     ],
@@ -1861,7 +1860,7 @@ return [
                             'route' => '/username-recover',
                             'defaults' => [
                                 'controller' => UserProfileControllerFactory::class,
-                                'action' => 'usernameRecover'
+                                'action' => 'usernameRecover',
                             ],
                         ],
                         'may_terminate' => true,
@@ -1872,7 +1871,7 @@ return [
                                     'route' => '/ok',
                                     'defaults' => [
                                         'controller' => UserProfileControllerFactory::class,
-                                        'action' => 'usernameRecoverOk'
+                                        'action' => 'usernameRecoverOk',
                                     ],
                                 ],
                             ],

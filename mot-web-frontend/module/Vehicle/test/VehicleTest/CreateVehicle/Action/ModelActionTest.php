@@ -40,7 +40,7 @@ class ModelActionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::MOT_TEST_START)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $this->buildAction()->execute(new Request());
     }
@@ -92,7 +92,6 @@ class ModelActionTest extends \PHPUnit_Framework_TestCase
         $this->mockIsPost(true, $this->getMockPostData());
         $this->withModelFromMakeInSession();
 
-
         $this->createVehicleStepService
             ->expects($this->once())
             ->method('getStep')
@@ -111,7 +110,6 @@ class ModelActionTest extends \PHPUnit_Framework_TestCase
         $this->mockIsPost(true, $this->getMockPostData());
         $this->withModelFromMakeInSession();
 
-
         $this->createVehicleStepService
             ->expects($this->once())
             ->method('getStep')
@@ -126,7 +124,7 @@ class ModelActionTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ModelForm::MODEL => 'Other',
-            ModelForm::OTHER => 'CarModel'
+            ModelForm::OTHER => 'CarModel',
         ];
     }
 

@@ -25,6 +25,4 @@ class MotTestServiceFactory implements FactoryInterface
 
         return new MotTestService($token, $configOverride);
     }
-
-
 }

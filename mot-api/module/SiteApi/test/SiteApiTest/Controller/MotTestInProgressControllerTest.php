@@ -51,7 +51,7 @@ class MotTestInProgressControllerTest extends AbstractRestfulControllerTestCase
                         'id' => self::SITE_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'getAllForSite',
                         'params' => [self::SITE_ID],
@@ -71,7 +71,7 @@ class MotTestInProgressControllerTest extends AbstractRestfulControllerTestCase
                         'id' => self::SITE_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'getCountForSite',
                         'params' => [self::SITE_ID],

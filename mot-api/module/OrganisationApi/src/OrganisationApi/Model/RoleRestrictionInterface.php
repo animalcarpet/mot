@@ -6,7 +6,7 @@ use DvsaCommonApi\Service\Validator\ErrorSchema;
 use DvsaEntities\Entity\Person;
 
 /**
- * Interface RoleRestrictionInterface
+ * Interface RoleRestrictionInterface.
  */
 interface RoleRestrictionInterface
 {

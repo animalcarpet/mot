@@ -5,18 +5,16 @@ namespace DvsaElasticSearch\Query;
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * Class SuperSearchQuery
+ * Class SuperSearchQuery.
  *
  * I answer all the type of search and redirect to the good service.
- *
- * @package DvsaElasticSearch\Query
  */
-class SuperSearchQuery {
-
+class SuperSearchQuery
+{
     /**
      * @param SearchParam $searchParams
-     * @param IFbQuery $databaseFallBack
-     * @param array $optionalMotTestTypes
+     * @param IFbQuery    $databaseFallBack
+     * @param array       $optionalMotTestTypes
      *
      * @return
      */

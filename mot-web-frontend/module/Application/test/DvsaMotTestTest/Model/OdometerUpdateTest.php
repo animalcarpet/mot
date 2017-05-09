@@ -1,12 +1,11 @@
 <?php
+
 namespace DvsaMotTest\Model;
 
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class OdometerUpdateTest
- *
- * @package DvsaMotTest\Model
+ * Class OdometerUpdateTest.
  */
 class OdometerUpdateTest extends PHPUnit_Framework_TestCase
 {
@@ -23,7 +22,7 @@ class OdometerUpdateTest extends PHPUnit_Framework_TestCase
     public function testExchangeArraySetsPropertiesCorrectly()
     {
         $odometerUpdate = new OdometerUpdate();
-        $data  = ['odometer' => '23000'];
+        $data = ['odometer' => '23000'];
 
         $odometerUpdate->exchangeArray($data);
 

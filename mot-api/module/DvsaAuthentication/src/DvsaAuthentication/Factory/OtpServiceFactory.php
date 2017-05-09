@@ -3,7 +3,6 @@
 namespace DvsaAuthentication\Factory;
 
 use Doctrine\ORM\EntityManager;
-use Dvsa\OpenAM\OpenAMClientInterface;
 use DvsaAuthentication\Service\OtpFailedAttemptCounter;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthentication\Service\OtpServiceAdapter\PinOtpServiceAdapter;

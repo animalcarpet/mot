@@ -45,7 +45,7 @@ class CpmsNotificationTest extends PHPUnit_Framework_TestCase
             'rawNotification' => 'PAYMENT-NOTIFICATION-v1
                                              {
                                                 "origin": "CPMS/PAYMENT-SERVICE",
-                                                "notification_id":' . '"' . rand(0, 20000) .'"' .'
+                                                "notification_id":' .'"'.rand(0, 20000).'"'.'
                                                 "acknowledge_by": "2016-11-03 10:14:45",
                                                 "scheme": "MOT2",
                                                 "scope": "CARD",

@@ -1,6 +1,6 @@
 <?php
-namespace Dvsa\Mot\Frontend\PersonModule\Breadcrumbs;
 
+namespace Dvsa\Mot\Frontend\PersonModule\Breadcrumbs;
 
 use Application\Data\ApiPersonalDetails;
 use Dashboard\Model\PersonalDetails;
@@ -11,7 +11,6 @@ use DvsaClient\MapperFactory;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 use Zend\Mvc\Controller\AbstractActionController;
-
 
 class PersonProfileBreadcrumbs implements AutoWireableInterface
 {
@@ -34,8 +33,7 @@ class PersonProfileBreadcrumbs implements AutoWireableInterface
         MapperFactory $mapperFactory,
         PersonProfileGuardBuilder $personProfileGuardBuilder,
         ApiPersonalDetails $apiPersonalDetails
-    )
-    {
+    ) {
         $this->contextProvider = $contextProvider;
         $this->mapperFactory = $mapperFactory;
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
@@ -43,7 +41,8 @@ class PersonProfileBreadcrumbs implements AutoWireableInterface
     }
 
     /**
-     * @param int|string      $personId
+     * @param int|string $personId
+     *
      * @return array
      */
     public function getBreadcrumbs($personId, AbstractActionController $controller, $currentStep = null)
@@ -119,7 +118,7 @@ class PersonProfileBreadcrumbs implements AutoWireableInterface
             $breadcrumbs += [PersonProfileController::CONTENT_HEADER_TYPE__USER_SEARCH => $userSearchUrl, $personName => $profileUrl];
         }
 
-        if(!empty($currentStep)) {
+        if (!empty($currentStep)) {
             $breadcrumbs += [$currentStep => ''];
         }
 
@@ -129,7 +128,7 @@ class PersonProfileBreadcrumbs implements AutoWireableInterface
     public function getRoute()
     {
         $context = $this->contextProvider->getContext();
-        switch($context) {
+        switch ($context) {
             case ContextProvider::YOUR_PROFILE_CONTEXT:
                 return ContextProvider::YOUR_PROFILE_PARENT_ROUTE;
                 break;
@@ -159,6 +158,6 @@ class PersonProfileBreadcrumbs implements AutoWireableInterface
             return $url;
         }
 
-        return $url . '?' . http_build_query($params);
+        return $url.'?'.http_build_query($params);
     }
 }

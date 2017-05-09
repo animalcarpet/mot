@@ -26,8 +26,7 @@ class RegistrationController extends AbstractDvsaRestfulController
 
     public function __construct(
         RegistrationService $registrationService
-    )
-    {
+    ) {
         $this->registrationService = $registrationService;
     }
 

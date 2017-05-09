@@ -2,7 +2,7 @@
 use DvsaCommon\Constants\ReasonForRejection;
 
 $showRfrName = true;
-$descriptionValidation = "";
+$descriptionValidation = '';
 
 if (!isset($rfr)) {
     $rfr = [
@@ -11,7 +11,7 @@ if (!isset($rfr)) {
         'canBeDangerous' => true,
     ];
     $showRfrName = false;
-    $descriptionValidation = "required";
+    $descriptionValidation = 'required';
 }
 ?>
 
@@ -33,7 +33,7 @@ if (!isset($rfr)) {
                     <?php echo $this->csrfToken() ?>
                     <?php if ($showRfrName): ?>
                         <h4>
-                            <?php echo !empty($rfr['name']) ? $this->escapeHtml($rfr['name']) . ' - ': null;
+                            <?php echo !empty($rfr['name']) ? $this->escapeHtml($rfr['name']).' - ' : null;
                                 echo $this->escapeHtml($rfr['failureText']); ?>
                         </h4>
                     <?php endif; ?>
@@ -53,8 +53,8 @@ if (!isset($rfr)) {
                                             '' => 'n/a',
                                             'nearside' => 'nearside',
                                             'centre' => 'centre',
-                                            'offside' => 'offside'
-                                        ]
+                                            'offside' => 'offside',
+                                        ],
                                     ]); ?>
                             </div>
                         </div>
@@ -67,8 +67,8 @@ if (!isset($rfr)) {
                                         'options' => [
                                             '' => 'n/a',
                                             'front' => 'front',
-                                            'rear' => 'rear'
-                                        ]
+                                            'rear' => 'rear',
+                                        ],
                                     ]); ?>
                             </div>
                         </div>
@@ -83,8 +83,8 @@ if (!isset($rfr)) {
                                             'upper' => 'upper',
                                             'lower' => 'lower',
                                             'inner' => 'inner',
-                                            'outer' => 'outer'
-                                        ]
+                                            'outer' => 'outer',
+                                        ],
                                     ]); ?>
                             </div>
                         </div>
@@ -98,11 +98,13 @@ if (!isset($rfr)) {
                                 </textarea>
                             </div>
                         </div>
-                        <?php if($rfr['canBeDangerous']): ?>
+                        <?php if ($rfr['canBeDangerous']): ?>
                         <div class="row">
                             <div class="col-sm-8">
                                 <label for="dangerous">
-                                    <input type="checkbox" name="failureDangerous" id="dangerous" value="true" <?php if ($rfr['failureDangerous']) echo 'checked'; ?>>
+                                    <input type="checkbox" name="failureDangerous" id="dangerous" value="true" <?php if ($rfr['failureDangerous']) {
+                                        echo 'checked';
+                                    } ?>>
                                     Failure is dangerous
                                 </label>
                             </div>
@@ -123,7 +125,7 @@ if (!isset($rfr)) {
     </div>
     <!-- /.modal-dialog -->
 
-   <?php echo $this->partial("modalMessages"); ?>
+   <?php echo $this->partial('modalMessages'); ?>
 </div><!-- /.modal -->
 
 
@@ -169,7 +171,7 @@ if (!isset($rfr)) {
                 }
                 
                 if (data.redirectUrl) {
-                    location.href = data.redirectUrl + '#' + '<?php echo $this->escapeJs($rfr['type'] . '_' . $rfr['id']); ?>';
+                    location.href = data.redirectUrl + '#' + '<?php echo $this->escapeJs($rfr['type'].'_'.$rfr['id']); ?>';
                     location.reload();
                 } else {
                     updateMessagesPane(data.data);

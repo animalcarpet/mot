@@ -1,4 +1,5 @@
 <?php
+
 namespace Organisation\UpdateAeProperty\Process;
 
 use Core\Formatting\AddressFormatter;
@@ -28,15 +29,15 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
 {
     private $propertyName = UpdateAePropertyAction::AE_CREATE_AEP_PROPERTY;
     private $permission = PermissionAtOrganisation::AUTHORISED_EXAMINER_PRINCIPAL_CREATE;
-    private $submitButtonText = "Continue";
-    private $successfulEditMessage = "%s has been added as a Authorised Examiner Principal.";
-    private $formPageTitle = "Add a principal";
-    private $formPartial = "organisation/update-ae-property/partials/add-principle";
+    private $submitButtonText = 'Continue';
+    private $successfulEditMessage = '%s has been added as a Authorised Examiner Principal.';
+    private $formPageTitle = 'Add a principal';
+    private $formPartial = 'organisation/update-ae-property/partials/add-principle';
     private $personMapper;
-    protected $reviewPageTitle = "Review new Principal";
-    protected $reviewPageLede = "";
-    protected $reviewPageButtonText = "Add Principal";
-    private $aepName = "";
+    protected $reviewPageTitle = 'Review new Principal';
+    protected $reviewPageLede = '';
+    protected $reviewPageButtonText = 'Add Principal';
+    private $aepName = '';
 
     public function __construct(MapperFactory $mapperFactory, OrganisationMapper $organisationMapper, Url $urlHelper)
     {
@@ -77,7 +78,7 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
     public function update($formData)
     {
         $dob = new \DateTime();
-        $dob->setDate((int)$formData[AepForm::FIELD_DOB_YEAR], (int)$formData[AepForm::FIELD_DOB_MONTH], (int)$formData[AepForm::FIELD_DOB_DAY]);
+        $dob->setDate((int) $formData[AepForm::FIELD_DOB_YEAR], (int) $formData[AepForm::FIELD_DOB_MONTH], (int) $formData[AepForm::FIELD_DOB_DAY]);
 
         $formData[DateOfBirthInput::FIELD] = $dob->format(DateTimeApiFormat::FORMAT_ISO_8601_DATE_ONLY);
 
@@ -105,11 +106,11 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
         $name = $this->getAepName($formData);
 
         $dob = new \DateTime();
-        $dob->setDate((int)$formData[AepForm::FIELD_DOB_YEAR], (int)$formData[AepForm::FIELD_DOB_MONTH], (int)$formData[AepForm::FIELD_DOB_DAY]);
+        $dob->setDate((int) $formData[AepForm::FIELD_DOB_YEAR], (int) $formData[AepForm::FIELD_DOB_MONTH], (int) $formData[AepForm::FIELD_DOB_DAY]);
 
-        $table->newRow("name")->setLabel("Name")->setValue($name);
-        $table->newRow("dob")->setLabel("Date of birth")->setValue($dob->format(DateTimeDisplayFormat::FORMAT_DATE));
-        $table->newRow("address")->setLabel("Address")
+        $table->newRow('name')->setLabel('Name')->setValue($name);
+        $table->newRow('dob')->setLabel('Date of birth')->setValue($dob->format(DateTimeDisplayFormat::FORMAT_DATE));
+        $table->newRow('address')->setLabel('Address')
             ->setValue((new AddressFormatter())->escapeAddressToMultiLine(
                 $formData[AddressLine1Input::FIELD],
                 $formData[AddressLine2Input::FIELD],
@@ -118,8 +119,7 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
                 $formData[TownInput::FIELD],
                 $formData[CountryInput::FIELD],
                 $formData[PostcodeInput::FIELD]
-            )
-                , false);
+            ), false);
 
         return $table;
     }
@@ -141,6 +141,7 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
 
     /**
      * @param array $formData
+     *
      * @return string
      */
     private function getAepName(array $formData = [])
@@ -148,7 +149,7 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
         if ($formData) {
             $nameData = [$formData[FirstNameInput::FIELD], $formData[MiddleNameInput::FIELD], $formData[FamilyNameInput::FIELD]];
             $nameData = array_filter($nameData);
-            $this->aepName = implode(" ", $nameData);
+            $this->aepName = implode(' ', $nameData);
         }
 
         return $this->aepName;

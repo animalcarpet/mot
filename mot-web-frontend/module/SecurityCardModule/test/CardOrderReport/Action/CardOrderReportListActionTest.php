@@ -16,10 +16,9 @@ use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
-use \DateTime;
-use \stdClass;
+use DateTime;
+use stdClass;
 use PHPUnit_Framework_TestCase;
-use DateInterval;
 
 class CardOrderReportListActionTest extends PHPUnit_Framework_TestCase
 {
@@ -67,9 +66,8 @@ class CardOrderReportListActionTest extends PHPUnit_Framework_TestCase
 
     public function testExecute_whenOrderCountsAreRequested_shouldRequestLastSevenDays_whenAfter10AM()
     {
-
         $currentDateTime = DateTime::createFromFormat('Y-m-d H:i:s', '2009-02-15 13:00:00');
-        $currentDate = DateTime::createFromFormat('Y-m-d', '2009-02-15')->setTime(0,0,0);
+        $currentDate = DateTime::createFromFormat('Y-m-d', '2009-02-15')->setTime(0, 0, 0);
 
         $rangeFrom = DateTime::createFromFormat('Y-m-d H:i:s', '2009-02-08 10:00:00');
         $rangeTo = DateTime::createFromFormat('Y-m-d H:i:s', '2009-02-15 10:00:00');
@@ -94,7 +92,7 @@ class CardOrderReportListActionTest extends PHPUnit_Framework_TestCase
     public function testExecute_whenOrderCountsAreRequested_shouldRequestLastSevenDays_whenBefore10AM()
     {
         $currentDateTime = DateTime::createFromFormat('Y-m-d H:i:s', '2009-02-15 09:00:00');
-        $currentDate = DateTime::createFromFormat('Y-m-d', '2009-02-15')->setTime(0,0,0);
+        $currentDate = DateTime::createFromFormat('Y-m-d', '2009-02-15')->setTime(0, 0, 0);
 
         $rangeFrom = DateTime::createFromFormat('Y-m-d H:i:s', '2009-02-07 10:00:00');
         $rangeTo = DateTime::createFromFormat('Y-m-d H:i:s', '2009-02-14 10:00:00');
@@ -119,7 +117,7 @@ class CardOrderReportListActionTest extends PHPUnit_Framework_TestCase
     public function testExecute_whenOrderReportIsRequested_shouldMapDailyCounts()
     {
         $currentDateTime = DateTime::createFromFormat('Y-m-d H:i:s', '2009-02-15 09:00:00');
-        $currentDate = DateTime::createFromFormat('Y-m-d', '2009-02-15')->setTime(0,0,0);
+        $currentDate = DateTime::createFromFormat('Y-m-d', '2009-02-15')->setTime(0, 0, 0);
 
         $this->testDateTimeHolder
             ->method('getUserCurrent')
@@ -145,7 +143,7 @@ class CardOrderReportListActionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($dailyCountCollection->getCount(), count($dailyCountRows));
 
-        for ($i = 0; $i < $dailyCountCollection->getCount(); $i++) {
+        for ($i = 0; $i < $dailyCountCollection->getCount(); ++$i) {
             $actDate = new \DateTime($dailyCountCollection->getItem($i)->getActivationDate());
             $formattedActivationDate = $actDate->format(DateUtils::DATETIME_FORMAT);
 
@@ -156,6 +154,7 @@ class CardOrderReportListActionTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param array $rawItems
+     *
      * @return Collection
      */
     private function buildDailyCountCollection(array $rawItems)
@@ -175,6 +174,7 @@ class CardOrderReportListActionTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param Collection $collection
+     *
      * @return $this
      */
     private function withDailyCountCollection(Collection $collection)

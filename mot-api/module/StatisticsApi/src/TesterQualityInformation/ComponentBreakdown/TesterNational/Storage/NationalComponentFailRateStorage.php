@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Storage;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Storage\S3KeyGenerator;
@@ -12,16 +13,16 @@ class NationalComponentFailRateStorage
 
     public function __construct(
         KeyValueStorageInterface $statisticsStorage
-    )
-    {
+    ) {
         $this->storage = $statisticsStorage;
         $this->keyGenerator = new S3KeyGenerator();
     }
 
     /**
-     * @param int $year
-     * @param int $month
+     * @param int    $year
+     * @param int    $month
      * @param string $group
+     *
      * @return NationalComponentStatisticsDto
      */
     public function get($year, $month, $group)

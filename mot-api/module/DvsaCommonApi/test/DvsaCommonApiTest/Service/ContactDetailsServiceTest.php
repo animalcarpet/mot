@@ -25,21 +25,21 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 class ContactDetailsServiceTest extends AbstractServiceTest
 {
-    /** @var  EntityManager|MockObj */
+    /** @var EntityManager|MockObj */
     private $mockEntityManager;
-    /** @var  AddressService|MockObj */
+    /** @var AddressService|MockObj */
     private $mockAddressSrv;
-    /** @var  PhoneContactTypeRepository|MockObj */
+    /** @var PhoneContactTypeRepository|MockObj */
     private $mockPhoneContactRepo;
-    /** @var  ContactDetailsValidator|MockObj */
+    /** @var ContactDetailsValidator|MockObj */
     private $mockContactDetailValidator;
-    /** @var  ContactDetailsService|MockObj */
+    /** @var ContactDetailsService|MockObj */
     private $service;
 
     public function setUp()
     {
         $this->mockEntityManager = XMock::of(EntityManager::class);
-        $this->mockAddressSrv = XMock::of(AddressService::class);//, ['persist']);
+        $this->mockAddressSrv = XMock::of(AddressService::class); //, ['persist']);
         $this->mockPhoneContactRepo = XMock::of(PhoneContactTypeRepository::class);
         $this->mockContactDetailValidator = XMock::of(ContactDetailsValidator::class);
 
@@ -90,7 +90,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
 
         $this->mockMethod($this->mockEntityManager, 'persist', $this->once());
 
-        $actualDetailsEntity = ($detailsEntity instanceof ContactDetail ? $detailsEntity : new ContactDetail);
+        $actualDetailsEntity = ($detailsEntity instanceof ContactDetail ? $detailsEntity : new ContactDetail());
         $actualDetailsEntity = $this->service->setContactDetailsFromDto($dto, $actualDetailsEntity);
 
         if ($dto->getAddress() instanceof AddressDto && $dto->getAddress()->isEmpty()) {
@@ -116,7 +116,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
         $contactDto->setAddress($addressDto);
 
         //  --  details entity  --
-        $addressEntity = (new Address)
+        $addressEntity = (new Address())
             ->setAddressLine1('unit address exists')
             ->setTown('unt town exists');
 
@@ -125,9 +125,9 @@ class ContactDetailsServiceTest extends AbstractServiceTest
 
         return [
             [
-                'entity'           => null,
-                'dto'              => $contactDto,
-                'expectSetAddress' => new Address,
+                'entity' => null,
+                'dto' => $contactDto,
+                'expectSetAddress' => new Address(),
             ],
             [$detailsEntity, $contactDto, $addressEntity],
             [
@@ -180,7 +180,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
 
         $actualDetailsEntity = $this->service->setContactDetailsFromDto(
             $contactDto,
-            ($detailsEntity instanceof ContactDetail ? $detailsEntity : new ContactDetail)
+            ($detailsEntity instanceof ContactDetail ? $detailsEntity : new ContactDetail())
         );
 
         $this->assertEquals(
@@ -200,7 +200,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
             ->setContactType(PhoneContactTypeCode::BUSINESS);
 
         //  --  entity  --
-        $phoneEntity = (new Phone)
+        $phoneEntity = (new Phone())
             ->setNumber($number)
             ->setIsPrimary(true)
             ->setContactType((new PhoneContactType())->setCode(PhoneContactTypeCode::BUSINESS));
@@ -210,45 +210,44 @@ class ContactDetailsServiceTest extends AbstractServiceTest
         return [
             //  --  contact has not phones, dto has -> should add phone to contact  --
             [
-                'entity'             => null,
-                'dto'                => $this->clonePhoneDto($phoneDto),
-                'typeCode'           => PhoneContactTypeCode::BUSINESS,
-                'expectEntity'        => $this->clonePhone($phoneEntity),
+                'entity' => null,
+                'dto' => $this->clonePhoneDto($phoneDto),
+                'typeCode' => PhoneContactTypeCode::BUSINESS,
+                'expectEntity' => $this->clonePhone($phoneEntity),
                 'expectRemoveEntity' => null,
             ],
             //  --  contact has phones, dto has number -> should update phone at contact  --
             [
-                'entity'             => $this->clonePhone($phoneEntity2),
-                'dto'                => $this->clonePhoneDto($phoneDto)->setId(999)->setNumber('+A99881'),
-                'typeCode'           => PhoneContactTypeCode::BUSINESS,
-                'expectEntity'        => $this->clonePhone($phoneEntity2)->setNumber('+A99881'),
+                'entity' => $this->clonePhone($phoneEntity2),
+                'dto' => $this->clonePhoneDto($phoneDto)->setId(999)->setNumber('+A99881'),
+                'typeCode' => PhoneContactTypeCode::BUSINESS,
+                'expectEntity' => $this->clonePhone($phoneEntity2)->setNumber('+A99881'),
                 'expectRemoveEntity' => null,
             ],
             //  --  contact has phones, dto has number -> should find primary nr and update at contact  --
             [
-                'entity'             => $this->clonePhone($phoneEntity),
-                'dto'                => $this->clonePhoneDto($phoneDto)->setNumber('+A99881'),
-                'typeCode'           => PhoneContactTypeCode::BUSINESS,
-                'expectEntity'        => $this->clonePhone($phoneEntity)->setNumber('+A99881'),
+                'entity' => $this->clonePhone($phoneEntity),
+                'dto' => $this->clonePhoneDto($phoneDto)->setNumber('+A99881'),
+                'typeCode' => PhoneContactTypeCode::BUSINESS,
+                'expectEntity' => $this->clonePhone($phoneEntity)->setNumber('+A99881'),
                 'expectRemoveEntity' => null,
             ],
             //  --  details has phone, dto without number -> phone should be removed from contact    --
             [
-                'entity'             => $phoneEntity2,
-                'dto'                => $this->clonePhoneDto($phoneDto)->setNumber(''),
-                'typeCode'           => null,
-                'expectEntity'        => null,
+                'entity' => $phoneEntity2,
+                'dto' => $this->clonePhoneDto($phoneDto)->setNumber(''),
+                'typeCode' => null,
+                'expectEntity' => null,
                 'expectRemoveEntity' => $phoneEntity2,
             ],
         ];
     }
 
-
     /**
-     * @param Email $emailEntity
+     * @param Email    $emailEntity
      * @param EmailDto $emailDto
-     * @param Email $expect
-     * @param Email $expectRemoveEntity
+     * @param Email    $expect
+     * @param Email    $expectRemoveEntity
      *
      * @internal param Email $detailsEntity
      * @dataProvider dataProviderTestUpdateEmailsInContactDetails
@@ -274,7 +273,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
 
         $actualDetailsEntity = $this->service->setContactDetailsFromDto(
             $contactDto,
-            ($detailsEntity instanceof ContactDetail ? $detailsEntity : new ContactDetail)
+            ($detailsEntity instanceof ContactDetail ? $detailsEntity : new ContactDetail())
         );
 
         $this->assertEquals(
@@ -285,7 +284,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
 
     public function dataProviderTestUpdateEmailsInContactDetails()
     {
-        $email = 'contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN;
+        $email = 'contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN;
 
         //  --  dto --
         $emailDto = (new EmailDto())
@@ -302,30 +301,30 @@ class ContactDetailsServiceTest extends AbstractServiceTest
         return [
             //  --  contact has not emails, dto has -> should add email to contact  --
             [
-                'entity'             => null,
-                'dto'                => $this->cloneEmailDto($emailDto),
-                'expect'             => $this->cloneEmail($emailEntity),
+                'entity' => null,
+                'dto' => $this->cloneEmailDto($emailDto),
+                'expect' => $this->cloneEmail($emailEntity),
                 'expectRemoveEntity' => null,
             ],
             //  --  contact has email, dto has address -> should update email by Id at contact  --
             [
-                'entity'             => $this->cloneEmail($emailEntity2),
-                'dto'                => $this->cloneEmailDto($emailDto)->setId(999)->setEmail('contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN),
-                'expect'             => $this->cloneEmail($emailEntity2)->setEmail('contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN),
+                'entity' => $this->cloneEmail($emailEntity2),
+                'dto' => $this->cloneEmailDto($emailDto)->setId(999)->setEmail('contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN),
+                'expect' => $this->cloneEmail($emailEntity2)->setEmail('contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN),
                 'expectRemoveEntity' => null,
             ],
             //  --  contact has email, dto has address -> should find primary email and update at contact  --
             [
-                'entity'             => $this->cloneEmail($emailEntity),
-                'dto'                => $this->cloneEmailDto($emailDto)->setEmail('contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN),
-                'expect'             => $this->cloneEmail($emailEntity)->setEmail('contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN),
+                'entity' => $this->cloneEmail($emailEntity),
+                'dto' => $this->cloneEmailDto($emailDto)->setEmail('contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN),
+                'expect' => $this->cloneEmail($emailEntity)->setEmail('contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN),
                 'expectRemoveEntity' => null,
             ],
             //  --  details has email, dto without address -> email should be removed from contact    --
             [
-                'entity'             => $emailEntity2,
-                'dto'                => $this->cloneEmailDto($emailDto)->setEmail(''),
-                'expect'             => null,
+                'entity' => $emailEntity2,
+                'dto' => $this->cloneEmailDto($emailDto)->setEmail(''),
+                'expect' => null,
                 'expectRemoveEntity' => $emailEntity2,
             ],
         ];
@@ -335,7 +334,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
     {
         $email = (new EmailDto())
             ->setIsPrimary(true)
-            ->setEmail('contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN);
+            ->setEmail('contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN);
         $phone = (new PhoneDto())
             ->setIsPrimary(true)
             ->setNumber('0123456789');
@@ -361,7 +360,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
             'town' => 'town',
             'postcode' => 'postcode',
             'phoneNumber' => '0123456789',
-            'email' => 'contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN,
+            'email' => 'contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN,
             'faxNumber' => '0123456789',
         ];
 
@@ -408,7 +407,7 @@ class ContactDetailsServiceTest extends AbstractServiceTest
             ->setPostcode('postcode');
         $email = (new Email())
             ->setIsPrimary(true)
-            ->setEmail('contactdetailsservicetest@' . EmailAddressValidator::TEST_DOMAIN);
+            ->setEmail('contactdetailsservicetest@'.EmailAddressValidator::TEST_DOMAIN);
         $phone = (new Phone())
             ->setIsPrimary(true)
             ->setNumber('0123456789')

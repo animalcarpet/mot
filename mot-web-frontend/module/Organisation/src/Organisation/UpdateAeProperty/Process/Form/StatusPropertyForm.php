@@ -15,7 +15,7 @@ use Zend\Validator\NotEmpty;
 class StatusPropertyForm extends Form
 {
     const FIELD_STATUS = UpdateAePropertyAction::AE_STATUS_PROPERTY;
-    const STATUS_EMPTY_MSG = "you must choose a status";
+    const STATUS_EMPTY_MSG = 'you must choose a status';
 
     /**
      * @var AuthForAuthorisedExaminerStatusCatalog
@@ -54,7 +54,7 @@ class StatusPropertyForm extends Form
         $statusInArrayValidator = (new InArray())
             ->setHaystack(AuthorisationForAuthorisedExaminerStatus::getPossibleAuthForAuthorisedExaminerStatuses()
             );
-        $statusInArrayValidator->setMessage(" you must choose a status");
+        $statusInArrayValidator->setMessage(' you must choose a status');
 
         $statusInput = new Input(self::FIELD_STATUS);
         $statusInput

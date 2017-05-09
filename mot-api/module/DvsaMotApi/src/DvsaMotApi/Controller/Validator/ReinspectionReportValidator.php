@@ -8,14 +8,13 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 
 class ReinspectionReportValidator
 {
-
     const FIELD_OUTCOME = 'reinspection-outcome';
     const ERROR_MSG_OUTCOME_REQUIRED = 'Please enter a valid reinspection outcome';
 
     protected $data;
 
     /**
-     * Ctor: Saves the data for subsequent validation
+     * Ctor: Saves the data for subsequent validation.
      *
      * @param $data Array
      */

@@ -2,13 +2,11 @@
 
 namespace TestSupport\Helper;
 
-use TestSupport\Helper\TestSupportRestClientHelper;
 use TestSupport\Model\Account;
 use DvsaCommon\UrlBuilder\NotificationUrlBuilder;
 
 class NotificationsHelper
 {
-
     const SITE_NOMINATION_ACCEPTED = 'SITE-NOMINATION-ACCEPTED';
     const SITE_NOMINATION_REJECTED = 'SITE-NOMINATION-REJECTED';
 
@@ -26,9 +24,12 @@ class NotificationsHelper
     }
 
     /**
-     * Return a list of notifications for any given Account
+     * Return a list of notifications for any given Account.
+     *
      * @param Account $account
+     *
      * @return array
+     *
      * @throws \Exception if the API responded in a unexpected fashion
      */
     public function getNotifications(Account $account)
@@ -43,14 +44,17 @@ class NotificationsHelper
         if (!isset($response['data'])) {
             throw new \Exception('Bad response from Rest Client');
         }
+
         return $response['data'];
     }
 
     /**
-     * Accept the notifications for the account with option to only accept a certain template type
-     * @param Account $account
-     * @param array $notifications
+     * Accept the notifications for the account with option to only accept a certain template type.
+     *
+     * @param Account  $account
+     * @param array    $notifications
      * @param int|null $templateIdFilter
+     *
      * @throws \Exception
      */
     public function acceptUnreadNotification(Account $account, array $notifications, $templateIdFilter = null)
@@ -59,25 +63,28 @@ class NotificationsHelper
     }
 
     /**
-     * Reject the notifications for the account with option to only accept a certain template type
+     * Reject the notifications for the account with option to only accept a certain template type.
+     *
      * @param Account $account
-     * @param array $notifications
-     * @param null $templateIdFilter
+     * @param array   $notifications
+     * @param null    $templateIdFilter
+     *
      * @throws \Exception
      */
     public function rejectUnreadNotifications(Account $account, array $notifications, $templateIdFilter = null)
     {
         $this->processUnreadNotifications($account, $notifications, self::SITE_NOMINATION_REJECTED, $templateIdFilter);
     }
-    
+
     /**
-     * Process any unread notifications marking them with the relevant action
-     * @param Account $account
-     * @param array $notifications
-     * @param string $action
+     * Process any unread notifications marking them with the relevant action.
+     *
+     * @param Account  $account
+     * @param array    $notifications
+     * @param string   $action
      * @param null|int $templateIdFilter
+     *
      * @throws \Exception if the rest client returns an unexpected response
-     * @return void
      */
     private function processUnreadNotifications(Account $account, array $notifications, $action, $templateIdFilter = null)
     {
@@ -86,7 +93,7 @@ class NotificationsHelper
                 'requestor' => [
                     'username' => $account->getUsername(),
                     'password' => $account->getPassword(),
-                ]
+                ],
             ]
         );
 
@@ -105,7 +112,7 @@ class NotificationsHelper
             $actionPath = NotificationUrlBuilder::of()->notification($notification['id'])->action()->toString();
             $return = $restClient->put($actionPath, ['action' => $action]);
 
-            if (! isset($return['data']) && $return['data'] === true) {
+            if (!isset($return['data']) && $return['data'] === true) {
                 throw new \Exception('Failed to action notification id '.$notification['id']);
             }
         }

@@ -11,17 +11,9 @@ use Report\Table\ColumnOptions;
 use Report\Table\Formatter as Formatter;
 use Report\Table\Formatter\Bold;
 use Report\Table\Table;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Mvc\Router\RouteMatch;
-use Zend\Mvc\Service\ViewHelperManagerFactory;
-use Zend\Server\Method\Prototype;
-use Zend\Stdlib\Hydrator\Reflection;
-use Zend\Test\PHPUnit\Controller\AbstractControllerTestCase;
 use Zend\View\Helper\Url;
-use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
 class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
@@ -31,7 +23,7 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
     /** @var PhpRenderer */
     private static $renderer;
 
-    /** @var  ColumnOptions */
+    /** @var ColumnOptions */
     private $columnOptions;
 
     public function setUp()
@@ -56,12 +48,12 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->columnOptions->{'set' . $method}($value);
+        $result = $this->columnOptions->{'set'.$method}($value);
         $this->assertInstanceOf(ColumnOptions::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->columnOptions->{$method}());
     }
 
@@ -75,7 +67,7 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'property' => 'field',
-                'value'    => 'testField',
+                'value' => 'testField',
             ],
             ['title', 'testTitle'],
             ['sortable', true],
@@ -88,12 +80,11 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
             ['escapeHtml', false, false],
             [
                 'property' => 'sub',
-                'value'    => $sub,
-                'expect'   => [new ColumnOptions($sub[0]), new ColumnOptions($sub[1])],
+                'value' => $sub,
+                'expect' => [new ColumnOptions($sub[0]), new ColumnOptions($sub[1])],
             ],
         ];
     }
-
 
     public function testGetSetTable()
     {
@@ -124,7 +115,7 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
     public function testGetSortCssClass($sortByField, SearchParamsDto $searchParams, $expect)
     {
         //  logical block: prepare objects
-        $table = new Table;
+        $table = new Table();
         $table->setSearchParams($searchParams);
 
         $this->columnOptions->setTable($table);
@@ -142,7 +133,7 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
     public function testGetUrl($sortByField, SearchParamsDto $searchParams, $expect)
     {
         //  logical block: prepare objects
-        $table = new Table;
+        $table = new Table();
         $table->setSearchParams($searchParams);
 
         $this->columnOptions->setTable($table);
@@ -155,10 +146,10 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
         //  locigal block: check
         $queryParams = [
             SearchParamConst::ROW_COUNT => 10,
-            SearchParamConst::PAGE_NR   => 1,
+            SearchParamConst::PAGE_NR => 1,
         ];
 
-        $expectUrl = '/?' . http_build_query($queryParams + $expect['queryParams']);
+        $expectUrl = '/?'.http_build_query($queryParams + $expect['queryParams']);
 
         $this->assertSame($expectUrl, $actual);
     }
@@ -171,42 +162,41 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
 
         return [
             [
-                'sortBy'       => 'testFieldA',
+                'sortBy' => 'testFieldA',
                 'searchParams' => $this->cloneObj($searchParams)
                     ->setSortDirection(SearchParamConst::SORT_DIRECTION_DESC),
-                'expect'       => [
-                    'css'         => ColumnOptions::SORT_CSS_DESC,
+                'expect' => [
+                    'css' => ColumnOptions::SORT_CSS_DESC,
                     'queryParams' => [
-                        SearchParamConst::SORT_BY        => 'testFieldA',
+                        SearchParamConst::SORT_BY => 'testFieldA',
                         SearchParamConst::SORT_DIRECTION => SearchParamConst::SORT_DIRECTION_ASC,
                     ],
-                ]
+                ],
             ],
             [
-                'sortBy'       => 'testFieldA',
+                'sortBy' => 'testFieldA',
                 'searchParams' => $searchParams,
-                'expect'       => [
-                    'css'         => ColumnOptions::SORT_CSS_ASC,
+                'expect' => [
+                    'css' => ColumnOptions::SORT_CSS_ASC,
                     'queryParams' => [
-                        SearchParamConst::SORT_BY        => 'testFieldA',
+                        SearchParamConst::SORT_BY => 'testFieldA',
                         SearchParamConst::SORT_DIRECTION => SearchParamConst::SORT_DIRECTION_DESC,
                     ],
                 ],
             ],
             [
-                'sortBy'       => 'testFieldB',
+                'sortBy' => 'testFieldB',
                 'searchParams' => $searchParams,
-                'expect'       => [
-                    'css'         => '',
+                'expect' => [
+                    'css' => '',
                     'queryParams' => [
-                        SearchParamConst::SORT_BY        => 'testFieldB',
+                        SearchParamConst::SORT_BY => 'testFieldB',
                         SearchParamConst::SORT_DIRECTION => SearchParamConst::SORT_DIRECTION_ASC,
                     ],
                 ],
             ],
         ];
     }
-
 
     /**
      * @dataProvider dataProviderTestRenderCellContent
@@ -257,7 +247,7 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
                             ['field' => 'fieldC'],
                         ]
                     ),
-                'expect' => $row['fieldA'] . $row['fieldC'],
+                'expect' => $row['fieldA'].$row['fieldC'],
             ],
             //  with formatter & value is for column
             [
@@ -270,7 +260,6 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
-
 
     /**
      * @return SearchParamsDto
@@ -286,7 +275,7 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
             return self::$renderer;
         }
 
-        $appTestConfig = include getcwd() . '/test/test.config.php';
+        $appTestConfig = include getcwd().'/test/test.config.php';
         Bootstrap::init($appTestConfig);
 
         /** @var \Zend\ServiceManager\ServiceManager $serviceManager */

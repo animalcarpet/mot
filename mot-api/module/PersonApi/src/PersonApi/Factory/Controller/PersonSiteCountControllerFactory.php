@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonSiteCountControllerFactory
+ * Class PersonSiteCountControllerFactory.
  *
  * Generates the PersonSiteCountController, injecting dependencies
  */

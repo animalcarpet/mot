@@ -11,9 +11,7 @@ use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\TwoFactorNominationNotificationService;
 use DvsaCommonTest\TestUtils\XMock;
-use GuzzleHttp\Exception\RequestException;
 use PHPUnit_Framework_TestCase;
-use Psr\Http\Message\RequestInterface;
 
 class SecurityCardServiceTest extends PHPUnit_Framework_TestCase
 {
@@ -39,12 +37,12 @@ class SecurityCardServiceTest extends PHPUnit_Framework_TestCase
 
         $authorisationCardService
             ->expects($this->any())
-            ->method("getSecurityCardForUser")
-            ->with("tester1")
+            ->method('getSecurityCardForUser')
+            ->with('tester1')
             ->willReturn($securityCard);
 
         $securityCardService = new SecurityCardService($authorisationCardService, $this->nominationService);
-        $actualSecurityCard = $securityCardService->getSecurityCardForUser("tester1");
+        $actualSecurityCard = $securityCardService->getSecurityCardForUser('tester1');
 
         $this->assertEquals($securityCard, $actualSecurityCard);
     }
@@ -55,12 +53,12 @@ class SecurityCardServiceTest extends PHPUnit_Framework_TestCase
 
         $authorisationCardService
             ->expects($this->any())
-            ->method("getSecurityCardForUser")
-            ->with("tester1")
+            ->method('getSecurityCardForUser')
+            ->with('tester1')
             ->will($this->throwException(new ResourceNotFoundException()));
 
         $securityCardService = new SecurityCardService($authorisationCardService, $this->nominationService);
-        $actualSecurityCard = $securityCardService->getSecurityCardForUser("tester1");
+        $actualSecurityCard = $securityCardService->getSecurityCardForUser('tester1');
 
         $this->assertNull($actualSecurityCard);
     }
@@ -73,12 +71,12 @@ class SecurityCardServiceTest extends PHPUnit_Framework_TestCase
 
         $authorisationCardService
             ->expects($this->any())
-            ->method("getSecurityCardOrders")
-            ->with("tester1")
+            ->method('getSecurityCardOrders')
+            ->with('tester1')
             ->willReturn($securityCardOrders);
 
         $securityCardService = new SecurityCardService($authorisationCardService, $this->nominationService);
-        $actualSecurityCardOrders = $securityCardService->getSecurityCardOrdersForUser("tester1");
+        $actualSecurityCardOrders = $securityCardService->getSecurityCardOrdersForUser('tester1');
 
         $this->assertEquals($securityCardOrders, $actualSecurityCardOrders);
     }
@@ -92,7 +90,7 @@ class SecurityCardServiceTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('2016-03-01 12:00:00', $actualCardOrder->getSubmittedOn());
     }
-    
+
     public function testCardOrderSendsNominationNotificationsIfOrderIsSuccessful()
     {
         $this->withSuccessfulCardOrder();
@@ -151,7 +149,7 @@ class SecurityCardServiceTest extends PHPUnit_Framework_TestCase
 
         $this->authorisationService
             ->expects($this->any())
-            ->method("getSecurityCardOrders")
+            ->method('getSecurityCardOrders')
             ->willReturn($securityCardOrders);
 
         return $this;
@@ -174,7 +172,7 @@ class SecurityCardServiceTest extends PHPUnit_Framework_TestCase
             'address2' => '',
             'address3' => '',
             'townOrCity' => '',
-            'postcode' => ''
+            'postcode' => '',
         ];
     }
 }

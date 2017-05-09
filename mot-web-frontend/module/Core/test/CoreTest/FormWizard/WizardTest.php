@@ -1,18 +1,18 @@
 <?php
+
 namespace CoreTest\FormWizard;
 
 use Core\FormWizard\StepList;
 use Core\FormWizard\Wizard;
 use CoreTest\FormWizard\Fake\FakeStep;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 
-class WizardTest extends  \PHPUnit_Framework_TestCase
+class WizardTest extends \PHPUnit_Framework_TestCase
 {
-    const FIRST_NAME_STEP = "first step name";
-    const SECOND_NAME_STEP = "second step name";
-    const THIRD_NAME_STEP = "third step name";
+    const FIRST_NAME_STEP = 'first step name';
+    const SECOND_NAME_STEP = 'second step name';
+    const THIRD_NAME_STEP = 'third step name';
 
-    private $formUuid = "UUUU-IIII-DDDD";
+    private $formUuid = 'UUUU-IIII-DDDD';
 
     /**
      * @dataProvider invalidStepList
@@ -35,72 +35,72 @@ class WizardTest extends  \PHPUnit_Framework_TestCase
                 $stepListWithInvalidFirstStep,
                 self::FIRST_NAME_STEP,
                 true,
-                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->executePost([])
+                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->executePost([]),
             ],
             [
                 $stepListWithInvalidFirstStep,
                 self::SECOND_NAME_STEP,
                 true,
-                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(["formUuid" => $this->formUuid])
+                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(['formUuid' => $this->formUuid]),
             ],
             [
                 $stepListWithInvalidFirstStep,
                 self::THIRD_NAME_STEP,
                 true,
-                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(["formUuid" => $this->formUuid])
+                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(['formUuid' => $this->formUuid]),
             ],
             [
                 $stepListWithInvalidFirstStep,
                 self::FIRST_NAME_STEP,
                 false,
-                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->executeGet()
+                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->executeGet(),
             ],
             [
                 $stepListWithInvalidFirstStep,
                 self::SECOND_NAME_STEP,
                 false,
-                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(["formUuid" => $this->formUuid])
+                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(['formUuid' => $this->formUuid]),
             ],
             [
                 $stepListWithInvalidFirstStep,
                 self::THIRD_NAME_STEP,
                 false,
-                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(["formUuid" => $this->formUuid])
+                $stepListWithInvalidFirstStep->get(self::FIRST_NAME_STEP)->getRoute(['formUuid' => $this->formUuid]),
             ],
             [
                 $stepListWithInvalidSecondStep,
                 self::FIRST_NAME_STEP,
                 true,
-                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->executePost([])
+                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->executePost([]),
             ],
             [
                 $stepListWithInvalidSecondStep,
                 self::SECOND_NAME_STEP,
                 true,
-                $stepListWithInvalidSecondStep->get(self::SECOND_NAME_STEP)->executePost([])
+                $stepListWithInvalidSecondStep->get(self::SECOND_NAME_STEP)->executePost([]),
             ],
             [
                 $stepListWithInvalidFirstStep,
                 self::THIRD_NAME_STEP,
                 true,
-                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->getRoute(["formUuid" => $this->formUuid])
-            ],[
+                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->getRoute(['formUuid' => $this->formUuid]),
+            ], [
                 $stepListWithInvalidSecondStep,
                 self::FIRST_NAME_STEP,
                 false,
-                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->executeGet()
+                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->executeGet(),
             ],
             [
                 $stepListWithInvalidSecondStep,
                 self::SECOND_NAME_STEP,
                 false,
-                $stepListWithInvalidSecondStep->get(self::SECOND_NAME_STEP)->executeGet()
+                $stepListWithInvalidSecondStep->get(self::SECOND_NAME_STEP)->executeGet(),
             ],
             [
                 $stepListWithInvalidFirstStep,
                 self::THIRD_NAME_STEP,
                 false,
-                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->getRoute(["formUuid" => $this->formUuid])
+                $stepListWithInvalidSecondStep->get(self::FIRST_NAME_STEP)->getRoute(['formUuid' => $this->formUuid]),
             ],
         ];
     }

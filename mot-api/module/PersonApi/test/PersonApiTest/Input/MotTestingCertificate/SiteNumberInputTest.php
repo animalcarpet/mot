@@ -2,11 +2,9 @@
 
 namespace PersonApiTest\Input\MotTestingCertificate;
 
-use Zend\Validator\NotEmpty;
 use PersonApi\Input\MotTestingCertificate\SiteNumberInput;
 use PersonApi\Service\Validator\MotTestingCertificate\SiteNumberValidator;
 use PersonApiTest\Input\BaseInput;
-use Zend\Validator\StringLength;
 use DvsaEntities\Entity\Site;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\SiteRepository;
@@ -22,11 +20,11 @@ class SiteNumberInputTest extends BaseInput
         $siteRepository = XMock::of(SiteRepository::class);
         $siteRepository
             ->expects($this->any())
-            ->method("getBySiteNumber")
+            ->method('getBySiteNumber')
             ->willReturn($site);
 
         $input = new SiteNumberInput($siteRepository);
-        $input->setValue("V123");
+        $input->setValue('V123');
 
         $this->assertTrue($input->isValid());
     }
@@ -35,23 +33,23 @@ class SiteNumberInputTest extends BaseInput
     {
         return [
             [
-                new Site()
+                new Site(),
             ],
             [
-                null
-            ]
+                null,
+            ],
         ];
     }
 
     public function testIsValidReturnsFalse()
     {
-        $siteNumber = "1";
+        $siteNumber = '1';
 
         $siteRepository = XMock::of(SiteRepository::class);
         $siteRepository
             ->expects($this->any())
-            ->method("getBySiteNumber")
-            ->willThrowException(new NotFoundException(""));
+            ->method('getBySiteNumber')
+            ->willThrowException(new NotFoundException(''));
 
         $input = new SiteNumberInput($siteRepository);
         $input->setValue($siteNumber);
@@ -59,7 +57,7 @@ class SiteNumberInputTest extends BaseInput
         $this->assertFalse($input->isValid($siteNumber));
         $messages = $input->getMessages();
 
-        $expectedMessages = [ SiteNumberValidator::MSG_NOT_FOUND => str_replace('%value%', $siteNumber, SiteNumberValidator::ERROR_NOT_EXISTS) ];
+        $expectedMessages = [SiteNumberValidator::MSG_NOT_FOUND => str_replace('%value%', $siteNumber, SiteNumberValidator::ERROR_NOT_EXISTS)];
 
         $this->assertCount(count($expectedMessages), $messages);
         $this->assertEquals($expectedMessages, $messages);

@@ -4,7 +4,7 @@ use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusBox;
 use DvsaCommon\Utility\TypeCheck;
 
-/** @var $sidebar \Core\ViewModel\Sidebar\GeneralSidebar */
+/* @var $sidebar \Core\ViewModel\Sidebar\GeneralSidebar */
 
 TypeCheck::assertInstance($sidebar, GeneralSidebar::class);
 
@@ -16,22 +16,24 @@ TypeCheck::assertInstance($sidebar, GeneralSidebar::class);
 
         <?php if ($sideBarItem instanceof GeneralSidebarStatusBox): ?>
 
-            <ul class="related__status" <?php if (!empty($sideBarItem->getId())) {echo 'id="' . $sideBarItem->getId() . '"';}?>>
+            <ul class="related__status" <?php if (!empty($sideBarItem->getId())) {
+    echo 'id="'.$sideBarItem->getId().'"';
+}?>>
 
                 <?php foreach ($sideBarItem->getItems() as $statusItem): ?>
-                    <li <?php echo ($statusItem->getHtmlId() ? 'id="' . $this->escapeHtmlAttr($statusItem->getHtmlId()). '"' : '') ?>>
+                    <li <?php echo $statusItem->getHtmlId() ? 'id="'.$this->escapeHtmlAttr($statusItem->getHtmlId()).'"' : '' ?>>
                         <span
                             class="<?php echo $statusItem->getBadge()->getCssClass() ?>">
-                            <?php echo($statusItem->escapeValue() ? $this->escapeHtml($statusItem->getValue()) : $statusItem->getValue()); ?>
+                            <?php echo $statusItem->escapeValue() ? $this->escapeHtml($statusItem->getValue()) : $statusItem->getValue(); ?>
                         </span>
                         <strong>
-                            <?php echo($statusItem->escapeKey() ? $this->escapeHtml($statusItem->getKey()) : $statusItem->getKey()); ?>
+                            <?php echo $statusItem->escapeKey() ? $this->escapeHtml($statusItem->getKey()) : $statusItem->getKey(); ?>
                         </strong>
                         <?php if ($statusItem->getSecondaryText() !== null): ?>
                             <br/>
                             <span
                                 class="text-secondary">
-                                <?php echo($statusItem->escapeSecondaryText() ? $this->escapeHtml($statusItem->getSecondaryText()) : $statusItem->getSecondaryText()); ?>
+                                <?php echo $statusItem->escapeSecondaryText() ? $this->escapeHtml($statusItem->getSecondaryText()) : $statusItem->getSecondaryText(); ?>
                             </span>
                         <?php endif; ?>
                     </li>
@@ -42,7 +44,9 @@ TypeCheck::assertInstance($sidebar, GeneralSidebar::class);
         <?php endif; ?>
 
         <?php if ($sideBarItem instanceof GeneralSidebarLinkList): ?>
-            <div class="related__section" <?php if (!empty($sideBarItem->getId())) {echo 'id="' . $sideBarItem->getId() . '"';}?>>
+            <div class="related__section" <?php if (!empty($sideBarItem->getId())) {
+    echo 'id="'.$sideBarItem->getId().'"';
+}?>>
                 <h2 class="related__section-title"><?php echo $this->escapeHtml($sideBarItem->getTitle()); ?></h2>
 
                 <ul class="related__section-links">

@@ -22,7 +22,7 @@ class EmailAddressControllerFactory implements FactoryInterface
     {
         $appServiceLocator = $controllerManager->getServiceLocator();
 
-        $authorisationService = $appServiceLocator->get("AuthorisationService");
+        $authorisationService = $appServiceLocator->get('AuthorisationService');
         $accountAdminService = $appServiceLocator->get(HelpdeskAccountAdminService::class);
         $testerGroupAuthorisationMapper = $appServiceLocator->get(TesterGroupAuthorisationMapper::class);
 

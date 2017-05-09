@@ -37,6 +37,7 @@ class RemoteAddress
         $remoteAddress->setUseProxy(true);
 
         self::$service = $remoteAddress;
+
         return self::$service;
     }
 }

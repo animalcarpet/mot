@@ -8,9 +8,8 @@ use DvsaFeature\FeatureToggles;
 
 class TwoFaFeatureToggleTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testIsEnabled() {
-
+    public function testIsEnabled()
+    {
         $this->assertTrue((new TwoFaFeatureToggle(new FeatureToggles([FeatureToggle::TWO_FA => true])))->isEnabled());
     }
 }

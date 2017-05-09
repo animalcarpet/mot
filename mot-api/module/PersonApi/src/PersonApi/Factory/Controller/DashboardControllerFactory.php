@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class DashboardControllerFactory
+ * Class DashboardControllerFactory.
  *
  * Generates the DashboardController, injecting dependencies
  */

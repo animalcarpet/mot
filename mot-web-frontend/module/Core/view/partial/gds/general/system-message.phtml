@@ -1,5 +1,5 @@
 <?php
-$escMessageType = (isset($type))? 'message--' . $this->escapeHtmlAttr($type) : 'message';
+$escMessageType = (isset($type)) ? 'message--'.$this->escapeHtmlAttr($type) : 'message';
 ?>
 
 <?php
@@ -7,7 +7,7 @@ if (!empty($messages)) {
     foreach ($messages as $message) {
         ?>
         <div class="<?php echo $escMessageType; ?>" id="validation-<?php echo $escMessageType; ?>">
-            <?php if (!empty($this->heading)): ?>
+            <?php if (!empty($this->heading)) : ?>
                 <h3 class="message__heading"><?php echo $this->escapeHtml($this->heading); ?></h3>
             <?php endif; ?>
 
@@ -22,6 +22,7 @@ if (!empty($messages)) {
             <?php endif; ?>
         </div>
         <?php
+
     }
 }
 ?>

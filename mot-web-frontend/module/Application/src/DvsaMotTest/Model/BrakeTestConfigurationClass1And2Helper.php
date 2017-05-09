@@ -8,7 +8,7 @@ use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface as ConfigDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 
 /**
- * Data model for configuration of brake test (vehicle class 1 and 2)
+ * Data model for configuration of brake test (vehicle class 1 and 2).
  */
 class BrakeTestConfigurationClass1And2Helper implements BrakeTestConfigurationHelperInterface
 {

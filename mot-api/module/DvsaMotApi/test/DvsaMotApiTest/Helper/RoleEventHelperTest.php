@@ -46,8 +46,8 @@ class RoleEventHelperTest extends \PHPUnit_Framework_TestCase
 
         $person = (new Person())
             ->setId($personId)
-            ->setFirstName("John")
-            ->setFamilyName("Rambo");
+            ->setFirstName('John')
+            ->setFamilyName('Rambo');
 
         $identity = XMock::of(Identity::class);
         $identity
@@ -65,14 +65,13 @@ class RoleEventHelperTest extends \PHPUnit_Framework_TestCase
             ->method('getIdentity')
             ->willReturn($identity);
 
-
         $user = (new Person())
             ->setId(123)
-            ->setFirstName("Marty")
-            ->setFamilyName("McFly");
+            ->setFirstName('Marty')
+            ->setFamilyName('McFly');
 
         $role = new PersonSystemRole();
-        $role->setFullName("DVSA Area Admin");
+        $role->setFullName('DVSA Area Admin');
 
         $this->identityProvider = $identityProvider;
         $this->person = $person;
@@ -97,7 +96,6 @@ class RoleEventHelperTest extends \PHPUnit_Framework_TestCase
         $description = $this->getDescription(EventDescription::DVSA_ROLE_ASSOCIATION_ASSIGN);
 
         $this->assertEvent($eventPersonMap, $description);
-
     }
 
     private function getDescription($eventDescription)
@@ -136,6 +134,7 @@ class RoleEventHelperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @return RoleEventHelper
+     *
      * @throws \Exception
      */
     private function createRoleEventHelper()

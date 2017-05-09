@@ -5,7 +5,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 
 /**
- * @var \Dvsa\Mot\ApiClient\Resource\Item\ReasonForCancel $reasonForCancel
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\ReasonForCancel
  */
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
@@ -31,7 +31,7 @@ if ($testStatus === MotTestStatusName::PASSED || $testStatus === MotTestStatusNa
     $testStatus = AbstractDvsaMotTestController::getTestStatusName($testStatus);
 }
 
-$title = 'Abort' . $testName;
+$title = 'Abort'.$testName;
 
 $this->headTitle($title);
 

@@ -5,7 +5,6 @@ namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Action;
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsConfirmationAction;
-use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsReviewAction;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsReviewController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsSessionService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsStepService;
@@ -13,9 +12,9 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class ChangeSecurityQuestionsConfirmationActionTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  ChangeSecurityQuestionsStepService */
+    /** @var ChangeSecurityQuestionsStepService */
     private $changeSecurityQuestionsStepService;
-    /** @var  ChangeSecurityQuestionsSessionService */
+    /** @var ChangeSecurityQuestionsSessionService */
     private $changeSecurityQuestionsSessionService;
 
     public function setUp()

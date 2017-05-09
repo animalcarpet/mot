@@ -18,18 +18,18 @@ use Zend\Mvc\Controller\Plugin\FlashMessenger;
 class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
 {
     const QUESTION_NB = 1;
-    const PERSON_ID   = 1;
+    const PERSON_ID = 1;
 
     /** @var SecurityQuestionViewModel */
     private $view;
 
-    /** @var  SecurityQuestionService */
+    /** @var SecurityQuestionService */
     private $service;
 
-    /** @var  \DvsaClient\Entity\Person */
+    /** @var \DvsaClient\Entity\Person */
     private $person;
 
-    /** @var  \DvsaCommon\Dto\Security\SecurityQuestionDto */
+    /** @var \DvsaCommon\Dto\Security\SecurityQuestionDto */
     private $question;
     private $messenger;
 
@@ -39,8 +39,8 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
             SecurityQuestionService::class,
             ['getQuestionNumber', 'getUserId', 'getSearchParams', 'getPerson', 'getQuestion']
         );
-        $this->person      = new Person();
-        $this->question    = new SecurityQuestionDto();
+        $this->person = new Person();
+        $this->question = new SecurityQuestionDto();
 
         /** @var PersonProfileUrlGenerator $personProfileUrlGenerator */
         $personProfileUrlGenerator = $this

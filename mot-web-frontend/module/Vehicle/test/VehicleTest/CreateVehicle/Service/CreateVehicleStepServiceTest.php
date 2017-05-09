@@ -82,12 +82,12 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
                 CreateVehicleStepService::DATE_STEP => false,
                 CreateVehicleStepService::COUNTRY_STEP => false,
                 CreateVehicleStepService::REVIEW_STEP => false,
-            ]
+            ],
         ];
 
         $this->createVehicleSessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(CreateVehicleSessionService::UNIQUE_KEY)
             ->willReturn($steps);
 
@@ -110,12 +110,12 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
                 CreateVehicleStepService::DATE_STEP => false,
                 CreateVehicleStepService::COUNTRY_STEP => false,
                 CreateVehicleStepService::REVIEW_STEP => false,
-            ]
+            ],
         ];
 
         $this->createVehicleSessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(CreateVehicleSessionService::UNIQUE_KEY)
             ->willReturn($steps);
 
@@ -128,7 +128,7 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->createVehicleSessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(CreateVehicleSessionService::UNIQUE_KEY)
             ->willReturn(null);
 
@@ -151,12 +151,12 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
                 CreateVehicleStepService::DATE_STEP => false,
                 CreateVehicleStepService::COUNTRY_STEP => false,
                 CreateVehicleStepService::REVIEW_STEP => false,
-            ]
+            ],
         ];
 
         $this->createVehicleSessionService
             ->expects($this->once())
-            ->method("load")
+            ->method('load')
             ->with(CreateVehicleSessionService::UNIQUE_KEY)
             ->willReturn($steps);
 
@@ -198,7 +198,7 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
                 CreateVehicleStepService::DATE_STEP => false,
                 CreateVehicleStepService::COUNTRY_STEP => false,
                 CreateVehicleStepService::REVIEW_STEP => false,
-            ]
+            ],
         ];
         $this->createVehicleSessionService
             ->expects($this->once())
@@ -227,7 +227,7 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
                 CreateVehicleStepService::DATE_STEP => false,
                 CreateVehicleStepService::COUNTRY_STEP => false,
                 CreateVehicleStepService::REVIEW_STEP => false,
-            ]
+            ],
         ];
 
         $this->createVehicleSessionService
@@ -249,7 +249,7 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
                 $stepName => false,
                 'security-question-2' => false,
                 'confirmation' => false,
-            ]
+            ],
         ];
 
         $stepResult = [
@@ -257,7 +257,7 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
                 $stepName => true,
                 'security-question-2' => false,
                 'confirmation' => false,
-            ]
+            ],
         ];
 
         $this->createVehicleSessionService
@@ -283,7 +283,7 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
     public function testStaticDataAlreadyStoredInSessionApiNotCalled()
     {
         $expected = [
-            'make' => 'ford'
+            'make' => 'ford',
         ];
 
         $this->createVehicleSessionService
@@ -308,7 +308,7 @@ class CreateVehicleStepServiceTest extends \PHPUnit_Framework_TestCase
     public function testUpdateStepDataWithValidStepAndStepIsSaved()
     {
         $expectedData = [
-            'field1' => 'testData'
+            'field1' => 'testData',
         ];
 
         $this->createVehicleSessionService

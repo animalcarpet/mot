@@ -3,11 +3,10 @@
 namespace DvsaMotTest\Model;
 
 /**
- * Class SlotDetails
+ * Class SlotDetails.
  */
 class SlotDetails
 {
-
     private $slots;
 
     private $slotsInUse;

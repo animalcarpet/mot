@@ -16,7 +16,6 @@ class GotoUrlValidatorServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactoryCreatesInstance()
     {
-
         $openAmClientOptionsMock = $this->getMockBuilder(OpenAMClientOptions::class)
             ->disableOriginalConstructor()
             ->setMethods(['getCookieDomain'])
@@ -24,7 +23,7 @@ class GotoUrlValidatorServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $openAmClientOptionsMock->expects($this->once())->method('getCookieDomain')->willReturn('.mot.gov.uk');
 
-        $sm = new ServiceManager;
+        $sm = new ServiceManager();
         $sm->setAllowOverride(true);
         $sm->setService(OpenAMClientOptions::class, $openAmClientOptionsMock);
 
@@ -32,6 +31,5 @@ class GotoUrlValidatorServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $urlValidator = $urlValidatorFactory->createService($sm);
 
         $this->assertInstanceOf(GotoUrlValidatorService::class, $urlValidator);
-
     }
 }

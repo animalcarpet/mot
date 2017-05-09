@@ -5,8 +5,7 @@ namespace DvsaClientTest\Entity;
 use DvsaClient\Entity\Person;
 
 /**
- * Class PersonTest
- * @package DvsaClient\test\DvsaClientTest\EntityTest
+ * Class PersonTest.
  */
 class PersonTest extends BaseEntityTestCase
 {

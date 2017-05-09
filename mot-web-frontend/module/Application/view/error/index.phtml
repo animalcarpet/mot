@@ -15,7 +15,7 @@ if ($this->showErrorsInFrontEnd): ?>
             $trace = $this->exception->getTraceAsString();
 
             if ($this->exception instanceof UnauthorisedException) {
-                $trace = $this->exception->getDebugInfo()['trace'] . "\n...\n" . $trace;
+                $trace = $this->exception->getDebugInfo()['trace']."\n...\n".$trace;
                 $file = $this->exception->getDebugInfo()['file'];
                 $line = $this->exception->getDebugInfo()['line'];
             }

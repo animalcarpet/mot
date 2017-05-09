@@ -1,6 +1,7 @@
 <?php
+
 return [
-    'modules'         => [
+    'modules' => [
         'DvsaFeature',
         'DoctrineModule',
         'DoctrineORMModule',
@@ -14,11 +15,11 @@ return [
         'DataCatalogApi',
         'VehicleApi',
         'DvsaAuthorisation',
-        'DvsaAuthentication'
+        'DvsaAuthentication',
     ],
     'test_namespaces' => [
-        'VehicleApiTest'    => __DIR__ . '/' . 'VehicleApiTest',
-        'DvsaCommonApiTest' => __DIR__ . '/../../DvsaCommonApi/test/DvsaCommonApiTest',
-        'DvsaMotApiTest'    => __DIR__ . '/../../DvsaMotApi/test/DvsaMotApiTest'
-    ]
+        'VehicleApiTest' => __DIR__.'/'.'VehicleApiTest',
+        'DvsaCommonApiTest' => __DIR__.'/../../DvsaCommonApi/test/DvsaCommonApiTest',
+        'DvsaMotApiTest' => __DIR__.'/../../DvsaMotApi/test/DvsaMotApiTest',
+    ],
 ];

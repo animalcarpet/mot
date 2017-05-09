@@ -18,7 +18,7 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
 <div class="info-notice">
     <p>
         If these are <strong>not the right results</strong> you can
-        <a href="<?php echo $this->url('mot-test-search') . '?' . $this->searchData ; ?>" id="go-back">go back</a>
+        <a href="<?php echo $this->url('mot-test-search').'?'.$this->searchData; ?>" id="go-back">go back</a>
     </p>
 </div>
 
@@ -97,7 +97,7 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
                                 [
                                     'status' => $motTest['status'],
                                     'url' => $motTest['link'],
-                                    'motTestNumber' => $motTest['motTestNumber']
+                                    'motTestNumber' => $motTest['motTestNumber'],
                                 ]
                             );
                             ?>
@@ -139,7 +139,7 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
 
                         <td>
                             <?php if (isset($motTest['siteNumber'])): ?>
-                                <a href="<?php echo VehicleTestingStationUrlBuilderWeb::byId($motTest['siteId']);?>">
+                                <a href="<?php echo VehicleTestingStationUrlBuilderWeb::byId($motTest['siteId']); ?>">
                                     <?php echo $this->escapeHtml($motTest['siteNumber']); ?>
                                 </a>
                             <?php else : ?>
@@ -186,7 +186,7 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
                     "aTargets": [7, 8, 9]
                 },
                 {
-                    'bVisible': false, 'aTargets': [<?php echo ($this->searchType) == 'vin' ?  '5' : '6' ?> ]
+                    'bVisible': false, 'aTargets': [<?php echo($this->searchType) == 'vin' ? '5' : '6' ?> ]
                 },
                 {
                     "bVisible": false, "aTargets": [0]
@@ -216,7 +216,7 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
             $(this).find('.chevron_toggleable').toggleClass('fa-chevron-up fa-chevron-down');
         });
 
-        <?php if( !empty ($comparedTest['motTestNumber']) && !empty ($comparedTest['motTestNumberToCompare'])): ?>
+        <?php if (!empty($comparedTest['motTestNumber']) && !empty($comparedTest['motTestNumberToCompare'])): ?>
             btnExpand.click();
         <?php endif; ?>
 

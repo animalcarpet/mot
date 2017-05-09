@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository;
 
 use Doctrine\ORM\AbstractQuery;
@@ -50,6 +51,7 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
         $this->setParameters($query, $params);
 
         $scalarResult = $query->getScalarResult();
+
         return $this->mapResult($scalarResult);
     }
 
@@ -71,7 +73,7 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
         $query->setParameter('irrelevantAssociationCodes',
             [
                 OrganisationSiteStatusCode::APPLIED,
-                OrganisationSiteStatusCode::UNKNOWN
+                OrganisationSiteStatusCode::UNKNOWN,
             ]
         );
         $query->setParameter('skippedRfrTypes', ReasonForRejection::getTestQualityInformationSkippedRfrTypes());

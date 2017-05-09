@@ -22,10 +22,9 @@ class RegisteredCardService
 
     /**
      * @param AuthenticationService $authenticationService
-     * @param AuthorisationService $authorisationServiceClient
+     * @param AuthorisationService  $authorisationServiceClient
      */
-    public function __construct
-    (
+    public function __construct(
         AuthenticationService $authenticationService,
         AuthorisationService $authorisationServiceClient
     ) {
@@ -34,8 +33,8 @@ class RegisteredCardService
     }
 
     /**
-     *
      * @param $pin
+     *
      * @return bool
      */
     public function validatePin($pin)
@@ -56,15 +55,18 @@ class RegisteredCardService
 
     /**
      * @param $pin
+     *
      * @return SecurityCardValidation
      */
-    public function getSecurityCardValidation($pin) {
+    public function getSecurityCardValidation($pin)
+    {
         $data = null;
         try {
             $data = $this->authorisationServiceClient->validatePersonSecurityCard($pin);
-            if($data->isPinValid() === true) {
+            if ($data->isPinValid() === true) {
                 $this->setAuthenticatedWith2FA();
             }
+
             return $data;
         } catch (RequestException $error) {
             return $data;
@@ -74,12 +76,14 @@ class RegisteredCardService
     /**
      * Sets the user as authenticated with 2FA.
      */
-    public function setAuthenticatedWith2FA() {
+    public function setAuthenticatedWith2FA()
+    {
         $identity = $this->authenticationService->getIdentity();
         $identity->setAuthenticatedWith2FA(true);
     }
 
-    public function isLockedOut() {
+    public function isLockedOut()
+    {
         return $this->authorisationServiceClient->pinLockedOut();
     }
 
@@ -87,9 +91,10 @@ class RegisteredCardService
     {
         try {
             $username = $this->authenticationService->getIdentity()->getUsername();
+
             return $this->authorisationServiceClient->getSecurityCardForUser($username)->getSerialNumber();
         } catch (ResourceNotFoundException $error) {
-            return "";
+            return '';
         }
     }
 
@@ -106,6 +111,7 @@ class RegisteredCardService
     {
         try {
             $username = $this->authenticationService->getIdentity()->getUsername();
+
             return $this->authorisationServiceClient->getSecurityCardForUser($username);
         } catch (ResourceNotFoundException $error) {
             return false;

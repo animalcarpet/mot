@@ -2,20 +2,18 @@
 
 use Core\Formatting\AddressFormatter;
 use Core\Routing\AeRoutes;
-use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Dto\Organisation\OrganisationSiteLinkDto;
 use DvsaCommon\Utility\AddressUtils;
 use Organisation\Controller\AuthorisedExaminerPrincipalController;
 use Organisation\Controller\RoleController;
 use Organisation\Controller\SiteController;
-use Organisation\UpdateAeProperty\UpdateAePropertyAction;
 
 /**
- * @var \Organisation\ViewModel\View\Index\IndexViewModel $viewModel
+ * @var \Organisation\ViewModel\View\Index\IndexViewModel
  * @var \Organisation\Presenter\AuthorisedExaminerPresenter $presenter
- * @var \Application\View\Helper\AuthorisationHelper      $authHelper
- * @var \DvsaCommon\Dto\Organisation\OrganisationDto $organisation
+ * @var \Application\View\Helper\AuthorisationHelper        $authHelper
+ * @var \DvsaCommon\Dto\Organisation\OrganisationDto        $organisation
  */
 $authHelper = $this->authorisationHelper();
 $withdrawalDate = $this->withdrawalDate;
@@ -46,7 +44,7 @@ echo $this->partial(
     Contact details
 </h3>
 
-<?php if($organisation->getRegisteredCompanyContactDetail()):
+<?php if ($organisation->getRegisteredCompanyContactDetail()):
     echo $this->partial(
     'partial/gds/gds-table/gds-summary-table',
     [
@@ -55,7 +53,7 @@ echo $this->partial(
     );
 endif; ?>
 
-<?php if($organisation->getCorrespondenceContactDetail()):
+<?php if ($organisation->getCorrespondenceContactDetail()):
     echo $this->partial(
     'partial/gds/gds-table/gds-summary-table',
     [
@@ -64,10 +62,10 @@ endif; ?>
     );
 endif; ?>
 
-<?php if($viewModel->getViewAuthorisation()->canViewPersonnel()) :?>
+<?php if ($viewModel->getViewAuthorisation()->canViewPersonnel()) :?>
     <h3 class="summary-heading">
         Roles
-        <?php if($viewModel->getViewAuthorisation()->canNominate()): ?>
+        <?php if ($viewModel->getViewAuthorisation()->canNominate()): ?>
             <span class="summary-heading__action">
                 <a href="<?php echo $this->url(RoleController::ROUTE_ROLES, ['id' => $orgId]); ?>" id="assign-a-role">
                     Assign a role
@@ -87,25 +85,25 @@ endif; ?>
                         <a href="<?php echo $this->url(ContextProvider::AE_PARENT_ROUTE,
                                                 [
                                                     'authorisedExaminerId' => $orgId,
-                                                    'id' => $employee->getPerson()->getId()
+                                                    'id' => $employee->getPerson()->getId(),
                                                 ]
                                             ); ?>">
                             <?php echo $this->escapeHtml($employee->getPerson()->getFullname()); ?>
                             <?php if ($viewModel->getViewAuthorisation()->canViewUsername()):
-                                echo "(" . $this->escapeHtml($employee->getPerson()->getUsername()) . ")";
+                                echo '('.$this->escapeHtml($employee->getPerson()->getUsername()).')';
                             endif; ?>
                         </a>
                     <?php else: ?>
                         <?php echo $this->escapeHtml($employee->getPerson()->getFullname());
                         if ($viewModel->getViewAuthorisation()->canViewUsername()):
-                            echo "(" . $this->escapeHtml($employee->getPerson()->getUsername()) . ")";
+                            echo '('.$this->escapeHtml($employee->getPerson()->getUsername()).')';
                         endif; ?>
                     <?php endif; ?>
                 </th>
 
                 <td class="table-summary__value">
 
-                        <div id="role-assignment-<?php echo $this->escapeHtmlAttr($employee->getPerson()->getId() . "-" . $pio->getRole()); ?>" class="text">
+                        <div id="role-assignment-<?php echo $this->escapeHtmlAttr($employee->getPerson()->getId().'-'.$pio->getRole()); ?>" class="text">
                             <?php echo $this->escapeHtml($pio->getRole()); ?>
                             <?php if ($pio->isPending()): ?>
                                 <br />
@@ -117,10 +115,10 @@ endif; ?>
                             <a id="remove-role" class="table-summary__action" href="<?php echo $this->url(
                                 RoleController::ROUTE_REMOVE_ROLE,
                                 [
-                                    'id'     => $orgId,
+                                    'id' => $orgId,
                                     'roleId' => $pio->getId(),
                                 ]
-                            );?>">Remove
+                            ); ?>">Remove
                             <span class="visuallyhidden">
                                 <?php echo $this->escapeHtml($employee->getPerson()->getFullname()) ?>
                             </span>
@@ -141,7 +139,7 @@ endif; ?>
         Vehicle testing stations
         <?php if ($viewModel->getViewAuthorisation()->canCreateSiteAssociation()) : ?>
             <span class="summary-heading__action">
-                <a href="<?php echo $this->url(SiteController::ROUTE_LINK, ['id' =>$orgId]); ?>" >Add a site association</a>
+                <a href="<?php echo $this->url(SiteController::ROUTE_LINK, ['id' => $orgId]); ?>" >Add a site association</a>
             </span>
         <?php endif; ?>
     </h3>
@@ -158,7 +156,7 @@ endif; ?>
         $vtsId = $vts->getId();
         $siteNumber = $vts->getSiteNumber();
 
-        $vtsElementId = 'vehicle-testing-station-' . ($vtsIdx + 1);
+        $vtsElementId = 'vehicle-testing-station-'.($vtsIdx + 1);
         ?>
         <tr id="<?php echo $this->escapeHtmlAttr($vtsElementId); ?>">
             <th class="table-summary__key">
@@ -189,7 +187,7 @@ endif; ?>
                         <span class="key-value-list__meta">
                             <a href="<?php echo $this->url(SiteController::ROUTE_UNLINK, [
                                 'id' => $orgId,
-                                'linkId' => $linkWithAe->getId()
+                                'linkId' => $linkWithAe->getId(),
                             ]);
                             ?>" class="table-summary__action">
                                 Remove
@@ -229,24 +227,24 @@ endif; ?>
             </thead>
             <tbody>
                 <?php foreach ($viewModel->getPrincipals() as $principalIdx => $principal) :
-                    $escPrincipalKey = (int)$principalIdx + 1;
+                    $escPrincipalKey = (int) $principalIdx + 1;
                     $contact = $viewModel->getPrincipalContactDetails($principalIdx);
                 ?>
-                    <tr id="<?php echo 'authorised-examiner-principal-' . $escPrincipalKey; ?>">
+                    <tr id="<?php echo 'authorised-examiner-principal-'.$escPrincipalKey; ?>">
                         <td class="table-default__body--primary" id="aep-name-<?php echo $principal->getId() ?>">
                             <?php echo $this->escapeHtml($principal->getDisplayName()); ?>
                         </td>
                         <td class="table-default__body" id="aep-address-<?php echo $principal->getId() ?>" >
-                            <?php echo (new AddressFormatter())->escapedDtoToMultiLine($contact->getAddress(), true); ?>
+                            <?php echo(new AddressFormatter())->escapedDtoToMultiLine($contact->getAddress(), true); ?>
                         </td>
                         <td class="table-default__body" id="aep-birth-<?php echo $principal->getId() ?>">
                             <?php echo $this->escapeHtml($principal->displayDateOfBirth()); ?>
                         </td>
                         <td class="table-default__body--action" id="aep-action-<?php echo $principal->getId() ?>">
-                                <?php if($viewModel->getViewAuthorisation()->canRemoveAuthorisedExaminerPrincipal()):
+                                <?php if ($viewModel->getViewAuthorisation()->canRemoveAuthorisedExaminerPrincipal()):
                                     $escUrlRemove = $this->url(AuthorisedExaminerPrincipalController::ROUTE_REMOVE_CONFIRMATION, [
                                         'id' => $orgId,
-                                        'principalId' => $principal->getId()
+                                        'principalId' => $principal->getId(),
                                     ]); ?>
                                     <a class="remove-aep" id="remove-aep-<?php echo $principal->getId() ?>" href="<?php echo $escUrlRemove; ?>">Remove</a>
                                     <span class="visuallyhidden"><?php echo $principal->getDisplayName() ?></span>

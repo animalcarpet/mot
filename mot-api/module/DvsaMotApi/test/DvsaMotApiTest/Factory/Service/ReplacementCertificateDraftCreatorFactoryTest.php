@@ -9,14 +9,11 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Factory\Service\ReplacementCertificateDraftCreatorFactory;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftCreator;
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class ReplacementCertificateDraftCreatorFactoryTest
- *
+ * Class ReplacementCertificateDraftCreatorFactoryTest.
  */
 class ReplacementCertificateDraftCreatorFactoryTest extends AbstractServiceTestCase
 {

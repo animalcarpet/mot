@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: szymonf
  * Date: 24.03.2016
- * Time: 11:32
+ * Time: 11:32.
  */
 
 namespace Dvsa\Mot\Frontend\PersonModule\Model;
-
 
 use Application\Data\ApiPersonalDetails;
 use Core\Action\AbstractRedirectActionResult;
@@ -54,8 +53,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
         PersonProfileGuardBuilder $personProfileGuardBuilder,
         ContextProvider $contextProvider,
         QualificationDetailsRoutes $qualificationDetailsRoutes
-    )
-    {
+    ) {
         $this->qualificationDetailsMapper = $qualificationDetailsMapper;
         $this->siteMapper = $siteMapper;
         $this->certificatesBreadcrumbs = $certificatesBreadcrumbs;
@@ -67,7 +65,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
 
     /** @var FormContext */
     protected $context;
-    
+
     abstract protected function getBackLinkText();
 
     public function setContext(FormContextInterface $context)
@@ -86,6 +84,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
      * Returning null means there are no breadcrumbs to display.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return array
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
@@ -103,7 +102,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     }
 
     /**
-     * Zend form used to edit values
+     * Zend form used to edit values.
      *
      * @return Form
      */
@@ -119,7 +118,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     }
 
     /**
-     * Tells what message should be shown to the user when the form has been successfully submitted
+     * Tells what message should be shown to the user when the form has been successfully submitted.
      *
      * @return string
      */
@@ -129,7 +128,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     }
 
     /**
-     * The title that will be displayed on the form page
+     * The title that will be displayed on the form page.
      *
      * @return string
      */
@@ -139,26 +138,27 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     }
 
     /**
-     * The sub title that will be displayed on the edit and review pages
+     * The sub title that will be displayed on the edit and review pages.
      *
      * @return string
      */
     public function getPageSubTitle()
     {
-         return ContextProvider::YOUR_PROFILE_CONTEXT === $this->contextProvider->getContext() ?
+        return ContextProvider::YOUR_PROFILE_CONTEXT === $this->contextProvider->getContext() ?
              'Your profile' : 'User profile';
     }
 
     /**
      * @param $form
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildEditStepViewModel($form)
     {
         return (new ViewModel())
             ->setVariables([
                 'form' => $form,
-                'backUrl' => $this->getStartPageUrl()
+                'backUrl' => $this->getStartPageUrl(),
             ]);
     }
 
@@ -172,6 +172,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
             self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
         ];
+
         return new RedirectToRoute($route, $params);
     }
 
@@ -182,6 +183,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
             self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
         ];
+
         return $this->context->getController()->url()->fromRoute($route, $params);
     }
 
@@ -190,6 +192,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
      * for user to review before completing the form.
      *
      * @param array $formData
+     *
      * @return GdsTable
      */
     public function transformFormIntoGdsTable(array $formData)
@@ -200,9 +203,9 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
 
         $date = new \DateTime();
         $date->setDate(
-            (int)$formData[QualificationDetailsForm::FIELD_DATE_YEAR],
-            (int)$formData[QualificationDetailsForm::FIELD_DATE_MONTH],
-            (int)$formData[QualificationDetailsForm::FIELD_DATE_DAY]
+            (int) $formData[QualificationDetailsForm::FIELD_DATE_YEAR],
+            (int) $formData[QualificationDetailsForm::FIELD_DATE_MONTH],
+            (int) $formData[QualificationDetailsForm::FIELD_DATE_DAY]
         );
         $table->newRow()->setLabel('Date awarded')->setValue($date->format(DateTimeDisplayFormat::FORMAT_DATE));
 
@@ -210,7 +213,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     }
 
     /**
-     * The title that will be displayed on the review page
+     * The title that will be displayed on the review page.
      *
      * @return string
      */
@@ -220,7 +223,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     }
 
     /**
-     * The page lede that will be displayed on the review page
+     * The page lede that will be displayed on the review page.
      *
      * @return string
      */
@@ -230,20 +233,21 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     }
 
     /**
-     * The text that will be displayed on the review page button text
+     * The text that will be displayed on the review page button text.
      *
      * @return string
      */
     public function getReviewPageButtonText()
     {
-        return "Review certificate details";
+        return 'Review certificate details';
     }
 
     /**
      * @param $formUuid
      * @param $formData
      * @param GdsTable $table
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildReviewStepViewModel($formUuid, $formData, GdsTable $table)
     {
@@ -278,7 +282,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
             ->setVehicleClassGroupCode(strtoupper($this->context->getGroup()))
             ->setSiteNumber($formData[QualificationDetailsForm::FIELD_VTS_ID])
             ->setCertificateNumber($formData[QualificationDetailsForm::FIELD_CERT_NUMBER])
-            ->setDateOfQualification(sprintf("%d-%d-%d",
+            ->setDateOfQualification(sprintf('%d-%d-%d',
                 $formData[QualificationDetailsForm::FIELD_DATE_YEAR],
                 $formData[QualificationDetailsForm::FIELD_DATE_MONTH],
                 $formData[QualificationDetailsForm::FIELD_DATE_DAY]
@@ -294,11 +298,12 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
 
     /**
      * @param $siteNumber
+     *
      * @return SiteDto
      */
     private function getSiteByNumber($siteNumber)
     {
-        if(!empty($siteNumber)){
+        if (!empty($siteNumber)) {
             return $this->siteMapper->getByNumber($siteNumber);
         }
 
@@ -322,6 +327,5 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
 
     public function populateConfirmationPageVariables()
     {
-
     }
 }

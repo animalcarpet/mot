@@ -2,7 +2,6 @@
 
 namespace Organisation\UpdateAeProperty;
 
-use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Routing\AeRouteList;
 use Core\TwoStepForm\TwoStepProcessInterface;
@@ -22,7 +21,7 @@ abstract class AbstractTwoStepAeProcess extends AbstractSingleStepAeProcess impl
             [
                 'id' => $this->context->getAeId(),
                 'propertyName' => $this->context->getPropertyName(),
-                'formUuid' => $formUuid
+                'formUuid' => $formUuid,
             ]
         );
     }
@@ -30,7 +29,7 @@ abstract class AbstractTwoStepAeProcess extends AbstractSingleStepAeProcess impl
     public function getSessionStoreKey()
     {
         return sprintf('%s/%s/%s',
-            "UPDATE_AE_PROPERTY_FORM",
+            'UPDATE_AE_PROPERTY_FORM',
             $this->context->getAeId(),
             $this->context->getPropertyName()
         );
@@ -43,11 +42,9 @@ abstract class AbstractTwoStepAeProcess extends AbstractSingleStepAeProcess impl
 
     public function redirectToConfirmationPage()
     {
-
     }
 
     public function populateConfirmationPageVariables()
     {
-
     }
 }

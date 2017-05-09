@@ -31,7 +31,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $config = $module->getControllerConfig();
 
         $this->assertInternalType('array', $config);
-
     }
 
     public function testGetServiceConfig()
@@ -41,6 +40,5 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $config = $module->getServiceConfig();
 
         $this->assertInternalType('array', $config);
-
     }
 }

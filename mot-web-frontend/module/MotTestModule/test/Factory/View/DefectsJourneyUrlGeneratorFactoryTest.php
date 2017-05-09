@@ -10,7 +10,7 @@ use PHPUnit_Framework_TestCase;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\RouteStackInterface;
 
-class DefectsJourneyUrlGeneratorFactoryTest  extends PHPUnit_Framework_TestCase
+class DefectsJourneyUrlGeneratorFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function testFactoryCreatesInstance()
     {
@@ -20,7 +20,7 @@ class DefectsJourneyUrlGeneratorFactoryTest  extends PHPUnit_Framework_TestCase
             [
                 'Router' => RouteStackInterface::class,
                 'Request' => Request::class,
-                DefectsJourneyContextProvider::class => DefectsJourneyContextProvider::class
+                DefectsJourneyContextProvider::class => DefectsJourneyContextProvider::class,
             ]
         );
     }

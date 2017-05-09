@@ -8,7 +8,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class OdometerReadingDeltaAnomalyCheckerFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new OdometerReadingDeltaAnomalyChecker($serviceLocator->get('ConfigurationRepository'));

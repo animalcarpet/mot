@@ -6,17 +6,15 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use UserApi\Application\Service\ApplicationService;
 use Zend\View\Model\JsonModel;
-use Zend\Authentication\AuthenticationService;
+
 /**
- * Class ApplicationController
- *
- * @package UserApi\Application\Controller
+ * Class ApplicationController.
  */
 class ApplicationController extends AbstractDvsaRestfulController
 {
     public function getList()
     {
-        $userIdFromRoute = $this->params()->fromRoute("userId");
+        $userIdFromRoute = $this->params()->fromRoute('userId');
         $this->confirmUserIdentity($userIdFromRoute);
 
         $service = $this->getApplicationService();
@@ -29,7 +27,7 @@ class ApplicationController extends AbstractDvsaRestfulController
         $identity = $this->getIdentity();
 
         if ($identity === null || $userId !== strval($identity->getUserId())) {
-            throw new ForbiddenException("Access denied.");
+            throw new ForbiddenException('Access denied.');
         }
     }
 

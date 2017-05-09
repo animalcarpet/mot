@@ -54,13 +54,12 @@ jA0EAwMCZIsq2TVkHiZgyUZvaApIr4zLJu52omoor/JIGIc211J3fm41+jYVvD6j
 
         return TestDataResponseHelper::jsonOk([
             'serialNumber' => $serialNumber,
-            'secret' => self::DECRYPTED_SECRET
+            'secret' => self::DECRYPTED_SECRET,
         ]);
     }
 
     private function getRandomisedSerialNumber()
     {
-
-        return Rand::getString(4, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", true) . Rand::getInteger(10000000, 99999999, true);
+        return Rand::getString(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', true).Rand::getInteger(10000000, 99999999, true);
     }
 }

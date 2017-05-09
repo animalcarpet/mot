@@ -136,7 +136,6 @@ class MotTestReasonForRejectionService extends AbstractService
         }
 
         if ($this->motTestValidator->validateMotTestReasonForRejection($rfr)) {
-
             $tempComment = $rfr->popComment();
             $tempDescription = $rfr->popDescription();
 
@@ -186,7 +185,7 @@ class MotTestReasonForRejectionService extends AbstractService
         $comment = ArrayUtils::tryGet($data, 'comment');
         $failureDangerous = ArrayUtils::tryGet($data, 'failureDangerous', false);
 
-        $location = $this->fetchLocation($locationLateral, $locationLongitudinal,$locationVertical);
+        $location = $this->fetchLocation($locationLateral, $locationLongitudinal, $locationVertical);
 
         $rfr->setLocation($location)
             ->setFailureDangerous($failureDangerous)
@@ -229,7 +228,7 @@ class MotTestReasonForRejectionService extends AbstractService
         $failureDangerous = ArrayUtils::tryGet($data, 'failureDangerous', false);
         $generated = ArrayUtils::tryGet($data, 'generated', false);
 
-        $location = $this->fetchLocation($locationLateral, $locationLongitudinal,$locationVertical);
+        $location = $this->fetchLocation($locationLateral, $locationLongitudinal, $locationVertical);
 
         $rfrType = $this->getEntityManager()->getRepository(ReasonForRejectionType::class)->findOneBy(
             ['reasonForRejectionType' => $type]
@@ -446,6 +445,7 @@ class MotTestReasonForRejectionService extends AbstractService
      * @param string $lateral
      * @param string $longitudinal
      * @param string $vertical
+     *
      * @return MotTestReasonForRejectionLocation
      */
     private function fetchLocation($lateral, $longitudinal, $vertical)
@@ -455,7 +455,6 @@ class MotTestReasonForRejectionService extends AbstractService
         );
 
         if (!$location) {
-
             $location = new MotTestReasonForRejectionLocation();
             $location->setLateral($lateral)
                 ->setLongitudinal($longitudinal)

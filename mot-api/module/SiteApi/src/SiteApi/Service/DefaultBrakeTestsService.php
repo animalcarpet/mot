@@ -3,7 +3,6 @@
 namespace SiteApi\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaEntities\Entity\BrakeTestType;
 use DvsaEntities\Entity\Site;
@@ -12,7 +11,7 @@ use DvsaEntities\Repository\SiteRepository;
 use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
 
 /**
- * Saves the brake test defaults to site entity
+ * Saves the brake test defaults to site entity.
  */
 class DefaultBrakeTestsService
 {
@@ -67,6 +66,7 @@ class DefaultBrakeTestsService
      * @param string $code
      *
      * @return BrakeTestType
+     *
      * @throws \DvsaCommonApi\Service\Exception\InvalidFieldValueException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */

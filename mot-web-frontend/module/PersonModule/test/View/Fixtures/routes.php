@@ -4,14 +4,13 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 
 return [
     ContextProvider::YOUR_PROFILE_PARENT_ROUTE => [
-        'type'    => 'segment',
+        'type' => 'segment',
         'options' => [
-            'route'    => '/your-profile',
+            'route' => '/your-profile',
         ],
         'may_terminate' => true,
         'child_routes' => [
@@ -43,52 +42,52 @@ return [
                     ],
                 ],
             ],
-            'trade-roles'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/trade-roles',
+            'trade-roles' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/trade-roles',
                 ],
             ],
             'remove-ae-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-ae-role/:entityId/:positionId',
+                    'route' => '/remove-ae-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
             ],
             'remove-vts-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-vts-role/:entityId/:positionId',
+                    'route' => '/remove-vts-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
             ],
-            'change-password'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/change-password',
+            'change-password' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/change-password',
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'confirmation' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/confirmation',
+                            'route' => '/confirmation',
                         ],
                     ],
                 ],
 
             ],
             'security-questions' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/security-question[/:questionNumber]',
+                    'route' => '/security-question[/:questionNumber]',
                     'constraints' => [
                         'questionNumber' => '1|2',
                     ],
@@ -162,28 +161,28 @@ return [
                     ],
                 ],
             ],
-            'trade-roles'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/trade-roles',
+            'trade-roles' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/trade-roles',
                 ],
             ],
             'remove-ae-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-ae-role/:entityId/:positionId',
+                    'route' => '/remove-ae-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
             ],
             'remove-vts-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-vts-role/:entityId/:positionId',
+                    'route' => '/remove-vts-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
@@ -217,17 +216,17 @@ return [
                     ],
                 ],
             ],
-            'change-password'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/change-password',
+            'change-password' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/change-password',
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'confirmation' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/confirmation',
+                            'route' => '/confirmation',
                         ],
                     ],
                 ],
@@ -345,43 +344,43 @@ return [
                     ],
                 ],
             ],
-            'trade-roles'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/trade-roles',
+            'trade-roles' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/trade-roles',
                 ],
             ],
             'remove-ae-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-ae-role/:entityId/:positionId',
+                    'route' => '/remove-ae-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
             ],
             'remove-vts-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-vts-role/:entityId/:positionId',
+                    'route' => '/remove-vts-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
             ],
-            'change-password'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/change-password',
+            'change-password' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/change-password',
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'confirmation' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/confirmation',
+                            'route' => '/confirmation',
                             'defaults' => [
                                 'action' => 'confirmation',
                             ],
@@ -458,43 +457,43 @@ return [
                     ],
                 ],
             ],
-            'trade-roles'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/trade-roles',
+            'trade-roles' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/trade-roles',
                 ],
             ],
             'remove-ae-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-ae-role/:entityId/:positionId',
+                    'route' => '/remove-ae-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
             ],
             'remove-vts-role' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/remove-vts-role/:entityId/:positionId',
+                    'route' => '/remove-vts-role/:entityId/:positionId',
                     'constraints' => [
-                        'entityId'   => '[0-9]+',
+                        'entityId' => '[0-9]+',
                         'positionId' => '[0-9]+',
                     ],
                 ],
             ],
-            'change-password'              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/change-password',
+            'change-password' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/change-password',
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'confirmation' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/confirmation',
+                            'route' => '/confirmation',
                             'defaults' => [
                                 'action' => 'confirmation',
                             ],
@@ -537,9 +536,9 @@ return [
         ],
     ],
     'authorised-examiner' => [
-        'type'          => 'segment',
-        'options'       => [
-            'route'    => '/authorised-examiner[/:id]',
+        'type' => 'segment',
+        'options' => [
+            'route' => '/authorised-examiner[/:id]',
             'constraints' => [
                 'id' => '[1-9]+[0-9]*',
             ],
@@ -547,9 +546,9 @@ return [
         'may_terminate' => true,
     ],
     'vehicle-testing-station' => [
-        'type'          => 'segment',
-        'options'       => [
-            'route'    => '/vehicle-testing-station[/:id]',
+        'type' => 'segment',
+        'options' => [
+            'route' => '/vehicle-testing-station[/:id]',
             'constraints' => [
                 'id' => '[1-9]+[0-9]*',
             ],

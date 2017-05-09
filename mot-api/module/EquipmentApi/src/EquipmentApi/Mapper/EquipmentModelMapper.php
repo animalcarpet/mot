@@ -5,11 +5,10 @@ namespace EquipmentApi\Mapper;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Dto\Equipment\EquipmentModelDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
-use DvsaCommonApi\Service\Mapper\AbstractApiMapper;
 use DvsaEntities\Entity\EquipmentModel;
 
 /**
- * Class EquipmentMapper
+ * Class EquipmentMapper.
  */
 class EquipmentModelMapper
 {
@@ -49,6 +48,7 @@ class EquipmentModelMapper
         foreach ($equipmentModels as $model) {
             $stack[] = $this->toDto($model);
         }
+
         return $stack;
     }
 }

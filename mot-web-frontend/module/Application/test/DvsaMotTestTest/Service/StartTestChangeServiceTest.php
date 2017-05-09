@@ -3,7 +3,6 @@
 namespace DvsaMotTestTest\Service;
 
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\StartTestSessionService;
 use Zend\View\Helper\Url;
@@ -59,9 +58,9 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
                         'model' => false,
                         'noRegistration' => false,
                         'source' => false,
-                        'url' => false
+                        'url' => false,
                     ],
-                    StartTestSessionService::USER_DATA             => [
+                    StartTestSessionService::USER_DATA => [
                         'noRegistration' => [
                             'noRegistration' => '0',
                         ],
@@ -322,7 +321,7 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
             StartTestChangeService::CHANGE_MODEL,
             StartTestChangeService::NO_REGISTRATION,
             StartTestChangeService::SOURCE,
-            StartTestChangeService::URL
+            StartTestChangeService::URL,
         ];
     }
 

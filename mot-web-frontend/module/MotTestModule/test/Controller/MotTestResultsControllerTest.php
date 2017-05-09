@@ -73,6 +73,7 @@ class MotTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -81,6 +82,7 @@ class MotTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 
@@ -114,7 +116,7 @@ class MotTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     public function testMotTestIndexWithoutIdParameterFails()
     {
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asTester());
-        
+
         $this->controller->dispatch($this->request);
 
         $this->assertResponseStatus(self::HTTP_ERR_404);

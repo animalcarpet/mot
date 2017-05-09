@@ -8,8 +8,7 @@ use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use Organisation\ViewModel\View\Index\EmployeeViewModel;
 
 /**
- * Class EmployeeViewModelTest
- * @package OrganisationTest\ViewModel\View\Index
+ * Class EmployeeViewModelTest.
  */
 class EmployeeViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,6 +47,6 @@ class EmployeeViewModelTest extends \PHPUnit_Framework_TestCase
         $this->model->addPosition((new OrganisationPositionDto())->setRole($role));
         $this->model->addPosition((new OrganisationPositionDto())->setRole($role));
 
-        $this->assertEquals($role . ', ' . $role, $this->model->getDisplayRoles());
+        $this->assertEquals($role.', '.$role, $this->model->getDisplayRoles());
     }
 }

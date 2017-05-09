@@ -9,11 +9,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class SpecialNoticeOverdueControllerFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
-        $serviceLocator    = $controllerManager->getServiceLocator();
+        $serviceLocator = $controllerManager->getServiceLocator();
         $specialNoticeService = $serviceLocator->get(SpecialNoticeService::class);
 
         return new SpecialNoticeOverdueController($specialNoticeService);

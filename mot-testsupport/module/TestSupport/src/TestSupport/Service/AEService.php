@@ -18,7 +18,6 @@ use TestSupport\Helper\TestSupportRestClientHelper;
 use TestSupport\Helper\TestDataResponseHelper;
 use TestSupport\Helper\DataGeneratorHelper;
 use DvsaCommon\Constants\OrganisationType;
-use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaCommon\Utility\ArrayUtils;
 use Doctrine\ORM\EntityManager;
 use Zend\View\Model\JsonModel;
@@ -54,8 +53,8 @@ class AEService
      */
     public function create($data)
     {
-        if (!array_key_exists("areaOfficeSiteNumber", $data)) {
-            $data["areaOfficeSiteNumber"] = self::DEFAULT_AREA_OFFICE;
+        if (!array_key_exists('areaOfficeSiteNumber', $data)) {
+            $data['areaOfficeSiteNumber'] = self::DEFAULT_AREA_OFFICE;
         }
 
         $organisationDto = $this->generateDto($data);
@@ -71,10 +70,10 @@ class AEService
 
         return TestDataResponseHelper::jsonOk(
             [
-                "message" => "Authorised Examiner created",
-                "id" => $aeId,
-                "aeRef" => $result['data']['aeRef'],
-                "aeName" => $organisationDto->getName(),
+                'message' => 'Authorised Examiner created',
+                'id' => $aeId,
+                'aeRef' => $result['data']['aeRef'],
+                'aeName' => $organisationDto->getName(),
             ]
         );
     }
@@ -87,8 +86,8 @@ class AEService
 
         $address = (new AddressDto())
             ->setAddressLine1($dataGenerator->addressLine1())
-            ->setPostcode("IP1 1LL")
-            ->setTown("Ipswich");
+            ->setPostcode('IP1 1LL')
+            ->setTown('Ipswich');
         $phones = (new PhoneDto())
             ->setIsPrimary(true)
             ->setContactType(PhoneContactTypeCode::BUSINESS)
@@ -104,13 +103,13 @@ class AEService
             ->setEmails([$email]);
 
         $authForAeDto = new AuthorisedExaminerAuthorisationDto();
-        $authForAeDto->setAssignedAreaOffice($data["areaOfficeSiteNumber"]);
+        $authForAeDto->setAssignedAreaOffice($data['areaOfficeSiteNumber']);
 
         return (new OrganisationDto())
             ->setName($aeName)
             ->setAuthorisedExaminerAuthorisation($authForAeDto)
             ->setOrganisationType(OrganisationType::AUTHORISED_EXAMINER)
-            ->setSlotBalance(ArrayUtils::tryGet($data, "slots", 1001))
+            ->setSlotBalance(ArrayUtils::tryGet($data, 'slots', 1001))
             ->setCompanyType(CompanyTypeCode::SOLE_TRADER)
             ->setContacts([$contact]);
     }
@@ -122,8 +121,8 @@ class AEService
     private function addSlotsToAe($aeId, $slots)
     {
         $this->em->getConnection()->executeUpdate(
-            "UPDATE organisation SET slots_balance = :slots WHERE id = :id",
-            ["slots" => $slots, "id" => $aeId]
+            'UPDATE organisation SET slots_balance = :slots WHERE id = :id',
+            ['slots' => $slots, 'id' => $aeId]
         );
 
         $this->em->flush();
@@ -138,16 +137,16 @@ class AEService
     public function setSiteAeStatusApproved($aeNumber)
     {
         $this->em->getConnection()->executeUpdate(
-            "
+            '
             UPDATE auth_for_ae
             SET
                 status_id = (SELECT id FROM auth_for_ae_status WHERE code=:STATUS)
             WHERE
                 ae_ref=:AE_NUMBER
-            ",
+            ',
             [
-                'STATUS'    => AuthorisationForAuthorisedExaminerStatusCode::APPROVED,
-                "AE_NUMBER" => $aeNumber,
+                'STATUS' => AuthorisationForAuthorisedExaminerStatusCode::APPROVED,
+                'AE_NUMBER' => $aeNumber,
             ]
         );
 
@@ -157,8 +156,8 @@ class AEService
     public function getSlotBalanceForAE($aeId)
     {
         $result = $this->em->getConnection()->executeQuery(
-            "SELECT slots_balance FROM organisation WHERE id=:organisation_id",
-            ['organisation_id' =>$aeId]
+            'SELECT slots_balance FROM organisation WHERE id=:organisation_id',
+            ['organisation_id' => $aeId]
         )->fetch();
 
         return $result['slots_balance'];
@@ -167,8 +166,8 @@ class AEService
     public function getLinkId($aeId, $siteId)
     {
         $result = $this->em->getConnection()->executeQuery(
-            "SELECT id FROM organisation_site_map WHERE organisation_id = :organisation_id AND site_id = :site_id AND end_date IS NULL",
-            ['organisation_id' =>$aeId, 'site_id' => $siteId]
+            'SELECT id FROM organisation_site_map WHERE organisation_id = :organisation_id AND site_id = :site_id AND end_date IS NULL',
+            ['organisation_id' => $aeId, 'site_id' => $siteId]
         )->fetch();
 
         return $result['id'];

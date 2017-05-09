@@ -15,8 +15,7 @@ class UpdateAePropertyBreadcrumbs extends AeBreadcrumbs
         MotAuthorisationServiceInterface $authorisationService,
         Url $url,
         $label
-    )
-    {
+    ) {
         parent::__construct($ae, $authorisationService, $url);
         $this->label = $label;
     }
@@ -24,6 +23,7 @@ class UpdateAePropertyBreadcrumbs extends AeBreadcrumbs
     public function create()
     {
         $aeBreadcrumbs = parent::create();
-        return array_merge($aeBreadcrumbs, [$this->label => ""]);
+
+        return array_merge($aeBreadcrumbs, [$this->label => '']);
     }
 }

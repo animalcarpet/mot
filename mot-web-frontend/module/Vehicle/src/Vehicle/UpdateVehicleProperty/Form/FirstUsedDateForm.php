@@ -6,8 +6,6 @@ use DvsaCommon\Validator\DateInPastValidator;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\InArray;
 use Zend\Validator\NotEmpty;
 
 class FirstUsedDateForm extends Form
@@ -90,21 +88,23 @@ class FirstUsedDateForm extends Form
         $day = $this->get(self::FIELD_DATE_DAY)->getValue();
 
         if (empty($year) || empty($month) || empty($day)) {
-            return "";
+            return '';
         }
 
-        return join("-", [$year, $month, $day]);
+        return implode('-', [$year, $month, $day]);
     }
 
     /**
      * @param string $elementLabel
      * @param string $elementId
      * @param $maxLength
+     *
      * @return Text
      */
     private function setTextElement($elementLabel, $elementId, $maxLength)
     {
         $element = new Text();
+
         return $element
             ->setName($elementId)
             ->setLabel($elementLabel)

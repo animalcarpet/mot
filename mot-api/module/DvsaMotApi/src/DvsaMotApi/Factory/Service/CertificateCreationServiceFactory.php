@@ -11,7 +11,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class CertificateCreationServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('config');

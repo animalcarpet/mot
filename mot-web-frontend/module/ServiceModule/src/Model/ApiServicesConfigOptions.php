@@ -6,7 +6,7 @@ use Zend\Stdlib\AbstractOptions;
 
 class ApiServicesConfigOptions extends AbstractOptions
 {
-    /** @var  string */
+    /** @var string */
     private $authorisationServiceUrl;
 
     /** @var string */
@@ -15,14 +15,15 @@ class ApiServicesConfigOptions extends AbstractOptions
     /** @var string */
     private $motTestServiceUrl;
 
-
     /**
      * @param $serviceUrl
+     *
      * @return $this
      */
     public function setAuthorisationServiceUrl($serviceUrl)
     {
         $this->authorisationServiceUrl = $serviceUrl;
+
         return $this;
     }
 
@@ -36,11 +37,13 @@ class ApiServicesConfigOptions extends AbstractOptions
 
     /**
      * @param $serviceUrl
+     *
      * @return $this
      */
     public function setVehicleServiceUrl($serviceUrl)
     {
         $this->vehicleServiceUrl = $serviceUrl;
+
         return $this;
     }
 
@@ -62,11 +65,13 @@ class ApiServicesConfigOptions extends AbstractOptions
 
     /**
      * @param $motTestServiceUrl
+     *
      * @return $this
      */
     public function setMotTestServiceUrl($motTestServiceUrl)
     {
         $this->motTestServiceUrl = $motTestServiceUrl;
+
         return $this;
     }
 }

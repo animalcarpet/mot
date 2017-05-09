@@ -28,9 +28,10 @@ class UpdateEngineInputFilter implements InputFilterAwareInterface
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
-     * @param  InputFilterInterface $inputFilter
+     * @param InputFilterInterface $inputFilter
+     *
      * @return InputFilterAwareInterface
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -39,7 +40,7 @@ class UpdateEngineInputFilter implements InputFilterAwareInterface
     }
 
     /**
-     * Retrieve input filter
+     * Retrieve input filter.
      *
      * @return InputFilterInterface
      */
@@ -102,7 +103,7 @@ class UpdateEngineInputFilter implements InputFilterAwareInterface
                 Digits::NOT_DIGITS => UpdateEngineForm::CAPACITY_CAN_ONLY_CONTAIN_NUMBERS,
                 Digits::STRING_EMPTY => UpdateEngineForm::CAPACITY_ENTER_A_NUMBER,
                 Digits::INVALID => UpdateEngineForm::CAPACITY_CAN_ONLY_CONTAIN_NUMBERS,
-            ]
+            ],
         ]);
 
         $capacityBetween = new Between([
@@ -111,7 +112,7 @@ class UpdateEngineInputFilter implements InputFilterAwareInterface
             'inclusive' => true,
             'messages' => [
                 Between::NOT_BETWEEN => UpdateEngineForm::CAPACITY_MAXIMUM_CAPACITY_MESSAGE,
-            ]
+            ],
         ]);
 
         $capacity

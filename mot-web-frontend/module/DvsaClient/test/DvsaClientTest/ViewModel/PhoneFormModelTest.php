@@ -31,12 +31,12 @@ class PhoneFormModelTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . $method}($value);
+        $result = $this->model->{'set'.$method}($value);
         $this->assertInstanceOf(PhoneFormModel::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? '' : 'get') . $method;
+        $method = (is_bool($expect) ? '' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -45,7 +45,7 @@ class PhoneFormModelTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'property' => 'number',
-                'value'    => 'test_Nr_1231234',
+                'value' => 'test_Nr_1231234',
             ],
             ['type', 'test_Type'],
             ['isPrimary', false],
@@ -71,7 +71,7 @@ class PhoneFormModelTest extends \PHPUnit_Framework_TestCase
                 'postData' => [
                     PhoneFormModel::FIELD_NUMBER => 'test_Nr_123456',
                 ],
-                'expect'   => (new PhoneFormModel())
+                'expect' => (new PhoneFormModel())
                     ->setNumber('test_Nr_123456'),
             ],
         ];
@@ -105,7 +105,6 @@ class PhoneFormModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($dto, $actual);
     }
 
-
     /**
      * @dataProvider dataProviderTestIsValid
      */
@@ -130,9 +129,9 @@ class PhoneFormModelTest extends \PHPUnit_Framework_TestCase
                 'postData' => [
                     PhoneFormModel::FIELD_NUMBER => 'test_12345678',
                 ],
-                'expect'   => [
+                'expect' => [
                     'isValid' => true,
-                    'errors'  => [],
+                    'errors' => [],
                 ],
             ],
             //  set supply email, validation is FALSE, because email invalid and conf not same
@@ -140,9 +139,9 @@ class PhoneFormModelTest extends \PHPUnit_Framework_TestCase
                 'postData' => [
                     PhoneFormModel::FIELD_NUMBER => '',
                 ],
-                'expect'   => [
+                'expect' => [
                     'isValid' => false,
-                    'errors'  => [
+                    'errors' => [
                         PhoneFormModel::FIELD_NUMBER => PhoneFormModel::ERR_REQUIRE,
                     ],
                 ],

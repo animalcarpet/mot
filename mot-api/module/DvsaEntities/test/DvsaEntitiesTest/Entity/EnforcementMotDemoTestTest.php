@@ -1,13 +1,13 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Comment;
 use DvsaEntities\Entity\EnforcementMotDemoTest;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class EnforcementMotDemoTestTest
+ * Class EnforcementMotDemoTestTest.
  */
 class EnforcementMotDemoTestTest extends PHPUnit_Framework_TestCase
 {

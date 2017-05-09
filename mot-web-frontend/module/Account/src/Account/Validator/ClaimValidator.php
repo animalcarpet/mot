@@ -3,17 +3,10 @@
 namespace Account\Validator;
 
 use Account\Controller\ClaimController;
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use DvsaCommon\Validator\PasswordValidator;
-use Zend\InputFilter\Input;
 use Zend\InputFilter\InputFilter;
-use Zend\Validator\EmailAddress;
 use Zend\Validator\Identical;
-use Zend\Validator\Regex;
 
-/**
- *
- */
 class ClaimValidator
 {
     // Step 1 (Confirm password) validation messages for Reset Account Security process
@@ -118,7 +111,7 @@ class ClaimValidator
                     [
                         'name' => 'not_empty',
                         'options' => [
-                            'message' => self::ERR_MSG_PASSWORD_EMPTY
+                            'message' => self::ERR_MSG_PASSWORD_EMPTY,
                         ],
                     ],
                     [
@@ -130,7 +123,7 @@ class ClaimValidator
                             'callback' => function ($value) use ($data) {
                                 return $data['username'] !== $value;
                             },
-                            'message' => self::ERR_MSG_PASSWORD_SAME_AS_USERNAME
+                            'message' => self::ERR_MSG_PASSWORD_SAME_AS_USERNAME,
                         ],
                     ],
                 ],
@@ -146,15 +139,15 @@ class ClaimValidator
                         [
                             'name' => 'not_empty',
                             'options' => [
-                                'message' => self::ERR_MSG_PASSWORD_CONFIRM_EMPTY
-                            ]
+                                'message' => self::ERR_MSG_PASSWORD_CONFIRM_EMPTY,
+                            ],
                         ],
                         [
                             'name' => 'identical',
                             'options' => [
                                 'token' => 'password',
-                                'message' => self::ERR_MSG_PASSWORD_CONFIRM_MATCH
-                            ]
+                                'message' => self::ERR_MSG_PASSWORD_CONFIRM_MATCH,
+                            ],
                         ],
                     ],
                 ]
@@ -179,21 +172,20 @@ class ClaimValidator
                         [
                             'name' => 'not_empty',
                             'options' => [
-                                'message' => self::ERR_MSG_ANSWER_EMPTY
-                            ]
+                                'message' => self::ERR_MSG_ANSWER_EMPTY,
+                            ],
                         ],
                         [
                             'name' => 'string_length',
                             'options' => [
                                 'max' => self::MAX_ANSWER,
-                                'message' => sprintf(self::ERR_MSG_ANSWER_MAX, self::MAX_ANSWER)
+                                'message' => sprintf(self::ERR_MSG_ANSWER_MAX, self::MAX_ANSWER),
                             ],
                         ],
                     ],
                 ]
             );
         }
-
 
         $filter->setData($data);
 

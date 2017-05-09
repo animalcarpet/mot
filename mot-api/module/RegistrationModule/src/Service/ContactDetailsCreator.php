@@ -35,7 +35,6 @@ class ContactDetailsCreator extends AbstractPersistableService
     private $personContactTypeRepository;
 
     /**
-     *
      * @var EntityRepository
      */
     private $phoneContactTypeRepository;
@@ -134,7 +133,6 @@ class ContactDetailsCreator extends AbstractPersistableService
             ->setAddressLine1($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_ADDRESS_1])
             ->setTown($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_TOWN_OR_CITY])
             ->setPostcode($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_POSTCODE]);
-
 
         /** @var PhoneContactType $phoneContactType */
         $phoneContactType = $this->phoneContactTypeRepository->findOneBy(['code' => PhoneContactTypeCode::PERSONAL]);

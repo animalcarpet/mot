@@ -6,7 +6,6 @@ use Core\Routing\VtsRouteList;
 use Core\ViewModel\MonthFilter\MonthFilter;
 use Zend\Mvc\Controller\Plugin\Url;
 
-
 class TestQualityMonthFilter extends MonthFilter
 {
     private $params;
@@ -18,9 +17,9 @@ class TestQualityMonthFilter extends MonthFilter
     /**
      * @param array $params
      * @param array $queryParams
-     * @param Url $url
+     * @param Url   $url
      */
-    public function __construct(array $params, array $queryParams = array(), Url $url)
+    public function __construct(array $params, array $queryParams, Url $url)
     {
         $this->params = $params;
         $this->url = $url;
@@ -31,6 +30,7 @@ class TestQualityMonthFilter extends MonthFilter
      * @param Url $url
      * @param $month
      * @param $year
+     *
      * @return mixed
      */
     public function getUrlForMonth(Url $url, $month, $year)
@@ -39,7 +39,7 @@ class TestQualityMonthFilter extends MonthFilter
             array_replace($this->params,
                 [
                     'month' => $month,
-                    'year'  => $year,
+                    'year' => $year,
                 ]
             ),
             $this->queryParams

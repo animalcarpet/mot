@@ -1,13 +1,12 @@
 <?php
 
 /**
- * @var string $firstName
+ * @var string
  * @var string $middleName
  * @var string $lastName
  */
-
 $errorMessages = $this->layout()->flashMessenger->getErrorMessages();
-echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorMessages]);
+echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorMessages]);
 ?>
 <form method="POST">
     <?php echo $this->csrfToken(); ?>
@@ -21,7 +20,7 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['firstName']) ? $errors['firstName'] : null,
                 'label' => 'First name',
                 'value' => htmlspecialchars_decode($firstName),
-                'type' => 'text'
+                'type' => 'text',
             ]);
         ?>
     </fieldset>
@@ -35,7 +34,7 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['middleName']) ? $errors['middleName'] : null,
                 'label' => 'Middle name (optional)',
                 'value' => htmlspecialchars_decode($middleName),
-                'type' => 'text'
+                'type' => 'text',
             ]);
         ?>
     </fieldset>
@@ -49,7 +48,7 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['lastName']) ? $errors['lastName'] : null,
                 'label' => 'Last name',
                 'value' => htmlspecialchars_decode($lastName),
-                'type' => 'text'
+                'type' => 'text',
             ]);
         ?>
     </fieldset>

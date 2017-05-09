@@ -14,9 +14,7 @@ use OrganisationApi\Service\AuthorisedExaminerService;
 use SiteApi\Service\SiteService;
 
 /**
- * Class SiteAssessmentValidator
- *
- * @package DvsaMotApi\Model
+ * Class SiteAssessmentValidator.
  */
 class SiteAssessmentValidator
 {
@@ -66,17 +64,17 @@ class SiteAssessmentValidator
 
     public static $fieldLabels
         = [
-            self::F_SITE_DETAILS    => 'Site number and name',
-            self::F_VISIT_OUTCOME   => 'Visit outcome',
-            self::F_TESTER_ID       => 'Tester ID',
+            self::F_SITE_DETAILS => 'Site number and name',
+            self::F_VISIT_OUTCOME => 'Visit outcome',
+            self::F_TESTER_ID => 'Tester ID',
             self::F_ADVISORY_ISSUED => 'Advisory issued',
-            self::F_SITE_SCORE      => 'Site score',
-            self::F_AE_REP_ID       => 'AE/representative ID',
-            self::F_AE_REP_NAME     => 'AE/representative name',
+            self::F_SITE_SCORE => 'Site score',
+            self::F_AE_REP_ID => 'AE/representative ID',
+            self::F_AE_REP_NAME => 'AE/representative name',
             self::F_AE_REP_POSITION => 'AE/representative position',
-            self::F_DAY             => 'Visit day',
-            self::F_MONTH           => 'Visit month',
-            self::F_YEAR            => 'Visit year',
+            self::F_DAY => 'Visit day',
+            self::F_MONTH => 'Visit month',
+            self::F_YEAR => 'Visit year',
         ];
 
     protected static $mandatoryFields
@@ -114,7 +112,7 @@ class SiteAssessmentValidator
      * @param UserService $userService    service manager: User information
      */
     public function __construct(
-        Array $data,
+        array $data,
         $siteService = null,
         $aeService = null,
         $testerService = null,
@@ -164,6 +162,7 @@ class SiteAssessmentValidator
      * that of a real testing station.
      *
      * @return SiteAssessmentValidator
+     *
      * @throws \Exception
      */
     protected function validateSiteDetails()
@@ -175,7 +174,7 @@ class SiteAssessmentValidator
             // that the internal site number is already available in that field.
             $id = null;
 
-            if (isset($this->data[self::F_SITE_SEARCH_ID]) && ((int)-1 != $this->data[self::F_SITE_SEARCH_ID])) {
+            if (isset($this->data[self::F_SITE_SEARCH_ID]) && ((int) -1 != $this->data[self::F_SITE_SEARCH_ID])) {
                 $id = $this->data[self::F_SITE_SEARCH_ID];
             } else {
                 if (1 === preg_match('/\w+/', $this->data[self::F_SITE_DETAILS], $match)) {
@@ -196,7 +195,7 @@ class SiteAssessmentValidator
                     $this->mustHave(
                         !empty($site),
                         self::F_SITE_DETAILS,
-                        'Invalid site number: ' . $id
+                        'Invalid site number: '.$id
                     );
 
                     if ($site && !empty($site->getSiteNumber())) {
@@ -207,6 +206,7 @@ class SiteAssessmentValidator
                 $this->mustHaveField(false, self::F_SITE_DETAILS);
             }
         }
+
         return $this;
     }
 
@@ -230,9 +230,10 @@ class SiteAssessmentValidator
                         break;
                     }
                 }
-                $this->mustHave($validOutcome, self::F_VISIT_OUTCOME, 'Invalid visit outcome: ' . $vo);
+                $this->mustHave($validOutcome, self::F_VISIT_OUTCOME, 'Invalid visit outcome: '.$vo);
             }
         }
+
         return $this;
     }
 
@@ -251,15 +252,17 @@ class SiteAssessmentValidator
                 case 'N':
                     break;
                 default:
-                    $this->mustHave(false, self::F_ADVISORY_ISSUED, 'Invalid advisory issued: ' . $ai);
+                    $this->mustHave(false, self::F_ADVISORY_ISSUED, 'Invalid advisory issued: '.$ai);
             }
         }
+
         return $this;
     }
 
     /**
      * Validate score value is not empty, digit and
      * between SiteAssessment::RISK_SCORE_MIN and SiteAssessment::RISK_SCORE_MAX.
+     *
      * @see SiteAssessment
      *
      * @return SiteAssessmentValidator
@@ -267,7 +270,7 @@ class SiteAssessmentValidator
     protected function validateScore()
     {
         $visitOutcome = ArrayUtils::tryGet($this->data, self::F_VISIT_OUTCOME, null);
-        if (!empty($visitOutcome) && (int)$visitOutcome === self::VO_ABANDONED) {
+        if (!empty($visitOutcome) && (int) $visitOutcome === self::VO_ABANDONED) {
             return $this;
         }
 
@@ -275,14 +278,14 @@ class SiteAssessmentValidator
         $fieldName = self::$fieldLabels[self::F_SITE_SCORE];
 
         $this->mustHave(
-            is_numeric($score) && (float)$score >= SiteAssessment::RISK_SCORE_MIN,
+            is_numeric($score) && (float) $score >= SiteAssessment::RISK_SCORE_MIN,
             $fieldName,
             'A site score must be a number and greater or equals zero'
         );
         $this->mustHave(
-            (float)$score <= SiteAssessment::RISK_SCORE_MAX,
+            (float) $score <= SiteAssessment::RISK_SCORE_MAX,
             $fieldName,
-            'A site score cannot be higher than ' . SiteAssessment::RISK_SCORE_MAX
+            'A site score cannot be higher than '.SiteAssessment::RISK_SCORE_MAX
         );
 
         return $this;
@@ -314,7 +317,7 @@ class SiteAssessmentValidator
                 $this->mustHave(
                     !empty($data),
                     self::F_AE_REP_ID,
-                    'Invalid AE/representative ID: ' . $aeId
+                    'Invalid AE/representative ID: '.$aeId
                 );
             }
         }
@@ -372,10 +375,11 @@ class SiteAssessmentValidator
                 $this->mustHave(
                     !empty($data),
                     self::F_TESTER_ID,
-                    'Invalid Tester ID: ' . $testerId
+                    'Invalid Tester ID: '.$testerId
                 );
             }
         }
+
         return $this;
     }
 
@@ -433,6 +437,7 @@ class SiteAssessmentValidator
                 }
             }
         }
+
         return $this;
     }
 
@@ -444,11 +449,12 @@ class SiteAssessmentValidator
      * @param $fieldName String contains the internal field name to map to a label
      *
      * @return true or false
+     *
      * @throws \Exception containing $message
      */
     protected function mustHaveField($condition, $fieldName)
     {
-        return $this->mustHave($condition, $fieldName, 'Missing value: ' . self::$fieldLabels[$fieldName]);
+        return $this->mustHave($condition, $fieldName, 'Missing value: '.self::$fieldLabels[$fieldName]);
     }
 
     /**
@@ -460,7 +466,8 @@ class SiteAssessmentValidator
      * @param $message   String containing the exception message (if required)
      *
      * @throws \Exception containing $message
-     * @return Bool true if the condition was met
+     *
+     * @return bool true if the condition was met
      */
     protected function mustHave($condition, $fieldName, $message)
     {
@@ -475,6 +482,7 @@ class SiteAssessmentValidator
         );
 
         $this->errors[$fieldName] = $error;
+
         return false;
     }
 

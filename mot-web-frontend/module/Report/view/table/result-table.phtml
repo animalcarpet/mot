@@ -3,8 +3,8 @@
 use Report\Table\ColumnOptions;
 
 /**
- * @var \Report\Table\Table $table
- * @var ColumnOptions[] $columns
+ * @var \Report\Table\Table
+ * @var ColumnOptions[]     $columns
  */
 $table = $this->table;
 $columns = $table->getColumns();
@@ -23,7 +23,7 @@ if (empty($data)) {
             foreach ($columns as $col):
                 $escTitle = $this->escapeHtml($col->getTitle());
                 $escSortCssClass = $col->getSortCssClass();
-                $escThCssClass = $col->getThClass();;
+                $escThCssClass = $col->getThClass();
                 ?>
                 <th scope="col" class="<?php echo $escThCssClass; ?>">
                     <?php if (!empty($col->getSortBy())): ?>
@@ -42,7 +42,7 @@ if (empty($data)) {
         <?php foreach ($table->getData() as $row): ?>
             <tr>
                 <?php foreach ($columns as $col):
-                    $escTdCssClass =$col->getTdClass();
+                    $escTdCssClass = $col->getTdClass();
                     $escBody = $col->renderCellContent($row, $this);
                     ?>
                     <td class="<?php echo $escTdCssClass; ?>">

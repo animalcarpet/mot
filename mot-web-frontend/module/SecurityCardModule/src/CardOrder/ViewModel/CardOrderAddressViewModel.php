@@ -8,7 +8,7 @@ use Zend\Form\Form;
 class CardOrderAddressViewModel
 {
     /**
-     * @var SecurityCardAddressForm $form
+     * @var SecurityCardAddressForm
      */
     private $form;
 

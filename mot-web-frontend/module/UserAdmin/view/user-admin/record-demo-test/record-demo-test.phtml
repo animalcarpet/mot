@@ -37,8 +37,8 @@
 <form action="<?php echo
     $this->url(
         'user_admin/profile/record-demo-test', [
-            'personId'          => $viewModel->getTester()->getId(),
-            'vehicleClassGroup' => $viewModel->getVehicleClassGroup()
+            'personId' => $viewModel->getTester()->getId(),
+            'vehicleClassGroup' => $viewModel->getVehicleClassGroup(),
         ]
     ); ?>" method="post">
     <?php echo $this->csrfToken() ?>
@@ -49,11 +49,11 @@
             <li>
                 <a id="cancel-record-demo-test" href="<?php
                     echo $this->url(
-                            "user_admin/user-profile",
+                            'user_admin/user-profile',
                             [
-                                "personId" => $viewModel->getTester()->getId()
+                                'personId' => $viewModel->getTester()->getId(),
                             ], [
-                                "query" => $viewModel->getSearchQueryParams()
+                                'query' => $viewModel->getSearchQueryParams(),
                             ]
                         ); ?>">Cancel and return to user profile
                 </a>

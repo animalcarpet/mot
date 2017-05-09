@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Model;
 
 use PHPUnit_Framework_TestCase;
@@ -36,14 +37,14 @@ class SpecialNoticeTest extends PHPUnit_Framework_TestCase
 
     public function testExchangeArraySetsPropertiesCorrectly()
     {
-        $sn    = new SpecialNotice();
-        $data  = [
-            'title'                 => 'test title',
-            'internalPublishDate'   => '2014-10-11',
-            'externalPublishDate'   => '2015-12-13',
-            'expiryDate'            => '2015-12-14',
-            'targetRoles'           => ['TESTER-CLASS-1', 'TESTER-CLASS-2'],
-            'noticeText'            => 'This is the body of the message',
+        $sn = new SpecialNotice();
+        $data = [
+            'title' => 'test title',
+            'internalPublishDate' => '2014-10-11',
+            'externalPublishDate' => '2015-12-13',
+            'expiryDate' => '2015-12-14',
+            'targetRoles' => ['TESTER-CLASS-1', 'TESTER-CLASS-2'],
+            'noticeText' => 'This is the body of the message',
         ];
 
         $sn->exchangeArray($data);

@@ -4,14 +4,13 @@ namespace DvsaCommonApiTest\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaFeature\FeatureToggles;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class AbstractDvsaRestfulControllerTest
+ * Class AbstractDvsaRestfulControllerTest.
  */
 class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCase
 {
-    const ENABLED_FEATURE  = 'enabledFeature';
+    const ENABLED_FEATURE = 'enabledFeature';
     const DISABLED_FEATURE = 'disabledFeature';
 
     protected function setUp()
@@ -59,7 +58,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     public function testCreateReturns405()
     {
         $this->request->setMethod('post');
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }
@@ -68,7 +67,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     {
         $this->request->setMethod('delete');
         $this->routeMatch->setParam('id', 1);
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }
@@ -76,7 +75,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     public function testDeleteListReturns405()
     {
         $this->request->setMethod('delete');
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }
@@ -84,14 +83,14 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     public function testGetReturns405()
     {
         $this->routeMatch->setParam('id', 1);
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }
 
     public function testGetListReturns405()
     {
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }
@@ -100,7 +99,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     {
         $this->request->setMethod('head');
         $this->routeMatch->setParam('id', 1);
-        $result  = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertEquals(405, $response->getStatusCode());
@@ -109,7 +108,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     public function testOptionsReturns405()
     {
         $this->request->setMethod('options');
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertEquals(405, $response->getStatusCode());
@@ -119,7 +118,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     {
         $this->request->setMethod('patch');
         $this->routeMatch->setParam('id', 1);
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }
@@ -127,7 +126,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     public function testReplaceListReturns405()
     {
         $this->request->setMethod('put');
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }
@@ -136,7 +135,7 @@ class AbstractDvsaRestfulControllerTest extends AbstractRestfulControllerTestCas
     {
         $this->request->setMethod('put');
         $this->routeMatch->setParam('id', 1);
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
         $this->assertResponse405Error($response, $result);
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service\MotTestingCertificate;
 
 use DvsaCommon\Auth\Assertion\RemoveMotTestingCertificateAssertion;
@@ -39,30 +40,30 @@ class RemoveMotTestingCertificateServiceTest extends \PHPUnit_Framework_TestCase
         $this
             ->mapper
             ->expects($this->any())
-            ->method("getAuthorisation")
+            ->method('getAuthorisation')
             ->willReturn(new TesterAuthorisation())
             ;
 
         $this
             ->qualificationAwardRepository
             ->expects($this->any())
-            ->method("getOneByGroupAndPersonId")
+            ->method('getOneByGroupAndPersonId')
             ->willReturn((new QualificationAward())->setPerson(new Person()))
         ;
     }
 
     public function testExecuteRemoveCertificate()
     {
-        $this->assertion->expects($this->once())->method("assertGranted");
-        $this->transaction->expects($this->once())->method("begin");
-        $this->event->expects($this->once())->method("sendRemoveEvent");
-        $this->notification->expects($this->once())->method("sendRemoveNotification");
-        $this->personQualificationStatusService->expects($this->once())->method("removeStatus");
-        $this->qualificationAwardRepository->expects($this->once())->method("remove");
-        $this->qualificationAwardRepository->expects($this->once())->method("flush");
-        $this->transaction->expects($this->exactly(1))->method("commit");
+        $this->assertion->expects($this->once())->method('assertGranted');
+        $this->transaction->expects($this->once())->method('begin');
+        $this->event->expects($this->once())->method('sendRemoveEvent');
+        $this->notification->expects($this->once())->method('sendRemoveNotification');
+        $this->personQualificationStatusService->expects($this->once())->method('removeStatus');
+        $this->qualificationAwardRepository->expects($this->once())->method('remove');
+        $this->qualificationAwardRepository->expects($this->once())->method('flush');
+        $this->transaction->expects($this->exactly(1))->method('commit');
 
-        $this->transaction->expects($this->exactly(0))->method("rollback");
+        $this->transaction->expects($this->exactly(0))->method('rollback');
 
         $this->createService()->execute(1, VehicleClassGroupCode::BIKES);
     }
@@ -75,8 +76,8 @@ class RemoveMotTestingCertificateServiceTest extends \PHPUnit_Framework_TestCase
         $this
             ->assertion
             ->expects($this->once())
-            ->method("assertGranted")
-            ->willThrowException(new UnauthorisedException(""))
+            ->method('assertGranted')
+            ->willThrowException(new UnauthorisedException(''))
         ;
 
         $this->createService()->execute(1, VehicleClassGroupCode::BIKES);
@@ -87,24 +88,23 @@ class RemoveMotTestingCertificateServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteRollBackChangesWhenSomethingGoesWrongDuringSendingEvent()
     {
-        $this->assertion->expects($this->once())->method("assertGranted");
-        $this->transaction->expects($this->once())->method("begin");
+        $this->assertion->expects($this->once())->method('assertGranted');
+        $this->transaction->expects($this->once())->method('begin');
 
         $this
             ->event
             ->expects($this->once())
-            ->method("sendRemoveEvent")
+            ->method('sendRemoveEvent')
             ->willThrowException(new \Exception())
         ;
 
-        $this->notification->expects($this->exactly(0))->method("sendRemoveNotification");
-        $this->personQualificationStatusService->expects($this->exactly(0))->method("removeStatus");
-        $this->qualificationAwardRepository->expects($this->exactly(0))->method("remove");
-        $this->qualificationAwardRepository->expects($this->exactly(0))->method("flush");
-        $this->transaction->expects($this->exactly(0))->method("commit");
+        $this->notification->expects($this->exactly(0))->method('sendRemoveNotification');
+        $this->personQualificationStatusService->expects($this->exactly(0))->method('removeStatus');
+        $this->qualificationAwardRepository->expects($this->exactly(0))->method('remove');
+        $this->qualificationAwardRepository->expects($this->exactly(0))->method('flush');
+        $this->transaction->expects($this->exactly(0))->method('commit');
 
-        $this->transaction->expects($this->once())->method("rollback");
-
+        $this->transaction->expects($this->once())->method('rollback');
 
         $this->createService()->execute(1, VehicleClassGroupCode::BIKES);
     }
@@ -114,24 +114,23 @@ class RemoveMotTestingCertificateServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteRollBackChangesWhenSomethingGoesWrongDuringSendingNotification()
     {
-        $this->assertion->expects($this->once())->method("assertGranted");
-        $this->transaction->expects($this->once())->method("begin");
-        $this->event->expects($this->once())->method("sendRemoveEvent");
+        $this->assertion->expects($this->once())->method('assertGranted');
+        $this->transaction->expects($this->once())->method('begin');
+        $this->event->expects($this->once())->method('sendRemoveEvent');
 
         $this
             ->notification
             ->expects($this->once())
-            ->method("sendRemoveNotification")
+            ->method('sendRemoveNotification')
             ->willThrowException(new \Exception())
         ;
 
-        $this->personQualificationStatusService->expects($this->exactly(0))->method("removeStatus");
-        $this->qualificationAwardRepository->expects($this->exactly(0))->method("remove");
-        $this->qualificationAwardRepository->expects($this->exactly(0))->method("flush");
-        $this->transaction->expects($this->exactly(0))->method("commit");
+        $this->personQualificationStatusService->expects($this->exactly(0))->method('removeStatus');
+        $this->qualificationAwardRepository->expects($this->exactly(0))->method('remove');
+        $this->qualificationAwardRepository->expects($this->exactly(0))->method('flush');
+        $this->transaction->expects($this->exactly(0))->method('commit');
 
-        $this->transaction->expects($this->once())->method("rollback");
-
+        $this->transaction->expects($this->once())->method('rollback');
 
         $this->createService()->execute(1, VehicleClassGroupCode::BIKES);
     }
@@ -141,23 +140,22 @@ class RemoveMotTestingCertificateServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteRollBackChangesWhenSomethingGoesWrongDuringChangingStatus()
     {
-        $this->assertion->expects($this->once())->method("assertGranted");
-        $this->transaction->expects($this->once())->method("begin");
-        $this->event->expects($this->once())->method("sendRemoveEvent");
-        $this->notification->expects($this->once())->method("sendRemoveNotification");
+        $this->assertion->expects($this->once())->method('assertGranted');
+        $this->transaction->expects($this->once())->method('begin');
+        $this->event->expects($this->once())->method('sendRemoveEvent');
+        $this->notification->expects($this->once())->method('sendRemoveNotification');
 
         $this
             ->personQualificationStatusService
             ->expects($this->once())
-            ->method("removeStatus")
+            ->method('removeStatus')
             ->willThrowException(new \Exception())
         ;
-        $this->qualificationAwardRepository->expects($this->exactly(0))->method("remove");
-        $this->qualificationAwardRepository->expects($this->exactly(0))->method("flush");
-        $this->transaction->expects($this->exactly(0))->method("commit");
+        $this->qualificationAwardRepository->expects($this->exactly(0))->method('remove');
+        $this->qualificationAwardRepository->expects($this->exactly(0))->method('flush');
+        $this->transaction->expects($this->exactly(0))->method('commit');
 
-        $this->transaction->expects($this->once())->method("rollback");
-
+        $this->transaction->expects($this->once())->method('rollback');
 
         $this->createService()->execute(1, VehicleClassGroupCode::BIKES);
     }
@@ -167,23 +165,22 @@ class RemoveMotTestingCertificateServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteRollBackChangesWhenSomethingGoesWrongDuringRemovingNotification()
     {
-        $this->assertion->expects($this->once())->method("assertGranted");
-        $this->transaction->expects($this->once())->method("begin");
-        $this->event->expects($this->once())->method("sendRemoveEvent");
-        $this->notification->expects($this->once())->method("sendRemoveNotification");
-        $this->personQualificationStatusService->expects($this->exactly(1))->method("removeStatus");
-        $this->qualificationAwardRepository->expects($this->once())->method("remove");
-        $this->transaction->expects($this->exactly(0))->method("commit");
+        $this->assertion->expects($this->once())->method('assertGranted');
+        $this->transaction->expects($this->once())->method('begin');
+        $this->event->expects($this->once())->method('sendRemoveEvent');
+        $this->notification->expects($this->once())->method('sendRemoveNotification');
+        $this->personQualificationStatusService->expects($this->exactly(1))->method('removeStatus');
+        $this->qualificationAwardRepository->expects($this->once())->method('remove');
+        $this->transaction->expects($this->exactly(0))->method('commit');
 
         $this
             ->qualificationAwardRepository
             ->expects($this->once())
-            ->method("flush")
+            ->method('flush')
             ->willThrowException(new \Exception())
         ;
 
-        $this->transaction->expects($this->once())->method("rollback");
-
+        $this->transaction->expects($this->once())->method('rollback');
 
         $this->createService()->execute(1, VehicleClassGroupCode::BIKES);
     }
@@ -200,5 +197,4 @@ class RemoveMotTestingCertificateServiceTest extends \PHPUnit_Framework_TestCase
             $this->transaction
         );
     }
-
 }

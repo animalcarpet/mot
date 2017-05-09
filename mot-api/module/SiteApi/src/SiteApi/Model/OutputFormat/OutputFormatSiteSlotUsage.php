@@ -13,7 +13,7 @@ class OutputFormatSiteSlotUsage extends OutputFormat
 {
     /**
      * Responsible for extracting the current item into the required format
-     * and adding to the passed results array
+     * and adding to the passed results array.
      *
      * @param $results
      * @param $key
@@ -27,8 +27,8 @@ class OutputFormatSiteSlotUsage extends OutputFormat
     {
         $result = [
             'id' => $item->getId(),
-            'date' => DateTimeApiFormat::dateTime($item->getCompletedDate()) ,
-            'tester' => $item->getTester()->getFirstName() . ' ' . $item->getTester()->getFamilyName(),
+            'date' => DateTimeApiFormat::dateTime($item->getCompletedDate()),
+            'tester' => $item->getTester()->getFirstName().' '.$item->getTester()->getFamilyName(),
             'vrn' => $item->getVehicle()->getRegistration(),
         ];
 

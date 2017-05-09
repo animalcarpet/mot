@@ -5,7 +5,7 @@ namespace DvsaCommonApi\Service\Validator;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 
 /**
- * Class DrivingLicenceValidator
+ * Class DrivingLicenceValidator.
  */
 class DrivingLicenceValidator extends AbstractValidator
 {
@@ -42,11 +42,11 @@ class DrivingLicenceValidator extends AbstractValidator
             case self::TYPE_DRIVING_LICENCE_UK:
                 if (
                     preg_match(
-                        "/^([A-Z]{2}[9]{3}|[A-Z]{3}[9]{2}|[A-Z]{4}[9]{1}|[A-Z]{5})[0-9]{6}([A-Z]{1}[9]{1}|[A-Z]{2})[0-9]{1}[A-Z0-9]{2}[0-9]{2}$/",
+                        '/^([A-Z]{2}[9]{3}|[A-Z]{3}[9]{2}|[A-Z]{4}[9]{1}|[A-Z]{5})[0-9]{6}([A-Z]{1}[9]{1}|[A-Z]{2})[0-9]{1}[A-Z0-9]{2}[0-9]{2}$/',
                         $drivingLicenceNumber
                     )
                     || preg_match(
-                        "/^[0-9]{8}$/",
+                        '/^[0-9]{8}$/',
                         $drivingLicenceNumber
                     )
                 ) {

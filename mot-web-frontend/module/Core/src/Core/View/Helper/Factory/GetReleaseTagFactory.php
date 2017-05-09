@@ -8,13 +8,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class GetReleaseTagFactory implements FactoryInterface
 {
-
     /**
      * This ViewHelper service will check for the following variable in application.config.php
      * footer_can_render_release_tag
-     * The default is FALSE
+     * The default is FALSE.
      *
      * @param ServiceLocatorInterface $viewHelperServiceLocator
+     *
      * @return GetReleaseTag
      */
     public function createService(ServiceLocatorInterface $viewHelperServiceLocator)

@@ -16,7 +16,7 @@ class SurveyTest extends PHPUnit_Framework_TestCase
     public function testToString()
     {
         $survey = new Survey(5);
-        $this->assertSame("Survey[id: null] rating: 5", (string) $survey);
+        $this->assertSame('Survey[id: null] rating: 5', (string) $survey);
     }
 
     public function testGetRating()

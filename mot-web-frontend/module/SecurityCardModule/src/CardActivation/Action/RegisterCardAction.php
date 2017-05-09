@@ -11,10 +11,10 @@ use Zend\Http\Request;
 
 abstract class RegisterCardAction
 {
-    const REGISTER_PAGE_SUBTITLE = "Your profile";
-    const REGISTER_SUCCESS_TITLE = "Security card activated";
+    const REGISTER_PAGE_SUBTITLE = 'Your profile';
+    const REGISTER_SUCCESS_TITLE = 'Security card activated';
 
-    /**  @var RegisterCardViewStrategy */
+    /** @var RegisterCardViewStrategy */
     protected $viewStrategy;
 
     public function __construct(
@@ -23,7 +23,7 @@ abstract class RegisterCardAction
         $this->viewStrategy = $viewStrategy;
     }
 
-    public abstract function doExecute(Request $request);
+    abstract public function doExecute(Request $request);
 
     public function execute(Request $request)
     {

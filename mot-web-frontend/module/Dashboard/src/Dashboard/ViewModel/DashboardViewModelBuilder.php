@@ -25,9 +25,9 @@ class DashboardViewModelBuilder
      * DashboardViewModelBuilder constructor.
      *
      * @param MotFrontendIdentityInterface $identity
-     * @param Dashboard $dashboard
-     * @param DashboardGuard $dashboardGuard
-     * @param Url $url
+     * @param Dashboard                    $dashboard
+     * @param DashboardGuard               $dashboardGuard
+     * @param Url                          $url
      */
     public function __construct(
         MotFrontendIdentityInterface $identity,

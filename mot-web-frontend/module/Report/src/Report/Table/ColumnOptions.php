@@ -8,9 +8,7 @@ use Zend\Stdlib\AbstractOptions;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Contains parameters of table Column and related functionality (draw, sorting and other)
- *
- * @package Report\Table
+ * Contains parameters of table Column and related functionality (draw, sorting and other).
  */
 class ColumnOptions extends AbstractOptions
 {
@@ -50,7 +48,7 @@ class ColumnOptions extends AbstractOptions
      */
     private $sub;
     /**
-     * @var  Table
+     * @var Table
      */
     private $table;
     /**
@@ -59,7 +57,7 @@ class ColumnOptions extends AbstractOptions
     private $escapeHtml = true;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEscapeHtml()
     {
@@ -67,7 +65,7 @@ class ColumnOptions extends AbstractOptions
     }
 
     /**
-     * @param boolean $escapeHtml
+     * @param bool $escapeHtml
      *
      * @return $this
      */
@@ -119,7 +117,7 @@ class ColumnOptions extends AbstractOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSortable()
     {
@@ -127,13 +125,13 @@ class ColumnOptions extends AbstractOptions
     }
 
     /**
-     * @param boolean $sortable
+     * @param bool $sortable
      *
      * @return $this
      */
     public function setSortable($sortable)
     {
-        $this->sortable = (boolean) $sortable;
+        $this->sortable = (bool) $sortable;
 
         return $this;
     }
@@ -154,6 +152,7 @@ class ColumnOptions extends AbstractOptions
     public function setSortBy($sortBy)
     {
         $this->sortBy = $sortBy;
+
         return $this;
     }
 
@@ -235,7 +234,7 @@ class ColumnOptions extends AbstractOptions
         $subCols = [];
 
         foreach ($sub as $item) {
-            $subCols[] = new ColumnOptions($item);
+            $subCols[] = new self($item);
         }
 
         $this->sub = $subCols;
@@ -268,7 +267,7 @@ class ColumnOptions extends AbstractOptions
     }
 
     /**
-     * Get sort class based on query parameters
+     * Get sort class based on query parameters.
      *
      * @return string
      */
@@ -281,15 +280,15 @@ class ColumnOptions extends AbstractOptions
             return '';
         }
 
-        return (
+        return
             $searchParams->getSortDirection() === SearchParamConst::SORT_DIRECTION_ASC
             ? self::SORT_CSS_ASC
             : self::SORT_CSS_DESC
-        );
+        ;
     }
 
     /**
-     * Get Url for sorting based on query parameters
+     * Get Url for sorting based on query parameters.
      *
      * @param PhpRenderer $renderer
      *
@@ -318,7 +317,7 @@ class ColumnOptions extends AbstractOptions
 
     /**
      * Render cell content based on provided formatter,
-     * which can be either a closure or class implementing FormatterInterface
+     * which can be either a closure or class implementing FormatterInterface.
      *
      * @param array       $row
      * @param PhpRenderer $view
@@ -335,7 +334,7 @@ class ColumnOptions extends AbstractOptions
                 $result[] = $col->renderCellContent($row, $view);
             }
 
-            return join('', $result);
+            return implode('', $result);
         }
 
         //  --  if have single field column --
@@ -346,7 +345,7 @@ class ColumnOptions extends AbstractOptions
 
         $formatterClass = $this->getFormatter();
         if (!empty($formatterClass) && class_exists($formatterClass)) {
-            $method = '\\' . $formatterClass . '::format';
+            $method = '\\'.$formatterClass.'::format';
             if (is_callable($method)) {
                 return call_user_func($method, $row, $this, $view);
             }

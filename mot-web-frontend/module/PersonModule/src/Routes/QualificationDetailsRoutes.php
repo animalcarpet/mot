@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Routes;
 
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -15,6 +16,7 @@ class QualificationDetailsRoutes extends PersonProfileRoutes implements AutoWire
     public function getRoute()
     {
         $route = parent::getRoute();
+
         return $route.self::ROUTE_QUALIFICATION_DETAILS;
     }
 

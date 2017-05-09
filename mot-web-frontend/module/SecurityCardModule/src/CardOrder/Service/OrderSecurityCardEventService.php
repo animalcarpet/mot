@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service;
 
 use DvsaCommon\Date\DateTimeHolder;
@@ -19,7 +20,8 @@ class OrderSecurityCardEventService
      */
     public function __construct(HttpRestJsonClient $jsonClient,
                                 MotFrontendIdentityProvider $identityProvider,
-                                DateTimeHolder $dateTimeHolder) {
+                                DateTimeHolder $dateTimeHolder)
+    {
         $this->jsonClient = $jsonClient;
         $this->identityProvider = $identityProvider;
         $this->dateTimeHolder = $dateTimeHolder;
@@ -29,10 +31,11 @@ class OrderSecurityCardEventService
     {
         $url = EventUrlBuilder::of()->addPersonEvent($recipientId)->toString();
         $identity = $this->identityProvider->getIdentity();
-        $postData =  $this->formatApiRequest($identity->getUsername(), $address);
+        $postData = $this->formatApiRequest($identity->getUsername(), $address);
 
         try {
             $response = $this->jsonClient->post($url, $postData);
+
             return true;
         } catch (GeneralRestException $e) {
             return false;
@@ -42,9 +45,10 @@ class OrderSecurityCardEventService
     private function formatApiRequest($username, $address)
     {
         $date = $this->dateTimeHolder->getUserCurrent();
+
         return [
             'eventTypeCode' => EventTypeCode::CREATE_SECURITY_CARD_ORDER,
-            'description' => 'Security card ordered by ' . $username . ' at ' . $date->format('g:ia') .' to ' . $address,
+            'description' => 'Security card ordered by '.$username.' at '.$date->format('g:ia').' to '.$address,
         ];
     }
 }

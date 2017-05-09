@@ -14,12 +14,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 
 /**
- * Class VehicleServiceFactory
+ * Class VehicleServiceFactory.
  */
 class AuthorisationServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return AuthorisationService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

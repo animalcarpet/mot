@@ -15,7 +15,7 @@ class BrakeTestResultsResourceTest extends \PHPUnit_Framework_TestCase
         $client = \DvsaCommonTest\TestUtils\XMock::of(Client::class);
 
         $client->expects($this->once())->method('postJson')->will(
-            $this->returnValue(['data' => [(int)(100 * rand())]])
+            $this->returnValue(['data' => [(int) (100 * rand())]])
         );
 
         $this->resource = new BrakeTestResultsResource($client);

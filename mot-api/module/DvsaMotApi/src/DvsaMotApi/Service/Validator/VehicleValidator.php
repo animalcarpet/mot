@@ -9,17 +9,16 @@ use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
-use DvsaMotTest\Fieldset\FirstRegistrationDateValidator;
 
 /**
- * Class VehicleValidator
+ * Class VehicleValidator.
  */
 class VehicleValidator extends AbstractValidator
 {
     const LIMIT_CC_MIN = 0.1;
     const LIMIT_CC_MAX = 10000;
-    const MODEL_OTHER = "OTHER";
-    const MAKE_OTHER = "OTHER";
+    const MODEL_OTHER = 'OTHER';
+    const MAKE_OTHER = 'OTHER';
 
     const LIMIT_REG_MAX = 13;
     const LIMIT_VIN_MAX = 20;
@@ -49,7 +48,7 @@ class VehicleValidator extends AbstractValidator
     {
         $requiredFields = self::$requiredFields;
 
-        $isCylinderCapacityCompulsory = 
+        $isCylinderCapacityCompulsory =
             FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($data['fuelTypeCode']);
 
         if ($isCylinderCapacityCompulsory) {
@@ -67,16 +66,16 @@ class VehicleValidator extends AbstractValidator
         $vrmAndVinValidator = new VehicleVrmVinValidator();
         $vrmAndVinValidator->validate($data, $this->errors);
 
-        if (VehicleClassCode::exists((string)$data['testClass']) === false) {
+        if (VehicleClassCode::exists((string) $data['testClass']) === false) {
             $this->errors->add(sprintf(Errors::CLASS_INVALID, $data['testClass']), 'testClass');
         }
 
         if (!array_key_exists('makeOther', $data)) {
-            $this->errors->add(sprintf(Errors::MISSING_PARAM, "makeOther"), "makeOther");
+            $this->errors->add(sprintf(Errors::MISSING_PARAM, 'makeOther'), 'makeOther');
         }
 
         if (!array_key_exists('modelOther', $data)) {
-            $this->errors->add(sprintf(Errors::MISSING_PARAM, "modelOther"), "modelOther");
+            $this->errors->add(sprintf(Errors::MISSING_PARAM, 'modelOther'), 'modelOther');
         }
 
         $makeOther = ArrayUtils::tryGet($data, 'makeOther');
@@ -117,9 +116,9 @@ class VehicleValidator extends AbstractValidator
     private function validateMake($make, $makeOther)
     {
         if (!$make) {
-            $this->errors->add("You must choose a manufacturer");
+            $this->errors->add('You must choose a manufacturer');
         } elseif ($make === self::MAKE_OTHER && !$makeOther) {
-            $this->errors->add("You must enter a manufacturer", "makeOther");
+            $this->errors->add('You must enter a manufacturer', 'makeOther');
         } elseif ($make !== self::MAKE_OTHER && $makeOther) {
             $this->errors->add("You can only enter a new manufacturer if you choose 'other' from the list of manufacturers");
         }
@@ -128,11 +127,11 @@ class VehicleValidator extends AbstractValidator
     private function validateModel($model, $modelOther, $make)
     {
         if (!$model) {
-            $this->errors->add("You must choose a model");
+            $this->errors->add('You must choose a model');
         } elseif ($make === self::MAKE_OTHER && $model !== self::MODEL_OTHER) {
-            $this->errors->add("Model must be related to a manufacturer", 'model');
+            $this->errors->add('Model must be related to a manufacturer', 'model');
         } elseif ($model === self::MODEL_OTHER && !$modelOther) {
-            $this->errors->add("You must enter a model", "modelOther");
+            $this->errors->add('You must enter a model', 'modelOther');
         } elseif ($model !== self::MODEL_OTHER && $modelOther) {
             $this->errors->add("You can only enter a new model if you choose 'other' from the list of models");
         }

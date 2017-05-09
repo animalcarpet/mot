@@ -6,9 +6,7 @@ use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class CheckScoreForCategoryNotApplicable
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class CheckScoreForCategoryNotApplicable.
  */
 class CheckScoreForDefectNotApplicable extends BaseValidator
 {
@@ -16,7 +14,7 @@ class CheckScoreForDefectNotApplicable extends BaseValidator
      * Pattern for validation of an RFR.
      * - Do the relevant check,
      * - set the error if required
-     * - return true if passed
+     * - return true if passed.
      *
      * @return bool|ErrorMessage
      */
@@ -25,7 +23,7 @@ class CheckScoreForDefectNotApplicable extends BaseValidator
         $disallowedScores = [
             self::SCORE_DEFECT_MISSED_VALUE,
             self::SCORE_DAMAGE_MISSED_VALUE,
-            self::SCORE_RISK_INJURY_MISSED_VALUE
+            self::SCORE_RISK_INJURY_MISSED_VALUE,
         ];
 
         if (in_array(intval($this->values['score']), $disallowedScores)
@@ -40,6 +38,7 @@ class CheckScoreForDefectNotApplicable extends BaseValidator
                 ['mappedRfrs' => [$this->mappedRfrId => ['score' => null]]]
             );
         }
+
         return $this->error === null;
     }
 }

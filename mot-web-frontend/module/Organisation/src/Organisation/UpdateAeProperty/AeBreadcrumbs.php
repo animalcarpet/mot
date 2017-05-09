@@ -1,4 +1,5 @@
 <?php
+
 namespace Organisation\UpdateAeProperty;
 
 use Core\Routing\AeRoutes;
@@ -17,9 +18,9 @@ class AeBreadcrumbs
     private $url;
 
     /**
-     * @param OrganisationDto $ae
+     * @param OrganisationDto                  $ae
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param Url $url
+     * @param Url                              $url
      */
     public function __construct(OrganisationDto $ae, MotAuthorisationServiceInterface $authorisationService, Url $url)
     {

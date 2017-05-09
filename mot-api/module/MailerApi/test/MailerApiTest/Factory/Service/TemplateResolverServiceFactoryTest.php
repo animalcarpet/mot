@@ -2,7 +2,6 @@
 
 namespace MailerApiTest\Factory\Service;
 
-use DvsaCommonTest\TestUtils\XMock;
 use MailerApi\Factory\Service\TemplateResolverServiceFactory;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;

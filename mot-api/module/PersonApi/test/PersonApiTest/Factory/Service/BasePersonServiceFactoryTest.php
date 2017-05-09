@@ -14,12 +14,9 @@ use PersonApi\Factory\Service\BasePersonServiceFactory;
 use PersonApi\Service\BasePersonService;
 use PersonApi\Service\Validator\BasePersonValidator;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class BasePersonServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class BasePersonServiceFactoryTest.
  */
 class BasePersonServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

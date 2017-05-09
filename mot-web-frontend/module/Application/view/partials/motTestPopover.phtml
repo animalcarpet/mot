@@ -1,8 +1,7 @@
 <?php
 /**
- * @var string $durationTime
+ * @var string
  */
-
 $durationTime = $this->durationTime;
 ?>
 
@@ -18,8 +17,8 @@ $rfrs = isset($motTest['reasonsForRejection']) ? $motTest['reasonsForRejection']
 
 if (isset($rfrs) && count($rfrs)) {
     $keys = [
-        'FAIL'     => ['title' => 'Fails'],
-        'PRS'      => ['title' => 'PRS'],
+        'FAIL' => ['title' => 'Fails'],
+        'PRS' => ['title' => 'PRS'],
         'ADVISORY' => ['title' => 'Advisories'],
     ];
 
@@ -31,15 +30,15 @@ if (isset($rfrs) && count($rfrs)) {
         }
 
         if ($rfrsByKey && count($rfrsByKey) != 0) {
-            $result[] = $params['title'] . ': ';
+            $result[] = $params['title'].': ';
 
             foreach ($rfrsByKey as $motRfr) {
-                $result[] = "<span>" . $this->truncate($motRfr['name'], 50) . "</span><br />";
+                $result[] = '<span>'.$this->truncate($motRfr['name'], 50).'</span><br />';
             }
         }
     }
 
-    echo join('', $result);
+    echo implode('', $result);
 }
 ?>
 </div>

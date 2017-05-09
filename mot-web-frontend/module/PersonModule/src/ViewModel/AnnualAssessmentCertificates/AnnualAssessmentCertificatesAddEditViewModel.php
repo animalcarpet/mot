@@ -1,6 +1,6 @@
 <?php
-namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates;
 
+namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates;
 
 use Dvsa\Mot\Frontend\PersonModule\Form\AnnualAssessmentCertificatesForm;
 
@@ -15,8 +15,7 @@ class AnnualAssessmentCertificatesAddEditViewModel
         AnnualAssessmentCertificatesForm $form,
         $backUrl,
         $submitButtonText
-    )
-    {
+    ) {
         $this->form = $form;
         $this->backUrl = $backUrl;
         $this->submitButtonText = $submitButtonText;

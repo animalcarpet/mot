@@ -19,8 +19,7 @@ use Organisation\ViewModel\View\Index\IndexViewModel;
 use Zend\Mvc\Controller\Plugin\Url;
 
 /**
- * Class IndexViewModelTest
- * @package OrganisationTest\ViewModel\View\Index
+ * Class IndexViewModelTest.
  */
 class IndexViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,7 +54,7 @@ class IndexViewModelTest extends \PHPUnit_Framework_TestCase
     /** @var Url */
     private $urlHelper;
 
-    /** @var  AuthorisedExaminerPresenter */
+    /** @var AuthorisedExaminerPresenter */
     private $presenter;
 
     public function setUp()
@@ -81,7 +80,7 @@ class IndexViewModelTest extends \PHPUnit_Framework_TestCase
         return [
             $janitorPosition,
             $pmPosition,
-            $taPosition
+            $taPosition,
         ];
     }
 
@@ -180,7 +179,6 @@ class IndexViewModelTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($viewModel->getPrincipals() as $index => $principal) {
-
             $aepContactDetails = $viewModel->getPrincipalContactDetails($index);
 
             $this->assertSame($principal->getContactDetails(), $aepContactDetails);
@@ -188,8 +186,9 @@ class IndexViewModelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int $id
+     * @param int          $id
      * @param ContactDto[] $contactDetails optional
+     *
      * @return PersonDto
      */
     private function createPerson($id, $contactDetails = null)
@@ -209,6 +208,7 @@ class IndexViewModelTest extends \PHPUnit_Framework_TestCase
         $position = new OrganisationPositionDto();
         $position->setPerson($person);
         $position->setRole($role);
+
         return $position;
     }
 
@@ -220,21 +220,24 @@ class IndexViewModelTest extends \PHPUnit_Framework_TestCase
         $contactDetails = [];
         foreach ([
                      PersonContactType::PERSONAL,
-                     PersonContactType::WORK
+                     PersonContactType::WORK,
                  ] as $type) {
             $contactDetails[] = $this->createPersonContactDetail($type);
         }
+
         return $contactDetails;
     }
 
     /**
      * @param string $contactType PersonContactType::PERSONAL | PersonContactType::WORK
+     *
      * @return PersonContactDto
      */
     private function createPersonContactDetail($contactType)
     {
         $contactDetail = new PersonContactDto();
         $contactDetail->setType($contactType);
+
         return $contactDetail;
     }
 }

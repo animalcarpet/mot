@@ -7,7 +7,6 @@ use DvsaCommon\Database\Transaction;
 use DvsaEntities\Entity\Notification;
 use DvsaEntities\Entity\PasswordDetail;
 use DvsaEntities\Entity\Person;
-use DvsaFeature\FeatureToggles;
 use NotificationApi\Service\NotificationService;
 use PersonApi\Service\PasswordExpiryNotificationService;
 use Zend\ServiceManager\FactoryInterface;

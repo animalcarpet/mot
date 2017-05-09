@@ -27,8 +27,8 @@ class RoleController extends AbstractAuthActionController
     use OrganisationServicesTrait;
 
     const ROUTE_LIST_USER_ROLES = 'authorised-examiner/list-user-roles';
-    const ROUTE_REMOVE_ROLE     = 'authorised-examiner/remove-role';
-    const ROUTE_ROLES           = 'authorised-examiner/roles';
+    const ROUTE_REMOVE_ROLE = 'authorised-examiner/remove-role';
+    const ROUTE_ROLES = 'authorised-examiner/roles';
 
     /**
      * @var \HTMLPurifier
@@ -47,7 +47,7 @@ class RoleController extends AbstractAuthActionController
     public function __construct(UsernameValidator $usernameValidator, HTMLPurifier $htmlPurifier)
     {
         $this->usernameValidator = $usernameValidator;
-        $this->htmlPurifier      = $htmlPurifier;
+        $this->htmlPurifier = $htmlPurifier;
     }
 
     /**
@@ -57,17 +57,17 @@ class RoleController extends AbstractAuthActionController
     {
         $this->layout('layout/layout-govuk.phtml');
 
-        $form           = [];
-        $mapperFactory  = $this->getMapperFactory();
+        $form = [];
+        $mapperFactory = $this->getMapperFactory();
         $organisationId = $this->params('id');
-        $organisation   = $mapperFactory->Organisation->getAuthorisedExaminer($organisationId);
-        $personLogin    = '';
-        $userNotFound   = false;
+        $organisation = $mapperFactory->Organisation->getAuthorisedExaminer($organisationId);
+        $personLogin = '';
+        $userNotFound = false;
 
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $postData    = $request->getPost()->toArray();
+            $postData = $request->getPost()->toArray();
             $personLogin = $this->htmlPurifier->purify($postData['userSearchBox']);
 
             /*
@@ -83,7 +83,7 @@ class RoleController extends AbstractAuthActionController
                         return $this->redirect()->toRoute(
                             self::ROUTE_LIST_USER_ROLES,
                             [
-                                'id'       => $organisationId,
+                                'id' => $organisationId,
                                 'personId' => $person->getId(),
                             ]
                         );
@@ -102,10 +102,10 @@ class RoleController extends AbstractAuthActionController
         }
 
         return [
-            'form'         => $form,
-            'id'           => $organisationId,
+            'form' => $form,
+            'id' => $organisationId,
             'organisation' => $organisation,
-            'personId'     => $personLogin,
+            'personId' => $personLogin,
             'userNotFound' => $userNotFound,
         ];
     }
@@ -116,10 +116,10 @@ class RoleController extends AbstractAuthActionController
     public function listUserRolesAction()
     {
         $organisationId = $this->params('id');
-        $personId       = $this->params('personId');
+        $personId = $this->params('personId');
 
-        $mapperFactory  = $this->getMapperFactory();
-        $person         = $mapperFactory->Person->getById($personId);
+        $mapperFactory = $this->getMapperFactory();
+        $person = $mapperFactory->Person->getById($personId);
         $personUsername = $person->getUsername();
         $personFullName = $person->getFullName();
         $roles = $mapperFactory->OrganisationRole->fetchAllForPerson($organisationId, $personId);
@@ -135,8 +135,8 @@ class RoleController extends AbstractAuthActionController
                     'authorised-examiner/confirm-nomination',
                     [
                         'nomineeId' => $personId,
-                        'id'        => $organisationId,
-                        'roleId'    => $form->getRoleId()->getValue(),
+                        'id' => $organisationId,
+                        'roleId' => $form->getRoleId()->getValue(),
                     ]
                 );
             }
@@ -151,7 +151,7 @@ class RoleController extends AbstractAuthActionController
                 'personId' => $personId,
                 'personUsername' => $personUsername,
                 'personFullName' => $personFullName,
-                'hasRoleOption' => !empty($roles)
+                'hasRoleOption' => !empty($roles),
             ]
         );
     }
@@ -164,10 +164,10 @@ class RoleController extends AbstractAuthActionController
         $mapperFactory = $this->getMapperFactory();
 
         $organisationId = $this->params()->fromRoute('id');
-        $positionId     = $this->params()->fromRoute('roleId');
+        $positionId = $this->params()->fromRoute('roleId');
 
         $organisation = $mapperFactory->Organisation->getAuthorisedExaminer($organisationId);
-        $positions    = $mapperFactory->OrganisationPosition->fetchAllPositionsForOrganisation($organisationId);
+        $positions = $mapperFactory->OrganisationPosition->fetchAllPositionsForOrganisation($organisationId);
 
         $position = $this->findPositionInListById($positions, (int) $positionId);
 
@@ -177,7 +177,7 @@ class RoleController extends AbstractAuthActionController
 
                 $organisationPosition->deletePosition($organisationId, $positionId);
                 $this->addSuccessMessage(
-                    'You have removed the role of ' . $position->getRole() . ' from ' . $position->getPerson()->getFullName()
+                    'You have removed the role of '.$position->getRole().' from '.$position->getPerson()->getFullName()
                 );
             } catch (RestApplicationException $e) {
                 $this->addErrorMessages($e->getDisplayMessages());
@@ -187,7 +187,7 @@ class RoleController extends AbstractAuthActionController
                 $this->getAuthorizationRefresher()->refreshAuthorization();
 
                 $authorisationService = $this->getAuthorizationService();
-                $viewAePermission     = PermissionAtOrganisation::AUTHORISED_EXAMINER_READ;
+                $viewAePermission = PermissionAtOrganisation::AUTHORISED_EXAMINER_READ;
 
                 if (!$authorisationService->isGrantedAtOrganisation($viewAePermission, $organisationId)) {
                     return $this->redirect()->toRoute('user-home');
@@ -229,16 +229,16 @@ class RoleController extends AbstractAuthActionController
      */
     public function confirmNominationAction()
     {
-        $organisationId   = $this->params('id');
-        $nomineeId        = $this->params('nomineeId');
-        $roleId           = $this->params('roleId');
-        $featureToggles   = $this->getFeatureToggles();
+        $organisationId = $this->params('id');
+        $nomineeId = $this->params('nomineeId');
+        $roleId = $this->params('roleId');
+        $featureToggles = $this->getFeatureToggles();
 
         $roleName = $this->getRoleName($roleId);
 
         $mapperFactory = $this->getMapperFactory();
-        $nominee       = $mapperFactory->Person->getById($nomineeId);
-        $ae            = $mapperFactory->Organisation->getAuthorisedExaminer($organisationId);
+        $nominee = $mapperFactory->Person->getById($nomineeId);
+        $ae = $mapperFactory->Organisation->getAuthorisedExaminer($organisationId);
 
         if ($this->getRequest()->isPost()) {
             try {
@@ -269,11 +269,11 @@ class RoleController extends AbstractAuthActionController
 
         return new ViewModel(
             [
-                'nominee'             => $nominee,
-                'roleName'            => $roleName,
-                'authorisedExaminer'  => $ae,
+                'nominee' => $nominee,
+                'roleName' => $roleName,
+                'authorisedExaminer' => $ae,
                 'displayNotification' => $displayNotification,
-                'twoFactorEnabled'    => $twoFactorOn
+                'twoFactorEnabled' => $twoFactorOn,
             ]
         );
     }
@@ -300,19 +300,18 @@ class RoleController extends AbstractAuthActionController
         $rolesArray = [];
         foreach ($roles as $roleId => $roleName) {
             $rolesArray[$roleId] = [
-                'value'            => $roleId,
-                'label'            => $roleName,
+                'value' => $roleId,
+                'label' => $roleName,
                 'label_attributes' => [
-                    'id' => 'organisationRoleLabel-' . $roleId,
+                    'id' => 'organisationRoleLabel-'.$roleId,
                 ],
-                'attributes'       => [
-                    'id' => 'organisationRole-' . $roleId,
+                'attributes' => [
+                    'id' => 'organisationRole-'.$roleId,
                 ],
             ];
         }
 
         return new SelectRoleForm('organisation', $rolesArray);
-
     }
 
     /**
@@ -349,6 +348,6 @@ class RoleController extends AbstractAuthActionController
             }
         }
 
-        throw new \InvalidArgumentException('Organisation business role with id ' .  $roleId . ' was not found');
+        throw new \InvalidArgumentException('Organisation business role with id '.$roleId.' was not found');
     }
 }

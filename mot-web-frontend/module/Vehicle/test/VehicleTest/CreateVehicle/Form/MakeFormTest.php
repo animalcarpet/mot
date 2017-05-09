@@ -67,5 +67,4 @@ class MakeFormTest extends \PHPUnit_Framework_TestCase
             ['id' => '1001', 'name' => 'BMW'],
         ];
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Service;
-
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsService;
@@ -14,11 +12,11 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class ChangeSecurityQuestionsServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  MapperFactory */
+    /** @var MapperFactory */
     private $mapperFactory;
-    /** @var  Client */
+    /** @var Client */
     private $client;
-    /** @var  MotIdentityProviderInterface */
+    /** @var MotIdentityProviderInterface */
     private $identityProvider;
 
     public function setUp()
@@ -48,6 +46,7 @@ class ChangeSecurityQuestionsServiceTest extends \PHPUnit_Framework_TestCase
             $this->client,
             $this->identityProvider
         );
+
         return $questionService;
     }
 
@@ -55,12 +54,13 @@ class ChangeSecurityQuestionsServiceTest extends \PHPUnit_Framework_TestCase
     {
         $identity = new Identity();
         $identity->setUserId(1);
+
         return $identity;
     }
 
     public function mockValidChangeSecurityQuestionsnModel()
     {
-        return (new ChangeSecurityQuestionsSubmissionModel)
+        return (new ChangeSecurityQuestionsSubmissionModel())
             ->setQuestionOneAnswer('cheese')
             ->setQuestionOneId(1)
             ->setQuestionTwoAnswer('ham')

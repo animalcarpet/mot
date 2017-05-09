@@ -1,15 +1,11 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
-
 
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
-use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsReviewController;
-use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionTwoController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Form\ChangeSecurityQuestionForm;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsSessionService;
@@ -20,9 +16,9 @@ use Zend\Http\Request;
 
 class ChangeSecurityQuestionTwoAction
 {
-    const CHANGE_SECURITY_QUESTIONS_QUESTION_TWO_PAGE_TITLE = "Second security question";
-    const CHANGE_SECURITY_QUESTIONS_QUESTION_TWO_PAGE_SUBTITLE = "Your profile";
-    const CHANGE_SECURITY_QUESTIONS_QUESTION_TWO_TEMPLATE = "profile/change-security-questions/question-two";
+    const CHANGE_SECURITY_QUESTIONS_QUESTION_TWO_PAGE_TITLE = 'Second security question';
+    const CHANGE_SECURITY_QUESTIONS_QUESTION_TWO_PAGE_SUBTITLE = 'Your profile';
+    const CHANGE_SECURITY_QUESTIONS_QUESTION_TWO_TEMPLATE = 'profile/change-security-questions/question-two';
 
     private $changeSecurityQuestionsService;
 
@@ -57,10 +53,12 @@ class ChangeSecurityQuestionTwoAction
             if ($form->isValid()) {
                 $this->saveToSession($form);
                 $this->changeSecurityQuestionsStepService->updateStepStatus(ChangeSecurityQuestionsStepService::QUESTION_TWO_STEP, true);
+
                 return new RedirectToRoute(ChangeSecurityQuestionsReviewController::ROUTE);
             } else {
                 $viewModel->setForm($form);
                 $result->setViewModel($viewModel);
+
                 return $result;
             }
         }
@@ -90,6 +88,7 @@ class ChangeSecurityQuestionTwoAction
         $stepData = $sessionData[ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES];
         $viewModel->setAnswer($stepData['questionTwoAnswer']);
         $viewModel->setQuestion($stepData['questionTwoId']);
+
         return $viewModel;
     }
 

@@ -28,7 +28,7 @@ class CountryOfRegistrationAction
     public function execute(Request $request)
     {
         $this->authorisationService->assertGranted(PermissionInSystem::MOT_TEST_START);
-        
+
         if (!$this->createVehicleStepService->isAllowedOnStep(CreateVehicleStepService::COUNTRY_STEP)) {
             return new RedirectToRoute(ColourController::ROUTE);
         }

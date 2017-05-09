@@ -13,7 +13,7 @@ use DvsaCommon\Utility\StringUtils;
 class ChangePasswordForm extends PasswordForm
 {
     const FIELD_OLD_PASSWORD = ChangePasswordInputFilter::FIELD_OLD_PASSWORD;
-    const LABEL_OLD_PASSWORD = "Current password";
+    const LABEL_OLD_PASSWORD = 'Current password';
 
     private $identityProvider;
     private $client;
@@ -39,12 +39,12 @@ class ChangePasswordForm extends PasswordForm
                 'name' => self::FIELD_OLD_PASSWORD,
                 'type' => 'password',
                 'options' => [
-                    'label' => self::LABEL_OLD_PASSWORD
+                    'label' => self::LABEL_OLD_PASSWORD,
                 ],
                 'attributes' => [
                     'id' => self::FIELD_OLD_PASSWORD,
                     'maxlength' => self::PASSWORD_MAX_LENGTH,
-                    'group' => true
+                    'group' => true,
                 ],
             ],
             [
@@ -85,7 +85,7 @@ class ChangePasswordForm extends PasswordForm
     {
         $timestamp = (new \DateTime('now'))->getTimestamp();
 
-        $obfuscatedName = self::FIELD_OLD_PASSWORD . '-' . $timestamp;
+        $obfuscatedName = self::FIELD_OLD_PASSWORD.'-'.$timestamp;
 
         $this->getOldPasswordElement()->setName($obfuscatedName);
     }

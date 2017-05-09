@@ -6,19 +6,14 @@ use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\Constants\FacilityTypeCode;
 use DvsaCommon\Dto\Site\FacilityDto;
 use DvsaCommon\Dto\Site\FacilityTypeDto;
-use DvsaCommon\Dto\Site\SiteContactDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Site\SiteListDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
-use DvsaCommon\Enum\SiteStatusCode;
-use DvsaCommon\Enum\SiteTypeCode;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Class SiteMapperTest
- *
- * @package DvsaClientTest\Mapper
+ * Class SiteMapperTest.
  */
 class SiteMapperTest extends AbstractMapperTest
 {
@@ -157,14 +152,14 @@ class SiteMapperTest extends AbstractMapperTest
                     'status' => 1,
                     'actionedOn' => 1,
                     'id' => 1,
-                ]
+                ],
             ],
             'siteTestingDailySchedule' => [
                 [
                     'weekday' => '',
                     'openTime' => null,
                     'closeTime' => null,
-                ]
+                ],
             ],
         ];
     }

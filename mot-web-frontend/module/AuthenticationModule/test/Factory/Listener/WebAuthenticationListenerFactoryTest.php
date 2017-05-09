@@ -23,8 +23,8 @@ class WebAuthenticationListenerFactoryTest extends \PHPUnit_Framework_TestCase
             WebAuthenticationListener::class,
             [
                 'ZendAuthenticationService' => AuthenticationService::class,
-                'tokenService'              => TokenServiceInterface::class,
-                'Application\Logger'        => LoggerInterface::class,
+                'tokenService' => TokenServiceInterface::class,
+                'Application\Logger' => LoggerInterface::class,
             ]
         );
     }

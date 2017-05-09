@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
-
 use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
@@ -13,7 +12,6 @@ use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
-
 class EditAnnualAssessmentCertificatesController extends AbstractAuthActionController implements AutoWireableInterface
 {
     private $annualAssessmentCertificatesEditProcess;
@@ -21,7 +19,7 @@ class EditAnnualAssessmentCertificatesController extends AbstractAuthActionContr
     private $reviewStepAction;
 
     private $personId;
-    /** @var  FormContext */
+    /** @var FormContext */
     private $context;
     private $isPost;
     private $formUuid;
@@ -36,8 +34,7 @@ class EditAnnualAssessmentCertificatesController extends AbstractAuthActionContr
         AnnualAssessmentCertificatesEditProcess $process,
         EditStepAction $editStepAction,
         ReviewStepAction $reviewStepAction
-    )
-    {
+    ) {
         $this->contextProvider = $contextProvider;
         $this->annualAssessmentCertificatesEditProcess = $process;
         $this->editStepAction = $editStepAction;
@@ -106,11 +103,12 @@ class EditAnnualAssessmentCertificatesController extends AbstractAuthActionContr
 
     /**
      * @param $context
+     *
      * @return int
      */
     private function getPersonId($context)
     {
         return $context === ContextProvider::YOUR_PROFILE_CONTEXT ?
-            $this->getIdentity()->getUserId() : (int)$this->params()->fromRoute('id');
+            $this->getIdentity()->getUserId() : (int) $this->params()->fromRoute('id');
     }
 }

@@ -14,14 +14,14 @@ class TrainingTestViewModel
     private $url;
 
     /**
-     * @var int $inProgressTestNumber
+     * @var int
      */
     private $inProgressTestNumber;
 
     /**
      * TrainingTestViewModel constructor.
      *
-     * @param Url            $url
+     * @param Url $url
      */
     public function __construct(Url $url)
     {

@@ -60,8 +60,8 @@ class ContingencyTestParametersTest extends PHPUnit_Framework_TestCase
     private function initDatetimeFields($value)
     {
         return [
-            'performed_at_month'  => $value,
-            'performed_at_day'    => $value,
+            'performed_at_month' => $value,
+            'performed_at_day' => $value,
             'performed_at_minute' => $value,
         ];
     }

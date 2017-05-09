@@ -21,8 +21,7 @@ class NationalComponentStatisticsService implements AutoWireableInterface
         NationalComponentFailRateStorage $storage,
         NationalComponentStatisticsRepository $componentStatisticsRepository,
         DateTimeHolder $dateTimeHolder
-    )
-    {
+    ) {
         $this->repository = $componentStatisticsRepository;
         $this->storage = $storage;
         $this->dateTimeHolder = $dateTimeHolder;
@@ -49,7 +48,7 @@ class NationalComponentStatisticsService implements AutoWireableInterface
     {
         $validator = new GroupStatisticsParameterCheck();
         if (!$validator->isValid($year, $month, $group)) {
-            throw new NotFoundException("National Component Statistics");
+            throw new NotFoundException('National Component Statistics');
         }
     }
 }

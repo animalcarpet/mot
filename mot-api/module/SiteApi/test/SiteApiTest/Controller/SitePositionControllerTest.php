@@ -17,12 +17,9 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use SiteApi\Controller\SitePositionController;
 use SiteApi\Service\NominateRoleService;
 use SiteApi\Service\SitePositionService;
-use Zend\Stdlib\Parameters;
 
 /**
- * Class SitePositionControllerTest
- *
- * @package SiteApiTest\Controller
+ * Class SitePositionControllerTest.
  */
 class SitePositionControllerTest extends AbstractRestfulControllerTestCase
 {
@@ -51,7 +48,7 @@ class SitePositionControllerTest extends AbstractRestfulControllerTestCase
         $result = $this->controller->create(
             [
                 'nomineeId' => $this->nomineeId,
-                'roleCode'  => SiteBusinessRoleCode::TESTER
+                'roleCode' => SiteBusinessRoleCode::TESTER,
             ]
         );
         //then
@@ -63,13 +60,13 @@ class SitePositionControllerTest extends AbstractRestfulControllerTestCase
         list($capSiteId, $capPositionId) = [ArgCapture::create(), ArgCapture::create()];
         list($inputSiteId, $inputPositionId) = [1, 5];
 
-        $this->routeMatch->setParam("siteId", $inputSiteId)
-            ->setParam("positionId", $inputPositionId);
-        $this->request->setMethod("DELETE");
+        $this->routeMatch->setParam('siteId', $inputSiteId)
+            ->setParam('positionId', $inputPositionId);
+        $this->request->setMethod('DELETE');
 
         $this->sitePositionServiceMock = $this->getSitePositionServiceMock();
         $this->sitePositionServiceMock->expects($this->atLeastOnce())
-            ->method("remove")
+            ->method('remove')
             ->with($capSiteId(), $capPositionId());
         $this->setupServiceManager();
 
@@ -82,6 +79,7 @@ class SitePositionControllerTest extends AbstractRestfulControllerTestCase
     private function getSitePositionServiceMock()
     {
         $organisationPositionServiceMock = XMock::of(SitePositionService::class);
+
         return $organisationPositionServiceMock;
     }
 

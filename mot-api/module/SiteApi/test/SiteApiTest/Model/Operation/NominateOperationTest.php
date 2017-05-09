@@ -1,7 +1,7 @@
 <?php
+
 namespace SiteApiTest\Model\Operation;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
@@ -22,9 +22,7 @@ use SiteApi\Model\RoleRestrictionsSet;
 use SiteApi\Service\SiteNominationService;
 
 /**
- * Class NominateOperationTest
- *
- * @package SiteApiTest\Model\Operation
+ * Class NominateOperationTest.
  */
 class NominateOperationTest extends AbstractServiceTestCase
 {
@@ -85,7 +83,7 @@ class NominateOperationTest extends AbstractServiceTestCase
         try {
             $this->nominateOperation->nominate(new Person(), $existingNomination);
         } catch (BadRequestException $e) {
-            $error = $e->getErrors()[0]["message"];
+            $error = $e->getErrors()[0]['message'];
         }
 
         $this->assertEquals(NominationVerifier::ERROR_ALREADY_HAS_NOMINATION, $error);
@@ -107,12 +105,11 @@ class NominateOperationTest extends AbstractServiceTestCase
         try {
             $this->nominateOperation->nominate(new Person(), $existingPosition);
         } catch (BadRequestException $e) {
-            $error = $e->getErrors()[0]["message"];
+            $error = $e->getErrors()[0]['message'];
         }
 
         $this->assertEquals(NominationVerifier::ERROR_ALREADY_HAS_ROLE, $error);
     }
-
 
     public function test_adding_nomination_when_nominee_has_dvsa_role_fail()
     {
@@ -130,7 +127,7 @@ class NominateOperationTest extends AbstractServiceTestCase
         try {
             $this->nominateOperation->nominate(new Person(), $position);
         } catch (BadRequestException $e) {
-            $error = $e->getErrors()[0]["message"];
+            $error = $e->getErrors()[0]['message'];
         }
 
         $this->assertEquals(AbstractSiteRoleRestriction::DVSA_ROLE_OWNER_ERROR, $error);

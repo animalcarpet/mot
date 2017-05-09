@@ -4,7 +4,6 @@ namespace VehicleApiTest\Factory\Service;
 
 use DataCatalogApi\Service\VehicleCatalogService;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
@@ -48,7 +47,4 @@ class VehicleSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
             (new VehicleSearchServiceFactory())->createService($mockServiceLocator)
         );
     }
-
-
-
 }

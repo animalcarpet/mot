@@ -10,7 +10,7 @@ namespace DvsaEntitiesTest\Entity;
 use DvsaEntities\Entity;
 
 /**
- * Class UberEntityTest
+ * Class UberEntityTest.
  *
  * Class run generic tests on entites. Verifies simple getters/setters
  */
@@ -153,7 +153,7 @@ class UberEntityTest extends \PHPUnit_Framework_TestCase
                         $params = $constructor === null ? [] : $constructor->getParameters();
 
                         if (empty($params)) {
-                            $class = new $declaredClass;
+                            $class = new $declaredClass();
                             $methods = $reflectionClass->getMethods();
 
                             foreach ($methods as $method) {

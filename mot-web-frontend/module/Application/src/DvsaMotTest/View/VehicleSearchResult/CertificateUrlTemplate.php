@@ -14,9 +14,9 @@ class CertificateUrlTemplate implements VehicleSearchResultUrlTemplateInterface
     private $noRegistration;
 
     /**
-     * @param int $noRegistration
+     * @param int                              $noRegistration
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param Url $urlPlugin
+     * @param Url                              $urlPlugin
      */
     public function __construct($noRegistration, MotAuthorisationServiceInterface $authorisationService, Url $urlPlugin)
     {
@@ -40,4 +40,3 @@ class CertificateUrlTemplate implements VehicleSearchResultUrlTemplateInterface
         return MotTestRoutes::of($this->urlHelper)->vehicleSearchResults($searchParams);
     }
 }
-

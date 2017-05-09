@@ -7,8 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\PersonService;
 
 /**
- * Class PersonSiteCountController
- *
+ * Class PersonSiteCountController.
  */
 class PersonSiteCountController extends AbstractDvsaRestfulController
 {

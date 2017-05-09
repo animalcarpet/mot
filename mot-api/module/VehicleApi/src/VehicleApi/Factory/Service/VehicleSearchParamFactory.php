@@ -2,20 +2,13 @@
 
 namespace VehicleApi\Factory\Service;
 
-use Doctrine\ORM\EntityManager;
-
-use DvsaEntities\Entity\DvlaVehicleImportChanges;
-
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
 use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
 use VehicleApi\Helper\VehicleSearchParams as VehicleSearchParamsHelper;
 
 /**
- * Create instance of service VehicleSearchService
- *
- * @package DvsaMotApi\Factory\Service
+ * Create instance of service VehicleSearchService.
  */
 class VehicleSearchParamFactory implements FactoryInterface
 {

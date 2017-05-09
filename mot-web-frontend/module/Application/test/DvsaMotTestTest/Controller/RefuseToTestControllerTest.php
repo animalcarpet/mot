@@ -23,7 +23,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
 {
-    /** @var  VehicleMapper|MockObj */
+    /** @var VehicleMapper|MockObj */
     private $mockVehicleMapper;
 
     protected function setUp()
@@ -51,10 +51,10 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         $identity = $this->getCurrentIdentity();
         $identity->setCurrentVts($this->getVtsData());
 
-        $paramObfuscator     = $this->createParamObfuscator();
-        $vehicleId           = 1;
+        $paramObfuscator = $this->createParamObfuscator();
+        $vehicleId = 1;
         $obfuscatedVehicleId = $paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
-        $response            = $this->getResponseForAction('refuseToTestSummary', ['id' => $obfuscatedVehicleId]);
+        $response = $this->getResponseForAction('refuseToTestSummary', ['id' => $obfuscatedVehicleId]);
 
         $this->assertEquals(302, $response->getStatusCode());
     }
@@ -65,8 +65,8 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         $this->mockAuthServiceAsserts();
         $this->getRestClientMockThrowingException('post', 'Some Error');
 
-        $paramObfuscator     = $this->createParamObfuscator();
-        $vehicleId           = 1;
+        $paramObfuscator = $this->createParamObfuscator();
+        $vehicleId = 1;
         $obfuscatedVehicleId = $paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
 
         $this->setPostAndPostParams(['refusal' => '1']);
@@ -85,18 +85,18 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $result = [
             'data' => [
-                'documentId'   => 1,
+                'documentId' => 1,
                 'documentName' => 'Foo.pdf',
             ],
         ];
-        $paramObfuscator     = $this->createParamObfuscator();
-        $vehicleId           = 1;
+        $paramObfuscator = $this->createParamObfuscator();
+        $vehicleId = 1;
         $obfuscatedVehicleId = $paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
 
         $mockSession = $this->getMock(\stdClass::class, ['offsetGet']);
         $mockSession->expects($this->once())
             ->method('offsetGet')
-            ->with('mot-test-refusal-' . $obfuscatedVehicleId)
+            ->with('mot-test-refusal-'.$obfuscatedVehicleId)
             ->will($this->returnValue($result));
 
         /** @var \Zend\ServiceManager\ServiceManager $sm */
@@ -185,7 +185,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
             'data' => [
                 'checkResult' => [
                     'previousCertificateExists' => true,
-                    'expiryDate'                => '2014-05-10',
+                    'expiryDate' => '2014-05-10',
                 ],
             ],
         ];
@@ -214,7 +214,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
      */
     private function getMapperFactoryMock()
     {
-        $factoryMapper           = XMock::of(MapperFactory::class);
+        $factoryMapper = XMock::of(MapperFactory::class);
         $this->mockVehicleMapper = XMock::of(VehicleMapper::class);
 
         $map = [
@@ -246,7 +246,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
     {
         $config = ['security' => ['obfuscate' => ['key' => 'ggg', 'entries' => ['vehicleId' => true]]]];
         $paramEncrypter = new ParamEncrypter(new EncryptionKey($config['security']['obfuscate']['key']));
-        $paramEncoder   = new ParamEncoder();
+        $paramEncoder = new ParamEncoder();
 
         return new ParamObfuscator($paramEncrypter, $paramEncoder, $config);
     }

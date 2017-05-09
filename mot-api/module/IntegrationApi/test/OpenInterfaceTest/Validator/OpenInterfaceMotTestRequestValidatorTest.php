@@ -6,7 +6,7 @@ use IntegrationApi\OpenInterface\Validator\OpenInterfaceMotTestRequestValidator;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class OpenInterfaceMotTestRequestValidatorTest
+ * Class OpenInterfaceMotTestRequestValidatorTest.
  */
 class OpenInterfaceMotTestRequestValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -41,7 +41,7 @@ class OpenInterfaceMotTestRequestValidatorTest extends PHPUnit_Framework_TestCas
         $this->motTestRequestValidator->validateDate($date);
 
         //then exception is thrown and below is not invoked
-        $this->assertTrue(false, "An exception expected to be thrown.");
+        $this->assertTrue(false, 'An exception expected to be thrown.');
     }
 
     public static function getValidDates()
@@ -59,8 +59,7 @@ class OpenInterfaceMotTestRequestValidatorTest extends PHPUnit_Framework_TestCas
             ['123'],
             ['20011301'], //invalid month
             ['20010132'], //invalid day
-            ['200101011']
-            ,
+            ['200101011'],
         ];
     }
 }

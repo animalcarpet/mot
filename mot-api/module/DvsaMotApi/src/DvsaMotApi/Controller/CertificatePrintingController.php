@@ -17,13 +17,10 @@ use DvsaReport\Service\Report\ReportService;
 use Zend\Http\Header\Accept;
 
 /**
- * Provide functionality for accessing early created PDF reports
- *
- * @package DvsaMotApi\Controller
+ * Provide functionality for accessing early created PDF reports.
  */
 class CertificatePrintingController extends AbstractDvsaRestfulController
 {
-
     const MSG_NOT_FOUND = 'Requested MOT id not found';
     const MSG_NO_SERVICE = "%s was not located\n";
 
@@ -40,9 +37,9 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
 
     const SNAPSHOT_DATA_KEY = 'snapshotData';
 
-    const ISSUER_INFO_ENG = "%s certificate issued by %s on %s";
-    const ISSUER_INFO_WEL = "%s wedi ei gyhoeddi gan %s ar %s";
-    const ISSUER_DVSA_INFO_WEL = "Anfonwyd %s gan %s ar %s";
+    const ISSUER_INFO_ENG = '%s certificate issued by %s on %s';
+    const ISSUER_INFO_WEL = '%s wedi ei gyhoeddi gan %s ar %s';
+    const ISSUER_DVSA_INFO_WEL = 'Anfonwyd %s gan %s ar %s';
 
     private static $validNames = ['CT20', 'CT30', 'CT32'];
 
@@ -55,14 +52,13 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
     /** @var ReportService */
     private $reportService;
 
-    /** @var AbstractMotAuthorisationService  */
+    /** @var AbstractMotAuthorisationService */
     private $authorisationService;
 
     public function __construct(
         DocumentService $documentService,
         AbstractMotAuthorisationService $authorisationService
-    )
-    {
+    ) {
         $this->documentService = $documentService;
         $this->authorisationService = $authorisationService;
     }
@@ -73,7 +69,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
             return ApiResponse::httpResponse(400);
         }
 
-        $docId = (int)$this->params()->fromRoute('docId', null);
+        $docId = (int) $this->params()->fromRoute('docId', null);
         $reportName = $this->documentService->getReportName($docId);
 
         if ($docId === 0 || empty($reportName)) {
@@ -112,7 +108,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         }
 
         return $this->getReportService()->getReport(
-            'MOT/' . $certificate . '.pdf',
+            'MOT/'.$certificate.'.pdf',
             [
                 self::JREPORT_PRM_SITE_NR => $testStation,
                 self::JREPORT_PRM_INSP_AUTH => $inspAuthority,
@@ -136,7 +132,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
      */
     public function printAction()
     {
-        $motTestNr = (int)$this->params('id', null);
+        $motTestNr = (int) $this->params('id', null);
         $isDuplicate = $this->params('dupmode', null);
 
         if (!$this->requestIsPdfOrHtml()) {
@@ -207,13 +203,13 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
                 $snapshotData = $this->documentService->getSnapshotById($certDocId);
 
                 if (empty($snapshotData)) {
-                    throw new \LogicException('Unable to find certificate json snapshot data for certificate document id: ' . $certDocId);
+                    throw new \LogicException('Unable to find certificate json snapshot data for certificate document id: '.$certDocId);
                 }
                 $runtimeParameters['snapshotData'] = $this->documentService->getSnapshotById($certDocId);
                 $reportArgs[] = [
                     'documentId' => $certDocId,
                     'reportName' => $this->amendTemplateForContentType($certificateDetail['reportName']),
-                    'runtimeParams' => $runtimeParameters
+                    'runtimeParams' => $runtimeParameters,
                 ];
 
                 if ($isDuplicateDoc) {
@@ -241,7 +237,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         $advisoryInformation = $this->getEnglishVersion($isDuplicate);
 
         if ($isRequiresDualLanguage) {
-            $advisoryInformation .= " / " . $this->getWelshVersion($isDuplicate, $hasDvsaRole);
+            $advisoryInformation .= ' / '.$this->getWelshVersion($isDuplicate, $hasDvsaRole);
         }
 
         return $advisoryInformation;
@@ -249,15 +245,15 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
 
     private function getEnglishVersion($isDuplicate)
     {
-        $type = "Replacement";
+        $type = 'Replacement';
         if ($isDuplicate) {
-            $type = "Duplicate";
+            $type = 'Duplicate';
         }
 
         $date = DateUtils::nowAsUserDateTime();
         $tester = $this->getIdentity()->getPerson()->getDisplayShortName();
 
-        return sprintf(self::ISSUER_INFO_ENG, $type, $tester, $date->format("d F Y"));
+        return sprintf(self::ISSUER_INFO_ENG, $type, $tester, $date->format('d F Y'));
     }
 
     private function getWelshVersion($isDuplicate, $hasDvsaRole = false)
@@ -270,21 +266,22 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         if ($hasDvsaRole && $isDuplicate) {
             return sprintf(self::ISSUER_DVSA_INFO_WEL, "copi o'r dystysgrif", $tester,  $date);
         } elseif ($hasDvsaRole) {
-            return sprintf(self::ISSUER_DVSA_INFO_WEL, "tystysgrif gyfnewid", $tester,  $date);
+            return sprintf(self::ISSUER_DVSA_INFO_WEL, 'tystysgrif gyfnewid', $tester,  $date);
         }
 
-        $type = "Ailddodiad";
+        $type = 'Ailddodiad';
         if ($isDuplicate) {
-            $type = "Dyblyg";
+            $type = 'Dyblyg';
         }
-        
+
         return sprintf(self::ISSUER_INFO_WEL, $type, $tester, $date);
     }
 
     /**
-     * Adjusts the reportname based on the Accept header of the request
+     * Adjusts the reportname based on the Accept header of the request.
      *
      * @param $reportName
+     *
      * @return string
      */
     private function amendTemplateForContentType($reportName)
@@ -307,6 +304,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
      * a 400 bad request response to be generated.
      *
      * @param mixed $contentType Array or single contenttype
+     *
      * @return bool
      */
     private function requestIs($contentType)
@@ -314,7 +312,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         $valid = false;
 
         /**
-         * @var \Zend\Http\Headers $requestHeaders
+         * @var \Zend\Http\Headers
          * @var \Zend\Http\Request $request
          */
         $request = $this->getRequest();
@@ -350,7 +348,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         $into = $this->getServiceLocator()->get($name);
 
         if ($into === null) {
-            throw new \RuntimeException('Can not get instance of service ' . $name);
+            throw new \RuntimeException('Can not get instance of service '.$name);
         }
 
         return $this;
@@ -372,13 +370,13 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
 
         $text = trim(ArrayUtils::tryGet($configPfd, 'invalidWatermarkText'), '');
 
-        $isPrint = (bool)ArrayUtils::tryGet($configPfd, 'invalidWatermark')
+        $isPrint = (bool) ArrayUtils::tryGet($configPfd, 'invalidWatermark')
             && !(
                 ($motTest instanceof MotTestDto)
                 && ($motTest->getTestType()->getCode() === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING)
             );
 
-        return ($isPrint ? $text : '');
+        return $isPrint ? $text : '';
     }
 
     /**

@@ -184,6 +184,7 @@ class EngineForm extends Form
 
     /**
      * @param array $fuelTypes
+     *
      * @return array
      */
     private function orderFuelTypes($fuelTypes)

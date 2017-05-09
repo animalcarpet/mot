@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\Helper;
 
 use Core\ViewModel\Header\HeaderTertiaryList;
@@ -17,6 +18,7 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataProviderTestUrlGeneration
+     *
      * @param DvsaVehicle $dvlaVehicle
      * @param $title
      * @param $secondTitle
@@ -47,7 +49,7 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
         $tertiaryTitle->addElement(self::VIN);
 
         return [
-            [new DvsaVehicle($vehicleWithModel), $vehicleWithModel->make->name . ', ' . $vehicleWithModel->model->name, self::PAGE_SUBTITLE, $tertiaryTitle],
+            [new DvsaVehicle($vehicleWithModel), $vehicleWithModel->make->name.', '.$vehicleWithModel->model->name, self::PAGE_SUBTITLE, $tertiaryTitle],
             [new DvsaVehicle($vehicleWithoutModel), $vehicleWithModel->make->name, self::PAGE_SUBTITLE, $tertiaryTitle],
         ];
     }
@@ -59,8 +61,8 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
             'amendedOn' => '2016-09-07',
             'registration' => self::REGISTRATION,
             'vin' => self::VIN,
-            'emptyVrmReason' => NULL,
-            'emptyVinReason' => NULL,
+            'emptyVrmReason' => null,
+            'emptyVinReason' => null,
             'make' => [
                 'id' => 5,
                 'name' => self::MAKE_NAME,

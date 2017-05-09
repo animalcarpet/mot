@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Service\Validator;
 
 use DvsaCommon\Enum\MotTestStatusName;
@@ -14,7 +15,7 @@ use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class MotTestStatusChangeValidatorTest
+ * Class MotTestStatusChangeValidatorTest.
  */
 class MotTestStatusChangeValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -77,20 +78,20 @@ class MotTestStatusChangeValidatorTest extends PHPUnit_Framework_TestCase
 
         return [
             [
-                'data'              => [
-                    MotTestStatusChangeService::FIELD_STATUS            => $newStatus,
-                    MotTestStatusChangeService::FIELD_REASON_FOR_CANCEL => 1
+                'data' => [
+                    MotTestStatusChangeService::FIELD_STATUS => $newStatus,
+                    MotTestStatusChangeService::FIELD_REASON_FOR_CANCEL => 1,
                 ],
                 'expectedException' => null,
             ],
             [
-                'data'              => [
+                'data' => [
                     MotTestStatusChangeService::FIELD_STATUS => $newStatus,
                 ],
                 'expectedException' => $expectedException,
             ],
             [
-                'data'              => [],
+                'data' => [],
                 'expectedException' => $expectedException,
             ],
         ];
@@ -113,26 +114,26 @@ class MotTestStatusChangeValidatorTest extends PHPUnit_Framework_TestCase
 
         return [
             [
-                'data'              => [
+                'data' => [
                     MotTestStatusChangeService::FIELD_CANCEL_COMMENT => 'Comment Text',
-                    MotTestStatusChangeService::FIELD_OTP            => '123456'
+                    MotTestStatusChangeService::FIELD_OTP => '123456',
                 ],
                 'expectedException' => null,
             ],
             [
-                'data'              => [
+                'data' => [
                     MotTestStatusChangeService::FIELD_CANCEL_COMMENT => 'Comment Text',
                 ],
                 'expectedException' => null,
             ],
             [
-                'data'              => [
-                    MotTestStatusChangeService::FIELD_OTP => '123456'
+                'data' => [
+                    MotTestStatusChangeService::FIELD_OTP => '123456',
                 ],
                 'expectedException' => $expectedException,
             ],
             [
-                'data'              => [],
+                'data' => [],
                 'expectedException' => $expectedException,
             ],
         ];
@@ -174,7 +175,7 @@ class MotTestStatusChangeValidatorTest extends PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn(MotTestStatusName::ACTIVE);
 
         return $status;

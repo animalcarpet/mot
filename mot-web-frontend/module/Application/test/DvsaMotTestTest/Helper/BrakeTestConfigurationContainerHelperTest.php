@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Helper;
 
 use DvsaCommonTest\TestUtils\XMock;

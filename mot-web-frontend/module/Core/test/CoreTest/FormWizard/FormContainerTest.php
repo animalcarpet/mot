@@ -1,17 +1,18 @@
 <?php
+
 namespace CoreTest\FormWizard;
 
 use Core\FormWizard\FormContainer;
 
-class FormContainerTest extends  \PHPUnit_Framework_TestCase
+class FormContainerTest extends \PHPUnit_Framework_TestCase
 {
     public function testStoreReturnsNewFormUuid()
     {
-        $formUuid = "adasdas-asdasd-dsdasd";
+        $formUuid = 'adasdas-asdasd-dsdasd';
         $sessionKey = uniqid();
 
         $container = new FormContainer();
-        $newFormUuid = $container->store($sessionKey, ["somedata"], null);
+        $newFormUuid = $container->store($sessionKey, ['somedata'], null);
 
         $this->assertNotEquals($newFormUuid, $formUuid);
     }
@@ -22,7 +23,7 @@ class FormContainerTest extends  \PHPUnit_Framework_TestCase
         $sessionKey = uniqid();
 
         $container = new FormContainer();
-        $newFormUuid = $container->store($sessionKey, ["somedata"], $formUuid);
+        $newFormUuid = $container->store($sessionKey, ['somedata'], $formUuid);
 
         $this->assertEquals($newFormUuid, $formUuid);
     }
@@ -40,7 +41,7 @@ class FormContainerTest extends  \PHPUnit_Framework_TestCase
     {
         $formUuid = uniqid();
         $sessionKey = uniqid();
-        $data = ["somedata"];
+        $data = ['somedata'];
 
         $container = new FormContainer();
         $container->store($sessionKey, $data, $formUuid);
@@ -54,7 +55,7 @@ class FormContainerTest extends  \PHPUnit_Framework_TestCase
         $sessionKey = uniqid();
 
         $container = new FormContainer();
-        $container->store($sessionKey, ["somedata"], $formUuid);
+        $container->store($sessionKey, ['somedata'], $formUuid);
         $container->clear($sessionKey, $formUuid);
 
         $this->assertFalse($container->dataExists($sessionKey, $formUuid));

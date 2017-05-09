@@ -7,15 +7,12 @@ use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use DataCatalogApi\Service\DataCatalogService;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class DataCatalogServiceFactoryTest
- *
+ * Class DataCatalogServiceFactoryTest.
  */
 class DataCatalogServiceFactoryTest extends AbstractServiceTestCase
 {

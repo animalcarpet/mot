@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\ViewModel\TestQuality;
 
 use DateTime;
@@ -25,6 +26,7 @@ class TestQualityStatisticRow
     public function setPersonId($personId)
     {
         $this->personId = $personId;
+
         return $this;
     }
 
@@ -36,6 +38,7 @@ class TestQualityStatisticRow
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -52,6 +55,7 @@ class TestQualityStatisticRow
     public function setTestCount($testCount)
     {
         $this->testCount = $testCount;
+
         return $this;
     }
 
@@ -63,12 +67,13 @@ class TestQualityStatisticRow
     public function setAverageTestDuration($averageTestDuration)
     {
         $this->averageTestDuration = $averageTestDuration;
+
         return $this;
     }
 
     public function getFailurePercentage()
     {
-        if($this->getTestCount() > 0) {
+        if ($this->getTestCount() > 0) {
             return number_format($this->failurePercentage, 0).'%';
         } else {
             return '';
@@ -78,6 +83,7 @@ class TestQualityStatisticRow
     public function setFailurePercentage($failurePercentage)
     {
         $this->failurePercentage = $failurePercentage;
+
         return $this;
     }
 
@@ -92,6 +98,7 @@ class TestQualityStatisticRow
     public function setSiteId($siteId)
     {
         $this->siteId = $siteId;
+
         return $this;
     }
 
@@ -100,7 +107,7 @@ class TestQualityStatisticRow
      */
     public function getViewedDateMonth()
     {
-        return $this->viewedDate->format("m");
+        return $this->viewedDate->format('m');
     }
 
     /**
@@ -108,14 +115,15 @@ class TestQualityStatisticRow
      */
     public function getViewedDateYear()
     {
-        $this->viewedDate->format("Y");
+        $this->viewedDate->format('Y');
 
-        return $this->viewedDate->format("Y");
+        return $this->viewedDate->format('Y');
     }
 
     public function setViewedDate(DateTime $viewedDate)
     {
         $this->viewedDate = $viewedDate;
+
         return $this;
     }
 
@@ -138,6 +146,7 @@ class TestQualityStatisticRow
     public function setGroupCode($groupCode)
     {
         $this->groupCode = $groupCode;
+
         return $this;
     }
 
@@ -154,6 +163,7 @@ class TestQualityStatisticRow
     public function setAverageVehicleAge($averageVehicleAge)
     {
         $this->averageVehicleAge = $averageVehicleAge;
+
         return $this;
     }
 }

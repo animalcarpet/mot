@@ -7,7 +7,7 @@ use DvsaCommon\Enum\SpecialNoticeAudienceTypeId;
 use DvsaCommon\Enum\VehicleClassId;
 
 /**
- * SpecialNoticeAudienceMapper
+ * SpecialNoticeAudienceMapper.
  */
 class SpecialNoticeAudienceMapper
 {
@@ -38,7 +38,7 @@ class SpecialNoticeAudienceMapper
             return self::$stringToObject[$audienceString];
         }
 
-        throw new \InvalidArgumentException('Invalid audience : ' . $audienceString);
+        throw new \InvalidArgumentException('Invalid audience : '.$audienceString);
     }
 
     /**
@@ -57,9 +57,9 @@ class SpecialNoticeAudienceMapper
         }
 
         throw new \InvalidArgumentException(
-            'Invalid audience with audienceId: ' .
-            $audienceVehicleClass->getAudienceId() .
-            ' and vehicleClassId: ' .
+            'Invalid audience with audienceId: '.
+            $audienceVehicleClass->getAudienceId().
+            ' and vehicleClassId: '.
             $audienceVehicleClass->getVehicleClassId()
         );
     }
@@ -77,43 +77,35 @@ class SpecialNoticeAudienceMapper
 }
 
 SpecialNoticeAudienceMapper::$stringToObject = [
-    SpecialNoticeAudience::DVSA           =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::DVSA => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::DVSA_AUDIENCE,
             null
         ),
-    SpecialNoticeAudience::VTS            =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::VTS => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::VTS_AUDIENCE,
             null
         ),
-    SpecialNoticeAudience::TESTER_CLASS_1 =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::TESTER_CLASS_1 => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::TESTER_AUDIENCE,
             VehicleClassId::CLASS_1
         ),
-    SpecialNoticeAudience::TESTER_CLASS_2 =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::TESTER_CLASS_2 => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::TESTER_AUDIENCE,
             VehicleClassId::CLASS_2
         ),
-    SpecialNoticeAudience::TESTER_CLASS_3 =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::TESTER_CLASS_3 => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::TESTER_AUDIENCE,
             VehicleClassId::CLASS_3
         ),
-    SpecialNoticeAudience::TESTER_CLASS_4 =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::TESTER_CLASS_4 => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::TESTER_AUDIENCE,
             VehicleClassId::CLASS_4
         ),
-    SpecialNoticeAudience::TESTER_CLASS_5 =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::TESTER_CLASS_5 => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::TESTER_AUDIENCE,
             VehicleClassId::CLASS_5
         ),
-    SpecialNoticeAudience::TESTER_CLASS_7 =>
-        new SpecialNoticeAudienceMapper(
+    SpecialNoticeAudience::TESTER_CLASS_7 => new SpecialNoticeAudienceMapper(
             SpecialNoticeAudienceTypeId::TESTER_AUDIENCE,
             VehicleClassId::CLASS_7
         ),

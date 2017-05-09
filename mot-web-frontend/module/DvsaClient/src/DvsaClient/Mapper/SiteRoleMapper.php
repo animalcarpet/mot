@@ -5,13 +5,10 @@ namespace DvsaClient\Mapper;
 use DvsaClient\Entity\Role;
 
 /**
- * Class SiteRoleMapper
- *
- * @package DvsaClient\Mapper
+ * Class SiteRoleMapper.
  */
 class SiteRoleMapper extends Mapper
 {
-
     protected $entityClass = Role::class;
 
     /**
@@ -19,11 +16,12 @@ class SiteRoleMapper extends Mapper
      * @param $personId
      *
      * @return string[]
+     *
      * @see SiteBusinessRoleCode
      */
     public function fetchAllForPerson($siteId, $personId)
     {
-        $url = 'site/' . $siteId . '/person/' . $personId . '/role';
+        $url = 'site/'.$siteId.'/person/'.$personId.'/role';
         $roleCodes = $this->client->get($url)['data'];
 
         return $roleCodes;

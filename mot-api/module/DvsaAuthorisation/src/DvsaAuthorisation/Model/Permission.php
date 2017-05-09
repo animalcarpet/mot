@@ -3,8 +3,7 @@
 namespace DvsaAuthorisation\Model;
 
 /**
- * Class Permission
- * @package DvsaAuthorisation\Model
+ * Class Permission.
  */
 class Permission
 {

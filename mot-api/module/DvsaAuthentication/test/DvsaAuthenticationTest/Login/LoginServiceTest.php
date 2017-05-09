@@ -8,7 +8,6 @@ use DvsaAuthentication\Login\LoginService;
 use DvsaAuthentication\Login\Response\GenericAuthenticationFailure;
 use DvsaAuthentication\Login\UsernamePasswordAuthenticator;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Dto\Authn\AuthenticationResponseDto;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
@@ -16,7 +15,6 @@ use PersonApi\Service\PasswordExpiryService;
 
 class LoginServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     private $passwordExpiryService;
 
     private $mapper;
@@ -25,7 +23,6 @@ class LoginServiceTest extends \PHPUnit_Framework_TestCase
 
     private $identityProvider;
 
-
     public function setUp()
     {
         $this->passwordExpiryService = XMock::of(PasswordExpiryService::class);
@@ -33,7 +30,6 @@ class LoginServiceTest extends \PHPUnit_Framework_TestCase
         $this->authenticator = XMock::of(UsernamePasswordAuthenticator::class);
         $this->identityProvider = XMock::of(MotIdentityProviderInterface::class);
     }
-
 
     private function createService()
     {

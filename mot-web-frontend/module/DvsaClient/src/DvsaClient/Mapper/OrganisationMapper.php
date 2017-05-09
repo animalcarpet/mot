@@ -3,17 +3,13 @@
 namespace DvsaClient\Mapper;
 
 use DvsaCommon\Dto\Organisation\OrganisationDto;
-use DvsaCommon\Dto\Organisation\SiteDto;
-use DvsaCommon\Exception\NotImplementedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Class OrganisationDtoMapper
- *
- * @package DvsaClient\Mapper
+ * Class OrganisationDtoMapper.
  */
 class OrganisationMapper extends DtoMapper implements AutoWireableInterface
 {
@@ -25,6 +21,7 @@ class OrganisationMapper extends DtoMapper implements AutoWireableInterface
     public function fetchAllForManager($managerId)
     {
         $url = PersonUrlBuilder::byId($managerId)->authorisedExaminer();
+
         return $this->get($url);
     }
 
@@ -36,6 +33,7 @@ class OrganisationMapper extends DtoMapper implements AutoWireableInterface
     public function getAuthorisedExaminer($id)
     {
         $url = AuthorisedExaminerUrlBuilder::of($id);
+
         return $this->get($url);
     }
 
@@ -47,18 +45,21 @@ class OrganisationMapper extends DtoMapper implements AutoWireableInterface
     public function getAuthorisedExaminerByNumber($params)
     {
         $url = AuthorisedExaminerUrlBuilder::of()->authorisedExaminerByNumber();
+
         return $this->getWithParams($url, $params);
     }
 
     public function update($id, OrganisationDto $dto)
     {
         $url = AuthorisedExaminerUrlBuilder::of($id);
+
         return $this->put($url, DtoHydrator::dtoToJson($dto));
     }
 
     public function create(OrganisationDto $dto)
     {
         $url = AuthorisedExaminerUrlBuilder::of();
+
         return $this->post($url, DtoHydrator::dtoToJson($dto));
     }
 
@@ -77,6 +78,7 @@ class OrganisationMapper extends DtoMapper implements AutoWireableInterface
      * used for SELECT content so we sort it by value.
      *
      * @param bool|false $forSelect
+     *
      * @return Site[]
      */
     public function getAllAreaOffices($forSelect = false)
@@ -86,21 +88,24 @@ class OrganisationMapper extends DtoMapper implements AutoWireableInterface
 
         if ($forSelect) {
             $areaOptions = [];
-            foreach($data as $ao) {
-                $aoNumber = (int)$ao['areaOfficeNumber'];
+            foreach ($data as $ao) {
+                $aoNumber = (int) $ao['areaOfficeNumber'];
                 $areaOptions[$aoNumber] = $ao['areaOfficeNumber'];
             }
+
             return $areaOptions;
         }
-        return $data;
 
+        return $data;
     }
 
     /**
-     * Updates given AE property
-     * @param int $aeId
+     * Updates given AE property.
+     *
+     * @param int    $aeId
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @return mixed
      */
     public function updateAeProperty($aeId, $property, $value)
@@ -109,14 +114,17 @@ class OrganisationMapper extends DtoMapper implements AutoWireableInterface
     }
 
     /**
-     * Updates AE with array of values
-     * @param int $aeId
+     * Updates AE with array of values.
+     *
+     * @param int   $aeId
      * @param array $arrayOfValues
+     *
      * @return mixed
      */
     public function updateAePropertiesWithArray($aeId, $arrayOfValues)
     {
         $apiUrl = AuthorisedExaminerUrlBuilder::of($aeId);
+
         return $this->patch($apiUrl, $arrayOfValues);
     }
 }

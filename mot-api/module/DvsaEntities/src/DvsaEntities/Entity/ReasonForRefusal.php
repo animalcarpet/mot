@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * MotTestReasonForRefusal
+ * MotTestReasonForRefusal.
  *
  * @ORM\Table(name="mot_test_reason_for_refusal_lookup")
  * @ORM\Entity(readOnly=true)

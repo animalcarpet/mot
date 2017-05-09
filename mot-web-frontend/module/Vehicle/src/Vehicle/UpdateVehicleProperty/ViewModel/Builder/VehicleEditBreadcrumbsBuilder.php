@@ -21,6 +21,7 @@ class VehicleEditBreadcrumbsBuilder implements AutoWireableInterface
     /**
      * @param string $stepTitle
      * @param string $obfucatedVehicleId
+     *
      * @return array
      */
     public function getVehicleEditBreadcrumbs($stepTitle, $obfucatedVehicleId)

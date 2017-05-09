@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Dto\AuthorisedExaminerPrincipal\AuthorisedExaminerPrincipalDto;
@@ -7,9 +8,7 @@ use DvsaEntities\Entity\AuthorisedExaminerPrincipal;
 use DvsaCommon\Date\DateTimeApiFormat;
 
 /**
- * Class AuthorisedExaminerPrincipalMapper
- *
- * @package OrganisationApi\Service\Mapper
+ * Class AuthorisedExaminerPrincipalMapper.
  */
 class AuthorisedExaminerPrincipalMapper extends AbstractApiMapper
 {
@@ -38,7 +37,6 @@ class AuthorisedExaminerPrincipalMapper extends AbstractApiMapper
             ->setFamilyName($principal->getFamilyName())
             ->setDisplayName($principal->getDisplayName())
             ->setDateOfBirth(DateTimeApiFormat::date($principal->getDateOfBirth()));
-        ;
 
         return $aepDto;
     }

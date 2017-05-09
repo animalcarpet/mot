@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteTest\Factory\Controller;
 
 use DvsaClient\MapperFactory;
@@ -6,12 +7,10 @@ use DvsaCommonTest\TestUtils\XMock;
 use Site\Controller\SiteSearchController;
 use Site\Factory\Controller\SiteSearchControllerFactory;
 use Site\Service\SiteSearchService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SiteSearchControllerFactoryTest
- * @package SiteTest\Factory\Controller
+ * Class SiteSearchControllerFactoryTest.
  */
 class SiteSearchControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

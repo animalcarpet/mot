@@ -3,13 +3,10 @@
 namespace DvsaMotApi\Service\RoleRefresher;
 
 /**
- * Interface RoleRefresherInterface
- *
- * @package DvsaMotApi\Service\RoleRefresher
+ * Interface RoleRefresherInterface.
  */
 interface RoleRefresherInterface
 {
-
     /**
      * @param $userId
      *

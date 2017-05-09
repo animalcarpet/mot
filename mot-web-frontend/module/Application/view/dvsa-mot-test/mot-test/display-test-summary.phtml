@@ -5,7 +5,6 @@ use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Resource\Item\PendingDetails;
 use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
@@ -17,12 +16,11 @@ use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 /** @var bool $isDuplicateCertificate */
 /** @var array $duplicateCertRouteSearchParams */
 /** @var MotTestDuplicateCertificateEditAllowedDto $motTestEditAllowed */
-
 $defaultValues = $this->defaultValues;
 $formErrors = $this->formErrors;
 $hasErrors = !empty($this->errorMessages);
 
-/** @var MotTest $motDetails */
+/* @var MotTest $motDetails */
 $motDetails;
 /** @var string $motTestType */
 $motTestType = $motDetails->getTestTypeCode();
@@ -42,7 +40,7 @@ $testStatus = $motDetails->getStatus();
 
 $isTestActive = ($testStatus == MotTestStatusName::ACTIVE);
 
-if($isTestActive) {
+if ($isTestActive) {
     $pendingDetails = $motDetails->getPendingDetails();
     $pendingStatus = $pendingDetails->getCurrentSubmissionStatus();
 }
@@ -64,8 +62,8 @@ $isReinspectionSummaryPage = ($isReinspection && (($isTestReadyToFail || $isTest
 //  --  title and header    --
 $testName = AbstractDvsaMotTestController::getTestName($motTestType);
 
-$title = $testName . ' summary';
-$header = $testName . ($isTestActive ? ' summary' : ($isDuplicateCertificate ? ' results' : ' result'));
+$title = $testName.' summary';
+$header = $testName.($isTestActive ? ' summary' : ($isDuplicateCertificate ? ' results' : ' result'));
 
 $this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $pageSubTitle);
@@ -97,7 +95,7 @@ echo $this->partial(
         'motTest' => $motDetails,
         'vehicle' => $vehicle,
         'odometerReading' => $odometerReading,
-        'isReinspection'=>$isReinspectionSummaryPage,
+        'isReinspection' => $isReinspectionSummaryPage,
         'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
     ]
 );
@@ -106,7 +104,7 @@ echo $this->partial(
 
 <?php if ($isDuplicateCertificate) :?>
     <form id="edit-test-results" method="POST"
-          action="<?php echo MotTestRoutes::of($this)->editDuplicateCertificate($motDetails->getMotTestNumber());?>">
+          action="<?php echo MotTestRoutes::of($this)->editDuplicateCertificate($motDetails->getMotTestNumber()); ?>">
 <?php else :?>
     <form id="submit-test-results"
           action="<?php echo MotTestUrlBuilderWeb::summary($motDetails->getMotTestNumber()); ?>"
@@ -114,7 +112,7 @@ echo $this->partial(
         <?php
 endif;
 echo $this->csrfToken();
-echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
+echo $this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '';
 ?>
 
 <?php if ($isReinspectionSummaryPage || $this->isNonMotTest):
@@ -122,20 +120,18 @@ echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
     $this->partial(
         'inspectionLocation',
         [
-            'site'   =>
-                [
-                    'id'         => 'siteidentry',
-                    'value'      => ArrayUtils::tryGet($defaultValues, 'siteidentry', ''),
-                    'cssClass'   => ArrayUtils::tryGet($formErrors, 'siteidentry', ''),
+            'site' => [
+                    'id' => 'siteidentry',
+                    'value' => ArrayUtils::tryGet($defaultValues, 'siteidentry', ''),
+                    'cssClass' => ArrayUtils::tryGet($formErrors, 'siteidentry', ''),
                     'onSelected' => 'siteIdSelected',
-                    'focus'      => false,
+                    'focus' => false,
                 ],
-            'location' =>
-                [
-                    'id'       => 'location',
-                    'value'    => ArrayUtils::tryGet($defaultValues, 'location', ''),
+            'location' => [
+                    'id' => 'location',
+                    'value' => ArrayUtils::tryGet($defaultValues, 'location', ''),
                     'cssClass' => ArrayUtils::tryGet($formErrors, 'location', ''),
-                ]
+                ],
         ]
     ); ?>
 
@@ -146,26 +142,32 @@ echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
     <input type="hidden" name="_non_mot_test" value="<?php echo $motDetails->getMotTestNumber(); ?>">
     <?php endif; ?>
 
-    <?php if ($hasErrors) echo '<div class="form-group has-error">' ?>
+    <?php if ($hasErrors) {
+        echo '<div class="form-group has-error">';
+    } ?>
         <div class="row">
             <div class="col-lg-4">
-                <h2>Site ID <?php if (!$this->isNonMotTest) echo '(if applicable)'; ?></h2>
+                <h2>Site ID <?php if (!$this->isNonMotTest) {
+        echo '(if applicable)';
+    } ?></h2>
             </div>
             <div class="col-lg-8">
                 <div style="margin-top: 27px;">
                     <?php if ($hasErrors) {
-                        echo $this->partial(
+        echo $this->partial(
                             'partials/field-validation-message',
                             [
                                 'errorMessage' => $this->errorMessages['displayMessage'],
                             ]
                         );
-                    }
+    }
                     echo $this->placeholder('inspectionLocation')->siteidentry; ?>
                 </div>
             </div>
         </div>
-    <?php if ($hasErrors) echo '</div>' ?>
+    <?php if ($hasErrors) {
+                        echo '</div>';
+                    } ?>
 
     <div class="row">
         <div class="col-lg-4">
@@ -194,25 +196,23 @@ echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
                 $escButtonText = 'Save test result';
             }
 
-
             echo $this->partial(
                 'otpInput',
                 [
-                    'buttonText'        => $escButtonText,
+                    'buttonText' => $escButtonText,
                     'canTestWithoutOpt' => $this->canTestWithoutOtp() || $this->isDemo,
-                    'buttonId'          => "confirm_test_result",
-                    'errorMessage'      => $this->otpErrorMessage,
-                    'shortErrorMessage' => $this->otpErrorShortMessage
+                    'buttonId' => 'confirm_test_result',
+                    'errorMessage' => $this->otpErrorMessage,
+                    'shortErrorMessage' => $this->otpErrorShortMessage,
                 ]
             );
 
-            if ($this->canTestWithoutOtp() && !$this->isNonMotTest)
-            {
+            if ($this->canTestWithoutOtp() && !$this->isNonMotTest) {
                 echo $this->partial(
                     '2faDeclaration',
                     [
-                        'declarationMessage' => 'By saving this test result you confirm that you have carried out ' .
-                            'this MOT test in line with DVSA conditions for MOT testing.'
+                        'declarationMessage' => 'By saving this test result you confirm that you have carried out '.
+                            'this MOT test in line with DVSA conditions for MOT testing.',
                     ]
                 );
             }

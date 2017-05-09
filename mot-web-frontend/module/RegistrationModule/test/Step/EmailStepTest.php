@@ -83,8 +83,8 @@ class EmailStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            'emailAddress'             =>  'email@dvsatest.com',
-            'confirmEmailAddress'      =>  'email1@dvsatest.com',
+            'emailAddress' => 'email@dvsatest.com',
+            'confirmEmailAddress' => 'email1@dvsatest.com',
         ];
 
         return $fixture;

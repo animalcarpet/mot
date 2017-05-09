@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ApplicationForAuthorisationTestingMot
+ * ApplicationForAuthorisationTestingMot.
  *
  * @ORM\Table(name="app_for_auth_testing_mot", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_app_for_auth_testing_mot_2_idx", columns={"auth_for_testing_mot_id"}), @ORM\Index(name="fk_app_for_auth_testing_mot_3_idx", columns={"status_id"}), @ORM\Index(name="fk_app_for_auth_testing_mot_4_idx", columns={"created_by"}), @ORM\Index(name="fk_app_for_auth_testing_mot_5_idx", columns={"last_updated_by"}), @ORM\Index(name="fk_app_for_auth_testing_mot_1_idx", columns={"application_id"})})
  * @ORM\Entity
@@ -46,7 +46,7 @@ class ApplicationForAuthorisationTestingMot extends Entity
     private $status;
 
     /**
-     * Set application
+     * Set application.
      *
      * @param \DvsaEntities\Entity\Application $application
      *
@@ -60,7 +60,7 @@ class ApplicationForAuthorisationTestingMot extends Entity
     }
 
     /**
-     * Get application
+     * Get application.
      *
      * @return \DvsaEntities\Entity\Application
      */
@@ -70,7 +70,7 @@ class ApplicationForAuthorisationTestingMot extends Entity
     }
 
     /**
-     * Set authorisationForTestingMot
+     * Set authorisationForTestingMot.
      *
      * @param \DvsaEntities\Entity\AuthorisationForTestingMot $authorisationForTestingMot
      *
@@ -85,7 +85,7 @@ class ApplicationForAuthorisationTestingMot extends Entity
     }
 
     /**
-     * Get authorisationForTestingMot
+     * Get authorisationForTestingMot.
      *
      * @return \DvsaEntities\Entity\AuthorisationForTestingMot
      */
@@ -107,7 +107,7 @@ class ApplicationForAuthorisationTestingMot extends Entity
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return AuthorisationForTestingMotStatus
      */

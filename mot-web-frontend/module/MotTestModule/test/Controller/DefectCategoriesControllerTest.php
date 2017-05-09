@@ -11,7 +11,6 @@ use Dvsa\Mot\Frontend\MotTestModule\Controller\DefectCategoriesController;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
@@ -76,6 +75,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -84,6 +84,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 
@@ -357,7 +358,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
                         'canBeDangerous' => true,
                     ],
                 ],
-            ]
+            ],
         ];
     }
 
@@ -429,7 +430,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
                 'reasonsForRejection' => [
 
                 ],
-            ]
+            ],
         ];
     }
 

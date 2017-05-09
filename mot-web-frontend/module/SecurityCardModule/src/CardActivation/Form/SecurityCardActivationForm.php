@@ -13,7 +13,6 @@ use Zend\InputFilter\InputFilter;
 
 class SecurityCardActivationForm extends Form
 {
-
     const SERIAL_NUMBER = 'serial_number';
     const PIN = 'pin';
 
@@ -60,7 +59,6 @@ class SecurityCardActivationForm extends Form
         $pinInput->getValidatorChain()
             ->attach((new SecurityCardPinValidator())->setValidationCallback($pinValidationCallback));
         $filter->add($pinInput);
-
 
         $this->setInputFilter($filter);
     }

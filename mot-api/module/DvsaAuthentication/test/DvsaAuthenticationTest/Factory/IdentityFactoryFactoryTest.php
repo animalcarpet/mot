@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Factory\IdentityFactoryFactory;
 use DvsaAuthentication\IdentityFactory\CacheableIdentityFactory;
 use DvsaAuthentication\IdentityFactory\DoctrineIdentityFactory;
-use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaFeature\FeatureToggles;
@@ -68,7 +67,7 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
 
         $identityFactory = $this->identityFactoryFactory->createService($serviceLocator);
 
-        $serviceLocator = new ServiceManager;
+        $serviceLocator = new ServiceManager();
         $serviceLocator->setAllowOverride(true);
 
         $this->assertInstanceOf(DoctrineIdentityFactory::class, $identityFactory);
@@ -89,14 +88,13 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
             ],
             EntityManager::class => $this->entityManager,
             Cache::class => $this->cache,
-            'Feature\FeatureToggles'  => $this->featureToggles,
+            'Feature\FeatureToggles' => $this->featureToggles,
         ]);
 
         $identityFactory = $this->identityFactoryFactory->createService($serviceLocator);
 
         $this->assertInstanceOf(CacheableIdentityFactory::class, $identityFactory);
     }
-
 
     public function testItCreatesDoctrineIdentityFactoryIfCacheIsDisabled()
     {
@@ -113,7 +111,7 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
             ],
             EntityManager::class => $this->entityManager,
             Cache::class => $this->cache,
-            'Feature\FeatureToggles'  => $this->featureToggles,
+            'Feature\FeatureToggles' => $this->featureToggles,
         ]);
 
         $identityFactory = $this->identityFactoryFactory->createService($serviceLocator);

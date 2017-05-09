@@ -8,10 +8,9 @@ use Zend\Mvc\MvcEvent;
 
 /**
  * User who has logged in with an account flagged as having a temporary password should only have access
- * to the change password page
+ * to the change password page.
  *
  * Class ChangeTempPasswordListener
- * @package Application\Listener
  */
 class ChangeTempPasswordListener
 {
@@ -36,7 +35,7 @@ class ChangeTempPasswordListener
     ];
 
     private $ChangeTempPasswordRoutes = [
-        'forgotten-password/update-password'
+        'forgotten-password/update-password',
     ];
 
     public function __construct(MotIdentityProviderInterface $identityProvider)

@@ -139,8 +139,8 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
                 EmailInputFilter::FIELD_EMAIL_CONFIRM => 'test@test.com',
             ],
             DetailsInputFilter::class => [
-                DetailsInputFilter::FIELD_FIRST_NAME    => 'Joe',
-                DetailsInputFilter::FIELD_LAST_NAME     => 'Brown',
+                DetailsInputFilter::FIELD_FIRST_NAME => 'Joe',
+                DetailsInputFilter::FIELD_LAST_NAME => 'Brown',
                 DetailsInputFilter::FIELD_DATE => [
                     DetailsInputFilter::FIELD_DAY => '01',
                     DetailsInputFilter::FIELD_MONTH => '02',
@@ -148,20 +148,20 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             ContactDetailsInputFilter::class => [
-                ContactDetailsInputFilter::FIELD_ADDRESS_1    => 'Center',
+                ContactDetailsInputFilter::FIELD_ADDRESS_1 => 'Center',
                 ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => 'Bristol',
-                ContactDetailsInputFilter::FIELD_POSTCODE     => 'BS1 1SB',
-                ContactDetailsInputFilter::FIELD_PHONE        => '123123123',
+                ContactDetailsInputFilter::FIELD_POSTCODE => 'BS1 1SB',
+                ContactDetailsInputFilter::FIELD_PHONE => '123123123',
             ],
             PasswordInputFilter::class => [
-                PasswordInputFilter::FIELD_PASSWORD         => 'Password1',
+                PasswordInputFilter::FIELD_PASSWORD => 'Password1',
                 PasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'Password1',
             ],
             SecurityQuestionsInputFilter::class => [
                 SecurityQuestionsInputFilter::FIELD_QUESTION_1 => 1,
-                SecurityQuestionsInputFilter::FIELD_ANSWER_1   => 'first question answer',
+                SecurityQuestionsInputFilter::FIELD_ANSWER_1 => 'first question answer',
                 SecurityQuestionsInputFilter::FIELD_QUESTION_2 => 1,
-                SecurityQuestionsInputFilter::FIELD_ANSWER_2   => 'second question answer',
+                SecurityQuestionsInputFilter::FIELD_ANSWER_2 => 'second question answer',
             ],
         ];
 
@@ -174,10 +174,10 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
     public function dpInvalidRegistrationData()
     {
         $data = [
-            EmailInputFilter::class             => [],
-            DetailsInputFilter::class           => [],
-            ContactDetailsInputFilter::class    => [],
-            PasswordInputFilter::class          => [],
+            EmailInputFilter::class => [],
+            DetailsInputFilter::class => [],
+            ContactDetailsInputFilter::class => [],
+            PasswordInputFilter::class => [],
             SecurityQuestionsInputFilter::class => [],
         ];
 

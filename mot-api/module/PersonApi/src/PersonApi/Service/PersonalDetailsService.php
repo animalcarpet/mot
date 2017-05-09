@@ -153,7 +153,7 @@ class PersonalDetailsService extends AbstractService
             ->findOneBy(
                 [
                     'person' => $person,
-                    'type'   => $personContactType,
+                    'type' => $personContactType,
                 ]
             );
     }
@@ -199,7 +199,7 @@ class PersonalDetailsService extends AbstractService
             }
         }
 
-        throw new UnauthorisedException("Cannot access profiles of other users");
+        throw new UnauthorisedException('Cannot access profiles of other users');
     }
 
     /**
@@ -210,7 +210,7 @@ class PersonalDetailsService extends AbstractService
     private function assertUpdateGranted($personId)
     {
         if ($this->identityProvider->getIdentity()->getUserId() != $personId) {
-            throw new UnauthorisedException("Cannot access profiles of other users");
+            throw new UnauthorisedException('Cannot access profiles of other users');
         }
     }
 
@@ -273,7 +273,7 @@ class PersonalDetailsService extends AbstractService
             ->getRepository(Email::class)
             ->findOneBy(
                 [
-                    'contact' => $personContact->getDetails()
+                    'contact' => $personContact->getDetails(),
                 ]
             );
         if (!$email) {
@@ -387,6 +387,5 @@ class PersonalDetailsService extends AbstractService
         $this->entityManager->persist($email);
 
         return $email;
-
     }
 }

@@ -9,8 +9,8 @@ class SecurityAnswerHashFunctionTest extends \PHPUnit_Framework_TestCase
 {
     private static function securityAnswerHashFunction()
     {
-        return (new SecurityAnswerHashFunction)->setBaseFunction(
-            (new BCryptHashFunction)->setCost(BCryptHashFunction::MIN_COST)
+        return (new SecurityAnswerHashFunction())->setBaseFunction(
+            (new BCryptHashFunction())->setCost(BCryptHashFunction::MIN_COST)
         );
     }
 

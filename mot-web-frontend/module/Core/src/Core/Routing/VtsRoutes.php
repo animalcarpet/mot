@@ -41,12 +41,12 @@ class VtsRoutes extends AbstractRoutes
         return $this->url(
             VtsRouteList::VTS_TEST_QUALITY,
             [
-                'id'    => $id,
+                'id' => $id,
                 'month' => $month,
-                'year'  => $year,
+                'year' => $year,
             ],
             [
-                'query' => $query
+                'query' => $query,
             ]
         );
     }
@@ -59,8 +59,8 @@ class VtsRoutes extends AbstractRoutes
                 'id' => $vtsId,
                 'userId' => $userId,
                 'month' => $month,
-                'year'  => $year,
-                'group' => $group
+                'year' => $year,
+                'group' => $group,
             ]
         );
     }
@@ -73,18 +73,19 @@ class VtsRoutes extends AbstractRoutes
                 'id' => $vtsId,
                 'userId' => $userId,
                 'month' => $month,
-                'year'  => $year,
-                'group' => $group
+                'year' => $year,
+                'group' => $group,
             ]
         );
     }
 
     /**
      * @param Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url $object
+     *
      * @return VtsRoutes
      */
     public static function of($object)
     {
-        return new VtsRoutes($object);
+        return new self($object);
     }
 }

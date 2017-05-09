@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\Factory\Service;
 
-use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;

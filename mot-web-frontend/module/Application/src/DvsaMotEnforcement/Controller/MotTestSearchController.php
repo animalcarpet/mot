@@ -27,17 +27,17 @@ use Zend\View\Model\ViewModel;
  */
 class MotTestSearchController extends AbstractAuthActionController
 {
-    const SEARCH_TITLE_BY_VTS        = 'Recent MOT(s) found for site "%s"';
+    const SEARCH_TITLE_BY_VTS = 'Recent MOT(s) found for site "%s"';
     const SEARCH_TITLE_BY_DATE_RANGE = 'MOT tests found for %s';
-    const SEARCH_TITLE_BY_VIN        = 'MOT(s) found for VIN/Chassis "%s"';
-    const SEARCH_TITLE_BY_VRM        = 'MOT(s) found with registration mark "%s"';
-    const INVALID_SEARCH_TERM_MSG    = 'Please enter a valid search';
+    const SEARCH_TITLE_BY_VIN = 'MOT(s) found for VIN/Chassis "%s"';
+    const SEARCH_TITLE_BY_VRM = 'MOT(s) found with registration mark "%s"';
+    const INVALID_SEARCH_TERM_MSG = 'Please enter a valid search';
 
     const SITE_NUMBER_NOT_FOUND_MSG = 'No results found for that site';
-    const TEST_NOT_FOUND_MSG        = 'No results found for that site';
-    const TESTER_NOT_FOUND_MSG      = 'No results found for that tester';
-    const DATE_FORMAT_ERROR         = 'Date Range format invalid';
-    const MOT_TEST_NOT_FOUND        = 'No results found for that test number';
+    const TEST_NOT_FOUND_MSG = 'No results found for that site';
+    const TESTER_NOT_FOUND_MSG = 'No results found for that tester';
+    const DATE_FORMAT_ERROR = 'Date Range format invalid';
+    const MOT_TEST_NOT_FOUND = 'No results found for that test number';
 
     const SEARCH_TYPE_TEST_NUMBER = 'testNumber';
 
@@ -50,7 +50,7 @@ class MotTestSearchController extends AbstractAuthActionController
     protected $authorisationService;
 
     /**
-     * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
+     * @param \DvsaCommon\Obfuscate\ParamObfuscator    $paramObfuscator
      * @param MotFrontendAuthorisationServiceInterface $authorisationService
      */
     public function __construct(ParamObfuscator $paramObfuscator = null,
@@ -71,7 +71,7 @@ class MotTestSearchController extends AbstractAuthActionController
             [
                 'searchType' => $vehicleTestSearchService->getSearchType(),
                 'searchTerm' => $vehicleTestSearchService->getSearchTerm(),
-                'dateRange'  => $vehicleTestSearchService->getDateRange(),
+                'dateRange' => $vehicleTestSearchService->getDateRange(),
             ]
         );
     }
@@ -128,11 +128,11 @@ class MotTestSearchController extends AbstractAuthActionController
 
         return new ViewModel(
             [
-                'searchTitle'   => sprintf(self::SEARCH_TITLE_BY_VTS, strtoupper(trim($siteNr))),
+                'searchTitle' => sprintf(self::SEARCH_TITLE_BY_VTS, strtoupper(trim($siteNr))),
                 'searchResults' => $resultData,
-                'searchTerm'    => $siteNr,
-                'searchType'    => $vehicleTestSearchService->getSearchType(),
-                'siteNumber'    => $siteNr,
+                'searchTerm' => $siteNr,
+                'searchType' => $vehicleTestSearchService->getSearchType(),
+                'siteNumber' => $siteNr,
             ]
         );
     }
@@ -182,26 +182,26 @@ class MotTestSearchController extends AbstractAuthActionController
         }
         if ($vehicleTestSearchService->getSearchType() === VehicleSearchType::SEARCH_TYPE_TESTER) {
             $searchTypeName = 'Tester "'
-                . trim($vehicleTestSearchService->getTesterInformation(
+                .trim($vehicleTestSearchService->getTesterInformation(
                     $vehicleTestSearchService->getSearchTermApi(),
                     $this->getRestClient()
-                )) . '"';
+                )).'"';
         } else {
-            $searchTypeName = 'Site "' . strtoupper(trim($vehicleTestSearchService->getSearchTermApi())) . '"';
+            $searchTypeName = 'Site "'.strtoupper(trim($vehicleTestSearchService->getSearchTermApi())).'"';
         }
 
         $view = new ViewModel(
             [
-                'searchTitle'   => sprintf(self::SEARCH_TITLE_BY_DATE_RANGE, $searchTypeName),
-                'userDetails'   => $this->getUserDisplayDetails(),
+                'searchTitle' => sprintf(self::SEARCH_TITLE_BY_DATE_RANGE, $searchTypeName),
+                'userDetails' => $this->getUserDisplayDetails(),
                 'searchResults' => $resultData,
-                'searchTerm'    => $vehicleTestSearchService->getSearchTermApi(),
-                'searchType'    => $vehicleTestSearchService->getSearchType(),
-                'siteNumber'    => $vehicleTestSearchService->getSearchTermApi(),
-                'dateFrom'      => $vehicleTestSearchService->getDateFrom(),
-                'dateTo'        => $vehicleTestSearchService->getDateTo(),
-                'searched'      => $vehicleTestSearchService->getSearched(),
-                'resultCount'   => $vehicleTestSearchService->getResultCount(),
+                'searchTerm' => $vehicleTestSearchService->getSearchTermApi(),
+                'searchType' => $vehicleTestSearchService->getSearchType(),
+                'siteNumber' => $vehicleTestSearchService->getSearchTermApi(),
+                'dateFrom' => $vehicleTestSearchService->getDateFrom(),
+                'dateTo' => $vehicleTestSearchService->getDateTo(),
+                'searched' => $vehicleTestSearchService->getSearched(),
+                'resultCount' => $vehicleTestSearchService->getResultCount(),
                 'summaryParams' => http_build_query($vehicleTestSearchService->getParams()->fromQuery()),
             ]
         );
@@ -220,7 +220,7 @@ class MotTestSearchController extends AbstractAuthActionController
         $this->layout('layout/layout_enforcement');
         $this->assertGranted(PermissionInSystem::DVSA_SITE_SEARCH);
 
-        $comparedTest             = null;
+        $comparedTest = null;
         $vehicleTestSearchService = new VehicleTestSearch($this->params(), $this->paramObfuscator);
 
         if (!$vehicleTestSearchService->isSearchTermValid()) {
@@ -233,7 +233,7 @@ class MotTestSearchController extends AbstractAuthActionController
             $vehicleTestSearchService->setSearchType(VehicleSearchType::SEARCH_TYPE_VRM);
         }
 
-        $refSession      = new Container('referralSession');
+        $refSession = new Container('referralSession');
         $refSession->url = $this->params()->fromQuery();
 
         // Check Comparison
@@ -241,12 +241,12 @@ class MotTestSearchController extends AbstractAuthActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $comparedTest = $request->getPost();
-            $result       = $vehicleTestSearchService->compareMotTest($this, $this->getRestClient(), $comparedTest);
+            $result = $vehicleTestSearchService->compareMotTest($this, $this->getRestClient(), $comparedTest);
             if (isset($result['data'])) {
                 return $this->redirect()->toRoute(
                     'enforcement-compare-tests',
                     [
-                        'motTestNumber'          => $request->getPost()['motTestNumber'],
+                        'motTestNumber' => $request->getPost()['motTestNumber'],
                         'motTestNumberToCompare' => $request->getPost()['motTestNumberToCompare'],
                     ]
                 );
@@ -265,19 +265,19 @@ class MotTestSearchController extends AbstractAuthActionController
 
         $view = new ViewModel(
             [
-                'pageTitle'     => 'MOT Test History',
-                'searchTitle'   => sprintf(
+                'pageTitle' => 'MOT Test History',
+                'searchTitle' => sprintf(
                     ($vehicleTestSearchService->getSearchType() === VehicleSearchType::SEARCH_TYPE_VRM
                         ? self::SEARCH_TITLE_BY_VRM
                         : self::SEARCH_TITLE_BY_VIN), strtoupper(trim($vehicleTestSearchService->getSearchTerm()))
                 ),
                 'searchResults' => $resultData,
-                'searchTerm'    => $vehicleTestSearchService->getSearchTerm(),
-                'searchType'    => $vehicleTestSearchService->getSearchType(),
-                'searchData'    => http_build_query(['type' => $vehicleTestSearchService->getSearchType()]),
-                'formErrors'    => $vehicleTestSearchService->getFormErrorData(),
-                'comparedTest'  => $comparedTest,
-                'testTypes'     => $this->getCatalogService()->getMotTestTypeDescriptions(),
+                'searchTerm' => $vehicleTestSearchService->getSearchTerm(),
+                'searchType' => $vehicleTestSearchService->getSearchType(),
+                'searchData' => http_build_query(['type' => $vehicleTestSearchService->getSearchType()]),
+                'formErrors' => $vehicleTestSearchService->getFormErrorData(),
+                'comparedTest' => $comparedTest,
+                'testTypes' => $this->getCatalogService()->getMotTestTypeDescriptions(),
             ]
         );
 
@@ -332,9 +332,9 @@ class MotTestSearchController extends AbstractAuthActionController
             );
         } else {
             $this->addErrorMessages(self::MOT_TEST_NOT_FOUND);
+
             return $vehicleTestSearchService->prepareRouteQueryForRedirect('mot-test-search', $this);
         }
-
     }
 
     /**
@@ -381,7 +381,7 @@ class MotTestSearchController extends AbstractAuthActionController
 
         $view = new ViewModel(
             [
-                'pageTitle'     => 'Vehicle MOT test history',
+                'pageTitle' => 'Vehicle MOT test history',
                 'searchResults' => $resultData,
                 'escGoBackLink' => $this->getGoBackLink($obfuscatedVehicleId, $searchParams),
             ]
@@ -406,16 +406,16 @@ class MotTestSearchController extends AbstractAuthActionController
             unset($searchData['backTo']);
         }
 
-        if (($searchData instanceof ParametersInterface) && $searchData->get("oneResult")) {
-            $searchData->set("backTo", VehicleController::BACK_TO_SEARCH);
+        if (($searchData instanceof ParametersInterface) && $searchData->get('oneResult')) {
+            $searchData->set('backTo', VehicleController::BACK_TO_SEARCH);
         }
-        $searchData = ($searchData && $searchData->count() ? '?' . http_build_query($searchData) : '');
+        $searchData = ($searchData && $searchData->count() ? '?'.http_build_query($searchData) : '');
 
         switch ($backTo) {
             case VehicleController::BACK_TO_DETAIL:
-                return VehicleUrlBuilderWeb::vehicle($obfuscatedVehicleId) . $searchData;
+                return VehicleUrlBuilderWeb::vehicle($obfuscatedVehicleId).$searchData;
             case VehicleController::BACK_TO_RESULT:
-                return VehicleUrlBuilderWeb::searchResult() . $searchData;
+                return VehicleUrlBuilderWeb::searchResult().$searchData;
         }
 
         return null;
@@ -437,13 +437,13 @@ class MotTestSearchController extends AbstractAuthActionController
         }
 
         switch ($backTo) {
-            case (VehicleController::BACK_TO_DETAIL && $searchData->get("oneResult")):
+            case VehicleController::BACK_TO_DETAIL && $searchData->get('oneResult'):
                 return $this->redirect()->toUrl(
                     VehicleUrlBuilderWeb::vehicle($obfuscatedVehicleId)
                         ->queryParams(
                             [
                                 'backTo' => VehicleController::BACK_TO_SEARCH,
-                                'type'   => $searchData['type'],
+                                'type' => $searchData['type'],
                                 'search' => $searchData['search'],
                             ]
                         )
@@ -454,7 +454,7 @@ class MotTestSearchController extends AbstractAuthActionController
                     VehicleUrlBuilderWeb::vehicle($obfuscatedVehicleId)
                         ->queryParams(
                             [
-                                'type'   => $searchData['type'],
+                                'type' => $searchData['type'],
                                 'search' => $searchData['search'],
                             ]
                         )
@@ -464,7 +464,7 @@ class MotTestSearchController extends AbstractAuthActionController
                 return $this->redirect()->toUrl(
                     VehicleUrlBuilderWeb::searchResult()->queryParams(
                         [
-                            'type'   => $searchData['type'],
+                            'type' => $searchData['type'],
                             'search' => $searchData['search'],
                         ]
                     )
@@ -473,9 +473,9 @@ class MotTestSearchController extends AbstractAuthActionController
                 return $this->redirect()->toUrl(
                     VehicleUrlBuilderWeb::searchResult()->queryParams(
                         [
-                            'type'   => $searchData['type'],
+                            'type' => $searchData['type'],
                             'search' => $searchData['search'],
-                            'backTo' => VehicleController::BACK_TO_SEARCH
+                            'backTo' => VehicleController::BACK_TO_SEARCH,
                         ]
                     )
                 );

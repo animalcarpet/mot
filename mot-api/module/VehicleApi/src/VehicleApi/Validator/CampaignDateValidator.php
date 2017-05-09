@@ -7,7 +7,6 @@
 
 namespace VehicleApi\Validator;
 
-use VehicleApi\InputFilter\MysteryShopperInputFilter;
 use VehicleApi\MysteryShopper\CampaignDates;
 use Zend\Validator\AbstractValidator;
 
@@ -21,12 +20,12 @@ class CampaignDateValidator extends AbstractValidator
      *
      * @var string
      */
-    const COLLIDING_START_DATE      = 'startDateColliding';
-    const COLLIDING_END_DATE        = 'endDateColliding';
+    const COLLIDING_START_DATE = 'startDateColliding';
+    const COLLIDING_END_DATE = 'endDateColliding';
     const COVERING_ANOTHER_CAMPAIGN = 'coversAnotherCampaign';
-    const IS_IN_THE_PAST            = 'isInThePast';
-    const END_BEFORE_START          = 'endBeforeStart';
-    const LAST_TEST_IN_FUTURE       = 'lastTestInFuture';
+    const IS_IN_THE_PAST = 'isInThePast';
+    const END_BEFORE_START = 'endBeforeStart';
+    const LAST_TEST_IN_FUTURE = 'lastTestInFuture';
 
     /**
      * Validation failure message template definitions.
@@ -34,12 +33,12 @@ class CampaignDateValidator extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
-        self::COLLIDING_START_DATE        => 'Provided start date is overlapping with an existing campaign for the same vehicle',
-        self::COLLIDING_END_DATE          => 'Provided end date is overlapping with an existing campaign for the same vehicle',
-        self::COVERING_ANOTHER_CAMPAIGN   => 'Provided start and date are covering an existing campaign for the same vehicle',
-        self::IS_IN_THE_PAST              => 'Campaign\'s start date must be in the future',
-        self::END_BEFORE_START            => 'Campaign\'s end date should be after its start date',
-        self::LAST_TEST_IN_FUTURE         => 'Last test\'s date must be in the past',
+        self::COLLIDING_START_DATE => 'Provided start date is overlapping with an existing campaign for the same vehicle',
+        self::COLLIDING_END_DATE => 'Provided end date is overlapping with an existing campaign for the same vehicle',
+        self::COVERING_ANOTHER_CAMPAIGN => 'Provided start and date are covering an existing campaign for the same vehicle',
+        self::IS_IN_THE_PAST => 'Campaign\'s start date must be in the future',
+        self::END_BEFORE_START => 'Campaign\'s end date should be after its start date',
+        self::LAST_TEST_IN_FUTURE => 'Last test\'s date must be in the past',
     ];
 
     /**
@@ -47,13 +46,13 @@ class CampaignDateValidator extends AbstractValidator
      *
      * @var string
      */
-    const KEY_START                       = 'start';
-    const KEY_END                         = 'end';
-    const KEY_BOOKED_DATE_RANGES          = 'booked_date_ranges';
+    const KEY_START = 'start';
+    const KEY_END = 'end';
+    const KEY_BOOKED_DATE_RANGES = 'booked_date_ranges';
 
-    const ERR_MSG_NOT_DATETIME            = 'Provided booked campaign start and end dates must be instance of DateTime';
-    const ERR_MSG_VALUE_TYPE              = 'First argument passed to this validator must be instance of %s';
-    const ERR_MSG_NO_CONTEXT              = 'This validator is rely on the context, with the key "%s"';
+    const ERR_MSG_NOT_DATETIME = 'Provided booked campaign start and end dates must be instance of DateTime';
+    const ERR_MSG_VALUE_TYPE = 'First argument passed to this validator must be instance of %s';
+    const ERR_MSG_NO_CONTEXT = 'This validator is rely on the context, with the key "%s"';
     const ERR_MSG_MISSING_KEY_DESCRIPTION = ', holding all the potential existing campaign for the given campaign';
 
     /**
@@ -116,7 +115,7 @@ class CampaignDateValidator extends AbstractValidator
         if (is_null($context) || false === array_key_exists(self::KEY_BOOKED_DATE_RANGES, $context)) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    self::ERR_MSG_NO_CONTEXT . self::ERR_MSG_MISSING_KEY_DESCRIPTION,
+                    self::ERR_MSG_NO_CONTEXT.self::ERR_MSG_MISSING_KEY_DESCRIPTION,
                     self::KEY_BOOKED_DATE_RANGES
                 )
             );

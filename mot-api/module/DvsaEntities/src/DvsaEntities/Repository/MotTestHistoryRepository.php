@@ -7,7 +7,6 @@ use Doctrine\ORM\NoResultException;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 
@@ -28,8 +27,7 @@ class MotTestHistoryRepository extends MotTestRepository
         $startDate,
         MysteryShopperHelper $mysteryShopperHelper,
         array $mysteryShopperSiteIds = []
-    )
-    {
+    ) {
         try {
             $currentTests = parent::findTestsForVehicle($vehicleId, $startDate, $mysteryShopperHelper, $mysteryShopperSiteIds);
 
@@ -122,7 +120,6 @@ class MotTestHistoryRepository extends MotTestRepository
             $historyDate->sub(new \DateInterval('P4Y'));
 
             if ($searchParam->getDateFrom() < $historyDate) {
-
                 $tableName = $this->getClassMetadata()->getTableName();
 
                 $sql = sprintf(
@@ -140,14 +137,14 @@ class MotTestHistoryRepository extends MotTestRepository
                     $orderBy = [$orderBy];
                 }
 
-                $sql.= ' ORDER BY ';
-                $sql.= implode(', ', array_map(function ($order) use ($searchParam) {
+                $sql .= ' ORDER BY ';
+                $sql .= implode(', ', array_map(function ($order) use ($searchParam) {
                     return sprintf('%s %s', $order, $searchParam->getSortDirection());
                 }, $orderBy));
             }
         }
         if ($searchParam->getRowCount() > 0) {
-            $sql.= sprintf(' LIMIT %d', $searchParam->getRowCount());
+            $sql .= sprintf(' LIMIT %d', $searchParam->getRowCount());
             if ($searchParam->getStart() > 0) {
                 if ($this->isUsingSubQuery($searchParam)) {
                     $sql.= sprintf(' OFFSET %d', 0);
@@ -266,7 +263,6 @@ class MotTestHistoryRepository extends MotTestRepository
         } finally {
             $this->switchToCurrent();
         }
-
     }
 
     public function switchToHistory()

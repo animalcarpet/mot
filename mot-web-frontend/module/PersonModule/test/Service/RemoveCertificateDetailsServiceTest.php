@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Service;
 
 use Dvsa\Mot\Frontend\PersonModule\Service\RemoveCertificateDetailsService;
@@ -17,7 +18,7 @@ use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateD
 
 class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const BACK_URL = "/back-to-prev-page";
+    const BACK_URL = '/back-to-prev-page';
 
     /** @var QualificationDetailsMapper */
     private $qualificationDetailsMapper;
@@ -49,7 +50,6 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
         $result = $this->createService()->process(1, VehicleClassGroupCode::BIKES, self::BACK_URL, false);
 
         $this->assertInstanceOf(ViewActionResult::class, $result);
-
     }
 
     public function testProcessRemoveCertificateIfUserHasCorrectPermissions()
@@ -58,18 +58,16 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
         $result = $this->createService()->process(1, VehicleClassGroupCode::BIKES, self::BACK_URL, true);
 
         $this->assertInstanceOf(RedirectToRoute::class, $result);
-
     }
 
     /** @expectedException \DvsaCommon\Exception\UnauthorisedException */
     public function testProcessThrowExceptionForGetMethodIfUserHasIncorrectPermissions()
     {
-        $this->mockPermissions($this->getCertificateData(),false);
+        $this->mockPermissions($this->getCertificateData(), false);
 
         $result = $this->createService()->process(1, VehicleClassGroupCode::BIKES, self::BACK_URL, false);
 
         $this->assertInstanceOf(ViewActionResult::class, $result);
-
     }
 
     /** @expectedException \DvsaCommon\Exception\UnauthorisedException */
@@ -98,8 +96,8 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
         $dto = new MotTestingCertificateDto();
         $dto
             ->setId(1)
-            ->setCertificateNumber("num1223")
-            ->setDateOfQualification("2012-02-03");
+            ->setCertificateNumber('num1223')
+            ->setDateOfQualification('2012-02-03');
 
         return $dto;
     }
@@ -109,26 +107,26 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
         $this
             ->qualificationDetailsMapper
             ->expects($this->any())
-            ->method("getQualificationDetails")
+            ->method('getQualificationDetails')
             ->willReturn($certData)
         ;
 
         $this
             ->apiPersonalDetails
             ->expects($this->any())
-            ->method("getPersonalDetailsData")
+            ->method('getPersonalDetailsData')
             ->willReturn([]);
 
         $this->personProfileGuard = XMock::of(PersonProfileGuard::class);
         $this->personProfileGuard
             ->expects($this->any())
-            ->method("canRemoveQualificationDetails")
+            ->method('canRemoveQualificationDetails')
             ->willReturn($canRemoveQualificationDetails);
 
         $this
             ->personProfileGuardBuilder
             ->expects($this->any())
-            ->method("createPersonProfileGuard")
+            ->method('createPersonProfileGuard')
             ->willReturn($this->personProfileGuard);
     }
 }

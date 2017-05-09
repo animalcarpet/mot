@@ -6,7 +6,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
 
 /**
- * Maps form data to BrakeTestConfiguration Dto
+ * Maps form data to BrakeTestConfiguration Dto.
  */
 interface BrakeTestConfigurationMapperInterface
 {

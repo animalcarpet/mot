@@ -9,13 +9,10 @@ use DvsaCommon\Utility\ArrayUtils;
 use Zend\Log\LoggerInterface;
 
 /**
- * Class VehicleSearchResult
- *
- * @package DvsaMotTest\Model
+ * Class VehicleSearchResult.
  */
 class VehicleSearchResult
 {
-
     const NOT_TESTED = 'Not tested';
 
     /** @var string $id */
@@ -60,16 +57,16 @@ class VehicleSearchResult
     /** @var VehicleSearchSource */
     protected $vehicleSearchSoruce;
 
-    /** @var boolean */
+    /** @var bool */
     protected $isIncognito;
 
     /** @var LoggerInterface */
     protected $logger;
 
     /**
-     * @param ParamObfuscator $paramObfuscator
+     * @param ParamObfuscator     $paramObfuscator
      * @param VehicleSearchSource $vehicleSearchSource
-     * @param LoggerInterface $logger
+     * @param LoggerInterface     $logger
      */
     public function __construct(ParamObfuscator $paramObfuscator, VehicleSearchSource $vehicleSearchSource, LoggerInterface $logger)
     {
@@ -80,6 +77,7 @@ class VehicleSearchResult
 
     /**
      * @param array $apiVehicleData
+     *
      * @return $this|VehicleSearchResult
      */
     public function addResults(array $apiVehicleData)
@@ -140,6 +138,7 @@ class VehicleSearchResult
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -157,6 +156,7 @@ class VehicleSearchResult
     public function setRegistrationNumber($registrationNumber)
     {
         $this->registrationNumber = $registrationNumber;
+
         return $this;
     }
 
@@ -174,6 +174,7 @@ class VehicleSearchResult
     public function setVin($vin)
     {
         $this->vin = $vin;
+
         return $this;
     }
 
@@ -191,6 +192,7 @@ class VehicleSearchResult
     public function setMake($make)
     {
         $this->make = $make;
+
         return $this;
     }
 
@@ -208,6 +210,7 @@ class VehicleSearchResult
     public function setModel($model)
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -217,6 +220,7 @@ class VehicleSearchResult
     public function setIsIncognito($isIncognito)
     {
         $this->isIncognito = $isIncognito;
+
         return $this;
     }
 
@@ -241,7 +245,7 @@ class VehicleSearchResult
      */
     public function getMakeAndModel()
     {
-        return $this->getMake() . ' ' . $this->getModel();
+        return $this->getMake().' '.$this->getModel();
     }
 
     /**
@@ -274,12 +278,13 @@ class VehicleSearchResult
     public function setMotTestCount($motTestCount)
     {
         $this->motTestCount = $motTestCount;
+
         return $this;
     }
 
     public function hasMotTests()
     {
-        return ($this->motTestCount == 0)? false : true;
+        return ($this->motTestCount == 0) ? false : true;
     }
 
     /**
@@ -296,6 +301,7 @@ class VehicleSearchResult
     public function setLastMotTestDate($lastMotTestDate)
     {
         $this->lastMotTestDate = $lastMotTestDate;
+
         return $this;
     }
 
@@ -319,6 +325,7 @@ class VehicleSearchResult
     public function addResult(VehicleSearchResult $vehicleSearchResult)
     {
         $this->results[] = $vehicleSearchResult;
+
         return $this;
     }
 
@@ -328,6 +335,7 @@ class VehicleSearchResult
     public function setResults($results)
     {
         $this->results = $results;
+
         return $this;
     }
 
@@ -353,6 +361,7 @@ class VehicleSearchResult
     public function setIsDvlaVehicle($isDvlaVehicle)
     {
         $this->isDvlaVehicle = $isDvlaVehicle;
+
         return $this;
     }
 
@@ -374,6 +383,7 @@ class VehicleSearchResult
         }
 
         $this->retestEligibility = $retestEligibility;
+
         return $this;
     }
 

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Email
+ * Email.
  *
  * @ORM\Table(
  * name="email",
@@ -42,7 +42,7 @@ class Email extends Entity
     private $contact;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_primary", type="boolean", nullable=false)
      */
@@ -69,13 +69,14 @@ class Email extends Entity
     }
 
     /**
-     * @param boolean $isPrimary
+     * @param bool $isPrimary
      *
      * @return Email
      */
     public function setIsPrimary($isPrimary)
     {
         $this->isPrimary = $isPrimary;
+
         return $this;
     }
 
@@ -96,7 +97,7 @@ class Email extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsPrimary()
     {

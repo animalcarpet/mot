@@ -12,9 +12,7 @@ use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContact;
 
 /**
- * Class SiteMapper
- *
- * @package OrganisationApi\Service\Mapper
+ * Class SiteMapper.
  */
 class SiteMapper extends AbstractApiMapper
 {

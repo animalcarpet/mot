@@ -1,15 +1,13 @@
 <?php
+
 namespace DvsaMotApiTest\Service\Model;
 
 use DvsaMotApi\Service\Model\BrakeTestResultSubmissionSummary;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class BrakeTestResultSubmissionSummaryTest
- *
- * @package DvsaMotApiTest\Service\Model
+ * Class BrakeTestResultSubmissionSummaryTest.
  */
 class BrakeTestResultSubmissionSummaryTest extends PHPUnit_Framework_TestCase
 {
@@ -33,10 +31,10 @@ class BrakeTestResultSubmissionSummaryTest extends PHPUnit_Framework_TestCase
     protected function getTestRfrSummary()
     {
         return [
-            MotTestReasonForRejectionService::RFR_ID_FIELD                => 3,
-            MotTestReasonForRejectionService::TYPE_FIELD                  => 'test_type',
+            MotTestReasonForRejectionService::RFR_ID_FIELD => 3,
+            MotTestReasonForRejectionService::TYPE_FIELD => 'test_type',
             MotTestReasonForRejectionService::LONGITUDINAL_LOCATION_FIELD => 'front',
-            MotTestReasonForRejectionService::COMMENT_FIELD               => 'comment'
+            MotTestReasonForRejectionService::COMMENT_FIELD => 'comment',
         ];
     }
 }

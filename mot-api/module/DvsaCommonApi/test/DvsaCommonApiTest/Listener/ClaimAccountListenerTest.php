@@ -15,7 +15,7 @@ use Zend\Mvc\Router\RouteMatch;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class ClaimAccountListenerTest
+ * Class ClaimAccountListenerTest.
  */
 class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
 {
@@ -39,7 +39,7 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $this
             ->identityProvider
             ->expects($this->atLeast(1))
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($this->identity);
 
         $eventManager = new EventManager();
@@ -50,8 +50,8 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $routeMatch = XMock::of(RouteMatch::class);
         $routeMatch
             ->expects($this->atLeast(1))
-            ->method("getMatchedRouteName")
-            ->willReturn("mot-retest");
+            ->method('getMatchedRouteName')
+            ->willReturn('mot-retest');
 
         $e = new MvcEvent();
         $e->setResponse(new Response());
@@ -74,11 +74,11 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $routeMatch = XMock::of(RouteMatch::class);
         $routeMatch
             ->expects($this->atLeast(1))
-            ->method("getMatchedRouteName")
-            ->willReturn("session");
+            ->method('getMatchedRouteName')
+            ->willReturn('session');
 
         $request = new Request();
-        $request->setMethod("POST");
+        $request->setMethod('POST');
 
         $e = new MvcEvent();
         $e->setResponse(new Response());
@@ -101,7 +101,7 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $this
             ->identityProvider
             ->expects($this->atLeast(1))
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($this->identity);
 
         $eventManager = new EventManager();
@@ -112,8 +112,8 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
         $routeMatch = XMock::of(RouteMatch::class);
         $routeMatch
             ->expects($this->atLeast(1))
-            ->method("getMatchedRouteName")
-            ->willReturn("mot-retest");
+            ->method('getMatchedRouteName')
+            ->willReturn('mot-retest');
 
         $e = new MvcEvent();
         $e->setResponse(new Response());

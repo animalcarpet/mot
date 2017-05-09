@@ -14,11 +14,10 @@ use NotificationApi\Service\Helper\TwoFactorNotificationTemplateHelper;
 use NotificationApi\Service\NotificationService;
 
 /**
- * Send site nomination to user
+ * Send site nomination to user.
  */
 class SiteNominationService
 {
-
     /** @var NotificationService $notificationService */
     private $notificationService;
 
@@ -39,7 +38,7 @@ class SiteNominationService
     }
 
     /**
-     * @param Person       $nominator
+     * @param Person              $nominator
      * @param SiteBusinessRoleMap $nomination
      *
      * @return int notificationId
@@ -72,16 +71,17 @@ class SiteNominationService
     {
         $facadeRoles = [
             'Site manager' => SiteBusinessRoleCode::SITE_MANAGER,
-            'Site admin'   => SiteBusinessRoleCode::SITE_ADMIN,
-            'Tester'       => SiteBusinessRoleCode::TESTER,
+            'Site admin' => SiteBusinessRoleCode::SITE_ADMIN,
+            'Tester' => SiteBusinessRoleCode::TESTER,
         ];
 
         if (false === array_key_exists($role, $facadeRoles)) {
             throw new BadRequestException(
-                'You cannot assign this role ' . $role,
+                'You cannot assign this role '.$role,
                 BadRequestException::ERROR_CODE_BUSINESS_FAILURE
             );
         }
+
         return $facadeRoles[$role];
     }
 

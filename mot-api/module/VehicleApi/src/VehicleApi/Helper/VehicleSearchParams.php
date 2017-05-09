@@ -5,13 +5,10 @@ namespace VehicleApi\Helper;
 use Zend\Stdlib\RequestInterface as Request;
 
 /**
- * Class VehicleService
- *
- * @package VehicleApi\Service
+ * Class VehicleService.
  */
 class VehicleSearchParams
 {
-
     const SEARCH_QUERY_PARAMETER = 'search';
     const SEARCH_TYPE_QUERY_PARAMETER = 'type';
 
@@ -31,5 +28,4 @@ class VehicleSearchParams
     {
         return $this->request->getQuery(self::SEARCH_TYPE_QUERY_PARAMETER, '');
     }
-
 }

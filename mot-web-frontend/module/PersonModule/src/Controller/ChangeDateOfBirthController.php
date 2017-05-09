@@ -22,7 +22,7 @@ use UserAdmin\Service\HelpdeskAccountAdminService;
 use Zend\View\Model\ViewModel;
 
 /**
- * Controller for changing day of birth for new person profile page
+ * Controller for changing day of birth for new person profile page.
  */
 class ChangeDateOfBirthController extends AbstractDvsaMotTestController
 {
@@ -72,8 +72,7 @@ class ChangeDateOfBirthController extends AbstractDvsaMotTestController
         ApiPersonalDetails $personalDetailsService,
         MapperFactory $mapperFactory,
         DateOfBirthValidator $dayOfBirthValidator
-    )
-    {
+    ) {
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
         $this->accountAdminService = $accountAdminService;
         $this->personalDetailsService = $personalDetailsService;
@@ -113,7 +112,6 @@ class ChangeDateOfBirthController extends AbstractDvsaMotTestController
         ];
 
         if ($this->getRequest()->isPost()) {
-
             $postData = [
                 DateOfBirthValidator::FIELD_DAY => $this->getRequest()->getPost('dobDay'),
                 DateOfBirthValidator::FIELD_MONTH => $this->getRequest()->getPost('dobMonth'),
@@ -121,23 +119,23 @@ class ChangeDateOfBirthController extends AbstractDvsaMotTestController
             ];
 
             try {
-                if($this->validate($postData)) {
+                if ($this->validate($postData)) {
                     $this->accountAdminService->updateDateOfBirth(
                         $personId,
                         $postData
                     );
 
                     $this->flashMessenger()->addSuccessMessage(self::SUCCESS_MSG);
+
                     return $this->redirect()->toUrl($this->personProfileUrlGenerator->toPersonProfile());
-                }
-                else {
+                } else {
                     $params = [
                         'dobDay' => $this->getRequest()->getPost('dobDay'),
                         'dobMonth' => $this->getRequest()->getPost('dobMonth'),
                         'dobYear' => $this->getRequest()->getPost('dobYear'),
                     ];
                 }
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->flashMessenger()->addErrorMessage(self::FAILURE_MSG);
             }
         }
@@ -184,6 +182,7 @@ class ChangeDateOfBirthController extends AbstractDvsaMotTestController
     /**
      * @param $context
      * @param PersonalDetails $personalDetails
+     *
      * @return array
      */
     private function generateBreadcrumbsFromRequest($context, PersonalDetails $personalDetails)
@@ -243,20 +242,22 @@ class ChangeDateOfBirthController extends AbstractDvsaMotTestController
 
     private function validate($postData)
     {
-        if($this->dayOfBirthValidator->isValid($postData)) {
+        if ($this->dayOfBirthValidator->isValid($postData)) {
             return true;
-        }
-        else {
-            foreach($this->dayOfBirthValidator->getMessages() as $type => $msg){
+        } else {
+            foreach ($this->dayOfBirthValidator->getMessages() as $type => $msg) {
                 $this->validationErrors[self::FIELD_NAME] = $msg;
             }
+
             return false;
         }
     }
 
     /**
      * @param PersonHelpDeskProfileDto $profile
+     *
      * @return \DateTime|null
+     *
      * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
      */
     private function getDateOfBirth(PersonHelpDeskProfileDto $profile)
@@ -265,8 +266,10 @@ class ChangeDateOfBirthController extends AbstractDvsaMotTestController
         $dobDate = null;
         try {
             $dobDate = DateUtils::toDate($dobStr);
+
             return $dobDate;
-        } catch (\Exception $ex) {}
+        } catch (\Exception $ex) {
+        }
 
         return $dobDate;
     }

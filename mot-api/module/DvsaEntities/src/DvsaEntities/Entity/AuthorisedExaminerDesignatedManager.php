@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * AuthorisedExaminerDesignatedManager
+ * AuthorisedExaminerDesignatedManager.
  *
  * @ORM\Table(name="application_authorised_examiner_designated_manager", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"},
  * indexes={@ORM\Index(name="fk_designated_manager_contact_details", columns={"contact_details_id"})})
@@ -25,21 +26,21 @@ class AuthorisedExaminerDesignatedManager
     private $userIdentificationNumber;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="mot_scheme_trained_person", type="boolean", nullable=false)
      */
     private $motSchemeTrainedPerson;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="mot_managers_course", type="boolean", nullable=false)
      */
     private $motManagersCourse;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="another_role", type="boolean", nullable=false)
      */
@@ -56,16 +57,17 @@ class AuthorisedExaminerDesignatedManager
     private $contactDetails;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_application_authorised_examiner_principal", type="boolean", nullable=true)
      */
     private $isAuthorisedExaminerPrincipal;
 
     /**
-     * Set userIdentificationNumber
+     * Set userIdentificationNumber.
      *
      * @param string $userIdentificationNumber
+     *
      * @return AuthorisedExaminerDesignatedManager
      */
     public function setUserIdentificationNumber($userIdentificationNumber)
@@ -76,7 +78,7 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Get userIdentificationNumber
+     * Get userIdentificationNumber.
      *
      * @return string
      */
@@ -86,9 +88,10 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Set motSchemeTrainedPerson
+     * Set motSchemeTrainedPerson.
      *
-     * @param boolean $motSchemeTrainedPerson
+     * @param bool $motSchemeTrainedPerson
+     *
      * @return AuthorisedExaminerDesignatedManager
      */
     public function setMotSchemeTrainedPerson($motSchemeTrainedPerson)
@@ -99,9 +102,9 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Get motSchemeTrainedPerson
+     * Get motSchemeTrainedPerson.
      *
-     * @return boolean
+     * @return bool
      */
     public function getMotSchemeTrainedPerson()
     {
@@ -109,9 +112,10 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Set motManagersCourse
+     * Set motManagersCourse.
      *
-     * @param boolean $motManagersCourse
+     * @param bool $motManagersCourse
+     *
      * @return AuthorisedExaminerDesignatedManager
      */
     public function setMotManagersCourse($motManagersCourse)
@@ -122,9 +126,9 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Get motManagersCourse
+     * Get motManagersCourse.
      *
-     * @return boolean
+     * @return bool
      */
     public function getMotManagersCourse()
     {
@@ -132,9 +136,10 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Set anotherRole
+     * Set anotherRole.
      *
-     * @param boolean $anotherRole
+     * @param bool $anotherRole
+     *
      * @return AuthorisedExaminerDesignatedManager
      */
     public function setAnotherRole($anotherRole)
@@ -145,9 +150,9 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Get anotherRole
+     * Get anotherRole.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAnotherRole()
     {
@@ -155,9 +160,10 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Set contactDetails
+     * Set contactDetails.
      *
      * @param ContactDetails $contactDetails
+     *
      * @return AuthorisedExaminerDesignatedManager
      */
     public function setContactDetails($contactDetails)
@@ -168,7 +174,7 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Get contactDetailsId
+     * Get contactDetailsId.
      *
      * @return \DvsaEntities\Entity\ContactDetail
      */
@@ -178,9 +184,10 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Set isAuthorisedExaminerPrincipal
+     * Set isAuthorisedExaminerPrincipal.
      *
-     * @param boolean $isAuthorisedExaminerPrincipal
+     * @param bool $isAuthorisedExaminerPrincipal
+     *
      * @return AuthorisedExaminerDesignatedManager
      */
     public function setIsAuthorisedExaminerPrincipal($isAuthorisedExaminerPrincipal)
@@ -191,9 +198,9 @@ class AuthorisedExaminerDesignatedManager
     }
 
     /**
-     * Get isAuthorisedExaminerPrincipal
+     * Get isAuthorisedExaminerPrincipal.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsAuthorisedExaminerPrincipal()
     {

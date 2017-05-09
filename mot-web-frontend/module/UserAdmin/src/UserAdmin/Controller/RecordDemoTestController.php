@@ -6,7 +6,6 @@ use DvsaClient\Mapper\DemoTestAssessmentMapper;
 use DvsaClient\Mapper\PersonMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\FeatureToggling\Feature;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use UserAdmin\ViewModel\RecordDemoTestOutcome\DemoTestAssessment;
 use Zend\View\Model\ViewModel;
@@ -47,6 +46,7 @@ class RecordDemoTestController extends AbstractDvsaMotTestController
         }
 
         $params = $this->getRequest()->getQuery()->toArray();
+
         return new ViewModel(['viewModel' => new DemoTestAssessment($tester, $vehicleClassGroup, $params)]);
     }
 }

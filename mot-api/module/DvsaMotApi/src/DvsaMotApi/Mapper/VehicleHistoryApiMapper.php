@@ -11,7 +11,7 @@ use DvsaEntities\Entity\MotTest;
 class VehicleHistoryApiMapper
 {
     /**
-     * Maps array of MotTest entity objects to VehicleHistoryDto
+     * Maps array of MotTest entity objects to VehicleHistoryDto.
      *
      * @param MotTest[] $motTests
      *

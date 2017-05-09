@@ -8,12 +8,9 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
-use DvsaMotApi\Service\MotTestStatusService;
 
 /**
- * Class MotTestDateHelperService
- *
- * @package DvsaMotApi\Service
+ * Class MotTestDateHelperService.
  */
 class MotTestDateHelperService
 {
@@ -31,8 +28,8 @@ class MotTestDateHelperService
     private $motTestStatusService;
 
     /**
-     * @param DateTimeHolder $dateTimeHolder
-     * @param MotTestRepository $motTestRepository
+     * @param DateTimeHolder       $dateTimeHolder
+     * @param MotTestRepository    $motTestRepository
      * @param MotTestStatusService $motTestStatusService
      */
     public function __construct(
@@ -45,11 +42,11 @@ class MotTestDateHelperService
         $this->motTestStatusService = $motTestStatusService;
     }
 
-
     /**
      * @param MotTest $motTest
-     * @param null $issuedDate
-     * @param null $pendingStatus
+     * @param null    $issuedDate
+     * @param null    $pendingStatus
+     *
      * @return \DateTime|null
      */
     public function getIssuedDate(MotTest $motTest, $issuedDate = null, $pendingStatus = null)
@@ -67,9 +64,9 @@ class MotTestDateHelperService
 
         //  --  set or not issued date to mot test in depend from test type and test status --
         $isTestIncomplete = ($pendingStatus == MotTestService::PENDING_INCOMPLETE_STATUS);
+
         return $isTestIncomplete ? null : $issuedDate;
     }
-
 
     /**
      * Answers the calculated expiry date based. Delegates all business
@@ -80,11 +77,12 @@ class MotTestDateHelperService
      * to remove the fact that an expiry date is available at all!
      *
      * @param MotTest $currentMotTest
-     * @param null $issuedDate
-     * @param null $pendingStatus
+     * @param null    $issuedDate
+     * @param null    $pendingStatus
      *
      * @throws \Exception
-     * @return \DateTime|null  -- null causes "N/A" to be displayed in views
+     *
+     * @return \DateTime|null -- null causes "N/A" to be displayed in views
      *
      * @SuppressWarnings(unused) --remove later!
      */
@@ -107,6 +105,7 @@ class MotTestDateHelperService
 
             $returnDate = $motTestDate->getExpiryDate();
         }
+
         return $returnDate;
     }
 
@@ -116,6 +115,7 @@ class MotTestDateHelperService
      *
      * @param MotTest $motTest
      * @param $pendingStatus
+     *
      * @return bool
      */
     protected function motTestNeedsExpiryDate(MotTest $motTest, $pendingStatus)
@@ -131,6 +131,7 @@ class MotTestDateHelperService
         if (!$isNeedSetDate) {
             return false;
         }
+
         return true;
     }
 }

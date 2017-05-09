@@ -84,7 +84,7 @@ class OpenInterfaceMotTestControllerTest extends AbstractRestfulControllerTestCa
         $response = $this->controller->getResponse();
 
         //then exception is thrown and below is not invoked
-        $this->assertTrue(false, "An exception expected to be thrown.");
+        $this->assertTrue(false, 'An exception expected to be thrown.');
     }
 
     /** @expectedException \DvsaCommonApi\Service\Exception\BadRequestException */
@@ -107,7 +107,7 @@ class OpenInterfaceMotTestControllerTest extends AbstractRestfulControllerTestCa
         $response = $this->controller->getResponse();
 
         //then exception is thrown and below is not invoked
-        $this->assertTrue(false, "An exception expected to be thrown.");
+        $this->assertTrue(false, 'An exception expected to be thrown.');
     }
 
     private function getDvlaInfoMotHistoryService()

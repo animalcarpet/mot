@@ -25,7 +25,6 @@ use DvsaClient\Mapper\OrganisationPositionMapper;
 use DvsaClient\Mapper\SitePositionMapper;
 use DvsaCommon\ApiClient\Person\PersonTradeRoles\Dto\PersonTradeRoleDto;
 use DvsaCommon\ApiClient\Person\PersonTradeRoles\PersonTradeRolesApiResource;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Utility\ArrayUtils;
 use Zend\View\Model\ViewModel;

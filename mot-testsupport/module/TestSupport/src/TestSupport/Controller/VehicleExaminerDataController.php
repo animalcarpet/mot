@@ -3,9 +3,7 @@
 namespace TestSupport\Controller;
 
 use DvsaCommon\Constants\Role;
-use TestSupport\Helper\TestSupportAccessTokenManager;
 use TestSupport\Service\VehicleExaminerService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -25,6 +23,7 @@ class VehicleExaminerDataController extends BaseTestSupportRestfulController
     {
         $vehicleExaminerService = $this->getServiceLocator()->get(VehicleExaminerService::class);
         $resultJson = $vehicleExaminerService->create($data);
+
         return $resultJson;
     }
 }

@@ -3,10 +3,9 @@
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Configuration
+ * Configuration.
  *
  * @ORM\Table(name="configuration", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\ConfigurationRepository", readOnly=true)
@@ -37,7 +36,7 @@ class Configuration extends Entity
     private $value;
 
     /**
-     * Get key
+     * Get key.
      *
      * @return string
      */
@@ -47,9 +46,10 @@ class Configuration extends Entity
     }
 
     /**
-     * Set key
+     * Set key.
      *
      * @param string $key
+     *
      * @return Configuration
      */
     public function setKey($key)
@@ -60,7 +60,7 @@ class Configuration extends Entity
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -70,9 +70,10 @@ class Configuration extends Entity
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return Configuration
      */
     public function setValue($value)

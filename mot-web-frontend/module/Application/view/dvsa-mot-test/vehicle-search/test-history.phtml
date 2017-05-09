@@ -1,13 +1,12 @@
 <?php
 use DvsaMotTest\Controller\VehicleSearchController;
-use DvsaMotTest\Service\VehicleSearchService;
+
 ?>
 
 <h1>Duplicate or replacement certificate</h1>
 
 <?php
 /** @var DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto $vehicleHistory */
-
 echo $this->partial('errorMessages', [
     'getFromFlash' => true,
     'errorTitle' => 'Problem with the form',
@@ -19,9 +18,9 @@ echo $this->partial(
     'vehicle/history',
     [
         'vehicleHistory' => $vehicleHistory,
-        'isDvsaUser'     => false,
-        'siteName'       => $this->siteName,
-        'isManySites'    => false,
+        'isDvsaUser' => false,
+        'siteName' => $this->siteName,
+        'isManySites' => false,
     ]
 );
 ?>
@@ -72,7 +71,7 @@ echo $this->partial(
                 <a href="<?php echo $this->url(
                     VehicleSearchController::ROUTE_REPLACEMENT_CERTIFICATE_VEHICLE_SEARCH,
                     [],
-                    ['query' => ['vin'=>$this->vin, 'registration'=>$this->registration]]
+                    ['query' => ['vin' => $this->vin, 'registration' => $this->registration]]
                 ); ?>" id="return_to_replacement_search">
                     Return to find a vehicle
                 </a>

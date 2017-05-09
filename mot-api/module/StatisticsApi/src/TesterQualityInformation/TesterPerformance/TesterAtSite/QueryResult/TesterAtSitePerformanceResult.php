@@ -1,8 +1,6 @@
 <?php
-namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryResult\AbstractTesterPerformanceResult;
-use DvsaCommon\DtoSerialization\ReflectiveDtoInterface;
+namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult;
 
 class TesterAtSitePerformanceResult extends TesterPerformanceResult
 {
@@ -16,6 +14,7 @@ class TesterAtSitePerformanceResult extends TesterPerformanceResult
     public function setSiteName($siteName)
     {
         $this->siteName = $siteName;
+
         return $this;
     }
 }

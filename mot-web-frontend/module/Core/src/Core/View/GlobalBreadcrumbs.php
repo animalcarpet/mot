@@ -14,5 +14,4 @@ namespace Core\View;
  */
 class GlobalBreadcrumbs extends Breadcrumbs
 {
-
 }

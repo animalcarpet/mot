@@ -1,15 +1,15 @@
 <?php
+
 namespace SiteApiTest\Factory\Controller;
 
 use DvsaCommonTest\TestUtils\XMock;
 use SiteApi\Controller\EnforcementSiteAssessmentController;
 use SiteApi\Service\EnforcementSiteAssessmentService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use SiteApi\Factory\Controller\EnforcementSiteAssessmentControllerFactory;
 
 /**
- * Class SiteRiskControllerFactoryTest
+ * Class SiteRiskControllerFactoryTest.
  */
 class EnforcementSiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

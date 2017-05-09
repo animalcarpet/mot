@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Types of amendments that can be made on a transaction
+ * Types of amendments that can be made on a transaction.
  *
  * @ORM\Table(name="test_slot_transaction_amendment_type", options={"collate"="utf8_general_ci", "charset"="utf8",
  *                                                         "engine"="InnoDB"})
@@ -64,7 +64,7 @@ class TestSlotTransactionAmendmentType extends Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -78,7 +78,7 @@ class TestSlotTransactionAmendmentType extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -88,7 +88,7 @@ class TestSlotTransactionAmendmentType extends Entity
     }
 
     /**
-     * Set active
+     * Set active.
      *
      * @param bool $active
      *
@@ -102,7 +102,7 @@ class TestSlotTransactionAmendmentType extends Entity
     }
 
     /**
-     * Get active
+     * Get active.
      *
      * @return bool
      */
@@ -112,7 +112,7 @@ class TestSlotTransactionAmendmentType extends Entity
     }
 
     /**
-     * Set display order
+     * Set display order.
      *
      * @param int $displayOrder
      *
@@ -126,7 +126,7 @@ class TestSlotTransactionAmendmentType extends Entity
     }
 
     /**
-     * Get display order
+     * Get display order.
      *
      * @return int
      */

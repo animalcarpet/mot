@@ -16,8 +16,7 @@ abstract class AbstractReportGenerator
     protected function __construct(
         DateTimeHolderInterface $dateTimeHolder,
         TimeSpan $timeoutPeriod
-    )
-    {
+    ) {
         $this->dateTimeHolder = $dateTimeHolder;
         $this->timeoutPeriod = $timeoutPeriod;
     }
@@ -29,7 +28,7 @@ abstract class AbstractReportGenerator
 
     abstract protected function storeReport($report);
 
-    private final function createInProgressReport($startedDate, $timeoutDate)
+    final private function createInProgressReport($startedDate, $timeoutDate)
     {
         $inProgressReport = $this->createEmptyReport();
         $inProgressReport->getReportStatus()->setIsCompleted(false);
@@ -41,7 +40,6 @@ abstract class AbstractReportGenerator
 
     /**
      * @return ReportDtoInterface
-     *
      */
     final private function generateReportAndStoreIt()
     {
@@ -64,7 +62,7 @@ abstract class AbstractReportGenerator
     /**
      * @return ReportDtoInterface
      */
-    abstract function createEmptyReport();
+    abstract public function createEmptyReport();
 
     private function completeReport(ReportDtoInterface $report, $startedDate, $timeoutDate, $endDate)
     {
@@ -106,7 +104,7 @@ abstract class AbstractReportGenerator
             && !$report->getReportStatus()->getIsCompleted()
             && $report->getReportStatus()->getGenerationTimeoutDate() === null
         ) {
-            throw new \UnexpectedValueException("Timeout not set for a report that is being generated.");
+            throw new \UnexpectedValueException('Timeout not set for a report that is being generated.');
         }
     }
 

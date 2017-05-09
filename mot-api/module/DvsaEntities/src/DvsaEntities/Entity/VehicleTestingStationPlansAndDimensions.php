@@ -1,12 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
-use Zend\Soap\Client\Common;
 
 /**
- * VehicleTestingStationPlansAndDimensions
+ * VehicleTestingStationPlansAndDimensions.
  *
  * @ORM\Table(
  * name="application_site_plans_and_dimensions",
@@ -77,14 +77,14 @@ class VehicleTestingStationPlansAndDimensions
     private $methodOfDelivery;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="plan_received", type="boolean", nullable=false)
      */
     private $sitePlanReceived = false;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="drawing_received", type="boolean", nullable=false)
      */
@@ -98,6 +98,7 @@ class VehicleTestingStationPlansAndDimensions
     public function setDrawingDate($drawingDate)
     {
         $this->drawingDate = $drawingDate;
+
         return $this;
     }
 
@@ -117,6 +118,7 @@ class VehicleTestingStationPlansAndDimensions
     public function setDrawingNumber($drawingNumber)
     {
         $this->drawingNumber = $drawingNumber;
+
         return $this;
     }
 
@@ -136,6 +138,7 @@ class VehicleTestingStationPlansAndDimensions
     public function setPlanDate($planDate)
     {
         $this->planDate = $planDate;
+
         return $this;
     }
 
@@ -155,6 +158,7 @@ class VehicleTestingStationPlansAndDimensions
     public function setPlanNumber($planNumber)
     {
         $this->planNumber = $planNumber;
+
         return $this;
     }
 
@@ -174,6 +178,7 @@ class VehicleTestingStationPlansAndDimensions
     public function setVehicleTestingStationDetails($vehicleTestingStationDetails)
     {
         $this->vehicleTestingStationDetails = $vehicleTestingStationDetails;
+
         return $this;
     }
 
@@ -206,7 +211,7 @@ class VehicleTestingStationPlansAndDimensions
     }
 
     /**
-     * @param boolean $drawingReceived
+     * @param bool $drawingReceived
      *
      * @return VehicleTestingStationPlansAndDimensions
      */
@@ -218,7 +223,7 @@ class VehicleTestingStationPlansAndDimensions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDrawingPlanReceived()
     {
@@ -226,7 +231,7 @@ class VehicleTestingStationPlansAndDimensions
     }
 
     /**
-     * @param boolean $planReceived
+     * @param bool $planReceived
      *
      * @return VehicleTestingStationPlansAndDimensions
      */
@@ -238,7 +243,7 @@ class VehicleTestingStationPlansAndDimensions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSitePlanReceived()
     {

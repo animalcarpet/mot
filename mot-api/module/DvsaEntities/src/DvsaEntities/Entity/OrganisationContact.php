@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * OrganisationContact
+ * OrganisationContact.
  *
  * @ORM\Table(
  *      name="organisation_contact_detail_map",

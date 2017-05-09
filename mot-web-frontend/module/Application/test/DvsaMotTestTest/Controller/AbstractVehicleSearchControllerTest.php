@@ -4,20 +4,16 @@ namespace DvsaMotTestTest\Controller;
 
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaMotTest\Controller\VehicleSearchController;
-use ReflectionMethod;
-use Zend\Stdlib\Parameters;
 
 /**
- * Class AbstractVehicleSearchControllerTest
- *
- * @package DvsaMotTestTest\Controller
+ * Class AbstractVehicleSearchControllerTest.
  */
 abstract class AbstractVehicleSearchControllerTest extends AbstractDvsaMotTestTestCase
 {
-    const TEST_PARTIAL_VIN = "123321";
-    const TEST_FULL_VIN = "12332112332112332";
-    const TEST_REG = "EL1 0FA";
-    const TEST_FULL_VIN_WITH_SPACES = "12332 11233 21 123 32";
+    const TEST_PARTIAL_VIN = '123321';
+    const TEST_FULL_VIN = '12332112332112332';
+    const TEST_REG = 'EL1 0FA';
+    const TEST_FULL_VIN_WITH_SPACES = '12332 11233 21 123 32';
 
     const VEHICLE_ID = 9999;
     const VEHICLE_ID_ENC = '34eT4Q';    //  encrypted 9999
@@ -65,8 +61,8 @@ abstract class AbstractVehicleSearchControllerTest extends AbstractDvsaMotTestTe
         return [
             'data' => [
                 'resultType' => VehicleSearchController::SEARCH_RESULT_EXACT_MATCH,
-                'vehicles'    => [$this->getTestVehicleData()],
-            ]
+                'vehicles' => [$this->getTestVehicleData()],
+            ],
         ];
     }
 
@@ -75,24 +71,24 @@ abstract class AbstractVehicleSearchControllerTest extends AbstractDvsaMotTestTe
         return [
             'data' => [
                 'resultType' => VehicleSearchController::SEARCH_RESULT_EXACT_MATCH,
-                'vehicle'    => $this->getTestVehicleData(),
-            ]
+                'vehicle' => $this->getTestVehicleData(),
+            ],
         ];
     }
 
     protected function getTestVehicleData()
     {
         return [
-            'id'            => self::VEHICLE_ID,
-            'registration'  => 'CRZ 4545',
-            'vin'           => 100000000001111111,
+            'id' => self::VEHICLE_ID,
+            'registration' => 'CRZ 4545',
+            'vin' => 100000000001111111,
             'vehicle_class' => '4',
-            'make'          => 'FORD',
-            'model'         => 'FOCUS ZETEC',
-            'year'          => 2011,
-            'colour'        => 'SILVER',
-            'fuel_type'     => 'P',
-            'isDvla'        => false,
+            'make' => 'FORD',
+            'model' => 'FOCUS ZETEC',
+            'year' => 2011,
+            'colour' => 'SILVER',
+            'fuel_type' => 'P',
+            'isDvla' => false,
             'emptyVinReason' => null,
             'emptyRegistrationReason' => null,
             'isIncognito' => false,

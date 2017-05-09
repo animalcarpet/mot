@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Role
+ * Role.
  *
  * @ORM\Table(
  *  name="role",
@@ -37,23 +37,24 @@ class Role extends Entity
     private $code;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_internal", type="boolean")
      */
     private $isInternal;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_trade", type="boolean")
      */
     private $isTrade;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Role
      */
     public function setName($name)
@@ -64,7 +65,7 @@ class Role extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -74,9 +75,10 @@ class Role extends Entity
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
+     *
      * @return Role
      */
     public function setCode($code)
@@ -87,7 +89,7 @@ class Role extends Entity
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */
@@ -97,7 +99,7 @@ class Role extends Entity
     }
 
     /**
-     * @param boolean $isInternal
+     * @param bool $isInternal
      *
      * @return $this
      * @codeCoverageIgnore
@@ -105,11 +107,12 @@ class Role extends Entity
     public function setIsInternal($isInternal)
     {
         $this->isInternal = $isInternal;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @codeCoverageIgnore
      */
     public function isInternal()
@@ -118,7 +121,7 @@ class Role extends Entity
     }
 
     /**
-     * @param boolean $isTrade
+     * @param bool $isTrade
      *
      * @return $this
      * @codeCoverageIgnore
@@ -126,11 +129,12 @@ class Role extends Entity
     public function setIsTrade($isTrade)
     {
         $this->isTrade = $isTrade;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @codeCoverageIgnore
      */
     public function isTrade()

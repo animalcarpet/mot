@@ -10,13 +10,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ResetClaimAccountControllerFactory
- * @package PersonApi\Factory\Controller
+ * Class ResetClaimAccountControllerFactory.
  */
 class ResetClaimAccountControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return ResetClaimAccountController
      */
     public function createService(ServiceLocatorInterface $controllerManager)

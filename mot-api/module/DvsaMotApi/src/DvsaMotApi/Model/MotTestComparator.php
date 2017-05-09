@@ -2,17 +2,13 @@
 
 namespace DvsaMotApi\Model;
 
-use DvsaCommonApi\Error\Message as ErrorMessage;
-
 /**
- * Class MotTestComparator
- *
- * @package DvsaMotApi\Model
+ * Class MotTestComparator.
  */
 class MotTestComparator
 {
     /**
-     * Compare that two Rfr arrays are the same
+     * Compare that two Rfr arrays are the same.
      *
      * @param $arr1
      * @param $arr2
@@ -51,7 +47,7 @@ class MotTestComparator
     }
 
     /**
-     * Compare that two Rfrs are equal (by their fields)
+     * Compare that two Rfrs are equal (by their fields).
      *
      * @param $rfr1
      * @param $rfr2
@@ -82,6 +78,7 @@ class MotTestComparator
         if ($rfr1['failureDangerous'] != $rfr2['failureDangerous']) {
             return false;
         }
+
         return true;
     }
 

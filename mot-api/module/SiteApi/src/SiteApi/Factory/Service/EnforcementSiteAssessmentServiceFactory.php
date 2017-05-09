@@ -7,14 +7,12 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaEventApi\Service\EventService;
 use SiteApi\Service\EnforcementSiteAssessmentService;
-use SiteApi\Service\SiteRiskAssessmentService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SiteRiskAssessmentServiceFactory
- *
+ * Class SiteRiskAssessmentServiceFactory.
  */
 class EnforcementSiteAssessmentServiceFactory implements FactoryInterface
 {

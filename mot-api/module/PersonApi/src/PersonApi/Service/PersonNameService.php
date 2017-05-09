@@ -65,7 +65,9 @@ class PersonNameService extends AbstractService
     /**
      * @param $personId
      * @param array $data contains firstName, middleName and lastName
+     *
      * @return \DvsaEntities\Entity\Person
+     *
      * @throws InvalidFieldValueException
      * @throws UnauthorisedException
      */
@@ -75,15 +77,15 @@ class PersonNameService extends AbstractService
         $identity = $this->authService->getIdentity();
 
         if ($identity->getUserId() == $personId) {
-            throw new UnauthorisedException("Not authorised");
-        };
+            throw new UnauthorisedException('Not authorised');
+        }
 
         $person = $this->findPerson($personId);
 
         $data = $this->xssFilter->filterMultiple($data);
 
         if (!$this->validator->isValid($data)) {
-            throw new InvalidFieldValueException(implode(", ", $this->validator->getMessages()));
+            throw new InvalidFieldValueException(implode(', ', $this->validator->getMessages()));
         }
 
         $person->setFirstName($data[self::FIRST_NAME]);

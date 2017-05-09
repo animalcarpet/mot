@@ -5,13 +5,10 @@ namespace Csrf;
 use Zend\Session\Container as SessionContainer;
 
 /**
- * Class CsrfSupportTest
- *
- * @package Csrf
+ * Class CsrfSupportTest.
  */
 class CsrfSupportTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGetCsrfToken_forNewSession_returnsNonNullToken()
     {
         $csrfSession = new SessionContainer('csrf');

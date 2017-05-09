@@ -11,7 +11,7 @@ use Exception;
 class UpdateLicenceDetailsController extends AbstractDvsaRestfulController
 {
     /**
-     * @var LicenceDetailsService $licenceService
+     * @var LicenceDetailsService
      */
     private $licenceService;
 
@@ -22,9 +22,10 @@ class UpdateLicenceDetailsController extends AbstractDvsaRestfulController
 
     /**
      * Create a driving licence for a user
-     * $data should contain 'LicenceNumber' & 'LicenceRegion'
+     * $data should contain 'LicenceNumber' & 'LicenceRegion'.
      *
      * @param array $data
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function create($data)
@@ -34,7 +35,7 @@ class UpdateLicenceDetailsController extends AbstractDvsaRestfulController
         $data['LicenceType'] = LicenceTypeCode::DRIVING_LICENCE;
 
         try {
-            $this->licenceService->updateOrCreate((int)$personId, $data);
+            $this->licenceService->updateOrCreate((int) $personId, $data);
         } catch (Exception $e) {
             return ApiResponse::jsonError($e->getMessage());
         }
@@ -43,9 +44,10 @@ class UpdateLicenceDetailsController extends AbstractDvsaRestfulController
     }
 
     /**
-     * Delete a user's driving licence
+     * Delete a user's driving licence.
      *
      * @param mixed $personId
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function delete($personId)

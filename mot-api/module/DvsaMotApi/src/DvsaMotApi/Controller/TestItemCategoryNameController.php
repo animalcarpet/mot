@@ -1,14 +1,13 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaMotApi\Service\TestItemSelectorService;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class TestItemSelectorController
+ * Class TestItemSelectorController.
  */
 class TestItemCategoryNameController extends AbstractDvsaRestfulController
 {

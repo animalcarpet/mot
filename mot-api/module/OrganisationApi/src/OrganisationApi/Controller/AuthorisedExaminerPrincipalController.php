@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
@@ -6,7 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\AuthorisedExaminerPrincipalService;
 
 /**
- * Controller for an AuthorisedExaminer's AuthorisedExaminerPrincipal related API calls
+ * Controller for an AuthorisedExaminer's AuthorisedExaminerPrincipal related API calls.
  */
 class AuthorisedExaminerPrincipalController extends AbstractDvsaRestfulController
 {
@@ -49,7 +50,7 @@ class AuthorisedExaminerPrincipalController extends AbstractDvsaRestfulControlle
     }
 
     /**
-     * todo WK/PT: inject the service by constructor
+     * todo WK/PT: inject the service by constructor.
      *
      * @return AuthorisedExaminerPrincipalService
      */

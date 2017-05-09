@@ -13,7 +13,6 @@ use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\PasswordDetail;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\PasswordDetailRepository;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use Doctrine\ORM\EntityManager;
 
@@ -26,7 +25,7 @@ class PasswordExpiryNotificationServiceFactoryTest extends \PHPUnit_Framework_Te
         $entityManager = XMock::of(EntityManager::class);
         $entityManager
             ->expects($this->any())
-            ->method("getRepository")
+            ->method('getRepository')
             ->willReturnCallback(function ($entity) {
                 switch ($entity) {
                     case Notification::class:

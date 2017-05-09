@@ -5,12 +5,11 @@ namespace ApplicationTest\Service\ReportBuilder;
 use Application\Helper\PrgHelper;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use PHPUnit_Framework_TestCase;
 use Zend\Http\Request;
 
 /**
- * Class PrgHelperTest
+ * Class PrgHelperTest.
  */
 class PrgHelperTest extends PHPUnit_Framework_TestCase
 {

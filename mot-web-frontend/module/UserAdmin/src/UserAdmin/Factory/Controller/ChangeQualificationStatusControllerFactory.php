@@ -5,7 +5,6 @@ namespace UserAdmin\Factory\Controller;
 use DvsaClient\MapperFactory;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use UserAdmin\Controller\ChangeQualificationStatusController;
-use Zend\Db\Sql\Update;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container;
@@ -13,7 +12,7 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 
 /**
- * Factory for {@link \UserAdmin\Controller\UpdateQualificationController}
+ * Factory for {@link \UserAdmin\Controller\UpdateQualificationController}.
  */
 class ChangeQualificationStatusControllerFactory implements FactoryInterface
 {

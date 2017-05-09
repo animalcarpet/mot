@@ -39,9 +39,7 @@ use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 
 /**
- * Class MotTestTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class MotTestTest.
  */
 class MotTestTest extends \PHPUnit_Framework_TestCase
 {
@@ -78,10 +76,10 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
 
     public function testSettersAndGetters()
     {
-        $number = "1234567";
+        $number = '1234567';
         $brakeTests12 = new BrakeTestResultClass12();
         $brakeTests3up = new BrakeTestResultClass3AndAbove();
-        $complaintRef = (new MotTestComplaintRef())->setComplaintRef("33333");
+        $complaintRef = (new MotTestComplaintRef())->setComplaintRef('33333');
         $completedDate = new \DateTime();
         $countryOfReg = new CountryOfRegistration();
         $document = new Document();
@@ -99,8 +97,8 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $secondaryColour = new Colour();
         $odometerValue = 666;
         $prsMotTest = $this->createMotTest();
-        $vin = "12345678901234567";
-        $reg = "FCB1234";
+        $vin = '12345678901234567';
+        $reg = 'FCB1234';
         $vts = new Site();
         $vehClass = new VehicleClass();
 
@@ -122,7 +120,7 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $startedDate = new \DateTime();
         $tester = new Person();
         $motTestOriginal = $this->createMotTest();
-        $reasonForTerminationComment = "comment for termination";
+        $reasonForTerminationComment = 'comment for termination';
         $reasonForCancel = new MotTestReasonForCancel();
         $comment = (new Comment())->setComment($reasonForTerminationComment);
         $motTestCancelled = new MotTestCancelled();
@@ -296,7 +294,7 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($mt->hasRfrsOfType(ReasonForRejectionTypeName::PRS));
         $this->assertTrue($mt->hasRfrsOfType(ReasonForRejectionTypeName::FAIL));
-        $this->assertFalse($mt->hasRfrsOfType("advisory"));
+        $this->assertFalse($mt->hasRfrsOfType('advisory'));
     }
 
     public function testExtractRfrs()
@@ -307,9 +305,9 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $mt = $this->createMotTest();
         $mt->setMotTestType($mtt);
         $reason1 = (new MotTestReasonForRejection())->setId(1)
-            ->setType((new ReasonForRejectionType())->setReasonForRejectionType("fail"));
+            ->setType((new ReasonForRejectionType())->setReasonForRejectionType('fail'));
         $reason2 = (new MotTestReasonForRejection())->setId(2)
-            ->setType((new ReasonForRejectionType())->setReasonForRejectionType("prs"));
+            ->setType((new ReasonForRejectionType())->setReasonForRejectionType('prs'));
         $mt->addMotTestReasonForRejection($reason1);
         $mt->addMotTestReasonForRejection($reason2);
         $this->assertCount(2, $mt->extractRfrs($hydrator));
@@ -397,7 +395,7 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;

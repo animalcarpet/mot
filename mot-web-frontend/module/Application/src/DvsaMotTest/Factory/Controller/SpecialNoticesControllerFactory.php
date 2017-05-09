@@ -22,7 +22,7 @@ class SpecialNoticesControllerFactory implements FactoryInterface
     {
         /* @var ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
-        $markdown       = $serviceLocator->get('MaglMarkdown\MarkdownService');
+        $markdown = $serviceLocator->get('MaglMarkdown\MarkdownService');
 
         return new SpecialNoticesController(
             $markdown,

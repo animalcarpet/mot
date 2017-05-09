@@ -9,13 +9,10 @@ use SiteApi\Model\NominationVerifier;
 use SiteApi\Service\SiteNominationService;
 
 /**
- * Class NominateOperation
- *
- * @package SiteApi\Model\Operation
+ * Class NominateOperation.
  */
 class NominateOperation
 {
-
     private $entityManager;
     private $nominationVerifier;
     private $siteNominationService;
@@ -31,7 +28,7 @@ class NominateOperation
     }
 
     /**
-     * @param Person       $nominator
+     * @param Person              $nominator
      * @param SiteBusinessRoleMap $nomination
      *
      * @return SiteBusinessRoleMap
@@ -49,8 +46,9 @@ class NominateOperation
     }
 
     /**
-     * @param Person $nominator
+     * @param Person              $nominator
      * @param SiteBusinessRoleMap $nomination
+     *
      * @return SiteBusinessRoleMap
      */
     public function sendUpdatedNominationNotification(Person $nominator, SiteBusinessRoleMap $nomination)
@@ -65,5 +63,4 @@ class NominateOperation
         $unmetRestrictions = $this->nominationVerifier->verify($nomination);
         $unmetRestrictions->throwIfAny();
     }
-
 }

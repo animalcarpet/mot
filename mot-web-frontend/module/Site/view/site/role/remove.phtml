@@ -1,8 +1,7 @@
 <?php
-use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
 use Site\Controller\RoleController;
 
-/**
+/*
  * @var $viewModel \Site\ViewModel\Role\RemoveRoleConfirmationViewModel
  */
 ?>
@@ -47,7 +46,7 @@ echo $this->url(
 
         <ul class="content-navigation__secondary">
             <li>
-                <a id="cancel-and-return-to-garage" href="<?php echo $this->url('vehicle-testing-station', [ 'id' => $viewModel->getSiteId()]); ?>">
+                <a id="cancel-and-return-to-garage" href="<?php echo $this->url('vehicle-testing-station', ['id' => $viewModel->getSiteId()]); ?>">
                     Cancel and return to Vehicle Testing Station
                 </a>
             </li>

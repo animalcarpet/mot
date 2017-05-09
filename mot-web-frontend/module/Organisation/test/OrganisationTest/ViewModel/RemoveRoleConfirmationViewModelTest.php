@@ -5,7 +5,7 @@ namespace OrganisationTest\ViewModel;
 use Organisation\ViewModel\View\Role\RemoveRoleConfirmationViewModel;
 
 /**
- * Class RemoveRoleConfirmationViewModelTest
+ * Class RemoveRoleConfirmationViewModelTest.
  */
 class RemoveRoleConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
 {

@@ -16,16 +16,16 @@ use Zend\View\Helper\Url;
 
 class UpdateVtsCountryProcess extends AbstractSingleStepVtsProcess implements AutoWireableInterface
 {
-    private $breadcrumbLabel = "Change site country";
+    private $breadcrumbLabel = 'Change site country';
     private $propertyName = UpdateVtsPropertyAction::VTS_COUNTRY_PROPERTY;
     private $permission = PermissionAtSite::VTS_UPDATE_COUNTRY;
-    private $submitButtonText = "Change country";
-    private $successfulEditMessage = "Country has been successfully changed.";
-    private $formPageTitle = "Change country";
-    private $formPartial = "site/update-vts-property/partials/edit-country";
-    private $reviewPageTitle = "";
-    private $reviewPageLede = "";
-    private $reviewPageButtonText = "";
+    private $submitButtonText = 'Change country';
+    private $successfulEditMessage = 'Country has been successfully changed.';
+    private $formPageTitle = 'Change country';
+    private $formPartial = 'site/update-vts-property/partials/edit-country';
+    private $reviewPageTitle = '';
+    private $reviewPageLede = '';
+    private $reviewPageButtonText = '';
 
     /**
      * @var CountryCatalog
@@ -65,7 +65,7 @@ class UpdateVtsCountryProcess extends AbstractSingleStepVtsProcess implements Au
 
         if ($vtsData->isDualLanguage()) {
             $country = CountryCode::WALES;
-        } else if ($vtsData->isScottishBankHoliday()) {
+        } elseif ($vtsData->isScottishBankHoliday()) {
             $country = CountryCode::SCOTLAND;
         }
 
@@ -99,6 +99,7 @@ class UpdateVtsCountryProcess extends AbstractSingleStepVtsProcess implements Au
     public function transformFormIntoGdsTable($vtsId, array $formData)
     {
         $table = new GdsTable();
+
         return $table;
     }
 

@@ -2,7 +2,7 @@
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper;
 use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 
-/**
+/*
  * @var \DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper $brakeTestConfiguration
  * @var \DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel $brakeTestResult
  */
@@ -17,7 +17,7 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
             'brakeTestInput',
             [
                 'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_FRONT,
-                'label' => 'Front control ' . BrakeTestConfigurationClass3AndAboveHelper::COUNT_ONE,
+                'label' => 'Front control '.BrakeTestConfigurationClass3AndAboveHelper::COUNT_ONE,
                 'value' => $brakeTestResult->getEffortFront1(),
                 'lockId' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_FRONT,
                 'lockValue' => $brakeTestResult->getLockFront1(),
@@ -31,7 +31,7 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
             'brakeTestInput',
             [
                 'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_REAR,
-                'label' => 'Rear control ' . BrakeTestConfigurationClass3AndAboveHelper::COUNT_ONE,
+                'label' => 'Rear control '.BrakeTestConfigurationClass3AndAboveHelper::COUNT_ONE,
                 'value' => $brakeTestResult->getEffortRear1(),
                 'lockId' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_REAR,
                 'lockValue' => $brakeTestResult->getLockRear1(),
@@ -46,7 +46,7 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
                 'brakeTestInput',
                 [
                     'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_SIDECAR,
-                    'label' => 'Sidecar control ' . BrakeTestConfigurationClass3AndAboveHelper::COUNT_ONE,
+                    'label' => 'Sidecar control '.BrakeTestConfigurationClass3AndAboveHelper::COUNT_ONE,
                     'value' => $brakeTestResult->getEffortSidecar1(),
                     'required' => false,
                 ]
@@ -63,7 +63,7 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
             'brakeTestInput',
             [
                 'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_FRONT,
-                'label' => 'Front control ' . BrakeTestConfigurationClass3AndAboveHelper::COUNT_TWO,
+                'label' => 'Front control '.BrakeTestConfigurationClass3AndAboveHelper::COUNT_TWO,
                 'value' => $brakeTestResult->getEffortFront2(),
                 'lockId' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_FRONT,
                 'lockValue' => $brakeTestResult->getLockFront2(),
@@ -77,7 +77,7 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
             'brakeTestInput',
             [
                 'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_REAR,
-                'label' => 'Rear control ' . BrakeTestConfigurationClass3AndAboveHelper::COUNT_TWO,
+                'label' => 'Rear control '.BrakeTestConfigurationClass3AndAboveHelper::COUNT_TWO,
                 'value' => $brakeTestResult->getEffortRear2(),
                 'lockId' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_REAR,
                 'lockValue' => $brakeTestResult->getLockRear2(),
@@ -92,7 +92,7 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
                 'brakeTestInput',
                 [
                     'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_SIDECAR,
-                    'label' => 'Sidecar control ' . BrakeTestConfigurationClass3AndAboveHelper::COUNT_TWO,
+                    'label' => 'Sidecar control '.BrakeTestConfigurationClass3AndAboveHelper::COUNT_TWO,
                     'value' => $brakeTestResult->getEffortSidecar2(),
                     'required' => false,
                 ]

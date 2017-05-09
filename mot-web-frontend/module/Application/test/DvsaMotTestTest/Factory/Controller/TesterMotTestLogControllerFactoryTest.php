@@ -9,7 +9,6 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\TesterMotTestLogController;
 use DvsaMotTest\Factory\Controller\TesterMotTestLogControllerFactory;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class TesterMotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase
@@ -19,7 +18,7 @@ class TesterMotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         $authorisationService = XMock::of(MotFrontendAuthorisationServiceInterface::class);
-        $serviceManager->setService("AuthorisationService", $authorisationService);
+        $serviceManager->setService('AuthorisationService', $authorisationService);
 
         $mapperFactory = XMock::of(MapperFactory::class);
         $serviceManager->setService(MapperFactory::class, $mapperFactory);

@@ -2,22 +2,15 @@
 
 namespace VehicleApiTest\Controller;
 
-use DvsaCommon\Constants\Role;
-use DvsaCommonTest\TestUtils\XMock;
-use DvsaElasticSearch\Service\ElasticSearchService;
-use DvsaMotApiTest\Controller\AbstractMotApiControllerTestCase;
 use VehicleApi\Controller\VehicleSearchController;
 use VehicleApi\Service\VehicleSearchService;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
 
 /**
- * Class VehicleSearchControllerTest
- *
- * @package DvsaMotApiTest\Controller
+ * Class VehicleSearchControllerTest.
  */
 class VehicleSearchControllerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGivenInputValidationPassesSearchReturnsResults()
     {
         $searchService = $this->getMockBuilder(VehicleSearchService::class)
@@ -33,5 +26,4 @@ class VehicleSearchControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Zend\View\Model\JsonModel', $result);
     }
-
 }

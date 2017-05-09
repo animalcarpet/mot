@@ -8,7 +8,7 @@ use DvsaEntities\Entity\Person;
 use SiteApi\Model\SitePersonnel;
 
 /**
- * Class SiteAdminRestriction
+ * Class SiteAdminRestriction.
  */
 class SiteAdminRestriction extends AbstractSiteRoleRestriction
 {
@@ -27,7 +27,7 @@ class SiteAdminRestriction extends AbstractSiteRoleRestriction
     }
 
     /**
-     * @return String The role this restriction applies to
+     * @return string The role this restriction applies to
      */
     public function getRole()
     {

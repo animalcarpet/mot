@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -8,7 +9,7 @@ use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\CreateMotTestService;
 
 /**
- * Api controller for creating a new DEMO Test
+ * Api controller for creating a new DEMO Test.
  */
 class DemoTestController extends AbstractDvsaRestfulController
 {
@@ -17,7 +18,7 @@ class DemoTestController extends AbstractDvsaRestfulController
         $data[CreateMotTestService::FIELD_MOT_TEST_TYPE] = MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING;
         $motTest = $this->getService()->createMotTest($data);
 
-        return ApiResponse::jsonOk(["motTestNumber" => $motTest->getNumber()]);
+        return ApiResponse::jsonOk(['motTestNumber' => $motTest->getNumber()]);
     }
 
     /**

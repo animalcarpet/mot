@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SecurityQuestion
+ * SecurityQuestion.
  *
  * @ORM\Table(
  *  name="security_question",

@@ -11,7 +11,7 @@ use SiteApi\Service\SiteBusinessRoleService;
 use DvsaEntities\Repository\SiteBusinessRoleMapRepository;
 
 /**
- * Testing that service returns array
+ * Testing that service returns array.
  */
 class SiteRoleServiceTest extends AbstractServiceTestCase
 {

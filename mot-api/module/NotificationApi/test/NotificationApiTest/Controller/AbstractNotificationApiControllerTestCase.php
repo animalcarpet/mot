@@ -8,7 +8,7 @@ use NotificationApi\Service\NotificationService;
 use NotificationApiTest\Entity\NotificationCreatorTrait;
 
 /**
- * Base for controller test in NotificationApi module
+ * Base for controller test in NotificationApi module.
  */
 abstract class AbstractNotificationApiControllerTestCase extends \PHPUnit_Framework_TestCase implements
     ApiControllerUnitTestInterface
@@ -23,7 +23,7 @@ abstract class AbstractNotificationApiControllerTestCase extends \PHPUnit_Framew
         $mock->expects($this->any())->method('getAllByPersonId')->will(
             $this->returnValue(
                 [
-                    $this->createNotification()
+                    $this->createNotification(),
                 ]
             )
         );

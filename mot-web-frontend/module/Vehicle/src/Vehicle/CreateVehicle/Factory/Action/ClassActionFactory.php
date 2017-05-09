@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Vehicle\CreateVehicle\Factory\Action;
 
 use Vehicle\CreateVehicle\Action\ClassAction;
@@ -28,6 +27,5 @@ class ClassActionFactory implements FactoryInterface
             $createVehicleStepService,
             $createNewVehicleService
         );
-
     }
 }

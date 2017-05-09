@@ -9,8 +9,8 @@ use TestSupport\Helper\TestDataResponseHelper;
 class SecurityQuestionsService
 {
     const PERSON_ID = 'person';
-    const QUESTION  = 'question';
-    const ANSWER    = 'answer';
+    const QUESTION = 'question';
+    const ANSWER = 'answer';
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -42,10 +42,10 @@ class SecurityQuestionsService
                     'INSERT INTO person_security_question_map(person_id, security_question_id, answer, created_by)
                       VALUE(:person_id, :security_question_id, :answer, :created_by)',
                     [
-                        'person_id'             => $personId,
-                        'security_question_id'  => $questionId,
-                        'answer'                => $answer,
-                        'created_by'            => 1,
+                        'person_id' => $personId,
+                        'security_question_id' => $questionId,
+                        'answer' => $answer,
+                        'created_by' => 1,
                     ]
                 );
             }

@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service\MotTestingCertificate;
 
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -16,7 +17,7 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 class MotTestingCertificateNotificationTest extends \PHPUnit_Framework_TestCase
 {
     const RECIPIENT_ID = 1;
-    const USERNAME = "username1";
+    const USERNAME = 'username1';
 
     /** @var MotIdentityProviderInterface */
     private $motIdentityProvider;
@@ -32,14 +33,14 @@ class MotTestingCertificateNotificationTest extends \PHPUnit_Framework_TestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUsername")
+            ->method('getUsername')
             ->willReturn(self::USERNAME);
 
         $this->motIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
         $this
             ->motIdentityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         $this->notificationService = XMock::of(NotificationService::class);
@@ -47,7 +48,7 @@ class MotTestingCertificateNotificationTest extends \PHPUnit_Framework_TestCase
         $this
             ->notificationService
             ->expects($this->spy = $this->any())
-            ->method("add")
+            ->method('add')
             ->willReturn(1);
     }
 
@@ -58,12 +59,11 @@ class MotTestingCertificateNotificationTest extends \PHPUnit_Framework_TestCase
     {
         $this->createService()->sendRemoveNotification($qualificationAward);
 
-        $this->assertEquals(Notification::TEMPLATE_MOT_TESTING_CERTIFICATE_REMOVAL, $this->getParamFromSpy("template"));
-        $this->assertEquals(self::RECIPIENT_ID, $this->getParamFromSpy("recipient"));
-        $this->assertEquals($qualificationAward->getVehicleClassGroup()->getCode(), $this->getParamFromSpy("fields")["group"]);
-        $this->assertEquals($qualificationAward->getCertificateNumber(), $this->getParamFromSpy("fields")["certificateNumber"]);
-        $this->assertEquals(DateTimeDisplayFormat::date($qualificationAward->getDateOfQualification()), $this->getParamFromSpy("fields")["dateOfQualification"]);
-
+        $this->assertEquals(Notification::TEMPLATE_MOT_TESTING_CERTIFICATE_REMOVAL, $this->getParamFromSpy('template'));
+        $this->assertEquals(self::RECIPIENT_ID, $this->getParamFromSpy('recipient'));
+        $this->assertEquals($qualificationAward->getVehicleClassGroup()->getCode(), $this->getParamFromSpy('fields')['group']);
+        $this->assertEquals($qualificationAward->getCertificateNumber(), $this->getParamFromSpy('fields')['certificateNumber']);
+        $this->assertEquals(DateTimeDisplayFormat::date($qualificationAward->getDateOfQualification()), $this->getParamFromSpy('fields')['dateOfQualification']);
     }
 
     /**
@@ -73,12 +73,11 @@ class MotTestingCertificateNotificationTest extends \PHPUnit_Framework_TestCase
     {
         $this->createService()->sendCreateNotification($qualificationAward);
 
-        $this->assertEquals(Notification::TEMPLATE_MOT_TESTING_CERTIFICATE_CREATED, $this->getParamFromSpy("template"));
-        $this->assertEquals(self::RECIPIENT_ID, $this->getParamFromSpy("recipient"));
-        $this->assertEquals($qualificationAward->getVehicleClassGroup()->getCode(), $this->getParamFromSpy("fields")["group"]);
-        $this->assertEquals($qualificationAward->getCertificateNumber(), $this->getParamFromSpy("fields")["certificateNumber"]);
-        $this->assertEquals(DateTimeDisplayFormat::date($qualificationAward->getDateOfQualification()), $this->getParamFromSpy("fields")["dateOfQualification"]);
-
+        $this->assertEquals(Notification::TEMPLATE_MOT_TESTING_CERTIFICATE_CREATED, $this->getParamFromSpy('template'));
+        $this->assertEquals(self::RECIPIENT_ID, $this->getParamFromSpy('recipient'));
+        $this->assertEquals($qualificationAward->getVehicleClassGroup()->getCode(), $this->getParamFromSpy('fields')['group']);
+        $this->assertEquals($qualificationAward->getCertificateNumber(), $this->getParamFromSpy('fields')['certificateNumber']);
+        $this->assertEquals(DateTimeDisplayFormat::date($qualificationAward->getDateOfQualification()), $this->getParamFromSpy('fields')['dateOfQualification']);
     }
 
     private function createService()
@@ -96,11 +95,11 @@ class MotTestingCertificateNotificationTest extends \PHPUnit_Framework_TestCase
 
         return [
             [
-                $certificateA
+                $certificateA,
             ],
             [
-                $certificateB
-            ]
+                $certificateB,
+            ],
         ];
     }
 
@@ -110,9 +109,9 @@ class MotTestingCertificateNotificationTest extends \PHPUnit_Framework_TestCase
         $certificate
             ->setId(1)
             ->setVehicleClassGroup((new VehicleClassGroup())->setCode($group))
-            ->setDateOfQualification(new \DateTime("2012-02-05"))
+            ->setDateOfQualification(new \DateTime('2012-02-05'))
             ->setPerson((new Person())->setId(self::RECIPIENT_ID))
-            ->setCertificateNumber("cert123")
+            ->setCertificateNumber('cert123')
         ;
 
         return $certificate;

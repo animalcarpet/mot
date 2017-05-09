@@ -3,9 +3,7 @@
 namespace OrganisationTest\ViewModel\MotTestLog;
 
 use DvsaCommon\Constants\SearchParamConst;
-use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
-use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\UrlBuilderWeb;
 use DvsaMotTest\ViewModel\TesterMotTestLog\TesterMotTestLogViewModel;
 use Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel;
@@ -17,17 +15,17 @@ class TesterMotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
     const ORG_ID = 9999;
 
     /**
-     * @var  TesterMotTestLogViewModel
+     * @var TesterMotTestLogViewModel
      */
     private $model;
 
     /**
-     * @var  MotTestLogSummaryDto
+     * @var MotTestLogSummaryDto
      */
     private $logSummaryDto;
 
     /**
-     * @var  MotTestLogFormViewModel
+     * @var MotTestLogFormViewModel
      */
     private $formModel;
 
@@ -42,8 +40,8 @@ class TesterMotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->sundayLastWeek = new \DateTime('@' . strtotime('sunday last week 23:59:59'));
-        $this->mondayLastWeek = new \DateTime('@' . strtotime('monday last week 00:00:00'));
+        $this->sundayLastWeek = new \DateTime('@'.strtotime('sunday last week 23:59:59'));
+        $this->mondayLastWeek = new \DateTime('@'.strtotime('monday last week 00:00:00'));
 
         $this->logSummaryDto = new MotTestLogSummaryDto();
 
@@ -71,12 +69,12 @@ class TesterMotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
         $method = lcfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . lcfirst($property)}($value);
+        $result = $this->model->{'set'.lcfirst($property)}($value);
         $this->assertInstanceOf(TesterMotTestLogViewModel::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -110,12 +108,12 @@ class TesterMotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
         $dateFromTs = $this->mondayLastWeek->getTimestamp();
         $dateToTs = $this->sundayLastWeek->getTimestamp();
 
-        $expect = UrlBuilderWeb::motTestLogDownloadCsv()->toString() .
-            '?' .
+        $expect = UrlBuilderWeb::motTestLogDownloadCsv()->toString().
+            '?'.
             http_build_query(
                 [
                     SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $dateFromTs,
-                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => $dateToTs,
+                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $dateToTs,
                 ]
             );
 

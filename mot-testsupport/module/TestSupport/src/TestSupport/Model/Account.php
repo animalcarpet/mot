@@ -5,7 +5,7 @@ namespace TestSupport\Model;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Model of account in the system
+ * Model of account in the system.
  */
 class Account
 {
@@ -37,7 +37,7 @@ class Account
     public function __construct($data)
     {
         if (false === is_array($data)) {
-            throw new \InvalidArgumentException('Expected array, ' . gettype($data) . ' given.');
+            throw new \InvalidArgumentException('Expected array, '.gettype($data).' given.');
         }
 
         $this->setPersonId(ArrayUtils::get($data, 'personId'));

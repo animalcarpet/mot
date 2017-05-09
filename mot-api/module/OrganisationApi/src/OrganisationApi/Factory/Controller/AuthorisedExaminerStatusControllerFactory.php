@@ -2,7 +2,6 @@
 
 namespace OrganisationApi\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use OrganisationApi\Controller\AuthorisedExaminerStatusController;
 use OrganisationApi\Service\AuthorisedExaminerStatusService;
 use Zend\ServiceManager\FactoryInterface;

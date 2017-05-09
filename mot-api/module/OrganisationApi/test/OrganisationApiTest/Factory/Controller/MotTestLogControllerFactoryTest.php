@@ -6,12 +6,9 @@ use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaElasticSearch\Service\ElasticSearchService;
-use DvsaEntities\Entity\MotTest;
 use OrganisationApi\Controller\MotTestLogController;
 use OrganisationApi\Factory\Controller\MotTestLogControllerFactory;
-use OrganisationApi\Factory\Service\MotTestLogServiceFactory;
 use OrganisationApi\Service\MotTestLogService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class MotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase

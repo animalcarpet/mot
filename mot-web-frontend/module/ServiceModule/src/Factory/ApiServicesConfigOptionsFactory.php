@@ -12,13 +12,13 @@ use Dvsa\Mot\Frontend\ServiceModule\Model\ApiServicesConfigOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-
 class ApiServicesConfigOptionsFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $apiConfig = $serviceLocator->get('config');
         $apiConfig = $config['api'];
+
         return new ApiServicesConfigOptions($apiConfig);
     }
 }

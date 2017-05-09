@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\Controller;
 
 use Application\Helper\PrgHelper;
@@ -27,12 +28,11 @@ use DvsaMotTest\Controller\ReplacementCertificateController;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-
 use Vehicle\Service\VehicleCatalogService;
 use Zend\Session\Container;
 
 /**
- * Class ReplacementCertificateControllerTest
+ * Class ReplacementCertificateControllerTest.
  */
 class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 {
@@ -86,6 +86,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -94,15 +95,16 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 
     public static function dataProviderUpdateDraftActionToUpdateDataMapping()
     {
         return [
-            ["updateVts", ['vtsSiteNumber' => 'SITE_NUMBER']],
-            ["updateCertificate", ['reasonForReplacement' => 'REASON']],
-            ['updateVin', ['vin' => "THE_VIN"]],
+            ['updateVts', ['vtsSiteNumber' => 'SITE_NUMBER']],
+            ['updateCertificate', ['reasonForReplacement' => 'REASON']],
+            ['updateVin', ['vin' => 'THE_VIN']],
             ['updateVrm', ['vrm' => 'THEVRM']],
             ['updateColours', ['primaryColour' => 3, 'secondaryColour' => 4]],
             ['updateModel', ['make' => 5, 'model' => 6]],
@@ -113,11 +115,11 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                     'odometerReading' => [
                         'value' => 444,
                         'unit' => OdometerUnit::KILOMETERS,
-                        'resultType' => OdometerReadingResultType::OK
-                    ]
-                ]
+                        'resultType' => OdometerReadingResultType::OK,
+                    ],
+                ],
             ],
-            ['updateCor', ['countryOfRegistration' => 10]]
+            ['updateCor', ['countryOfRegistration' => 10]],
         ];
     }
 
@@ -127,10 +129,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserIdDto(1);
-                    },
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserIdDto(1);
+                },
             ]
         );
 
@@ -143,7 +144,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ->with(1)
             ->will($this->returnValue($testMotTestData));
 
-        $this->givenPostAction("review");
+        $this->givenPostAction('review');
     }
 
     public function testReviewActionGivenDifferentTesterShouldUpdateReason()
@@ -152,10 +153,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserIdDto(5);
-                    },
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserIdDto(5);
+                },
             ]
         );
 
@@ -173,7 +173,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ['reasonForDifferentTester' => 'REASON']
         );
 
-        $this->givenPostAction("review", ['reasonForDifferentTester' => 'REASON']);
+        $this->givenPostAction('review', ['reasonForDifferentTester' => 'REASON']);
     }
 
     public function testReviewActionGivenAdminShouldDispatch()
@@ -183,10 +183,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserIdDto(1);
-                    },
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserIdDto(1);
+                },
             ]
         );
 
@@ -199,7 +198,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ->with(1)
             ->will($this->returnValue($testMotTestData));
 
-        $this->givenPostAction("review");
+        $this->givenPostAction('review');
     }
 
     public function testReviewActionGivenDifferentTesterShouldReturnViewModelContainingRequiredProperties()
@@ -208,10 +207,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserIdDto(5);
-                    },
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserIdDto(5);
+                },
             ]
         );
 
@@ -244,10 +242,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserIdDto(5);
-                    },
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserIdDto(5);
+                },
             ]
         );
 
@@ -279,10 +276,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserIdDto(1);
-                    },
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserIdDto(1);
+                },
             ]
         );
 
@@ -309,7 +305,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Get from summary page, draft with provided Id not found (api), throw error (not found page)
+     * Get from summary page, draft with provided Id not found (api), throw error (not found page).
      */
     public function testReviewGetActionGivenDraftDataThrow404ShouldRedirectTo404()
     {
@@ -333,10 +329,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserId(1);
-                    },
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserId(1);
+                },
             ]
         );
 
@@ -370,10 +365,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserId(1);
-                    }
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserId(1);
+                },
             ]
         );
 
@@ -398,9 +392,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 
         $assertVarsSet = $this->hasKeyAssertFactory($vars);
         $assertVarsSet(
-            "vts",
-            "vehicle",
-            "countryOfRegistrationList"
+            'vts',
+            'vehicle',
+            'countryOfRegistrationList'
         );
 
         $this->assertEquals($vars['isAdmin'], true);
@@ -422,19 +416,17 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $this->givenRestClientReturningOnGet(
             $restClient,
             [
-                $this->pathMotTest() =>
-                    function () {
-                        return self::restResponseMotTestWithUserId(1);
-                    },
-                $this->pathReplacementDiff() =>
-                    function () {
-                        return self::asResponse([]);
-                    }
+                $this->pathMotTest() => function () {
+                    return self::restResponseMotTestWithUserId(1);
+                },
+                $this->pathReplacementDiff() => function () {
+                    return self::asResponse([]);
+                },
             ]
         );
 
         $this->givenPostAction(
-            "replacementCertificate",
+            'replacementCertificate',
             array_merge(['action' => $updateAction], self::postDataUpdateDraft())
         );
     }
@@ -442,7 +434,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     public function testOdometerValidatorOnUpdatingCertificate()
     {
         $response = $this->givenPostAction(
-            "replacementCertificate",
+            'replacementCertificate',
             array_merge(
                 ['action' => ReplacementCertificateController::ACTION_UPDATE_ODOMETER],
                 [
@@ -466,11 +458,11 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         $spy = new MethodSpy($restClient, 'put');
 
         $this->givenPostAction(
-            "replacementCertificate",
+            'replacementCertificate',
             array_merge(
                 ['action' => ReplacementCertificateController::ACTION_UPDATE_VRM],
                 [
-                    'vrm' => $inputVrm
+                    'vrm' => $inputVrm,
                 ]
             )
         );
@@ -490,12 +482,12 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         return [
             ['123 fta', '123FTA'],
             ['-*[]123 fta<>\-', null],
-            ["123\tabc", "123ABC"],
+            ["123\tabc", '123ABC'],
         ];
     }
 
     /**
-     * Check for double post
+     * Check for double post.
      */
     public function testReviewDoublePost()
     {
@@ -521,7 +513,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                 'odometerReading' => [
                     'value' => 1234,
                     'unit' => OdometerUnit::KILOMETERS,
-                    'resultType' => OdometerReadingResultType::OK
+                    'resultType' => OdometerReadingResultType::OK,
                 ],
                 'vin' => '12345678901234567',
                 'vrm' => 'ABD3523',
@@ -539,10 +531,10 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                         'line4' => '',
                         'town' => '',
                         'postcode' => '',
-                        'country' => ''
+                        'country' => '',
                     ],
-                    'name' => 'vts'
-                ]
+                    'name' => 'vts',
+                ],
             ]
         );
     }
@@ -580,7 +572,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     {
         return self::asResponse(
             [
-                ['code' => 'x', 'description' => 'y']
+                ['code' => 'x', 'description' => 'y'],
             ]
         );
     }
@@ -590,8 +582,8 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
         return [
             'vts' => 'SITE_NUMBER',
             'reasonForReplacement' => 'REASON',
-            'vin' => "THE_VIN",
-            'vrm' => "THEVRM",
+            'vin' => 'THE_VIN',
+            'vrm' => 'THEVRM',
             'primaryColour' => 3,
             'secondaryColour' => 4,
             'make' => 5,
@@ -600,9 +592,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             'odometerUnit' => OdometerUnit::KILOMETERS,
             'odometerResultType' => OdometerReadingResultType::OK,
             'cor' => 10,
-            'expiryDate-day' => "4",
-            "expiryDate-month" => "12",
-            "expiryDate-year" => "2014"
+            'expiryDate-day' => '4',
+            'expiryDate-month' => '12',
+            'expiryDate-year' => '2014',
         ];
     }
 
@@ -638,31 +630,28 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 
     /**
      * @param MockObj $restClient
-     * @param array $extensionUrl2CallbackMap
+     * @param array   $extensionUrl2CallbackMap
      */
     private function givenRestClientReturningOnGet($restClient, $extensionUrl2CallbackMap = [])
     {
         $baseUrl2CallbackMap = [
-            $this->pathReplacementCertificateDraft() =>
-                function () {
-                    return self::restResponseDraft();
-                },
-            $this->pathDifferentTesterReasons() =>
-                function () {
-                    return self::differentTesterReasons();
-                },
-            $this->pathOdometerCheck() =>
-                function () {
-                    return self::asResponse(['modifiable' => true]);
-                },
+            $this->pathReplacementCertificateDraft() => function () {
+                return self::restResponseDraft();
+            },
+            $this->pathDifferentTesterReasons() => function () {
+                return self::differentTesterReasons();
+            },
+            $this->pathOdometerCheck() => function () {
+                return self::asResponse(['modifiable' => true]);
+            },
         ];
 
         // merge extra entries
         $url2CallbackMap = array_merge($baseUrl2CallbackMap, $extensionUrl2CallbackMap);
-        $restClient->expects($this->any())->method("get")
+        $restClient->expects($this->any())->method('get')
             ->willReturnCallback(
                 function ($arg) use (&$url2CallbackMap) {
-                    return $url2CallbackMap[(string)$arg]();
+                    return $url2CallbackMap[(string) $arg]();
                 }
             );
     }
@@ -675,8 +664,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     private function pathReplacementCertificateDraft(
         $id = self::EXAMPLE_DRAFT_ID,
         $motTestNumber = self::EXAMPLE_MOT_TEST_NUMBER
-    )
-    {
+    ) {
         return UrlBuilder::replacementCertificateDraft($id, $motTestNumber)->toString();
     }
 
@@ -690,7 +678,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 
     private function pathDifferentTesterReasons()
     {
-        return "cert-change-diff-tester-reason";
+        return 'cert-change-diff-tester-reason';
     }
 
     private function pathOdometerCheck()
@@ -725,6 +713,6 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     private function assertTesterShowDraftViewModelProperties($vars)
     {
         $assertVars = $this->hasKeyAssertFactory($vars);
-        $assertVars("odometerReading", "colours");
+        $assertVars('odometerReading', 'colours');
     }
 }

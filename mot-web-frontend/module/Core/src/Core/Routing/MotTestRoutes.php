@@ -15,11 +15,12 @@ class MotTestRoutes extends AbstractRoutes
 
     /**
      * @param Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url $object
+     *
      * @return MotTestRoutes
      */
     public static function of($object)
     {
-        return new MotTestRoutes($object);
+        return new self($object);
     }
 
     public function motTest($motTestNumber)
@@ -29,12 +30,12 @@ class MotTestRoutes extends AbstractRoutes
 
     public function vehicleSearchByVin($vin)
     {
-        return $this->url(MotTestRouteList::MOT_TEST_CERTIFICATE_SEARCH_BY_VIN, [], ['query' => ["vin" => $vin]]);
+        return $this->url(MotTestRouteList::MOT_TEST_CERTIFICATE_SEARCH_BY_VIN, [], ['query' => ['vin' => $vin]]);
     }
 
     public function vehicleSearchByRegistration($vrm)
     {
-        return $this->url(MotTestRouteList::MOT_TEST_CERTIFICATE_SEARCH_BY_REGISTRATION, [], ['query' => ["vrm" => $vrm]]);
+        return $this->url(MotTestRouteList::MOT_TEST_CERTIFICATE_SEARCH_BY_REGISTRATION, [], ['query' => ['vrm' => $vrm]]);
     }
 
     public function vehicleSearchResults($searchParams)
@@ -69,14 +70,14 @@ class MotTestRoutes extends AbstractRoutes
                 'id' => $obfuscatedVehicleId,
                 'noRegistration' => $noRegistration,
                 'source' => $source,
-                'property' => $property
+                'property' => $property,
             ]
         );
     }
 
     public function printDuplicateTestResult($motTest)
     {
-       return $this->url(MotTestRouteList::MOT_TEST_PRINT_DUPLICATE_TEST_RESULT, ['motTestNumber' => $motTest]);
+        return $this->url(MotTestRouteList::MOT_TEST_PRINT_DUPLICATE_TEST_RESULT, ['motTestNumber' => $motTest]);
     }
 
     public function printDuplicateCertificate($motTest)

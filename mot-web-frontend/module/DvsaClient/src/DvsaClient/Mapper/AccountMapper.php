@@ -8,13 +8,12 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Class AccountMapper
- * @package DvsaClient\Mapper
+ * Class AccountMapper.
  */
 class AccountMapper extends DtoMapper
 {
     /**
-     * @param integer $userId
+     * @param int $userId
      *
      * @return \DvsaCommon\Dto\AbstractDataTransferObject
      */
@@ -36,11 +35,13 @@ class AccountMapper extends DtoMapper
     {
         $url = AccountUrlBuilder::changePassword();
         $response = $this->client->post($url, ['userId' => $userId, 'password' => $obfuscatedPassword]);
+
         return DtoHydrator::jsonToDto($response['data']);
     }
 
     /**
      * @param $username
+     *
      * @return \DvsaCommon\Dto\AbstractDataTransferObject
      */
     public function validateUsername($username)
@@ -63,6 +64,7 @@ class AccountMapper extends DtoMapper
 
     /**
      * @param int $userId
+     *
      * @return ClaimStartDto
      */
     public function getClaimData($userId)
@@ -71,11 +73,12 @@ class AccountMapper extends DtoMapper
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function claimUpdate($userId, $data)
     {
         $apiUrl = UrlBuilder::claimAccount($userId);
+
         return $this->put($apiUrl, $data);
     }
 }

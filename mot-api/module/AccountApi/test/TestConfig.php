@@ -1,4 +1,5 @@
 <?php
+
 return [
     'modules' => [
         'DoctrineModule',
@@ -9,9 +10,9 @@ return [
         'DvsaEntities',
         'DvsaMotApi',
         'UserApi',
-        'AccountApi'
+        'AccountApi',
     ],
     'test_namespaces' => [
-        'DvsaCommonApiTest' => __DIR__ . '/../../DvsaCommonApi/test/DvsaCommonApiTest',
-    ]
+        'DvsaCommonApiTest' => __DIR__.'/../../DvsaCommonApi/test/DvsaCommonApiTest',
+    ],
 ];

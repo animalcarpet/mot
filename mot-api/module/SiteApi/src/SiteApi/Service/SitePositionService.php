@@ -23,11 +23,10 @@ use DvsaEntities\Repository\SiteBusinessRoleMapRepository;
 use DvsaEventApi\Service\EventService;
 use NotificationApi\Dto\Notification;
 use NotificationApi\Service\NotificationService;
-use NotificationApi\Service\PositionRemovalNotificationService;
 use NotificationApi\Service\UserOrganisationNotificationService;
 
 /**
- * Takes care of operations associated with site position
+ * Takes care of operations associated with site position.
  */
 class SitePositionService implements TransactionAwareInterface
 {
@@ -37,11 +36,11 @@ class SitePositionService implements TransactionAwareInterface
     private $entityManager;
     /** @var NotificationService */
     private $notificationService;
-    /** @var  EventService $eventService */
+    /** @var EventService $eventService */
     private $eventService;
 
     /**
-     * @var  AbstractMotAuthorisationService $authorisationService
+     * @var AbstractMotAuthorisationService
      */
     private $authorisationService;
 
@@ -63,8 +62,7 @@ class SitePositionService implements TransactionAwareInterface
         MotIdentityProviderInterface $identityProvider,
         MotTestRepository $motTestRepository,
         UserOrganisationNotificationService $userOrganisationNotificationService
-    )
-    {
+    ) {
         $this->eventService = $eventService;
         $this->siteBusinessRoleMapRepository = $siteBusinessRoleMapRepository;
         $this->authorisationService = $authorisationService;
@@ -81,7 +79,7 @@ class SitePositionService implements TransactionAwareInterface
      * + asserts valid SiteBusinessRoleMap
      * + removes physical SiteBusinessRoleMap entity
      * + adds SitePositionHistory entity in REMOVED status
-     * + sends removal notification
+     * + sends removal notification.
      *
      * @param int $siteId
      * @param int $mapId
@@ -98,10 +96,9 @@ class SitePositionService implements TransactionAwareInterface
             $this->assertCanRemovePosition($position);
             $this->assertTestInProgress($position);
 
-            if($this->identityProvider->getIdentity()->getUserId() == $position->getPerson()->getId()) {
+            if ($this->identityProvider->getIdentity()->getUserId() == $position->getPerson()->getId()) {
                 $this->userOrganisationNotificationService->notifySiteAboutRoleRemoval($position);
-            }
-            else {
+            } else {
                 $this->userOrganisationNotificationService->sendNotificationToUserAboutSiteRoleRemoval($position);
             }
 
@@ -110,7 +107,7 @@ class SitePositionService implements TransactionAwareInterface
             $this->entityManager->remove($position);
             $this->entityManager->flush();
         } else {
-            ErrorSchema::throwError("This role has already been removed");
+            ErrorSchema::throwError('This role has already been removed');
         }
     }
 
@@ -123,7 +120,6 @@ class SitePositionService implements TransactionAwareInterface
             $testInProgress = $this->motTestRepository->findInProgressTestForPerson($personId);
             if ($testInProgress) {
                 if ($testInProgress->getVehicleTestingStation()->getId() == $siteId) {
-
                     $person = $position->getPerson();
                     $errorMessage = $person->getId() == $this->identityProvider->getIdentity()->getUserId()
                         ? 'You currently have a vehicle registered for test or retest. This must be completed or aborted before you can remove this role.'
@@ -147,14 +143,14 @@ class SitePositionService implements TransactionAwareInterface
             return;
         }
 
-        throw new UnauthorisedException("No permissions to remove role");
+        throw new UnauthorisedException('No permissions to remove role');
     }
 
     private function assertValidPositionInSite(SiteBusinessRoleMap $map, $siteId)
     {
         if ($map->getSite()->getId() !== $siteId) {
             throw new BadRequestException(
-                "Invalid relation between site and role map",
+                'Invalid relation between site and role map',
                 BadRequestException::ERROR_CODE_BUSINESS_FAILURE
             );
         }

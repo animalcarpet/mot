@@ -5,14 +5,10 @@ namespace VehicleApi\Controller;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
-use DvsaMotApi\Model\OutputFormat;
 use VehicleApi\Service\VehicleSearchService;
-use Zend\I18n\Validator\DateTime;
 
 /**
- * Class VehicleSearchController
- *
- * @package DvsaMotApi\Controller
+ * Class VehicleSearchController.
  */
 class VehicleSearchController extends AbstractDvsaRestfulController
 {
@@ -34,7 +30,7 @@ class VehicleSearchController extends AbstractDvsaRestfulController
 
     /**
      * @param VehicleSearchService $vehicleSearchService
-     * @param VehicleSearchParam $vehicleSearchParam
+     * @param VehicleSearchParam   $vehicleSearchParam
      */
     public function __construct(VehicleSearchService $vehicleSearchService, VehicleSearchParam $vehicleSearchParam)
     {
@@ -50,6 +46,7 @@ class VehicleSearchController extends AbstractDvsaRestfulController
         try {
             $searchParam = $this->vehicleSearchParam;
             $vehicles = $this->vehicleSearchService->searchVehicleWithAdditionalData($searchParam);
+
             return ApiResponse::jsonOk($vehicles);
         } catch (\UnexpectedValueException $e) {
             return $this->returnBadRequestResponseModel(

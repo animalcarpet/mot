@@ -2,8 +2,8 @@
 
 return [
     'session_storage' => [
-        'type' => 'SessionArrayStorage'
+        'type' => 'SessionArrayStorage',
     ],
     'session_config' => [],
-    'session_namespace_prefixes' => []
+    'session_namespace_prefixes' => [],
 ];

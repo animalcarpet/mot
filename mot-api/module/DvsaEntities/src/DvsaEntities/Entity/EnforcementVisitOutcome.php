@@ -1,11 +1,11 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- *
  * @ORM\Entity(readOnly=true)
  *
  * @ORM\Table(name="enforcement_visit_outcome_lookup",
@@ -42,6 +42,7 @@ class EnforcementVisitOutcome
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -61,6 +62,7 @@ class EnforcementVisitOutcome
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 

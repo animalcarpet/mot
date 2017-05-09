@@ -27,9 +27,9 @@ if (!empty($this->urlSearch)) {
 $escUrlDemoSearch = $this->url(VehicleSearchController::ROUTE_VEHICLE_SEARCH_TRAINING, [], ['query' => $query]);
 $escUrlNonMotSearch = $this->url(VehicleSearchController::ROUTE_VEHICLE_SEARCH_NON_MOT, [], ['query' => $query]);
 
-if($viewModel->isTrainingTest()){
+if ($viewModel->isTrainingTest()) {
     $backToVehicleSearchUrl = $escUrlDemoSearch;
-} elseif($viewModel->isNonMotTest()){
+} elseif ($viewModel->isNonMotTest()) {
     $backToVehicleSearchUrl = $escUrlNonMotSearch;
 } else {
     $backToVehicleSearchUrl = $escUrlSearch;
@@ -52,7 +52,7 @@ if (!empty($checkExpiryResults)) {
         }
 
         if ($viewModel->isMysteryShopper()) {
-            $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator)->getPreviousMotExpiryDate();
+            $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator())->getPreviousMotExpiryDate();
             $expiryDate = $mysteryShopperExpiryDate->format('Y-m-d');
             $isEarlierThanTestDateLimit = false;
         }
@@ -74,7 +74,7 @@ if (!empty($checkExpiryResults)) {
 <form method="post" name="StartTestConfirmation" id="StartTestConfirmation" action="<?php echo $viewModel->getConfirmActionUrl() ?>">
     <?php
         echo $this->csrfToken();
-        echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
+        echo $this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '';
     ?>
     <input type="hidden" name="motTestType" value="<?php echo $this->escapeHtmlAttr($viewModel->getMethod()); ?>" />
 
@@ -103,9 +103,11 @@ if (!empty($checkExpiryResults)) {
     <div class="validation-summary">
         <h2 class="heading-medium">There was a problem with the information</h2>
         <ol>
-        <?php foreach ($this->layout()->flashMessenger->getErrorMessages() as $message) {?>
+        <?php foreach ($this->layout()->flashMessenger->getErrorMessages() as $message) {
+        ?>
             <li><?php echo $message ?></li>
-        <?php } ?>
+        <?php 
+    } ?>
         </ol>
     </div>
     <?php endif; ?>
@@ -114,7 +116,7 @@ if (!empty($checkExpiryResults)) {
     <?php
         echo $this->partial('partial/gds/general/system-message', [
             'messages' => $this->layout()->flashMessenger->getSuccessMessages(),
-            'type' => 'success'
+            'type' => 'success',
         ]);
     ?>
 
@@ -232,7 +234,7 @@ if (!empty($checkExpiryResults)) {
         <tr>
             <th scope="row" class="table-summary__key">MOT expiration date</th>
             <td class="table-summary__value">
-                <?php echo DateTimeDisplayFormat::textDate($expiryDate) ; ?>
+                <?php echo DateTimeDisplayFormat::textDate($expiryDate); ?>
             </td>
         </tr>
         </tbody>

@@ -38,8 +38,7 @@ class MotTestLogController extends AbstractDvsaRestfulController
         MotTestLogService $motTestLogService,
         ElasticSearchService $elasticSearchService,
         EntityManager $entityManager
-    )
-    {
+    ) {
         $this->motTestLogService = $motTestLogService;
         $this->elasticSearchService = $elasticSearchService;
         $this->entityManager = $entityManager;
@@ -62,7 +61,7 @@ class MotTestLogController extends AbstractDvsaRestfulController
      */
     public function logDataAction()
     {
-        $siteId = (int)$this->params()->fromRoute('id');
+        $siteId = (int) $this->params()->fromRoute('id');
         if ($siteId <= 0) {
             return $this->returnBadRequestResponseModel(
                 self::ERR_SITE_ID,

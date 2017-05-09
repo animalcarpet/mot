@@ -13,11 +13,11 @@ class StatisticsParameterCheck
 
     public function __construct()
     {
-        $pastDate = DateUtils::firstOfThisMonth()->sub(new \DateInterval("P13M"));
-        $min = new Month($pastDate->format("Y"), $pastDate->format("m"));
+        $pastDate = DateUtils::firstOfThisMonth()->sub(new \DateInterval('P13M'));
+        $min = new Month($pastDate->format('Y'), $pastDate->format('m'));
 
         $firstOfThisMonth = DateUtils::firstOfThisMonth();
-        $max = new Month($firstOfThisMonth->format("Y"), $firstOfThisMonth->format("m"));
+        $max = new Month($firstOfThisMonth->format('Y'), $firstOfThisMonth->format('m'));
 
         $this->betweenDateValidator = new BetweenDatesValidator($min->getEndDate(), $max->getStartDate());
     }

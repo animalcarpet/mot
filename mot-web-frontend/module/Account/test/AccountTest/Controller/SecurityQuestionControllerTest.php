@@ -112,7 +112,7 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
         if (!empty($expect['errors'])) {
             $this->assertInstanceOf(ViewModel::class, $result);
 
-            /** @var  PasswordResetFormModel $form */
+            /** @var PasswordResetFormModel $form */
             $form = $result->getVariable('viewModel');
 
             foreach ($expect['errors'] as $field => $error) {

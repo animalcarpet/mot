@@ -5,14 +5,12 @@ namespace Vehicle\CreateVehicle\Factory\Service;
 use Application\Service\ContingencySessionManager;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
-use DvsaMotTest\NewVehicle\Container\NewVehicleContainer;
 use DvsaMotTest\Service\AuthorisedClassesService;
 use Vehicle\CreateVehicle\Service\CreateNewVehicleService;
 use Vehicle\CreateVehicle\Service\CreateVehicleStepService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaCommon\HttpRestJson\Client;
-use Zend\Session\Container;
 
 class CreateNewVehicleServiceFactory implements FactoryInterface
 {

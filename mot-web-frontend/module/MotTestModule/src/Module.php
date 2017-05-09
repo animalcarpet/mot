@@ -38,8 +38,8 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
     public function getConfig()
     {
         $config = array_merge(
-            include __DIR__ . '/../config/routes.config.php',
-            include __DIR__ . '/../config/module.config.php'
+            include __DIR__.'/../config/routes.config.php',
+            include __DIR__.'/../config/module.config.php'
         );
 
         return $config;
@@ -50,7 +50,7 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
      */
     public function getControllerConfig()
     {
-        return include __DIR__ . '/../config/controllers.config.php';
+        return include __DIR__.'/../config/controllers.config.php';
     }
 
     /**
@@ -58,7 +58,7 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/../config/services.config.php';
+        return include __DIR__.'/../config/services.config.php';
     }
 
     /**

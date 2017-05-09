@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Service\Calculator;
 
 use DvsaCommon\Date\DateUtils;
@@ -10,7 +11,7 @@ use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
 use DvsaEntities\Entity\Vehicle;
 
 /**
- * Class BrakeTestResultClass3AndAboveCalculator
+ * Class BrakeTestResultClass3AndAboveCalculator.
  */
 class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAboveCalculatorBase
 {
@@ -30,9 +31,9 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
     const EFFICIENCY_TWO_SERVICE_BRAKES_SECONDARY = 25;
 
     /**
-     * This value is calculated once and cached in BrakeTestResultClass3AndAbove
+     * This value is calculated once and cached in BrakeTestResultClass3AndAbove.
      *
-     * @param Vehicle $vehicle
+     * @param Vehicle                       $vehicle
      * @param                               $serviceBrakeType
      * @param BrakeTestResultClass3AndAbove $brakeTestResult
      * @param                               $serviceBrakeNumber
@@ -117,8 +118,8 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
 
     private function isUnladenVehicleClass7(Vehicle $vehicle, BrakeTestResultClass3AndAbove $brakeTestResult)
     {
-        return ($vehicle->getVehicleClass()->getCode() === VehicleClassCode::CLASS_7
-            && $brakeTestResult->getWeightIsUnladen());
+        return $vehicle->getVehicleClass()->getCode() === VehicleClassCode::CLASS_7
+            && $brakeTestResult->getWeightIsUnladen();
     }
 
     protected function isPassingParkingBrakeEfficiency(BrakeTestResultClass3AndAbove $brakeTestResult, $vehicleClass)
@@ -131,6 +132,7 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
             $passesOnEfficiency
                 = $brakeTestResult->getParkingBrakeEfficiency() >= self::EFFICIENCY_PARKING_BRAKE_DUAL_LINE;
         }
+
         return $passesOnEfficiency || $percentLocked > self::LOCKS_MINIMUM;
     }
 
@@ -139,6 +141,7 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
         BrakeTestResultClass3AndAbove $brakeTestResult
     ) {
         $percentLocked = $this->calculateServiceBrakePercentLocked($checkedServiceBrake, $brakeTestResult);
+
         return $percentLocked > self::LOCKS_MINIMUM;
     }
 
@@ -203,6 +206,7 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
                 break;
             }
         }
+
         return $brakeTestResult->getWeightIsUnladen() === true
         && $serviceBrakeData->getLockNearsideAxle1() === true
         && $serviceBrakeData->getLockOffsideAxle1() === true
@@ -215,6 +219,7 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
     ) {
         $imbalanceValuesPassing = $testResult->getParkingBrakeImbalance() <= self::IMBALANCE_MAXIMUM
             && $testResult->getParkingBrakeSecondaryImbalance() <= self::IMBALANCE_MAXIMUM;
+
         return $vehicleClass === Vehicle::VEHICLE_CLASS_3
         || !$testResult->getServiceBrakeIsSingleLine()
         || $imbalanceValuesPassing;

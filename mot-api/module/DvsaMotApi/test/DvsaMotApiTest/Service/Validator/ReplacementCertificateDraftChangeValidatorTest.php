@@ -11,15 +11,13 @@ use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
-use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ReplacementCertificateDraftChangeValidatorTest
+ * Class ReplacementCertificateDraftChangeValidatorTest.
  */
 class ReplacementCertificateDraftChangeValidatorTest extends PHPUnit_Framework_TestCase
 {
-
     private $censorService;
 
     private function getValidator()
@@ -37,6 +35,7 @@ class ReplacementCertificateDraftChangeValidatorTest extends PHPUnit_Framework_T
 
     /**
      * @param bool $bool
+     *
      * @throws \Exception
      */
     private function setCensorServiceReturnValue($bool = true)
@@ -55,11 +54,11 @@ class ReplacementCertificateDraftChangeValidatorTest extends PHPUnit_Framework_T
 
         $change = (new ReplacementCertificateDraftChangeDTO())
             ->setPrimaryColour(4)->setSecondaryColour(5)
-            ->setVin("2343434")->setVrm("VRM")
-            ->setVtsSiteNumber("gegreg")
-            ->setReasonForDifferentTester("24344")
+            ->setVin('2343434')->setVrm('VRM')
+            ->setVtsSiteNumber('gegreg')
+            ->setReasonForDifferentTester('24344')
             ->setOdometerReading(123, OdometerUnit::MILES, OdometerReadingResultType::OK)
-            ->setReasonForReplacement("fwegreg")
+            ->setReasonForReplacement('fwegreg')
             ->setMake(4)->setModel(44)
             ->setExpiryDate($currentDate)
             ->setCountryOfRegistration(5);
@@ -87,24 +86,24 @@ class ReplacementCertificateDraftChangeValidatorTest extends PHPUnit_Framework_T
             };
         };
         $change = (new ReplacementCertificateDraftChangeDTO())
-            ->setPrimaryColour("gerg")
-            ->setSecondaryColour("gerge")
-            ->setVin("")
-            ->setVrm("")
-            ->setVtsSiteNumber("")
-            ->setReasonForDifferentTester("")
-            ->setOdometerReading("INVALID", OdometerUnit::MILES, OdometerReadingResultType::OK)
-            ->setReasonForReplacement("")
-            ->setMake("gerg")
-            ->setModel("gerg")
-            ->setExpiryDate("2014-13-01")
-            ->setCountryOfRegistration("5");
+            ->setPrimaryColour('gerg')
+            ->setSecondaryColour('gerge')
+            ->setVin('')
+            ->setVrm('')
+            ->setVtsSiteNumber('')
+            ->setReasonForDifferentTester('')
+            ->setOdometerReading('INVALID', OdometerUnit::MILES, OdometerReadingResultType::OK)
+            ->setReasonForReplacement('')
+            ->setMake('gerg')
+            ->setModel('gerg')
+            ->setExpiryDate('2014-13-01')
+            ->setCountryOfRegistration('5');
 
         $result = $this->getValidator()->validate($change);
 
         $errorFields = [
-            "vin", "vrm", "odometerReading.value", "expiryDate", "countryOfRegistration",
-            "reasonForReplacement", "reasonForDifferentTester"
+            'vin', 'vrm', 'odometerReading.value', 'expiryDate', 'countryOfRegistration',
+            'reasonForReplacement', 'reasonForDifferentTester',
         ];
         foreach ($errorFields as $field) {
             $this->assertCount(

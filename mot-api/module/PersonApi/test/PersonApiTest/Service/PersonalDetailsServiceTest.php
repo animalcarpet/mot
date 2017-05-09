@@ -9,11 +9,9 @@ use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommon\Constants\PersonContactType;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonApi\Filter\XssFilter;
-use DvsaCommonApi\Service\EntityHelperService;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
@@ -36,7 +34,7 @@ use DvsaAuthorisation\Service\UserRoleService;
 /**
  * Unit tests for PersonDetailsService.
  */
-class PersonDetailsServiceTest extends AbstractServiceTestCase
+class PersonalDetailsServiceTest extends AbstractServiceTestCase
 {
     const USER_ID = 9999;
 
@@ -99,16 +97,16 @@ class PersonDetailsServiceTest extends AbstractServiceTestCase
             ->setTitle(new Title())
             ->setGender(new Gender());
 
-        $contactDetail     = XMock::of(ContactDetail::class, ['getAddress']);
+        $contactDetail = XMock::of(ContactDetail::class, ['getAddress']);
         $contactDetail
             ->expects($this->any())
             ->method('getAddress')
             ->willReturn(new Address());
-        $phone             = new Phone();
-        $phoneContactType  = PhoneContactTypeCode::PERSONAL;
-        $email             = new Email();
+        $phone = new Phone();
+        $phoneContactType = PhoneContactTypeCode::PERSONAL;
+        $email = new Email();
         $personContactType = new \DvsaEntities\Entity\PersonContactType();
-        $personContact     = new PersonContact($contactDetail, $personContactType, $person);
+        $personContact = new PersonContact($contactDetail, $personContactType, $person);
 
         $personContactRepository = $this
             ->getMockBuilder(EntityRepository::class)
@@ -166,7 +164,7 @@ class PersonDetailsServiceTest extends AbstractServiceTestCase
                         [PhoneContactType::class, $phoneContactTypeRepository],
                         [Phone::class, $phoneRepository],
                         [Email::class, $emailRepository],
-                        [\DvsaEntities\Entity\PersonContactType::class, $personContactTypeRepository]
+                        [\DvsaEntities\Entity\PersonContactType::class, $personContactTypeRepository],
                     ]
                 )
             );
@@ -267,25 +265,25 @@ class PersonDetailsServiceTest extends AbstractServiceTestCase
     {
         return [
             [
-                'personId'       => self::USER_ID,
-                'sites'          => [],
-                'orgs'           => [],
+                'personId' => self::USER_ID,
+                'sites' => [],
+                'orgs' => [],
                 'expectIsAccess' => true,
             ],
             [
                 'personId' => 101,
-                'sites'    => [
+                'sites' => [
                     ['id' => 201, 'isGranted' => false],
                     ['id' => 202, 'isGranted' => true],
                     ['id' => 203, 'isGranted' => false],
                 ],
-                'orgs'           => [],
+                'orgs' => [],
                 'expectIsAccess' => true,
             ],
             [
                 'personId' => 102,
-                'sites'    => [],
-                'orgs'     => [
+                'sites' => [],
+                'orgs' => [
                     ['id' => 301, 'isGranted' => false],
                     ['id' => 302, 'isGranted' => true],
                     ['id' => 303, 'isGranted' => false],
@@ -294,7 +292,7 @@ class PersonDetailsServiceTest extends AbstractServiceTestCase
             ],
             [
                 'personId' => 103,
-                'sites'    => [
+                'sites' => [
                     ['id' => 201, 'isGranted' => false],
                 ],
                 'orgs' => [
@@ -304,7 +302,7 @@ class PersonDetailsServiceTest extends AbstractServiceTestCase
             ],
             [
                 'personId' => 103,
-                'sites'    => [
+                'sites' => [
                     ['id' => 201, 'isGranted' => false],
                 ],
                 'orgs' => [
@@ -313,9 +311,9 @@ class PersonDetailsServiceTest extends AbstractServiceTestCase
                 'expectIsAccess' => false,
             ],
             [
-                'personId'       => 103,
-                'sites'          => [],
-                'orgs'           => [],
+                'personId' => 103,
+                'sites' => [],
+                'orgs' => [],
                 'expectIsAccess' => false,
             ],
         ];
@@ -354,7 +352,7 @@ class PersonDetailsServiceTest extends AbstractServiceTestCase
                     $this->mockAuthSrv,
                     $this->mockIdentityProvider,
                     $this->xssFilterMock,
-                    XMock::of(UserRoleService::class)
+                    XMock::of(UserRoleService::class),
                 ]
             )
             ->setMethods(['getUserRoles', 'findPerson', 'findOneByOrThrowException'])

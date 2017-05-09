@@ -11,35 +11,33 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEventApi\Service\EventService;
 use NotificationApi\Dto\Notification as DtoNotification;
 use NotificationApi\Service\NotificationService;
-use Zend\ServiceManager\ServiceManager;
 use DvsaCommonApi\Service\EntityFinderTrait;
-use Zend\ServiceManager\AbstractFactoryInterface;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaCommon\Constants\EventDescription;
 use DvsaEntities\Entity\EventPersonMap;
 use NotificationApi\Service\Helper\SiteNominationEventHelper;
 
 /**
- * Handles nomination for a tester at site
+ * Handles nomination for a tester at site.
  */
 class PositionAtSiteNominationHandler extends AbstractNotificationActionHandler
 {
     use EntityFinderTrait;
 
     /**
-     * values from database `notification_template_action`
+     * values from database `notification_template_action`.
      */
     const ACCEPTED = 'SITE-NOMINATION-ACCEPTED';
     const REJECTED = 'SITE-NOMINATION-REJECTED';
 
     /**
-     * values from database `notification_action_lookup`
+     * values from database `notification_action_lookup`.
      */
     const ACTION_ACCEPTED_ID = NotificationActionLookup::SITE_NOMINATION_ACCEPTED;
     const ACTION_REJECTED_ID = NotificationActionLookup::SITE_NOMINATION_REJECTED;
 
     /**
-     * notification fields
+     * notification fields.
      */
     const SITE_NAME = 'siteName';
     const SITE_NUMBER = 'siteNumber';
@@ -55,11 +53,11 @@ class PositionAtSiteNominationHandler extends AbstractNotificationActionHandler
     private $siteNominationEventHelper;
 
     /**
-     * $action === self::ACCEPT or self::REJECT
+     * $action === self::ACCEPT or self::REJECT.
      *
-     * @param EntityManager       $entityManger
-     * @param NotificationService $notificationService
-     * @param string              $action
+     * @param EntityManager             $entityManger
+     * @param NotificationService       $notificationService
+     * @param string                    $action
      * @param SiteNominationEventHelper $siteNominationEventHelper
      */
     public function __construct(
@@ -77,10 +75,9 @@ class PositionAtSiteNominationHandler extends AbstractNotificationActionHandler
     }
 
     /**
-     * Updates association status between person and site
+     * Updates association status between person and site.
      *
      * @param Notification $notification
-     *
      */
     public function proceed(Notification $notification)
     {
@@ -120,9 +117,9 @@ class PositionAtSiteNominationHandler extends AbstractNotificationActionHandler
     }
 
     /**
-     * Updates notification and nomination status, adds RBAC role (if nomination accepted)
+     * Updates notification and nomination status, adds RBAC role (if nomination accepted).
      *
-     * @param Notification      $notification
+     * @param Notification        $notification
      * @param SiteBusinessRoleMap $position
      */
     protected function update(Notification $notification, SiteBusinessRoleMap $position)

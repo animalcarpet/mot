@@ -8,7 +8,7 @@ use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ApiPerformMotTestAssertionFactory  implements FactoryInterface
+class ApiPerformMotTestAssertionFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

@@ -31,12 +31,11 @@ use Zend\View\Model\ViewModel;
 /**
  * @method AjaxResponsePlugin ajaxResponse()
  */
-abstract class AbstractDvsaActionController
-    extends AbstractActionController
+abstract class AbstractDvsaActionController extends AbstractActionController
 {
     const FORM_ERROR_CONTAINER_NAMESPACE = 'formErrorMessages';
-    const FORM_ERROR_CONTAINER_KEY       = 'errorData';
-    const TEMPLATE_FLASH_ERROR           = 'error/flash-error';
+    const FORM_ERROR_CONTAINER_KEY = 'errorData';
+    const TEMPLATE_FLASH_ERROR = 'error/flash-error';
 
     protected $form;
     /**
@@ -74,6 +73,7 @@ abstract class AbstractDvsaActionController
 
     /**
      * @return \DvsaCommon\HttpRestJson\Client|object
+     *
      * @deprecated Use mappers if it possible
      */
     protected function getRestClient()
@@ -105,6 +105,7 @@ abstract class AbstractDvsaActionController
         } else {
             $this->flashMessenger()->addInfoMessage($messages);
         }
+
         return $this;
     }
 
@@ -117,12 +118,14 @@ abstract class AbstractDvsaActionController
         } else {
             $this->flashMessenger()->addErrorMessage($messages);
         }
+
         return $this;
     }
 
     protected function addErrorMessage($message)
     {
         $this->flashMessenger()->addErrorMessage($message);
+
         return $this;
     }
 
@@ -134,6 +137,7 @@ abstract class AbstractDvsaActionController
     protected function addSuccessMessage($message)
     {
         $this->flashMessenger()->addSuccessMessage($message);
+
         return $this;
     }
 
@@ -141,15 +145,14 @@ abstract class AbstractDvsaActionController
     {
         $viewModel = new ViewModel();
         $viewModel->setTemplate(self::TEMPLATE_FLASH_ERROR);
+
         return $viewModel;
     }
 
     /**
-     *
      * @param $errorData
      *
      * errorData should be returned from the DvsaCommon\HttpRestJson\Exception;->getExpandedData()
-     *
      */
     protected function addFormErrorMessagesToSession($errorData)
     {
@@ -167,6 +170,7 @@ abstract class AbstractDvsaActionController
 
     /**
      * @param string $catalogName
+     *
      * @return array
      */
     public function getCatalogByName($catalogName)
@@ -239,7 +243,7 @@ abstract class AbstractDvsaActionController
             $file = $result->getFile();
 
             if ($file->getFileName() === null) {
-                throw new \InvalidArgumentException("Cannot create a file for download. The file has not been given a name.");
+                throw new \InvalidArgumentException('Cannot create a file for download. The file has not been given a name.');
             }
 
             if ($file instanceof CsvFile) {
@@ -253,14 +257,15 @@ abstract class AbstractDvsaActionController
                 $headers = $response->getHeaders();
 
                 $headers->addHeader(new ContentType('text/csv; charset=utf-8'));
-                $headers->addHeader(new ContentDisposition('attachment; filename="' . $file->getFileName() . '"'));
+                $headers->addHeader(new ContentDisposition('attachment; filename="'.$file->getFileName().'"'));
                 $headers->addHeader(new ContentLength(mb_strlen($content)));
 
                 $response->setContent($content);
+
                 return $response;
             }
 
-            throw new \InvalidArgumentException("Unsupported file class '" . get_class($result->getFile()) . "'");
+            throw new \InvalidArgumentException("Unsupported file class '".get_class($result->getFile())."'");
         }
 
         if ($result->getSuccessMessages()) {
@@ -305,7 +310,7 @@ abstract class AbstractDvsaActionController
             }
 
             if ($result->layout()->getBreadcrumbs()) {
-                $this->setBreadcrumbs(["breadcrumbs" => $result->layout()->getBreadcrumbs()]);
+                $this->setBreadcrumbs(['breadcrumbs' => $result->layout()->getBreadcrumbs()]);
             }
 
             $viewModel = new ViewModel([
@@ -335,7 +340,7 @@ abstract class AbstractDvsaActionController
     }
 
     /**
-     * Setting head title of page
+     * Setting head title of page.
      *
      * @param $title
      */

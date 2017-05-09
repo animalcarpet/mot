@@ -5,7 +5,7 @@ $idPrefix = $this->withDefault('')->getValue($idPrefix);
 
 $getValueOrEmptyString = function ($key) use ($values, $idPrefix) {
     if ('' !== $idPrefix) {
-        $key = $idPrefix . ucfirst($key);
+        $key = $idPrefix.ucfirst($key);
     }
 
     if (is_array($values)) {
@@ -13,7 +13,7 @@ $getValueOrEmptyString = function ($key) use ($values, $idPrefix) {
     }
 
     if (is_object($values)) {
-        return $values->{'get' . ucfirst($key)}();
+        return $values->{'get'.ucfirst($key)}();
     }
 
     return '';
@@ -22,7 +22,7 @@ $getValueOrEmptyString = function ($key) use ($values, $idPrefix) {
 echo $this->partial(
     'partial/forms/inputBox.phtml',
     [
-        'id' => '' !== $idPrefix ? $idPrefix . 'AddressLine1' : 'addressLine1',
+        'id' => '' !== $idPrefix ? $idPrefix.'AddressLine1' : 'addressLine1',
         'label' => 'Address',
         'required' => true,
         'title' => 'Enter the address',
@@ -34,7 +34,7 @@ echo $this->partial(
 echo $this->partial(
     'partial/forms/inputBox.phtml',
     [
-        'id' => '' !== $idPrefix ? $idPrefix . 'AddressLine2' : 'addressLine2',
+        'id' => '' !== $idPrefix ? $idPrefix.'AddressLine2' : 'addressLine2',
         'label' => 'Address line 2',
         'classFormGroup' => 'form-group-flowing',
         'classLabel' => 'visually-hidden',
@@ -47,9 +47,9 @@ echo $this->partial(
 echo $this->partial(
     'partial/forms/inputBox.phtml',
     [
-        'id' => '' !== $idPrefix ? $idPrefix . 'AddressLine3' : 'addressLine3',
+        'id' => '' !== $idPrefix ? $idPrefix.'AddressLine3' : 'addressLine3',
         'label' => 'Address line 3',
-        'classFormGroup' => "form-group-flowing",
+        'classFormGroup' => 'form-group-flowing',
         'classLabel' => 'visually-hidden',
         'title' => 'Enter the address',
         'maxLength' => 45,
@@ -60,7 +60,7 @@ echo $this->partial(
 echo $this->partial(
     'partial/forms/inputBox.phtml',
     [
-        'id' => '' !== $idPrefix ? $idPrefix . 'Town' : 'town',
+        'id' => '' !== $idPrefix ? $idPrefix.'Town' : 'town',
         'label' => 'Town or city',
         'required' => true,
         'title' => 'Enter the town name',
@@ -72,7 +72,7 @@ echo $this->partial(
 echo $this->partial(
     'partial/forms/inputBox.phtml',
     [
-        'id' => '' !== $idPrefix ? $idPrefix . 'Postcode' : 'postcode',
+        'id' => '' !== $idPrefix ? $idPrefix.'Postcode' : 'postcode',
         'label' => 'Postcode',
         'cssClass' => ' form-control-sm',
         'required' => true,

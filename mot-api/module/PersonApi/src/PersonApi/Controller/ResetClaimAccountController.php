@@ -8,8 +8,7 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 
 /**
- * Class ResetClaimAccountController
- * @package PersonApi\Controller
+ * Class ResetClaimAccountController.
  */
 class ResetClaimAccountController extends AbstractDvsaRestfulController
 {
@@ -19,9 +18,9 @@ class ResetClaimAccountController extends AbstractDvsaRestfulController
     private $entityManager;
 
     /**
-     * Constructor of the ResetClaimAccountController
+     * Constructor of the ResetClaimAccountController.
      *
-     * @param EntityManager $entityManager
+     * @param EntityManager            $entityManager
      * @param ResetClaimAccountService $service
      */
     public function __construct(EntityManager $entityManager, ResetClaimAccountService $service)
@@ -32,10 +31,12 @@ class ResetClaimAccountController extends AbstractDvsaRestfulController
 
     /**
      * End point to reset an account by the person Id
-     * This function will return true if succeed or throw an exception
+     * This function will return true if succeed or throw an exception.
      *
      * @param int $id
+     *
      * @return \Zend\View\Model\JsonModel
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)

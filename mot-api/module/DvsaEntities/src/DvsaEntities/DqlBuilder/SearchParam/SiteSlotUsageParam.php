@@ -6,7 +6,7 @@ use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * Class SiteSlotUsageParam
+ * Class SiteSlotUsageParam.
  */
 class SiteSlotUsageParam extends SearchParam
 {
@@ -35,6 +35,7 @@ class SiteSlotUsageParam extends SearchParam
     public function setSortColumnId($sortColumnID)
     {
         $this->sortColumnId = $sortColumnID;
+
         return $this;
     }
 
@@ -46,6 +47,7 @@ class SiteSlotUsageParam extends SearchParam
     public function setDateFrom($dateFrom)
     {
         $this->dateFrom = $dateFrom;
+
         return $this;
     }
 
@@ -65,6 +67,7 @@ class SiteSlotUsageParam extends SearchParam
     public function setDateTo($dateTo)
     {
         $this->dateTo = $dateTo;
+
         return $this;
     }
 
@@ -78,11 +81,13 @@ class SiteSlotUsageParam extends SearchParam
 
     /**
      * @param mixed $vtsId
+     *
      * @return $this
      */
     public function setVtsId($vtsId)
     {
         $this->vtsId = $vtsId;
+
         return $this;
     }
 
@@ -98,6 +103,7 @@ class SiteSlotUsageParam extends SearchParam
     {
         parent::loadStandardDataTableValuesFromRequest($request);
         $this->setSortColumnId($request->getQuery(SearchParamConst::SORT_COLUMN_ID));
+
         return $this;
     }
 
@@ -106,6 +112,7 @@ class SiteSlotUsageParam extends SearchParam
         if (in_array($this->getSortColumnId(), $this->sortWhiteList) !== false) {
             return $this->getSortColumnId();
         }
+
         return self::DEFAULT_SORT_COL;
     }
 }

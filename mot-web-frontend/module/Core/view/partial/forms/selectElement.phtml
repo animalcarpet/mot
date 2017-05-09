@@ -1,4 +1,5 @@
 <?php
+
 $id = isset($id) ? $id : '';
 $name = isset($name) ? $name : $id;
 $value = (isset($value) && $value !== false) ? $value : '';
@@ -29,20 +30,19 @@ $t = [
     '<select',
     ' id="', $this->escapeHtml($id), '"',
     ' name="', $this->escapeHtml($name), '"',
-    ($cssClass ? ' class="' . $this->escapeHtml($cssClass) . '"' : ''),
+    ($cssClass ? ' class="'.$this->escapeHtml($cssClass).'"' : ''),
     (!empty($disabled) ? ' disabled="disabled"' : ''),
     (!empty($required) ? ' required' : ''),
     (!empty($readonly) ? ' readonly' : ''),
-    '>'
+    '>',
 ];
-
 
 foreach ($options as $key => $optionValue) {
     array_push(
         $t,
         '<option',
-        ' id="' . $this->escapeHtml($id . '_' . $key) . '"',
-        ' value="' . $this->escapeHTML($key) . '"',
+        ' id="'.$this->escapeHtml($id.'_'.$key).'"',
+        ' value="'.$this->escapeHTML($key).'"',
         (strval($key) === strval($value) ? ' selected' : ''),
         ($key === $disabledOption ? ' disabled' : ''),
         '>',
@@ -53,5 +53,5 @@ foreach ($options as $key => $optionValue) {
 
 $t[] = '</select>';
 
-echo implode('', $t) .
+echo implode('', $t).
     $this->partial('fieldErrorMessage', ['error' => $error]);

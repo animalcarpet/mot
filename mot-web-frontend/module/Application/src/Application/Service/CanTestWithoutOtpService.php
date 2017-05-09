@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Application\Service;
 
 use Core\Service\MotFrontendIdentityProvider;
@@ -8,9 +7,6 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaFeature\FeatureToggles;
-
-use Zend\View\Helper\AbstractHelper;
 
 class CanTestWithoutOtpService
 {
@@ -32,9 +28,9 @@ class CanTestWithoutOtpService
     private $identityProvider;
 
     /**
-     * @param MotFrontendIdentityProvider $identityProvider
+     * @param MotFrontendIdentityProvider      $identityProvider
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param TwoFaFeatureToggle $twoFaFeatureToggle
+     * @param TwoFaFeatureToggle               $twoFaFeatureToggle
      */
     public function __construct(MotFrontendIdentityProvider $identityProvider, MotAuthorisationServiceInterface $authorisationService,
                                 TwoFaFeatureToggle $twoFaFeatureToggle)
@@ -43,7 +39,6 @@ class CanTestWithoutOtpService
         $this->authorisationService = $authorisationService;
         $this->twoFaFeatureToggle = $twoFaFeatureToggle;
     }
-
 
     /**
      * @return bool

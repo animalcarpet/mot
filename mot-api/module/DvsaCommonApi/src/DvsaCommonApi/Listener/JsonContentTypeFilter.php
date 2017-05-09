@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApi\Listener;
 
 use DvsaCommon\Utility\HeaderUtils;
@@ -19,7 +20,7 @@ class JsonContentTypeFilter extends AbstractListenerAggregate
     }
 
     /**
-     * Filters requests to make sure they have correct application/json content type
+     * Filters requests to make sure they have correct application/json content type.
      *
      * @param MvcEvent $event
      */
@@ -32,7 +33,7 @@ class JsonContentTypeFilter extends AbstractListenerAggregate
             && HeaderUtils::getContentType() !== self::HTTP_CONTENT_TYPE_APPLICATION_JSON
         ) {
             $exc = new ServiceException(null);
-            $exc->addError("Unsupported media type", self::HTTP_CODE_UNSUPPORTED_MEDIA_TYPE);
+            $exc->addError('Unsupported media type', self::HTTP_CODE_UNSUPPORTED_MEDIA_TYPE);
 
             $event->setViewModel($exc->getJsonModel());
             $event->getResponse()->setStatusCode(self::HTTP_CODE_UNSUPPORTED_MEDIA_TYPE);

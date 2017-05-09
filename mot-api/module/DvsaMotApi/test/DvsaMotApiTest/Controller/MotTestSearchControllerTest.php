@@ -9,7 +9,7 @@ use DvsaElasticSearch\Service\ElasticSearchService;
 use DvsaMotApi\Controller\MotTestSearchController;
 
 /**
- * Class MotTestSearchControllerTest
+ * Class MotTestSearchControllerTest.
  */
 class MotTestSearchControllerTest extends AbstractMotApiControllerTestCase
 {

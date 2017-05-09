@@ -20,8 +20,7 @@ use DvsaMotApiTest\Controller\AbstractMotApiControllerTestCase;
 use Zend\Http\Request;
 
 /**
- * Class SecurityQuestionControllerTest
- * @package AccountApiTest\Crypt
+ * Class SecurityQuestionControllerTest.
  */
 class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -99,7 +98,7 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
 
     /**
      * @param string $actionName
-     * @param array $unacceptableMethod
+     * @param array  $unacceptableMethod
      * @dataProvider unacceptableMethodsDataProvider
      */
     public function testUnacceptableMethodCallsOnActions($actionName, $unacceptableMethod)
@@ -127,7 +126,7 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
             foreach ($unacceptableMethods as $method) {
                 $data[] = [
                     'actionName' => $actionName,
-                    'unacceptableMethods' => $method
+                    'unacceptableMethods' => $method,
                 ];
             }
         }
@@ -137,6 +136,7 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
 
     /**
      * @param array $acceptableMethods
+     *
      * @return array
      */
     private function getAllMethodsBut(array $acceptableMethods)
@@ -163,7 +163,7 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * @param array $params
+     * @param array      $params
      * @param \Exception $expectedException
      * @dataProvider verifyAnswerDataProvider
      */
@@ -183,14 +183,14 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
         return [
             [
                 'params' => [],
-                new RequiredFieldException([$fieldName])
+                new RequiredFieldException([$fieldName]),
             ],
             [
                 'params' => [$fieldName => 'first answer'],
                 new InvalidFieldValueException(
                     sprintf(SecurityQuestionService::ERR_MSG_INVALID_ARGUMENT, var_export('first answer', true))
-                )
-            ]
+                ),
+            ],
         ];
     }
 }

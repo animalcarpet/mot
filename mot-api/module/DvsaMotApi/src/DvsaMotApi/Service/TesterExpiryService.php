@@ -15,9 +15,7 @@ use DvsaCommonApi\Service\AbstractService;
 use DvsaEntities\Repository\ConfigurationRepository;
 
 /**
- * Class TesterExpiryService
- *
- * @package DvsaMotApi\Service
+ * Class TesterExpiryService.
  */
 class TesterExpiryService extends AbstractService
 {
@@ -49,7 +47,7 @@ class TesterExpiryService extends AbstractService
     private $dateTime;
 
     /**
-     * @var \DvsaAuthorisation\Service\AuthorisationServiceInterface $authService
+     * @var \DvsaAuthorisation\Service\AuthorisationServiceInterface
      */
     protected $authService;
 
@@ -71,7 +69,6 @@ class TesterExpiryService extends AbstractService
 
     /**
      * This method changes the status of inactive testers.
-     *
      */
     public function changeStatusOfInactiveTesters()
     {
@@ -139,11 +136,11 @@ class TesterExpiryService extends AbstractService
 
     private function executeUpdate($stmt, $fromStatus, $targetStatus, $vehicleClassGroup, \DateTime $expiryDate)
     {
-        /** @var Statement $stmt */
-        $stmt->bindParam("fromStatus", $fromStatus);
-        $stmt->bindParam("targetStatus", $targetStatus);
-        $stmt->bindValue("vehicleClassGroup", $vehicleClassGroup);
-        $stmt->bindValue("expiryDate", $expiryDate->format('Y-m-d'));
+        /* @var Statement $stmt */
+        $stmt->bindParam('fromStatus', $fromStatus);
+        $stmt->bindParam('targetStatus', $targetStatus);
+        $stmt->bindValue('vehicleClassGroup', $vehicleClassGroup);
+        $stmt->bindValue('expiryDate', $expiryDate->format('Y-m-d'));
         $stmt->execute();
     }
 
@@ -157,7 +154,7 @@ class TesterExpiryService extends AbstractService
     private function getDateLimitForDemoTestIsRequired(\DateTime $date)
     {
         $expiryDate = clone $date;
-        $months = (int)$this->configurationRepository->getValue(ConfigParam::MONTHS_BEFORE_DEMO_TEST);
+        $months = (int) $this->configurationRepository->getValue(ConfigParam::MONTHS_BEFORE_DEMO_TEST);
 
         return DateUtils::subtractCalendarMonths($expiryDate, $months);
     }
@@ -172,9 +169,9 @@ class TesterExpiryService extends AbstractService
     private function getDateLimitForRefresherCourseRequired(\DateTime $date)
     {
         $expiryDate = clone $date;
-        $years = (int)$this->configurationRepository->getValue(ConfigParam::YEARS_BEFORE_REFRESHER_COURSE);
+        $years = (int) $this->configurationRepository->getValue(ConfigParam::YEARS_BEFORE_REFRESHER_COURSE);
 
-        return $expiryDate->sub(new \DateInterval('P' . $years . 'Y'));
+        return $expiryDate->sub(new \DateInterval('P'.$years.'Y'));
     }
 
     /**
@@ -187,8 +184,8 @@ class TesterExpiryService extends AbstractService
     private function getDateLimitForInitialCourseRequired(\DateTime $date)
     {
         $expiryDate = clone $date;
-        $years = (int)$this->configurationRepository->getValue(ConfigParam::YEARS_BEFORE_INITIAL_COURSE);
+        $years = (int) $this->configurationRepository->getValue(ConfigParam::YEARS_BEFORE_INITIAL_COURSE);
 
-        return $expiryDate->sub(new \DateInterval('P' . $years . 'Y'));
+        return $expiryDate->sub(new \DateInterval('P'.$years.'Y'));
     }
 }

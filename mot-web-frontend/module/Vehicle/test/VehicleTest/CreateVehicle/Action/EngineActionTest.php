@@ -77,7 +77,7 @@ class EngineActionTest extends \PHPUnit_Framework_TestCase
     {
         return [
             EngineForm::FIELD_FUEL_TYPE => $fuelType,
-            EngineForm::FIELD_CAPACITY => $capacity
+            EngineForm::FIELD_CAPACITY => $capacity,
         ];
     }
 

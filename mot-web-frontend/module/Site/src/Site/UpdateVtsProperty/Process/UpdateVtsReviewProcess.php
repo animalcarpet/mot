@@ -2,7 +2,6 @@
 
 namespace Site\UpdateVtsProperty\Process;
 
-use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Routing\VtsRouteList;
 use Core\TwoStepForm\TwoStepProcessInterface;
@@ -13,10 +12,8 @@ use Site\UpdateVtsProperty\UpdateVtsPropertyReviewViewModel;
 use Zend\Form\Form;
 
 /**
- *
  * todo rename this to testProcess
- * Class UpdateVtsReviewProcess
- * @package Site\UpdateVtsProperty\Process
+ * Class UpdateVtsReviewProcess.
  */
 class UpdateVtsReviewProcess extends UpdateVtsPropertyProcess implements TwoStepProcessInterface, AutoWireableInterface
 {
@@ -45,8 +42,7 @@ class UpdateVtsReviewProcess extends UpdateVtsPropertyProcess implements TwoStep
         $reviewPageLede,
         $reviewPageButtonText,
         $breadCrumb
-    )
-    {
+    ) {
         $this->formToGdsTableTransformer = $formToGdsTransformer;
         $this->reviewPageTitle = $reviewPageTitle;
         $this->reviewPageLede = $reviewPageLede;
@@ -95,7 +91,9 @@ class UpdateVtsReviewProcess extends UpdateVtsPropertyProcess implements TwoStep
      * @param $formUuid
      * @param $formData
      * @param GdsTable $table
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
+     *
      * @internal param $entityId
      */
     public function buildReviewStepViewModel($formUuid, $formData, GdsTable $table)
@@ -130,11 +128,9 @@ class UpdateVtsReviewProcess extends UpdateVtsPropertyProcess implements TwoStep
 
     public function redirectToConfirmationPage()
     {
-
     }
 
     public function populateConfirmationPageVariables()
     {
-
     }
 }

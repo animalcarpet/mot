@@ -21,9 +21,9 @@ class PhonePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function validData()
     {
         return [
-            [[PhonePropertyForm::FIELD_PHONE => "1"]],
-            [[PhonePropertyForm::FIELD_PHONE => "22-678-345-342"]],
-            [[PhonePropertyForm::FIELD_PHONE => "22 678 345 342"]],
+            [[PhonePropertyForm::FIELD_PHONE => '1']],
+            [[PhonePropertyForm::FIELD_PHONE => '22-678-345-342']],
+            [[PhonePropertyForm::FIELD_PHONE => '22 678 345 342']],
             [[PhonePropertyForm::FIELD_PHONE => $this->createPhone(PhonePropertyForm::FIELD_PHONE_MAX_LENGTH)]],
         ];
     }
@@ -47,22 +47,22 @@ class PhonePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[PhonePropertyForm::FIELD_PHONE => ""], PhonePropertyForm::PHONE_EMPTY_MSG],
-            [[PhonePropertyForm::FIELD_PHONE => " "], PhonePropertyForm::PHONE_EMPTY_MSG],
-            [[PhonePropertyForm::FIELD_PHONE =>  $this->createPhone(PhonePropertyForm::FIELD_PHONE_MAX_LENGTH, " ")], PhonePropertyForm::PHONE_EMPTY_MSG],
+            [[PhonePropertyForm::FIELD_PHONE => ''], PhonePropertyForm::PHONE_EMPTY_MSG],
+            [[PhonePropertyForm::FIELD_PHONE => ' '], PhonePropertyForm::PHONE_EMPTY_MSG],
+            [[PhonePropertyForm::FIELD_PHONE => $this->createPhone(PhonePropertyForm::FIELD_PHONE_MAX_LENGTH, ' ')], PhonePropertyForm::PHONE_EMPTY_MSG],
             [
                 [PhonePropertyForm::FIELD_PHONE => $this->createPhone(PhonePropertyForm::FIELD_PHONE_MAX_LENGTH + 1)],
-                str_replace("%max%", PhonePropertyForm::FIELD_PHONE_MAX_LENGTH, PhonePropertyForm::PHONE_TOO_LONG_MSG)
+                str_replace('%max%', PhonePropertyForm::FIELD_PHONE_MAX_LENGTH, PhonePropertyForm::PHONE_TOO_LONG_MSG),
             ],
         ];
     }
 
-    private function createPhone($length, $char = "1")
+    private function createPhone($length, $char = '1')
     {
-        $name = "";
+        $name = '';
         while ($length) {
             $name .= $char;
-            $length--;
+            --$length;
         }
 
         return $name;

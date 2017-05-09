@@ -8,7 +8,7 @@ use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 
 /**
- * Unit test for Dashboard\Model\Dashboard
+ * Unit test for Dashboard\Model\Dashboard.
  */
 class DashboardTest extends \PHPUnit_Framework_TestCase
 {
@@ -50,8 +50,7 @@ class DashboardTest extends \PHPUnit_Framework_TestCase
         $aeCount,
         $vtsCount,
         $expected
-    )
-    {
+    ) {
         $dashboard = new Dashboard(ApiDashboardResourceTest::getTestDataForAedm($aeCount, ['vtsCount' => $vtsCount]));
 
         $this->assertEquals($expected, $dashboard->getOverallSiteCount());
@@ -201,14 +200,14 @@ class DashboardTest extends \PHPUnit_Framework_TestCase
         $testData = ApiDashboardResourceTest::getTestDataForAedm();
         $testData['inProgressTestTypeCode'] = 'RT';
         $dashboard = new Dashboard($testData);
-        $this->assertSame("Enter retest results", $dashboard->getEnterTestResultsLabel());
+        $this->assertSame('Enter retest results', $dashboard->getEnterTestResultsLabel());
     }
 
     public function test_getEnterTestResultsLabel_shouldReturnExpectedIfTypeIsNotRetest()
     {
         $testData = ApiDashboardResourceTest::getTestDataForAedm();
         $dashboard = new Dashboard($testData);
-        $this->assertSame("Enter test results", $dashboard->getEnterTestResultsLabel());
+        $this->assertSame('Enter test results', $dashboard->getEnterTestResultsLabel());
     }
 
     public function test_InProgressNonMotTest_shouldBeAvailableIfValueIsSet()

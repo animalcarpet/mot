@@ -30,9 +30,7 @@ use OrganisationApi\Factory\Service as ServiceX;
 use OrganisationApi\Factory\Model as ModelX;
 
 /**
- * Class Module
- *
- * @package OrganisationApi
+ * Class Module.
  */
 class Module
 {
@@ -42,35 +40,35 @@ class Module
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function getServiceConfig()
     {
         return [
-            'factories'  => [
-                Hydrator::class                           => \OrganisationApi\Factory\HydratorFactory::class,
-                OrganisationService::class                => ServiceX\OrganisationServiceFactory::class,
-                AddressService::class                     => ServiceX\AddressServiceFactory::class,
-                ContactDetailsService::class              => ServiceX\ContactDetailsServiceFactory::class,
-                AuthorisedExaminerService::class          => ServiceX\AuthorisedExaminerServiceFactory::class,
-                AuthorisedExaminerSearchService::class    => ServiceX\AuthorisedExaminerSearchServiceFactory::class,
+            'factories' => [
+                Hydrator::class => \OrganisationApi\Factory\HydratorFactory::class,
+                OrganisationService::class => ServiceX\OrganisationServiceFactory::class,
+                AddressService::class => ServiceX\AddressServiceFactory::class,
+                ContactDetailsService::class => ServiceX\ContactDetailsServiceFactory::class,
+                AuthorisedExaminerService::class => ServiceX\AuthorisedExaminerServiceFactory::class,
+                AuthorisedExaminerSearchService::class => ServiceX\AuthorisedExaminerSearchServiceFactory::class,
                 AuthorisedExaminerPrincipalService::class => ServiceX\AuthorisedExaminerPrincipalServiceFactory::class,
-                AuthorisedExaminerSlotService::class      => ServiceX\AuthorisedExaminerSlotServiceFactory::class,
-                AuthorisedExaminerStatusService::class    => ServiceX\AuthorisedExaminerStatusServiceFactory::class,
-                OrganisationPositionService::class        => ServiceX\OrganisationPositionServiceFactory::class,
-                OrganisationSlotUsageService::class       => ServiceX\OrganisationSlotUsageServiceFactory::class,
-                OrganisationRoleService::class            => ServiceX\OrganisationRoleServiceFactory::class,
-                RoleAvailability::class                   => ModelX\RoleAvailabilityFactory::class,
-                NominateRoleServiceBuilder::class         => ServiceX\NominateRoleServiceBuilderFactory::class,
-                ConditionalNominationOperation::class         => ServiceX\NominateByRequestOperationFactory::class,
-                DirectNominationOperation::class          => ServiceX\DirectNominationOperationFactory::class,
-                OrganisationNominationNotificationService::class      => ServiceX\OrganisationNominationServiceFactory::class,
-                NominationVerifier::class                 => ServiceX\NominateVerifierFactory::class,
-                SiteService::class                        => ServiceX\SiteServiceFactory::class,
-                MotTestLogService::class                  => ServiceX\MotTestLogServiceFactory::class,
-                SiteLinkService::class                    => ServiceX\SiteLinkServiceFactory::class,
-                OrganisationEventService::class           => OrganisationEventServiceFactory::class
+                AuthorisedExaminerSlotService::class => ServiceX\AuthorisedExaminerSlotServiceFactory::class,
+                AuthorisedExaminerStatusService::class => ServiceX\AuthorisedExaminerStatusServiceFactory::class,
+                OrganisationPositionService::class => ServiceX\OrganisationPositionServiceFactory::class,
+                OrganisationSlotUsageService::class => ServiceX\OrganisationSlotUsageServiceFactory::class,
+                OrganisationRoleService::class => ServiceX\OrganisationRoleServiceFactory::class,
+                RoleAvailability::class => ModelX\RoleAvailabilityFactory::class,
+                NominateRoleServiceBuilder::class => ServiceX\NominateRoleServiceBuilderFactory::class,
+                ConditionalNominationOperation::class => ServiceX\NominateByRequestOperationFactory::class,
+                DirectNominationOperation::class => ServiceX\DirectNominationOperationFactory::class,
+                OrganisationNominationNotificationService::class => ServiceX\OrganisationNominationServiceFactory::class,
+                NominationVerifier::class => ServiceX\NominateVerifierFactory::class,
+                SiteService::class => ServiceX\SiteServiceFactory::class,
+                MotTestLogService::class => ServiceX\MotTestLogServiceFactory::class,
+                SiteLinkService::class => ServiceX\SiteLinkServiceFactory::class,
+                OrganisationEventService::class => OrganisationEventServiceFactory::class,
 
             ],
             'invokables' => [

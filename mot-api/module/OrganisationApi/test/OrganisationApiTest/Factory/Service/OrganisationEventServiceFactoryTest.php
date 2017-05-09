@@ -10,11 +10,10 @@ use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEventApi\Service\EventService;
 use OrganisationApi\Factory\Service\OrganisationEventServiceFactory;
 use OrganisationApi\Service\OrganisationEventService;
-use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class OrganisationEventServiceFactoryTest
+ * Class OrganisationEventServiceFactoryTest.
  */
 class OrganisationEventServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

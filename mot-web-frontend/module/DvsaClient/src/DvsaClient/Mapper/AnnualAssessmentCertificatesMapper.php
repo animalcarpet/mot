@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaClient\Mapper;
 
 use Dvsa\Mot\Frontend\PersonModule\Form\AnnualAssessmentCertificatesForm;
@@ -18,8 +19,7 @@ class AnnualAssessmentCertificatesMapper extends DtoMapper implements AutoWireab
         Client $client,
         DtoReflectiveDeserializer $deserializer,
         DtoReflectiveSerializer $serializer
-    )
-    {
+    ) {
         parent::__construct($client);
         $this->deserializer = $deserializer;
         $this->serializer = $serializer;
@@ -45,7 +45,7 @@ class AnnualAssessmentCertificatesMapper extends DtoMapper implements AutoWireab
             ->setScore($formData[AnnualAssessmentCertificatesForm::FIELD_SCORE])
             ->setCertificateNumber($formData[AnnualAssessmentCertificatesForm::FIELD_CERT_NUMBER])
             ->setExamDate(new \DateTime(
-                sprintf("%d-%d-%d",
+                sprintf('%d-%d-%d',
                     $formData[AnnualAssessmentCertificatesForm::FIELD_DATE_YEAR],
                     $formData[AnnualAssessmentCertificatesForm::FIELD_DATE_MONTH],
                     $formData[AnnualAssessmentCertificatesForm::FIELD_DATE_DAY]

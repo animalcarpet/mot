@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaClient\Mapper;
 
 use DvsaCommon\Utility\Hydrator;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 
 /**
- * Class AutoMapper
+ * Class AutoMapper.
  */
 class AutoMapper
 {
@@ -58,8 +59,9 @@ class AutoMapper
 
     private function createEntity($entityClass)
     {
-        $fullClassName = $this->entityNamespace . $entityClass;
-        return new $fullClassName;
+        $fullClassName = $this->entityNamespace.$entityClass;
+
+        return new $fullClassName();
     }
 
     private function hydrateNestedEntities(array $data, $obj)
@@ -98,6 +100,6 @@ class AutoMapper
 
     private function getSetterForProperty($property)
     {
-        return 'set' . ucfirst($property);
+        return 'set'.ucfirst($property);
     }
 }

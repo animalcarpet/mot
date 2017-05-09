@@ -11,7 +11,7 @@ class HolidaysProvider implements NonWorkingDaysProvider
      */
     private $nonWorkingDayLookupRepository;
 
-    function __construct(NonWorkingDayRepository $nonWorkingDayLookupRepository)
+    public function __construct(NonWorkingDayRepository $nonWorkingDayLookupRepository)
     {
         $this->nonWorkingDayLookupRepository = $nonWorkingDayLookupRepository;
     }
@@ -19,6 +19,7 @@ class HolidaysProvider implements NonWorkingDaysProvider
     /**
      * @param int    $year
      * @param string $countryCode
+     *
      * @return \DateTime[]
      */
     public function getNonWorkingDaysInYear($year, $countryCode)

@@ -17,6 +17,7 @@ class SiteNominationEventHelperFactory implements FactoryInterface
     {
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get(EntityManager::class);
+
         return new SiteNominationEventHelper(
             $serviceLocator->get(EventService::class),
             $entityManager->getRepository(EventSiteMap::class),

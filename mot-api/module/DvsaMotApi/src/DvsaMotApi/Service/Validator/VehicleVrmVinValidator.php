@@ -50,7 +50,7 @@ class VehicleVrmVinValidator
             return;
         }
 
-        $isUkCountry = CountryOfRegistration::isUkCountry((int)$cor);
+        $isUkCountry = CountryOfRegistration::isUkCountry((int) $cor);
         $maxVRMLength = $isUkCountry ? self::REG_MAX_LENGTH_FOR_UK : self::REG_MAX_LENGTH;
 
         if (strlen($vrm) > $maxVRMLength) {

@@ -9,11 +9,11 @@ use DvsaMotTest\Service\CertificatePrintingService;
 
 class CertificatePrintingServiceFactory implements FactoryInterface
 {
-
     /**
-     * Create CertificatePrintingService
+     * Create CertificatePrintingService.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return CertificatePrintingService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

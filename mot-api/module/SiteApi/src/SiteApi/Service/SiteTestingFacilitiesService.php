@@ -28,8 +28,8 @@ use DvsaCommon\Utility\ArrayUtils;
 
 class SiteTestingFacilitiesService
 {
-    const FACILITY_COUNT_OLD = "old";
-    const FACILITY_COUNT_NEW = "new";
+    const FACILITY_COUNT_OLD = 'old';
+    const FACILITY_COUNT_NEW = 'new';
 
     /**
      * @var SiteRepository
@@ -82,8 +82,7 @@ class SiteTestingFacilitiesService
         FacilityTypeRepository $facilityTypeRepository,
         MotIdentityInterface $identity,
         EntityManager $entityManager
-    )
-    {
+    ) {
         $this->siteRepository = $siteRepository;
         $this->authService = $authService;
         $this->updateVtsAssertion = $updateVtsAssertion;
@@ -108,7 +107,7 @@ class SiteTestingFacilitiesService
     }
 
     /**
-     * The update method checks the following permissions using the updateVtsAssertion:
+     * The update method checks the following permissions using the updateVtsAssertion:.
      *
      * PermissionAtSite::VTS_UPDATE_TESTING_FACILITIES_DETAILS,
      * PermissionAtSite::VTS_UPDATE_NAME,
@@ -118,7 +117,9 @@ class SiteTestingFacilitiesService
      *
      * @param $siteId
      * @param VehicleTestingStationDto $data
+     *
      * @return array|null
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \DvsaCommon\Exception\UnauthorisedException
      */
@@ -147,25 +148,27 @@ class SiteTestingFacilitiesService
         $this->raiseSiteEvents($site, $facilitiesCount);
 
         return [
-            'success' => true
+            'success' => true,
         ];
     }
 
     /**
      * @param FacilityDto[] $data
+     *
      * @return array|SiteFacility[]
      */
     private function transformDtosToEntities($data, Site $site)
     {
         $newFacilities = array_map(function (FacilityDto $facilityDto) use ($site) {
-                /** @var FacilityType $type */
+            /** @var FacilityType $type */
                 $type = $this->facilityTypeRepository->getByCode($facilityDto->getType()->getCode());
-                return (new SiteFacility())
+
+            return (new SiteFacility())
                     ->setFacilityType($type)
                     ->setVehicleTestingStation($site)
                     ->setName($type->getName())
                     ;
-            },
+        },
             $data
         );
 
@@ -181,7 +184,7 @@ class SiteTestingFacilitiesService
             $this->entityManager->remove($siteFacility);
         }
 
-        if(true === $doFlush){
+        if (true === $doFlush) {
             $this->entityManager->flush();
         }
     }
@@ -191,32 +194,32 @@ class SiteTestingFacilitiesService
      */
     private function saveFacilities($newFacilities, $doFlush = true)
     {
-        array_walk($newFacilities, function(SiteFacility $siteFacility){
-           $this->entityManager->persist($siteFacility);
+        array_walk($newFacilities, function (SiteFacility $siteFacility) {
+            $this->entityManager->persist($siteFacility);
         });
 
-        if(true === $doFlush){
+        if (true === $doFlush) {
             $this->entityManager->flush();
         }
     }
 
     /**
-     * @param Site $site
+     * @param Site  $site
      * @param array $facilitiesCount
      */
     private function raiseSiteEvents(Site $site, array $facilitiesCount)
     {
         /** @var array $oldValues */
-        $oldValues =     $facilitiesCount[self::FACILITY_COUNT_OLD];
+        $oldValues = $facilitiesCount[self::FACILITY_COUNT_OLD];
         /** @var array $newValues */
         $newValues = $facilitiesCount[self::FACILITY_COUNT_NEW];
 
-        foreach($newValues as $typeCode => $value){
+        foreach ($newValues as $typeCode => $value) {
             $fieldName = $typeCode;
             $oldValue = ArrayUtils::tryGet($oldValues, $typeCode, 0);
             $newValue = ArrayUtils::tryGet($newValues, $typeCode, 0);
 
-            if($newValue === $oldValue) {
+            if ($newValue === $oldValue) {
                 continue;
             }
 
@@ -239,9 +242,9 @@ class SiteTestingFacilitiesService
     }
 
     /**
-     * Create site event
+     * Create site event.
      *
-     * @param Site $site
+     * @param Site   $site
      * @param string $eventType
      * @param string $eventDesc
      *
@@ -263,10 +266,11 @@ class SiteTestingFacilitiesService
     }
 
     /**
-     * Counts facilities grouped by facility type
+     * Counts facilities grouped by facility type.
      *
      * @param SiteFacility[] $originalFacilities
-     * @param FacilityDto[] $newFacilities
+     * @param FacilityDto[]  $newFacilities
+     *
      * @return array
      */
     private function facilitiesCount($originalFacilities, $newFacilities, $mergeAtlAndOptl = true)
@@ -276,7 +280,7 @@ class SiteTestingFacilitiesService
             self::FACILITY_COUNT_NEW => $this->countNewFacilities($newFacilities),
         ];
 
-        if(true === $mergeAtlAndOptl){
+        if (true === $mergeAtlAndOptl) {
             $result = $this->mergeAtlAndOptlCounts($result);
         }
 
@@ -284,9 +288,10 @@ class SiteTestingFacilitiesService
     }
 
     /**
-     * Merges ATL and OPTL keys of array containing counts into one value under one key (OPTL)
+     * Merges ATL and OPTL keys of array containing counts into one value under one key (OPTL).
      *
      * @param array $facilitiesCount
+     *
      * @return array
      */
     private function mergeAtlAndOptlCounts(array $facilitiesCount)
@@ -322,6 +327,7 @@ class SiteTestingFacilitiesService
 
     /**
      * @param SiteFacility[] $originalFacilities
+     *
      * @return array
      */
     private function countOriginalFacilities($originalFacilities)
@@ -334,7 +340,7 @@ class SiteTestingFacilitiesService
                 if (!isset($result[$typeCode])) {
                     $result[$typeCode] = 0;
                 }
-                $result[$typeCode]++;
+                ++$result[$typeCode];
             }
         }
 
@@ -343,6 +349,7 @@ class SiteTestingFacilitiesService
 
     /**
      * @param FacilityDto[] $newFacilities
+     *
      * @return array
      */
     private function countNewFacilities($newFacilities)
@@ -354,7 +361,7 @@ class SiteTestingFacilitiesService
             if (!isset($result[$typeCode])) {
                 $result[$typeCode] = 0;
             }
-            $result[$typeCode]++;
+            ++$result[$typeCode];
         });
 
         return $result;
@@ -362,8 +369,8 @@ class SiteTestingFacilitiesService
 
     /**
      * @param SiteFacility[] $originalFacilities
-     * @param FacilityDto[] $newFacilities
-     * @param Site $site
+     * @param FacilityDto[]  $newFacilities
+     * @param Site           $site
      */
     private function updateFacilities($originalFacilities, $newFacilities, Site $site)
     {

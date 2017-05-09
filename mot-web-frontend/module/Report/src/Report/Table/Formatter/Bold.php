@@ -6,9 +6,7 @@ use Zend\View\Renderer\PhpRenderer;
 use Report\Table\ColumnOptions;
 
 /**
- * Class Bold
- *
- * @package Report\Table\Formatter
+ * Class Bold.
  */
 class Bold implements FormatterInterface
 {
@@ -21,6 +19,6 @@ class Bold implements FormatterInterface
      */
     public static function format(array $data, ColumnOptions $column, PhpRenderer $view)
     {
-        return '<b>' . $view->escapeHtml($data[$column->getField()]) . '</b>';
+        return '<b>'.$view->escapeHtml($data[$column->getField()]).'</b>';
     }
 }

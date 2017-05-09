@@ -19,7 +19,7 @@ class HelpdeskAccountAdminServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $authorisationService = $serviceLocator->get("AuthorisationService");
+        $authorisationService = $serviceLocator->get('AuthorisationService');
         /** @var MapperFactory $mapperFactory */
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 

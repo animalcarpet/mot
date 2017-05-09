@@ -10,12 +10,11 @@ class SecurityCardValidationFormTest extends \PHPUnit_Framework_TestCase
 {
     public static function dataProvider_invalidPin()
     {
-
         return [
-            ['','Enter a PIN number', 'onBlankPin'],
+            ['', 'Enter a PIN number', 'onBlankPin'],
             ['ABCDEDF', 'Enter a valid PIN number', 'onNonNumeric'],
             ['1234', 'Enter a 6 digit number', 'onInvalidLength'],
-            ['1234567', 'Enter a 6 digit number', 'onInvalidLength']
+            ['1234567', 'Enter a 6 digit number', 'onInvalidLength'],
         ];
     }
 
@@ -51,5 +50,4 @@ class SecurityCardValidationFormTest extends \PHPUnit_Framework_TestCase
         $form->setData($data);
         $form->isValid();
     }
-
 }

@@ -5,12 +5,11 @@ use Report\Table\TableOptions;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * @var \Zend\Paginator\Paginator $paginator
- * @var TableOptions $tableOptions
- * @var  SearchParamsDto $searchParams
- * @var PhpRenderer $this
+ * @var \Zend\Paginator\Paginator
+ * @var TableOptions              $tableOptions
+ * @var SearchParamsDto           $searchParams
+ * @var PhpRenderer               $this
  */
-
 $searchParams = $this->searchParams;
 ?>
 
@@ -21,12 +20,12 @@ echo $this->paginationControl(
     'Sliding',
     'table/gds-paginator',
     [
-        'route'        => null,
+        'route' => null,
         'searchParams' => $searchParams,
         'tableOptions' => $tableOptions,
         'routeOptions' => [
             'query' => $searchParams->toQueryParams()->toArray(),
-        ]
+        ],
     ]
 );
 ?>

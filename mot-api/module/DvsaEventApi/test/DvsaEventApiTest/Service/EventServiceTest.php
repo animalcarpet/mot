@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEventApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -21,9 +22,7 @@ use Zend\Log\Logger;
 use DvsaEntities\Repository\EventTypeOutcomeCategoryMapRepository;
 
 /**
- * Class EventServiceTest
- *
- * @package DvsaEventApiTest\Service
+ * Class EventServiceTest.
  */
 class EventServiceTest extends AbstractServiceTestCase
 {
@@ -52,8 +51,8 @@ class EventServiceTest extends AbstractServiceTestCase
     {
         $this->authServiceMock = XMock::of(AuthorisationServiceInterface::class);
         $this->entityManagerMock = XMock::of(EntityManager::class);
-        $this->eventRepositoryMock =  XMock::of(EventRepository::class);
-        $this->eventTypeRepositoryMock =  XMock::of(EntityRepository::class);
+        $this->eventRepositoryMock = XMock::of(EventRepository::class);
+        $this->eventTypeRepositoryMock = XMock::of(EntityRepository::class);
         $this->eventCategoryRepositoryMock = XMock::of(EntityRepository::class);
         $this->eventOutcomeRepositoryMock = XMock::of(EntityRepository::class);
         $this->eventTypeOutcomeCategoryMapRepositoryMock = XMock::of(EventTypeOutcomeCategoryMapRepository::class);
@@ -162,7 +161,7 @@ class EventServiceTest extends AbstractServiceTestCase
      */
     public function testFailsWhenNonIntegerEventTypeGiven2()
     {
-        $this->eventService->addEvent("Hello", '', new \DateTime());
+        $this->eventService->addEvent('Hello', '', new \DateTime());
     }
 
     /**

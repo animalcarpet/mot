@@ -5,12 +5,12 @@ namespace Dashboard\ViewModel;
 class LinkViewModel
 {
     /**
-     * @var string $text
+     * @var string
      */
     private $text;
 
     /**
-     * @var string $href
+     * @var string
      */
     private $href;
 

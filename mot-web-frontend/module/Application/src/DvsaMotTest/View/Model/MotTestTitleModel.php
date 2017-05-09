@@ -8,19 +8,19 @@ use DvsaCommon\Enum\MotTestTypeCode;
 
 class MotTestTitleModel
 {
-
     const MOT_TESTING_TITLE = 'MOT testing';
     const MOT_TRAINING_TEST_TITLE = 'Training test';
     const DUPLICATE_CERTIFICATE_TITLE = 'Duplicate or replacement certificate';
 
     /**
      * @param null|MotTest $motTest
-     * @param bool $isDuplicateCertificate
+     * @param bool         $isDuplicateCertificate
+     *
      * @return string
      */
     public function getTitle($motTest,  $isDuplicateCertificate = false)
     {
-        if($isDuplicateCertificate) {
+        if ($isDuplicateCertificate) {
             return self::DUPLICATE_CERTIFICATE_TITLE;
         }
 
@@ -35,5 +35,4 @@ class MotTestTitleModel
 
         return self::MOT_TESTING_TITLE;
     }
-
 }

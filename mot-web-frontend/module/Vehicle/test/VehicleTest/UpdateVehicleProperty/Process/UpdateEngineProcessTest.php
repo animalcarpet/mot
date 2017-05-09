@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\UpdateVehicleProperty\Process;
 
 use Application\Service\CatalogService;
@@ -28,23 +29,23 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
     const FUEL_TYPE = FuelTypeCode::DIESEL;
     const SESSION_FUEL_TYPE = FuelTypeCode::PETROL;
 
-    /** @var  DvsaVehicleBuilder */
+    /** @var DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
 
-    /** @var  CatalogService | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var CatalogService | \PHPUnit_Framework_MockObject_MockObject */
     protected $catalogService;
-    /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var Url | \PHPUnit_Framework_MockObject_MockObject */
     private $urlHelper;
-    /** @var  VehicleService | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleService | \PHPUnit_Framework_MockObject_MockObject */
     private $vehicleService;
-    /** @var  VehicleEditBreadcrumbsBuilder | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleEditBreadcrumbsBuilder | \PHPUnit_Framework_MockObject_MockObject */
     private $breadcrumbsBuilder;
-    /** @var  VehicleTertiaryTitleBuilder | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleTertiaryTitleBuilder | \PHPUnit_Framework_MockObject_MockObject */
     private $tertiaryTitleBuilder;
 
     /** @var UpdateEngineProcess */
     private $sut;
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     public function setUp()
@@ -77,7 +78,7 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         $this->sut->setContext($this->buildContext('change'));
 
         $this->vehicleService->expects($this->once())
-            ->method("updateDvsaVehicleAtVersion")
+            ->method('updateDvsaVehicleAtVersion')
             ->with(
                 self::VEHICLE_ID,
                 self::VEHICLE_VERSION,
@@ -102,7 +103,7 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
             ->with(StartTestChangeService::CHANGE_ENGINE)
             ->willReturn([
                 'fuelType' => 'PE',
-                'cylinderCapacity' => '1400'
+                'cylinderCapacity' => '1400',
             ]);
         $data = $this->sut->getPrePopulatedData();
         $this->assertSame(self::VEHICLE_CAPACITY, $data[UpdateEngineForm::FIELD_CAPACITY]);
@@ -123,7 +124,7 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
             ->with(StartTestChangeService::CHANGE_ENGINE)
             ->willReturn([
                 'fuelType' => 'PE',
-                'cylinderCapacity' => '1400'
+                'cylinderCapacity' => '1400',
             ]);
         $data = $this->sut->getPrePopulatedData();
         $this->assertSame(self::SESSION_VEHICLE_CAPACITY, $data[UpdateEngineForm::FIELD_CAPACITY]);
@@ -152,10 +153,9 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Continue', $viewModel->getSubmitButtonText());
     }
 
-
     private function buildContext($routeContext)
     {
-        return new UpdateVehicleContext($this->buildDvsaVehicle(), "abc", $routeContext);
+        return new UpdateVehicleContext($this->buildDvsaVehicle(), 'abc', $routeContext);
     }
 
     private function buildDvsaVehicle()

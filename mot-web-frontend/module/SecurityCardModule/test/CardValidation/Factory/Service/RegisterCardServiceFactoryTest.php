@@ -10,7 +10,6 @@ use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
 use Core\Service\MotFrontendIdentityProvider;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 
-
 class RegisterCardServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactoryCreatesInstance()
@@ -21,7 +20,7 @@ class RegisterCardServiceFactoryTest extends \PHPUnit_Framework_TestCase
             [
                 AuthorisationService::class,
                 'MotIdentityProvider' => MotFrontendIdentityProvider::class,
-                MotAuthorisationServiceInterface::class => LazyMotFrontendAuthorisationService::class
+                MotAuthorisationServiceInterface::class => LazyMotFrontendAuthorisationService::class,
             ]
         );
     }

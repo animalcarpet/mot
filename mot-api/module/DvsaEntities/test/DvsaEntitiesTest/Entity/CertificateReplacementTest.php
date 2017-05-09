@@ -1,11 +1,11 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
-use DvsaEntitiesTest\Entity\BaseEntityTestCase;
 use DvsaEntities\Entity\CertificateReplacement;
 
 /**
- * Class CertificateReplacementTest
+ * Class CertificateReplacementTest.
  */
 class CertificateReplacementTest extends BaseEntityTestCase
 {

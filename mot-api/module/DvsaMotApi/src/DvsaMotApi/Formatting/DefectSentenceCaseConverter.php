@@ -262,7 +262,7 @@ class DefectSentenceCaseConverter
                     if ($language->getCode() === LanguageTypeCode::ENGLISH || null === $language->getCode()) {
                         $categoryDetails['name'] = $description->getName();
                         $categoryDetails['description'] = $description->getDescription();
-                    } else if ($language->getCode() === LanguageTypeCode::WELSH) {
+                    } elseif ($language->getCode() === LanguageTypeCode::WELSH) {
                         $categoryDetails['nameCy'] = $description->getName();
                         $categoryDetails['descriptionCy'] = $description->getDescription();
                     }
@@ -303,7 +303,7 @@ class DefectSentenceCaseConverter
                     $defectDetails['name'] = $defectDescription->getName();
                     $defectDetails['advisoryText'] = $defectDescription->getAdvisoryText();
                     $defectDetails['inspectionManualDescription'] = $defectDescription->getInspectionManualDescription();
-                } else if ($defectLanguage->getCode() === LanguageTypeCode::WELSH) {
+                } elseif ($defectLanguage->getCode() === LanguageTypeCode::WELSH) {
                     $defectDetails['nameCy'] = $defectDescription->getName();
                     $defectDetails['advisoryTextCy'] = $defectDescription->getAdvisoryText();
                     $defectDetails['inspectionManualDescriptionCy'] = $defectDescription->getInspectionManualDescription();

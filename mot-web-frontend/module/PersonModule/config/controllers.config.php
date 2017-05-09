@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeAddressController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeNameController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeTelephoneController;
@@ -40,8 +39,8 @@ return [
     'factories' => [
         UserProfileControllerFactory::class => UserProfileController::class,
         UserSearchController::class => UserSearchControllerFactory::class,
-        PersonProfileController::class    => PersonProfileControllerFactory::class,
-        UserTradeRolesController::class   => UserTradeRolesControllerFactory::class,
+        PersonProfileController::class => PersonProfileControllerFactory::class,
+        UserTradeRolesController::class => UserTradeRolesControllerFactory::class,
         ChangeQualificationStatusController::class => ChangeQualificationStatusControllerFactory::class,
         ChangeAddressController::class => ChangeAddressControllerFactory::class,
         ChangeQualificationStatusController::class => ChangeQualificationStatusControllerFactory::class,

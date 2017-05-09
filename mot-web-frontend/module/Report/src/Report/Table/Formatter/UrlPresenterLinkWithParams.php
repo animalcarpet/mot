@@ -8,15 +8,17 @@ use Report\Table\ColumnOptions;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class UrlPresenterLinkWithParams formatter for Table
+ * Class UrlPresenterLinkWithParams formatter for Table.
  */
 class UrlPresenterLinkWithParams implements FormatterInterface
 {
     /**
-     * @param array $data
+     * @param array         $data
      * @param ColumnOptions $column
-     * @param PhpRenderer $view
+     * @param PhpRenderer   $view
+     *
      * @return string|\Zend\View\Helper\Partial
+     *
      * @throws InvalidArgumentException
      */
     public static function format(array $data, ColumnOptions $column, PhpRenderer $view)
@@ -34,7 +36,7 @@ class UrlPresenterLinkWithParams implements FormatterInterface
             $links[] = static::getLink($view, $urlPresenterData);
         }
 
-        return join(" ", $links);
+        return implode(' ', $links);
     }
 
     private static function getLink(PhpRenderer $view, UrlPresenterData $field)
@@ -45,7 +47,7 @@ class UrlPresenterLinkWithParams implements FormatterInterface
                 'params' => $field->getParams(),
                 'queryParams' => $field->getQueryParams(),
                 'value' => $field->getValue(),
-                'id' => $field->getId()
+                'id' => $field->getId(),
             ]
         );
     }

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SitePositionHistory
+ * SitePositionHistory.
  *
  * @ORM\Table(name="site_position_history", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SitePositionHistoryRepository")
@@ -46,7 +46,7 @@ class SitePositionHistory extends Entity
     private $site;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="status_id", type="integer", nullable=false)
      */
@@ -60,10 +60,10 @@ class SitePositionHistory extends Entity
     private $actionedOn;
 
     /**
-     * Constructs history item based on existing position
+     * Constructs history item based on existing position.
      *
-     * @param SiteBusinessRoleMap         $sitePosition
-     * @param                      $status
+     * @param SiteBusinessRoleMap $sitePosition
+     * @param                     $status
      *
      * @return SitePositionHistory
      */
@@ -73,7 +73,7 @@ class SitePositionHistory extends Entity
         $historyItem->person = $sitePosition->getPerson();
         $historyItem->role = $sitePosition->getSiteBusinessRole();
         $historyItem->site = $sitePosition->getSite();
-        $historyItem->status = $status ? : $sitePosition->getBusinessRoleStatus()->getId();
+        $historyItem->status = $status ?: $sitePosition->getBusinessRoleStatus()->getId();
         $historyItem->actionedOn = new \DateTime();
 
         return $historyItem;
@@ -102,6 +102,7 @@ class SitePositionHistory extends Entity
     public function setActionedOn($confirmedOn)
     {
         $this->actionedOn = $confirmedOn;
+
         return $this;
     }
 

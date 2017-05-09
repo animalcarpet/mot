@@ -2,57 +2,19 @@
 
 namespace VehicleApiTest\Service;
 
-use DataCatalogApi\Service\VehicleCatalogService;
-use Doctrine\ORM\EntityManager;
-use DvsaAuthentication\Model\Identity;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Database\Transaction;
-use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaCommon\Dto\Vehicle\AbstractVehicleDto;
-use DvsaCommon\Dto\Vehicle\DvlaVehicleDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
-use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
-use DvsaCommon\Enum\WeightSourceCode;
-use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommon\Enum\VehicleClassId;
-use DvsaCommon\Obfuscate\ParamObfuscator;
-use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
-use DvsaCommonTest\TestUtils\ArgCapture;
-use DvsaCommonTest\TestUtils\MultiCallStubBuilder;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Entity\DvlaVehicle;
-use DvsaEntities\Entity\DvlaMakeModelMap;
 use DvsaEntities\Entity\IncognitoVehicle;
-use DvsaEntities\Entity\Make;
-use DvsaEntities\Entity\Model;
-use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\Person;
-use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
-use DvsaEntities\Entity\VehicleV5C;
-use DvsaEntities\Repository\DvlaVehicleImportChangesRepository;
-use DvsaEntities\Repository\DvlaVehicleRepository;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaEntities\Repository\VehicleRepository;
-use DvsaEntities\Repository\VehicleV5CRepository;
-use Doctrine\ORM\EntityRepository;
-use DvsaMotApi\Service\MotTestService;
-use DvsaMotApi\Service\MotTestServiceProvider;
-use DvsaAuthentication\Service\OtpService;
-use DvsaMotApi\Service\Validator\VehicleValidator;
-use DvsaMotApiTest\Factory\VehicleObjectsFactory as VOF;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use VehicleApi\InputFilter\MysteryShopperInputFilter;
 use VehicleApi\Service\MysteryShopperVehicleService;
-use VehicleApi\Service\VehicleService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaEntities\Repository\IncognitoVehicleRepository;
-use DvsaCommonApi\Service\Exception\NotFoundException;
 
 class MysteryShopperVehicleServiceTest extends AbstractServiceTestCase
 {
@@ -79,22 +41,22 @@ class MysteryShopperVehicleServiceTest extends AbstractServiceTestCase
             ->method('getIdentity')
             ->willReturn(XMock::of(MotIdentityInterface::class));
 
-        /** @var SiteRepository $mockSiteRepository */
+        /* @var SiteRepository $mockSiteRepository */
         $this->mockSiteRepository = XMock::of(SiteRepository::class);
 
-        /** @var IncognitoVehicleRepository $mockIncognitoVehicleRepository */
+        /* @var IncognitoVehicleRepository $mockIncognitoVehicleRepository */
         $this->mockIncognitoVehicleRepository = XMock::of(IncognitoVehicleRepository::class);
 
-        /** @var MysteryShopperInputFilter $mockMysteryShopperInputFilter */
+        /* @var MysteryShopperInputFilter $mockMysteryShopperInputFilter */
         $this->mockMysteryShopperInputFilter = XMock::of(MysteryShopperInputFilter::class);
 
-        /** @var VehicleRepository $mockVehicleRepository */
+        /* @var VehicleRepository $mockVehicleRepository */
         $this->mockVehicleRepository = XMock::of(VehicleRepository::class);
 
-        /** @var PersonRepository $mockPersonRepository */
+        /* @var PersonRepository $mockPersonRepository */
         $this->mockPersonRepository = XMock::of(PersonRepository::class);
 
-        /** @var MysteryShopperVehicleService subject */
+        /* @var MysteryShopperVehicleService subject */
         $this->subject = new MysteryShopperVehicleService(
             $mockAuthService,
             $mockIdentityProvider,
@@ -120,7 +82,7 @@ class MysteryShopperVehicleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @expectedException DvsaCommonApi\Service\Exception\NotFoundException
+     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function testOptOutNotFound()
     {
@@ -172,7 +134,7 @@ class MysteryShopperVehicleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @expectedException DvsaCommonApi\Service\Exception\NotFoundException
+     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function testCurrentVehicleNotFound()
     {

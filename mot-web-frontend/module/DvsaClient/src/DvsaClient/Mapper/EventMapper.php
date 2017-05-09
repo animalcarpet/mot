@@ -7,37 +7,35 @@ use DvsaCommon\Dto\Event\EventListDto;
 use DvsaCommon\UrlBuilder\EventUrlBuilder;
 
 /**
- * Class EventMapper
- *
- * @package DvsaClient\Mapper
+ * Class EventMapper.
  */
 class EventMapper extends DtoMapper
 {
     /**
-     * @param int       $id
-     * @param string    $type
-     * @param string    $formDto
+     * @param int    $id
+     * @param string $type
+     * @param string $formDto
      *
      * @return EventListDto
      */
     public function getEventList($id, $type, $formDto)
     {
         $url = EventUrlBuilder::of()->eventList($id, $type)->toString();
+
         return $this->post($url, $formDto);
     }
 
     /**
-     * @param int       $id
+     * @param int $id
      *
      * @return EventDto
      */
     public function getEvent($id)
     {
         $url = EventUrlBuilder::of()->event($id)->toString();
+
         return $this->get($url);
     }
-
-
 
     protected function post($url, $params)
     {

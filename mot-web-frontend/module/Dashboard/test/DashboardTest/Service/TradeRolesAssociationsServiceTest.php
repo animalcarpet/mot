@@ -2,7 +2,6 @@
 
 namespace DashboardTest\Service;
 
-use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Application\Data\ApiPersonalDetails;
 use Application\Service\CatalogService;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
@@ -33,7 +32,7 @@ class TradeRolesAssociationsServiceTest extends \PHPUnit_Framework_TestCase
         $apiPersonalDetails = XMock::of(ApiPersonalDetails::class);
         $apiPersonalDetails
             ->expects($this->any())
-            ->method("getPersonalDetailsData")
+            ->method('getPersonalDetailsData')
             ->willReturn($personalDetailsData);
 
         $tradeRolesAssociationsService = new TradeRolesAssociationsService(
@@ -43,14 +42,14 @@ class TradeRolesAssociationsServiceTest extends \PHPUnit_Framework_TestCase
 
         $rolesAndAssociations = $tradeRolesAssociationsService->getRolesAndAssociations(self::PERSON_ID);
 
-        $organisations = $personalDetailsData["roles"]["organisations"];
-        $sites = $personalDetailsData["roles"]["sites"];
+        $organisations = $personalDetailsData['roles']['organisations'];
+        $sites = $personalDetailsData['roles']['sites'];
 
         $assertRoles = function ($expectedId, array $expectedRoles, array $rolesAndAssociations) {
             foreach ($expectedRoles as $role) {
                 $found = false;
                 foreach ($rolesAndAssociations as $raa) {
-                    if ($raa["id"] === $expectedId && $role === $raa["role"]) {
+                    if ($raa['id'] === $expectedId && $role === $raa['role']) {
                         $found = true;
                     }
                 }
@@ -61,24 +60,24 @@ class TradeRolesAssociationsServiceTest extends \PHPUnit_Framework_TestCase
 
         $organisationRoles = 0;
         foreach ($organisations as $id => $organisation) {
-            if (!array_key_exists("roles",$organisation)) {
+            if (!array_key_exists('roles', $organisation)) {
                 continue;
             }
 
-            $assertRoles($id, $organisation["roles"], $rolesAndAssociations);
+            $assertRoles($id, $organisation['roles'], $rolesAndAssociations);
 
-            $organisationRoles += count($organisation["roles"]);
+            $organisationRoles += count($organisation['roles']);
         }
 
         $siteRoles = 0;
         foreach ($sites as $id => $site) {
-            if (!array_key_exists("roles",$site)) {
+            if (!array_key_exists('roles', $site)) {
                 continue;
             }
 
-            $assertRoles($id, $site["roles"], $rolesAndAssociations);
+            $assertRoles($id, $site['roles'], $rolesAndAssociations);
 
-            $siteRoles += count($site["roles"]);
+            $siteRoles += count($site['roles']);
         }
 
         $roles = $organisationRoles + $siteRoles;
@@ -91,123 +90,119 @@ class TradeRolesAssociationsServiceTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    "roles" =>
-                        [
-                            "system" => [
-                                "roles" => [
-                                    RoleCode::USER
-                                ]
-                            ],
-                            "organisations" => [],
-                            "sites" => [
-                                1 => [
-                                    "name" => "Garage 1",
-                                    "number" => "V1",
-                                    "address" => "Elm Street",
-                                    "roles" => [
-                                        SiteBusinessRoleCode::TESTER
-                                    ]
-                                ]
-                            ]
-                        ]
-                ]
-            ],
-            [
-                [
-                    "roles" =>
-                        [
-                            "system" => [
-                                "roles" => [
-                                    RoleCode::USER
-                                ]
-                            ],
-                            "organisations" => [
-                                9 => [
-                                    "name" => "Organisation 1",
-                                    "number" => "AE1",
-                                    "address" => "New street",
-                                    "roles" => [
-                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER
-                                    ]
-                                ]
-                            ],
-                            "sites" => []
-                        ]
-                ]
-            ],
-            [
-                [
-                    "roles" =>
-                        [
-                            "system" => [
-                                "roles" => [
+                    'roles' => [
+                            'system' => [
+                                'roles' => [
                                     RoleCode::USER,
-                                    RoleCode::VEHICLE_EXAMINER
-                                ]
+                                ],
                             ],
-                            "organisations" => [
-                                9 => [
-                                    "name" => "Organisation 1",
-                                    "number" => "AE1",
-                                    "address" => "New street",
-                                    "roles" => [
-                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER
-                                    ]
-                                ]
-                            ],
-                            "sites" => [
+                            'organisations' => [],
+                            'sites' => [
                                 1 => [
-                                    "name" => "Garage 1",
-                                    "number" => "V1",
-                                    "address" => "Elm Street",
-                                    "roles" => [
-                                        SiteBusinessRoleCode::TESTER
-                                    ]
-                                ]
-                            ]
-                        ]
-                ]
+                                    'name' => 'Garage 1',
+                                    'number' => 'V1',
+                                    'address' => 'Elm Street',
+                                    'roles' => [
+                                        SiteBusinessRoleCode::TESTER,
+                                    ],
+                                ],
+                            ],
+                        ],
+                ],
             ],
             [
                 [
-                    "roles" =>
-                        [
-                            "system" => [
-                                "roles" => [
+                    'roles' => [
+                            'system' => [
+                                'roles' => [
                                     RoleCode::USER,
-                                ]
+                                ],
                             ],
-                            "organisations" => [],
-                            "sites" => []
-                        ]
-                ]
-            ]
+                            'organisations' => [
+                                9 => [
+                                    'name' => 'Organisation 1',
+                                    'number' => 'AE1',
+                                    'address' => 'New street',
+                                    'roles' => [
+                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
+                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+                                    ],
+                                ],
+                            ],
+                            'sites' => [],
+                        ],
+                ],
+            ],
+            [
+                [
+                    'roles' => [
+                            'system' => [
+                                'roles' => [
+                                    RoleCode::USER,
+                                    RoleCode::VEHICLE_EXAMINER,
+                                ],
+                            ],
+                            'organisations' => [
+                                9 => [
+                                    'name' => 'Organisation 1',
+                                    'number' => 'AE1',
+                                    'address' => 'New street',
+                                    'roles' => [
+                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
+                                        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+                                    ],
+                                ],
+                            ],
+                            'sites' => [
+                                1 => [
+                                    'name' => 'Garage 1',
+                                    'number' => 'V1',
+                                    'address' => 'Elm Street',
+                                    'roles' => [
+                                        SiteBusinessRoleCode::TESTER,
+                                    ],
+                                ],
+                            ],
+                        ],
+                ],
+            ],
+            [
+                [
+                    'roles' => [
+                            'system' => [
+                                'roles' => [
+                                    RoleCode::USER,
+                                ],
+                            ],
+                            'organisations' => [],
+                            'sites' => [],
+                        ],
+                ],
+            ],
         ];
     }
 
     private function getPersonalDetails()
     {
         return [
-            "id" => self::PERSON_ID,
-            "username" => "marty",
-            "firstName" => "Marty",
-            "middleName" => "",
-            "surname" => "McFly",
-            "dateOfBirth" => "1968-10-23",
-            "title" => "Mr",
-            "gender" => "male",
-            "addressLine1" => "",
-            "addressLine2" => "",
-            "addressLine3" => "",
-            "town" => "Hill Valley",
-            "postcode" => "L1 1PQ",
-            "email" => "traderolesassociationstest@dvsa.test",
-            "phone" => "iphone 6",
-            "drivingLicenceNumber" => "1234567831234",
-            "drivingLicenceRegion" => "GB",
-            "positions" => []
+            'id' => self::PERSON_ID,
+            'username' => 'marty',
+            'firstName' => 'Marty',
+            'middleName' => '',
+            'surname' => 'McFly',
+            'dateOfBirth' => '1968-10-23',
+            'title' => 'Mr',
+            'gender' => 'male',
+            'addressLine1' => '',
+            'addressLine2' => '',
+            'addressLine3' => '',
+            'town' => 'Hill Valley',
+            'postcode' => 'L1 1PQ',
+            'email' => 'traderolesassociationstest@dvsa.test',
+            'phone' => 'iphone 6',
+            'drivingLicenceNumber' => '1234567831234',
+            'drivingLicenceRegion' => 'GB',
+            'positions' => [],
 
         ];
     }
@@ -217,7 +212,7 @@ class TradeRolesAssociationsServiceTest extends \PHPUnit_Framework_TestCase
         $catalogService = XMock::of(CatalogService::class);
         $catalogService
             ->expects($this->any())
-            ->method("getBusinessRoles")
+            ->method('getBusinessRoles')
             ->willReturn($this->getBusinessRoles());
 
         return $catalogService;
@@ -227,22 +222,22 @@ class TradeRolesAssociationsServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'role' => "organisation",
-                'id'   => 1,
+                'role' => 'organisation',
+                'id' => 1,
                 'code' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
-                'name' => "Authorised examiner designated manager"
+                'name' => 'Authorised examiner designated manager',
             ],
             [
-                'role' => "organisation",
-                'id'   => 12,
+                'role' => 'organisation',
+                'id' => 12,
                 'code' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                'name' => "Authorised examiner designated manager"
+                'name' => 'Authorised examiner designated manager',
             ],
             [
-                'role' => "site",
-                'id'   => 1,
+                'role' => 'site',
+                'id' => 1,
                 'code' => SiteBusinessRoleCode::TESTER,
-                'name' => "tester"
+                'name' => 'tester',
             ],
         ];
     }

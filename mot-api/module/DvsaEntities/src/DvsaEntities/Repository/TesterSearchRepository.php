@@ -3,13 +3,13 @@
 namespace DvsaEntities\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use DvsaEntities\Repository\SearchRepositoryTrait;
 use DvsaEntities\DqlBuilder\TesterSearchParamDqlBuilder;
 
 /**
- * TesterSearchRepository
+ * TesterSearchRepository.
  *
  * Custom Doctrine Repository for reusable DQL queries
+ *
  * @codeCoverageIgnore
  */
 class TesterSearchRepository extends EntityRepository

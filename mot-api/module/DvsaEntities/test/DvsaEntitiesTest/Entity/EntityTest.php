@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntityTest\Entity;
 
 use DvsaEntities\Entity\Entity;
@@ -6,7 +7,7 @@ use DvsaEntities\Entity\Person;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Test for base entity
+ * Test for base entity.
  */
 class EntityTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,7 @@ class EntityTest extends PHPUnit_Framework_TestCase
         $creatorIdStub = (new Person())->setId(999);
         $updaterIdStub = (new Person())->setId(632);
         $createDateStub = new \DateTime();
-        $updateDateStub = (new \DateTime())->add(new \DateInterval("P1D"));
+        $updateDateStub = (new \DateTime())->add(new \DateInterval('P1D'));
         $versionStub = 12345;
 
         $entity = $this->getEntityMock();

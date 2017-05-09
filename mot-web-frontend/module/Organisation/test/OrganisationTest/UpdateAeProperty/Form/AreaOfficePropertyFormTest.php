@@ -1,11 +1,11 @@
 <?php
 
 namespace OrganisationTest\UpdateAeProperty\Form;
+
 use DvsaClient\Mapper\OrganisationMapper;
 use DvsaCommonTest\TestUtils\XMock;
 use Organisation\UpdateAeProperty\Process\Form\AreaOfficePropertyForm;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-
 
 class AreaOfficePropertyFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,26 +53,26 @@ class AreaOfficePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => ""]],
-            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => " "]],
+            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => '']],
+            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => ' ']],
         ];
     }
 
     public function validData()
     {
         return [
-            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => "01"]],
-            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => "02"]],
-            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => "03"]],
+            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => '01']],
+            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => '02']],
+            [[AreaOfficePropertyForm::FIELD_AREA_OFFICE => '03']],
         ];
     }
 
     protected function fakedAreaOfficeList()
     {
         return [
-                1 => "01",
-                2 => "02",
-                3 => "03",
+                1 => '01',
+                2 => '02',
+                3 => '03',
         ];
     }
 }

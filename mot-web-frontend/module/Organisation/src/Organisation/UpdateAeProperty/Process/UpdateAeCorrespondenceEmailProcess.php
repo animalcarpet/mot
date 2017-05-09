@@ -12,9 +12,9 @@ class UpdateAeCorrespondenceEmailProcess extends UpdateAeRegisteredEmailProcess
 {
     protected $propertyName = UpdateAePropertyAction::AE_CORRESPONDENCE_EMAIL_PROPERTY;
     protected $permission = PermissionAtOrganisation::AE_UPDATE_CORRESPONDENCE_EMAIL;
-    protected $successfulEditMessage = "Correspondence email address has been successfully changed.";
-    protected $submitButtonText = "Change correspondence email address";
-    protected $formPageTitle = "Change correspondence email address";
+    protected $successfulEditMessage = 'Correspondence email address has been successfully changed.';
+    protected $submitButtonText = 'Change correspondence email address';
+    protected $formPageTitle = 'Change correspondence email address';
 
     public function createEmptyForm()
     {

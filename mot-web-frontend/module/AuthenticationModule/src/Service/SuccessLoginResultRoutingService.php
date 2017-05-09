@@ -26,16 +26,16 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
     /**  * @var AuthorisationService */
     private $authorisationServiceClient;
 
-    /** @var AuthenticationService  */
+    /** @var AuthenticationService */
     private $authenticationService;
 
     /** @var LazyMotFrontendAuthorisationService */
     private $authorisationService;
 
-    /** @var  GotoUrlService */
+    /** @var GotoUrlService */
     private $gotoUrlService;
 
-    /** @var  TwoFaFeatureToggle */
+    /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
     public function __construct(
@@ -54,7 +54,6 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
 
     public function route(WebLoginResult $loginResult, Request $request)
     {
-
         if ($this->userMaySeeA2FAPageAfterLogin()) {
             $token = $loginResult->getToken();
             $userId = $this->authenticationService->getIdentity()->getUserId();
@@ -63,6 +62,7 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
                 if ($this->userOrderedReplacementCard($token)) {
                     return new RedirectToRoute(LostOrForgottenCardController::START_ALREADY_ORDERED_ROUTE);
                 }
+
                 return new RedirectToRoute(RegisteredCardController::ROUTE);
             }
             if ($this->authorisationService->isTradeUser()) {
@@ -76,6 +76,7 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
                     ['userId' => $userId]
                 );
             }
+
             return new RedirectToRoute(NewUserOrderCardController::ORDER_CARD_NEW_USER_ROUTE, ['userId' => $userId]);
         }
 
@@ -89,9 +90,9 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
     }
 
     /**
-     * Determine if the user has ever ordered a card
+     * Determine if the user has ever ordered a card.
      *
-     * @return boolean
+     * @return bool
      */
     private function userHasAlreadyOrderedACard($token)
     {
@@ -100,11 +101,12 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
         /** @var Collection $orders */
         $orders = $this->authorisationServiceClient->getSecurityCardOrders($identity->getUsername(), null, null,
             $token);
+
         return $orders->getCount() > 0;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function userOrderedReplacementCard($token)
     {
@@ -112,7 +114,7 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
 
         try {
             $securityCard = $this->authorisationServiceClient->getSecurityCardForUser($identity->getUsername(), $token);
-        } catch (ResourceNotFoundException $exception){
+        } catch (ResourceNotFoundException $exception) {
             return false;
         }
 
@@ -124,8 +126,9 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
     /**
      * Determine if the user should see an activation
      * or order card screen after login
-     * (2FA toggle is on) AND (NOT DVSA User) AND has2FAPermission AND (NOT alreadyRegisteredFor2Fa)
-     * @return boolean
+     * (2FA toggle is on) AND (NOT DVSA User) AND has2FAPermission AND (NOT alreadyRegisteredFor2Fa).
+     *
+     * @return bool
      */
     private function userMaySeeA2FAPageAfterLogin()
     {
@@ -134,5 +137,4 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
         && ($this->authorisationService->isGranted(PermissionInSystem::AUTHENTICATE_WITH_2FA)
             || $this->authorisationService->isNewTester());
     }
-
 }

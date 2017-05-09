@@ -5,8 +5,7 @@ namespace OrganisationTest\ViewModel\Search;
 use Organisation\ViewModel\Search\AeSearchViewModel;
 
 /**
- * Class AeSearchViewModelTest
- * @package OrganisationTest\ViewModel\Search
+ * Class AeSearchViewModelTest.
  */
 class AeSearchViewModelTest extends \PHPUnit_Framework_TestCase
 {

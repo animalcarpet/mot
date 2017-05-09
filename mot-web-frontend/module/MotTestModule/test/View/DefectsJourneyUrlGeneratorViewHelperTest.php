@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\View;
 
-
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGeneratorViewHelper;

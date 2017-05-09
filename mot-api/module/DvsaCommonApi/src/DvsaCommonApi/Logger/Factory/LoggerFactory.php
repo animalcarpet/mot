@@ -9,13 +9,13 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Default LoggerFactory
+ * Default LoggerFactory.
  */
 class LoggerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $logger = new Logger;
+        $logger = new Logger();
 
         $config = $serviceLocator->get('config');
         if (array_key_exists('logPath', $config)) {

@@ -8,7 +8,6 @@
 namespace DvsaMotApiTest\Service\ReplacementCertificate;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -32,7 +31,7 @@ use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ReplacementCertificateDraftCreatorTest
+ * Class ReplacementCertificateDraftCreatorTest.
  */
 class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
 {
@@ -80,7 +79,7 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
                         $repo->expects($this->any())->method('get')->willReturn($expectedEntity);
 
                         return $repo;
-                    case Colour::class;
+                    case Colour::class:
                         $expectedEntity = new Colour();
                         $repo = XMock::of(ColourRepository::class);
                         $repo->expects($this->any())->method('getByCode')->willReturn($expectedEntity);
@@ -194,7 +193,7 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
     private function permissionsGranted($permissions)
     {
         $this->authService->expects($this->any())
-            ->method("isGranted")
+            ->method('isGranted')
             ->will(
                 $this->returnCallback(
                     function ($arg) use (&$permissions) {
@@ -216,7 +215,7 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn(MotTestStatusName::ACTIVE);
 
         return $status;
@@ -229,15 +228,15 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
             'amendedOn' => '2004-01-11',
             'registration' => self::REGISTRATION,
             'vin' => self::VIN,
-            'emptyVrmReason' => NULL,
-            'emptyVinReason' => NULL,
+            'emptyVrmReason' => null,
+            'emptyVinReason' => null,
             'make' => [
                 'id' => 5,
-                'name' => self::MAKE_NAME
+                'name' => self::MAKE_NAME,
             ],
             'model' => [
                 'id' => 6,
-                'name' => self::MODEL_NAME
+                'name' => self::MODEL_NAME,
             ],
             'colour' => [
                 'code' => 'L',

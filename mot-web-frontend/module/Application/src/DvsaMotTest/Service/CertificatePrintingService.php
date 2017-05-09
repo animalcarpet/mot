@@ -6,7 +6,6 @@ use DvsaCommon\HttpRestJson\Client as RestClient;
 
 class CertificatePrintingService
 {
-
     /**
      * @var RestClient
      */
@@ -29,4 +28,3 @@ class CertificatePrintingService
         return $result;
     }
 }
-

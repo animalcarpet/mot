@@ -27,11 +27,11 @@ class SpecialNoticesController extends AbstractAuthActionController
 {
     use ReportControllerTrait;
 
-    const FORM_ERROR_TARGET_ROLES       = 'You must select recipients from the target groups';
-    const ROUTE_PRINT_SPECIAL_NOTICE    = 'dvsa-mot-test/special-notices/print-special-notice';
+    const FORM_ERROR_TARGET_ROLES = 'You must select recipients from the target groups';
+    const ROUTE_PRINT_SPECIAL_NOTICE = 'dvsa-mot-test/special-notices/print-special-notice';
     const ROUTE_SPECIAL_NOTICES_PREVIEW = 'special-notices/preview';
-    const ROUTE_SPECIAL_NOTICES         = 'special-notices';
-    const ERROR_DATE_IN_PAST            = 'The %s cannot be in the past';
+    const ROUTE_SPECIAL_NOTICES = 'special-notices';
+    const ERROR_DATE_IN_PAST = 'The %s cannot be in the past';
 
     /**
      * @var \MaglMarkdown\Service\Markdown
@@ -71,11 +71,10 @@ class SpecialNoticesController extends AbstractAuthActionController
         Markdown $markdown,
         WebAcknowledgeSpecialNoticeAssertion $acknowledgeSpecialNoticeAssertion,
         ApiPersonalDetails $apiPersonalDetails
-    )
-    {
-        $this->markdown                          = $markdown;
+    ) {
+        $this->markdown = $markdown;
         $this->acknowledgeSpecialNoticeAssertion = $acknowledgeSpecialNoticeAssertion;
-        $this->apiPersonalDetails                = $apiPersonalDetails;
+        $this->apiPersonalDetails = $apiPersonalDetails;
     }
 
     /**
@@ -85,10 +84,10 @@ class SpecialNoticesController extends AbstractAuthActionController
     {
         $this->assertGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT);
 
-        $userId             = $this->getIdentity()->getUserId();
+        $userId = $this->getIdentity()->getUserId();
         $specialNoticesData = [
-            'overdue'        => null,
-            'unread'         => null,
+            'overdue' => null,
+            'unread' => null,
             'currentNotices' => null,
         ];
         $specialNotices = [];
@@ -114,7 +113,7 @@ class SpecialNoticesController extends AbstractAuthActionController
                 $specialNoticesData['overdue'][] = $specialNotice;
             } elseif (!$specialNotice['isAcknowledged'] && !$specialNotice['isExpired']) {
                 $specialNotice['daysLeftToView'] = $this->getExpiringInDays($specialNotice['content']['expiryDate']);
-                $specialNoticesData['unread'][]  = $specialNotice;
+                $specialNoticesData['unread'][] = $specialNotice;
             } else {
                 $specialNoticesData['currentNotices'][] = $specialNotice;
             }
@@ -129,19 +128,18 @@ class SpecialNoticesController extends AbstractAuthActionController
 
         return new ViewModel(
             [
-                'specialNotices'       => $specialNoticesData,
+                'specialNotices' => $specialNoticesData,
                 'daysLeftToViewUnread' => $daysLeftToViewUnread,
-                'config'               => $this->getConfig(),
-                'canAcknowledge'       => $this->acknowledgeSpecialNoticeAssertion->isGranted(),
-                'canRemove'            => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_REMOVE),
-                'canUpdate'            => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_UPDATE),
-                'isTester'             => $this->checkIfUserIsTester(),
+                'config' => $this->getConfig(),
+                'canAcknowledge' => $this->acknowledgeSpecialNoticeAssertion->isGranted(),
+                'canRemove' => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_REMOVE),
+                'canUpdate' => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_UPDATE),
+                'isTester' => $this->checkIfUserIsTester(),
             ]
         );
     }
 
     /**
-     *
      * @return \DvsaCommon\Traits\Response|\DvsaCommon\Traits\ViewModel
      */
     public function printSpecialNoticeAction()
@@ -153,7 +151,7 @@ class SpecialNoticesController extends AbstractAuthActionController
             ->routeParam('id', $id)
             ->toString();
 
-        $data                        = $this->getRestClient()->get($specialNoticeContentApiPath);
+        $data = $this->getRestClient()->get($specialNoticeContentApiPath);
         $data['data']['targetRoles'] = $this->getTargetRoles($data['data']['targetRoles']);
 
         /*
@@ -177,7 +175,7 @@ class SpecialNoticesController extends AbstractAuthActionController
         return $this->renderReport(
             [
                 'specialNotice' => $data['data'],
-                'config'        => $this->getConfig(),
+                'config' => $this->getConfig(),
             ],
             self::ROUTE_PRINT_SPECIAL_NOTICE,
             'Special Notice',
@@ -194,7 +192,7 @@ class SpecialNoticesController extends AbstractAuthActionController
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $userId          = $this->getIdentity()->getUserId();
+            $userId = $this->getIdentity()->getUserId();
             $specialNoticeId = (int) $this->params()->fromRoute('id', null);
 
             $specialNoticesAcknowledgeApiPath = (new UrlBuilder())
@@ -249,7 +247,7 @@ class SpecialNoticesController extends AbstractAuthActionController
                 ->queryParam('removed', $removed)
                 ->queryParam('listAll', $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_CREATE))
                 ->toString();
-            $result         = $this->getRestClient()->get($specialNoticesApiPath);
+            $result = $this->getRestClient()->get($specialNoticesApiPath);
             $specialNotices = $result['data'];
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
@@ -259,11 +257,11 @@ class SpecialNoticesController extends AbstractAuthActionController
 
         foreach ($specialNotices as $specialNotice) {
             $specialNotice['content'] = $specialNotice;
-            $targetRoles              = isset($specialNotice['content']['targetRoles']) ? $specialNotice['content']['targetRoles']
+            $targetRoles = isset($specialNotice['content']['targetRoles']) ? $specialNotice['content']['targetRoles']
                 : null;
             $specialNotice['content']['targetRoles'] = $this->getTargetRoles($targetRoles);
-            $specialNotice['isAcknowledged']         = true;
-            $specialNotice['isExpired']              = true;
+            $specialNotice['isAcknowledged'] = true;
+            $specialNotice['isExpired'] = true;
 
             $specialNoticesData[] = $specialNotice;
         }
@@ -271,11 +269,11 @@ class SpecialNoticesController extends AbstractAuthActionController
         $viewModel = new ViewModel(
             [
                 'specialNotices' => $specialNoticesData,
-                'removed'        => $removed,
-                'config'         => $this->getConfig(),
+                'removed' => $removed,
+                'config' => $this->getConfig(),
                 'canAcknowledge' => $this->acknowledgeSpecialNoticeAssertion->isGranted(),
-                'canRemove'      => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_REMOVE),
-                'canUpdate'      => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_UPDATE),
+                'canRemove' => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_REMOVE),
+                'canUpdate' => $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_UPDATE),
             ]
         );
         $viewModel->setTemplate('dvsa-mot-test/special-notices/display-all-special-notices');
@@ -345,8 +343,8 @@ class SpecialNoticesController extends AbstractAuthActionController
                 try {
                     //Get the data out of the form, so you use the form's validation.
                     $data = $form->getData(FormInterface::VALUES_AS_ARRAY);
-                    $data['internalPublishDate'] = DateUtils::changeFormat($data['internalPublishDate'], "Y-n-d", "Y-m-d");
-                    $data['externalPublishDate'] = DateUtils::changeFormat($data['externalPublishDate'], "Y-n-d", "Y-m-d");
+                    $data['internalPublishDate'] = DateUtils::changeFormat($data['internalPublishDate'], 'Y-n-d', 'Y-m-d');
+                    $data['externalPublishDate'] = DateUtils::changeFormat($data['externalPublishDate'], 'Y-n-d', 'Y-m-d');
 
                     if ($isEdit) {
                         $result = $this->getRestClient()->putJson($url, $data);
@@ -375,7 +373,7 @@ class SpecialNoticesController extends AbstractAuthActionController
         return (new ViewModel(
             [
                 'userDetails' => $this->getUserDisplayDetails(),
-                'form'        => $form,
+                'form' => $form,
             ]
         ))->setTemplate('dvsa-mot-test/special-notices/create-or-edit');
     }
@@ -388,13 +386,13 @@ class SpecialNoticesController extends AbstractAuthActionController
     public function previewSpecialNoticeAction()
     {
         $canCreate = $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_CREATE);
-        $canEdit   = $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_UPDATE);
+        $canEdit = $this->getAuthorizationService()->isGranted(PermissionInSystem::SPECIAL_NOTICE_UPDATE);
         if (!$canCreate && !$canEdit) {
-            throw new UnauthorisedException("Preview special notice assertion failed");
+            throw new UnauthorisedException('Preview special notice assertion failed');
         }
 
         $specialNoticeId = (int) $this->params()->fromRoute('id', null);
-        $specialNotice   = null;
+        $specialNotice = null;
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -422,7 +420,7 @@ class SpecialNoticesController extends AbstractAuthActionController
                 ->get($specialNoticesContentApiPath);
             $specialNotice = $result['data'];
 
-            $targetRoles                  = ArrayUtils::tryGet($specialNotice, 'targetRoles', 0);
+            $targetRoles = ArrayUtils::tryGet($specialNotice, 'targetRoles', 0);
             $specialNotice['targetRoles'] = $this->getTargetRoles($targetRoles);
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
@@ -430,7 +428,7 @@ class SpecialNoticesController extends AbstractAuthActionController
 
         return new ViewModel(
             [
-                'userDetails'   => $this->getUserDisplayDetails(),
+                'userDetails' => $this->getUserDisplayDetails(),
                 'specialNotice' => $specialNotice,
             ]
         );
@@ -469,23 +467,23 @@ class SpecialNoticesController extends AbstractAuthActionController
      */
     private function getTargetRoles($targetRoles = [])
     {
-        $roleMessage       = null;
+        $roleMessage = null;
         $targetTestClasses = array_intersect($this->testClasses, $targetRoles);
 
         if ($targetTestClasses) {
             foreach ($targetTestClasses as $targetClass) {
                 switch ($targetClass) {
-                    case "DVSA":
-                        $classNumber = "D";
+                    case 'DVSA':
+                        $classNumber = 'D';
                         break;
-                    case "VTS":
-                        $classNumber = "V";
+                    case 'VTS':
+                        $classNumber = 'V';
                         break;
                     default:
                         $classNumber = substr($targetClass, -1);
                 }
 
-                $roleMessage = $roleMessage . $classNumber . ' ';
+                $roleMessage = $roleMessage.$classNumber.' ';
             }
         } else {
             $roleMessage = 'None specified';
@@ -520,7 +518,7 @@ class SpecialNoticesController extends AbstractAuthActionController
     private function getExpiringInDays($specialNoticeExpiryDate)
     {
         $currDateWithoutTimeStr = DateUtils::today();
-        $expiryDate             = DateUtils::toDate($specialNoticeExpiryDate);
+        $expiryDate = DateUtils::toDate($specialNoticeExpiryDate);
 
         return DateUtils::getDaysDifference($currDateWithoutTimeStr, $expiryDate);
     }
@@ -530,7 +528,7 @@ class SpecialNoticesController extends AbstractAuthActionController
      */
     public function getAuthorizationService()
     {
-        return $this->serviceLocator->get("AuthorisationService");
+        return $this->serviceLocator->get('AuthorisationService');
     }
 
     /**
@@ -559,18 +557,19 @@ class SpecialNoticesController extends AbstractAuthActionController
     }
 
     /**
-     * A person is has at least one authorisation in any status is considered to be a "tester"
+     * A person is has at least one authorisation in any status is considered to be a "tester".
+     *
      * @return bool
      */
     protected function checkIfUserIsTester()
     {
         $authorisationClasses = $this->apiPersonalDetails->getPersonalAuthorisationForMotTesting($this->getIdentity()->getUserId());
-        if(!is_array($authorisationClasses)){
+        if (!is_array($authorisationClasses)) {
             return false;
         }
 
         foreach ($authorisationClasses as $class) {
-            if(!is_null($class)) {
+            if (!is_null($class)) {
                 return true;
             }
         }

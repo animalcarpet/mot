@@ -1,4 +1,5 @@
 <?php
+
 namespace Organisation\UpdateAeProperty\Process;
 
 use DvsaCommon\Auth\PermissionAtOrganisation;
@@ -12,10 +13,10 @@ class UpdateAeAreaOfficeProcess extends AbstractSingleStepAeProcess implements A
 {
     private $propertyName = UpdateAePropertyAction::AE_DVSA_AREA_OFFICE_STATUS_PROPERTY;
     private $permission = PermissionAtOrganisation::AE_UPDATE_DVSA_AREA_OFFICE;
-    private $submitButtonText = "Change area office";
-    private $successfulEditMessage = "Area office has been successfully changed.";
-    private $formPageTitle = "Change area office";
-    private $formPartial = "organisation/update-ae-property/partials/edit-areaoffice";
+    private $submitButtonText = 'Change area office';
+    private $successfulEditMessage = 'Area office has been successfully changed.';
+    private $formPageTitle = 'Change area office';
+    private $formPartial = 'organisation/update-ae-property/partials/edit-areaoffice';
 
     public function getPropertyName()
     {
@@ -40,6 +41,7 @@ class UpdateAeAreaOfficeProcess extends AbstractSingleStepAeProcess implements A
     public function getPrePopulatedData()
     {
         $aeData = $this->organisationMapper->getAuthorisedExaminer($this->context->getAeId());
+
         return [$this->propertyName => ltrim($aeData->getAuthorisedExaminerAuthorisation()->getAssignedAreaOffice()->getSiteNumber(), '0')];
     }
 

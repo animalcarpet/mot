@@ -11,11 +11,11 @@ class NotificationListViewModel
     private $activeTabTemplate = '<a href="%s" id="%s" class="c-tab-list__tab-link">%s</a>';
     private $inactiveTabTemplate = '<span class="c-tab-list__tab-link c-tab-list__tab-link--active">%s</span>';
 
-    /** @var  Notification[] */
+    /** @var Notification[] */
     private $notifications;
-    /** @var  int */
+    /** @var int */
     private $unreadCount = 0;
-    /** @var  bool */
+    /** @var bool */
     private $isArchiveView = false;
 
     private $urlPlugin;
@@ -35,11 +35,13 @@ class NotificationListViewModel
 
     /**
      * @param \Dashboard\Model\Notification[] $notifications
+     *
      * @return NotificationListViewModel
      */
     public function setNotifications($notifications)
     {
         $this->notifications = $notifications;
+
         return $this;
     }
 
@@ -53,16 +55,18 @@ class NotificationListViewModel
 
     /**
      * @param int $unreadCount
+     *
      * @return NotificationListViewModel
      */
     public function setUnreadCount($unreadCount)
     {
         $this->unreadCount = $unreadCount;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isArchiveView()
     {
@@ -70,12 +74,14 @@ class NotificationListViewModel
     }
 
     /**
-     * @param boolean $isArchiveView
+     * @param bool $isArchiveView
+     *
      * @return NotificationListViewModel
      */
     public function setIsArchiveView($isArchiveView)
     {
         $this->isArchiveView = $isArchiveView;
+
         return $this;
     }
 
@@ -95,7 +101,7 @@ class NotificationListViewModel
     {
         $inboxLink = $this->getUrlForRoute(NotificationController::ROUTE_NOTIFICATION_LIST);
         $inboxText = "Inbox ({$this->getUnreadCount()})";
-        $inboxTabId = "inbox-tab";
+        $inboxTabId = 'inbox-tab';
 
         return !$this->isArchiveView()
             ? sprintf($this->inactiveTabTemplate, $inboxText)
@@ -105,8 +111,8 @@ class NotificationListViewModel
     public function getArchiveTab()
     {
         $archiveLink = $this->getUrlForRoute(NotificationController::ROUTE_NOTIFICATION_ARCHIVE);
-        $archiveText = "Archive";
-        $archiveTabId = "archive-tab";
+        $archiveText = 'Archive';
+        $archiveTabId = 'archive-tab';
 
         return $this->isArchiveView()
             ? sprintf($this->inactiveTabTemplate, $archiveText)

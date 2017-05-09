@@ -4,7 +4,6 @@ namespace SiteTest\Authorisation;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaClient\Entity\Person;
-use DvsaClient\Entity\SitePosition;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
@@ -33,9 +32,8 @@ class VtsOverviewPagePermissionsTest extends PHPUnit_Framework_TestCase
     /** @var MotAuthorisationServiceInterface|MockObj */
     private $mockAuthSrv;
     private $mockIdentity;
-    /** @var  VehicleTestingStationDto */
+    /** @var VehicleTestingStationDto */
     private $mockVtsData;
-
 
     public function setUp()
     {
@@ -131,9 +129,9 @@ class VtsOverviewPagePermissionsTest extends PHPUnit_Framework_TestCase
     {
         return [
             [
-                'personId'  => null,
+                'personId' => null,
                 'isGranted' => true,
-                'expect'    => true,
+                'expect' => true,
             ],
             [1, false, false],
             [1, true, true],
@@ -161,8 +159,8 @@ class VtsOverviewPagePermissionsTest extends PHPUnit_Framework_TestCase
     {
         return [
             [
-                'roles'      => [1, 3],
-                'expect12'   => true,
+                'roles' => [1, 3],
+                'expect12' => true,
                 'expect3to7' => true,
             ],
             [[4, 5], false, true],
@@ -170,7 +168,6 @@ class VtsOverviewPagePermissionsTest extends PHPUnit_Framework_TestCase
             [[], false, false],
         ];
     }
-
 
     public function testCanChangeDefaultBrakeTests()
     {

@@ -15,13 +15,13 @@ class UpdateVtsClassesReviewProcess extends AbstractTwoStepVtsProcess implements
 {
     private $propertyName = UpdateVtsPropertyAction::VTS_CLASSES_PROPERTY;
     private $permission = PermissionAtSite::VTS_UPDATE_CLASSES;
-    private $submitButtonText = "Review classes";
-    private $successfulEditMessage = "Classes have been successfully changed.";
-    private $formPageTitle = "Change classes";
-    private $formPartial = "site/update-vts-property/partials/edit-classes";
-    private $reviewPageTitle = "Review classes";
-    private $reviewPageLede = "Please check the classes below are correct.";
-    private $reviewPageButtonText = "Change classes";
+    private $submitButtonText = 'Review classes';
+    private $successfulEditMessage = 'Classes have been successfully changed.';
+    private $formPageTitle = 'Change classes';
+    private $formPartial = 'site/update-vts-property/partials/edit-classes';
+    private $reviewPageTitle = 'Review classes';
+    private $reviewPageLede = 'Please check the classes below are correct.';
+    private $reviewPageButtonText = 'Change classes';
 
     public function getPropertyName()
     {
@@ -46,6 +46,7 @@ class UpdateVtsClassesReviewProcess extends AbstractTwoStepVtsProcess implements
     public function getPrePopulatedData()
     {
         $vtsData = $this->siteMapper->getById($this->context->getVtsId());
+
         return [$this->propertyName => $vtsData->getTestClasses()];
     }
 
@@ -57,7 +58,7 @@ class UpdateVtsClassesReviewProcess extends AbstractTwoStepVtsProcess implements
     public function update($formData)
     {
         $patchData = ArrayUtils::map($formData[$this->propertyName], function ($classAsString) {
-            return (int)$classAsString;
+            return (int) $classAsString;
         });
 
         $this->siteMapper->updateVtsProperty($this->context->getVtsId(), VehicleTestingStation::PATCH_PROPERTY_CLASSES, $patchData);
@@ -78,10 +79,11 @@ class UpdateVtsClassesReviewProcess extends AbstractTwoStepVtsProcess implements
         $table = new GdsTable();
 
         $classesData = $formData[$this->propertyName];
-        $classesAsText = $classesData ? join(', ', $classesData) : 'None';
+        $classesAsText = $classesData ? implode(', ', $classesData) : 'None';
 
-        $table->newRow()->setLabel("Vehicle Testing Station")->setValue($this->siteMapper->getById($this->context->getVtsId())->getName());
-        $table->newRow($this->propertyName)->setLabel("Classes")->setValue($classesAsText);
+        $table->newRow()->setLabel('Vehicle Testing Station')->setValue($this->siteMapper->getById($this->context->getVtsId())->getName());
+        $table->newRow($this->propertyName)->setLabel('Classes')->setValue($classesAsText);
+
         return $table;
     }
 

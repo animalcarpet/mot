@@ -33,7 +33,7 @@ class HelpdeskAccountAdminServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $restClientMock = XMock::of(Client::class);
         $serviceManager->setService(Client::class, $restClientMock);
         $authorisationService = XMock::of(MotFrontendAuthorisationServiceInterface::class);
-        $serviceManager->setService("AuthorisationService", $authorisationService);
+        $serviceManager->setService('AuthorisationService', $authorisationService);
 
         // when
         $result = $sut->createService($serviceManager);

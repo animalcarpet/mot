@@ -3,12 +3,13 @@
 namespace Core\Presenter;
 
 /**
- * Class MastheadPresenter
+ * Class MastheadPresenter.
  */
 class MastheadPresenter
 {
     /**
-     * URL for Feedback
+     * URL for Feedback.
+     *
      * @var string
      */
     const FEEDBACK_URL = 'http://www.smartsurvey.co.uk/s/MTSFeedback/';

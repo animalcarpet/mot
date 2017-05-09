@@ -1,4 +1,5 @@
 <?php
+
 namespace Organisation\UpdateAeProperty\Process;
 
 use DvsaCommon\Auth\PermissionAtOrganisation;
@@ -12,10 +13,10 @@ class UpdateAeNameProcess extends AbstractSingleStepAeProcess implements AutoWir
 {
     private $propertyName = UpdateAePropertyAction::AE_NAME_PROPERTY;
     private $permission = PermissionAtOrganisation::AE_UPDATE_NAME;
-    private $submitButtonText = "Change business name";
-    private $successfulEditMessage = "Business name has been successfully changed.";
-    private $formPageTitle = "Change business name";
-    private $formPartial = "organisation/update-ae-property/partials/edit-name";
+    private $submitButtonText = 'Change business name';
+    private $successfulEditMessage = 'Business name has been successfully changed.';
+    private $formPageTitle = 'Change business name';
+    private $formPartial = 'organisation/update-ae-property/partials/edit-name';
 
     public function getPropertyName()
     {
@@ -40,6 +41,7 @@ class UpdateAeNameProcess extends AbstractSingleStepAeProcess implements AutoWir
     public function getPrePopulatedData()
     {
         $aeData = $this->organisationMapper->getAuthorisedExaminer($this->context->getAeId());
+
         return [$this->propertyName => $aeData->getName()];
     }
 

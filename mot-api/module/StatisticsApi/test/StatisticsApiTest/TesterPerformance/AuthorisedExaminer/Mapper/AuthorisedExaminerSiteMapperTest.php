@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\AuthorisedExaminer\Mapper;
-
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Mapper\AuthorisedExaminerSiteMapper;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
@@ -15,22 +13,21 @@ use DvsaEntities\Entity\SiteContactType;
 
 class AuthorisedExaminerSiteMapperTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testDtoMapping()
     {
         $siteEntity = $this->getSiteEntity();
 
-        $mapper = new AuthorisedExaminerSiteMapper;
+        $mapper = new AuthorisedExaminerSiteMapper();
         $siteDto = $mapper->toDto($siteEntity);
         $this->assertDtoFieldsEqualsEntityFields($siteEntity, $siteDto);
     }
 
     private function getSiteEntity()
     {
-        $siteEntity = new Site;
-        $contactDetail = new ContactDetail;
-        $address = new Address;
-        $siteContactType = new SiteContactType;
+        $siteEntity = new Site();
+        $contactDetail = new ContactDetail();
+        $address = new Address();
+        $siteContactType = new SiteContactType();
         $contactDetail->setAddress($address
             ->setAddressLine1('address1')
             ->setAddressLine2('address2')
@@ -43,7 +40,7 @@ class AuthorisedExaminerSiteMapperTest extends \PHPUnit_Framework_TestCase
         $siteEntity->setName('siteName')
             ->setId(1)
             ->setSiteNumber('siteNumber')
-            ->setLastSiteAssessment((new EnforcementSiteAssessment)->setSiteAssessmentScore(100.03))
+            ->setLastSiteAssessment((new EnforcementSiteAssessment())->setSiteAssessmentScore(100.03))
             ->setContact(
                 $contactDetail, $siteContactType->setCode(SiteContactTypeCode::BUSINESS)
             );

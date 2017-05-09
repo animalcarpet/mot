@@ -8,7 +8,7 @@ use DvsaCommon\Dto\Contact\AddressDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 
 /**
- * Class AeRemovePrincipalViewModel
+ * Class AeRemovePrincipalViewModel.
  */
 class AeRemovePrincipalViewModel extends AeFormViewModel
 {
@@ -18,7 +18,7 @@ class AeRemovePrincipalViewModel extends AeFormViewModel
     private $dateOfBirth;
 
     /**
-     * @return String
+     * @return string
      */
     public function getDateOfBirth()
     {
@@ -31,6 +31,7 @@ class AeRemovePrincipalViewModel extends AeFormViewModel
     public function setDateOfBirth($dateOfBirth)
     {
         $this->dateOfBirth = $dateOfBirth;
+
         return $this;
     }
 
@@ -48,6 +49,7 @@ class AeRemovePrincipalViewModel extends AeFormViewModel
     public function setAddress($address)
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -65,6 +67,7 @@ class AeRemovePrincipalViewModel extends AeFormViewModel
     public function setPrincipalName($principalName)
     {
         $this->principalName = $principalName;
+
         return $this;
     }
 
@@ -82,9 +85,9 @@ class AeRemovePrincipalViewModel extends AeFormViewModel
     public function setAuthorisedExaminer($authorisedExaminer)
     {
         $this->authorisedExaminer = $authorisedExaminer;
+
         return $this;
     }
-
 
     /**
      * @return GdsTable
@@ -98,6 +101,7 @@ class AeRemovePrincipalViewModel extends AeFormViewModel
         $table->newRow('AE-principal-name')->setLabel('Name')->setValue($this->getPrincipalName());
         $table->newRow('AE-date-of-birth')->setLabel('Date of birth')->setValue($this->getDateOfBirth());
         $table->newRow('AE-address')->setLabel('Address')->setValue($address, false);
+
         return $table;
     }
 }

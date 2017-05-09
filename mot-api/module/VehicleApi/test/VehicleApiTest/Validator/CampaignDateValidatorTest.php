@@ -15,7 +15,7 @@ use Zend\Validator\Date;
 /**
  * To test ONLY the expected exceptions on CampaignDateValidator
  * as its unit test is taking place in MysteryShopperInputFilterTest
- * Class CampaignDatesTest
+ * Class CampaignDatesTest.
  */
 class CampaignDateValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,7 +41,7 @@ class CampaignDateValidatorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(
             \InvalidArgumentException::class,
             sprintf(
-                CampaignDateValidator::ERR_MSG_NO_CONTEXT . CampaignDateValidator::ERR_MSG_MISSING_KEY_DESCRIPTION,
+                CampaignDateValidator::ERR_MSG_NO_CONTEXT.CampaignDateValidator::ERR_MSG_MISSING_KEY_DESCRIPTION,
                 CampaignDateValidator::KEY_BOOKED_DATE_RANGES
             )
         );
@@ -60,8 +60,8 @@ class CampaignDateValidatorTest extends \PHPUnit_Framework_TestCase
                 [
                     MysteryShopperInputFilter::FIELD_START_DATE => 'incorrect date',
                     MysteryShopperInputFilter::FIELD_END_DATE => 'incorrect date',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->subject->setOptions(

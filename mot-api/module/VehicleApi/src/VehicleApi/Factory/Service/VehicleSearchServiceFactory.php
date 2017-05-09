@@ -18,9 +18,7 @@ use DvsaCommon\Obfuscate\ParamObfuscator;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 
 /**
- * Create instance of service VehicleSearchService
- *
- * @package DvsaMotApi\Factory\Service
+ * Create instance of service VehicleSearchService.
  */
 class VehicleSearchServiceFactory implements FactoryInterface
 {

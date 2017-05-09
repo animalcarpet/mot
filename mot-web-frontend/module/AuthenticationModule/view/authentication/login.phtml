@@ -1,14 +1,14 @@
 <?php
 use Csrf\CsrfConstants;
 use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
+
 $this->headScript()->appendFile('/assets/javascripts/authentication.js');
 /**
- * @var LoginForm $form
- * @var boolean $authError
- * @var boolean $twoFaEnabled
+ * @var LoginForm
+ * @var bool      $authError
+ * @var bool      $twoFaEnabled
  */
-
-if($authError) {
+if ($authError) {
     $this->gtmDataLayer(['event' => 'user-login-failed', 'reason' => 'wrong-username-or-password']);
 }
 
@@ -17,7 +17,7 @@ $this->headTitle('Sign in');
 ?>
 <div class="grid-row">
     <div class="__sign-in">
-        <?php if(!$authError) : ?>
+        <?php if (!$authError) : ?>
             <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
         <?php else : ?>
             <div id="validationBox">
@@ -35,13 +35,13 @@ $this->headTitle('Sign in');
                     echo $this->partial(
                         'partial/gds/form/control',
                         [
-                            'element' => $form->getUsernameField()
+                            'element' => $form->getUsernameField(),
                         ]
                     );
                     echo $this->partial(
                         'partial/gds/form/control',
                         [
-                            'element' => $form->getPasswordField()
+                            'element' => $form->getPasswordField(),
                         ]
                     );
                 ?>
@@ -58,7 +58,7 @@ $this->headTitle('Sign in');
     </div>
     <div class="column-half">
         <h3 class="heading-medium">Sign in help</h3>
-        <?php if($twoFaEnabled): ?>
+        <?php if ($twoFaEnabled): ?>
             <details role="group">
                 <summary role="button" aria-controls="details-content-3" aria-expanded="false" tabindex="0">
                     <span class="summary">Lost, forgotten or damaged security card</span>

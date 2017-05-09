@@ -1,4 +1,5 @@
 <?php
+
 namespace NotificationApi\Controller;
 
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -8,9 +9,7 @@ use NotificationApi\Mapper\NotificationMapper;
 use NotificationApi\Service\NotificationService;
 
 /**
- * Class NotificationController
- *
- * @package NotificationApi\Controller
+ * Class NotificationController.
  */
 class NotificationController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
@@ -53,6 +52,7 @@ class NotificationController extends AbstractDvsaRestfulController implements Au
     public function archiveAction()
     {
         $id = $this->params()->fromRoute($this->identifierName);
-        return ApiResponse::jsonOk($this->notificationService->archive((int)$id));
+
+        return ApiResponse::jsonOk($this->notificationService->archive((int) $id));
     }
 }

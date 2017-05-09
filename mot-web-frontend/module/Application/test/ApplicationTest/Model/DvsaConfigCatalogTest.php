@@ -5,9 +5,7 @@ namespace ApplicationTest\Model;
 use Application\Model\DvsaConfigCatalog;
 
 /**
- * Class DvsaConfigCatalogTest
- *
- * @package ApplicationTest\Model
+ * Class DvsaConfigCatalogTest.
  */
 class DvsaConfigCatalogTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +29,7 @@ class DvsaConfigCatalogTest extends \PHPUnit_Framework_TestCase
     /** @expectedException \Exception */
     public function testCanEnsureRfrItemNotTestedIsNumeric1()
     {
-        $this->catalog->isItemNotTested("hello");
+        $this->catalog->isItemNotTested('hello');
     }
 
     public function testCanEnsureRfrItemNotTestedIsNumeric2()

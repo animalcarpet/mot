@@ -3,7 +3,6 @@
 namespace NotificationApi\Factory\Service\Helper;
 
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
-use DvsaFeature\FeatureToggles;
 use NotificationApi\Service\Helper\NotificationTradeTemplateHelper;
 use Zend\ServiceManager\FactoryInterface;
 use DvsaEntities\Repository\PersonRepository;

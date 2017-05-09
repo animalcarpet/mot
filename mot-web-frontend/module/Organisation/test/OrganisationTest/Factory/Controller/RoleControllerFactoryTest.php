@@ -8,7 +8,7 @@ use Organisation\Controller\RoleController;
 use Organisation\Factory\Controller\RoleControllerFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
-use \PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Class RoleControllerFactoryTest.

@@ -15,8 +15,8 @@ class PhonePropertyForm extends Form
     const FIELD_PHONE = UpdateVtsPropertyAction::VTS_PHONE_PROPERTY;
     const FIELD_PHONE_MAX_LENGTH = 24;
 
-    const PHONE_EMPTY_MSG = "you must enter a telephone number";
-    const PHONE_TOO_LONG_MSG = "must be %max% characters or less";
+    const PHONE_EMPTY_MSG = 'you must enter a telephone number';
+    const PHONE_TOO_LONG_MSG = 'must be %max% characters or less';
 
     private $phoneElement;
 
@@ -58,4 +58,3 @@ class PhonePropertyForm extends Form
         return $this->phoneElement;
     }
 }
-

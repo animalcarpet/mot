@@ -21,7 +21,6 @@ use DvsaFeature\FeatureToggles;
 use PHPUnit_Framework_TestCase;
 use stdClass;
 use UserAdmin\Service\PersonRoleManagementService;
-use Core\Authorisation;
 
 class SecurityCardGuardTest extends PHPUnit_Framework_TestCase
 {
@@ -56,7 +55,7 @@ class SecurityCardGuardTest extends PHPUnit_Framework_TestCase
     private $testerAuthorisation;
 
     /**
-     * @var MotFrontendAuthorisationServiceInterface $authorisationService
+     * @var MotFrontendAuthorisationServiceInterface
      */
     private $authorisationService;
 
@@ -398,14 +397,14 @@ class SecurityCardGuardTest extends PHPUnit_Framework_TestCase
     private function withSecurityCardOrder()
     {
         $securityCardOrderData = [
-            "submittedOn" => "2014-05-25",
-            "fullName" => "AUTH_INT_YOTURWDKSPFUMKBPMGMU AUTH_INT_YOTURWDKSPFUMKBPMGMU",
-            "recipientName" => "",
-            "addressLine1" => "9f1341",
-            "addressLine2" => "5 Uncanny St",
-            "addressLine3" => "fake address line 3",
-            "postcode" => "L1 1PQ",
-            "town" => "Liverpool"
+            'submittedOn' => '2014-05-25',
+            'fullName' => 'AUTH_INT_YOTURWDKSPFUMKBPMGMU AUTH_INT_YOTURWDKSPFUMKBPMGMU',
+            'recipientName' => '',
+            'addressLine1' => '9f1341',
+            'addressLine2' => '5 Uncanny St',
+            'addressLine3' => 'fake address line 3',
+            'postcode' => 'L1 1PQ',
+            'town' => 'Liverpool',
         ];
 
         $this->authorisationServiceClient

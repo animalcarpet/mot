@@ -2,11 +2,9 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\QueryBuilder;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryBuilder\ComponentBreakdownQueryBuilder;
-
 class ComponentBreakdownQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryBuilder\ComponentBreakdownQueryBuilder */
+    /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryBuilder\ComponentBreakdownQueryBuilder */
     private $sut;
 
     public function setUp()
@@ -16,6 +14,6 @@ class ComponentBreakdownQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlIsReturned()
     {
-        $this->assertStringMatchesFormat("SELECT%aFROM%aWHERE%a", $this->sut->getSql());
+        $this->assertStringMatchesFormat('SELECT%aFROM%aWHERE%a', $this->sut->getSql());
     }
 }

@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * WeightSource entity
+ * WeightSource entity.
  *
  * @ORM\Table(name="weight_source_lookup")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\WeightSourceRepository", readOnly=true)

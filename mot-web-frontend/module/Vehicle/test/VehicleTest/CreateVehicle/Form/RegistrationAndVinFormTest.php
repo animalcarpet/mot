@@ -130,8 +130,7 @@ class RegistrationAndVinFormTest extends \PHPUnit_Framework_TestCase
         $registrationCheckboxValue,
         $vinFieldValue,
         $vinCheckboxValue
-    )
-    {
+    ) {
         return [
             'reg-input' => $registrationFieldValue,
             'vin-input' => $vinFieldValue,
@@ -145,8 +144,7 @@ class RegistrationAndVinFormTest extends \PHPUnit_Framework_TestCase
         $registrationCheckboxValue = false,
         $vinFieldValue = null,
         $vinCheckboxValue = false
-    )
-    {
+    ) {
         return new RegistrationAndVinForm(
             $registrationFieldValue,
             $registrationCheckboxValue,

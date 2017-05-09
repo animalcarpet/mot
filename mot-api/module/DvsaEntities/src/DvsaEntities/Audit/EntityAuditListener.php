@@ -16,13 +16,13 @@ use Zend\ServiceManager\ServiceManager;
  * Handles auditing actions:
  * - sets createdOn/lastUpdatedOn
  * - sets createdBy/lastUpdatedBy
- * on entities that inherit from DvsaEntities\Entity\Entity abstract class
+ * on entities that inherit from DvsaEntities\Entity\Entity abstract class.
  *
  * One lightweight class to replace usage of Gedmo library which was too heavy for such a simple task
  */
 class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterface
 {
-    /** @var  ServiceLocatorInterface $sl */
+    /** @var ServiceLocatorInterface $sl */
     private $sl;
 
     /** @var Person $user */
@@ -70,9 +70,10 @@ class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterfa
 
     private static function currentTimestamp()
     {
-        $dt = new \DateTime;
-        $us = substr(explode(" ", microtime())[0], 1, 7);
-        return \DateTime::createFromFormat("Y-m-d H:i:s.u", $dt->format("Y-m-d H:i:s") . $us);
+        $dt = new \DateTime();
+        $us = substr(explode(' ', microtime())[0], 1, 7);
+
+        return \DateTime::createFromFormat('Y-m-d H:i:s.u', $dt->format('Y-m-d H:i:s').$us);
     }
 
     private function getUser(EntityManager $em)
@@ -88,11 +89,12 @@ class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterfa
             }
             $this->user = $em->getReference(Person::class, $userId);
         }
+
         return $this->user;
     }
 
     /**
-     * Set service locator
+     * Set service locator.
      *
      * @param ServiceLocatorInterface $serviceLocator
      */
@@ -102,7 +104,7 @@ class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterfa
     }
 
     /**
-     * Get service locator
+     * Get service locator.
      *
      * @return ServiceLocatorInterface
      */

@@ -10,13 +10,11 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 
 /**
- * Class EmergencyService
+ * Class EmergencyService.
  *
  * This provides a means to obtain the emergency reason codes and
  * for validating them. It also provides an entry point that allows
  * for the validation of a contingency code.
- *
- * @package DvsaMotApi\Service
  */
 class EmergencyService extends AbstractService
 {
@@ -32,11 +30,11 @@ class EmergencyService extends AbstractService
     private $repoEmergencyLog;
 
     /**
-     * Creates the Emergency service class
+     * Creates the Emergency service class.
      *
-     * @param AuthorisationServiceInterface     $authService
-     * @param EntityManager                     $entityManager
-     * @param DoctrineObject                    $objectHydrator
+     * @param AuthorisationServiceInterface $authService
+     * @param EntityManager                 $entityManager
+     * @param DoctrineObject                $objectHydrator
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
@@ -60,6 +58,7 @@ class EmergencyService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::EMERGENCY_TEST_READ);
         $codes = $this->repoReason->findAll();
+
         return $codes;
     }
 
@@ -69,6 +68,7 @@ class EmergencyService extends AbstractService
      * @param $reasonId
      *
      * @return null|object
+     *
      * @throws NotFoundException
      */
     public function getEmergencyCodeById($reasonId)
@@ -79,6 +79,7 @@ class EmergencyService extends AbstractService
         if (!$reason) {
             throw new NotFoundException('EmergencyReason', $reasonId);
         }
+
         return $reason;
     }
 
@@ -92,6 +93,7 @@ class EmergencyService extends AbstractService
     public function getEmergencyByCode($code)
     {
         $this->authService->assertGranted(PermissionInSystem::EMERGENCY_TEST_READ);
+
         return $this->repoReason->findOneBy(['code' => $code]);
     }
 
@@ -105,6 +107,7 @@ class EmergencyService extends AbstractService
     public function getEmergencyLog($number)
     {
         $this->authService->assertGranted(PermissionInSystem::EMERGENCY_TEST_READ);
+
         return $this->repoEmergencyLog->findOneBy(['number' => $number]);
     }
 }

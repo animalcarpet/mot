@@ -19,6 +19,7 @@ class MotTestControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return MotTestController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -35,9 +36,9 @@ class MotTestControllerFactory implements FactoryInterface
         $duplicateCertificateApiResource = $serviceLocator->get(MotTestDuplicateCertificateApiResource::class);
 
         return new MotTestController(
-            $authService, 
-            $eventManager, 
-            $odometerViewObject, 
+            $authService,
+            $eventManager,
+            $odometerViewObject,
             $duplicateCertificateApiResource
         );
     }

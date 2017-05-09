@@ -1,12 +1,10 @@
 <?php
 use Dashboard\Controller\UserHomeController;
-use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 
 /** @var \UserAdmin\Presenter\UserProfilePresenter $presenter */
 /** @var string $searchResultsUrl */
 /** @var string $passwordResetUrl */
 /** @var string $usernameRecoverUrl */
-
 $elementsSecondColumn = [
     ['id' => 'person-name', 'label' => 'Name', 'value' => $presenter->displayFullName()],
     ['id' => 'person-username', 'label' => 'Username', 'value' => $presenter->displayUserName()],
@@ -21,14 +19,13 @@ $elementsThirdColumn = [
 echo $this->partial(
     'partial/gds/general/system-message',
     [
-        'messages' =>
-            [
+        'messages' => [
                 [
                     'Password reset and username recovery are ',
-                    'only available by post.'
+                    'only available by post.',
                 ],
             ],
-        'heading'  => 'Authentication failed', 'type' => 'failure'
+        'heading' => 'Authentication failed', 'type' => 'failure',
     ]
 );
 ?>
@@ -44,9 +41,9 @@ echo $this->partial(
                 echo $this->partial(
                     'partial/gds/form/control-submit.phtml',
                     [
-                        'id'    => 'reset-password',
+                        'id' => 'reset-password',
                         'label' => 'Reset Password',
-                        'name'  => 'action',
+                        'name' => 'action',
                         'value' => 'Post',
                     ]
                 );
@@ -63,9 +60,9 @@ echo $this->partial(
                 <?php echo $this->partial(
                     'partial/gds/form/control-submit.phtml',
                     [
-                        'id'    => 'recover-username',
+                        'id' => 'recover-username',
                         'label' => 'Recover username',
-                        'name'  => 'action',
+                        'name' => 'action',
                         'value' => 'Post',
                     ]
                 );
@@ -83,16 +80,16 @@ echo $this->partial(
     echo $this->partial(
         'partial/gds/general/information-in-column',
         [
-            'nbCol'     => 'third',
-            'elements'  => $elementsSecondColumn,
+            'nbCol' => 'third',
+            'elements' => $elementsSecondColumn,
         ]
     );
 
     echo $this->partial(
         'partial/gds/general/information-in-column',
         [
-            'nbCol'     => 'third',
-            'elements'  => $elementsThirdColumn,
+            'nbCol' => 'third',
+            'elements' => $elementsThirdColumn,
         ]
     );
     ?>
@@ -102,10 +99,10 @@ echo $this->partial(
     <?php echo $this->partial(
         'partial/gds/form/control-navigation-secondary',
         [
-            'navigation'    => [
-                'Cancel and return to search results'   => $searchResultsUrl,
-                'Return to home'                        => $this->url(UserHomeController::ROUTE),
-            ]
+            'navigation' => [
+                'Cancel and return to search results' => $searchResultsUrl,
+                'Return to home' => $this->url(UserHomeController::ROUTE),
+            ],
         ]
     ); ?>
 </nav>

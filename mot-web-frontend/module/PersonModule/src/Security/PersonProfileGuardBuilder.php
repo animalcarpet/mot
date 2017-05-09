@@ -14,7 +14,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaFeature\FeatureToggles;
 
 /**
  * PersonProfileGuardBuilder creates PersonProfileGuard instances.
@@ -48,10 +47,10 @@ class PersonProfileGuardBuilder
 
     /**
      * @param MotFrontendAuthorisationServiceInterface $authorisationService
-     * @param MotIdentityProviderInterface $identityProvider
-     * @param TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
-     * @param TradeRolesAssociationsService $tradeRolesAndAssociationsService
-     * @param TwoFaFeatureToggle $twoFeatureToggle
+     * @param MotIdentityProviderInterface             $identityProvider
+     * @param TesterGroupAuthorisationMapper           $testerGroupAuthorisationMapper
+     * @param TradeRolesAssociationsService            $tradeRolesAndAssociationsService
+     * @param TwoFaFeatureToggle                       $twoFeatureToggle
      */
     public function __construct(MotFrontendAuthorisationServiceInterface $authorisationService,
                                 MotIdentityProviderInterface $identityProvider,
@@ -88,7 +87,7 @@ class PersonProfileGuardBuilder
 
     /**
      * @param PersonalDetails $targetPersonDetails
-     * @param string          $context             The context in which we are viewing the profile. Could be AE, VE or User Search.
+     * @param string          $context             The context in which we are viewing the profile. Could be AE, VE or User Search
      *
      * @return PersonProfileGuard
      */

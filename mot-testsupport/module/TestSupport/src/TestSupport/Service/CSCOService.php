@@ -5,11 +5,9 @@ namespace TestSupport\Service;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use DvsaCommon\Constants\Role;
 use Zend\View\Model\JsonModel;
-use TestSupport\Service\AccountDataService;
 
 class CSCOService
 {
-
     /**
      * @var AccountDataService
      */
@@ -21,9 +19,10 @@ class CSCOService
     }
 
     /**
-     * Create a CSCO with the data supplied
+     * Create a CSCO with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -32,6 +31,7 @@ class CSCOService
 
         $resultJson = $this->accountDataService->create($data, Role::CUSTOMER_SERVICE_CENTRE_OPERATIVE);
         $this->accountDataService->addRole($resultJson->data['personId'], Role::CUSTOMER_SERVICE_CENTRE_OPERATIVE);
+
         return $resultJson;
     }
 }

@@ -8,6 +8,7 @@ class CpmsNotificationRepository extends AbstractMutableRepository
 {
     /**
      * @param $notificationId
+     *
      * @return null|CpmsNotification
      */
     public function findByNotificationId($notificationId)

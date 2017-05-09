@@ -19,9 +19,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class PersonRoleServiceFactory implements FactoryInterface
 {
     /**
-     * Create an instance of Person Role service
+     * Create an instance of Person Role service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return PersonRoleService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -6,7 +6,7 @@ use Site\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use Site\ViewModel\MotTestLog\MotTestLogViewModel;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
 
-/**
+/*
  * @var MotTestLogViewModel                                        $viewModel
  * @var \DvsaCommon\Dto\Site\SiteDto                               $site
  * @var \DvsaCommon\Dto\Site\MotTestLogSummaryDto                  $logSummary
@@ -36,7 +36,7 @@ $numberFormatter = (new NumberFormatter('en_GB', NumberFormatter::DECIMAL));
 if ($dateLinks->findOneBy('active', true)) {
     $topLineLabel = $dateLinks->findOneBy('active', true)->getLabel();
 } else {
-    $topLineLabel = join(
+    $topLineLabel = implode(
         ' ', [
             'from', DateTimeDisplayFormat::date($dateFrom->getDate()),
             'to', DateTimeDisplayFormat::date($dateTo->getDate()),
@@ -90,14 +90,14 @@ if ($dateLinks->findOneBy('active', true)) {
         if ($rowsTotalCount > 0) {
             echo $this->partial(
                 'report/top-line', [
-                    'text'        => '<strong>%s</strong> tests performed <strong>%s</strong>',
+                    'text' => '<strong>%s</strong> tests performed <strong>%s</strong>',
                     'itemsNumber' => $rowsTotalCount,
-                    'range'       => $topLineLabel
+                    'range' => $topLineLabel,
                 ]
             );
         }
 
-        $errorMessages      = $this->layout()->flashMessenger->getErrorMessages();
+        $errorMessages = $this->layout()->flashMessenger->getErrorMessages();
         echo $this->partial(
             'partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']
         );
@@ -110,15 +110,15 @@ if ($dateLinks->findOneBy('active', true)) {
             if ($rowsTotalCount > MotTestLogController::MAX_TESTS_COUNT) :
                 echo $this->partial(
                     'partial/gds/general/system-message', [
-                        'heading'  => 'Too many records to download a CSV file.',
+                        'heading' => 'Too many records to download a CSV file.',
                         'messages' => [
                             sprintf(
-                                'The filter currently spans over %s tests. ' .
+                                'The filter currently spans over %s tests. '.
                                 'Please narrow the date range and try again.',
                                 $numberFormatter->format(MotTestLogController::MAX_TESTS_COUNT)
                             ),
                         ],
-                        'type'     => 'important'
+                        'type' => 'important',
                     ]
                 );
             else: ?>
@@ -156,11 +156,11 @@ if ($dateLinks->findOneBy('active', true)) {
                             echo $this->partial(
                                 'partials/form/date-group.phtml',
                                 [
-                                    'legend'       => 'From',
-                                    'fieldKey'     => MotTestLogFormViewModel::FLD_DATE_FROM,
-                                    'valueDay'     => $dateFrom->getDay(),
-                                    'valueMonth'   => $dateFrom->getMonth(),
-                                    'valueYear'    => $dateFrom->getYear(),
+                                    'legend' => 'From',
+                                    'fieldKey' => MotTestLogFormViewModel::FLD_DATE_FROM,
+                                    'valueDay' => $dateFrom->getDay(),
+                                    'valueMonth' => $dateFrom->getMonth(),
+                                    'valueYear' => $dateFrom->getYear(),
                                     'errorMessage' => $formModel->getError(MotTestLogFormViewModel::FLD_DATE_FROM),
                                 ]
                             );
@@ -174,11 +174,11 @@ if ($dateLinks->findOneBy('active', true)) {
                             echo $this->partial(
                                 'partials/form/date-group.phtml',
                                 [
-                                    'legend'       => 'To',
-                                    'fieldKey'     => MotTestLogFormViewModel::FLD_DATE_TO,
-                                    'valueDay'     => $dateTo->getDay(),
-                                    'valueMonth'   => $dateTo->getMonth(),
-                                    'valueYear'    => $dateTo->getYear(),
+                                    'legend' => 'To',
+                                    'fieldKey' => MotTestLogFormViewModel::FLD_DATE_TO,
+                                    'valueDay' => $dateTo->getDay(),
+                                    'valueMonth' => $dateTo->getMonth(),
+                                    'valueYear' => $dateTo->getYear(),
                                     'errorMessage' => $formModel->getError(MotTestLogFormViewModel::FLD_DATE_TO),
                                 ]
                             );
@@ -203,8 +203,8 @@ if ($dateLinks->findOneBy('active', true)) {
         'partial/gds/form/control-navigation-secondary',
         [
             'navigation' => [
-                'Return to Vehicle Testing Station' => VehicleTestingStationUrlBuilderWeb::byId($site->getId())
-            ]
+                'Return to Vehicle Testing Station' => VehicleTestingStationUrlBuilderWeb::byId($site->getId()),
+            ],
         ]
     ); ?>
 </nav>

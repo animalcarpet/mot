@@ -3,9 +3,8 @@
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * @var array $searchResults   List of Mot Tests data
+ * @var array List of Mot Tests data
  */
-
 $searchResults = $this->searchResults;
 
 $title = 'Vehicle Testing Station Search Results';
@@ -71,7 +70,7 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
                                 [
                                     'status' => $motTest['status'],
                                     'url' => $motTest['link'],
-                                    'motTestNumber' => $motTest['motTestNumber']
+                                    'motTestNumber' => $motTest['motTestNumber'],
                                 ]
                             );
                             ?>
@@ -79,10 +78,10 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
                         <?php
                         // See VM-7612/7614 for details.
                         $formDetails = [
-                            'registration'      => '', 'make' => '', 'model' => '',
-                            'displayType'       => '',
+                            'registration' => '', 'make' => '', 'model' => '',
+                            'displayType' => '',
                             'username' => '',
-                            'display_test_type' => ArrayUtils::tryGet($motTest, 'display_test_type', '')
+                            'display_test_type' => ArrayUtils::tryGet($motTest, 'display_test_type', ''),
                         ];
 
                         if (isset($motTest['vehicle'])) {
@@ -129,7 +128,7 @@ $this->headLink()->appendStylesheet('/css/jquery.dataTables.css');
      *
      */
     <?php
-          $ajaxUrl = "{}";
+          $ajaxUrl = '{}';
           if (!is_null($this->siteNumber) && strlen($this->siteNumber)) {
               $ajaxUrl = $this->url('enforcement-list-recent-mot-tests-api', ['siteNumber' => $this->siteNumber]);
           }

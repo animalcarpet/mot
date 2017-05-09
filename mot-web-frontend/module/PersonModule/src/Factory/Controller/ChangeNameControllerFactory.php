@@ -24,34 +24,33 @@ class ChangeNameControllerFactory implements FactoryInterface
         $serviceLocator = $controllerManager->getServiceLocator();
 
         /**
-         * @var PersonProfileGuardBuilder $personProfileGuard
+         * @var PersonProfileGuardBuilder
          */
         $personProfileGuardBuilder = $serviceLocator->get(PersonProfileGuardBuilder::class);
 
         /**
-         * @var HelpDeskAccountAdminService $helpDeskAccountAdminService
+         * @var HelpDeskAccountAdminService
          */
         $helpDeskAccountAdminService = $serviceLocator->get(HelpDeskAccountAdminService::class);
 
         /**
-         * @var PersonProfileUrlGenerator $personProfileUrlBuilder
+         * @var PersonProfileUrlGenerator
          */
         $personProfileUrlBuilder = $serviceLocator->get(PersonProfileUrlGenerator::class);
 
         /**
-         * @var ContextProvider $contextProvider
+         * @var ContextProvider
          */
         $contextProvider = $serviceLocator->get(ContextProvider::class);
 
         /**
-         * @var ApiPersonalDetails $personalDetailsService
+         * @var ApiPersonalDetails
          */
         $personalDetailsService = $serviceLocator->get(ApiPersonalDetails::class);
 
         /**
-         * @var MapperFactory $mapperFactory
+         * @var MapperFactory
          */
-
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 
         return new ChangeNameController(

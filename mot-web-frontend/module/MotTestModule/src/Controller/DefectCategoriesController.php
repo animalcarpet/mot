@@ -119,7 +119,6 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
             $isNonMotTest = MotTestType::isNonMotTypes($testType);
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
-
         }
 
         if (true === $this->isDefectsParent($defectCategories)) {
@@ -181,12 +180,12 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $isNonMotTest
     ) {
         $this->enableGdsLayout('Defects', '');
-         $this->setHeadTitle('Defects');
+        $this->setHeadTitle('Defects');
 
         $vehicleClassCode = $vehicle->getVehicleClass()->getCode();
 
         $defects = $this->addInspectionManualReferenceUrls($category->getComponentCategory()->getDefectsCollection(), $vehicleClassCode);
-        
+
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
 
         $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest);
@@ -257,7 +256,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
                 $categoryId
             )
         );
-        
+
         // Here we reverse the tree. We want the the columns stored in order of left->right.
         $dataFromApi = array_reverse($dataFromApi);
 

@@ -9,8 +9,7 @@ use DvsaCommon\Validator\UsernameValidator;
 use DvsaCommon\Exception\UnauthorisedException;
 
 /**
- * Class PersonByLoginController
- * @package PersonApi\Controller
+ * Class PersonByLoginController.
  */
 class PersonByLoginController extends AbstractDvsaRestfulController
 {
@@ -32,6 +31,7 @@ class PersonByLoginController extends AbstractDvsaRestfulController
 
     /**
      * @param int $login
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function get($login)

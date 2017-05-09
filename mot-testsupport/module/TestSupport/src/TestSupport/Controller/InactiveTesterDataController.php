@@ -2,9 +2,7 @@
 
 namespace TestSupport\Controller;
 
-use Doctrine\ORM\EntityManager;
 use TestSupport\Service\InactiveTesterService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -24,6 +22,7 @@ class InactiveTesterDataController extends BaseTestSupportRestfulController
         /** @var InactiveTesterService $inactiveTesterService */
         $inactiveTesterService = $this->getServiceLocator()->get(InactiveTesterService::class);
         $resultJson = $inactiveTesterService->create($data);
+
         return $resultJson;
     }
 }

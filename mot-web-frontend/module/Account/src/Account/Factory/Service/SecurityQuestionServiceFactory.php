@@ -10,13 +10,13 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SecurityQuestionServiceFactory
- * @package Account\Factory\Service
+ * Class SecurityQuestionServiceFactory.
  */
 class SecurityQuestionServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return SecurityQuestionService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

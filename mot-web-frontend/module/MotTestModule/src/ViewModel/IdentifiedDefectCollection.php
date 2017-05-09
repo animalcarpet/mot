@@ -101,7 +101,7 @@ class IdentifiedDefectCollection
                 $failure->locationVertical,
                 $failure->comment,
                 $failure->failureDangerous,
-                $failure->testItemSelectorDescription . ' ' . $failure->failureText,
+                $failure->testItemSelectorDescription.' '.$failure->failureText,
                 $failure->id,
                 $failure->rfrId,
                 $failure->onOriginalTest,
@@ -124,7 +124,7 @@ class IdentifiedDefectCollection
                 $loopPrs->locationVertical,
                 $loopPrs->comment,
                 $loopPrs->failureDangerous,
-                $loopPrs->testItemSelectorDescription . ' ' . $loopPrs->failureText,
+                $loopPrs->testItemSelectorDescription.' '.$loopPrs->failureText,
                 $loopPrs->id,
                 $loopPrs->rfrId,
                 $loopPrs->onOriginalTest,
@@ -202,16 +202,17 @@ class IdentifiedDefectCollection
     }
 
     /**
-    * @return int
-    */
+     * @return int
+     */
     public function getNumberOfUnrepairedFailures()
     {
         $count = 0;
         foreach (array_keys($this->failures) as $k) {
             if (false === $this->failures[$k]->isMarkedAsRepaired()) {
-                $count++;
+                ++$count;
             }
         }
+
         return $count;
     }
 
@@ -232,14 +233,14 @@ class IdentifiedDefectCollection
     }
 
     /**
-    * @return int
-    */
+     * @return int
+     */
     public function getNumberOfUnrepairedAdvisories()
     {
         $count = 0;
         foreach (array_keys($this->advisories) as $k) {
             if (false === $this->advisories[$k]->isMarkedAsRepaired()) {
-                $count++;
+                ++$count;
             }
         }
 

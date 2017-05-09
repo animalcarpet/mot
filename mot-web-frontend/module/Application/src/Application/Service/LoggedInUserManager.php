@@ -11,7 +11,7 @@ use DvsaCommon\UrlBuilder\TesterUrlBuilder;
 use Zend\Session\Container;
 
 /**
- * Class LoggedInUserManager
+ * Class LoggedInUserManager.
  */
 class LoggedInUserManager
 {
@@ -29,7 +29,7 @@ class LoggedInUserManager
     private $restClient;
 
     /**
-     * For use by test code only
+     * For use by test code only.
      */
     public function setIdentityProvider(MotIdentityProviderInterface $identityProvider)
     {
@@ -38,7 +38,7 @@ class LoggedInUserManager
 
     /**
      * @var array
-     * cached PHP array of the result of the tester data API call
+     *            cached PHP array of the result of the tester data API call
      */
     private $testerData;
 
@@ -47,8 +47,8 @@ class LoggedInUserManager
 
     /**
      * @param MotIdentityProviderInterface $identityProvider
-     * @param Container                 $motSession
-     * @param Client                    $restClient
+     * @param Container                    $motSession
+     * @param Client                       $restClient
      */
     public function __construct(
         MotIdentityProviderInterface $identityProvider,
@@ -75,6 +75,7 @@ class LoggedInUserManager
         if (null == $this->testerData) {
             $this->testerData = $this->getUsersTestingDataFromApi();
         }
+
         return $this->testerData;
     }
 
@@ -82,6 +83,7 @@ class LoggedInUserManager
     {
         $apiUrl = TesterUrlBuilder::create()->routeParam('id', $this->getIdentity()->getUserId());
         $result = $this->getAuthRestClient()->get($apiUrl);
+
         return $result['data'];
     }
 
@@ -103,8 +105,8 @@ class LoggedInUserManager
     public function getAllVts()
     {
         $testerId = $this->getIdentity()->getUserId();
-        $apiUrl   = TesterUrlBuilder::create()->vehicleTestingStations($testerId);
-        $result   = $this->getAuthRestClient()->get($apiUrl);
+        $apiUrl = TesterUrlBuilder::create()->vehicleTestingStations($testerId);
+        $result = $this->getAuthRestClient()->get($apiUrl);
 
         return $result['data'];
     }
@@ -115,8 +117,8 @@ class LoggedInUserManager
     public function getAllVtsWithSlotBalance()
     {
         $testerId = $this->getIdentity()->getUserId();
-        $apiUrl   = TesterUrlBuilder::create()->vehicleTestingStationWithSlotBalance($testerId);
-        $result   = $this->getAuthRestClient()->get($apiUrl);
+        $apiUrl = TesterUrlBuilder::create()->vehicleTestingStationWithSlotBalance($testerId);
+        $result = $this->getAuthRestClient()->get($apiUrl);
 
         return $result['data'];
     }
@@ -139,6 +141,7 @@ class LoggedInUserManager
     /**
      * @param $vtsId
      * @param $vtsList
+     *
      * @return VehicleTestingStation
      */
     private function findVtsInList($vtsId, $vtsList)

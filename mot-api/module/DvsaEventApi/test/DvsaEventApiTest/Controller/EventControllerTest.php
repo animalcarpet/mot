@@ -30,7 +30,7 @@ class EventControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * Test access for specified action and parameters
+     * Test access for specified action and parameters.
      *
      * @param string $method        HTTP request type (get, post, put)
      * @param array  $id            Route id
@@ -88,28 +88,27 @@ class EventControllerTest extends AbstractMotApiControllerTestCase
                 (new EventDto())
                     ->setDate('date')
                     ->setType('type')
-                    ->setDescription('description')
+                    ->setDescription('description'),
                 ]
             );
 
         return [
             [
-                'method'        => 'post',
-                'id'            => self::AE_ID,
-                'type'          => self::AE_TYPE,
+                'method' => 'post',
+                'id' => self::AE_ID,
+                'type' => self::AE_TYPE,
                 'serviceMethod' => 'getList',
                 'serviceReturn' => $dto,
-                'expectResult'  => [
+                'expectResult' => [
                     'statusCode' => self::HTTP_OK_CODE,
-                    'result'     => ['data' => $hydrator->extract($dto)],
+                    'result' => ['data' => $hydrator->extract($dto)],
                 ],
             ],
         ];
     }
 
     /**
-     * Test access for specified action and parameters
-     *
+     * Test access for specified action and parameters.
      */
     public function testGetCanAccessed()
     {

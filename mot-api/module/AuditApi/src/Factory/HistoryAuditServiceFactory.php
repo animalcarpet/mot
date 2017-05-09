@@ -8,7 +8,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class HistoryAuditServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $historyAuditService = new HistoryAuditService(
@@ -16,6 +15,7 @@ class HistoryAuditServiceFactory implements FactoryInterface
             null,
             $serviceLocator->get('Application\Logger')
     );
+
         return $historyAuditService;
     }
 }

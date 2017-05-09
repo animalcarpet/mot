@@ -5,7 +5,7 @@ namespace DvsaAuthentication\Login\Response;
 use DvsaCommon\Authn\AuthenticationResultCode;
 
 /**
- * Represents a failure upon accessing identity
+ * Represents a failure upon accessing identity.
  */
 class UnresolvableIdentityAuthenticationFailure extends AuthenticationResponse
 {

@@ -6,7 +6,7 @@ use DvsaCommon\Enum\WeightSourceCode;
 use DvsaEntities\Entity\WeightSource;
 
 /**
- * Creates WeightSourceFactory entity populated with given values
+ * Creates WeightSourceFactory entity populated with given values.
  */
 class WeightSourceFactory
 {

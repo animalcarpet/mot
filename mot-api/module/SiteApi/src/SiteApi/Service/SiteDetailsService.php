@@ -14,7 +14,6 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\AuthorisationForTestingMotAtSiteStatusCode;
 use DvsaCommon\Enum\CountryCode;
 use DvsaCommon\Enum\EventTypeCode;
-use DvsaCommon\Model;
 use DvsaCommon\Model\VehicleTestingStation;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Filter\XssFilter;
@@ -121,8 +120,7 @@ class SiteDetailsService
         SiteDetailsValidator $siteDetailsValidator,
         SiteTypeRepository $siteTypeRepository,
         NonWorkingDayCountryRepository $nonWorkingDayCountryRepository
-    )
-    {
+    ) {
         $this->siteRepository = $siteRepository;
         $this->authService = $authService;
         $this->updateVtsAssertion = $updateVtsAssertion;
@@ -142,9 +140,11 @@ class SiteDetailsService
     }
 
     /**
-     * @param int $siteId
+     * @param int   $siteId
      * @param array $data
+     *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \DvsaCommon\Exception\UnauthorisedException
@@ -159,43 +159,43 @@ class SiteDetailsService
         $site = $this->siteRepository->get($siteId);
         $diff = [];
 
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_NAME, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_NAME, $data)) {
             $this->authService->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_NAME, $siteId);
             $this->siteDetailsValidator->validateName($dto);
         }
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_CLASSES, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_CLASSES, $data)) {
             $this->authService->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_CLASSES, $siteId);
             $this->siteDetailsValidator->validateTestClasses($dto);
         }
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_STATUS, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_STATUS, $data)) {
             $this->authService->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_STATUS, $siteId);
             $this->siteDetailsValidator->validateStatus($dto);
         }
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_TYPE, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_TYPE, $data)) {
             $this->authService->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_TYPE, $siteId);
             $this->siteDetailsValidator->validateType($dto);
         }
 
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_COUNTRY, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_COUNTRY, $data)) {
             $this->authService->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_COUNTRY, $siteId);
             $this->siteDetailsValidator->validateCountry($dto);
         }
 
         $this->siteDetailsValidator->getErrors()->throwIfAnyField();
 
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_NAME, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_NAME, $data)) {
             $this->updateName($site, $dto, $diff);
         }
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_CLASSES, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_CLASSES, $data)) {
             $this->updateClasses($site, $dto, $diff);
         }
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_STATUS, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_STATUS, $data)) {
             $this->updateStatus($site, $dto, $diff);
         }
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_TYPE, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_TYPE, $data)) {
             $this->updateType($site, $dto, $diff);
         }
-        if(array_key_exists(VehicleTestingStation::PATCH_PROPERTY_COUNTRY, $data)) {
+        if (array_key_exists(VehicleTestingStation::PATCH_PROPERTY_COUNTRY, $data)) {
             $this->updateCountry($site, $dto);
         }
 
@@ -205,27 +205,27 @@ class SiteDetailsService
         $this->siteRepository->flush();
 
         return [
-            'success' => true
+            'success' => true,
         ];
     }
 
-    private function updateName(Site $site, VehicleTestingStationDto $dto, array & $diff)
+    private function updateName(Site $site, VehicleTestingStationDto $dto, array &$diff)
     {
         $old = $site->getName();
         $new = $dto->getName();
 
-        if($old !== $new){
+        if ($old !== $new) {
             $site->setName($new);
             $this->createDiffArray($diff, $old, $new, self::NAME_FIELD);
         }
     }
 
-    private function updateType(Site $site, VehicleTestingStationDto $dto, array & $diff)
+    private function updateType(Site $site, VehicleTestingStationDto $dto, array &$diff)
     {
         $old = $site->getType();
         $new = $dto->getType();
 
-        if(!empty($new) && $new != $old->getCode()) {
+        if (!empty($new) && $new != $old->getCode()) {
             /** @var SiteType $newType */
             $newType = $this->siteTypeRepository->getByCode($new);
             $site->setType($newType);
@@ -233,7 +233,7 @@ class SiteDetailsService
         }
     }
 
-    private function updateStatus(Site $site, VehicleTestingStationDto $dto, array & $diff)
+    private function updateStatus(Site $site, VehicleTestingStationDto $dto, array &$diff)
     {
         /** @var SiteStatus $old */
         $old = $site->getStatus();
@@ -241,22 +241,20 @@ class SiteDetailsService
         /** @var string $new */
         $new = $dto->getStatus();
 
-        if(!empty($new) && $new !== $old->getCode()){
+        if (!empty($new) && $new !== $old->getCode()) {
             $newStatus = $this->siteStatusRepository->getByCode($new);
             $site->setStatus($newStatus);
             $site->setStatusChangedOn(new \DateTime());
             $this->createDiffArray($diff, $old->getName(), $newStatus->getName(), self::STATUS_FIELD);
-
         }
     }
 
-    private function updateClasses(Site $site, VehicleTestingStationDto $dto, array & $diff)
+    private function updateClasses(Site $site, VehicleTestingStationDto $dto, array &$diff)
     {
         $oldClasses = $site->getApprovedVehicleClasses();
         $new = (array) $dto->getTestClasses();
 
-        if($this->isTestClassesModified($oldClasses, $new)) {
-
+        if ($this->isTestClassesModified($oldClasses, $new)) {
             $oldEntities = $site->getApprovedAuthorisationForTestingMotAtSite();
             $stringifyOldClasses = $this->replaceEmptyTextWithNone(
                 implode(', ', $this->transformClassEntitiesToClassCodesArray($oldClasses))
@@ -277,7 +275,7 @@ class SiteDetailsService
     private function updateCountry(Site $site, VehicleTestingStationDto $dto)
     {
         $country = $dto->getCountry();
-        switch($country) {
+        switch ($country) {
             case CountryCode::WALES:
                 $site->setDualLanguage(true);
                 $site->setScottishBankHoliday(false);
@@ -297,7 +295,8 @@ class SiteDetailsService
 
     /**
      * @param AuthorisationForTestingMotAtSite[] $oldClasses
-     * @param array $newClasses
+     * @param array                              $newClasses
+     *
      * @return bool
      */
     private function isTestClassesModified(array $oldClasses, array $newClasses)
@@ -308,13 +307,13 @@ class SiteDetailsService
     }
 
     /**
-     * @param Site $site
+     * @param Site                               $site
      * @param AuthorisationForTestingMotAtSite[] $toRemove
      */
     private function removeTestClasses(Site $site, array $toRemove)
     {
         /** @var AuthorisationForTestingMotAtSite $oldClass */
-        foreach($toRemove as $oldClass){
+        foreach ($toRemove as $oldClass) {
             $site->removeAuthorisationForTestingMotAtSite($oldClass);
             $this->entityManager->remove($oldClass);
         }
@@ -322,13 +321,12 @@ class SiteDetailsService
     }
 
     /**
-     * @param Site $site
+     * @param Site  $site
      * @param array $changesDiff
      */
     private function raiseSiteEvents(Site $site, array $changesDiff)
     {
-        foreach($changesDiff as $fieldName => $diffArray){
-
+        foreach ($changesDiff as $fieldName => $diffArray) {
             $this->createSiteEvent(
                 $site,
                 EventTypeCode::DVSA_ADMINISTRATOR_UPDATE_SITE,
@@ -346,9 +344,9 @@ class SiteDetailsService
     }
 
     /**
-     * Create site event
+     * Create site event.
      *
-     * @param Site $site
+     * @param Site   $site
      * @param string $eventType
      * @param string $eventDesc
      *
@@ -375,7 +373,7 @@ class SiteDetailsService
      * @param $new
      * @param $fieldName
      */
-    private function createDiffArray(array & $diff, $old, $new, $fieldName)
+    private function createDiffArray(array &$diff, $old, $new, $fieldName)
     {
         $diff[$fieldName] = [
             self::OLD_VALUE => $old,
@@ -384,7 +382,7 @@ class SiteDetailsService
     }
 
     /**
-     * @return integer
+     * @return int
      * @description return ID from zend identity
      */
     private function getUserName()
@@ -393,11 +391,11 @@ class SiteDetailsService
     }
 
     /**
-     * Create the Site authorisation and classes in relation to the site
+     * Create the Site authorisation and classes in relation to the site.
      *
-     * @param Site $site
+     * @param Site                     $site
      * @param VehicleTestingStationDto $dto
-     * @param string $status
+     * @param string                   $status
      */
     private function createAuthorisationForTestingMotAtSite(Site $site, VehicleTestingStationDto $dto, $status)
     {
@@ -423,6 +421,7 @@ class SiteDetailsService
 
     /**
      * @param AuthorisationForTestingMotAtSite[] $classEntities
+     *
      * @return array Array of vehicle class codes
      */
     private function transformClassEntitiesToClassCodesArray(array $classEntities)
@@ -438,17 +437,18 @@ class SiteDetailsService
     }
 
     /**
-     * Returns original text, or "none" if passed text was empty
+     * Returns original text, or "none" if passed text was empty.
+     *
      * @param string $text
+     *
      * @return string
      */
     protected function replaceEmptyTextWithNone($text)
     {
-        if(empty($text)){
+        if (empty($text)) {
             $text = 'none';
         }
 
         return $text;
     }
-
 }

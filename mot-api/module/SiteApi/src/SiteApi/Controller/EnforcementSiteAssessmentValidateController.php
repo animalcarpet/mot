@@ -2,7 +2,6 @@
 
 namespace SiteApi\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
@@ -10,7 +9,6 @@ use SiteApi\Service\EnforcementSiteAssessmentService;
 
 class EnforcementSiteAssessmentValidateController extends AbstractDvsaRestfulController
 {
-
     /** @var EnforcementSiteAssessmentService */
     private $riskAssessmentService;
 
@@ -23,7 +21,7 @@ class EnforcementSiteAssessmentValidateController extends AbstractDvsaRestfulCon
     {
         $dto = DtoHydrator::jsonToDto($data);
         $validatedDto = $this->riskAssessmentService->validateRiskAssessment($dto);
+
         return ApiResponse::jsonOk($validatedDto);
     }
-
 }

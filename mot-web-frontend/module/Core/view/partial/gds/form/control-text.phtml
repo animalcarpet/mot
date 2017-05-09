@@ -3,7 +3,7 @@
 $type = (empty($this->type) ? 'text' : $this->type);
 
 $id = $this->id ?: false;
-$name=  isset($this->name) ? $this->name : $id;
+$name = isset($this->name) ? $this->name : $id;
 $tabIdx = (int) $this->tabIndex;
 
 $pattern = !empty($this->pattern) ? $this->pattern : '';
@@ -14,16 +14,16 @@ $autoCompleteOff = isset($this->autoCompleteOff) ? $this->autoCompleteOff : fals
 <input
     type="<?php echo $this->escapeHtmlAttr($type); ?>"
     <?php
-    echo $id ? ' id="'. $this->escapeHtmlAttr($id) . '"' : '';
-    echo $name ? ' name="'. $this->escapeHtmlAttr($name) .'"' : '';
+    echo $id ? ' id="'.$this->escapeHtmlAttr($id).'"' : '';
+    echo $name ? ' name="'.$this->escapeHtmlAttr($name).'"' : '';
     echo $this->autofocus === true ? ' autofocus' : '';
-    echo $tabIdx > 0 ? ' tabindex="'. $this->escapeHtmlAttr($tabIdx) .'"' : '';
+    echo $tabIdx > 0 ? ' tabindex="'.$this->escapeHtmlAttr($tabIdx).'"' : '';
     echo !empty($maxLength) ? ' maxlength="'.$this->escapeHtmlAttr($maxLength).'"' : '';
-    echo !empty($pattern) ? ' pattern="'. $this->escapeHtmlAttr($pattern).'"' : '';
-    echo !empty($pattern) && !empty($patternError) ? 'title="'. $this->escapeHtmlAttr($patternError).'"' : '';
+    echo !empty($pattern) ? ' pattern="'.$this->escapeHtmlAttr($pattern).'"' : '';
+    echo !empty($pattern) && !empty($patternError) ? 'title="'.$this->escapeHtmlAttr($patternError).'"' : '';
     echo ($type == 'password' || $autoCompleteOff) ? ' autocomplete="off"' : '';
     ?>
     value="<?php echo $this->escapeHtmlAttr($this->value); ?>"
     class="form-control
-        <?php echo !empty($inputModifier) ? 'form-control-' . $this->escapeHtmlAttr($inputModifier) : ''; ?>"
+        <?php echo !empty($inputModifier) ? 'form-control-'.$this->escapeHtmlAttr($inputModifier) : ''; ?>"
 />

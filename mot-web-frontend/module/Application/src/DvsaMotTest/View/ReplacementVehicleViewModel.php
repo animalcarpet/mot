@@ -7,7 +7,6 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 
 class ReplacementVehicleViewModel
 {
-
     const DEFAULT_MODEL_NAME = 'Unknown';
     const MAKE_MODEL_OTHER = 'other';
 
@@ -19,7 +18,7 @@ class ReplacementVehicleViewModel
     private $displayModelBody;
     private $expiryDate;
 
-    /** @var boolean */
+    /** @var bool */
     private $isLatestPassedMotTest;
 
     /** @var ReplacementMakeViewModel $make */
@@ -57,10 +56,13 @@ class ReplacementVehicleViewModel
 
     /**
      * @param ReplacementMakeViewModel $make
+     *
      * @return $this
      */
-    public function setMake(ReplacementMakeViewModel $make) {
+    public function setMake(ReplacementMakeViewModel $make)
+    {
         $this->make = $make;
+
         return $this;
     }
 
@@ -169,11 +171,13 @@ class ReplacementVehicleViewModel
 
     /**
      * @param bool $bool
+     *
      * @return $this
      */
     public function setDisplayModelBody($bool = false)
     {
         $this->displayModelBody = $bool;
+
         return $this;
     }
 
@@ -204,7 +208,6 @@ class ReplacementVehicleViewModel
 
     public function isOtherMake()
     {
-        return ($this->getMake()->getCode() == self::MAKE_MODEL_OTHER);
+        return $this->getMake()->getCode() == self::MAKE_MODEL_OTHER;
     }
-
 }

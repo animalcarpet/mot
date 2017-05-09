@@ -3,19 +3,18 @@
 namespace DvsaMotTest\ViewModel\MotTestCertificate;
 
 use Core\Routing\MotTestRoutes;
-use Zend\Mvc\Controller\Plugin\Url;
 use Zend\View\Renderer\PhpRenderer;
 
 class MotTestCertificateListViewModel
 {
-    /** @var boolean */
+    /** @var bool */
     private $foundByRegistration = true;
     /** @var VehicleTable[] $tables */
     private $tables;
     private $tablesCount = 0;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFoundByRegistration()
     {
@@ -27,12 +26,14 @@ class MotTestCertificateListViewModel
         if ($this->isFoundByRegistration()) {
             return 'Back to search by registration mark';
         }
+
         return 'Back to search by VIN';
     }
 
     /**
      * @param PhpRenderer $renderer
-     * @return string|boolean
+     *
+     * @return string|bool
      */
     public function getReturnLink(PhpRenderer $renderer)
     {
@@ -40,14 +41,16 @@ class MotTestCertificateListViewModel
         if ($this->isFoundByRegistration()) {
             return $motTestRoutes->vehicleSearchByRegistration($this->getRegistration());
         }
+
         return $motTestRoutes->vehicleSearchByVin($this->getVin());
     }
-    
+
     public function getFoundByType()
     {
         if ($this->isFoundByRegistration()) {
             return 'registration';
         }
+
         return 'VIN';
     }
 
@@ -56,11 +59,12 @@ class MotTestCertificateListViewModel
         if ($this->isFoundByRegistration()) {
             return $this->getRegistration();
         }
+
         return $this->getVin();
     }
 
     /**
-     * @param boolean $foundByRegistration
+     * @param bool $foundByRegistration
      */
     public function setFoundByRegistration($foundByRegistration)
     {
@@ -90,7 +94,7 @@ class MotTestCertificateListViewModel
     {
         $table->setIndex($this->tablesCount);
         $this->tables[] = $table;
-        $this->tablesCount++;
+        ++$this->tablesCount;
     }
 
     /**

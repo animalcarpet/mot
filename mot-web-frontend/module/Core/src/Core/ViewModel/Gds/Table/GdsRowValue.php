@@ -23,6 +23,4 @@ class GdsRowValue extends AbstractGdsRowElement
     {
         return $this->content;
     }
-
-
 }

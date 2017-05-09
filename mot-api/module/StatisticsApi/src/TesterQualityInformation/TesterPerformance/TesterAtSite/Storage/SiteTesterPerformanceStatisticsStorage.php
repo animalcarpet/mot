@@ -16,8 +16,7 @@ class SiteTesterPerformanceStatisticsStorage
 
     public function __construct(
         KeyValueStorageInterface $statisticsStorage
-    )
-    {
+    ) {
         $this->storage = $statisticsStorage;
         $this->keyGenerator = new S3KeyGenerator();
     }
@@ -26,6 +25,7 @@ class SiteTesterPerformanceStatisticsStorage
      * @param $siteId
      * @param $year
      * @param $month
+     *
      * @return TesterPerformanceResult[]
      */
     public function get($siteId, $year, $month)
@@ -33,7 +33,7 @@ class SiteTesterPerformanceStatisticsStorage
         $key = $this->keyGenerator->generateForSiteTesterStatistics($siteId, $year, $month);
 
         /** @var TesterPerformanceResult[] $dbResult */
-        $dbResult =  $this->storage->getAsDto($key, TesterPerformanceResult::class);
+        $dbResult = $this->storage->getAsDto($key, TesterPerformanceResult::class);
 
         return $dbResult;
     }

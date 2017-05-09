@@ -57,7 +57,7 @@ class AuthorisedExaminersViewModel implements Iterator
             );
         }
 
-        return new AuthorisedExaminersViewModel($dashboardGuard, $authorisedExaminerViewModels);
+        return new self($dashboardGuard, $authorisedExaminerViewModels);
     }
 
     /**
@@ -70,7 +70,7 @@ class AuthorisedExaminersViewModel implements Iterator
 
     public function next()
     {
-        $this->currentPosition++;
+        ++$this->currentPosition;
     }
 
     /**

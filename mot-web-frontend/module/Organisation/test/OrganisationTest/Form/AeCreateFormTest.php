@@ -12,7 +12,6 @@ use DvsaCommon\Dto\Contact\PhoneDto;
 use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationContactDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
-use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommon\Enum\OrganisationContactTypeCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
@@ -21,7 +20,7 @@ use Organisation\Form\AeCreateForm;
 use Zend\Stdlib\Parameters;
 
 /**
- * I'm building my professional career on comments
+ * I'm building my professional career on comments.
  */
 class AeCreateFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,12 +53,12 @@ class AeCreateFormTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->form->{'set' . $method}($value);
+        $result = $this->form->{'set'.$method}($value);
         $this->assertInstanceOf(AeCreateForm::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->form->{$method}());
     }
 
@@ -112,14 +111,14 @@ class AeCreateFormTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'postData' => [
-                    AeCreateForm::FIELD_NAME                     => 'test_OrgName',
-                    AeCreateForm::FIELD_TRADING_AS               => 'test_TradingAs',
-                    AeCreateForm::FIELD_COMPANY_TYPE             => 'test_CompanyType',
-                    AeCreateForm::FIELD_REG_NR                   => 'test_RegNr',
-                    AeCreateForm::FIELD_AO_NR                    => 'test_AONr',
+                    AeCreateForm::FIELD_NAME => 'test_OrgName',
+                    AeCreateForm::FIELD_TRADING_AS => 'test_TradingAs',
+                    AeCreateForm::FIELD_COMPANY_TYPE => 'test_CompanyType',
+                    AeCreateForm::FIELD_REG_NR => 'test_RegNr',
+                    AeCreateForm::FIELD_AO_NR => 'test_AONr',
                     AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME => 1,
                 ],
-                'expect'   => [
+                'expect' => [
                     'isCorrTheSame' => true,
                 ],
             ],
@@ -127,7 +126,7 @@ class AeCreateFormTest extends \PHPUnit_Framework_TestCase
                 'postData' => [
                     AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME => null,
                 ],
-                'expect'   => [
+                'expect' => [
                     'isCorrTheSame' => false,
                 ],
             ],
@@ -205,43 +204,42 @@ class AeCreateFormTest extends \PHPUnit_Framework_TestCase
 
         return [
             [
-                'busContact'   => null,
-                'corrContact'  => null,
+                'busContact' => null,
+                'corrContact' => null,
                 'expectIsSame' => true,
             ],
             //  check when corr details is null
             [
-                'busContact'   => $busContactDto,
-                'corrContact'  => null,
+                'busContact' => $busContactDto,
+                'corrContact' => null,
                 'expectIsSame' => true,
             ],
             //  check when corr and bus contacts the same
             [
-                'busContact'   => $busContactDto,
-                'corrContact'  => $corrContactDto,
+                'busContact' => $busContactDto,
+                'corrContact' => $corrContactDto,
                 'expectIsSame' => true,
             ],
             //  check when corr details not null, but address not same
             [
-                'busContact'   => $busContactDto,
-                'corrContact'  => $this->cloneObj($corrContactDto)->setAddress(new AddressDto()),
+                'busContact' => $busContactDto,
+                'corrContact' => $this->cloneObj($corrContactDto)->setAddress(new AddressDto()),
                 'expectIsSame' => false,
             ],
             //  check when corr details not null, but phones not same
             [
-                'busContact'   => $busContactDto,
-                'corrContact'  => $this->cloneObj($corrContactDto)->setPhones([]),
+                'busContact' => $busContactDto,
+                'corrContact' => $this->cloneObj($corrContactDto)->setPhones([]),
                 'expectIsSame' => false,
             ],
             //  check when corr details not null, but email not same
             [
-                'busContact'   => $busContactDto,
-                'corrContact'  => $this->cloneObj($corrContactDto)->setEmails([(new EmailDto())->setIsPrimary(true)]),
+                'busContact' => $busContactDto,
+                'corrContact' => $this->cloneObj($corrContactDto)->setEmails([(new EmailDto())->setIsPrimary(true)]),
                 'expectIsSame' => false,
             ],
         ];
     }
-
 
     /**
      * @dataProvider dataProviderTestToDto
@@ -270,36 +268,36 @@ class AeCreateFormTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'postData' => [
-                    AeCreateForm::FIELD_NAME                        => 'test_OrgName',
-                    AeCreateForm::FIELD_TRADING_AS                  => 'test_TradingAs',
-                    AeCreateForm::FIELD_COMPANY_TYPE                => 'test_CompanyType',
-                    AeCreateForm::FIELD_REG_NR                      => 'test_RegNr',
-                    AeCreateForm::FIELD_AO_NR                       => '1',
-                    AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME    => 1,
+                    AeCreateForm::FIELD_NAME => 'test_OrgName',
+                    AeCreateForm::FIELD_TRADING_AS => 'test_TradingAs',
+                    AeCreateForm::FIELD_COMPANY_TYPE => 'test_CompanyType',
+                    AeCreateForm::FIELD_REG_NR => 'test_RegNr',
+                    AeCreateForm::FIELD_AO_NR => '1',
+                    AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME => 1,
                     OrganisationContactTypeCode::REGISTERED_COMPANY => [
                         AddressFormModel::FIELD_LINE1 => 'test_Addr1',
-                        PhoneFormModel::FIELD_NUMBER  => 'test_Phone1',
-                        EmailFormModel::FIELD_EMAIL   => 'test_Email1',
+                        PhoneFormModel::FIELD_NUMBER => 'test_Phone1',
+                        EmailFormModel::FIELD_EMAIL => 'test_Email1',
                     ],
                 ],
-                'expect'   => (new OrganisationDto())
+                'expect' => (new OrganisationDto())
                     ->setName('test_OrgName')
                     ->setTradingAs('test_TradingAs')
                     ->setCompanyType('test_CompanyType')
                     ->setRegisteredCompanyNumber('test_RegNr')
                     ->setAuthorisedExaminerAuthorisation($authForAeDto)
-                    ->setContacts([$busContactDto, $corrContactDto])
+                    ->setContacts([$busContactDto, $corrContactDto]),
             ],
             [
                 'postData' => [
-                    AeCreateForm::FIELD_NAME                     => 'test_OrgName',
+                    AeCreateForm::FIELD_NAME => 'test_OrgName',
                     AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME => 0,
-                    AeCreateForm::FIELD_AO_NR                    => 1,
-                    OrganisationContactTypeCode::CORRESPONDENCE  => [
+                    AeCreateForm::FIELD_AO_NR => 1,
+                    OrganisationContactTypeCode::CORRESPONDENCE => [
                         EmailFormModel::FIELD_EMAIL => 'test_Email',
-                    ]
+                    ],
                 ],
-                'expect'   => (new OrganisationDto())
+                'expect' => (new OrganisationDto())
                     ->setName('test_OrgName')
                     ->setAuthorisedExaminerAuthorisation($authForAeDto)
                     ->setContacts(
@@ -307,9 +305,9 @@ class AeCreateFormTest extends \PHPUnit_Framework_TestCase
                             $this->createContactDetails(OrganisationContactTypeCode::REGISTERED_COMPANY),
                             $this->createContactDetails(
                                 OrganisationContactTypeCode::CORRESPONDENCE, null, 'test_Email'
-                            )
+                            ),
                         ]
-                    )
+                    ),
             ],
         ];
     }
@@ -352,12 +350,11 @@ class AeCreateFormTest extends \PHPUnit_Framework_TestCase
         return $contactDto;
     }
 
-
     public function testAddErrorsFromApi()
     {
         $errors = [
             'field' => 'field',
-            'displayMessage' => 'message'
+            'displayMessage' => 'message',
         ];
 
         $this->form->addErrorsFromApi([$errors]);

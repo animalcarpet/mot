@@ -3,7 +3,6 @@
 use \UserAdmin\Presenter\UserProfilePresenter as Presenter;
 
 /** @var Presenter $presenter */
-
 $associatedSitesAndOrganisations = $presenter->getSiteAndOrganisationRoles();
 
 if (!empty($associatedSitesAndOrganisations)):
@@ -23,7 +22,7 @@ if (!empty($associatedSitesAndOrganisations)):
                 </th>
                 <td id="roles-<?php echo md5($unit['name']) ?>" class="key-value-list__value">
                     <?php if (isset($unit['roles'])): ?>
-                        <?php echo join('<br />', $unit['roles']) ?>
+                        <?php echo implode('<br />', $unit['roles']) ?>
                     <?php else: ?>
                         No Roles
                     <?php endif; ?>

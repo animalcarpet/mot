@@ -5,9 +5,7 @@ namespace DvsaClientTest\Entity;
 use DvsaClient\Entity\Phone;
 
 /**
- * Class PhoneTest
- *
- * @package DvsaClientTest\Entity
+ * Class PhoneTest.
  */
 class PhoneTest extends BaseEntityTestCase
 {

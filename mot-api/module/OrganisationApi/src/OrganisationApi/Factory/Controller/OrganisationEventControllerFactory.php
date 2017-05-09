@@ -11,11 +11,13 @@ class OrganisationEventControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return OrganisationEventController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
+
         return new OrganisationEventController(
             $serviceLocator->get(OrganisationEventService::class)
         );

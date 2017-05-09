@@ -6,7 +6,7 @@ use NotificationApi\Service\Validator\NotificationValidator;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class NotificationValidatorTest
+ * Class NotificationValidatorTest.
  */
 class NotificationValidatorTest extends PHPUnit_Framework_TestCase
 {

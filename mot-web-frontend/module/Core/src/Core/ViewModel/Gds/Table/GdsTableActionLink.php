@@ -9,7 +9,7 @@ class GdsTableActionLink extends AbstractGdsRowElement
     private $text;
     private $id;
 
-    public function __construct(GdsRow $parentRow, $text, $url, $tooltip, $id = "")
+    public function __construct(GdsRow $parentRow, $text, $url, $tooltip, $id = '')
     {
         parent::__construct($parentRow);
 

@@ -43,23 +43,22 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
     ];
     const USER_ID = 105;
 
-
-    /** @var  ComponentFailRateApiResource */
+    /** @var ComponentFailRateApiResource */
     protected $componentFailRateApiResource;
 
-    /** @var  NationalComponentStatisticApiResource */
+    /** @var NationalComponentStatisticApiResource */
     private $nationalComponentStatisticApiResource;
 
-    /** @var  UserTestQualityAction */
+    /** @var UserTestQualityAction */
     private $userTestQualityAction;
 
-    /** @var  ViewVtsTestQualityAssertion */
+    /** @var ViewVtsTestQualityAssertion */
     private $assertion;
 
-    /** @var  Url */
+    /** @var Url */
     private $urlPluginMock;
 
-    /** @var  AuthorisationServiceMock */
+    /** @var AuthorisationServiceMock */
     private $authorisationServiceMock;
 
     /** @var SiteMapper */
@@ -67,9 +66,9 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
 
     /** @var VehicleTestingStationDto */
     private $siteDto;
-    /** @var  NationalPerformanceApiResource */
+    /** @var NationalPerformanceApiResource */
     private $nationalPerformanceApiResourceMock;
-    /** @var  MotIdentityProviderInterface */
+    /** @var MotIdentityProviderInterface */
     private $identityProvider;
 
     protected function setUp()

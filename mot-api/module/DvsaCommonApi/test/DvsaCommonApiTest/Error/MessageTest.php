@@ -6,13 +6,10 @@ use DvsaCommonApi\Error\Message as ErrorMessage;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class MessageTest
- *
- * @package DvsaCommonApiTest\Error
+ * Class MessageTest.
  */
 class MessageTest extends PHPUnit_Framework_TestCase
 {
-
     const TEST_MESSAGE = 'A unit test display message';
     const TEST_CODE = 42;
 

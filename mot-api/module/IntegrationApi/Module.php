@@ -7,21 +7,15 @@ use IntegrationApi\OpenInterface\Repository\OpenInterfaceMotTestRepository as Op
 use IntegrationApi\OpenInterface\Service\OpenInterfaceMotTestService;
 use IntegrationApi\TransportForLondon\Service\TransportForLondonMotTestService;
 use IntegrationApi\DvlaInfo\Service\DvlaInfoMotHistoryService;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class Module
- *
- * @package IntegrationApi
+ * Class Module.
  */
 class Module
 {
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function getAutoloaderConfig()
@@ -32,11 +26,11 @@ class Module
     {
         return [
             'factories' => [
-                OpenInterfaceMotTestRepository::class   => \IntegrationApi\Factory\OpenInterfaceMotTestRepositoryFactory::class,
-                OpenInterfaceMotTestService::class      => \IntegrationApi\Factory\OpenInterfaceMotTestServiceFactory::class,
+                OpenInterfaceMotTestRepository::class => \IntegrationApi\Factory\OpenInterfaceMotTestRepositoryFactory::class,
+                OpenInterfaceMotTestService::class => \IntegrationApi\Factory\OpenInterfaceMotTestServiceFactory::class,
                 TransportForLondonMotTestService::class => \IntegrationApi\Factory\TransportForLondonMotTestServiceFactory::class,
-                DvlaInfoMotHistoryService::class        => \IntegrationApi\Factory\DvlaInfoMotHistoryServiceFactory::class,
-                DvlaVehicleUpdatedService::class        => \IntegrationApi\Factory\Service\DvlaVehicleUpdatedServiceFactory::class
+                DvlaInfoMotHistoryService::class => \IntegrationApi\Factory\DvlaInfoMotHistoryServiceFactory::class,
+                DvlaVehicleUpdatedService::class => \IntegrationApi\Factory\Service\DvlaVehicleUpdatedServiceFactory::class,
             ],
         ];
     }

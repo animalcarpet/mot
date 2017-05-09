@@ -2,7 +2,7 @@
 use Site\UpdateVtsProperty\Process\Form\NamePropertyForm;
 use Site\UpdateVtsProperty\UpdateVtsPropertyViewModel;
 
-/** @var UpdateVtsPropertyViewModel $viewModel */
+/* @var UpdateVtsPropertyViewModel $viewModel */
 
 $this->headTitle('Change site name');
 /** @var NamePropertyForm $form */
@@ -12,7 +12,7 @@ $form = $viewModel->getForm();
     <?php echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getNameElement()
+            'element' => $form->getNameElement(),
         ]
-    );?>
+    ); ?>
 </fieldset>

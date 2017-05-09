@@ -6,9 +6,9 @@ use DataCatalogApi\Service\VehicleCatalogService;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\ApiClient\Request\CreateDvlaVehicleRequest;
 use Dvsa\Mot\ApiClient\Request\CreateDvsaVehicleRequest;
-use \Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle as NewDvlaVehicle;
-use \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle as NewDvsaVehicle;
-use \Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
+use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle as NewDvlaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle as NewDvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -28,7 +28,6 @@ use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\MultiCallStubBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\DvlaVehicle;
-use DvsaEntities\Entity\DvlaMakeModelMap;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
@@ -50,9 +49,7 @@ use VehicleApi\Service\VehicleService;
 use DvsaAuthentication\Identity;
 
 /**
- * it test functionality of class VehicleService
- *
- * @package VehicleApiTest\Service
+ * it test functionality of class VehicleService.
  */
 class VehicleServiceTest extends AbstractServiceTestCase
 {
@@ -105,7 +102,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
     private $transaction;
 
     private $mockNewVehicleService;
-
 
     public function setUp()
     {
@@ -208,8 +204,8 @@ class VehicleServiceTest extends AbstractServiceTestCase
     public function testCreateVtrAndV5CfromDvlaVehicleGivenDvlaVehicleShouldCreateVtrAndV5C()
     {
         $dvlaVehicle = VOF::dvlaVehicle();
-        $dvlaVehicle->setMakeCode("BB");
-        $dvlaVehicle->setModelCode("COOPER");
+        $dvlaVehicle->setMakeCode('BB');
+        $dvlaVehicle->setModelCode('COOPER');
         $vehicleClassCode = VehicleClassCode::CLASS_4;
 //        $dvlaVehicle->setMassInServiceWeight(1000);
 
@@ -222,7 +218,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             'getVehicleClassByCode'
         );
         $this->returningOn($this->mockDvlaVehicleRepository, $dvlaVehicle);
-        $this->returningOn($this->mockVehicleCatalog, VOF::bodyType(), "findBodyTypeByCode");
+        $this->returningOn($this->mockVehicleCatalog, VOF::bodyType(), 'findBodyTypeByCode');
 
         $colourCode = 'R';
         $secondaryColourCode = 'G';
@@ -283,7 +279,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             'getVehicleClassByCode'
         );
         $this->returningOn($this->mockDvlaVehicleRepository, $dvlaVehicle);
-        $this->returningOn($this->mockVehicleCatalog, VOF::bodyType(), "findBodyTypeByCode");
+        $this->returningOn($this->mockVehicleCatalog, VOF::bodyType(), 'findBodyTypeByCode');
 
         $this->returningOn(
             $this->mockVehicleCatalog, VOF::weightSource(WeightSourceCode::MISW), 'getWeightSourceByCode'
@@ -321,7 +317,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
     public function invalidDvlaBodyTypeCodeProvider()
     {
-        return [[""], [null], ["xxx"]];
+        return [[''], [null], ['xxx']];
     }
 
     public function testLogDvlaVehicleImportChangesShouldSaveImportChangesData()
@@ -374,7 +370,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param Vehicle $entity
+     * @param Vehicle            $entity
      * @param AbstractVehicleDto $dto
      */
     private function assertVehicleEntityEqualsDto(Vehicle $entity, AbstractVehicleDto $dto)
@@ -451,7 +447,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param DvlaVehicle $entity
+     * @param DvlaVehicle        $entity
      * @param AbstractVehicleDto $dto
      */
     private function assertDvlaVehicleEntityEqualsDto(DvlaVehicle $entity, AbstractVehicleDto $dto)
@@ -571,24 +567,24 @@ class VehicleServiceTest extends AbstractServiceTestCase
     private static function dataCreateVehicle()
     {
         return [
-            'vin'                   => VOF::EXAMPLE_VIN,
-            'registrationNumber'    => VOF::EXAMPLE_VRM,
-            'cylinderCapacity'      => 1234,
-            'manufactureDate'       => '1990-12-12',
+            'vin' => VOF::EXAMPLE_VIN,
+            'registrationNumber' => VOF::EXAMPLE_VRM,
+            'cylinderCapacity' => 1234,
+            'manufactureDate' => '1990-12-12',
             'firstRegistrationDate' => '1990-12-23',
-            'dateOfFirstUse'        => '2000-12-12',
-            'make'                  => 1,
-            'makeOther'             => '',
-            'model'                 => 2,
-            'modelOther'            => '',
-            'modelType'             => 3,
-            'colour'                => 'R',
-            'testClass'             => VehicleClassCode::CLASS_4,
-            'fuelTypeCode'          => FuelTypeCode::PETROL,
+            'dateOfFirstUse' => '2000-12-12',
+            'make' => 1,
+            'makeOther' => '',
+            'model' => 2,
+            'modelOther' => '',
+            'modelType' => 3,
+            'colour' => 'R',
+            'testClass' => VehicleClassCode::CLASS_4,
+            'fuelTypeCode' => FuelTypeCode::PETROL,
             'countryOfRegistration' => 9,
-            'transmissionType'      => 10,
-            'secondaryColour'       => 'G',
-            'vtsId'                 => 1
+            'transmissionType' => 10,
+            'secondaryColour' => 'G',
+            'vtsId' => 1,
         ];
     }
 
@@ -626,41 +622,41 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $dvlaVehicleData = json_decode(
             json_encode(
                 [
-                    'id'                    => 2,
-                    'amendedOn'             => '2016-02-03',
-                    'registration'          => 'YK02OML',
-                    'vin'                   => '1HGCM82633A004352',
-                    'emptyVrmReason'        => null,
-                    'emptyVinReason'        => null,
-                    'make'                  => [
-                        'id'   => 5,
+                    'id' => 2,
+                    'amendedOn' => '2016-02-03',
+                    'registration' => 'YK02OML',
+                    'vin' => '1HGCM82633A004352',
+                    'emptyVrmReason' => null,
+                    'emptyVinReason' => null,
+                    'make' => [
+                        'id' => 5,
                         'name' => 'PORSCHE',
                     ],
-                    'model'                 => [
-                        'id'   => 6,
+                    'model' => [
+                        'id' => 6,
                         'name' => 'BOXSTER',
                     ],
-                    'colour'                 => [
-                        'code'   => 'C',
+                    'colour' => [
+                        'code' => 'C',
                         'name' => 'Red',
                     ],
-                    'colourSecondary'                 => [
-                        'code'   => 'W',
+                    'colourSecondary' => [
+                        'code' => 'W',
                         'name' => 'Not Stated',
                     ],
                     'vehicleClass' => ['code' => '4', 'name' => '4'],
-                    'bodyType'              => '2 Door Saloon',
-                    'cylinderCapacity'      => 1700,
-                    'transmissionType'      => 'Automatic',
-                    'fuelType'              => [
+                    'bodyType' => '2 Door Saloon',
+                    'cylinderCapacity' => 1700,
+                    'transmissionType' => 'Automatic',
+                    'fuelType' => [
                         'code' => FuelTypeCode::PETROL,
-                        'name' => "Petrol",
+                        'name' => 'Petrol',
                     ],
                     'firstRegistrationDate' => new \DateTime('2001-03-01'),
-                    'firstUsedDate'         => new \DateTime('2001-03-02'),
-                    'manufactureDate'       => new \DateTime('2000-12-12'),
-                    'isNewAtFirstReg'       => false,
-                    'weight'                => null
+                    'firstUsedDate' => new \DateTime('2001-03-02'),
+                    'manufactureDate' => new \DateTime('2000-12-12'),
+                    'isNewAtFirstReg' => false,
+                    'weight' => null,
                 ]
             )
         );
@@ -675,41 +671,41 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $dvsaVehicleData = json_decode(
             json_encode(
                 [
-                    'id'                    => 2,
-                    'amendedOn'             => '2016-02-03',
-                    'registration'          => 'DII4454',
-                    'vin'                   => '1M7GDM9AXKP042777',
-                    'emptyVrmReason'        => null,
-                    'emptyVinReason'        => null,
-                    'make'                  => [
-                        'id'   => 5,
+                    'id' => 2,
+                    'amendedOn' => '2016-02-03',
+                    'registration' => 'DII4454',
+                    'vin' => '1M7GDM9AXKP042777',
+                    'emptyVrmReason' => null,
+                    'emptyVinReason' => null,
+                    'make' => [
+                        'id' => 5,
                         'name' => 'PORSCHE',
                     ],
-                    'model'                 => [
-                        'id'   => 6,
+                    'model' => [
+                        'id' => 6,
                         'name' => 'BOXSTER',
                     ],
-                    'colour'                 => [
-                        'code'   => 'C',
+                    'colour' => [
+                        'code' => 'C',
                         'name' => 'Red',
                     ],
-                    'colourSecondary'                 => [
-                        'code'   => 'W',
+                    'colourSecondary' => [
+                        'code' => 'W',
                         'name' => 'Not Stated',
                     ],
                     'vehicleClass' => ['code' => '4', 'name' => '4'],
-                    'bodyType'              => '2 Door Saloon',
-                    'cylinderCapacity'      => 1700,
-                    'transmissionType'      => 'Automatic',
-                    'fuelType'              => [
+                    'bodyType' => '2 Door Saloon',
+                    'cylinderCapacity' => 1700,
+                    'transmissionType' => 'Automatic',
+                    'fuelType' => [
                         'code' => FuelTypeCode::PETROL,
-                        'name' => "Petrol",
+                        'name' => 'Petrol',
                     ],
                     'firstRegistrationDate' => '2001-03-02',
-                    'firstUsedDate'         => '2001-03-02',
-                    'manufactureDate'       => '2001-03-02',
-                    'isNewAtFirstReg'       => false,
-                    'weight'                => null
+                    'firstUsedDate' => '2001-03-02',
+                    'manufactureDate' => '2001-03-02',
+                    'isNewAtFirstReg' => false,
+                    'weight' => null,
                 ]
             )
         );

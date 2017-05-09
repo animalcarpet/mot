@@ -1,8 +1,6 @@
 <?php
 
-
 namespace CoreTest\Formatter;
-
 
 use Core\Formatting\VehicleAgeFormatter;
 

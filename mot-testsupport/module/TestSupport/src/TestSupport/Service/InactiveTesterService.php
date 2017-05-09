@@ -20,9 +20,6 @@ class InactiveTesterService
      */
     protected $entityManager;
 
-
-    /**
-     */
     public function __construct(TesterService $testerService, EntityManager $entityManager)
     {
         $this->testerService = $testerService;
@@ -30,9 +27,10 @@ class InactiveTesterService
     }
 
     /**
-     * Create a tester with the data supplied
+     * Create a tester with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create($data)
@@ -45,7 +43,7 @@ class InactiveTesterService
             $personId = $data['personId'];
             $resp = TestDataResponseHelper::jsonOk(
                 [
-                    "message" => "Tester suspended",
+                    'message' => 'Tester suspended',
                 ]
             );
         }
@@ -60,7 +58,7 @@ class InactiveTesterService
     private function suspendTestingAuthorisation($personId)
     {
         $stmt = $this->entityManager->getConnection()->prepare(
-            "UPDATE auth_for_testing_mot SET status_id = ? WHERE person_id = ?"
+            'UPDATE auth_for_testing_mot SET status_id = ? WHERE person_id = ?'
         );
 
         $stmt->bindValue(1, self::SUSP_STATUS_ID);

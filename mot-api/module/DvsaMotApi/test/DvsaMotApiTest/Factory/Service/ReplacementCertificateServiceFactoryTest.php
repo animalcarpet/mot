@@ -17,13 +17,10 @@ use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftCreator
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftUpdater;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ReplacementCertificateServiceFactoryTest
- *
+ * Class ReplacementCertificateServiceFactoryTest.
  */
 class ReplacementCertificateServiceFactoryTest extends AbstractServiceTestCase
 {

@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApiTest\Service\Factory;
 
 use Doctrine\ORM\EntityManager;
@@ -8,13 +9,10 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\SiteRepository;
 use SiteApi\Factory\Service\SiteSearchServiceFactory;
 use SiteApi\Service\SiteSearchService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SiteSearchServiceFactoryTest
- *
- * @package SiteApiTest\Service\Factory
+ * Class SiteSearchServiceFactoryTest.
  */
 class SiteSearchServiceFactoryTest extends AbstractServiceTestCase
 {

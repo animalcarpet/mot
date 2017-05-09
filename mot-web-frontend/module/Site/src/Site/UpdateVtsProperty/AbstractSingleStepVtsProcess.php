@@ -49,7 +49,7 @@ abstract class AbstractSingleStepVtsProcess implements SingleStepProcessInterfac
 
     public function getPageSubTitle()
     {
-        return "Vehicle Testing Station";
+        return 'Vehicle Testing Station';
     }
 
     public function buildEditStepViewModel($form)
@@ -69,7 +69,7 @@ abstract class AbstractSingleStepVtsProcess implements SingleStepProcessInterfac
         return $authorisationService->isGrantedAtSite($this->getPermission(), $this->context->getVtsId());
     }
 
-    abstract function getPermission();
+    abstract public function getPermission();
 
     abstract public function getFormPartial();
 

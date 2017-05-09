@@ -47,9 +47,9 @@ class UserService extends AbstractService
     {
         parent::__construct($entityManager);
 
-        $this->userRepository       = $this->entityManager->getRepository(Person::class);
-        $this->objectHydrator       = $objectHydrator;
-        $this->roleProviderService  = $roleProviderService;
+        $this->userRepository = $this->entityManager->getRepository(Person::class);
+        $this->objectHydrator = $objectHydrator;
+        $this->roleProviderService = $roleProviderService;
         $this->authorisationService = $authorisationService;
     }
 
@@ -101,7 +101,7 @@ class UserService extends AbstractService
             throw new NotFoundException('Person', $username);
         }
 
-        $userData          = $this->extractUserDataWithoutPassword($user);
+        $userData = $this->extractUserDataWithoutPassword($user);
         $userData['roles'] = [];
         $userData['roles'] = $this->roleProviderService->getRolesForPerson($user);
 

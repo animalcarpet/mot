@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Routes;
 
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -19,7 +20,7 @@ class PersonProfileRoutes implements AutoWireableInterface
     public function getRoute()
     {
         $context = $this->contextProvider->getContext();
-        switch($context) {
+        switch ($context) {
             case ContextProvider::YOUR_PROFILE_CONTEXT:
                 return ContextProvider::YOUR_PROFILE_PARENT_ROUTE;
             case ContextProvider::USER_SEARCH_CONTEXT:
@@ -40,6 +41,6 @@ class PersonProfileRoutes implements AutoWireableInterface
 
     public function getTestQualityRoute()
     {
-        return $this->getRoute() . self::TEST_QUALITY;
+        return $this->getRoute().self::TEST_QUALITY;
     }
 }

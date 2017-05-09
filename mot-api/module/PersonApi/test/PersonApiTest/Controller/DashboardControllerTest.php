@@ -2,15 +2,11 @@
 
 namespace PersonApi\Controller;
 
-use DvsaCommonTest\Bootstrap;
-use PersonApi\Controller\DashboardController;
 use UserApi\Dashboard\Dto\DashboardData;
 use PersonApi\Service\DashboardService;
 
 /**
- * Class DashboardControllerTest
- *
- * @package UserApiTest\Dashboard\Controller
+ * Class DashboardControllerTest.
  */
 class DashboardControllerTest extends \PHPUnit_Framework_TestCase
 {

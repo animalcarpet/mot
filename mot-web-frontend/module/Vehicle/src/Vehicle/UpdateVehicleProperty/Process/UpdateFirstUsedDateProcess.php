@@ -12,7 +12,6 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
-use GuzzleHttp\Exception\ClientException;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\FirstUsedDateForm;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleEditBreadcrumbsBuilder;
@@ -37,8 +36,7 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
         Url $url,
         VehicleService $vehicleService,
         VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder
-    )
-    {
+    ) {
         $this->url = $url;
         $this->vehicleService = $vehicleService;
         $this->breadcrumbsBuilder = $breadcrumbsBuilder;
@@ -69,16 +67,17 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
 
     public function getPrePopulatedData()
     {
-        $vehicle = $this->vehicleService->getDvsaVehicleById((int)$this->context->getVehicleId());
-        if ($vehicle->getFirstUsedDate() !== null)
-        {
+        $vehicle = $this->vehicleService->getDvsaVehicleById((int) $this->context->getVehicleId());
+        if ($vehicle->getFirstUsedDate() !== null) {
             $date = new \DateTime($vehicle->getFirstUsedDate());
+
             return [
                 FirstUsedDateForm::FIELD_DATE_DAY => $date->format('d'),
                 FirstUsedDateForm::FIELD_DATE_MONTH => $date->format('m'),
-                FirstUsedDateForm::FIELD_DATE_YEAR => $date->format('Y')
+                FirstUsedDateForm::FIELD_DATE_YEAR => $date->format('Y'),
             ];
         }
+
         return [];
     }
 
@@ -102,17 +101,17 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
 
     public function getSuccessfulEditMessage()
     {
-        return "Vehicle’s date of first use has been changed successfully";
+        return 'Vehicle’s date of first use has been changed successfully';
     }
 
     public function getEditStepPageTitle()
     {
-        return "Change date of first use";
+        return 'Change date of first use';
     }
 
     public function getPageSubTitle()
     {
-        return "Vehicle";
+        return 'Vehicle';
     }
 
     public function buildEditStepViewModel($form)
@@ -127,8 +126,8 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
 
         return (new UpdateVehiclePropertyViewModel())
             ->setForm($form)
-            ->setSubmitButtonText("Change date of first use")
-            ->setPartial("partials/edit-first-used-date")
+            ->setSubmitButtonText('Change date of first use')
+            ->setPartial('partials/edit-first-used-date')
             ->setBackUrl($backUrl)
             ->setFormActionUrl($formActionUrl)
             ->setPageTertiaryTitle($tertiaryTitle);
@@ -136,7 +135,7 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
 
     public function redirectToStartPage()
     {
-        return new RedirectToRoute("vehicle/detail",
+        return new RedirectToRoute('vehicle/detail',
             ['id' => $this->context->getObfuscatedVehicleId()]
         );
     }
@@ -148,6 +147,6 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
 
     public function getEditPageLede()
     {
-        return "";
+        return '';
     }
 }

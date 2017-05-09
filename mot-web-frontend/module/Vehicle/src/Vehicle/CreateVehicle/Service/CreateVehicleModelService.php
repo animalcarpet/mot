@@ -19,6 +19,7 @@ class CreateVehicleModelService
 
     /**
      * @return array
+     *
      * @throws \Exception
      */
     public function getModelFromMakeInSession()

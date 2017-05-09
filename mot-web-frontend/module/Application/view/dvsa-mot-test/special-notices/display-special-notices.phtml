@@ -1,6 +1,5 @@
 <?php
 /** @var bool $isTester */
-
 $title = 'Special Notices';
 $this->headTitle($title);
 $overdueNotices = $specialNotices['overdue'];
@@ -32,7 +31,7 @@ $currentNotices = $specialNotices['currentNotices'];
                         <div class="col-sm-1">
                             <span class="count"><?php echo count($overdueNotices) ?><sup>overdue</sup></span>
                         </div>
-                        <?php if($isTester): ?>
+                        <?php if ($isTester): ?>
                         <div class="col-sm-11">
                             <h3>Test status will become active when unacknowledged notices have been read and
                                 confirmed</h3>

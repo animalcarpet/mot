@@ -13,29 +13,29 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester
 return [
     'router' => [
         'routes' => [
-            'national-tester-statistics'       => [
-                'type'    => 'Segment',
+            'national-tester-statistics' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/tester-performance/national/:year/:month',
+                    'route' => '/statistic/tester-performance/national/:year/:month',
                     'constraints' => [
-                        'year'  => '[0-9]+',
+                        'year' => '[0-9]+',
                         'month' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => NationalStatisticsController::class,
                     ],
                 ],
             ],
-            'site-tester-statistics'           => [
-                'type'    => 'Segment',
+            'site-tester-statistics' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/tester-performance/site/:id/:year/:month',
+                    'route' => '/statistic/tester-performance/site/:id/:year/:month',
                     'constraints' => [
-                        'id'    => '[0-9]+',
-                        'year'  => '[0-9]+',
+                        'id' => '[0-9]+',
+                        'year' => '[0-9]+',
                         'month' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteStatisticsController::class,
                     ],
                 ],
@@ -54,86 +54,86 @@ return [
                 ],
             ],
             'batch-national-tester-statistics' => [
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/tester-performance/national/batch',
+                    'route' => '/statistic/tester-performance/national/batch',
                     'constraints' => [
 
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => NationalBatchStatisticsController::class,
                     ],
                 ],
             ],
-            'tester-at-site-component-fail-rate'              => [
-                'type'    => 'Segment',
+            'tester-at-site-component-fail-rate' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/component-fail-rate/site/:siteId/tester/:testerId/group/:group/:year/:month',
+                    'route' => '/statistic/component-fail-rate/site/:siteId/tester/:testerId/group/:group/:year/:month',
                     'constraints' => [
-                        'siteId'   => '[0-9]+',
+                        'siteId' => '[0-9]+',
                         'testerId' => '[0-9]+',
-                        'group'    => 'A|B',
-                        'year'     => '[0-9]+',
-                        'month'    => '[0-9]+',
+                        'group' => 'A|B',
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => TesterAtSiteComponentStatisticsController::class,
-                    ]
-                ]
+                    ],
+                ],
             ],
-            'tester-component-fail-rate'              => [
-                'type'    => 'Segment',
+            'tester-component-fail-rate' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/component-fail-rate/tester/:testerId/group/:group/:year/:month',
+                    'route' => '/statistic/component-fail-rate/tester/:testerId/group/:group/:year/:month',
                     'constraints' => [
                         'testerId' => '[0-9]+',
-                        'group'    => 'A|B',
-                        'year'     => '[0-9]+',
-                        'month'    => '[0-9]+',
+                        'group' => 'A|B',
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => TesterComponentStatisticsController::class,
-                    ]
-                ]
+                    ],
+                ],
             ],
-            'national-component-fail-rate'     => [
-                'type'    => 'Segment',
+            'national-component-fail-rate' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/component-fail-rate/national/group/:id/:year/:month',
+                    'route' => '/statistic/component-fail-rate/national/group/:id/:year/:month',
                     'constraints' => [
-                        'id'    => 'A|B',
-                        'year'  => '[0-9]+',
+                        'id' => 'A|B',
+                        'year' => '[0-9]+',
                         'month' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => NationalComponentStatisticsController::class,
-                    ]
-                ]
+                    ],
+                ],
             ],
-            'tester-aggregated-statistics'           => [
-                'type'    => 'Segment',
+            'tester-aggregated-statistics' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/tester-performance/tester/:id/:year/:month',
+                    'route' => '/statistic/tester-performance/tester/:id/:year/:month',
                     'constraints' => [
-                        'id'    => '[0-9]+',
-                        'year'  => '[0-9]+',
+                        'id' => '[0-9]+',
+                        'year' => '[0-9]+',
                         'month' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => TesterAggregatedStatisticsController::class,
                     ],
                 ],
             ],
-            'tester-multi-site-statistics'           => [
-                'type'    => 'Segment',
+            'tester-multi-site-statistics' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/statistic/tester-performance/multi-site/:id/:year/:month',
+                    'route' => '/statistic/tester-performance/multi-site/:id/:year/:month',
                     'constraints' => [
-                        'id'    => '[0-9]+',
-                        'year'  => '[0-9]+',
+                        'id' => '[0-9]+',
+                        'year' => '[0-9]+',
                         'month' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => TesterMultiSiteStatisticsController::class,
                     ],
                 ],

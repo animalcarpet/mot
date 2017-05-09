@@ -19,7 +19,7 @@ class PersonEmailController extends AbstractDvsaRestfulController
     {
         $emailRouteParam = $this->params()->fromQuery('email');
 
-        if (empty($emailRouteParam) || is_null($emailRouteParam) || $emailRouteParam === "") {
+        if (empty($emailRouteParam) || is_null($emailRouteParam) || $emailRouteParam === '') {
             return ApiResponse::jsonError('Email cannot be empty.');
         }
 

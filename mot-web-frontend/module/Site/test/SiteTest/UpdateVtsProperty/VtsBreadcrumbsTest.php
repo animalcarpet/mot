@@ -12,12 +12,12 @@ use Zend\View\Helper\Url;
 class VtsBreadcrumbsTest extends \PHPUnit_Framework_TestCase
 {
     const ORG_ID = 2;
-    const ORG_NAME = "orgName";
+    const ORG_NAME = 'orgName';
 
     const SITE_ID = 1;
-    const SITE_NAME = "siteName";
+    const SITE_NAME = 'siteName';
 
-    const LINK = "http://link";
+    const LINK = 'http://link';
 
     private $url;
 
@@ -26,7 +26,7 @@ class VtsBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $url = XMock::of(Url::class);
         $url
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn(self::LINK);
 
         $this->url = $url;
@@ -37,7 +37,7 @@ class VtsBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $authorisationService = XMock::of(MotAuthorisationServiceInterface::class);
         $authorisationService
             ->expects($this->any())
-            ->method("isGrantedAtOrganisation")
+            ->method('isGrantedAtOrganisation')
             ->willReturn($value);
 
         return $authorisationService;
@@ -53,7 +53,6 @@ class VtsBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $vtsDto->setId(self::SITE_ID);
         $vtsDto->setName(self::SITE_NAME);
         $vtsDto->setOrganisation($org);
-
 
         $vtsBreadcrumbs = new VtsBreadcrumbs($vtsDto, $this->createAuthorisationService(true), $this->url);
         $breadcrumbs = $vtsBreadcrumbs->create();
@@ -94,7 +93,6 @@ class VtsBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $vtsDto->setId(self::SITE_ID);
         $vtsDto->setName(self::SITE_NAME);
         $vtsDto->setOrganisation($org);
-
 
         $vtsBreadcrumbs = new VtsBreadcrumbs($vtsDto, $this->createAuthorisationService(false), $this->url);
         $breadcrumbs = $vtsBreadcrumbs->create();

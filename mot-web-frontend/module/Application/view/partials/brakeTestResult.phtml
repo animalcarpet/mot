@@ -8,10 +8,10 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach($this->rows as $row): ?>
+        <?php foreach ($this->rows as $row): ?>
             <tr>
                 <td><?php echo $this->escapeHtml($row['name']); ?></td>
-                <td><?php echo ($row['value'] !== null) ? $this->escapeHtml($row['value']) . '%' : '-'; ?></td>
+                <td><?php echo ($row['value'] !== null) ? $this->escapeHtml($row['value']).'%' : '-'; ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>

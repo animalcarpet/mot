@@ -2,16 +2,9 @@
 
 namespace DvsaEntities\Repository;
 
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Class EventPersonMapRepository
- *
- * @package DvsaEntities\Repository
+ * Class EventPersonMapRepository.
  */
 class EventPersonMapRepository extends AbstractMutableRepository
 {
-
 }

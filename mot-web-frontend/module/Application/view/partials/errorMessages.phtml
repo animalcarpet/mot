@@ -11,6 +11,7 @@ $isShowHidden = (isset($isShowHidden) ? $isShowHidden : false);
     }
 
     use Zend\Session\Container;
+
     $containerNamespace = 'formErrorMessages';
     $containerKey = 'errorData';
     $container = new Container($containerNamespace);
@@ -19,7 +20,9 @@ $isShowHidden = (isset($isShowHidden) ? $isShowHidden : false);
         $formMessages = $container->offsetGet($containerKey);
         $container->offsetUnset('errorData');
     }
-    if (!is_array($formMessages)) { $formMessages = array(); }
+    if (!is_array($formMessages)) {
+        $formMessages = array();
+    }
 
     $messages = array_unique(array_filter($messages));
     $messageCount = count($messages) + count($formMessages);
@@ -27,7 +30,7 @@ $isShowHidden = (isset($isShowHidden) ? $isShowHidden : false);
 
 <?php if ($messageCount > 0 || $isShowHidden) : ?>
 <div id="validation-summary-id" class="validation-summary"
-    <?php echo ($messageCount == 0  && $isShowHidden ? ' style="display:none;"' : ''); ?>>
+    <?php echo $messageCount == 0 && $isShowHidden ? ' style="display:none;"' : ''; ?>>
 
     <?php if (isset($errorTitle) && $errorTitle) : ?>
         <h2><?php echo $this->escapeHtml($errorTitle) ?></h2>

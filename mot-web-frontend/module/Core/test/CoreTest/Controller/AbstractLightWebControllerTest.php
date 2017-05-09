@@ -21,6 +21,7 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
 {
     /**
      * Controller under test.
+     *
      * @var AbstractActionController
      */
     private $controller;
@@ -54,9 +55,10 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
 
     /**
      * Get service (controller) under test.
+     *
      * @return AbstractActionController
      *
-     * @deprecated Use AbstractLightWebControllerTest::getController() instead.
+     * @deprecated Use AbstractLightWebControllerTest::getController() instead
      */
     protected function sut()
     {
@@ -77,6 +79,7 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
     {
         $this->controller = $controller;
         $this->controller->setPluginManager($this->pluginManagerMock);
+
         return $this;
     }
 
@@ -131,6 +134,7 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
             ->expects($this->any())
             ->method('__invoke')
             ->willReturnSelf();
+
         return $mock;
     }
 

@@ -20,7 +20,7 @@ $this->headScript()->appendFile('/js/dvsa-mot-enforcement/search/mot-search.js')
     };
 </script>
 
-<form id="vts-search-form" method="get" action="<?php echo $this->url('mot-test-search/' . $this->searchType); ?>">
+<form id="vts-search-form" method="get" action="<?php echo $this->url('mot-test-search/'.$this->searchType); ?>">
     <div class="row" >
         <div class="col-sm-12">
             <h1>
@@ -42,8 +42,8 @@ $this->headScript()->appendFile('/js/dvsa-mot-enforcement/search/mot-search.js')
                         'tester' => 'Tester (by date range)',
                         'vrm' => 'Registration (comparison available)',
                         'vin' => 'VIN/Chassis (comparison available)',
-                        'testNumber' => 'MOT test number'
-                    ]
+                        'testNumber' => 'MOT test number',
+                    ],
                 ]
             );
             ?>
@@ -97,7 +97,7 @@ $this->headScript()->appendFile('/js/dvsa-mot-enforcement/search/mot-search.js')
                         'hiddenElement', [
                             'id' => 'search-result',
                             'value' => 'not-search',
-                            'name' => 'search-result'
+                            'name' => 'search-result',
                         ]
                     );
                     ?>
@@ -109,7 +109,7 @@ $this->headScript()->appendFile('/js/dvsa-mot-enforcement/search/mot-search.js')
                             'size' => 92,
                             'value' => $this->searchTerm,
                             'maxlength' => 60,
-                            'placeholder' => 'eg. V12345'
+                            'placeholder' => 'eg. V12345',
                         ]
                     );
                     ?>

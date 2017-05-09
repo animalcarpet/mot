@@ -2,7 +2,6 @@
 
 use UserApi\Application\Controller\AccountController;
 use UserApi\Application\Controller\ApplicationController;
-use UserApi\Application\Controller\UsernameGenerationController;
 use UserApi\Message\Controller\MessageController;
 use UserApi\HelpDesk\Controller\SearchPersonController;
 use UserApi\SpecialNotice\Controller\SpecialNoticeBroadcastController;
@@ -14,108 +13,108 @@ use UserApi\Factory\SpecialNoticeOverdueControllerFactory;
 return [
     'controllers' => [
         'invokables' => [
-            ApplicationController::class             => ApplicationController::class,
-            AccountController::class                 => AccountController::class,
-            SpecialNoticeContentController::class    => SpecialNoticeContentController::class,
-            SpecialNoticeBroadcastController::class  => SpecialNoticeBroadcastController::class,
-            SpecialNoticeController::class           => SpecialNoticeController::class,
-            SearchPersonController::class            => SearchPersonController::class,
-            MessageController::class                 => MessageController::class,
+            ApplicationController::class => ApplicationController::class,
+            AccountController::class => AccountController::class,
+            SpecialNoticeContentController::class => SpecialNoticeContentController::class,
+            SpecialNoticeBroadcastController::class => SpecialNoticeBroadcastController::class,
+            SpecialNoticeController::class => SpecialNoticeController::class,
+            SearchPersonController::class => SearchPersonController::class,
+            MessageController::class => MessageController::class,
         ],
         'factories' => [
-            SpecialNoticeOverdueController::class    => SpecialNoticeOverdueControllerFactory::class,
-        ]
+            SpecialNoticeOverdueController::class => SpecialNoticeOverdueControllerFactory::class,
+        ],
     ],
-    'router'      => [
+    'router' => [
         'routes' => [
-            'applications-for-user'    => [
-                'type'    => 'Segment',
+            'applications-for-user' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/user/:userId/application',
-                    'defaults'    => [
+                    'route' => '/user/:userId/application',
+                    'defaults' => [
                         'controller' => ApplicationController::class,
                     ],
                     'constraints' => [
-                        'userId' => '[0-9]+'
+                        'userId' => '[0-9]+',
                     ],
                 ],
             ],
-            'search-person'            => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/search-person',
-                    'defaults'    => [
+            'search-person' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/search-person',
+                    'defaults' => [
                         'controller' => SearchPersonController::class,
                     ],
                     'constraints' => [
-                        'id' => '[0-9]+'
+                        'id' => '[0-9]+',
                     ],
                 ],
             ],
-            'user-account'             => [
-                'type'    => 'Segment',
+            'user-account' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/user-account[/:id]',
+                    'route' => '/user-account[/:id]',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => AccountController::class,
                     ],
                 ],
             ],
-            'special-notice-content'   => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/special-notice-content[/:id]',
+            'special-notice-content' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/special-notice-content[/:id]',
                     'constraints' => [
-                        'id' => '[0-9]+'
+                        'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
-                        'controller' => SpecialNoticeContentController::class
-                    ]
+                    'defaults' => [
+                        'controller' => SpecialNoticeContentController::class,
+                    ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'publish' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/publish',
+                            'route' => '/publish',
                             'defaults' => [
                                 'controller' => SpecialNoticeContentController::class,
-                                'action'     => "publish"
+                                'action' => 'publish',
                             ],
                         ],
                     ],
                 ],
             ],
             'special-notice-broadcast' => [
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => [
-                    'route'    => '/special-notice-broadcast',
+                    'route' => '/special-notice-broadcast',
                     'defaults' => [
                         'controller' => SpecialNoticeBroadcastController::class,
                     ],
                 ],
             ],
-            'special-notice-overdue'                 => [
-                'type'    => 'Segment',
+            'special-notice-overdue' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/special-notice-overdue',
+                    'route' => '/special-notice-overdue',
                     'defaults' => [
-                        'controller' => SpecialNoticeOverdueController::class
-                    ]
+                        'controller' => SpecialNoticeOverdueController::class,
+                    ],
                 ],
             ],
-            'message'    => [
-                'type'    => 'Segment',
+            'message' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/message',
+                    'route' => '/message',
                     'defaults' => [
-                        'controller' => MessageController::class
-                    ]
-                ]
-            ]
+                        'controller' => MessageController::class,
+                    ],
+                ],
+            ],
         ],
     ],
 ];

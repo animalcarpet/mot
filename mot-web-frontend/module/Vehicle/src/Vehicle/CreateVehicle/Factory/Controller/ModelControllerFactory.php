@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Vehicle\CreateVehicle\Factory\Controller;
 
 use Vehicle\CreateVehicle\Action\ModelAction;

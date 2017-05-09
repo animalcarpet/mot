@@ -10,7 +10,7 @@ use DvsaCommon\Enum\VehicleClassCode;
 
 class ClassForm extends Form
 {
-    const FIELD_CLASS = "class";
+    const FIELD_CLASS = 'class';
     const SELECT_CLASS_ERROR = 'Test class - select an option';
 
     private $errorMessages = [];
@@ -36,15 +36,16 @@ class ClassForm extends Form
         $valueOptions = [];
         foreach ($classes as $classId => $classCode) {
             $valueOptions[] = [
-                'value'      => $classId,
-                'inputName'  => self::FIELD_CLASS,
-                'key'        => 'Class ' . $classCode,
-                'label'      => 'Class ' . $classCode,
-                'selected'   => ($classId == $selectedId),
-                'attributes' => ['id' => 'testClass' . $classCode],
+                'value' => $classId,
+                'inputName' => self::FIELD_CLASS,
+                'key' => 'Class '.$classCode,
+                'label' => 'Class '.$classCode,
+                'selected' => ($classId == $selectedId),
+                'attributes' => ['id' => 'testClass'.$classCode],
                 'label_attributes' => ['class' => 'block-label'],
             ];
         }
+
         return $valueOptions;
     }
 
@@ -56,18 +57,21 @@ class ClassForm extends Form
             !in_array($selectedValue, VehicleClassCode::getAll())) {
             $this->addErrorMessage(self::SELECT_CLASS_ERROR);
             $this->addLabelError($this->getClassRadioGroup(), ['Select a test class']);
+
             return false;
         }
 
         if (!in_array($selectedValue, $this->allowedClasses['forPerson'])) {
-            $this->addErrorMessage('Test class - you are not eligible to test class ' . $selectedValue . ' vehicles');
-            $this->addLabelError($this->getClassRadioGroup(), ['You are not eligible to test class ' . $selectedValue . ' vehicles']);
+            $this->addErrorMessage('Test class - you are not eligible to test class '.$selectedValue.' vehicles');
+            $this->addLabelError($this->getClassRadioGroup(), ['You are not eligible to test class '.$selectedValue.' vehicles']);
+
             return false;
         }
 
         if (!in_array($selectedValue, $this->allowedClasses['forVts'])) {
-            $this->addErrorMessage('Test class - this VTS is not eligible to test class ' . $selectedValue . ' vehicles');
-            $this->addLabelError($this->getClassRadioGroup(), ['This VTS is not eligible to test class ' . $selectedValue . ' vehicles']);
+            $this->addErrorMessage('Test class - this VTS is not eligible to test class '.$selectedValue.' vehicles');
+            $this->addLabelError($this->getClassRadioGroup(), ['This VTS is not eligible to test class '.$selectedValue.' vehicles']);
+
             return false;
         }
 

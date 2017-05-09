@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApiTest\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
@@ -8,9 +9,7 @@ use PHPUnit_Framework_TestCase;
 use Zend\Http\PhpEnvironment\Response;
 
 /**
- * Class BaseRestfulControllerTestCase
- *
- * @package DvsaCommonApiTest\Controller
+ * Class BaseRestfulControllerTestCase.
  */
 abstract class BaseRestfulControllerTestCase extends PHPUnit_Framework_TestCase
 {
@@ -38,8 +37,8 @@ abstract class BaseRestfulControllerTestCase extends PHPUnit_Framework_TestCase
             [
                 [
                     'message' => $expectedErrorMessage,
-                    'code'    => $expectedErrorCode
-                ]
+                    'code' => $expectedErrorCode,
+                ],
             ]
         );
     }
@@ -53,12 +52,12 @@ abstract class BaseRestfulControllerTestCase extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedResponseStatus, $response->getStatusCode());
         $this->assertInstanceOf("Zend\View\Model\JsonModel", $result);
         $vars = $result->getVariables();
-        $this->assertTrue(array_key_exists('errors', $vars), "Should have errors");
+        $this->assertTrue(array_key_exists('errors', $vars), 'Should have errors');
 
         foreach ($errorArray as $error) {
             $this->assertEquals($error['message'], $vars['errors'][0]['message']);
             $this->assertEquals($error['code'], $vars['errors'][0]['code']);
-            $this->assertTrue(array_key_exists('displayMessage', $vars['errors'][0]), "Should have display message");
+            $this->assertTrue(array_key_exists('displayMessage', $vars['errors'][0]), 'Should have display message');
         }
     }
 
@@ -90,7 +89,7 @@ abstract class BaseRestfulControllerTestCase extends PHPUnit_Framework_TestCase
             $response,
             403,
             $result,
-            'Unauthorised request, requires role ' . $requiredRole . ' to perform that action',
+            'Unauthorised request, requires role '.$requiredRole.' to perform that action',
             ForbiddenException::ERROR_CODE_FORBIDDEN
         );
     }

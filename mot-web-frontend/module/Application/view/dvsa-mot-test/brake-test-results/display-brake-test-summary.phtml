@@ -1,11 +1,10 @@
 <?php
 
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
-use DvsaCommon\Enum\VehicleClassCode;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
-/** @var MotTest $motTest */
+/* @var MotTest $motTest */
 $motTest;
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
@@ -46,7 +45,7 @@ if ($vehicle) {
 echo $this->partial(
     'partials/brake-test-column-summary.phtml',
     [
-        'vehicle'     => $vehicle,
+        'vehicle' => $vehicle,
         'motTest' => $motTest,
     ]
 );
@@ -72,7 +71,7 @@ echo $this->partial(
             echo $this->url(
                 'mot-test/brake-test-configuration',
                 [
-                    'tis-id'        => null,
+                    'tis-id' => null,
                     'motTestNumber' => $motTestNumber,
                 ]
             ); ?>"

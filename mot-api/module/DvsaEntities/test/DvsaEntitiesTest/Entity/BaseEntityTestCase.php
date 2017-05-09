@@ -1,12 +1,11 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class BaseEntityTestCase
- *
- * @package DvsaEntitiesTest\Entity
+ * Class BaseEntityTestCase.
  */
 class BaseEntityTestCase extends PHPUnit_Framework_TestCase
 {
@@ -15,12 +14,12 @@ class BaseEntityTestCase extends PHPUnit_Framework_TestCase
         $number = 0;
         foreach ($fields as $expectedProperty) {
             $propertyCapitalName = ucfirst($expectedProperty);
-            $setterName = 'set' . $propertyCapitalName;
-            $getterName = 'get' . $propertyCapitalName;
-            $setterReturnValue = $entity->$setterName('testValue' . $number);
-            $this->assertSame('testValue' . $number, $entity->$getterName());
+            $setterName = 'set'.$propertyCapitalName;
+            $getterName = 'get'.$propertyCapitalName;
+            $setterReturnValue = $entity->$setterName('testValue'.$number);
+            $this->assertSame('testValue'.$number, $entity->$getterName());
             $this->assertSame($entity, $setterReturnValue);
-            $number++;
+            ++$number;
         }
     }
 }

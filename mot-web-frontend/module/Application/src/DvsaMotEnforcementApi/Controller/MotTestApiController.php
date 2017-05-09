@@ -6,26 +6,23 @@ use Core\Controller\AbstractAuthActionController;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
-use DvsaCommon\HttpRestJson\Exception\RestException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotEnforcement\Model\MotTest as MotTestModel;
 use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
 
 /**
- * Class MotTestApiController
+ * Class MotTestApiController.
  */
 class MotTestApiController extends AbstractAuthActionController
 {
     /**
-     * Fetch last 2 days of MOT test results back to front-end as JSON
-     *
+     * Fetch last 2 days of MOT test results back to front-end as JSON.
      */
     public function examinerFetchRecentMotTestDataAction()
     {
         $this->assertGranted(PermissionInSystem::DVSA_SITE_SEARCH);
 
-        $siteNumber = (string)$this->params()->fromRoute('siteNumber', null);
+        $siteNumber = (string) $this->params()->fromRoute('siteNumber', null);
         $params['siteNumber'] = $siteNumber;
         $params['format'] = 'DATA_TABLES';
         $params['sortDirection'] = 'DESC';
@@ -38,7 +35,7 @@ class MotTestApiController extends AbstractAuthActionController
             $apiUrl = MotTestUrlBuilder::search()->toString();
             $restResult = $this->getRestClient()->getWithParams($apiUrl, $params);
             $resultData = $restResult['data']['data'];
-            $motTestModel = new MotTestModel;
+            $motTestModel = new MotTestModel();
             $viewRender = $this->getServiceLocator()->get('ViewRenderer');
             $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
             $catalog = $this->getCatalogService();
@@ -60,7 +57,7 @@ class MotTestApiController extends AbstractAuthActionController
                                     'model' => $escapeHtml($motTest['model']),
                                     'display_test_type' => $escapeHtml($motTest['display_test_type']),
                                     'username' => $escapeHtml($motTest['testerUsername']),
-                                    'test_date' => $motTest['test_date']
+                                    'test_date' => $motTest['test_date'],
                     ];
                 }
             }
@@ -70,6 +67,7 @@ class MotTestApiController extends AbstractAuthActionController
 
         // JSON results in DataTables required format.
         $result = new JsonModel(['aaData' => $results]);
+
         return $result;
     }
 
@@ -77,7 +75,7 @@ class MotTestApiController extends AbstractAuthActionController
     {
         $response = [
             'display_status' => $motTest['display_status'],
-            'popover' => $motTest['popover']
+            'popover' => $motTest['popover'],
         ];
 
         return $response;
@@ -89,15 +87,14 @@ class MotTestApiController extends AbstractAuthActionController
             'id' => "id=\"mot-$motTestNumber\"",
             'text' => MotTestStatusName::ACTIVE === $status ? 'In progress' : 'View',
             'url' => $this->url()->fromRoute('enforcement-view-mot-test', ['motTestNumber' => $motTestNumber]),
-            'status' => $status
+            'status' => $status,
         ];
 
         return $response;
     }
 
     /**
-     * Fetch MOT test results back to front-end as JSON
-     *
+     * Fetch MOT test results back to front-end as JSON.
      */
     public function examinerFetchMotTestByDateAction()
     {
@@ -118,9 +115,9 @@ class MotTestApiController extends AbstractAuthActionController
                 $apiUrl = MotTestUrlBuilder::search()->toString();
 
                 if ($searchType == 'tester') {
-                    $params['tester'] = (string)$this->params()->fromRoute('search', 0);
+                    $params['tester'] = (string) $this->params()->fromRoute('search', 0);
                 } else {
-                    $params['siteNumber'] = (string)$this->params()->fromRoute('search', 0);
+                    $params['siteNumber'] = (string) $this->params()->fromRoute('search', 0);
                 }
                 $params['format'] = 'DATA_TABLES';
                 $params['rowCount'] = $aPosts['iDisplayLength'];
@@ -141,7 +138,7 @@ class MotTestApiController extends AbstractAuthActionController
             }
             if ($apiResult) {
                 if (!empty($apiResult['data']['data'])) {
-                    $motTestModel = new MotTestModel;
+                    $motTestModel = new MotTestModel();
                     $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
                     $viewRender = $this->getServiceLocator()->get('ViewRenderer');
                     $escapeHtml = $viewHelperManager->get('escapeHtml');
@@ -153,7 +150,7 @@ class MotTestApiController extends AbstractAuthActionController
                         $data[] = [
                             'display_date' => $escapeHtml($motTest['display_date']),
                             'test_date' => $escapeHtml($motTest['test_date']),
-                            'status' =>$escapeHtml($motTest['display_status']),
+                            'status' => $escapeHtml($motTest['display_status']),
                             'vin' => $escapeHtml($motTest['vin']),
                             'registration' => $escapeHtml($motTest['registration']),
                             'link' => $this->createSummaryLinkAttributes($motTestNumber, $motTest['status']),
@@ -161,7 +158,7 @@ class MotTestApiController extends AbstractAuthActionController
                             'model' => $escapeHtml($motTest['model']),
                             'display_test_type' => $escapeHtml($motTest['display_test_type']),
                             'site_number' => $escapeHtml($motTest['siteNumber']),
-                            'username' => $escapeHtml($motTest['testerUsername'])
+                            'username' => $escapeHtml($motTest['testerUsername']),
                         ];
                     }
                 }
@@ -177,9 +174,10 @@ class MotTestApiController extends AbstractAuthActionController
                 'sEcho' => $sEcho,
                 'iTotalRecords' => $totalResultCount,
                 'iTotalDisplayRecords' => $totalResultCount,
-                'errorData' => $errorData
+                'errorData' => $errorData,
             ]
         );
+
         return $result;
     }
 }

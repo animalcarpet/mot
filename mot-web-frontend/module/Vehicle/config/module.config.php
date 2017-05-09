@@ -58,8 +58,8 @@ use Vehicle\CreateVehicle\Service\CreateVehicleModelService;
 use Vehicle\CreateVehicle\Factory\Service\CreateVehicleModelServiceFactory;
 
 return [
-    'router'        => ['routes' => require __DIR__ . '/routes.config.php'],
-    'controllers'   => [
+    'router' => ['routes' => require __DIR__.'/routes.config.php'],
+    'controllers' => [
         'invokables' => [
         ],
         'factories' => [
@@ -97,9 +97,9 @@ return [
             CreateNewVehicleService::class => CreateNewVehicleServiceFactory::class,
         ],
     ],
-    'view_manager'  => [
+    'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
     ],
 ];

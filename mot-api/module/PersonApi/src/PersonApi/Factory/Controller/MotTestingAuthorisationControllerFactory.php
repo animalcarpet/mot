@@ -2,7 +2,6 @@
 
 namespace PersonApi\Factory\Controller;
 
-use OrganisationApi\Service\AuthorisedExaminerService;
 use PersonApi\Controller\AuthorisedExaminerController;
 use PersonApi\Controller\MotTestingAuthorisationController;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
@@ -11,7 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class MotTestingAuthorisationControllerFactory
+ * Class MotTestingAuthorisationControllerFactory.
  *
  * Generates the MotTestingAuthorisationController, injecting dependencies
  */

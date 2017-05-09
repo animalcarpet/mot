@@ -1,7 +1,8 @@
 <?php
 
 use Site\Controller\RoleController;
-/**
+
+/*
  * @var \Organisation\Form\SelectRoleForm $form
  * @var int $vehicleTestingStationId
  * @var int $personId
@@ -72,7 +73,7 @@ $this->headTitle('Choose a role');
         'vehicle-testing-station-list-user-roles',
         [
             'vehicleTestingStationId' => $vehicleTestingStationId,
-            'personId'                => $personId
+            'personId' => $personId,
         ]
     ); ?>" method="POST">
         <?php echo $this->csrfToken() ?>
@@ -84,9 +85,11 @@ $this->headTitle('Choose a role');
                     <fieldset>
                         <div class="form-group <?php echo ($form->getRoleId()->getMessages()) ? ' has-error' : ''; ?>">
                             <legend class="form-label">Select a role
-                                <?php if ($form->getRoleId()->getMessages()) { ?>
+                                <?php if ($form->getRoleId()->getMessages()) {
+        ?>
                                     <span class="validation-message" id="error2">You must select a role</span>
-                                <?php } ?>
+                                <?php 
+    } ?>
                             </legend>
                             <?php echo $this->formRow($form->getRoleId(), null, false); ?>
                         </div>

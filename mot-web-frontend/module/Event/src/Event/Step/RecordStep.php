@@ -8,14 +8,13 @@
 namespace Event\Step;
 
 use DvsaCommon\InputFilter\Event\RecordInputFilter;
-use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 
 class RecordStep extends AbstractEventStep
 {
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "RECORD";
+    const STEP_ID = 'RECORD';
 
     /**
      * @var
@@ -41,7 +40,6 @@ class RecordStep extends AbstractEventStep
      * @var
      */
     protected $date;
-
 
     /**
      * @return string
@@ -88,25 +86,25 @@ class RecordStep extends AbstractEventStep
     public function toArray()
     {
         return [
-            RecordInputFilter::FIELD_TYPE     => $this->getEventType(),
-            RecordInputFilter::FIELD_DATE     => $this->makeDate(),
-            RecordInputFilter::FIELD_DAY      => $this->getDay(),
-            RecordInputFilter::FIELD_MONTH    => $this->getMonth(),
-            RecordInputFilter::FIELD_YEAR     => $this->getYear(),
+            RecordInputFilter::FIELD_TYPE => $this->getEventType(),
+            RecordInputFilter::FIELD_DATE => $this->makeDate(),
+            RecordInputFilter::FIELD_DAY => $this->getDay(),
+            RecordInputFilter::FIELD_MONTH => $this->getMonth(),
+            RecordInputFilter::FIELD_YEAR => $this->getYear(),
         ];
     }
 
     /**
-     * Convert our three fields into a string that the validaotrs expect
+     * Convert our three fields into a string that the validaotrs expect.
      *
      * @return string
      */
     protected function makeDate()
     {
         return [
-            RecordInputFilter::FIELD_DAY      => $this->getDay(),
-            RecordInputFilter::FIELD_MONTH    => $this->getMonth(),
-            RecordInputFilter::FIELD_YEAR     => $this->getYear()
+            RecordInputFilter::FIELD_DAY => $this->getDay(),
+            RecordInputFilter::FIELD_MONTH => $this->getMonth(),
+            RecordInputFilter::FIELD_YEAR => $this->getYear(),
         ];
     }
 
@@ -141,7 +139,7 @@ class RecordStep extends AbstractEventStep
      */
     public function getProgress()
     {
-        return "Step 1 of 3";
+        return 'Step 1 of 3';
     }
 
     /**

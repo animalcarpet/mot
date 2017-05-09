@@ -14,7 +14,7 @@ use VehicleApi\Service\VehicleSearchService;
 use VehicleApi\Controller\VehicleController;
 
 /**
- * Create instance of VehicleController
+ * Create instance of VehicleController.
  *
  * Class VehicleControllerFactory
  */
@@ -22,7 +22,6 @@ class VehicleControllerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $controllerManager)
     {
-
         $sl = $controllerManager->getServiceLocator();
 
         $vehicleService = $sl->get(VehicleService::class);
@@ -30,6 +29,5 @@ class VehicleControllerFactory implements FactoryInterface
         $controller = new VehicleController($vehicleService, $vehicleSearchService);
 
         return $controller;
-
     }
 }

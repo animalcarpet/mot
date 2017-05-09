@@ -10,9 +10,7 @@ namespace DvsaMotApi\Service\Helper;
 use DvsaEntities\Entity\MotTest;
 
 /**
- * Class MotTestCloneHelper
- *
- * @package DvsaMotApi\Service\Helper
+ * Class MotTestCloneHelper.
  */
 class MotTestCloneHelper
 {
@@ -45,7 +43,7 @@ class MotTestCloneHelper
                 $brakeTestCarsClone->setServiceBrake2Data($brakeTestServiceBrakeData2Clone);
             }
         }
-        
+
         $clonedMotTest->setNumber(null);
 
         return $clonedMotTest;

@@ -46,7 +46,7 @@ class MysteryShopperVehicleController extends AbstractDvsaRestfulController
         }
 
         $response = ApiResponse::jsonOk($campaignsArray);
-        
+
         return $response;
     }
 
@@ -79,7 +79,7 @@ class MysteryShopperVehicleController extends AbstractDvsaRestfulController
 
         $result = $this->mysteryShopperVehicleService->optIn($data);
 
-        if (false ===  $result) {
+        if (false === $result) {
             $this->getResponse()->setStatusCode(HttpStatus::HTTP_UNPROCESSABLE_ENTITY);
 
             return ApiResponse::jsonError(
@@ -100,8 +100,7 @@ class MysteryShopperVehicleController extends AbstractDvsaRestfulController
     {
         $incognitoVehicleId = $this->params()->fromRoute('incognitoVehicleId');
 
-        if(is_null($incognitoVehicleId)) {
-
+        if (is_null($incognitoVehicleId)) {
             $this->getResponse()->setStatusCode(HttpStatus::HTTP_BAD_REQUEST);
 
             return ApiResponse::jsonError(
@@ -111,8 +110,7 @@ class MysteryShopperVehicleController extends AbstractDvsaRestfulController
 
         $campaign = $this->mysteryShopperVehicleService->edit($incognitoVehicleId, $data);
 
-        if (false ===  $campaign) {
-
+        if (false === $campaign) {
             $this->getResponse()->setStatusCode(HttpStatus::HTTP_UNPROCESSABLE_ENTITY);
 
             return ApiResponse::jsonError(
@@ -133,6 +131,7 @@ class MysteryShopperVehicleController extends AbstractDvsaRestfulController
         $incognitoVehicleId = $this->params()->fromRoute('incognitoVehicleId');
         $response = ApiResponse::jsonOk(['Soft Delete carried out on Incognito Vehicle' => $incognitoVehicleId]);
         $this->mysteryShopperVehicleService->optOut($incognitoVehicleId);
+
         return $response;
     }
 
@@ -170,12 +169,12 @@ class MysteryShopperVehicleController extends AbstractDvsaRestfulController
             $incognitoVehicle->getTestDate()->format('Y-m-d') : null;
 
         return [
-            'incognito_vehicle_id'  => $incognitoVehicleId,
-            MysteryShopperInputFilter::FIELD_START_DATE  => $startDate,
-            MysteryShopperInputFilter::FIELD_END_DATE    => $endDate,
+            'incognito_vehicle_id' => $incognitoVehicleId,
+            MysteryShopperInputFilter::FIELD_START_DATE => $startDate,
+            MysteryShopperInputFilter::FIELD_END_DATE => $endDate,
             MysteryShopperInputFilter::FIELD_SITE_NUMBER => $siteNumber,
             MysteryShopperInputFilter::FIELD_EXPIRY_DATE => $expiryDate,
-            MysteryShopperInputFilter::FIELD_TEST_DATE   => $testDate,
+            MysteryShopperInputFilter::FIELD_TEST_DATE => $testDate,
         ];
     }
 }
