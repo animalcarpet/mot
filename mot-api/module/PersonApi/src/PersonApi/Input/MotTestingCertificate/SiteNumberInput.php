@@ -14,7 +14,6 @@ class SiteNumberInput extends Input
     {
         parent::__construct(self::FIELD);
 
-
         $siteNumberValidator = new SiteNumberValidator($siteRepository);
 
         $this

@@ -2,11 +2,10 @@
 
 namespace Application\Service;
 
-use Zend\Http\Request;
 use Zend\Session\Container;
 
 /**
- * Class ContingencySessionManager
+ * Class ContingencySessionManager.
  */
 class ContingencySessionManager
 {
@@ -16,15 +15,15 @@ class ContingencySessionManager
     private $contingencySession;
 
     /**
-     * Initalisation of the Contingency Session Manager
+     * Initalisation of the Contingency Session Manager.
      */
     public function __construct()
     {
-        $this->contingencySession   = new Container('contingencySession');
+        $this->contingencySession = new Container('contingencySession');
     }
 
     /**
-     * This function save the dto and the contingency Id to the session
+     * This function save the dto and the contingency Id to the session.
      *
      * @param $data
      * @param $contingencyId
@@ -36,7 +35,7 @@ class ContingencySessionManager
     }
 
     /**
-     * This function delete the contingency session
+     * This function delete the contingency session.
      */
     public function deleteContingencySession()
     {
@@ -45,7 +44,7 @@ class ContingencySessionManager
     }
 
     /**
-     * This function return the session
+     * This function return the session.
      *
      * @return array|null
      */
@@ -53,20 +52,21 @@ class ContingencySessionManager
     {
         if ($this->contingencySession->contingencyId !== null) {
             return [
-                'dto'           => $this->contingencySession->formData,
-                'contingencyId' => $this->contingencySession->contingencyId
+                'dto' => $this->contingencySession->formData,
+                'contingencyId' => $this->contingencySession->contingencyId,
             ];
         }
+
         return null;
     }
 
     /**
-     * This function return true if the test perform is a contingency
+     * This function return true if the test perform is a contingency.
      *
      * @return bool
      */
     public function isMotContingency()
     {
-        return (boolean)$this->contingencySession->contingencyId;
+        return (bool) $this->contingencySession->contingencyId;
     }
 }

@@ -9,7 +9,7 @@ class RegisterCardSuccessViewModel
     private $hasNewAedmRole = false;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasPendingNominations()
     {
@@ -17,7 +17,7 @@ class RegisterCardSuccessViewModel
     }
 
     /**
-     * @param boolean $hasPendingNominations
+     * @param bool $hasPendingNominations
      */
     public function setHasPendingNominations($hasPendingNominations)
     {
@@ -25,7 +25,7 @@ class RegisterCardSuccessViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasNewAedmRole()
     {
@@ -33,7 +33,7 @@ class RegisterCardSuccessViewModel
     }
 
     /**
-     * @param boolean $hasNewAedmRole
+     * @param bool $hasNewAedmRole
      */
     public function setHasNewAedmRole($hasNewAedmRole)
     {

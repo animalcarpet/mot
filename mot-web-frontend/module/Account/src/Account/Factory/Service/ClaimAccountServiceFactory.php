@@ -13,6 +13,7 @@ class ClaimAccountServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return ClaimAccountService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -21,7 +22,7 @@ class ClaimAccountServiceFactory implements FactoryInterface
         $identityProvider = $serviceLocator->get('MotIdentityProvider');
 
         return new ClaimAccountService(
-            $serviceLocator->get("AuthorisationService"),
+            $serviceLocator->get('AuthorisationService'),
             $identityProvider->getIdentity(),
             $serviceLocator->get(MapperFactory::class),
             $serviceLocator->get(ParamObfuscator::class)

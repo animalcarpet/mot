@@ -13,25 +13,23 @@ use OrganisationApi\Service\NominateRoleServiceBuilder;
 use OrganisationApi\Service\OrganisationPositionService;
 
 /**
- * Class OrganisationPositionControllerTest
- *
- * @package OrganisationApiTest\Controller
+ * Class OrganisationPositionControllerTest.
  */
 class OrganisationPositionControllerTest extends AbstractRestfulControllerTestCase
 {
     private $organisationId = 1;
-    private $nomineeId      = 1;
-    private $roleId         = 1;
+    private $nomineeId = 1;
+    private $roleId = 1;
     private $organisationPositionServiceMock;
     private $nominateRoleServiceMock;
     private $nominateRoleServiceBuilderMock;
 
     protected function setUp()
     {
-        $this->controller                      = new OrganisationPositionController();
+        $this->controller = new OrganisationPositionController();
         $this->organisationPositionServiceMock = $this->getOrganisationPositionServiceMock();
-        $this->nominateRoleServiceMock         = $this->getNominateRoleServiceMock();
-        $this->nominateRoleServiceBuilderMock  = $this->getNominateRoleServiceBuilderMock();
+        $this->nominateRoleServiceMock = $this->getNominateRoleServiceMock();
+        $this->nominateRoleServiceBuilderMock = $this->getNominateRoleServiceBuilderMock();
         $this->setupServiceManager();
         TestTransactionExecutor::inject($this->controller);
         parent::setUp();
@@ -59,7 +57,7 @@ class OrganisationPositionControllerTest extends AbstractRestfulControllerTestCa
         $result = $this->controller->create(
             [
                 'nomineeId' => $this->nomineeId,
-                'roleId'    => $this->roleId,
+                'roleId' => $this->roleId,
             ]
         );
 
@@ -93,7 +91,7 @@ class OrganisationPositionControllerTest extends AbstractRestfulControllerTestCa
 
     private function getNominateRoleServiceMock()
     {
-        $orgPosition              = new OrganisationBusinessRoleMap();
+        $orgPosition = new OrganisationBusinessRoleMap();
         $nominatedRoleServiceMock = XMock::of(NominateRoleService::class);
 
         $nominatedRoleServiceMock->expects($this->any())

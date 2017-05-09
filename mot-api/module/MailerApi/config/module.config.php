@@ -3,26 +3,26 @@
 use MailerApi\Controller\MailerController;
 
 return [
-    'controllers'  => [
+    'controllers' => [
         'invokables' => [
             MailerController::class => MailerController::class,
         ],
     ],
-    'router'       => [
+    'router' => [
         'routes' => [
             'mailer' => [
-                'type'         => 'literal',
-                'options'      => [
-                    'route'    => '/mailer',
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/mailer',
                     'defaults' => [
                         'controller' => MailerController::class,
                     ],
                 ],
                 'child_routes' => [
                     'username-reminder' => [
-                        'type'    => 'literal',
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/username-reminder',
+                            'route' => '/username-reminder',
                             'defaults' => [
                                 'controller' => MailerController::class,
                             ],

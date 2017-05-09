@@ -28,8 +28,8 @@ class EditDefectController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
     const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
     const CONTENT_HEADER_TYPE__SEARCH_RESULTS = 'Search for a defect';
-    const CONTENT_HEADER_TYPE__ADD_DEFECT = "Add a defect";
-    const CONTENT_HEADER_TYPE__EDIT_DEFECT = "Edit a defect";
+    const CONTENT_HEADER_TYPE__ADD_DEFECT = 'Add a defect';
+    const CONTENT_HEADER_TYPE__EDIT_DEFECT = 'Edit a defect';
 
     const DEFECT_TYPE_ADVISORY = 'advisory';
     const DEFECT_TYPE_PRS = 'prs';
@@ -228,8 +228,7 @@ class EditDefectController extends AbstractDvsaMotTestController
             $breadcrumbs += [
                 self::CONTENT_HEADER_TYPE__SEARCH_RESULTS => $this->defectsJourneyUrlGenerator->goBack(),
             ];
-        }
-        elseif (DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT === $defectsJourneyContext) {
+        } elseif (DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT === $defectsJourneyContext) {
             // add nothing for main result page
         }
         // Get breadcrumbs for any other context in the Defect Journey (e.g. browse, browse-root).

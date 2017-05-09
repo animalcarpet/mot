@@ -1,9 +1,8 @@
 <?php
+
 namespace DvsaEntities\Repository;
 
 use AccountApi\Crypt\SecurityAnswerHashFunction;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\TooFewResultsException;
 use DvsaCommonApi\Service\Exception\TooManyResultsException;
@@ -42,12 +41,13 @@ class SecurityQuestionRepository extends AbstractMutableRepository
     }
 
     /**
-     * Find the security question attached to a person
+     * Find the security question attached to a person.
      *
-     * @param integer $questionNumber   the zero based question number (0 => question1; 1 => question2)
-     * @param integer $userId           the database Id of the user presenting the answer
+     * @param int $questionNumber the zero based question number (0 => question1; 1 => question2)
+     * @param int $userId         the database Id of the user presenting the answer
      *
      * @return SecurityQuestion
+     *
      * @throws NotFoundException
      */
     public function findQuestionByQuestionNumber($questionNumber, $userId)
@@ -60,12 +60,15 @@ class SecurityQuestionRepository extends AbstractMutableRepository
         if (count($results) !== 1) {
             throw new NotFoundException('Question not found');
         }
+
         return $results[0]->getSecurityQuestion();
     }
 
     /**
-     * @param integer $personId
+     * @param int $personId
+     *
      * @return array
+     *
      * @throws NotFoundException
      * @throws TooFewResultsException
      * @throws TooManyResultsException
@@ -106,11 +109,11 @@ class SecurityQuestionRepository extends AbstractMutableRepository
      *             in the "lost or forgotten card" journey
      *
      * Find a SINGLE matching tuple of (question-id, user-id) and iff there is one, we can
-     * then check that the correct answer has been submitted.
+     * then check that the correct answer has been submitted
      *
-     * @param integer $question the database Id of the security question being asked
-     * @param integer $userId   the database Id of the user presenting the answer
-     * @param string  $answer   the plain text response they gave to the SCSO over the phone
+     * @param int    $question the database Id of the security question being asked
+     * @param int    $userId   the database Id of the user presenting the answer
+     * @param string $answer   the plain text response they gave to the SCSO over the phone
      *
      * @return bool
      */
@@ -128,6 +131,7 @@ class SecurityQuestionRepository extends AbstractMutableRepository
                     $match->getAnswer()
                 );
         }
+
         return false;
     }
 }

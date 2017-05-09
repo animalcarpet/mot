@@ -10,15 +10,15 @@ use DvsaCommon\UrlBuilder\TesterUrlBuilder;
  */
 class TesterInProgressTestNumberResource extends ApiResources
 {
-
     /**
-     * @param integer $personId
+     * @param int $personId
      *
-     * @return integer|null test id if tester has test in progress.
+     * @return int|null test id if tester has test in progress
      */
     public function get($personId)
     {
         $path = TesterUrlBuilder::create()->testerInProgressTestNumber($personId)->toString();
+
         return $this->restGet($path)['data'];
     }
 }

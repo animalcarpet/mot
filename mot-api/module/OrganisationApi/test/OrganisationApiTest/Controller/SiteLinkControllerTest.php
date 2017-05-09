@@ -2,7 +2,6 @@
 
 namespace OrganisationApiTest\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
@@ -62,7 +61,6 @@ class SiteLinkControllerTest extends AbstractRestfulControllerTestCase
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, $expect['result'], $result);
     }
 
-
     public function dataProviderTestActionsResultAndAccess()
     {
         $srvResult = 'service result';
@@ -75,7 +73,7 @@ class SiteLinkControllerTest extends AbstractRestfulControllerTestCase
                 'method' => Request::METHOD_GET,
                 'action' => null,
                 'params' => null,
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'getApprovedUnlinkedSite',
                         'result' => $srvResult,
@@ -96,7 +94,7 @@ class SiteLinkControllerTest extends AbstractRestfulControllerTestCase
                         'linkId' => self::LINK_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'get',
                         'params' => [self::LINK_ID, OrganisationSiteStatusCode::ACTIVE],
@@ -114,13 +112,13 @@ class SiteLinkControllerTest extends AbstractRestfulControllerTestCase
                 'action' => null,
                 'params' => [
                     'route' => [
-                        'id'         => self::AE_ID,
+                        'id' => self::AE_ID,
                     ],
-                    'post'  => [
+                    'post' => [
                         'siteNumber' => self::SITE_NR,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'siteLink',
                         'params' => [self::AE_ID, self::SITE_NR],
@@ -140,9 +138,9 @@ class SiteLinkControllerTest extends AbstractRestfulControllerTestCase
                     'route' => [
                         'linkId' => self::LINK_ID,
                     ],
-                    'put'   => $status,
+                    'put' => $status,
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'siteChangeStatus',
                         'params' => [self::LINK_ID, $status],

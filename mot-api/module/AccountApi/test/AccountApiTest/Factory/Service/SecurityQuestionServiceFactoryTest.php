@@ -11,7 +11,6 @@ use AccountApi\Factory\Service\SecurityQuestionServiceFactory;
 use AccountApi\Service\SecurityQuestionService;
 use AccountApi\Service\Validator\PersonSecurityAnswerValidator;
 use Doctrine\ORM\EntityManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -23,13 +22,10 @@ use DvsaEntities\Entity\SecurityQuestion;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\PersonSecurityAnswerRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SecurityQuestionServiceFactoryTest
- *
- * @package AccountApiTest\Service\Factory
+ * Class SecurityQuestionServiceFactoryTest.
  */
 class SecurityQuestionServiceFactoryTest extends AbstractServiceTestCase
 {
@@ -45,10 +41,11 @@ class SecurityQuestionServiceFactoryTest extends AbstractServiceTestCase
         $repoMap = [
             SecurityQuestion::class => XMock::of(SecurityQuestionRepository::class),
             Person::class => XMock::of(PersonRepository::class),
-            PersonSecurityAnswer::class => XMock::of(PersonSecurityAnswerRepository::class)
+            PersonSecurityAnswer::class => XMock::of(PersonSecurityAnswerRepository::class),
         ];
         $this->mockMethod($mockEntityManager, 'getRepository', $this->any(), function () use ($repoMap) {
             $className = func_get_args()[0];
+
             return isset($repoMap[$className]) ? $repoMap[$className] : null;
         });
 
@@ -61,7 +58,7 @@ class SecurityQuestionServiceFactoryTest extends AbstractServiceTestCase
         $mockParamObfuscator = XMock::of(ParamObfuscator::class);
         $serviceManager->setService(ParamObfuscator::class, $mockParamObfuscator);
 
-        $serviceManager->setService('config', ['security_answer_verification_delay' => 5, /* seconds */]);
+        $serviceManager->setService('config', ['security_answer_verification_delay' => 5/* seconds */]);
 
         $factory = new SecurityQuestionServiceFactory();
 

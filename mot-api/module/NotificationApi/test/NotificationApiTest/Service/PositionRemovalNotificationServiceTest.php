@@ -1,21 +1,17 @@
 <?php
+
 namespace NotificationApiTest\Service;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
-use Zend\ServiceManager\ServiceManager;
 use NotificationApi\Service\PositionRemovalNotificationService;
 
 /**
- * Class PositionRemovalNotificationServiceTest
+ * Class PositionRemovalNotificationServiceTest.
  *
  * Unit testing PositionRemovalNotificationService
- *
- * @package NotificationApiTest\Service
  */
 class PositionRemovalNotificationServiceTest extends AbstractServiceTestCase
 {
-
     // Scenario 1:
     public function testScenarioOneDvsaOrgSiteRemovingFromSite()
     {
@@ -60,7 +56,7 @@ class PositionRemovalNotificationServiceTest extends AbstractServiceTestCase
     {
         $roles = $this->dummyRoles();
         $roles['system'] = [];
-        $roles['sites'] = [ 1 => [ 'roles' => [] ] ];
+        $roles['sites'] = [1 => ['roles' => []]];
 
         // When: User who is Org removing role from site
         $service = new PositionRemovalNotificationService($roles);
@@ -144,43 +140,42 @@ class PositionRemovalNotificationServiceTest extends AbstractServiceTestCase
                     'DVSA-AREA-OFFICE-1',
                     'TESTER',
                     'SITE-ADMIN',
-                    'SITE-MANAGER'
-                ]
+                    'SITE-MANAGER',
+                ],
             ],
-            "organisations" => [
-                "9" => [
-                    "roles" => [
-                        "AUTHORISED-EXAMINER-DELEGATE",
-                        "AUTHORISED-EXAMINER-DESIGNATED-MANAGER"
+            'organisations' => [
+                '9' => [
+                    'roles' => [
+                        'AUTHORISED-EXAMINER-DELEGATE',
+                        'AUTHORISED-EXAMINER-DESIGNATED-MANAGER',
                     ],
                 ],
-                "10" => [
-                    "roles" => [
-                        "AUTHORISED-EXAMINER-DESIGNATED-MANAGER"
+                '10' => [
+                    'roles' => [
+                        'AUTHORISED-EXAMINER-DESIGNATED-MANAGER',
                     ],
                 ],
-                "12" => [
-                    "roles" => [
-                        "AUTHORISED-EXAMINER-DESIGNATED-MANAGER"
-                    ]
-                ]
+                '12' => [
+                    'roles' => [
+                        'AUTHORISED-EXAMINER-DESIGNATED-MANAGER',
+                    ],
+                ],
             ],
             'sites' => [
                 1 => [
                     'roles' => [
-                        "TESTER",
-                        "SITE-MANAGER"
-                    ]
+                        'TESTER',
+                        'SITE-MANAGER',
+                    ],
                 ],
             ],
-            "siteOrganisationMap" => [
+            'siteOrganisationMap' => [
                 1 => [
-                    9
-                ]
-            ]
+                    9,
+                ],
+            ],
         ];
 
         return $roles;
     }
-
 }

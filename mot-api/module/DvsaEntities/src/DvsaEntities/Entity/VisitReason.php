@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -36,6 +37,7 @@ class VisitReason extends Entity
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 
@@ -55,6 +57,7 @@ class VisitReason extends Entity
     public function setReason($reason)
     {
         $this->reason = $reason;
+
         return $this;
     }
 

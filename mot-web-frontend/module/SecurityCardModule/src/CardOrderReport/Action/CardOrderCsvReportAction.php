@@ -56,13 +56,13 @@ class CardOrderCsvReportAction
         }
         $this->authService->assertGranted(PermissionInSystem::VIEW_SECURITY_CARD_ORDER);
 
-        if (!(bool)strtotime($dateRouteParam)) {
+        if (!(bool) strtotime($dateRouteParam)) {
             return new NotFoundActionResult();
         }
 
         $nowAsTime = $this->dateTimeHolder->getUserCurrent();
-        $tenAmToday =$this->dateTimeHolder->getUserCurrentDate()
-            ->setTime(0,0,0)
+        $tenAmToday = $this->dateTimeHolder->getUserCurrentDate()
+            ->setTime(0, 0, 0)
             ->add(new DateInterval(self::DATE_INTERVAL_10_HOURS));
 
         $minDate = $this->dateTimeHolder->getUserCurrentDate()
@@ -72,8 +72,7 @@ class CardOrderCsvReportAction
             ->sub(new DateInterval(self::DATE_INTERVAL_ONE_DAY))
             ->add(new DateInterval(self::DATE_INTERVAL_10_HOURS));
 
-        if ($nowAsTime < $tenAmToday)
-        {
+        if ($nowAsTime < $tenAmToday) {
             $minDate->sub(new DateInterval(self::DATE_INTERVAL_ONE_DAY));
             $maxDate->sub(new DateInterval(self::DATE_INTERVAL_ONE_DAY));
         }
@@ -81,8 +80,7 @@ class CardOrderCsvReportAction
         $fromDate = DateUtils::toDateTime($dateRouteParam);
         $toDate = clone $fromDate;
         $toDate->add(new DateInterval(self::DATE_INTERVAL_ONE_DAY));
-        if (date_offset_get($this->dateTimeHolder->getUserCurrent()) === self::ONE_HOUR_IN_SECS)
-        {
+        if (date_offset_get($this->dateTimeHolder->getUserCurrent()) === self::ONE_HOUR_IN_SECS) {
             $fromDate->sub(new DateInterval(self::DATE_INTERVAL_1_HOUR));
             $minDate->sub(new DateInterval(self::DATE_INTERVAL_1_HOUR));
             $toDate->sub(new DateInterval(self::DATE_INTERVAL_1_HOUR));
@@ -103,6 +101,7 @@ class CardOrderCsvReportAction
 
     /**
      * @param Collection $orders
+     *
      * @return resource
      */
     private function buildCsv(Collection $orders)
@@ -117,7 +116,7 @@ class CardOrderCsvReportAction
             'Address line 2',
             'Address line 3',
             'Town',
-            'Postcode'
+            'Postcode',
         ]);
 
         /** @var SecurityCardOrder $order */
@@ -130,7 +129,7 @@ class CardOrderCsvReportAction
                 $order->getAddressLine2(),
                 $order->getAddressLine3(),
                 $order->getTown(),
-                $order->getPostcode()
+                $order->getPostcode(),
             ]);
         }
 
@@ -141,7 +140,8 @@ class CardOrderCsvReportAction
 
     /**
      * @param resource $streamResource
-     * @param string $dateRouteParam
+     * @param string   $dateRouteParam
+     *
      * @return Stream
      */
     private function buildResponseStream($streamResource, $dateRouteParam)

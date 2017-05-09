@@ -59,19 +59,19 @@ class NominateRoleServiceBuilder
         FeatureToggles $featureToggles,
         TwoFactorStatusService $twoFactorStatusService
     ) {
-        $this->organisationRepository                = $organisationRepository;
-        $this->personRepository                      = $personRepository;
-        $this->organisationBusinessRoleRepository    = $organisationBusinessRoleRepository;
-        $this->authorisationService                  = $authorisationService;
-        $this->conditionalNominationOperation        = $conditionalNominationOperation;
-        $this->directNominationOperation             = $directNominationOperation;
-        $this->transaction                           = $transaction;
-        $this->authorisationService                  = $authorisationService;
-        $this->motIdentityProvider                   = $motIdentityProvider;
-        $this->businessRoleStatusRepository          = $businessRoleStatusRepository;
+        $this->organisationRepository = $organisationRepository;
+        $this->personRepository = $personRepository;
+        $this->organisationBusinessRoleRepository = $organisationBusinessRoleRepository;
+        $this->authorisationService = $authorisationService;
+        $this->conditionalNominationOperation = $conditionalNominationOperation;
+        $this->directNominationOperation = $directNominationOperation;
+        $this->transaction = $transaction;
+        $this->authorisationService = $authorisationService;
+        $this->motIdentityProvider = $motIdentityProvider;
+        $this->businessRoleStatusRepository = $businessRoleStatusRepository;
         $this->organisationBusinessRoleMapRepository = $organisationBusinessRoleMapRepository;
-        $this->featureToggles                        = $featureToggles;
-        $this->twoFactorStatusService                = $twoFactorStatusService;
+        $this->featureToggles = $featureToggles;
+        $this->twoFactorStatusService = $twoFactorStatusService;
     }
 
     public function buildForNominationCreation($nomineeId, $organisationId, $roleId)
@@ -130,12 +130,12 @@ class NominateRoleServiceBuilder
 
         if (isset($this->roleId)) {
             $organisationBusinessRole = $this->organisationBusinessRoleRepository->get($this->roleId);
-        } else if (isset($this->roleCode)) {
+        } elseif (isset($this->roleCode)) {
             $organisationBusinessRole = $this->organisationBusinessRoleRepository->getByCode($this->roleCode);
         }
 
         if (!isset($organisationBusinessRole)) {
-            throw new NotFoundException("Role not found, did you specify an ID or code?");
+            throw new NotFoundException('Role not found, did you specify an ID or code?');
         }
 
         return $organisationBusinessRole;

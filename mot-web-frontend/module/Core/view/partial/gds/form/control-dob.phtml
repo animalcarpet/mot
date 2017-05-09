@@ -2,7 +2,7 @@
     $escLabel = (is_null($label)) ? $element->getLabel() : $label;
 ?>
 
-<label for="<?php echo $this->escapeHtmlAttr($element->getAttribute("id")); ?>"
+<label for="<?php echo $this->escapeHtmlAttr($element->getAttribute('id')); ?>"
        class="form-label">
 
     <?php if (!empty($escLabel)) :
@@ -14,12 +14,12 @@
     echo $this->partial(
         'partial/gds/form/control-text',
         [
-            'id'            => $element->getAttribute("id"),
-            'name'          => $element->getName(),
-            'value'         => $element->getValue(),
-            'inputModifier' => $element->getAttribute("inputModifier"),
-            'type'          => $element->getAttribute("type"),
-            'maxLength'     => $element->getAttribute("maxLength"),
+            'id' => $element->getAttribute('id'),
+            'name' => $element->getName(),
+            'value' => $element->getValue(),
+            'inputModifier' => $element->getAttribute('inputModifier'),
+            'type' => $element->getAttribute('type'),
+            'maxLength' => $element->getAttribute('maxLength'),
         ]
     );
 ?>

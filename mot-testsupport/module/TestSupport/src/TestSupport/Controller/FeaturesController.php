@@ -3,7 +3,6 @@
 namespace TestSupport\Controller;
 
 use TestSupport\Service\FeaturesService;
-use Zend\View\Model\JsonModel;
 
 class FeaturesController extends BaseTestSupportRestfulController
 {

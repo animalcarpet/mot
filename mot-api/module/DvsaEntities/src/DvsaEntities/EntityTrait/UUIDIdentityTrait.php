@@ -3,7 +3,7 @@
 namespace DvsaEntities\EntityTrait;
 
 /**
- * A trait that mixes in UUID-generated identity
+ * A trait that mixes in UUID-generated identity.
  */
 trait UUIDIdentityTrait
 {
@@ -17,22 +17,23 @@ trait UUIDIdentityTrait
     private $id = '';
 
     /**
-     * Set id
+     * Set id.
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

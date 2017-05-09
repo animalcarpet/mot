@@ -26,7 +26,7 @@ class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $elements[0]->isBold());
         $this->assertEquals(false, $elements[1]->isBold());
         $this->assertEquals(false, $elements[2]->isBold());
-        $this->assertEquals(self::MAKE_NAME . ', ' . self::MODEL_NAME, $elements[0]->getText());
+        $this->assertEquals(self::MAKE_NAME.', '.self::MODEL_NAME, $elements[0]->getText());
         $this->assertEquals(self::REGISTRATION, $elements[1]->getText());
         $this->assertEquals(self::VIN, $elements[2]->getText());
     }
@@ -44,9 +44,9 @@ class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
                 'id' => 2,
                 'name' => self::MODEL_NAME,
             ],
-            'vehicleClass' => ["code" => VehicleClassCode::CLASS_3, "name" => "3"],
+            'vehicleClass' => ['code' => VehicleClassCode::CLASS_3, 'name' => '3'],
             'fuelType' => [
-                'code' => FuelTypeCode::PETROL
+                'code' => FuelTypeCode::PETROL,
             ],
             'colour' => [
                 'code' => 'L',

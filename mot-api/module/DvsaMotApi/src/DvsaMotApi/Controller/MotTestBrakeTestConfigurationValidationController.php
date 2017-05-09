@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
@@ -13,14 +14,14 @@ class MotTestBrakeTestConfigurationValidationController extends AbstractDvsaRest
         $motTestNumber = $this->params()->fromRoute('motTestNumber', null);
 
         /**
-         * @var MotTestService $motTestService
+         * @var MotTestService
          */
         $motTestService = $this->getServiceLocator()->get('MotTestService');
 
         $motTest = $motTestService->getMotTest($motTestNumber);
 
         /**
-         * @var BrakeTestResultService $brakeTestResultService
+         * @var BrakeTestResultService
          */
         $brakeTestResultService = $this->getServiceLocator()->get('BrakeTestResultService');
 

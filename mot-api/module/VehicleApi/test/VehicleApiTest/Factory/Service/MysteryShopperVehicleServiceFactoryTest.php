@@ -8,8 +8,6 @@
 namespace VehicleApiTest\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\UnitOfWork;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
@@ -23,7 +21,6 @@ use DvsaEntities\Repository\SiteRepository;
 use DvsaEntities\Repository\VehicleRepository;
 use VehicleApi\Factory\Service\MysteryShopperVehicleServiceFactory;
 use VehicleApi\Service\MysteryShopperVehicleService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class MysteryShopperVehicleServiceFactoryTest extends \PHPUnit_Framework_TestCase

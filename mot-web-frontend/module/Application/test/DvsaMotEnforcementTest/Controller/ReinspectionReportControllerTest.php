@@ -6,12 +6,9 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonTest\Bootstrap;
 use DvsaMotEnforcement\Controller\ReinspectionReportController;
 use DvsaMotTestTest\Controller\AbstractDvsaMotTestTestCase;
-use Zend\View\Model\ViewModel;
 
 /**
- * Class ReinspectionReportControllerTest
- *
- * @package DvsaMotEnforcementTest\Controller
+ * Class ReinspectionReportControllerTest.
  */
 class ReinspectionReportControllerTest extends AbstractDvsaMotTestTestCase
 {

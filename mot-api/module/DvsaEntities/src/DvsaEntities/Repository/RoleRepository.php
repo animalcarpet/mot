@@ -2,7 +2,6 @@
 
 namespace DvsaEntities\Repository;
 
-use Doctrine\ORM\AbstractQuery as Query;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -11,7 +10,8 @@ use Doctrine\ORM\EntityRepository;
 class RoleRepository extends EntityRepository
 {
     /**
-     * Returns an array of all the internal roles
+     * Returns an array of all the internal roles.
+     *
      * @return array
      */
     public function getAllInternalRoles()
@@ -26,7 +26,8 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Returns an array of all the trade roles
+     * Returns an array of all the trade roles.
+     *
      * @return array
      */
     public function getAllTradeRoles()

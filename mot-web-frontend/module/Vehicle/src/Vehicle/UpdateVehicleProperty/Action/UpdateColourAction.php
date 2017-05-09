@@ -1,4 +1,5 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Action;
 
 use Core\TwoStepForm\EditStepAction;
@@ -16,8 +17,7 @@ class UpdateColourAction extends AbstractUpdateVehicleAction implements AutoWire
         VehicleService $vehicleService,
         ParamObfuscator $paramObfuscator,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct($editStepAction, $process, $vehicleService, $paramObfuscator, $startTestChangeService);
     }
 }

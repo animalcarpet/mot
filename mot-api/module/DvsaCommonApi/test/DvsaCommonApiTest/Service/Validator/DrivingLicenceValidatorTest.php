@@ -6,7 +6,7 @@ use DvsaCommonApi\Service\Validator\DrivingLicenceValidator;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class DrivingLicenceValidatorTest
+ * Class DrivingLicenceValidatorTest.
  */
 class DrivingLicenceValidatorTest extends PHPUnit_Framework_TestCase
 {

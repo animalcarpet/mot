@@ -15,8 +15,7 @@ class UpdateVtsPropertyBreadcrumbs extends VtsBreadcrumbs
         MotAuthorisationServiceInterface $authorisationService,
         Url $url,
         $label
-    )
-    {
+    ) {
         parent::__construct($vts, $authorisationService, $url);
         $this->label = $label;
     }
@@ -24,6 +23,7 @@ class UpdateVtsPropertyBreadcrumbs extends VtsBreadcrumbs
     public function create()
     {
         $vtsBreadcrumbs = parent::create();
-        return array_merge($vtsBreadcrumbs, [$this->label => ""]);
+
+        return array_merge($vtsBreadcrumbs, [$this->label => '']);
     }
 }

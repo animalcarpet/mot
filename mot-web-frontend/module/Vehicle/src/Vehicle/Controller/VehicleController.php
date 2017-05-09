@@ -33,14 +33,14 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
     const BACK_TO_RESULT = 'result';
     const BACK_TO_SEARCH = 'search';
     const PARAM_BACK_TO = 'backTo';
-    const SEARCH_RETUREND_ONE_RESULT = "oneResult";
+    const SEARCH_RETUREND_ONE_RESULT = 'oneResult';
     const ERR_MSG_INVALID_VEHICLE_ID = 'No Vehicle Id provided';
     const FORM_ERROR = 'Unable to find Vehicle';
     const NO_RESULT_FOUND = 'Search term(s) not found...';
 
     protected $paramObfuscator;
     private $vehicleService;
-    /** @var  MotTestService */
+    /** @var MotTestService */
     private $motTestServiceClient;
     private $vehicleTableBuilder;
     private $catalogService;
@@ -54,8 +54,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         MotAuthorisationServiceInterface $authorisationService,
         VehicleViewModelBuilder $vehicleTableBuilder,
         VehicleExpiryMapper $vehicleExpiryMapper
-    )
-    {
+    ) {
         $this->paramObfuscator = $paramObfuscator;
         $this->vehicleService = $vehicleService;
         $this->catalogService = $catalogService;
@@ -77,8 +76,8 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         $this->motTestServiceClient = $this->getServiceLocator()->get(MotTestService::class);
         $this->authorisationService->assertGranted(PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW);
 
-        $obfuscatedVehicleId = (string)$this->params('id');
-        $vehicleId = (int)$this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $obfuscatedVehicleId);
+        $obfuscatedVehicleId = (string) $this->params('id');
+        $vehicleId = (int) $this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $obfuscatedVehicleId);
 
         if ($vehicleId == 0) {
             return $this->notFoundAction();
@@ -89,7 +88,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
             /** @var VehicleService $vehicleService */
             $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
             $mostRecentWeight = $this->motTestServiceClient->getVehicleTestWeight($vehicleId);
-            if($mostRecentWeight !== 0) {
+            if ($mostRecentWeight !== 0) {
                 $vehicle->setWeight($mostRecentWeight);
             }
             $expiryDateForVehicle = $this->vehicleExpiryMapper->getExpiryForVehicle($vehicleId);
@@ -108,7 +107,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
             ->setExpiryDateInformation($expiryDateForVehicle);
 
         return new ViewModel([
-                'viewModel' => $vehicleTableBuilder->getViewModel()
+                'viewModel' => $vehicleTableBuilder->getViewModel(),
             ]
         );
     }
@@ -174,20 +173,20 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
             $vehicle = $results->getItem(0);
 
             return $this->redirect()->toRoute(
-                "vehicle/detail",
+                'vehicle/detail',
                 [
-                    "id" => $this->paramObfuscator->obfuscate($vehicle->getId()),
+                    'id' => $this->paramObfuscator->obfuscate($vehicle->getId()),
                 ],
                 [
-                    "query" => [
-                        "backTo" => self::BACK_TO_SEARCH,
-                        "type" => $form[VehicleSearchService::VEHICLE_TYPE_TERM],
-                        "search" => $form[VehicleSearchService::VEHICLE_SEARCH_TERM],
-                    ]
+                    'query' => [
+                        'backTo' => self::BACK_TO_SEARCH,
+                        'type' => $form[VehicleSearchService::VEHICLE_TYPE_TERM],
+                        'search' => $form[VehicleSearchService::VEHICLE_SEARCH_TERM],
+                    ],
                 ]
             );
         }
-        
+
         return $vehicleSearchService->checkVehicleResults();
     }
 

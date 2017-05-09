@@ -1,11 +1,11 @@
 <?php
+
 namespace VehicleTest\UpdateVehicleProperty\Process;
 
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
-use Dvsa\Mot\ApiClient\test\Resource\Item\DvlaVehicleTest;
 use DvsaCommonTest\Builder\DvlaVehicleBuilder;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -26,25 +26,25 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
     const VEHICLE_ID = 1;
     const VEHICLE_VERSION = 10000;
 
-    /** @var  DvsaVehicleBuilder */
+    /** @var DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
 
-    /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var Url | \PHPUnit_Framework_MockObject_MockObject */
     private $urlHelper;
-    /** @var  VehicleService | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleService | \PHPUnit_Framework_MockObject_MockObject */
     private $vehicleService;
-    /** @var  VehicleEditBreadcrumbsBuilder | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleEditBreadcrumbsBuilder | \PHPUnit_Framework_MockObject_MockObject */
     private $breadcrumbsBuilder;
-    /** @var  VehicleTertiaryTitleBuilder | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleTertiaryTitleBuilder | \PHPUnit_Framework_MockObject_MockObject */
     private $tertiaryTitleBuilder;
 
     /** @var UpdateClassProcess */
     private $sut;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
-    /** @var  DvlaVehicleBuilder */
+    /** @var DvlaVehicleBuilder */
     private $dvlaVehicleBuilder;
 
     public function setUp()
@@ -70,13 +70,13 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
     public function testUpdateRunsVehicleService()
     {
         $formData = [
-            UpdateClassForm::FIELD_CLASS => self::VEHICLE_CLASS
+            UpdateClassForm::FIELD_CLASS => self::VEHICLE_CLASS,
         ];
 
         $this->sut->setContext($this->buildContext($this->buildDvsaVehicle(), 'change'));
 
         $this->vehicleService->expects($this->once())
-            ->method("updateDvsaVehicleAtVersion")
+            ->method('updateDvsaVehicleAtVersion')
             ->with(
                 self::VEHICLE_ID,
                 self::VEHICLE_VERSION,
@@ -99,7 +99,7 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_CLASS)
             ->willReturn([
-                'class' => '1'
+                'class' => '1',
             ]);
         $data = $this->sut->getPrePopulatedData();
 
@@ -128,7 +128,7 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_CLASS)
             ->willReturn([
-                'class' => '1'
+                'class' => '1',
             ]);
         $data = $this->sut->getPrePopulatedData();
 
@@ -148,7 +148,7 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_CLASS)
             ->willReturn([
-                'class' => '1'
+                'class' => '1',
             ]);
         $data = $this->sut->getPrePopulatedData();
 
@@ -178,16 +178,16 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
 
     private function buildContext($vehicle, $routeContext)
     {
-        return new UpdateVehicleContext($vehicle, "abc", $routeContext);
+        return new UpdateVehicleContext($vehicle, 'abc', $routeContext);
     }
 
     private function buildDvsaVehicle()
     {
         $data = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $vehicleClassData = new \stdClass();
-        $vehicleClassData->code =  self::VEHICLE_CLASS;
-        $vehicleClassData->name =  self::VEHICLE_CLASS;
-        
+        $vehicleClassData->code = self::VEHICLE_CLASS;
+        $vehicleClassData->name = self::VEHICLE_CLASS;
+
         $data->id = self::VEHICLE_ID;
         $data->vehicleClass = $vehicleClassData;
 
@@ -199,7 +199,6 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
     private function buildDvlaVehicle()
     {
         $data = $this->dvlaVehicleBuilder->getEmptyVehicleStdClass();
-
 
         $data->id = self::VEHICLE_ID;
 

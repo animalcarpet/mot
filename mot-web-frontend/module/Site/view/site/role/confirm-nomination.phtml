@@ -1,11 +1,10 @@
 <?php
 /**
- * @var \DvsaClient\Entity\Person $nominee
+ * @var \DvsaClient\Entity\Person
  * @var int                       $vehicleTestingStationId
  * @var string                    $roleName
- * @var boolean                   $twoFactorEnabled
+ * @var bool                      $twoFactorEnabled
  */
-
 $this->headTitle('Review role');
 
 ?>
@@ -64,7 +63,7 @@ $this->headTitle('Review role');
             <li>
                 <a href="<?php echo $this->url('vehicle-testing-station-list-user-roles', [
                         'vehicleTestingStationId' => $vehicleTestingStationId,
-                        'personId' => $nominee->getId()
+                        'personId' => $nominee->getId(),
                     ]); ?>">Back</a>
             </li>
         </ul>

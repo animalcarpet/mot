@@ -34,9 +34,9 @@ use Zend\Http\Request;
  */
 class EmailAddressController extends AbstractDvsaActionController
 {
-    const CHANGE_EMAIL_TEMPLATE = "user-admin/email-address/form.phtml";
+    const CHANGE_EMAIL_TEMPLATE = 'user-admin/email-address/form.phtml';
 
-    const PAGE_TITLE          = 'Change email address';
+    const PAGE_TITLE = 'Change email address';
     const PAGE_SUBTITLE_YOUR_PROFILE = 'Your profile';
     const PAGE_SUBTITLE_USER_PROFILE = 'User profile';
     const PAGE_SUBTITLE_INDEX = 'User profile';
@@ -81,10 +81,10 @@ class EmailAddressController extends AbstractDvsaActionController
      */
     private $contextProvider;
 
-    /** @var  IsEmailDuplicateService */
+    /** @var IsEmailDuplicateService */
     private $duplicateEmailService;
 
-    /** @var Request  */
+    /** @var Request */
     protected $request;
 
     /** @var MotIdentityProviderInterface */
@@ -92,15 +92,16 @@ class EmailAddressController extends AbstractDvsaActionController
 
     /**
      * EmailAddressController constructor.
+     *
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param HelpdeskAccountAdminService $userAccountAdminService
-     * @param TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
-     * @param MapperFactory $mapperFactory
-     * @param PersonProfileUrlGenerator $personProfileUrlGenerator
-     * @param ContextProvider $contextProvider
-     * @param IsEmailDuplicateService $duplicateEmailService
-     * @param Request $request
-     * @param MotIdentityProviderInterface $identityProvider
+     * @param HelpdeskAccountAdminService      $userAccountAdminService
+     * @param TesterGroupAuthorisationMapper   $testerGroupAuthorisationMapper
+     * @param MapperFactory                    $mapperFactory
+     * @param PersonProfileUrlGenerator        $personProfileUrlGenerator
+     * @param ContextProvider                  $contextProvider
+     * @param IsEmailDuplicateService          $duplicateEmailService
+     * @param Request                          $request
+     * @param MotIdentityProviderInterface     $identityProvider
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
@@ -156,7 +157,6 @@ class EmailAddressController extends AbstractDvsaActionController
         $form = new ChangeEmailForm($currentEmail);
 
         if ($this->request->isPost()) {
-
             $params = $this->request->getPost()->toArray();
             $email = $params['email'];
             $emailConfirm = $params['emailConfirm'];
@@ -165,7 +165,6 @@ class EmailAddressController extends AbstractDvsaActionController
             $form->getEmailConfirm()->setValue($emailConfirm);
 
             if ($form->isValid()) {
-
                 if ($this->duplicateEmailService->isEmailDuplicate($email)) {
                     $this->addErrorMessageForKey('duplicateEmailValidation', self::MSG_DUPLICATE_EMAIL_ERROR);
                 } else {
@@ -199,8 +198,8 @@ class EmailAddressController extends AbstractDvsaActionController
     }
 
     /**
-     * @param integer $personId
-     * @param string  $email
+     * @param int    $personId
+     * @param string $email
      *
      * @return bool
      */
@@ -256,7 +255,7 @@ class EmailAddressController extends AbstractDvsaActionController
             return $url;
         }
 
-        return $url . '?' . http_build_query($params);
+        return $url.'?'.http_build_query($params);
     }
 
     private function getTesterAuthorisationViewModel($personId)
@@ -350,7 +349,7 @@ class EmailAddressController extends AbstractDvsaActionController
      */
     private function canChangeEmailAddress($context)
     {
-        return (ContextProvider::YOUR_PROFILE_CONTEXT === $context ||
-            $this->authorisationService->isGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS));
+        return ContextProvider::YOUR_PROFILE_CONTEXT === $context ||
+            $this->authorisationService->isGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS);
     }
 }

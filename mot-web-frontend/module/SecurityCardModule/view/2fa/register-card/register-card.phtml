@@ -2,7 +2,7 @@
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardViewModel;
 
-/**
+/*
  * @var RegisterCardViewModel $viewModel
  */
 
@@ -69,13 +69,13 @@ if ($viewModel->isCardAlreadyRegistered()) {
                     echo $this->partial(
                         'partial/gds/form/control',
                         [
-                            'element' => $viewModel->getForm()->getSerialNumberField()
+                            'element' => $viewModel->getForm()->getSerialNumberField(),
                         ]
                     );
                     echo $this->partial(
                         'partial/gds/form/control',
                         [
-                            'element' => $viewModel->getForm()->getPinField()
+                            'element' => $viewModel->getForm()->getPinField(),
                         ]
                     );
                     ?>

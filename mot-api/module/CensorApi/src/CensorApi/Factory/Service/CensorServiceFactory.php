@@ -10,13 +10,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class CensorServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get(EntityManager::class);
         $censorBlacklistRepository = $entityManager->getRepository(CensorBlacklist::class);
         $censorService = new CensorService($censorBlacklistRepository);
+
         return $censorService;
     }
 }

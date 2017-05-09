@@ -1,10 +1,9 @@
 <?php
 
 /**
- * @var \Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel $model
+ * @var \Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel
  * @var \Organisation\Form\AeCreateForm                            $form
  */
-
 use DvsaCommon\Utility\AddressUtils;
 
 $model = $this->model;
@@ -71,8 +70,8 @@ $corrContact = $form->isCorrDetailsTheSame() ? $form->getBusContactModel() : $fo
     echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'submitAeConfirmation',
-            'value'      => 'Create Authorised Examiner',
+            'id' => 'submitAeConfirmation',
+            'value' => 'Create Authorised Examiner',
             'navigation' => [
                 'Back' => $model->getCancelUrl(),
             ],

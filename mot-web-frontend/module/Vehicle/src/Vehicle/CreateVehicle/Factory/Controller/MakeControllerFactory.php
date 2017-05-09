@@ -13,6 +13,7 @@ class MakeControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
         $makeAction = $serviceLocator->get(MakeAction::class);
+
         return new MakeController($makeAction);
     }
 }

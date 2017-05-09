@@ -10,12 +10,10 @@ use DvsaEntities\Entity\Notification;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Class NotificationServiceFactory
- * @package NotificationApi\Factory
+ * Class NotificationServiceFactory.
  */
 class NotificationServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $entityManager = $serviceLocator->get(EntityManager::class);

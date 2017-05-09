@@ -8,18 +8,19 @@ use Csrf\CsrfTokenViewHelper;
 use DvsaCommonTest\TestUtils\XMock;
 
 /**
- * Class CsrfTokenViewHelperTest
+ * Class CsrfTokenViewHelperTest.
  */
 class CsrfTokenViewHelperTest extends \PHPUnit_Framework_TestCase
 {
-    const TEST_TOKEN = "tokenABCDE";
+    const TEST_TOKEN = 'tokenABCDE';
 
     private function tokenViewHelper()
     {
         $csrfSupport = XMock::of(CsrfSupport::class);
-        $csrfSupport->expects($this->any())->method("getCsrfToken")
+        $csrfSupport->expects($this->any())->method('getCsrfToken')
             ->will($this->returnValue(self::TEST_TOKEN));
         $helper = new CsrfTokenViewHelper($csrfSupport);
+
         return $helper;
     }
 
@@ -31,7 +32,7 @@ class CsrfTokenViewHelperTest extends \PHPUnit_Framework_TestCase
         $html = $helper();
 
         $this->assertEquals(
-            "<input type=\"hidden\" name=\"" . CsrfConstants::REQ_TOKEN . "\" value=\"$token\">",
+            '<input type="hidden" name="'.CsrfConstants::REQ_TOKEN."\" value=\"$token\">",
             $html
         );
     }

@@ -1,10 +1,10 @@
 <?php
 use Core\ViewModel\Header\HeaderTertiaryList;
 
-/** @var string $type */
-/** @var string $title */
-/** @var string $progress */
-/** @var string|HeaderTertiaryList $tretiary */
+/* @var string $type */
+/* @var string $title */
+/* @var string $progress */
+/* @var string|HeaderTertiaryList $tretiary */
 ?>
 <header class="content-header">
     <h1>
@@ -22,7 +22,7 @@ use Core\ViewModel\Header\HeaderTertiaryList;
         <?php elseif ($tertiary instanceof HeaderTertiaryList): ?>
             <ul class="content-header__tertiary-list">
                 <?php foreach ($tertiary->getElements() as $element): ?>
-                    <li class="<?php echo $element->isBold() ? "content-header__list-item--primary": "content-header__list-item" ?>">
+                    <li class="<?php echo $element->isBold() ? 'content-header__list-item--primary' : 'content-header__list-item' ?>">
                         <?php echo $element->getText(); ?>
                     </li>
                 <?php endforeach; ?>

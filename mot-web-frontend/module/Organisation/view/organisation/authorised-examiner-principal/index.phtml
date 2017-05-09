@@ -2,11 +2,10 @@
 
 $this->headTitle('Add an AEP');
 
+$sectionName = 'Authorised Examiner';
+$taskName = 'Add an AEP';
 
-$sectionName = "Authorised Examiner";
-$taskName = "Add an AEP";
-
-$this->headTitle($sectionName . ' - ' . $taskName);
+$this->headTitle($sectionName.' - '.$taskName);
 $this->layout()->setVariable('pageSubTitle', $this->translate($sectionName));
 $this->layout()->setVariable('pageTitle', $this->translate($taskName));
 
@@ -32,12 +31,12 @@ $form['convictions'] = $this->withDefault('')->getValue($values['convictions']);
                 echo $this->partial(
                     'partial/forms/inputBox.phtml',
                     [
-                        'id'        => 'firstName',
-                        'label'     => 'First name',
-                        'required'  => true,
-                        'title'     => 'Enter the first name',
+                        'id' => 'firstName',
+                        'label' => 'First name',
+                        'required' => true,
+                        'title' => 'Enter the first name',
                         'maxLength' => 50,
-                        'value'     => $form['firstName'],
+                        'value' => $form['firstName'],
                     ],
                     'Core'
                 );
@@ -45,11 +44,11 @@ $form['convictions'] = $this->withDefault('')->getValue($values['convictions']);
                 echo $this->partial(
                     'partial/forms/inputBox.phtml',
                     [
-                        'id'        => 'middleName',
-                        'label'     => 'Middle name',
-                        'title'     => 'Enter the middle name',
+                        'id' => 'middleName',
+                        'label' => 'Middle name',
+                        'title' => 'Enter the middle name',
                         'maxLength' => 50,
-                        'value'     => $form['middleName'],
+                        'value' => $form['middleName'],
                     ],
                     'Core'
                 );
@@ -57,12 +56,12 @@ $form['convictions'] = $this->withDefault('')->getValue($values['convictions']);
                 echo $this->partial(
                     'partial/forms/inputBox.phtml',
                     [
-                        'id'        => 'surname',
-                        'label'     => 'Surname',
-                        'required'  => true,
-                        'title'     => 'Enter the surname',
+                        'id' => 'surname',
+                        'label' => 'Surname',
+                        'required' => true,
+                        'title' => 'Enter the surname',
                         'maxLength' => 50,
-                        'value'     => $form['surname'],
+                        'value' => $form['surname'],
                     ],
                     'Core'
                 );
@@ -83,13 +82,13 @@ $form['convictions'] = $this->withDefault('')->getValue($values['convictions']);
                 echo $this->partial(
                     'partial/forms/inputBox.phtml',
                     [
-                        'id'        => 'email',
-                        'label'     => 'Email address',
-                        'required'  => true,
-                        'type'      => 'email',
-                        'title'     => 'Enter the e-mail',
+                        'id' => 'email',
+                        'label' => 'Email address',
+                        'required' => true,
+                        'type' => 'email',
+                        'title' => 'Enter the e-mail',
                         'maxLength' => 50,
-                        'value'     => $form['email'],
+                        'value' => $form['email'],
                     ],
                     'Core'
                 );
@@ -97,13 +96,13 @@ $form['convictions'] = $this->withDefault('')->getValue($values['convictions']);
                 echo $this->partial(
                     'partial/forms/inputBox.phtml',
                     [
-                        'id'        => 'phoneNumber',
-                        'label'     => 'Telephone number',
-                        'pattern'   => "^\+?[\d -]{6,25}$",
-                        'required'  => true,
-                        'title'     => 'Enter the phone number',
+                        'id' => 'phoneNumber',
+                        'label' => 'Telephone number',
+                        'pattern' => "^\+?[\d -]{6,25}$",
+                        'required' => true,
+                        'title' => 'Enter the phone number',
                         'maxLength' => 25,
-                        'value'     => $form['phoneNumber'],
+                        'value' => $form['phoneNumber'],
                     ],
                     'Core'
                 );
@@ -116,12 +115,12 @@ $form['convictions'] = $this->withDefault('')->getValue($values['convictions']);
                 <?php echo $this->partial(
                     'partial/forms/radioBoxDouble.phtml',
                     [
-                        'label'        => 'Do they have any relevant convictions?',
-                        'required'     => true,
-                        'name'         => 'convictions',
-                        'option1'      => 'Yes',
+                        'label' => 'Do they have any relevant convictions?',
+                        'required' => true,
+                        'name' => 'convictions',
+                        'option1' => 'Yes',
                         'option1Value' => 'true',
-                        'option2'      => 'No',
+                        'option2' => 'No',
                         'option2Value' => 'false',
                     ],
                     'Core'

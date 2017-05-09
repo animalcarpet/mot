@@ -31,7 +31,8 @@ class AccountDataService
     private $accountPerson;
 
     /**
-     * Set the service manager object
+     * Set the service manager object.
+     *
      * @param ServiceManager $serviceManager
      */
     public function __construct(AccountService $accountService, EntityManager $entityManager)
@@ -57,20 +58,20 @@ class AccountDataService
         );
 
         return TestDataResponseHelper::jsonOk([
-            "message"  => $this->createMessage($role),
-            "username" => $account->getUsername(),
-            "password" => $account->getPassword(),
-            "personId" => $account->getPersonId(),
-            "firstName"=> $this->accountPerson->getFirstName(),
-            "middleName" => $this->accountPerson->getMiddleName(),
-            "surname"  => $this->accountPerson->getSurname(),
-            "addressLine1" => $this->accountPerson->getAddressLine1(),
-            "addressLine2" => $this->accountPerson->getAddressLine2(),
-            "postcode" => $this->accountPerson->getPostcode(),
-            "phoneNumber" => $this->accountPerson->getPhoneNumber(),
-            "emailAddress" => $this->accountPerson->getEmailAddress(),
-            "dateOfBirth" => $this->accountPerson->getDateOfBirth(),
-            "drivingLicenceNumber" => $this->accountPerson->getDrivingLicenceNumber(),
+            'message' => $this->createMessage($role),
+            'username' => $account->getUsername(),
+            'password' => $account->getPassword(),
+            'personId' => $account->getPersonId(),
+            'firstName' => $this->accountPerson->getFirstName(),
+            'middleName' => $this->accountPerson->getMiddleName(),
+            'surname' => $this->accountPerson->getSurname(),
+            'addressLine1' => $this->accountPerson->getAddressLine1(),
+            'addressLine2' => $this->accountPerson->getAddressLine2(),
+            'postcode' => $this->accountPerson->getPostcode(),
+            'phoneNumber' => $this->accountPerson->getPhoneNumber(),
+            'emailAddress' => $this->accountPerson->getEmailAddress(),
+            'dateOfBirth' => $this->accountPerson->getDateOfBirth(),
+            'drivingLicenceNumber' => $this->accountPerson->getDrivingLicenceNumber(),
         ]);
     }
 
@@ -81,7 +82,7 @@ class AccountDataService
      */
     private function createMessage($role)
     {
-        return is_null($role) ? 'User created' : strtolower(str_replace('-', ' ', $role)) . ' created';
+        return is_null($role) ? 'User created' : strtolower(str_replace('-', ' ', $role)).' created';
     }
 
     public function addRole($personId, $role)
@@ -122,11 +123,11 @@ class AccountDataService
 
     public function removeRole($personId, $role)
     {
-        $stmt = $this->entityManager->getConnection()->prepare("
+        $stmt = $this->entityManager->getConnection()->prepare('
             DELETE FROM person_system_role_map
             WHERE `person_id` = ?
             AND `person_system_role_id` = (SELECT `id` FROM `person_system_role` WHERE `name` = ?)
-        ");
+        ');
 
         $stmt->bindValue(1, $personId);
         $stmt->bindValue(2, $role);

@@ -48,6 +48,7 @@ class EventRecordController extends EventBaseController
         $this->extractRouteParams();
         $step = $this->stepService->getById(RecordStep::STEP_ID);
         $this->sessionService->destroy();
+
         return $this->redirect()->toRoute($step->route(), ['type' => $this->getType(), 'id' => $this->getId()]);
     }
 
@@ -61,7 +62,7 @@ class EventRecordController extends EventBaseController
         $this->loadEventCategory();
         $this->assertPermission();
 
-        $previousEventType  = $this->stepService->getById(RecordStep::STEP_ID)->load()->getEventType();
+        $previousEventType = $this->stepService->getById(RecordStep::STEP_ID)->load()->getEventType();
 
         $this->stepService->injectParamsIntoSteps($this->getType(), $this->getId());
 

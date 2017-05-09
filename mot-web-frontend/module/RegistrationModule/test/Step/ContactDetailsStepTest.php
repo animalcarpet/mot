@@ -129,12 +129,12 @@ class ContactDetailsStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            'address1'   => __METHOD__ . '_address1',
-            'address2'   => __METHOD__ . '_address2',
-            'address3'   => __METHOD__ . '_address3',
-            'townOrCity' => __METHOD__ . '_townOrCity',
-            'postcode'   => __METHOD__ . '_postcode',
-            'phone'      => __METHOD__ . '_phone',
+            'address1' => __METHOD__.'_address1',
+            'address2' => __METHOD__.'_address2',
+            'address3' => __METHOD__.'_address3',
+            'townOrCity' => __METHOD__.'_townOrCity',
+            'postcode' => __METHOD__.'_postcode',
+            'phone' => __METHOD__.'_phone',
         ];
 
         return $fixture;

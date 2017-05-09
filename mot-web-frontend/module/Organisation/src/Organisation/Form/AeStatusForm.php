@@ -7,7 +7,6 @@ use DvsaCommon\Dto\Common\AuthForAeStatusDto;
 use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
-use Organisation\Controller\AuthorisedExaminerController;
 use Zend\Stdlib\Parameters;
 
 class AeStatusForm extends AbstractFormModel
@@ -25,13 +24,13 @@ class AeStatusForm extends AbstractFormModel
      */
     private $status;
 
-    /** @var  int */
+    /** @var int */
     private $assignedAreaOffice;
 
-    /** @var  string */
+    /** @var string */
     private $assignedAreaOfficeLabel;
 
-    /** @var  \DvsaEntities\Entity\Site[]  */
+    /** @var \DvsaEntities\Entity\Site[] */
     private $areaOfficeOptions;
 
     public function fromPost(Parameters $data)
@@ -78,11 +77,13 @@ class AeStatusForm extends AbstractFormModel
 
     /**
      * @param string $formUrl
+     *
      * @return $this
      */
     public function setFormUrl($formUrl)
     {
         $this->formUrl = $formUrl;
+
         return $this;
     }
 
@@ -96,11 +97,13 @@ class AeStatusForm extends AbstractFormModel
 
     /**
      * @param string $status
+     *
      * @return $this
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 

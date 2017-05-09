@@ -6,11 +6,7 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommonTest\TestUtils\TestCaseViewTrait;
 use Report\Table\ColumnOptions;
 use Report\Table\Formatter\MotTestLink;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver as Resolver;
 
 class MotTestLinkTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +17,7 @@ class MotTestLinkTest extends \PHPUnit_Framework_TestCase
         //  logical block: create view renderer
         $renderer = $this->getPhpRenderer(
             [
-                'table/formatter/mot-test-link' => __DIR__ . '/../../../../view/table/formatter/mot-test-link.phtml',
+                'table/formatter/mot-test-link' => __DIR__.'/../../../../view/table/formatter/mot-test-link.phtml',
             ]
         );
 
@@ -34,7 +30,7 @@ class MotTestLinkTest extends \PHPUnit_Framework_TestCase
 
         $rowData = [
             'motTestNumber' => $expectMotTestNr,
-            'testFieldA'    => $expectFieldValue,
+            'testFieldA' => $expectFieldValue,
         ];
 
         //  logical block: call

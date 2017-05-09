@@ -2,7 +2,6 @@
 
 namespace VehicleTest\CreateVehicle\Action;
 
-use Core\Action\ActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -10,13 +9,10 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\CreateVehicle\Action\CountryOfRegistrationAction;
-use Vehicle\CreateVehicle\Action\RegistrationAndVinAction;
 use Vehicle\CreateVehicle\Controller\ReviewController;
-use Vehicle\CreateVehicle\Form\RegistrationAndVinForm;
 use Vehicle\CreateVehicle\Service\CreateVehicleStepService;
 use Zend\Http\Request;
 use Zend\Stdlib\ParametersInterface;
-use Zend\View\Model\ViewModel;
 
 class CountryOfRegistrationActionTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +41,7 @@ class CountryOfRegistrationActionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::MOT_TEST_START)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $this->buildAction()->execute(new Request());
     }
@@ -196,11 +192,10 @@ class CountryOfRegistrationActionTest extends \PHPUnit_Framework_TestCase
     private function mockedCountriesData()
     {
         return [
-            CreateVehicleStepService::COUNTRY_STEP =>
-                [
-                    ['code' => 'UK' ,'name' => 'United Kingdom'],
-                    ['code' => 'IRELAND' ,'name' => 'Republic of Ireland']
-                ]
+            CreateVehicleStepService::COUNTRY_STEP => [
+                    ['code' => 'UK', 'name' => 'United Kingdom'],
+                    ['code' => 'IRELAND', 'name' => 'Republic of Ireland'],
+                ],
         ];
     }
 

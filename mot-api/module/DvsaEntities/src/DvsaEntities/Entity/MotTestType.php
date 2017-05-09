@@ -2,12 +2,11 @@
 
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * MotTestType
+ * MotTestType.
  *
  * @ORM\Table(
  *  name="mot_test_type",
@@ -27,19 +26,19 @@ class MotTestType extends Entity
      */
     protected $position;
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_demo", type="boolean", nullable=false)
      */
     protected $isDemo = 0;
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_slot_consuming", type="boolean", nullable=false)
      */
     protected $isSlotConsuming = 1;
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_reinspection", type="boolean", nullable=false)
      */
@@ -58,7 +57,7 @@ class MotTestType extends Entity
     private $description;
 
     /**
-     * @param boolean $isDemo
+     * @param bool $isDemo
      *
      * @return $this
      * @codeCoverageIgnore
@@ -66,11 +65,12 @@ class MotTestType extends Entity
     public function setIsDemo($isDemo)
     {
         $this->isDemo = $isDemo;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @codeCoverageIgnore
      */
     public function getIsDemo()
@@ -79,7 +79,7 @@ class MotTestType extends Entity
     }
 
     /**
-     * @param boolean $isReinspection
+     * @param bool $isReinspection
      *
      * @return $this
      * @codeCoverageIgnore
@@ -87,11 +87,12 @@ class MotTestType extends Entity
     public function setIsReinspection($isReinspection)
     {
         $this->isReinspection = $isReinspection;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @codeCoverageIgnore
      */
     public function getIsReinspection()
@@ -110,7 +111,7 @@ class MotTestType extends Entity
     }
 
     /**
-     * @param boolean $isSlotConsuming
+     * @param bool $isSlotConsuming
      *
      * @return $this
      * @codeCoverageIgnore
@@ -118,11 +119,12 @@ class MotTestType extends Entity
     public function setIsSlotConsuming($isSlotConsuming)
     {
         $this->isSlotConsuming = $isSlotConsuming;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @codeCoverageIgnore
      */
     public function getIsSlotConsuming()
@@ -131,7 +133,7 @@ class MotTestType extends Entity
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -141,7 +143,7 @@ class MotTestType extends Entity
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -162,6 +164,7 @@ class MotTestType extends Entity
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 
@@ -174,6 +177,7 @@ class MotTestType extends Entity
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 

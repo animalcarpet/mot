@@ -3,7 +3,6 @@
 namespace DvsaEntitiesTest\DqlBuilder\SearchParam;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Search\MotTestSearchParamsDto;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -15,9 +14,7 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntitiesTest\DqlBuilder\BuildMotTestSearchParamsTrait;
 
 /**
- * Class MotTestSearchParamTest
- *
- * @package DvsaEntities\DqlBuilder\SearchParam
+ * Class MotTestSearchParamTest.
  */
 class MotTestSearchParamTest extends AbstractServiceTestCase
 {
@@ -31,7 +28,7 @@ class MotTestSearchParamTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test we can create a MotTestSearchParam
+     * Test we can create a MotTestSearchParam.
      */
     public function testSearchParamDefaultsAndFluidInterface()
     {
@@ -122,17 +119,17 @@ class MotTestSearchParamTest extends AbstractServiceTestCase
         // at a point in time, independent of that array
 
         $searchColumns = [
-            "0" => "testDate", // mot_test
-            "2" => "status", // mot_test
-            "3" => "vin", // vehicle
-            "4" => "registration", // vehicle
-            "5" => "startedDate", // mot_test
-            "6" => "make", // make
-            "7" => "model", // model
-            "8" => "testType", // testType
-            "9" => "siteNumber", // vts
-            "10" => "testerUsername", // tester -> user
-            "11" => "testNumber",
+            '0' => 'testDate', // mot_test
+            '2' => 'status', // mot_test
+            '3' => 'vin', // vehicle
+            '4' => 'registration', // vehicle
+            '5' => 'startedDate', // mot_test
+            '6' => 'make', // make
+            '7' => 'model', // model
+            '8' => 'testType', // testType
+            '9' => 'siteNumber', // vts
+            '10' => 'testerUsername', // tester -> user
+            '11' => 'testNumber',
         ];
 
         foreach ($searchColumns as $id => $name) {

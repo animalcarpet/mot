@@ -25,9 +25,7 @@ use Site\ViewModel\MotTest\MotTestInProgressViewModel;
 use Zend\Mvc\Controller\Plugin\Url;
 
 /**
- * Class VTSDecorator
- *
- * @package Site\ViewModel
+ * Class VTSDecorator.
  */
 class SiteViewModel
 {
@@ -35,11 +33,11 @@ class SiteViewModel
     const LIMIT_AMBER_THRESHOLD = 459.2;
 
     /**
-     * @var  VehicleTestingStationDto
+     * @var VehicleTestingStationDto
      */
     private $site;
     /**
-     * @var  EquipmentViewModel[]
+     * @var EquipmentViewModel[]
      */
     private $equipments;
     /**
@@ -57,12 +55,12 @@ class SiteViewModel
     private $urlHelper;
 
     /**
-     * @param VehicleTestingStationDto $site
-     * @param EquipmentDto[] $equipments
-     * @param MotTestInProgressDto[] $testsInProgress
+     * @param VehicleTestingStationDto   $site
+     * @param EquipmentDto[]             $equipments
+     * @param MotTestInProgressDto[]     $testsInProgress
      * @param VtsOverviewPagePermissions $permissions
-     * @param array $equipmentModelStatusMap
-     * @param Url $urlHelper
+     * @param array                      $equipmentModelStatusMap
+     * @param Url                        $urlHelper
      */
     public function __construct(
         VehicleTestingStationDto $site,
@@ -71,8 +69,7 @@ class SiteViewModel
         VtsOverviewPagePermissions $permissions,
         $equipmentModelStatusMap,
         Url $urlHelper
-    )
-    {
+    ) {
         $this->site = $site;
         $this->permissions = $permissions;
         $this->urlHelper = $urlHelper;
@@ -91,6 +88,7 @@ class SiteViewModel
             $equipmentDto,
             function (EquipmentDto $equipmentDto) use ($equipmentModelStatusMap) {
                 $modelStatus = $equipmentModelStatusMap[$equipmentDto->getModel()->getStatus()];
+
                 return new EquipmentViewModel($equipmentDto, $modelStatus);
             }
         );
@@ -147,6 +145,7 @@ class SiteViewModel
         if ($this->site->isScottishBankHoliday() == true) {
             return 'Scotland';
         }
+
         return 'England';
     }
 
@@ -161,13 +160,14 @@ class SiteViewModel
             return 'Closed';
         }
 
-        return DateTimeDisplayFormat::time(Time::fromIso8601($schedule->getOpenTime())) .
-        ' to ' . DateTimeDisplayFormat::time(Time::fromIso8601($schedule->getCloseTime()));
+        return DateTimeDisplayFormat::time(Time::fromIso8601($schedule->getOpenTime())).
+        ' to '.DateTimeDisplayFormat::time(Time::fromIso8601($schedule->getCloseTime()));
     }
 
     public function getSiteTypes()
     {
         $types = array_combine(SiteTypeCode::getAll(), SiteTypeName::getAll());
+
         return ArrayUtils::asortBy($types);
     }
 
@@ -186,7 +186,7 @@ class SiteViewModel
         $organisationDisplay = '';
         if (isset($organisation)) {
             if ($permissions->canViewAuthorisedExaminer()) {
-                $organisationDisplay = '<a id="authorised-examiner-link" href="' . AuthorisedExaminerUrlBuilderWeb::of($organisation->getId())->toString() . '">' . $organisation->getName() . '</a>';
+                $organisationDisplay = '<a id="authorised-examiner-link" href="'.AuthorisedExaminerUrlBuilderWeb::of($organisation->getId())->toString().'">'.$organisation->getName().'</a>';
             } else {
                 $organisationDisplay = $organisation->getName();
             }
@@ -194,9 +194,8 @@ class SiteViewModel
 
         $table = new GdsTable();
         $row = $table->newRow('site-name')->setLabel('Name')->setValue($site->getName());
-        if ($permissions->canChangeSiteName())
-        {
-            $row->addActionLink('Change', VtsRoutes::of($this->urlHelper)->vtsEditProperty($site->getId(), UpdateVtsPropertyAction::VTS_NAME_PROPERTY), "Change Name");
+        if ($permissions->canChangeSiteName()) {
+            $row->addActionLink('Change', VtsRoutes::of($this->urlHelper)->vtsEditProperty($site->getId(), UpdateVtsPropertyAction::VTS_NAME_PROPERTY), 'Change Name');
         }
         $table->newRow('site-number')->setLabel('VTS ID')->setValue($site->getSiteNumber());
         $row = $table->newRow('site-classes')->setLabel('Classes')->setValue(!empty($site->getTestClasses()) ? implode(',', $site->getTestClasses()) : 'None');
@@ -214,7 +213,7 @@ class SiteViewModel
         }
 
         if ($permissions->canViewAuthorisedExaminer()) {
-            $table->newRow('authorisedExaminer')->setLabel('Authorised Examiner')->setValue($organisationDisplay ,false);
+            $table->newRow('authorisedExaminer')->setLabel('Authorised Examiner')->setValue($organisationDisplay, false);
         } else {
             $table->newRow('authorisedExaminer')->setLabel('Authorised Examiner')->setValue($organisationDisplay);
         }

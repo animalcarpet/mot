@@ -2,14 +2,13 @@
 
 namespace PersonApiTest\Controller;
 
-use DvsaCommonTest\Bootstrap;
 use PersonApi\Controller\UserStatsController;
 use PersonApi\Service\UserStatsService;
 use UserApi\Dashboard\Dto\DayStats;
 use UserApi\Dashboard\Dto\MonthStats;
 
 /**
- * Tests for UserStatsController
+ * Tests for UserStatsController.
  */
 class UserStatsControllerTest extends \PHPUnit_Framework_TestCase
 {

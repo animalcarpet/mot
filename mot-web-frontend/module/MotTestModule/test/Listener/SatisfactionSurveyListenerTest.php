@@ -72,7 +72,7 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
             ->getMockBuilder(TreeRouteStack::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->routerMock->setRoutes(require __DIR__ . '/../View/Fixtures/routes.php');
+        $this->routerMock->setRoutes(require __DIR__.'/../View/Fixtures/routes.php');
 
         $this->logger = $this
             ->getMockBuilder(Logger::class)

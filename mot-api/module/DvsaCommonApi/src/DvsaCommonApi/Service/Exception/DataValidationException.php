@@ -3,18 +3,13 @@
 namespace DvsaCommonApi\Service\Exception;
 
 /**
- * Class DataValidationException
- *
- * @package DvsaCommonApi\Service\Exception
+ * Class DataValidationException.
  */
 class DataValidationException extends ServiceException
 {
-    /**
-     *
-     */
     public function __construct()
     {
-        parent::__construct("Data validation error", 422);
+        parent::__construct('Data validation error', 422);
     }
 
     /**
@@ -22,6 +17,6 @@ class DataValidationException extends ServiceException
      */
     public static function create()
     {
-        return new DataValidationException();
+        return new self();
     }
 }

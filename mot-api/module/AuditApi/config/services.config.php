@@ -5,7 +5,7 @@ use Dvsa\Mot\AuditApi\Factory\HistoryAuditServiceFactory;
 
 $s = [];
 $s['factories'] = [
-    HistoryAuditService::class => HistoryAuditServiceFactory::class
+    HistoryAuditService::class => HistoryAuditServiceFactory::class,
 ];
 
 return $s;

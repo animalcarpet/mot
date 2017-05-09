@@ -10,20 +10,17 @@ namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Listener\Factory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\GotoUrlServiceFactory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlValidatorService;
-use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
 use Zend\ServiceManager\ServiceManager;
-use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\GotoUrlValidatorServiceFactory;
 
 class GotoUrlServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactoryCreatesInstance()
     {
-
         $urlValidatorMock = $this->getMockBuilder(GotoUrlValidatorService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $sm = new ServiceManager;
+        $sm = new ServiceManager();
         $sm->setAllowOverride(true);
         $sm->setService(GotoUrlValidatorService::class, $urlValidatorMock);
 
@@ -31,6 +28,5 @@ class GotoUrlServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $urlValidator = $urlValidatorFactory->createService($sm);
 
         $this->assertInstanceOf(GotoUrlService::class, $urlValidator);
-
     }
 }

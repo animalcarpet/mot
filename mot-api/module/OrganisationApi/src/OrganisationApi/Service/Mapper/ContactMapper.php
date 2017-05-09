@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Dto\Contact\ContactDto;
@@ -10,9 +11,7 @@ use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Mapper\AddressMapper;
 
 /**
- * Class ContactDetailMapper
- *
- * @package OrganisationApi\Service\Mapper
+ * Class ContactDetailMapper.
  */
 class ContactMapper
 {
@@ -46,7 +45,7 @@ class ContactMapper
 
     public function __construct()
     {
-        $this->hydrator      = new Hydrator();
+        $this->hydrator = new Hydrator();
         $this->addressMapper = new AddressMapper();
     }
 
@@ -82,10 +81,10 @@ class ContactMapper
         if (null != $contact->getPhones()) {
             $phonesData = [];
             foreach ($contact->getPhones() as $phone) {
-                $phoneData                = $this->hydrator->extract($phone, $this->requiredFieldsForPhone);
+                $phoneData = $this->hydrator->extract($phone, $this->requiredFieldsForPhone);
                 $phoneData['contactType'] = $phone->getContactType()->getCode();
-                $phoneData['_clazz']      = 'Phone';
-                $phonesData[]             = $phoneData;
+                $phoneData['_clazz'] = 'Phone';
+                $phonesData[] = $phoneData;
             }
             $contactData['phones'] = $phonesData;
         }
@@ -93,9 +92,9 @@ class ContactMapper
         if (null != $contact->getEmails()) {
             $emailsData = [];
             foreach ($contact->getEmails() as $email) {
-                $emailData           = $this->hydrator->extract($email, $this->requiredFieldsForEmail);
+                $emailData = $this->hydrator->extract($email, $this->requiredFieldsForEmail);
                 $emailData['_clazz'] = 'Email';
-                $emailsData[]        = $emailData;
+                $emailsData[] = $emailData;
             }
             $contactData['emails'] = $emailsData;
         }
@@ -124,7 +123,7 @@ class ContactMapper
             $phones = $contact->getPhones();
 
             $phones = $contact->getPhones()->toArray();
-            usort($phones, function($a, $b) {
+            usort($phones, function ($a, $b) {
                 return $a->getCreatedOn() < $b->getCreatedOn();
             });
 
@@ -146,7 +145,7 @@ class ContactMapper
             $emails = $contact->getEmails();
 
             $emails = $contact->getEmails()->toArray();
-            usort($emails, function($a, $b) {
+            usort($emails, function ($a, $b) {
                 return $a->getCreatedOn() < $b->getCreatedOn();
             });
 

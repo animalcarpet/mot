@@ -4,7 +4,6 @@ namespace DvsaMotApiTest\Service\ReplacementCertificate;
 
 use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Service\OtpService;
-use DvsaCommon\Enum\CertificateType;
 use DvsaCommon\Enum\CertificateTypeCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
@@ -26,11 +25,10 @@ use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use DvsaMotApiTest\Factory\ReplacementCertificateObjectsFactory;
 use IntegrationApi\DvlaVehicle\Service\DvlaVehicleUpdatedService;
-use PHPUnit_Framework_TestCase;
 use DvsaCommon\Auth\PermissionInSystem;
 
 /**
- * Class ReplacementCertificateServiceTest
+ * Class ReplacementCertificateServiceTest.
  */
 class ReplacementCertificateServiceTest extends AbstractServiceTestCase
 {
@@ -45,10 +43,10 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
     private $otpService;
     private $certificateCreationService;
 
-    /** @var  MotIdentityInterface $motIdentity */
+    /** @var MotIdentityInterface $motIdentity */
     private $motIdentity;
 
-    /** @var  MotIdentityProviderInterface $motIdentityProvider */
+    /** @var MotIdentityProviderInterface $motIdentityProvider */
     private $motIdentityProvider;
 
     public function setUp()
@@ -72,7 +70,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
                 $this->returnValueMap(
                     [
                         [CertificateTypeCode::TRANSFER, $transferType],
-                        [CertificateTypeCode::REPLACE, $replaceType]
+                        [CertificateTypeCode::REPLACE, $replaceType],
                     ]
                 )
             );
@@ -122,6 +120,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         );
 
         TestTransactionExecutor::inject($sut);
+
         return $sut;
     }
 
@@ -131,20 +130,20 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $replacementDraft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
 
         $this->motTestRepository->expects($this->any())
-            ->method("getMotTestByNumber")
+            ->method('getMotTestByNumber')
             ->with($motTest->getNumber())
             ->will($this->returnValue($motTest));
         $this->draftCreator->expects($this->any())
-            ->method("create")
+            ->method('create')
             ->with($motTest)
             ->will($this->returnValue($replacementDraft));
-        $this->draftRepository->expects($this->any())->method("save");
+        $this->draftRepository->expects($this->any())->method('save');
 
         $draft = $this->createSUT()->createDraft($motTest->getNumber());
 
         $this->assertInstanceOf(
             CertificateReplacementDraft::class, $draft,
-            "expected draft not returned!"
+            'expected draft not returned!'
         );
     }
 
@@ -154,25 +153,25 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $replacementDraft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
 
         $this->motTestRepository->expects($this->any())
-            ->method("getMotTestByNumber")
+            ->method('getMotTestByNumber')
             ->with($motTest->getNumber())
             ->will($this->returnValue($motTest));
         $this->draftCreator->expects($this->any())
-            ->method("create")
+            ->method('create')
             ->with($motTest)
             ->will($this->returnValue($replacementDraft));
-        $this->draftRepository->expects($this->any())->method("save");
+        $this->draftRepository->expects($this->any())->method('save');
 
         $changeData = ReplacementCertificateObjectsFactory::partialReplacementCertificateDraftChange(1);
         $this->draftUpdater->expects($this->once())
-            ->method("updateDraft")
+            ->method('updateDraft')
             ->with($replacementDraft, $changeData);
 
         $draft = $this->createSUT()->createAndUpdateDraft($motTest->getNumber(), '', $changeData);
 
         $this->assertInstanceOf(
             CertificateReplacementDraft::class, $draft,
-            "expected draft not returned!"
+            'expected draft not returned!'
         );
     }
 
@@ -184,7 +183,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
 
         $draft = $this->createSUT()->getDraft($draft->getId());
 
-        $this->assertNotNull($draft, "retrieved draft instance should not be null");
+        $this->assertNotNull($draft, 'retrieved draft instance should not be null');
     }
 
     public function testUpdateDraft_givenDraftIdAndChangeData_callUpdater()
@@ -194,7 +193,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $this->returnsDraftForId($draft->getId(), $draft);
 
         $this->draftUpdater->expects($this->once())
-            ->method("updateDraft")
+            ->method('updateDraft')
             ->with($draft, $changeData);
 
         $this->createSUT()->updateDraft($draft->getId(), $changeData);
@@ -202,14 +201,14 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
 
     public function testApplyDraft_givenDraftId_createCorrectCertificateReplacement()
     {
-        $exampleReason = "EXAMPLE_REASON";
+        $exampleReason = 'EXAMPLE_REASON';
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
             ->setId(12345)->setReasonForReplacement($exampleReason);
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
-        $this->certificateCreator->expects($this->any())->method("create");
-        $this->certificateReplacementRepository->expects($this->any())->method("save")
+        $this->certificateCreator->expects($this->any())->method('create');
+        $this->certificateReplacementRepository->expects($this->any())->method('save')
             ->with($certificateReplacementCapture());
 
         $data = ['oneTimePassword' => '123456'];
@@ -220,14 +219,14 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $certReplacement = $certificateReplacementCapture->get();
         $this->assertEquals(
             $exampleReason, $certReplacement->getReplacementReason(),
-            "replacement reason of the draft should be copied to certificate replacement instance!"
+            'replacement reason of the draft should be copied to certificate replacement instance!'
         );
         $this->assertEquals(
             CertificateTypeCode::REPLACE, $certReplacement->getCertificateType()->getCode(),
             "Certificate replacement type should be 'Replace' for a non-cherished transfer replacement"
         );
         $this->assertNotNull(
-            $certReplacement->getMotTest(), "MOT test instance attached to certificate replacement cannot be null!"
+            $certReplacement->getMotTest(), 'MOT test instance attached to certificate replacement cannot be null!'
         );
         $this->assertEquals(
             $draft->getMotTestVersion(), $certReplacement->getMotTestVersion(),
@@ -243,8 +242,8 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
-        $this->certificateCreator->expects($this->any())->method("create");
-        $this->certificateReplacementRepository->expects($this->any())->method("save")
+        $this->certificateCreator->expects($this->any())->method('create');
+        $this->certificateReplacementRepository->expects($this->any())->method('save')
             ->with($certificateReplacementCapture());
 
         $data = ['oneTimePassword' => '123456'];
@@ -274,7 +273,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
             [true, true, false],
 
             //Auth Not Expected If No Otp Permission And Tester Does Not Have Two Factor Auth
-            [true, false, false]
+            [true, false, false],
         ];
     }
 
@@ -290,14 +289,14 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $isSecondFactorRequiredForIdentity,
         $isAuthorisationExpected
     ) {
-        $exampleReason = "EXAMPLE_REASON";
+        $exampleReason = 'EXAMPLE_REASON';
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
             ->setId(12345)->setReasonForReplacement($exampleReason);
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
-        $this->certificateCreator->expects($this->any())->method("create");
-        $this->certificateReplacementRepository->expects($this->any())->method("save")
+        $this->certificateCreator->expects($this->any())->method('create');
+        $this->certificateReplacementRepository->expects($this->any())->method('save')
             ->with($certificateReplacementCapture());
 
         $otpPin = '123456';
@@ -321,7 +320,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
     private function returnsDraftForId($inputDraftId, $returnedDraft)
     {
         $this->draftRepository->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->with($inputDraftId)
             ->will($this->returnValue($returnedDraft));
     }

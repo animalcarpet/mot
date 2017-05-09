@@ -6,7 +6,7 @@ use Zend\View\Helper\AbstractHelper;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 
 /**
- * AuthorisationHelper - helper for view
+ * AuthorisationHelper - helper for view.
  *
  * accessible by this->authorisationHelper() in any *.phtml file
  *
@@ -14,7 +14,6 @@ use Core\Service\MotFrontendAuthorisationServiceInterface;
  */
 class AuthorisationHelper extends AbstractHelper implements MotFrontendAuthorisationServiceInterface
 {
-
     /**
      * @var MotFrontendAuthorisationServiceInterface
      */
@@ -93,7 +92,8 @@ class AuthorisationHelper extends AbstractHelper implements MotFrontendAuthorisa
      * Returns the user's roles (at any level) as an array.
      *
      * @return array
-     * @deprecated check permissions, rather than roles.
+     *
+     * @deprecated check permissions, rather than roles
      */
     public function getRolesAsArray()
     {

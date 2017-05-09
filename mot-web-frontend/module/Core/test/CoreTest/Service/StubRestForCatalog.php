@@ -8,7 +8,7 @@ use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 
 /**
- * Minimal rest client stub for use by catalog service
+ * Minimal rest client stub for use by catalog service.
  */
 class StubRestForCatalog
 {
@@ -934,38 +934,38 @@ class StubRestForCatalog
         "organisationBusinessRole": [
             {
                 "id": 1,
-                "code": "' . OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER . '",
+                "code": "' .OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER.'",
                 "name": "Authorised Examiner Designated Manager"
             },
             {
                 "id": 2,
-                "code": "' . OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE . '",
+                "code": "' .OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE.'",
                 "name": "Authorised Examiner Delegate"
             },
             {
                 "id": 3,
-                "code": "' . OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL . '",
+                "code": "' .OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL.'",
                 "name": "Authorised Examiner Principal"
             },
             {
                 "id": 4,
-                "code": "' . OrganisationBusinessRoleCode::SCHEME_MANAGER . '",
+                "code": "' .OrganisationBusinessRoleCode::SCHEME_MANAGER.'",
                 "name": "DVSA Scheme Management"
             }
         ],
         "siteBusinessRole": [
             {
-                "code": "' . SiteBusinessRoleCode::TESTER . '",
+                "code": "' .SiteBusinessRoleCode::TESTER.'",
                 "id": 1,
                 "name": "Tester"
             },
             {
-                "code": "' . SiteBusinessRoleCode::SITE_MANAGER . '",
+                "code": "' .SiteBusinessRoleCode::SITE_MANAGER.'",
                 "id": 2,
                 "name": "Site manager"
             },
             {
-                "code": "' . SiteBusinessRoleCode::SITE_ADMIN . '",
+                "code": "' .SiteBusinessRoleCode::SITE_ADMIN.'",
                 "id": 3,
                 "name": "Site admin"
             }
@@ -973,44 +973,44 @@ class StubRestForCatalog
         "brakeTestType": [
             {
                 "id": 1,
-                "code": "' . BrakeTestTypeCode::DECELEROMETER . '",
+                "code": "' .BrakeTestTypeCode::DECELEROMETER.'",
                 "name": "decelerometer"
             },
             {
                 "id": 2,
-                "code": "' . BrakeTestTypeCode::FLOOR . '",
+                "code": "' .BrakeTestTypeCode::FLOOR.'",
                 "name": "floor"
             },
             {
                 "id": 3,
-                "code": "' . BrakeTestTypeCode::GRADIENT . '",
+                "code": "' .BrakeTestTypeCode::GRADIENT.'",
                 "name": "gradient"
             },
             {
                 "id": 4,
-                "code": "' . BrakeTestTypeCode::PLATE . '",
+                "code": "' .BrakeTestTypeCode::PLATE.'",
                 "name": "plate"
             },
             {
                 "id": 5,
-                "code": "' . BrakeTestTypeCode::ROLLER . '",
+                "code": "' .BrakeTestTypeCode::ROLLER.'",
                 "name": "roller"
             }
         ],
         "equipmentModelStatus": [
             {
                 "id": 1,
-                "code": "'. EquipmentModelStatusCode::APPROVED . '",
+                "code": "'.EquipmentModelStatusCode::APPROVED.'",
                 "name": "Approved"
             },
             {
                 "id": 2,
-                "code": "'. EquipmentModelStatusCode::NOT_INSTALLABLE . '",
+                "code": "'.EquipmentModelStatusCode::NOT_INSTALLABLE.'",
                 "name": "Not Installable"
             },
             {
                 "id": 3,
-                "code": "'. EquipmentModelStatusCode::WITHDRAWN . '",
+                "code": "'.EquipmentModelStatusCode::WITHDRAWN.'",
                 "name": "Withdrawn"
             }
         ],

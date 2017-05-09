@@ -23,7 +23,7 @@ use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
 
 /**
- * Class ReplacementCertificateDraftController
+ * Class ReplacementCertificateDraftController.
  */
 class ReplacementCertificateDraftController extends AbstractDvsaRestfulController implements TransactionAwareInterface
 {
@@ -42,10 +42,10 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
     private $motTestService;
 
     /**
-     * @param ReplacementCertificateService $replacementCertificateService
+     * @param ReplacementCertificateService    $replacementCertificateService
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param CertificateCreationService $certificateCreationService
-     * @param MotTestService $motTestService
+     * @param CertificateCreationService       $certificateCreationService
+     * @param MotTestService                   $motTestService
      */
     public function __construct(
         ReplacementCertificateService $replacementCertificateService,
@@ -80,7 +80,7 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
 
     /**
      * @param string $draftId
-     * @param array $data
+     * @param array  $data
      *
      * @return \Zend\View\Model\JsonModel
      */
@@ -88,6 +88,7 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
     {
         $draftDTO = ReplacementCertificateDraftChangeDTO::fromDataArray($data);
         $this->replacementCertificateService->updateDraft($draftId, $draftDTO);
+
         return ApiResponse::jsonOk();
     }
 
@@ -111,12 +112,13 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
 
     /**
      * @return \Zend\View\Model\JsonModel
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function applyAction()
     {
         if ($this->getRequest()->isPost()) {
-            $draftId = $this->params()->fromRoute("id");
+            $draftId = $this->params()->fromRoute('id');
             $data = $this->processBodyContent($this->getRequest());
 
             $motEntity = $this->replacementCertificateService->applyDraft($draftId, $data, false);
@@ -136,6 +138,7 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
 
             return ApiResponse::jsonOk();
         }
+
         return $this->returnMethodNotAllowedResponseModel();
     }
 
@@ -144,15 +147,16 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
      */
     public function diffAction()
     {
-        $draftId = $this->params()->fromRoute("id");
+        $draftId = $this->params()->fromRoute('id');
         $draft = $this->replacementCertificateService->getDraft($draftId);
         $diff = ReplacementCertificateDraftDiffHelper::getDiff($draft);
-        
+
         return ApiResponse::jsonOk($diff);
     }
 
     /**
      * @param CertificateReplacementDraft $draft
+     *
      * @return bool
      */
     private function isLatestPassedMotTest(CertificateReplacementDraft $draft)

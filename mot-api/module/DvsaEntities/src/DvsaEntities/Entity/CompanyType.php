@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * CompanyType
+ * CompanyType.
  *
  * @ORM\Table(name="company_type", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\CompanyTypeRepository", readOnly=true)
@@ -38,6 +38,7 @@ class CompanyType extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 }

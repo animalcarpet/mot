@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service;
 
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -46,7 +47,6 @@ class PersonQualificationStatusService implements AutoWireableInterface
 
                 $this->authorisationForTestingMotRepository->persist($authorisation);
             }
-
         }
 
         $this->authorisationForTestingMotRepository->flush();
@@ -57,7 +57,7 @@ class PersonQualificationStatusService implements AutoWireableInterface
         $authorisations = $this->getAuthorisationsForGroup($person, $vehicleClassGroup);
 
         if (empty($authorisations)) {
-            throw new \InvalidArgumentException("Cannot remove status for group '" . $vehicleClassGroup . "'");
+            throw new \InvalidArgumentException("Cannot remove status for group '".$vehicleClassGroup."'");
         }
 
         foreach ($authorisations as $authorisation) {

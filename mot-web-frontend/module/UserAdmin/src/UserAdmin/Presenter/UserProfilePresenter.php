@@ -14,10 +14,9 @@ use DvsaCommon\Utility\AddressUtils;
 use UserAdmin\Service\PersonRoleManagementService;
 use UserAdmin\ViewModel\UserProfile\TesterAuthorisationViewModel;
 use Zend\Di\Exception\RuntimeException;
-use Zend\Mvc\Controller\Plugin\Url as UrlPlugin;
 
 /**
- * Decorator for PersonHelpDeskProfileDto
+ * Decorator for PersonHelpDeskProfileDto.
  */
 class UserProfilePresenter implements AddressPresenterInterface
 {
@@ -41,17 +40,17 @@ class UserProfilePresenter implements AddressPresenterInterface
     /** @var TesterAuthorisationViewModel */
     private $testerAuthorisation;
 
-    /** @var PersonRoleManagementService s*/
+    /** @var PersonRoleManagementService s */
     private $personRoleManagementService;
 
     /** @var array $dvsaRoles - cache for data retrieved from API */
     private $dvsaRoles;
 
     /**
-     * @param PersonHelpDeskProfileDto $person
-     * @param TesterAuthorisationViewModel $testerAuthorisation
-     * @param CatalogService $catalogService
-     * @param bool|false $isDvsaUser
+     * @param PersonHelpDeskProfileDto         $person
+     * @param TesterAuthorisationViewModel     $testerAuthorisation
+     * @param CatalogService                   $catalogService
+     * @param bool|false                       $isDvsaUser
      * @param PersonRoleManagementService|null $personRoleManagementService
      */
     public function __construct(
@@ -101,7 +100,7 @@ class UserProfilePresenter implements AddressPresenterInterface
      */
     public function displayTitleAndFullName()
     {
-        return join(
+        return implode(
             ' ', array_filter(
                 [
                     $this->person->getTitle(),
@@ -245,7 +244,7 @@ class UserProfilePresenter implements AddressPresenterInterface
     }
 
     /**
-     * Returns an array of all site and organisation roles, grouped by site/organisation ID
+     * Returns an array of all site and organisation roles, grouped by site/organisation ID.
      *
      * @return array
      */
@@ -270,11 +269,12 @@ class UserProfilePresenter implements AddressPresenterInterface
     }
 
     /**
-     * Function to make use of the service catalog and Data Mapping helper to get a role's name from codes
+     * Function to make use of the service catalog and Data Mapping helper to get a role's name from codes.
      *
      * @param array $roles
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function getNameFromRoleCode(array $roles)
@@ -293,7 +293,7 @@ class UserProfilePresenter implements AddressPresenterInterface
     }
 
     /**
-     * Get the profile template depending on the authentication status
+     * Get the profile template depending on the authentication status.
      *
      * @return string
      */
@@ -307,7 +307,7 @@ class UserProfilePresenter implements AddressPresenterInterface
     }
 
     /**
-     * Return an array of all the internal role codes assigned to the person
+     * Return an array of all the internal role codes assigned to the person.
      *
      * @return array
      */
@@ -341,7 +341,7 @@ class UserProfilePresenter implements AddressPresenterInterface
 
     /**
      * Don't display only when user has trade roles (e.g tester, AEDM, etc.) and has no DVSA/DVLA roles
-     * or if user has no permission to see it
+     * or if user has no permission to see it.
      *
      * @return bool
      */
@@ -356,7 +356,7 @@ class UserProfilePresenter implements AddressPresenterInterface
      * User has permissions to:
      *  - reset password
      *  - recover username
-     *  - reclaim account
+     *  - reclaim account.
      *
      * @return bool
      */
@@ -368,7 +368,7 @@ class UserProfilePresenter implements AddressPresenterInterface
     }
 
     /**
-     * Tells us if the user is trying to manage their own roles
+     * Tells us if the user is trying to manage their own roles.
      *
      * @return bool
      */

@@ -5,11 +5,9 @@ namespace Organisation\UpdateAeProperty;
 use Core\TwoStepForm\ProcessBuilderInterface;
 use Core\TwoStepForm\SingleStepProcessInterface;
 use DvsaCommon\Utility\ArrayUtils;
-use Site\UpdateVtsProperty\AbstractSingleStepVtsProcess;
 
 /**
- * Class UpdateAePropertyProcessBuilder
- * @package Organisation\UpdateAeProperty
+ * Class UpdateAePropertyProcessBuilder.
  *
  * @deprecated remove class
  */

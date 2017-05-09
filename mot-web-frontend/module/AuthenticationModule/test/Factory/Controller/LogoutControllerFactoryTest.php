@@ -15,8 +15,6 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLogoutService;
 use DvsaClient\MapperFactory;
 use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\EventManager\EventManager;
-use Zend\Session\Container;
 
 class LogoutControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +27,7 @@ class LogoutControllerFactoryTest extends \PHPUnit_Framework_TestCase
                 MotEventManager::class,
                 SessionService::class,
                 WebLogoutService::class,
-                MapperFactory::class => function() {
+                MapperFactory::class => function () {
                     return XMock::of(MapperFactory::class);
                 },
             ]

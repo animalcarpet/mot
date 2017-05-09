@@ -20,13 +20,14 @@ interface AuthorisationServiceInterface extends MotAuthorisationServiceInterface
      * @param $person
      * @param $roleName
      *
-     * @return boolean
-     * @deprecated check permissions, rather than roles.
+     * @return bool
+     *
+     * @deprecated check permissions, rather than roles
      */
     public function personHasRole($person, $roleName);
 
     /**
-     * For use by framework-related code only, refreshes the roles and permissions
+     * For use by framework-related code only, refreshes the roles and permissions.
      */
     public function flushAuthorisationCache();
 }

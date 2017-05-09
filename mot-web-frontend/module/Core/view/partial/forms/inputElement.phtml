@@ -1,4 +1,5 @@
 <?php
+
 $id = isset($id) ? $id : '';
 $name = isset($name) ? $name : $id;
 $type = isset($type) ? $type : 'text';
@@ -6,7 +7,7 @@ $value = isset($value) ? $value : '';
 $pattern = isset($pattern) ? $pattern : '';
 $min = isset($min) && is_numeric($min) ? $min : false;
 $max = isset($max) && is_numeric($max) ? $max : false;
-$maxLength = isset($maxLength) && (int)$maxLength > 0 ? $maxLength : false;
+$maxLength = isset($maxLength) && (int) $maxLength > 0 ? $maxLength : false;
 $placeholder = isset($placeholder) ? $placeholder : '';
 $htmlAttrs = isset($htmlAttrs) ? $htmlAttrs : [];
 
@@ -15,30 +16,16 @@ $htmlAttrs = isset($htmlAttrs) ? $htmlAttrs : [];
 if (isset($cssOnly)) {
     $cssClass = $cssOnly;
 } else {
-    $cssClass = 'form-control ' . (isset($cssClass) ? $cssClass : '');
+    $cssClass = 'form-control '.(isset($cssClass) ? $cssClass : '');
 }
 
 $t = [
-    '<input'
-    , ' type="', $this->escapeHtmlAttr($type), '"'
-    , ' id="', $this->escapeHtmlAttr($id), '"'
-    , ' name="', $this->escapeHtmlAttr($name), '"'
-    , ' value="', $this->escapeHtmlAttr($value), '"'
-    , ($cssClass ? ' class="' . $this->escapeHtmlAttr($cssClass) . '"' : '')
-    , ($placeholder ? ' placeholder="' . $this->escapeHtmlAttr($placeholder) . '"' : '')
-    , (!empty($disabled) ? ' disabled="disabled"' : '')
-    , ($pattern ? ' pattern="' . $this->escapeHtmlAttr($pattern) . '"' : '')
-    , (!empty($required) ? ' required' : '')
-    , ($maxLength ? ' maxlength="' . $this->escapeHtmlAttr($maxLength) . '"' : '')
-    , ($min ? ' min="' . $this->escapeHtmlAttr($min) . '"' : '')
-    , ($max ? ' max="' . $this->escapeHtmlAttr($max) . '"' : '')
-    , (isset($title) ? ' title="' . $this->escapeHtmlAttr($title) . '"' : '')
+    '<input', ' type="', $this->escapeHtmlAttr($type), '"', ' id="', $this->escapeHtmlAttr($id), '"', ' name="', $this->escapeHtmlAttr($name), '"', ' value="', $this->escapeHtmlAttr($value), '"', ($cssClass ? ' class="'.$this->escapeHtmlAttr($cssClass).'"' : ''), ($placeholder ? ' placeholder="'.$this->escapeHtmlAttr($placeholder).'"' : ''), (!empty($disabled) ? ' disabled="disabled"' : ''), ($pattern ? ' pattern="'.$this->escapeHtmlAttr($pattern).'"' : ''), (!empty($required) ? ' required' : ''), ($maxLength ? ' maxlength="'.$this->escapeHtmlAttr($maxLength).'"' : ''), ($min ? ' min="'.$this->escapeHtmlAttr($min).'"' : ''), ($max ? ' max="'.$this->escapeHtmlAttr($max).'"' : ''), (isset($title) ? ' title="'.$this->escapeHtmlAttr($title).'"' : ''),
 ];
 
 foreach ($htmlAttrs as $attrName => $attrValue) {
-    $t[] = ' ' . $attrName . '="' . $this->escapeHtml($attrValue) . '"';
+    $t[] = ' '.$attrName.'="'.$this->escapeHtml($attrValue).'"';
 }
 $t[] = '/>';
 
 echo implode('', $t);
-?>

@@ -10,7 +10,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class VehicleAbstract
+ * Class VehicleAbstract.
  */
 class VehicleAbstract extends Entity implements VehicleInterface
 {
@@ -72,28 +72,28 @@ class VehicleAbstract extends Entity implements VehicleInterface
     protected $firstUsedDate;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_damaged", type="boolean")
      */
     protected $isDamaged = 0;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_destroyed", type="boolean")
      */
     protected $isDestroyed = 0;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_incognito", type="boolean")
      */
     protected $isIncognito = 0;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_new_at_first_reg", type="boolean")
      */
@@ -155,7 +155,7 @@ class VehicleAbstract extends Entity implements VehicleInterface
     /**
      * VSI weight for brake tests.
      *
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="weight", type="integer")
      */
@@ -172,7 +172,7 @@ class VehicleAbstract extends Entity implements VehicleInterface
     protected $weightSource;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="year", type="smallint", length=4)
      */
@@ -235,7 +235,7 @@ class VehicleAbstract extends Entity implements VehicleInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsDamaged()
     {
@@ -243,7 +243,7 @@ class VehicleAbstract extends Entity implements VehicleInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsDestroyed()
     {
@@ -259,7 +259,7 @@ class VehicleAbstract extends Entity implements VehicleInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsIncognito()
     {
@@ -267,7 +267,7 @@ class VehicleAbstract extends Entity implements VehicleInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNewAtFirstReg()
     {

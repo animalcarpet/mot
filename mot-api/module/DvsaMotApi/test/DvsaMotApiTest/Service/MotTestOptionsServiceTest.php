@@ -13,7 +13,6 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Service\MotTestOptionsService;
-use PHPUnit_Framework_MockObject_MockObject;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
 use Zend\Authentication\AuthenticationService;
@@ -23,7 +22,7 @@ use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommon\Date\DateTimeApiFormat;
 
 /**
- * Unit test for MotTestOptionsService
+ * Unit test for MotTestOptionsService.
  */
 class MotTestOptionsServiceTest extends AbstractMotTestServiceTest
 {
@@ -146,9 +145,10 @@ class MotTestOptionsServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Fake an identity
+     * Fake an identity.
+     *
      * @param object $identityProvider
-     * @param int $id The ID of the user
+     * @param int    $id               The ID of the user
      * @param string $username
      */
     private function setupMockIdentity($identityProvider, $id = 12, $username = 'tester')
@@ -159,5 +159,4 @@ class MotTestOptionsServiceTest extends AbstractMotTestServiceTest
             ->method('getIdentity')
             ->willReturn($identity);
     }
-
 }

@@ -40,13 +40,13 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
     const POSITIONS = 'test';
     const USERNAME = 'tester1';
     const SITE_ID = 1;
-    const SITE_NAME = "Garage";
-    const SITE_NUMBER = "V1234";
-    const SITE_ADDRESS = "Elm Street";
+    const SITE_NAME = 'Garage';
+    const SITE_NUMBER = 'V1234';
+    const SITE_ADDRESS = 'Elm Street';
     const ORGANISATION_ID = 13;
-    const ORGANISATION_NAME = "Venture Industries AE";
-    const ORGANISATION_NUMBER = "AEVNTR";
-    const ORGANISATION_ADDRESS = "1 Providence, Nashville, 72-123";
+    const ORGANISATION_NAME = 'Venture Industries AE';
+    const ORGANISATION_NUMBER = 'AEVNTR';
+    const ORGANISATION_ADDRESS = '1 Providence, Nashville, 72-123';
 
     /** @var OrderNewSecurityCardSessionService $sessionService */
     private $sessionService;
@@ -84,7 +84,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->request = XMock::of(Request::class);
     }
 
-    public function testRedirectedToAddress_WhenNotAllowedOnReviewStep() {
+    public function testRedirectedToAddress_WhenNotAllowedOnReviewStep()
+    {
         $this->setUpProtection();
         $this->stepService
             ->expects($this->once())
@@ -100,7 +101,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::USER_ID, $actionResult->getRouteParams()['userId']);
     }
 
-    public function testRedirectedToConfirmation_EventCreated_WhenPostAndNotAlreadyOrdered() {
+    public function testRedirectedToConfirmation_EventCreated_WhenPostAndNotAlreadyOrdered()
+    {
         $this->setUpProtection();
         $this->stepService
             ->expects($this->once())
@@ -123,7 +125,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::USER_ID, $actionResult->getRouteParams()['userId']);
     }
 
-    public function testRedirectedToConfirmation_WhenPostAndHaveAlreadyOrdered() {
+    public function testRedirectedToConfirmation_WhenPostAndHaveAlreadyOrdered()
+    {
         $this->setUpProtection();
         $this->stepService
             ->expects($this->once())
@@ -156,7 +159,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::USER_ID, $actionResult->getRouteParams()['userId']);
     }
 
-    public function testViewModelCreatedCorrectly_WhenNotPost() {
+    public function testViewModelCreatedCorrectly_WhenNotPost()
+    {
         $this->setUpProtection();
         $this->stepService
             ->expects($this->once())
@@ -182,7 +186,6 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2fa/card-order/review', $actionResult->getTemplate());
         $this->assertEquals(CardOrderReviewAction::REVIEW_PAGE_TITLE, $actionResult->layout()->getPageTitle());
         $this->assertEquals(CardOrderReviewAction::REVIEW_PAGE_SUBTITLE, $actionResult->layout()->getPageSubTitle());
-
     }
 
     private function buildAction()
@@ -196,6 +199,7 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
             $this->notificationService,
             $this->orderSecurityCardEventService
         );
+
         return $action;
     }
 
@@ -207,7 +211,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
             ->willReturn(null);
     }
 
-    private function setupPostMocks() {
+    private function setupPostMocks()
+    {
         $this->request
             ->expects($this->once())
             ->method('isPost')
@@ -239,49 +244,50 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
     }
 
-    private function buildPersonalDetailsData() {
+    private function buildPersonalDetailsData()
+    {
         return [
-            'id'                   => self::ID,
-            'firstName'            => self::FIRST_NAME,
-            'middleName'           => self::MIDDLE_NAME,
-            'surname'              => self::SURNAME,
-            'dateOfBirth'          => self::DOB,
-            'username'             => self::USERNAME,
-            'title'                => self::TITLE,
-            'gender'               => self::GENDER,
-            'addressLine1'         => self::ADDR_1,
-            'addressLine2'         => self::ADDR_2,
-            'addressLine3'         => self::ADDR_3,
-            'town'                 => self::TOWN,
-            'postcode'             => self::POSTCODE,
-            'email'                => self::EMAIL,
-            'phone'                => self::PHONE,
+            'id' => self::ID,
+            'firstName' => self::FIRST_NAME,
+            'middleName' => self::MIDDLE_NAME,
+            'surname' => self::SURNAME,
+            'dateOfBirth' => self::DOB,
+            'username' => self::USERNAME,
+            'title' => self::TITLE,
+            'gender' => self::GENDER,
+            'addressLine1' => self::ADDR_1,
+            'addressLine2' => self::ADDR_2,
+            'addressLine3' => self::ADDR_3,
+            'town' => self::TOWN,
+            'postcode' => self::POSTCODE,
+            'email' => self::EMAIL,
+            'phone' => self::PHONE,
             'drivingLicenceNumber' => self::DRIVING_LICENCE_BUMBER,
             'drivingLicenceRegion' => self::REGION,
-            'roles'                => [
-                "system" => [
-                    "roles" => [self::ROLE_USER]
+            'roles' => [
+                'system' => [
+                    'roles' => [self::ROLE_USER],
                 ],
-                "organisations" => [
+                'organisations' => [
                     self::ORGANISATION_ID => [
-                        "name" => self::ORGANISATION_NAME,
-                        "number" => self::ORGANISATION_NUMBER,
-                        "address" => self::ORGANISATION_ADDRESS,
-                        "roles" => [self::ROLE_AEDM]
-                    ]
+                        'name' => self::ORGANISATION_NAME,
+                        'number' => self::ORGANISATION_NUMBER,
+                        'address' => self::ORGANISATION_ADDRESS,
+                        'roles' => [self::ROLE_AEDM],
+                    ],
                 ],
-                "sites" => [
+                'sites' => [
                     self::SITE_ID => [
-                        "name" => self::SITE_NAME,
-                        "number" => self::SITE_NUMBER,
-                        "address" => self::SITE_ADDRESS,
-                        "roles" => [self::ROLE_TESTER]
-                    ]
+                        'name' => self::SITE_NAME,
+                        'number' => self::SITE_NUMBER,
+                        'address' => self::SITE_ADDRESS,
+                        'roles' => [self::ROLE_TESTER],
+                    ],
                 ],
             ],
-            'positions'            => [
-                'test'
-            ]
+            'positions' => [
+                'test',
+            ],
         ];
     }
 }

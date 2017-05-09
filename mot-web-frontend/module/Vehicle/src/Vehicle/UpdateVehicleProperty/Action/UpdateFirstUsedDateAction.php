@@ -17,8 +17,7 @@ class UpdateFirstUsedDateAction extends AbstractUpdateVehicleAction implements A
         VehicleService $vehicleService,
         ParamObfuscator $paramObfuscator,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct($editStepAction, $firstUsedProcess, $vehicleService, $paramObfuscator, $startTestChangeService);
     }
 }

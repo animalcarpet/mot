@@ -1,4 +1,5 @@
 <?php
+
 return [
     'modules' => [
         'DvsaFeature',
@@ -9,10 +10,10 @@ return [
         'DataCatalogApi',
         'DvsaMotApi',
         'DvsaAuthorisation',
-        'DvsaAuthentication'
+        'DvsaAuthentication',
     ],
     'test_namespaces' => [
-        'DataCatalogApi' => __DIR__ . '/' . 'DataCatalogApi',
-        'DvsaCommonApiTest' => __DIR__ . '/../../DvsaCommonApi/test/DvsaCommonApiTest',
-    ]
+        'DataCatalogApi' => __DIR__.'/'.'DataCatalogApi',
+        'DvsaCommonApiTest' => __DIR__.'/../../DvsaCommonApi/test/DvsaCommonApiTest',
+    ],
 ];

@@ -49,13 +49,13 @@ class TransactionSearchParamDqlBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\DvsaEntities\DqlBuilder\TransactionSearchParamDqlBuilder::class, $result);
 
         $searchDql =
-            "SELECT transaction from DvsaEntities\Entity\TestSlotTransaction transaction " .
-            "LEFT JOIN DvsaEntities\Entity\Payment p WITH transaction.payment = p.id " .
-            "LEFT JOIN DvsaEntities\Entity\Organisation o WITH transaction.organisation = o.id " .
-            "WHERE (transaction.organisation = :ORGANISATION_ID) " .
-            "AND (transaction.status = :STATUS) ".
-            "AND (transaction.completedOn >= :DATE_FROM) AND (transaction.completedOn <= :DATE_TO) ".
-            "ORDER BY p.0 ";
+            "SELECT transaction from DvsaEntities\Entity\TestSlotTransaction transaction ".
+            "LEFT JOIN DvsaEntities\Entity\Payment p WITH transaction.payment = p.id ".
+            "LEFT JOIN DvsaEntities\Entity\Organisation o WITH transaction.organisation = o.id ".
+            'WHERE (transaction.organisation = :ORGANISATION_ID) '.
+            'AND (transaction.status = :STATUS) '.
+            'AND (transaction.completedOn >= :DATE_FROM) AND (transaction.completedOn <= :DATE_TO) '.
+            'ORDER BY p.0 ';
 
         $this->assertEquals($searchDql, $this->dqlBuilder->getSearchDql());
     }

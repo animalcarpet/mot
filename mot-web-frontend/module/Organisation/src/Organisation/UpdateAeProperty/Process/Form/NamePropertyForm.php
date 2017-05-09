@@ -13,8 +13,8 @@ use Zend\Validator\StringLength;
 class NamePropertyForm extends Form
 {
     const FIELD_NAME = UpdateAePropertyAction::AE_NAME_PROPERTY;
-    const NAME_EMPTY_MSG = "you must enter a business name";
-    const NAME_TOO_LONG_MSG = "must be %max% characters or less";
+    const NAME_EMPTY_MSG = 'you must enter a business name';
+    const NAME_TOO_LONG_MSG = 'must be %max% characters or less';
     const FIELD_NAME_MAX_LENGTH = 60;
 
     private $nameElement;

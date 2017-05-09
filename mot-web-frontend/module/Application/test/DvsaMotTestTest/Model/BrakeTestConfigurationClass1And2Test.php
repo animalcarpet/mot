@@ -6,9 +6,7 @@ use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 
 /**
- * Class BrakeTestConfigurationClass1And2Test
- *
- * @package DvsaMotTest\Model
+ * Class BrakeTestConfigurationClass1And2Test.
  */
 class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
 {
@@ -55,7 +53,7 @@ class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
                     'requiresEfforts' => true,
                     'requiresWeight' => true,
                     'hasSidecar' => true,
-                ]
+                ],
             ],
             [
                 [
@@ -74,7 +72,7 @@ class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
                     'requiresEfforts' => true,
                     'requiresWeight' => true,
                     'hasSidecar' => false,
-                ]
+                ],
             ],
             [
                 [
@@ -93,7 +91,7 @@ class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
                     'requiresEfforts' => false,
                     'requiresWeight' => true,
                     'hasSidecar' => true,
-                ]
+                ],
             ],
             [
                 [
@@ -112,7 +110,7 @@ class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
                     'requiresEfforts' => false,
                     'requiresWeight' => false,
                     'hasSidecar' => false,
-                ]
+                ],
             ],
             [
                 [
@@ -131,7 +129,7 @@ class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
                     'requiresEfforts' => false,
                     'requiresWeight' => false,
                     'hasSidecar' => false,
-                ]
+                ],
             ],
         ];
     }

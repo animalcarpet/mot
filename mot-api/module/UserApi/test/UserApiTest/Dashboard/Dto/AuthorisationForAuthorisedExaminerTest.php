@@ -1,14 +1,14 @@
 <?php
+
 namespace UserApiTest\Dashboard\Dto;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer as AuthorisationForAuthorisedExaminerEntity;
 use DvsaEntities\Entity\Organisation;
 use UserApi\Dashboard\Dto\AuthorisationForAuthorisedExaminer;
 use UserApi\Dashboard\Dto\Site;
 
 /**
- * Unit tests for AuthorisationForAuthorisedExaminer dto
+ * Unit tests for AuthorisationForAuthorisedExaminer dto.
  */
 class AuthorisationForAuthorisedExaminerTest extends \PHPUnit_Framework_TestCase
 {
@@ -50,7 +50,7 @@ class AuthorisationForAuthorisedExaminerTest extends \PHPUnit_Framework_TestCase
 
     private function assertWellFormedData($data)
     {
-        return (is_array($data)
+        return is_array($data)
             && isset($data['id'])
             && isset($data['reference'])
             && isset($data['name'])
@@ -61,6 +61,6 @@ class AuthorisationForAuthorisedExaminerTest extends \PHPUnit_Framework_TestCase
             && isset($data['sites'])
             && is_array($data['sites'])
             && isset($data['position'])
-        );
+        ;
     }
 }

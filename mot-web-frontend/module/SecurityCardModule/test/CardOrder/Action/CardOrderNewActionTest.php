@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardOrder\Action;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderNewAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderProtection;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
@@ -12,7 +11,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderNewViewMod
 use DvsaCommonTest\TestUtils\XMock;
 use Core\Action\ViewActionResult;
 use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 use Core\Service\MotFrontendIdentityProvider;
 
 class CardOrderNewActionTest extends \PHPUnit_Framework_TestCase
@@ -51,7 +49,8 @@ class CardOrderNewActionTest extends \PHPUnit_Framework_TestCase
         $this->cardOrderProtection = XMock::of(CardOrderProtection::class);
     }
 
-    public function testStepArrayCleared_AndSessionWithViewModelCorrectlySetUp() {
+    public function testStepArrayCleared_AndSessionWithViewModelCorrectlySetUp()
+    {
         $this->setSecondFactorRequiredMock(true);
         $this->setUpProtection();
         $this->stepService
@@ -80,11 +79,12 @@ class CardOrderNewActionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($viewModel->getHasAnActiveCard());
     }
 
-    private function getExpectedTestSessionArray() {
+    private function getExpectedTestSessionArray()
+    {
         return [
             'userId' => self::USER_ID,
             'steps' => ['new' => true, self::TEST_STEP_1 => false, self::TEST_STEP_2 => false],
-            'hasOrdered' => false
+            'hasOrdered' => false,
         ];
     }
 
@@ -98,7 +98,8 @@ class CardOrderNewActionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function setSecondFactorRequiredMock($secondFactorRequired) {
+    private function setSecondFactorRequiredMock($secondFactorRequired)
+    {
         $this->identity
             ->expects($this->any())
             ->method('isSecondFactorRequired')

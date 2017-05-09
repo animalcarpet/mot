@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryResult\AbstractTesterPerformanceResult;
@@ -20,6 +21,7 @@ class TesterStatisticsMapper
 {
     /**
      * @param TesterPerformanceResult[] $statistics
+     *
      * @return SitePerformanceDto
      */
     public function buildSitePerformanceDto(array $statistics)
@@ -68,6 +70,7 @@ class TesterStatisticsMapper
     /**
      * @param array $statistics
      * @param $vehicleGroup
+     *
      * @return AbstractTesterPerformanceResult[]
      */
     private function filterStatisticsByGroup(array $statistics, $vehicleGroup)
@@ -82,7 +85,8 @@ class TesterStatisticsMapper
 
     /**
      * @param TesterPerformanceResult[] $statistics
-     * @param string $vehicleGroup
+     * @param string                    $vehicleGroup
+     *
      * @return SiteGroupPerformanceDto
      */
     private function createSiteGroupPerformanceDtoForClassGroup(array $statistics, $vehicleGroup)
@@ -101,6 +105,7 @@ class TesterStatisticsMapper
 
     /**
      * @param TesterPerformanceResult[] $statistics
+     *
      * @return MotTestingPerformanceDto
      */
     private function calculateTotalSiteStatistics(array $statistics)
@@ -131,6 +136,7 @@ class TesterStatisticsMapper
     private function calculateSiteFailedTestsPercentage(array $statistics, $totalTestCount)
     {
         $totalFailCount = $this->sumUpFailedTestsInTheSite($statistics);
+
         return $this->calculateFailedPercentage($totalFailCount, $totalTestCount);
     }
 
@@ -152,6 +158,7 @@ class TesterStatisticsMapper
 
     /**
      * @param TesterPerformanceResult $result
+     *
      * @return EmployeePerformanceDto
      */
     private function buildEmployeePerformanceDto(TesterPerformanceResult $result)
@@ -167,6 +174,7 @@ class TesterStatisticsMapper
 
     /**
      * @param TesterMultiSitePerformanceResult $result
+     *
      * @return TesterMultiSitePerformanceDto
      */
     private function buildTesterMultiSitePerformanceDto(TesterMultiSitePerformanceResult $result)
@@ -185,6 +193,7 @@ class TesterStatisticsMapper
 
     /**
      * @param TesterMultiSitePerformanceResult[] $statistics
+     *
      * @return TesterMultiSitePerformanceReportDto
      */
     public function buildTesterMultiSitePerformanceReportDto(array $statistics)
@@ -198,11 +207,11 @@ class TesterStatisticsMapper
             VehicleClassGroupCode::CARS_ETC => [],
         ];
 
-        foreach($groups as $group) {
+        foreach ($groups as $group) {
             $groupStatistics = $this->filterStatisticsByGroup($statistics, $group);
             /** @var TesterMultiSitePerformanceResult $statistic */
-            foreach($groupStatistics as $statistic) {
-                $siteDtos[$group][]= $this->buildTesterMultiSitePerformanceDto($statistic);
+            foreach ($groupStatistics as $statistic) {
+                $siteDtos[$group][] = $this->buildTesterMultiSitePerformanceDto($statistic);
             }
         }
 
@@ -225,6 +234,7 @@ class TesterStatisticsMapper
 
     /**
      * @param TesterPerformanceResult[] $statistics
+     *
      * @return EmployeePerformanceDto[]
      */
     private function buildStatisticsForManyEmployees(array $statistics)
@@ -255,8 +265,10 @@ class TesterStatisticsMapper
     }
 
     /**
-     * Calculates weighted sum of average vehicle age
+     * Calculates weighted sum of average vehicle age.
+     *
      * @param TesterPerformanceResult[] $statistics
+     *
      * @return float|int
      */
     private function calculateTotalAverageVehicleAgeForTheWholeSite($statistics)
@@ -279,8 +291,10 @@ class TesterStatisticsMapper
     }
 
     /**
-     * Checks if any tester has vehicle average age available
+     * Checks if any tester has vehicle average age available.
+     *
      * @param TesterPerformanceResult[] $statistics
+     *
      * @return bool
      */
     private function calculateTotalIsAverageAgeAvailable($statistics)

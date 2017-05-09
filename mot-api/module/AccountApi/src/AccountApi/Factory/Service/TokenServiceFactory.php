@@ -10,18 +10,17 @@ use DvsaEntities\Entity\Message;
 use DvsaEntities\Entity\MessageType;
 use DvsaEntities\Entity\Person;
 use MailerApi\Service\MailerService;
-use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class TokenServiceFactory
- * @package AccountApi\Factory\Service
+ * Class TokenServiceFactory.
  */
 class TokenServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return TokenService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\Mapper;
 
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
@@ -21,6 +22,7 @@ class MotTestingCertificateMapper extends AbstractApiMapper implements AutoWirea
 
     /**
      * @param QualificationAward $object
+     *
      * @return MotTestingCertificateDto
      */
     public function toDto($object)

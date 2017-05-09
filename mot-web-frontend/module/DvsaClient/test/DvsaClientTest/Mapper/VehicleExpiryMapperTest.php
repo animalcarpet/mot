@@ -16,7 +16,7 @@ class VehicleExpiryMapperTest extends AbstractMapperTest
 
     const VEHICLE_ID = 1;
 
-    /** @var  VehicleExpiryMapper */
+    /** @var VehicleExpiryMapper */
     private $mapper;
 
     public function setUp()
@@ -36,8 +36,8 @@ class VehicleExpiryMapperTest extends AbstractMapperTest
                         'expiryDate' => self::EXPIRY_DATE,
                         'isEarlierThanTestDateLimit' => false,
                         'previousCertificateExists' => true,
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 

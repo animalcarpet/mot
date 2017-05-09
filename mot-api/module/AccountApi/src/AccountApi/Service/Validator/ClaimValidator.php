@@ -23,7 +23,7 @@ class ClaimValidator extends AbstractValidator
         'securityAnswerOne',
         'securityQuestionTwoId',
         'securityAnswerTwo',
-        'personId'
+        'personId',
     ];
 
     /**
@@ -41,17 +41,17 @@ class ClaimValidator extends AbstractValidator
      */
     protected $securityQuestionService;
 
-    const ERROR_PASSWORD_CONFIRMATION = "Passwords do not match";
-    const ERROR_PIN_INCORRECT_FORMAT = "PIN - must be a 6 digit number";
-    const ERROR_SECURITY_QUESTION_NOT_EXIST = "Security Question - The security question received does not exist";
+    const ERROR_PASSWORD_CONFIRMATION = 'Passwords do not match';
+    const ERROR_PIN_INCORRECT_FORMAT = 'PIN - must be a 6 digit number';
+    const ERROR_SECURITY_QUESTION_NOT_EXIST = 'Security Question - The security question received does not exist';
 
     public function __construct(
         SecurityQuestionService $securityQuestionService,
         SecurityQuestionRepository $securityQuestionRepository
     ) {
-        $this->securityQuestionService    = $securityQuestionService;
+        $this->securityQuestionService = $securityQuestionService;
         $this->securityQuestionRepository = $securityQuestionRepository;
-        $this->passwordValidator          = new PasswordValidator();
+        $this->passwordValidator = new PasswordValidator();
 
         parent::__construct();
     }

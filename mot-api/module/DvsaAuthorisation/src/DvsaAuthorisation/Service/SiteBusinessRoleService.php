@@ -10,11 +10,9 @@ use DvsaEntities\Entity\SiteBusinessRole;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 
 /**
- * Class SiteBusinessRoleService
+ * Class SiteBusinessRoleService.
  *
  * Allows for a business role to be added to the DB against a site.
- *
- * @package DvsaAuthentication\Service
  */
 class SiteBusinessRoleService
 {
@@ -30,7 +28,7 @@ class SiteBusinessRoleService
 
     /**
      * @param Person $person
-     * @param Site $site
+     * @param Site   $site
      * @param string $businessRoleCode
      * @param string $statusCode
      */

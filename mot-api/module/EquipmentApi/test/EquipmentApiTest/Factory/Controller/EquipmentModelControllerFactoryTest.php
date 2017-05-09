@@ -11,8 +11,7 @@ use PHPUnit_Framework_TestCase;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PasswordChangeControllerFactoryTest
- * @package AccountTest\Factory
+ * Class PasswordChangeControllerFactoryTest.
  */
 class EquipmentModelControllerFactoryTest extends PHPUnit_Framework_TestCase
 {

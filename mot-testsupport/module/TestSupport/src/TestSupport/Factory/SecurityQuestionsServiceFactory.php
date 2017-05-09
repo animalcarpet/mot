@@ -12,6 +12,7 @@ class SecurityQuestionsServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $entityManager = $serviceLocator->get(EntityManager::class);
+
         return new SecurityQuestionsService($entityManager);
     }
 }

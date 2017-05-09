@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\TesterAtSite\Mapper;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper\TesterStatisticsMapper;
@@ -12,7 +13,7 @@ use DvsaCommon\Utility\ArrayUtils;
 
 class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  TesterStatisticsMapper */
+    /** @var TesterStatisticsMapper */
     private $sut;
 
     /** @var TesterPerformanceResult[] */
@@ -127,6 +128,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataProviderTestCalculateAverageVehicleAge
+     *
      * @param $tester1testCount
      * @param $tester2testCount
      * @param $tester1AverageVehicleAge
@@ -140,8 +142,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $tester1testCount, $tester2testCount, $tester1AverageVehicleAge, $tester2AverageVehicleAge,
         $tester1IsAverageAvailable, $tester2IsAverageAvailable,
         $expectedSiteAverageAge, $expectedSiteHasVehicleAgeAvailable
-    )
-    {
+    ) {
         // GIVEN one tester did tests in VTS
         $this->addResult($this->user1, $this->groupA, $tester1testCount, 0, 0, $tester1AverageVehicleAge, $tester1IsAverageAvailable);
 
@@ -158,6 +159,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataProviderTestCalculateAverageVehicleAgeForTester
+     *
      * @param $tester1testCount
      * @param $tester1AverageVehicleAge
      * @param $tester1IsAverageAvailable
@@ -170,8 +172,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $tester1IsAverageAvailable,
         $expectedAverageAge,
         $expectedHasVehicleAgeAvailable
-    )
-    {
+    ) {
         // GIVEN one tester did tests in VTS
         $this->addResult($this->user1, $this->groupA, $tester1testCount, 0, 0, $tester1AverageVehicleAge, $tester1IsAverageAvailable);
 
@@ -251,7 +252,9 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
      * @param SitePerformanceDto $statistics
      * @param $username
      * @param $group
+     *
      * @return EmployeePerformanceDto
+     *
      * @throws \Exception
      */
     private function findStats(SitePerformanceDto $statistics, $username, $group)
@@ -267,7 +270,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $hitCount = count($filtered);
 
         if ($hitCount >= 2) {
-            throw new \Exception("There should only be one result per person per group");
+            throw new \Exception('There should only be one result per person per group');
         }
 
         return ArrayUtils::firstOrNull($filtered);
@@ -275,8 +278,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
 
     private function addResult(
         $username, $groupA, $totalCount, $failedCount, $totalTestTime, $averageVehicleAge = null, $isAverageAgeAvailable = false
-    )
-    {
+    ) {
         $this->results[] = (new TesterPerformanceResult())
             ->setUsername($username)
             ->setTotalCount($totalCount)
@@ -289,7 +291,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
 
     public function dataProviderTestCalculateAverageVehicleAge()
     {
-        /**
+        /*
          * Arguments:
          * $tester1testCount,
          * $tester2testCount,
@@ -320,7 +322,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
 
     public function dataProviderTestCalculateAverageVehicleAgeForTester()
     {
-        /**
+        /*
          * Arguments:
          * $tester1testCount,
          * $tester1AverageAge,
@@ -338,6 +340,4 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
             [0, 0, false, 0, false],
         ];
     }
-
-
 }

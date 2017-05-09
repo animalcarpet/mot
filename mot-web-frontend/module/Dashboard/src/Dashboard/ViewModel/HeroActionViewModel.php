@@ -9,7 +9,7 @@ class HeroActionViewModel
     /** @var DashboardGuard $dashboardGuard */
     private $dashboardGuard;
 
-    /** @var SlotsViewModel $slotsViewModel*/
+    /** @var SlotsViewModel $slotsViewModel */
     private $slotsViewModel;
 
     /** @var StartMotViewModel $startMotViewModel */
@@ -23,11 +23,11 @@ class HeroActionViewModel
     /**
      * HeroActionViewModel constructor.
      *
-     * @param DashboardGuard                           $dashboardGuard
-     * @param SlotsViewModel                           $slotsViewModel
-     * @param StartMotViewModel                        $startMotViewModel
-     * @param TargetedReinspectionViewModel            $targetedReinspectionViewModel
-     * @param TestingAdviceViewModel                   $testingAdviceViewModel
+     * @param DashboardGuard                $dashboardGuard
+     * @param SlotsViewModel                $slotsViewModel
+     * @param StartMotViewModel             $startMotViewModel
+     * @param TargetedReinspectionViewModel $targetedReinspectionViewModel
+     * @param TestingAdviceViewModel        $testingAdviceViewModel
      */
     public function __construct(
         DashboardGuard $dashboardGuard,
@@ -35,8 +35,7 @@ class HeroActionViewModel
         StartMotViewModel $startMotViewModel,
         TargetedReinspectionViewModel $targetedReinspectionViewModel,
         TestingAdviceViewModel $testingAdviceViewModel
-    )
-    {
+    ) {
         $this->dashboardGuard = $dashboardGuard;
         $this->slotsViewModel = $slotsViewModel;
         $this->startMotViewModel = $startMotViewModel;

@@ -8,8 +8,7 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 
 /**
- * Class SearchPersonValidator
- * @package UserApi\HelpDesk\Service\Validator
+ * Class SearchPersonValidator.
  */
 class SearchPersonValidator extends AbstractValidator
 {
@@ -17,7 +16,7 @@ class SearchPersonValidator extends AbstractValidator
     const ERROR_DATE_IN_FUTURE = 'Date in future';
 
     /**
-     * At least one fields must not be null (empty)
+     * At least one fields must not be null (empty).
      *
      * @param SearchPersonModel $model
      *
@@ -66,5 +65,4 @@ class SearchPersonValidator extends AbstractValidator
             $this->errors->add(self::ERROR_INCORRECT_DATE, 'dateOfBirth');
         }
     }
-
 }

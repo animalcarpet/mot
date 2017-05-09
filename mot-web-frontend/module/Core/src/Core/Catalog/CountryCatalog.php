@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Core\Catalog;
-
 
 use Application\Service\CatalogService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -22,6 +20,7 @@ class CountryCatalog implements AutoWireableInterface
 
     /**
      * @param $code
+     *
      * @return Country
      */
     public function getByCode($code)
@@ -39,6 +38,7 @@ class CountryCatalog implements AutoWireableInterface
 
     /**
      * @param CatalogService $catalog
+     *
      * @return Country[]
      */
     private function buildVtsCountriesCatalog(CatalogService $catalog)

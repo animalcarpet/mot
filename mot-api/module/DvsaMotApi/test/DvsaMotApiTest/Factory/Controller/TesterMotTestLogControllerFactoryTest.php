@@ -9,12 +9,10 @@ use DvsaElasticSearch\Service\ElasticSearchService;
 use DvsaMotApi\Controller\TesterMotTestLogController;
 use DvsaMotApi\Factory\Controller\TesterMotTestLogControllerFactory;
 use DvsaMotApi\Service\TesterMotTestLogService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class TesterMotTestLogControllerFactoryTest
- * @package DvsaMotApiTest\Factory\Controller
+ * Class TesterMotTestLogControllerFactoryTest.
  */
 class TesterMotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

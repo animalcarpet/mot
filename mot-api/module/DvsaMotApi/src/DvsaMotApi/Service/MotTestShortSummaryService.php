@@ -3,9 +3,7 @@
 namespace DvsaMotApi\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
@@ -34,6 +32,7 @@ class MotTestShortSummaryService
      * @param $motTestNumber
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
     public function getMotTestData($motTestNumber)
@@ -55,6 +54,7 @@ class MotTestShortSummaryService
      * @param $motTestNumber
      *
      * @return \DvsaEntities\Entity\MotTest
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getMotTest($motTestNumber)

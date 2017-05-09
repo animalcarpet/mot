@@ -117,9 +117,9 @@ class ColourForm extends Form
         $currentValue = 0;
 
         foreach ($colourCodes as $colour) {
-            $currentValue++;
+            ++$currentValue;
             if ($currentValue < $colourCodesSize) {
-                $colourValues .= $colour . ',';
+                $colourValues .= $colour.',';
             }
 
             if ($currentValue == $colourCodesSize) {

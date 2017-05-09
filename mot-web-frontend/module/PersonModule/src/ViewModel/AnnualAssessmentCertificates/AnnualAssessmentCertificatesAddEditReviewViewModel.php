@@ -1,12 +1,12 @@
 <?php
-namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates;
 
+namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates;
 
 use Core\ViewModel\Gds\Table\GdsTable;
 
 class AnnualAssessmentCertificatesAddEditReviewViewModel
 {
-    /** @var  GdsTable $table */
+    /** @var GdsTable $table */
     private $table;
     private $formData;
     private $backUrl;
@@ -17,8 +17,7 @@ class AnnualAssessmentCertificatesAddEditReviewViewModel
         GdsTable $table,
         $backUrl,
         $submitButtonText
-    )
-    {
+    ) {
         $this->formData = $formData;
         $this->table = $table;
         $this->backUrl = $backUrl;

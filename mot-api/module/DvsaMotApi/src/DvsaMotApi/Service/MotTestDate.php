@@ -2,15 +2,13 @@
 
 namespace DvsaMotApi\Service;
 
-use \DateTime;
+use DateTime;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 
 /**
- * Class MotTestDate
- *
- * @package DvsaMotApi\Service
+ * Class MotTestDate.
  */
 class MotTestDate
 {
@@ -19,12 +17,12 @@ class MotTestDate
     // value that is essentially never going to change?
     const YEARS_BEFORE_FIRST_TEST_IS_DUE_CLASS_5 = 1;
     const YEARS_BEFORE_FIRST_TEST_IS_DUE = 3;
-    const MOT_YEAR_DURATION  = 1; // offset when extending an anniversary / awarded new MOT pass
-    const MOT_DAY_DURATION   = 1; // days to remove as part of MOT expiry date checking
+    const MOT_YEAR_DURATION = 1; // offset when extending an anniversary / awarded new MOT pass
+    const MOT_DAY_DURATION = 1; // days to remove as part of MOT expiry date checking
 
-    /** @var  MotTest */
+    /** @var MotTest */
     private $motCurrent;
-    /** @var  MotTest */
+    /** @var MotTest */
     private $motPrevious;
     /** @var DateTime */
     private $testDate;
@@ -33,9 +31,9 @@ class MotTestDate
      * Constructs an MOT date assistant with the two given tests. The second test is optional
      * and depends on the history of the vehicle currently under inspection.
      *
-     * @param DateTime $when the test was conducted
-     * @param MotTest $current MOT test for the vehicle under test
-     * @param MotTest $previous MOT test for the vehicle under test
+     * @param DateTime $when     the test was conducted
+     * @param MotTest  $current  MOT test for the vehicle under test
+     * @param MotTest  $previous MOT test for the vehicle under test
      */
     public function __construct(DateTime $when, MotTest $current, MotTest $previous = null)
     {
@@ -55,6 +53,7 @@ class MotTestDate
      * midnight as previously.
      *
      * @throws \Exception
+     *
      * @return \DateTime|null
      */
     public function getExpiryDate()
@@ -65,7 +64,6 @@ class MotTestDate
             return $this->withNoPreviousTest();
         }
     }
-
 
     /**
      * When a vehicle has been tested before, the new expiry date is based upon the old expiry date
@@ -98,9 +96,9 @@ class MotTestDate
                 }
             }
         }
+
         return $expiryDate;
     }
-
 
     /**
      * When there is no previous test on record the expiry date is based upon the vehicles
@@ -127,6 +125,7 @@ class MotTestDate
                 $expiryDate = self::getStandardDurationExpiryDate($this->motCurrent->getStartedDate());
             }
         }
+
         return $expiryDate;
     }
 
@@ -139,6 +138,7 @@ class MotTestDate
      * @param  $vehicle // (Vehicle or DvlaVehicle - there is no Base class at this time)
      *
      * @return \DateTime
+     *
      * @throws \Exception
      */
     public static function getNotionalExpiryDateForVehicle($vehicle)
@@ -155,9 +155,10 @@ class MotTestDate
      * to be able to get a notional expiry date.
      *
      * @param Vehicle $vehicle
-     * @return DateTime
-     * @throws \Exception
      *
+     * @return DateTime
+     *
+     * @throws \Exception
      */
     private static function getNotionalExpiryForNonDvlaVehicle(Vehicle $vehicle)
     {
@@ -182,7 +183,7 @@ class MotTestDate
                 throw new \Exception("Registration or manufacture date is required for vehicle [{$vehicle->getId()}]");
             }
 
-            $vehicleClassCode = (string)$vehicleClass->getCode();
+            $vehicleClassCode = (string) $vehicleClass->getCode();
 
             if (empty($vehicleClassCode)) {
                 throw new \Exception("Vehicle class *CODE* is required for vehicle [{$vehicle->getId()}]");
@@ -198,13 +199,14 @@ class MotTestDate
         }
     }
 
-
     /**
      * Answers TRUE if the expiry date of the given test is within the derived preservation
      * date window i.e. within a "month" of the expiry date.
      *
      * @param DateTime $date
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     private function isPreservable(\DateTime $date)
@@ -226,23 +228,22 @@ class MotTestDate
         $preservationDate = self::preservationDate($expiryDate);
 
         if (is_null($alternativeToday)) {
-            return (
+            return
                 ($today >= $preservationDate)
                 &&
                 ($today < $expiryDate)
-            );
+            ;
         } else {
             $today = clone $alternativeToday;
             $today->setTime(0, 0, 0);
 
-            return (
+            return
                 ($today >= $preservationDate)
                 &&
                 ($today < $expiryDate)
-            );
+            ;
         }
     }
-
 
     /**
      * Answers a date time as a standard MOT duration up to midnight.
@@ -256,9 +257,9 @@ class MotTestDate
         if ($date) {
             return self::asDatePlusOffset($date, self::MOT_YEAR_DURATION, self::MOT_DAY_DURATION);
         }
+
         return null;
     }
-
 
     /**
      * Modifies a date backwards in time by a number years and days when supplied.
@@ -271,8 +272,8 @@ class MotTestDate
      * intact in case that is important to the caller.
      *
      * @param \DateTime $dateIn
-     * @param int $years
-     * @param int $days
+     * @param int       $years
+     * @param int       $days
      *
      * @return \DateTime
      */
@@ -282,14 +283,14 @@ class MotTestDate
         $dateOut = clone $dateIn;
 
         if ($years) {
-            $dateOut->add(new \DateInterval('P' . $years . 'Y'));
+            $dateOut->add(new \DateInterval('P'.$years.'Y'));
         }
         if ($days) {
-            $dateOut->sub(new \DateInterval('P' . $days . 'D'));
+            $dateOut->sub(new \DateInterval('P'.$days.'D'));
         }
+
         return $dateOut->setTime(0, 0, 0);
     }
-
 
     /**
      * Calculate a preservation date based on the given expiry date.
@@ -302,6 +303,7 @@ class MotTestDate
      * start of the day.
      *
      * @param \DateTime $expiryDate
+     *
      * @return \DateTime|null
      */
     public static function preservationDate(\DateTime $expiryDate = null)
@@ -337,8 +339,10 @@ class MotTestDate
                         : $clonedDate->sub(new \DateInterval('P1M'))->add(new \DateInterval('P1D'));
                     break;
             }
+
             return $resultDate->setTime(0, 0, 0);
         }
+
         return null;
     }
 
@@ -347,13 +351,14 @@ class MotTestDate
      * of any other form of date wrapper.
      *
      * @param $year
+     *
      * @return bool
      */
     public static function isLeapYear($year)
     {
-        return (
+        return
             (($year % 4) === 0)
             && ((($year % 100) !== 0) || (($year % 400) === 0))
-        );
+        ;
     }
 }

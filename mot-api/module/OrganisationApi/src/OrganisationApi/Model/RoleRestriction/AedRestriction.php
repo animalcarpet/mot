@@ -6,12 +6,9 @@ use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommonApi\Service\Validator\ErrorSchema;
 use DvsaEntities\Entity\Person;
 use OrganisationApi\Model\OrganisationPersonnel;
-use OrganisationApi\Model\RoleRestrictionInterface;
 
 /**
- * Class AedRestriction
- *
- * @package OrganisationApi\Model\RoleRestriction
+ * Class AedRestriction.
  */
 class AedRestriction extends AbstractOrganisationRoleRestriction
 {

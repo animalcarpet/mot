@@ -8,7 +8,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class HydratorFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new Hydrator();

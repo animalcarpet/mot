@@ -3,10 +3,8 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Controller;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Service\AuthorisedExaminerStatisticsService;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaCommonApi\Model\ApiResponse;
 
 class AuthorisedExaminerStatisticsController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
@@ -17,21 +15,21 @@ class AuthorisedExaminerStatisticsController extends AbstractDvsaRestfulControll
 
     public function __construct(
         AuthorisedExaminerStatisticsService $siteStatisticsService
-    )
-    {
+    ) {
         $this->authorisedExaminerStatisticsService = $siteStatisticsService;
     }
 
     /**
      * @param int $aeId
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function get($aeId)
     {
         $sitePerformanceDtos = $this->authorisedExaminerStatisticsService->getListForPage(
-            (int)$aeId,
-            abs((int)$this->params()->fromQuery('page', static::DEFAULT_PAGE)),
-            abs((int)$this->params()->fromQuery('itemsPerPage', static::DEFAULT_ITEMS_PER_PAGE))
+            (int) $aeId,
+            abs((int) $this->params()->fromQuery('page', static::DEFAULT_PAGE)),
+            abs((int) $this->params()->fromQuery('itemsPerPage', static::DEFAULT_ITEMS_PER_PAGE))
         );
 
         return $this->returnDto($sitePerformanceDtos);

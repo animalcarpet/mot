@@ -10,7 +10,7 @@ class AeLinkSiteForm extends AbstractFormModel
     const FIELD_SITE_NR = 'siteNumber';
 
     /**
-     * @var integer
+     * @var int
      */
     private $siteNumber;
     /**
@@ -22,10 +22,10 @@ class AeLinkSiteForm extends AbstractFormModel
      */
     private $maxInputLength;
 
-
     public function fromPost(Parameters $data)
     {
         $this->siteNumber = $data->get(self::FIELD_SITE_NR);
+
         return $this;
     }
 
@@ -43,6 +43,7 @@ class AeLinkSiteForm extends AbstractFormModel
     public function setMaxInputLength($maxInputLength)
     {
         $this->maxInputLength = $maxInputLength;
+
         return $this;
     }
 
@@ -56,11 +57,13 @@ class AeLinkSiteForm extends AbstractFormModel
 
     /**
      * @param mixed $siteId
+     *
      * @return $this
      */
     public function setSiteNumber($siteId)
     {
         $this->siteNumber = $siteId;
+
         return $this;
     }
 
@@ -74,11 +77,13 @@ class AeLinkSiteForm extends AbstractFormModel
 
     /**
      * @param mixed $typeAheadData
+     *
      * @return $this
      */
     public function setSites($typeAheadData)
     {
         $this->sites = $typeAheadData;
+
         return $this;
     }
 }

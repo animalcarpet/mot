@@ -1,15 +1,14 @@
 <?php
 
 namespace DvsaClient\Entity;
+
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Formatting\PersonFullNameFormatter;
 
 /**
- * Class AuthorisedExaminerPrincipal
- *
- * @package DvsaClient\Entity
+ * Class AuthorisedExaminerPrincipal.
  */
-class AuthorisedExaminerPrincipal
+class AuthorisedExaminerPreincipal
 {
     private $contactDetails;
     private $firstName;
@@ -77,7 +76,6 @@ class AuthorisedExaminerPrincipal
         return $this->middleName;
     }
 
-
     /**
      * @param string $familyName
      *
@@ -131,5 +129,4 @@ class AuthorisedExaminerPrincipal
         return (new PersonFullNameFormatter())
             ->format($this->getFirstName(), $this->getMiddleName(), $this->getFamilyName());
     }
-
 }

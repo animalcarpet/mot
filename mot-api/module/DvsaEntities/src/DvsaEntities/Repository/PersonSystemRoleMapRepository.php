@@ -12,6 +12,7 @@ class PersonSystemRoleMapRepository extends AbstractMutableRepository
 {
     /**
      * @param $personId
+     *
      * @return PersonSystemRoleMap[]
      */
     public function getActiveUserRoles($personId)
@@ -21,6 +22,7 @@ class PersonSystemRoleMapRepository extends AbstractMutableRepository
 
     /**
      * @param $personId
+     *
      * @return PersonSystemRoleMap[]
      */
     public function getPendingUserRoles($personId)
@@ -30,15 +32,15 @@ class PersonSystemRoleMapRepository extends AbstractMutableRepository
 
     private function getUserRoles($personId, $businessRoleStatusCode)
     {
-        $qb = $this->createQueryBuilder("srbm")
-            ->innerJoin("srbm.person", "p")
-            ->innerJoin("srbm.businessRoleStatus", "st")
-            ->innerJoin("srbm.personSystemRole", "sr")
-            ->innerJoin("srbm.businessRoleStatus", "rs")
-            ->where("p.id = :personId")
-            ->andWhere("st.code in (:statusCode)")
-            ->setParameter("personId", $personId)
-            ->setParameter("statusCode", $businessRoleStatusCode);
+        $qb = $this->createQueryBuilder('srbm')
+            ->innerJoin('srbm.person', 'p')
+            ->innerJoin('srbm.businessRoleStatus', 'st')
+            ->innerJoin('srbm.personSystemRole', 'sr')
+            ->innerJoin('srbm.businessRoleStatus', 'rs')
+            ->where('p.id = :personId')
+            ->andWhere('st.code in (:statusCode)')
+            ->setParameter('personId', $personId)
+            ->setParameter('statusCode', $businessRoleStatusCode);
 
         $roles = $qb->getQuery()->getResult();
 
@@ -48,6 +50,7 @@ class PersonSystemRoleMapRepository extends AbstractMutableRepository
     /**
      * @param int $personId
      * @param int $personSystemRoleId
+     *
      * @return null|PersonSystemRoleMap
      */
     public function findByPersonAndSystemRole($personId, $personSystemRoleId)
@@ -56,24 +59,25 @@ class PersonSystemRoleMapRepository extends AbstractMutableRepository
     }
 
     /**
-     * Return person's internal roles only
+     * Return person's internal roles only.
      *
      * @param int $personId
+     *
      * @return array
      */
     public function getPersonActiveInternalRoleCodes($personId)
     {
         $qb = $this->createQueryBuilder('psrm')
             ->select('r.code')
-            ->innerJoin("psrm.businessRoleStatus", "brs")
+            ->innerJoin('psrm.businessRoleStatus', 'brs')
             ->innerJoin('psrm.person', 'p')
             ->innerJoin('psrm.personSystemRole', 'psr')
             ->innerJoin('psr.role', 'r')
             ->where('p.id = :personId')
             ->andWhere('r.isInternal = 1')
-            ->andWhere("brs.code = :statusCode")
+            ->andWhere('brs.code = :statusCode')
             ->setParameter('personId', $personId)
-            ->setParameter("statusCode", BusinessRoleStatusCode::ACTIVE);
+            ->setParameter('statusCode', BusinessRoleStatusCode::ACTIVE);
 
         $internalRoleCodes = $qb->getQuery()->getResult();
 

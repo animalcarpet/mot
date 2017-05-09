@@ -2,13 +2,12 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Model;
 
-
 class WebLoginResult
 {
-    /** @var  string */
+    /** @var string */
     private $code;
 
-    /** @var  string */
+    /** @var string */
     private $token;
 
     /**
@@ -21,11 +20,13 @@ class WebLoginResult
 
     /**
      * @param string $code
+     *
      * @return WebLoginResult
      */
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -39,11 +40,13 @@ class WebLoginResult
 
     /**
      * @param string $token
+     *
      * @return WebLoginResult
      */
     public function setToken($token)
     {
         $this->token = $token;
+
         return $this;
     }
 }

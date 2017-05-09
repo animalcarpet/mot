@@ -9,7 +9,7 @@ use DvsaCommon\Validator\EmailAddressValidator;
 use UserApi\Application\Service\Validator\AccountValidator;
 
 /**
- * unit tests for AccountValidator
+ * unit tests for AccountValidator.
  */
 class AccountValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -50,7 +50,7 @@ class AccountValidatorTest extends \PHPUnit_Framework_TestCase
         $data = array_merge(
             $data,
             [
-                'email'             => 'email',
+                'email' => 'email',
                 'emailConfirmation' => 'differentEmail',
             ]
         );
@@ -67,7 +67,7 @@ class AccountValidatorTest extends \PHPUnit_Framework_TestCase
         $data = array_merge(
             $data,
             [
-                'password'             => 'AlaMa1Kota',
+                'password' => 'AlaMa1Kota',
                 'passwordConfirmation' => 'AlaMa3Koty',
             ]
         );
@@ -84,7 +84,7 @@ class AccountValidatorTest extends \PHPUnit_Framework_TestCase
         $data = array_merge(
             $data,
             [
-                'password'             => 'AlaMa1',
+                'password' => 'AlaMa1',
                 'passwordConfirmation' => 'AlaMa1',
             ]
         );
@@ -101,7 +101,7 @@ class AccountValidatorTest extends \PHPUnit_Framework_TestCase
         $data = array_merge(
             $data,
             [
-                'password'             => 'ALAMA1KOTA',
+                'password' => 'ALAMA1KOTA',
                 'passwordConfirmation' => 'ALAMA1KOTA',
             ]
         );
@@ -118,7 +118,7 @@ class AccountValidatorTest extends \PHPUnit_Framework_TestCase
         $data = array_merge(
             $data,
             [
-                'password'             => 'alama1kota',
+                'password' => 'alama1kota',
                 'passwordConfirmation' => 'alama1kota',
             ]
         );
@@ -135,7 +135,7 @@ class AccountValidatorTest extends \PHPUnit_Framework_TestCase
         $data = array_merge(
             $data,
             [
-                'password'             => 'AlaMaJednegoKota',
+                'password' => 'AlaMaJednegoKota',
                 'passwordConfirmation' => 'AlaMaJednegoKota',
             ]
         );
@@ -194,18 +194,18 @@ class AccountValidatorTest extends \PHPUnit_Framework_TestCase
     private function getCorrectData()
     {
         return [
-            'title'                => 'title',
-            'firstName'            => 'firstName',
-            'surname'              => 'surname',
-            'dateOfBirth'          => '1980-03-15',
-            'gender'               => 'gender',
-            'addressLine1'         => 'addressLine1',
-            'town'                 => 'town',
-            'postcode'             => 'postcode',
-            'phoneNumber'          => 'phoneNumber',
-            'email'                => 'accountvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-            'emailConfirmation'    => 'accountvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-            'password'             => 'AlaMa1Kota',
+            'title' => 'title',
+            'firstName' => 'firstName',
+            'surname' => 'surname',
+            'dateOfBirth' => '1980-03-15',
+            'gender' => 'gender',
+            'addressLine1' => 'addressLine1',
+            'town' => 'town',
+            'postcode' => 'postcode',
+            'phoneNumber' => 'phoneNumber',
+            'email' => 'accountvalidatortest@'.EmailAddressValidator::TEST_DOMAIN,
+            'emailConfirmation' => 'accountvalidatortest@'.EmailAddressValidator::TEST_DOMAIN,
+            'password' => 'AlaMa1Kota',
             'passwordConfirmation' => 'AlaMa1Kota',
             'drivingLicenceRegion' => 'other',
             'drivingLicenceNumber' => '2323123',

@@ -1,11 +1,11 @@
 <?php
+
 namespace DvsaMotTest\Model;
 
-use DvsaMotTest\Model\LocationSelect;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class LocationSelectTest
+ * Class LocationSelectTest.
  */
 class LocationSelectTest extends PHPUnit_Framework_TestCase
 {

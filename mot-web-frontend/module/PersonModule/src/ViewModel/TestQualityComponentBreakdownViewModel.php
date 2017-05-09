@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel;
 
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
@@ -8,7 +9,7 @@ use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable;
 
 class TestQualityComponentBreakdownViewModel
 {
-    static $subtitles = [
+    public static $subtitles = [
         VehicleClassGroupCode::BIKES => 'Class 1 and 2',
         VehicleClassGroupCode::CARS_ETC => 'Class 3, 4, 5 and 7',
     ];
@@ -26,7 +27,6 @@ class TestQualityComponentBreakdownViewModel
         $returnUrl,
         $returnLinkText
     ) {
-
         $this->table = new ComponentStatisticsTable(
             $testerBreakdown,
             $nationalBreakdown,
@@ -34,7 +34,7 @@ class TestQualityComponentBreakdownViewModel
             $groupCode
         );
 
-        $this->testerBreakdown = $testerBreakdown;;
+        $this->testerBreakdown = $testerBreakdown;
         $this->nationalBreakdown = $nationalBreakdown;
         $this->returnUrl = $returnUrl;
         $this->returnLinkText = $returnLinkText;

@@ -15,7 +15,7 @@ $form = $viewModel->getForm();
     <fieldset>
         <h3 class="form-title heading-medium">Certificate details</h3>
         <?php echo $this->partial('partial/gds/form/control', [
-            'element' => $form->get(AnnualAssessmentCertificatesForm::FIELD_CERT_NUMBER)
+            'element' => $form->get(AnnualAssessmentCertificatesForm::FIELD_CERT_NUMBER),
         ]);
         ?>
 
@@ -29,7 +29,7 @@ $form = $viewModel->getForm();
 
         <?php echo $this->partial('partial/gds/form/control', [
             'element' => $form->get(AnnualAssessmentCertificatesForm::FIELD_SCORE),
-            'info'    => '%',
+            'info' => '%',
         ]);
         ?>
     </fieldset>

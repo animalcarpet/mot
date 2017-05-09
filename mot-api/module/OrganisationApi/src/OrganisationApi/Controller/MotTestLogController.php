@@ -11,18 +11,17 @@ use DvsaEntities\DqlBuilder\SearchParam\MotTestLogSearchParam;
 use OrganisationApi\Service\MotTestLogService;
 
 /**
- * Class MotTestLogController
- * @package OrganisationApi\Controller
+ * Class MotTestLogController.
  */
 class MotTestLogController extends AbstractDvsaRestfulController
 {
     const ERR_ORG_ID = 'Invalid organisation Id entered.';
 
-    /** @var MotTestLogService  */
+    /** @var MotTestLogService */
     private $motTestLogService;
-    /** @var ElasticSearchService  */
+    /** @var ElasticSearchService */
     private $elasticSearchService;
-    /** @var EntityManager  */
+    /** @var EntityManager */
     private $entityManager;
 
     public function __construct(

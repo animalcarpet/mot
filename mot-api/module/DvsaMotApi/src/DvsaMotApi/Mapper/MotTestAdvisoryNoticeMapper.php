@@ -2,10 +2,11 @@
 
 /**
  * Mot Test Advisory Notice Mapper
- * Maps MOT Test data into the snap shot format for the advisory notice
+ * Maps MOT Test data into the snap shot format for the advisory notice.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace DvsaMotApi\Mapper;
 
 use DataCatalogApi\Service\DataCatalogService;
@@ -15,14 +16,14 @@ use DvsaCommon\Utility\ArrayUtils;
 
 /**
  * Mot Test Advisory Notice Mapper
- * Maps MOT Test data into the snap shot format for the advisory notice
+ * Maps MOT Test data into the snap shot format for the advisory notice.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 class MotTestAdvisoryNoticeMapper extends AbstractMotTestMapper
 {
     /**
-     * Holds the template map
+     * Holds the template map.
      *
      * @var array
      */
@@ -50,14 +51,13 @@ class MotTestAdvisoryNoticeMapper extends AbstractMotTestMapper
             self::REP_VAR_RFC_COMMENT => '',
         ];
 
-
     public function __construct(DataCatalogService $dataCatalogService)
     {
         parent::__construct($dataCatalogService);
     }
 
     /**
-     * Map the input data to the snapshot data format
+     * Map the input data to the snapshot data format.
      *
      * @return array
      */
@@ -70,7 +70,7 @@ class MotTestAdvisoryNoticeMapper extends AbstractMotTestMapper
         $this->mapFailures('FAIL');
 
         $testType = ArrayUtils::tryGet($this->data, 'testType');
-        if ($testType instanceof MotTestTypeDto && MotTestType::isVeAdvisory($testType->getCode()) ) {
+        if ($testType instanceof MotTestTypeDto && MotTestType::isVeAdvisory($testType->getCode())) {
             $this->mapFailures('PRS');
         }
 

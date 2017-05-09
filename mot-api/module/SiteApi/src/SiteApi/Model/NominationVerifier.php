@@ -8,15 +8,12 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use SiteApi\Factory\SitePersonnelFactory;
 
 /**
- * Verifies if the given nomination is possible and doesn't break nomination rules
+ * Verifies if the given nomination is possible and doesn't break nomination rules.
  *
  * Class NominationVerifier
- *
- * @package SiteApi\Model
  */
 class NominationVerifier
 {
-
     const ERROR_ALREADY_HAS_ROLE = 'This person already has this role';
     const ERROR_ALREADY_HAS_NOMINATION = 'This person has been already nominated to this role';
 
@@ -60,6 +57,7 @@ class NominationVerifier
         } else {
             $errors->add(self::ERROR_ALREADY_HAS_ROLE);
         }
+
         return $errors;
     }
 }

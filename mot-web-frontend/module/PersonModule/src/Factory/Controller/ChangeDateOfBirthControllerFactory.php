@@ -16,9 +16,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ChangeDateOfBirthControllerFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $controllerManager)

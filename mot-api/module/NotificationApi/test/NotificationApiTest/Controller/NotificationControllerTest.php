@@ -1,4 +1,5 @@
 <?php
+
 namespace NotificationApiTest\Controller;
 
 use DvsaCommonTest\TestUtils\XMock;
@@ -6,7 +7,7 @@ use NotificationApi\Controller\NotificationController;
 use NotificationApi\Service\NotificationService;
 
 /**
- * Unit tests for NotificationController
+ * Unit tests for NotificationController.
  */
 class NotificationControllerTest extends AbstractNotificationApiControllerTestCase
 {

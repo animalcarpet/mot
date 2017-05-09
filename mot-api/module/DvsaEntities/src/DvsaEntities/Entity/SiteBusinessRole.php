@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SiteBusinessRole
+ * SiteBusinessRole.
  *
  * @ORM\Table(name="site_business_role")
  * @ORM\Entity(readOnly=true)

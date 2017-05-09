@@ -45,16 +45,16 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
 
     /** VehicleMapper|@var MockObj */
     private $mockVehicleMapper;
-    /** @var  ParamObfuscator|MockObj */
+    /** @var ParamObfuscator|MockObj */
     private $mockParamObfuscator;
 
     private $mockVehicleSearchService;
     private $mockMapperFactory;
 
-    /** @var  MotAuthorisationServiceInterface|MockObj */
+    /** @var MotAuthorisationServiceInterface|MockObj */
     private $mockAuthorisationService;
 
-    /** @var  Logger|MockObj */
+    /** @var Logger|MockObj */
     private $logger;
 
     protected function setUp()

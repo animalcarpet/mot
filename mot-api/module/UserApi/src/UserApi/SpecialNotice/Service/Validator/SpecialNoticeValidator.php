@@ -61,10 +61,10 @@ class SpecialNoticeValidator
     protected function checkIfDateNotInPast($dateString)
     {
         $today = new \DateTime();
-        $date  = new \DateTime($dateString);
+        $date = new \DateTime($dateString);
 
         if (DateUtils::compareDates($today, $date) > 0) {
-            throw new InvalidFieldValueException("Publish date cannot be in past");
+            throw new InvalidFieldValueException('Publish date cannot be in past');
         }
     }
 }

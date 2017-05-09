@@ -2,7 +2,6 @@
 
 namespace OrganisationApi\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use OrganisationApi\Controller\SiteLinkController;
 use OrganisationApi\Service\SiteLinkService;
 use Zend\ServiceManager\FactoryInterface;

@@ -10,11 +10,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Service that notifies the original tester (whom started a test) of cancellation of that test by another user
- * and the reason behind it
+ * and the reason behind it.
  */
 class MotTestStatusChangeNotificationService implements ServiceLocatorAwareInterface
 {
-
     const FIELD_VIN_OR_REG_NUMBER = 'vinOrRegNumber';
     const FIELD_NEW_STATUS = 'newStatus';
     const FIELD_USER_FULL_NAME = 'userFullName';
@@ -27,11 +26,11 @@ class MotTestStatusChangeNotificationService implements ServiceLocatorAwareInter
     /** @var \DvsaEntities\Entity\MotTest */
     protected $motTestAfterUpdateState;
 
-    /** @var  NotificationService */
+    /** @var NotificationService */
     protected $notificationService;
 
     /**
-     * Set service locator
+     * Set service locator.
      *
      * @param ServiceLocatorInterface $serviceLocator
      */
@@ -41,7 +40,7 @@ class MotTestStatusChangeNotificationService implements ServiceLocatorAwareInter
     }
 
     /**
-     * Get service locator
+     * Get service locator.
      *
      * @return ServiceLocatorInterface
      */
@@ -106,7 +105,7 @@ class MotTestStatusChangeNotificationService implements ServiceLocatorAwareInter
 
         $notification->addField(
             self::FIELD_USER_FULL_NAME,
-            $this->motTestAfterUpdateState->getLastUpdatedBy()->getFirstName() . ' ' .
+            $this->motTestAfterUpdateState->getLastUpdatedBy()->getFirstName().' '.
             $this->motTestAfterUpdateState->getLastUpdatedBy()->getFamilyName()
         );
 

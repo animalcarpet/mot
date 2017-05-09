@@ -13,6 +13,7 @@ class CSCOServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new CSCOService($accountService);
+
         return $service;
     }
 }

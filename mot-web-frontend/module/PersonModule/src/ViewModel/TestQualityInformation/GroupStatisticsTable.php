@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation;
 
-
 use Core\Formatting\VehicleAgeFormatter;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
@@ -34,8 +33,9 @@ class GroupStatisticsTable
 
     /**
      * GroupStatisticsTable constructor.
+     *
      * @param EmployeePerformanceDto|null $groupPerformanceDto
-     * @param SiteRowViewModel[] $siteTests
+     * @param SiteRowViewModel[]          $siteTests
      * @param $isNationalDataAvailable
      * @param MotTestingPerformanceDto|null $nationalTestingPerformanceDto
      * @param $groupDescription
@@ -53,8 +53,7 @@ class GroupStatisticsTable
         $componentLinkText,
         $componentLinkTextGroup,
         $componentLink
-    )
-    {
+    ) {
         TypeCheck::assertCollectionOfClass($siteTests, SiteRowViewModel::class);
 
         $timeSpanFormatter = new TimeSpanFormatter();
@@ -90,6 +89,7 @@ class GroupStatisticsTable
 
     /**
      * @param MotTestingPerformanceDto $groupPerformanceDto
+     *
      * @return int
      */
     private function determineVtsGroupAverageVehicleAge(MotTestingPerformanceDto $groupPerformanceDto)
@@ -167,7 +167,7 @@ class GroupStatisticsTable
 
     public function getNationalPercentageFailed()
     {
-       return $this->convertPercentFailed($this->nationalPercentageFailed);
+        return $this->convertPercentFailed($this->nationalPercentageFailed);
     }
 
     public function getNationalAverageVehicleAge()
@@ -188,7 +188,7 @@ class GroupStatisticsTable
     private function convertPercentFailed($value)
     {
         if (is_numeric($value)) {
-            return number_format($value, 0) . '%';
+            return number_format($value, 0).'%';
         } else {
             return $value;
         }
@@ -201,6 +201,6 @@ class GroupStatisticsTable
 
     public function getComponentLinkId()
     {
-        return "view-components-".$this->groupCode;
+        return 'view-components-'.$this->groupCode;
     }
 }

@@ -3,13 +3,11 @@
 namespace Application\Navigation\Breadcrumbs;
 
 use Application\Navigation\Breadcrumbs\Handler\BreadcrumbsPartResolver;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\Layout;
 
 /**
- * Helper to generate breadcrumbs
+ * Helper to generate breadcrumbs.
  *
  * Example usage:
  *
@@ -17,11 +15,10 @@ use Zend\View\Helper\Layout;
  */
 class BreadcrumbsBuilder
 {
-
     private $parts = [];
     private $serviceLocator;
     /**
-     * @var Layout $layout
+     * @var Layout
      */
     private $layout;
 
@@ -33,9 +30,12 @@ class BreadcrumbsBuilder
     }
 
     /**
-     * Adds site name breadcrumb
+     * Adds site name breadcrumb.
+     *
      * @param $siteId
+     *
      * @return $this
+     *
      * @throws \Exception
      */
     public function site($siteId)
@@ -46,9 +46,12 @@ class BreadcrumbsBuilder
     }
 
     /**
-     * Adds organisation name breadcrumb based on site
+     * Adds organisation name breadcrumb based on site.
+     *
      * @param $siteId
+     *
      * @return $this
+     *
      * @throws \Exception
      */
     public function organisationBySiteId($siteId)
@@ -59,22 +62,24 @@ class BreadcrumbsBuilder
     }
 
     /**
-     * Adds simple breadcrumb which has a label and optionally link
+     * Adds simple breadcrumb which has a label and optionally link.
+     *
      * @param $label - breadcrumb label
-     * @param null $link - route
+     * @param null  $link   - route
      * @param array $params - route parameters
+     *
      * @return $this
+     *
      * @throws \Exception
      */
     public function simple($label, $link = null, $params = [])
     {
-
         $this->resolve(
             [
                 'simple' => [
                     'label' => $label,
-                    'link' => ['route' => $link, 'params' => $params]
-                ]
+                    'link' => ['route' => $link, 'params' => $params],
+                ],
             ]
         );
 
@@ -82,7 +87,7 @@ class BreadcrumbsBuilder
     }
 
     /**
-     * Sets breadcrumb in the layout
+     * Sets breadcrumb in the layout.
      */
     public function build()
     {
@@ -108,7 +113,7 @@ class BreadcrumbsBuilder
 
                 return;
             } else {
-                throw new \Exception('Breadcrumb building failed for type: ' . $type);
+                throw new \Exception('Breadcrumb building failed for type: '.$type);
             }
         }
         throw new \Exception('Breadcrumb building failed');

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -6,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * TransmissionType
+ * TransmissionType.
  *
  * @ORM\Table(
  *  name="transmission_type",
@@ -37,6 +38,7 @@ class TransmissionType extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

@@ -5,7 +5,6 @@ namespace TestSupport\Controller;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use TestSupport\Service\SiteUserDataService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
  * Creates Site Admin for use by tests.

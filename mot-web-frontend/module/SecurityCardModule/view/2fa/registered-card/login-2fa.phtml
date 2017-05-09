@@ -1,10 +1,11 @@
 <?php
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
+
 /**
- * @var \Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm $form
- * @var boolean $gtmData
+ * @var \Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm
+ * @var bool                                                                                 $gtmData
  */
-if($gtmData) {
+if ($gtmData) {
     $this->gtmDataLayer($gtmData);
 }
 ?>
@@ -31,7 +32,7 @@ if($gtmData) {
                 echo $this->partial(
                     'partial/gds/form/control',
                     [
-                        'element' => $form->getPinField()
+                        'element' => $form->getPinField(),
 
                     ]
                 );

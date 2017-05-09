@@ -2,15 +2,13 @@
 
 namespace DvsaElasticSearch\Model;
 
-use \DvsaCommon\Utility\ArrayUtils;
+use DvsaCommon\Utility\ArrayUtils;
 
 /**
  * I wrap an array containing the ES configuration and provide some useful helper
  * functions for the application code.
  *
  * Class ESConfig
- *
- * @package DvsaElasticSearch\Model
  */
 class ESConfig
 {
@@ -27,11 +25,11 @@ class ESConfig
      *
      * @throws \Exception
      */
-    public function __construct(Array $data)
+    public function __construct(array $data)
     {
         foreach (['indices', 'passphrase', 'client'] as $key) {
             if (!array_key_exists($key, $data)) {
-                throw new \Exception('ESConfig: missing mandatory key: ' . $key);
+                throw new \Exception('ESConfig: missing mandatory key: '.$key);
             }
         }
         $this->config = $data;
@@ -41,6 +39,7 @@ class ESConfig
      * Returns the ElasticSearch cluster Url we use for communications.
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function esHostUrl()
@@ -48,6 +47,7 @@ class ESConfig
         if (!array_key_exists('host', $this->config['client'])) {
             throw new \Exception('ESConfig: missing client.host key');
         }
+
         return $this->config['client']['host'];
     }
 
@@ -59,7 +59,7 @@ class ESConfig
     {
         return [
             'host' => $this->esHostUrl(),
-            'timeout' => ArrayUtils::tryGet($this->config['client'], 'timeout', 1)
+            'timeout' => ArrayUtils::tryGet($this->config['client'], 'timeout', 1),
         ];
     }
 
@@ -67,6 +67,7 @@ class ESConfig
      * @param string $type one of the document types
      *
      * @throws \Exception
+     *
      * @return string the index to use for this type
      */
     public function indexForType($type)
@@ -74,13 +75,14 @@ class ESConfig
         if (array_key_exists($type, $this->config['indices'])) {
             return $this->config['indices'][$type]['index'];
         }
-        throw new \Exception('Unhandled document type: ' . $type);
+        throw new \Exception('Unhandled document type: '.$type);
     }
 
     /**
      * @param string $type one of the document types
      *
      * @throws \Exception
+     *
      * @return string the ES document type name to use for this type
      */
     public function docTypeForType($type)
@@ -88,7 +90,7 @@ class ESConfig
         if (array_key_exists($type, $this->config['indices'])) {
             return $this->config['indices'][$type]['type'];
         }
-        throw new \Exception('Unhandled document type: ' . $type);
+        throw new \Exception('Unhandled document type: '.$type);
     }
 
     /**
@@ -97,6 +99,7 @@ class ESConfig
      * @param $action
      *
      * @throws \Exception
+     *
      * @return string configured value
      */
     public function passPhrase($action)
@@ -105,7 +108,7 @@ class ESConfig
             return $this->config['passphrase'][$action];
         }
 
-        throw new \Exception('Missing passphrase for: ' . $action);
+        throw new \Exception('Missing passphrase for: '.$action);
     }
 
     /**

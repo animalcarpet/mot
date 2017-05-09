@@ -5,13 +5,12 @@ namespace DvsaEntities\Repository;
 use DvsaEntities\Entity\Title;
 
 /**
- * Class TitleRepository
- * @package DvsaEntities\Repository
+ * Class TitleRepository.
+ *
  * @codeCoverageIgnore
  */
 class TitleRepository extends AbstractMutableRepository
 {
-
     /**
      * @param $name
      *

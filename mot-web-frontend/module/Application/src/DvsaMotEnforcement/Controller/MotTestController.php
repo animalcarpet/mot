@@ -30,17 +30,15 @@ use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class MotTestController
- *
- * @package DvsaMotEnforcement\Controller
+ * Class MotTestController.
  */
 class MotTestController extends AbstractDvsaMotTestController
 {
-    const MOT_TEST_ABORTED_MESSAGE = "The mot test was successfully aborted";
+    const MOT_TEST_ABORTED_MESSAGE = 'The mot test was successfully aborted';
     const NO_RESULTS_FOUND_MESSAGE = 'No results found';
     const REINSPECTION_SAVE_MSG = 'The reinspection assessment outcome and details of the test differences have been saved';
 
-    /** @var  ParamObfuscator */
+    /** @var ParamObfuscator */
     private $paramObfuscator;
 
     /**
@@ -50,7 +48,8 @@ class MotTestController extends AbstractDvsaMotTestController
 
     /**
      * MotTestController constructor.
-     * @param ParamObfuscator $paramObfuscator
+     *
+     * @param ParamObfuscator           $paramObfuscator
      * @param OdometerReadingViewObject $odometerViewObject
      */
     public function __construct(
@@ -72,7 +71,7 @@ class MotTestController extends AbstractDvsaMotTestController
 
         $this->assertGranted(PermissionInSystem::DVSA_SITE_SEARCH);
 
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         $motDetails = null;
         $isDemoMotTest = false;
         $isNonMotTest = false;
@@ -81,7 +80,7 @@ class MotTestController extends AbstractDvsaMotTestController
         /** @var MotTest $motDetails */
         $motDetails = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
-        /** @var  Site $siteData */
+        /** @var Site $siteData */
         $siteData = $motDetails->getSite();
 
         /** @var DvsaVehicle $vehicle */
@@ -146,7 +145,7 @@ class MotTestController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Start an MOT reinspection by a Vehicle Examiner
+     * Start an MOT reinspection by a Vehicle Examiner.
      *
      * @return \Zend\Http\Response
      */
@@ -155,7 +154,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $this->assertGranted(PermissionInSystem::MOT_TEST_REINSPECTION_PERFORM);
 
         /* MOT Test Id */
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         $motTestType = $this->params()->fromPost('motTestType');
         $complaintRef = $this->params()->fromPost('complaintRef');
         $motTest = null;
@@ -207,7 +206,7 @@ class MotTestController extends AbstractDvsaMotTestController
 
         $this->assertGranted(PermissionInSystem::MOT_TEST_REINSPECTION_PERFORM);
 
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         $formErrorData = [];
         $defaultValues = [];
 
@@ -253,7 +252,7 @@ class MotTestController extends AbstractDvsaMotTestController
                 'formErrors' => $formErrorData,
                 'configCatalog' => new DvsaConfigCatalog($this->getRestClient()),
                 'saveButton' => true,
-                'dataCatalog' => $this->getCatalogService()
+                'dataCatalog' => $this->getCatalogService(),
             ]
         );
 
@@ -269,7 +268,7 @@ class MotTestController extends AbstractDvsaMotTestController
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
 
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
 
         if ($request->isPost()) {
             try {
@@ -290,7 +289,7 @@ class MotTestController extends AbstractDvsaMotTestController
     }
 
     /**
-     * This will start the MOT tests comparison
+     * This will start the MOT tests comparison.
      *
      * @return ViewModel
      */
@@ -347,7 +346,7 @@ class MotTestController extends AbstractDvsaMotTestController
                 'formErrors' => $formErrorData,
                 'configCatalog' => new DvsaConfigCatalog($this->getRestClient()),
                 'saveButton' => true,
-                'dataCatalog' => $this->getCatalogService()
+                'dataCatalog' => $this->getCatalogService(),
             ]
         );
 
@@ -386,6 +385,7 @@ class MotTestController extends AbstractDvsaMotTestController
      * @param string $motTestType
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function getRouteForMotTestType($motTestType)
@@ -398,7 +398,7 @@ class MotTestController extends AbstractDvsaMotTestController
             case MotTestTypeCode::TARGETED_REINSPECTION:
                 return 'enforcement-step';
             default:
-                throw new \Exception('Unknown inspection report type: ' . $motTestType);
+                throw new \Exception('Unknown inspection report type: '.$motTestType);
         }
     }
 
@@ -436,6 +436,7 @@ class MotTestController extends AbstractDvsaMotTestController
      *
      * @param string $enumPath
      * @param string $enumName
+     *
      * @return string
      */
     private function evalEnumByName($enumPath, $enumName)
@@ -444,7 +445,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $enumNameWithUnderscores = str_replace([' ', ' - ', '-', '/'], '_', $enumNameSpecialCharsRemoved);
 
         return constant(
-            $enumPath . '::' .
+            $enumPath.'::'.
             strtoupper($enumNameWithUnderscores)
         );
     }
@@ -453,6 +454,7 @@ class MotTestController extends AbstractDvsaMotTestController
      * @TODO (ABN) Same as evalEnumByName()!!
      *
      * @param string $colorName
+     *
      * @return string enum name from ColourCode
      */
     private function evalColourCodeEnumsBasedOnTheColourName($colorName)
@@ -464,6 +466,7 @@ class MotTestController extends AbstractDvsaMotTestController
      * @TODO (ABN) Same as evalEnumByName()!!
      *
      * @param string $FuelTypeName
+     *
      * @return string enum name from ColourCode
      */
     private function evalFuelTypeCodeEnumsBasedOnTheFuelName($FuelTypeName)

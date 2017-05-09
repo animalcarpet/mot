@@ -1,4 +1,5 @@
 <?php
+
 namespace Organisation\UpdateAeProperty\Process;
 
 use DvsaCommon\Auth\PermissionAtOrganisation;
@@ -12,10 +13,10 @@ class UpdateAeTradingNameProcess extends AbstractSingleStepAeProcess implements 
 {
     private $propertyName = UpdateAePropertyAction::AE_TRADING_NAME_PROPERTY;
     private $permission = PermissionAtOrganisation::AE_UPDATE_TRADING_NAME;
-    private $submitButtonText = "Change trading name";
-    private $successfulEditMessage = "Trading name has been successfully changed.";
-    private $formPageTitle = "Change trading name";
-    private $formPartial = "organisation/update-ae-property/partials/edit-trading-name";
+    private $submitButtonText = 'Change trading name';
+    private $successfulEditMessage = 'Trading name has been successfully changed.';
+    private $formPageTitle = 'Change trading name';
+    private $formPartial = 'organisation/update-ae-property/partials/edit-trading-name';
 
     public function getPropertyName()
     {
@@ -40,6 +41,7 @@ class UpdateAeTradingNameProcess extends AbstractSingleStepAeProcess implements 
     public function getPrePopulatedData()
     {
         $aeData = $this->organisationMapper->getAuthorisedExaminer($this->context->getAeId());
+
         return [$this->propertyName => $aeData->getTradingAs()];
     }
 

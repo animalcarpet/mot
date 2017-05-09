@@ -14,14 +14,12 @@ use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
 use DvsaMotApiTest\Factory\ReplacementCertificateObjectsFactory;
-use Zend\Http\Header\Authorization;
 
 /**
- * Class ReplacementCertificateDraftControllerTest
+ * Class ReplacementCertificateDraftControllerTest.
  */
 class ReplacementCertificateDraftControllerTest extends AbstractMotApiControllerTestCase
 {
-
     /** @var ReplacementCertificateService */
     private $replacementCertificateService;
 
@@ -41,7 +39,7 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
         $this->certificateCreationService = XMock::of(CertificateCreationService::class);
         $this->motTestService = XMock::of(MotTestService::class);
 
-        /** @var ReplacementCertificateDraftController $controller */
+        /* @var ReplacementCertificateDraftController $controller */
         $this->controller = new ReplacementCertificateDraftController(
             $this->replacementCertificateService,
             $this->authorisationService,
@@ -74,7 +72,7 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
 
         //then
         $this->assertEquals(
-            ['id' => $createdDraft->getId()], $result, "Returned draft id is incorrect"
+            ['id' => $createdDraft->getId()], $result, 'Returned draft id is incorrect'
         );
     }
 
@@ -86,7 +84,7 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
         $draftId = 4;
         $this->routeMatch->setParam('id', $draftId);
         $this->request->setMethod('put');
-        $this->setJsonRequestContent(['primaryColour' => "Y"]);
+        $this->setJsonRequestContent(['primaryColour' => 'Y']);
 
         $this->mockMethod(
             $this->replacementCertificateService, 'updateDraft', $this->any(), null, [$draftIdCapture(), $draftChangeCapture()]
@@ -94,14 +92,14 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
 
         // when
         $result = $this->getResultForAction(
-            'put', null, ['id' => $draftId], ['primaryColour' => "Y"]
+            'put', null, ['id' => $draftId], ['primaryColour' => 'Y']
         );
 
         // then
-        $this->assertEquals($draftId, $draftIdCapture->get(), "Passed in draftId is not correct");
+        $this->assertEquals($draftId, $draftIdCapture->get(), 'Passed in draftId is not correct');
         $this->assertThat(
             $draftChangeCapture->get(), $this->isInstanceOf(ReplacementCertificateDraftChangeDTO::class),
-            "Wrong parameter type is passed in to the service"
+            'Wrong parameter type is passed in to the service'
         );
     }
 
@@ -117,7 +115,7 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
         );
 
         $this->mockMethod(
-            $this->replacementCertificateService, 'getDraft', $this->any(), $returnedDraft, [ $draftIdCapture() ]
+            $this->replacementCertificateService, 'getDraft', $this->any(), $returnedDraft, [$draftIdCapture()]
         );
 
         // when
@@ -126,10 +124,10 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
         )->data;
 
         // then
-        $this->assertEquals($draftId, $draftIdCapture->get(), "Passed in draftId is not correct");
+        $this->assertEquals($draftId, $draftIdCapture->get(), 'Passed in draftId is not correct');
         $this->assertEquals(
             $returnedDraft->getPrimaryColour()->getCode(), $result['primaryColour']['code'],
-            "Invalid data returned from the controller"
+            'Invalid data returned from the controller'
         );
     }
 
@@ -137,13 +135,13 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
     {
         // given
         $returnedDraft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
-        $returnedDraft->getPrimaryColour()->setCode("Y")->setId(1);
-        $returnedDraft->getMotTest()->getPrimaryColour()->setCode("Z")->setId(2);
+        $returnedDraft->getPrimaryColour()->setCode('Y')->setId(1);
+        $returnedDraft->getMotTest()->getPrimaryColour()->setCode('Z')->setId(2);
         $draftIdCapture = ArgCapture::create();
         $draftId = 4;
 
         $this->mockMethod(
-            $this->replacementCertificateService, 'getDraft', $this->any(), $returnedDraft, [ $draftIdCapture() ]
+            $this->replacementCertificateService, 'getDraft', $this->any(), $returnedDraft, [$draftIdCapture()]
         );
 
         // when
@@ -152,10 +150,10 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
         )->data;
 
         // then
-        $this->assertEquals($draftId, $draftIdCapture->get(), "Passed in draftId is not correct");
+        $this->assertEquals($draftId, $draftIdCapture->get(), 'Passed in draftId is not correct');
         $this->assertEquals(
             $returnedDraft->getPrimaryColour()->getId(), in_array('primaryColour', $result),
-            "Though primary colour different, it isnt included in the diff"
+            'Though primary colour different, it isnt included in the diff'
         );
     }
 
@@ -174,17 +172,17 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
             ->will($this->returnValue(123));
 
         $this->mockMethod(
-            $this->replacementCertificateService, 'applyDraft', $this->any(), $mockEntity, [ $draftIdCapture() ]
+            $this->replacementCertificateService, 'applyDraft', $this->any(), $mockEntity, [$draftIdCapture()]
         );
 
         $motData = new MotTestDto();
 
         $this->mockMethod(
-            $this->motTestService, 'getMotTestData', $this->any(), $motData, [ 123 ]
+            $this->motTestService, 'getMotTestData', $this->any(), $motData, [123]
         );
 
         $this->mockMethod(
-            $this->certificateCreationService, 'create', $this->any(), null, [ 123, $motData, AbstractRestfulControllerTestCase::MOCK_USER_ID ]
+            $this->certificateCreationService, 'create', $this->any(), null, [123, $motData, AbstractRestfulControllerTestCase::MOCK_USER_ID]
         );
 
         // when
@@ -193,7 +191,6 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
         )->data;
 
         // then
-        $this->assertEquals($draftId, $draftIdCapture->get(), "Passed in draftId is not correct");
+        $this->assertEquals($draftId, $draftIdCapture->get(), 'Passed in draftId is not correct');
     }
-
 }

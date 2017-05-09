@@ -11,7 +11,7 @@ use DvsaEntities\Repository\GenderRepository;
 use DvsaEntities\Repository\TitleRepository;
 
 /**
- * tests for PersonMapper
+ * tests for PersonMapper.
  */
 class PersonMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,11 +44,11 @@ class PersonMapperTest extends \PHPUnit_Framework_TestCase
     public function testMapToObject()
     {
         $testData = [
-            'firstName'   => 'Harold',
-            'middleName'  => 'Jay',
-            'surname'     => 'Harrisson',
-            'title'       => 'Mr',
-            'gender'      => 'Male',
+            'firstName' => 'Harold',
+            'middleName' => 'Jay',
+            'surname' => 'Harrisson',
+            'title' => 'Mr',
+            'gender' => 'Male',
             'dateOfBirth' => '1992-04-01',
         ];
         $expected = (new Person())

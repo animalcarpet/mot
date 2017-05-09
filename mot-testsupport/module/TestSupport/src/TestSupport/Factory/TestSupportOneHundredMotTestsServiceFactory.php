@@ -12,6 +12,7 @@ class TestSupportOneHundredMotTestsServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $service = new OneHundredMotTestsService($serviceLocator->get(EntityManager::class));
+
         return $service;
     }
 }

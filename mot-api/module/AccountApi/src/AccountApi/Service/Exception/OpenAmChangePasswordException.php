@@ -2,9 +2,7 @@
 
 namespace AccountApi\Service\Exception;
 
-
 use DvsaCommonApi\Service\Exception\ServiceException;
-
 
 class OpenAmChangePasswordException extends ServiceException
 {

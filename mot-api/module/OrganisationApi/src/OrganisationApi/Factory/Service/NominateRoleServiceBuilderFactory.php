@@ -3,14 +3,12 @@
 namespace OrganisationApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
-use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use DvsaAuthentication\Service\TwoFactorStatusService;
 use DvsaCommon\Database\Transaction;
 use DvsaEntities\Entity\BusinessRoleStatus;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\OrganisationBusinessRole;
 use DvsaEntities\Entity\Person;
-use DvsaFeature\FeatureToggles;
 use OrganisationApi\Model\Operation\DirectNominationOperation;
 use OrganisationApi\Model\Operation\ConditionalNominationOperation;
 use OrganisationApi\Service\NominateRoleServiceBuilder;
@@ -19,8 +17,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 
 /**
- * Class NominateRoleServiceFactory
- * @package OrganisationApi\Factory\Service
+ * Class NominateRoleServiceFactory.
  */
 class NominateRoleServiceBuilderFactory implements FactoryInterface
 {

@@ -44,18 +44,18 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
 
         $result = new NationalStatisticsResult();
         $result
-            ->setGroupATotal((int)$dbResult['totalACount'] ?: 0)
-            ->setGroupACumulativeTestTime((int)$dbResult['totalATestTime'])
-            ->setGroupAFailed((int)$dbResult['totalAFailCount'] ?: 0)
-            ->setGroupAAverageVehicleAgeInMonths((float)$dbResult['totalAVehicleAgeInMonths'])
+            ->setGroupATotal((int) $dbResult['totalACount'] ?: 0)
+            ->setGroupACumulativeTestTime((int) $dbResult['totalATestTime'])
+            ->setGroupAFailed((int) $dbResult['totalAFailCount'] ?: 0)
+            ->setGroupAAverageVehicleAgeInMonths((float) $dbResult['totalAVehicleAgeInMonths'])
             ->setIsGroupAAverageVehicleAgeAvailable(!is_null($dbResult['totalAVehicleAgeInMonths']))
-            ->setNumberOfGroupATesters((int)$numberOfGroupATesters)
-            ->setGroupBTotal((int)$dbResult['totalBCount'] ?: 0)
-            ->setGroupBCumulativeTestTime((int)$dbResult['totalBTestTime'])
-            ->setGroupBFailed((int)$dbResult['totalBFailCount'] ?: 0)
-            ->setGroupBAverageVehicleAgeInMonths((float)$dbResult['totalBVehicleAgeInMonths'])
+            ->setNumberOfGroupATesters((int) $numberOfGroupATesters)
+            ->setGroupBTotal((int) $dbResult['totalBCount'] ?: 0)
+            ->setGroupBCumulativeTestTime((int) $dbResult['totalBTestTime'])
+            ->setGroupBFailed((int) $dbResult['totalBFailCount'] ?: 0)
+            ->setGroupBAverageVehicleAgeInMonths((float) $dbResult['totalBVehicleAgeInMonths'])
             ->setIsGroupBAverageVehicleAgeAvailable(!is_null($dbResult['totalBVehicleAgeInMonths']))
-            ->setNumberOfGroupBTesters((int)$numberOfGroupBTesters);
+            ->setNumberOfGroupBTesters((int) $numberOfGroupBTesters);
 
         return $result;
     }
@@ -78,7 +78,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
 
     private function getSqlForNumberOfTesters()
     {
-        return "SELECT COUNT(DISTINCT `test`.`person_id`) `numberOfTesters`
+        return 'SELECT COUNT(DISTINCT `test`.`person_id`) `numberOfTesters`
                   FROM `mot_test_current` `test` USE INDEX (`ix_mot_test_current_completed_date`)
                   JOIN `mot_test_status` `status` ON `status`.`id` = `test`.`status_id`
                   JOIN `mot_test_type` `type` ON `type`.`id` = `test`.`mot_test_type_id`
@@ -93,7 +93,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
                   -- the only tests we take into account are failures or non PRS passed ones
                   AND (`status`.`code` = :failedStatusCode OR (`status`.`code` = :passStatusCode AND `test`.`prs_mot_test_id` IS NULL))
                   AND `mter`.`emergency_log_id` IS NULL
-                  AND `classGroup`.`code` = :classGroupCode";
+                  AND `classGroup`.`code` = :classGroupCode';
     }
 
     private function getSqlForStatistics()
@@ -134,5 +134,4 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
                   AND `test`.`completed_date` BETWEEN :startDate AND :endDate
                   AND `mter`.`emergency_log_id` IS NULL";
     }
-
 }

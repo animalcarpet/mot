@@ -13,6 +13,7 @@ class PasswordResetDataController extends BaseTestSupportRestfulController
     public function create($data)
     {
         $passwordResetService = $this->getServiceLocator()->get(PasswordResetService::class);
+
         return $passwordResetService->create($data);
     }
 }

@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonCurrentMotTestControllerFactory
+ * Class PersonCurrentMotTestControllerFactory.
  *
  * Generates the PersonCurrentMotTestController, injecting dependencies
  */

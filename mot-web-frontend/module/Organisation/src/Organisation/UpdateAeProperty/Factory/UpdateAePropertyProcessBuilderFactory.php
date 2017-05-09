@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Organisation\UpdateAeProperty\Factory;
 
 use Organisation\UpdateAeProperty\Process\CreateAePrincipalProcess;
@@ -22,9 +21,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class UpdateAePropertyProcessBuilderFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return UpdateAePropertyProcessBuilder
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

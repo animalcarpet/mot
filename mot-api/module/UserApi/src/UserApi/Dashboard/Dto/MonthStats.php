@@ -3,11 +3,10 @@
 namespace UserApi\Dashboard\Dto;
 
 /**
- * All the tester's stats for the month
+ * All the tester's stats for the month.
  */
 class MonthStats
 {
-
     private $averageTime;
     private $failRate;
 
@@ -26,7 +25,7 @@ class MonthStats
     {
         return [
             'averageTime' => $this->averageTime,
-            'failRate'    => $this->failRate,
+            'failRate' => $this->failRate,
         ];
     }
 }

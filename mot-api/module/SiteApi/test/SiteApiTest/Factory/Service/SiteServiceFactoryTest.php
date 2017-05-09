@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApiTest\Service\Factory;
 
 use Doctrine\ORM\EntityManager;
@@ -25,14 +26,11 @@ use SiteApi\Service\SiteService;
 use SiteApi\Service\Validator\SiteDetailsValidator;
 use SiteApi\Service\Validator\SiteValidator;
 use SiteApi\Service\Validator\TestingFacilitiesValidator;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use DvsaEntities\Repository\SiteStatusRepository;
 
 /**
- * Class SiteServiceFactoryTest
- *
- * @package SiteApiTest\Service\Factory
+ * Class SiteServiceFactoryTest.
  */
 class SiteServiceFactoryTest extends AbstractServiceTestCase
 {

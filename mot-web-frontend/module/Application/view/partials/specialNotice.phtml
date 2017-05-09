@@ -8,7 +8,7 @@ $showRemoveButton = isset($showRemoveButton) ? $showRemoveButton : false;
         <?php $noticeCount = count($specialNotices); ?>
         <?php foreach ($specialNotices as $specialNotice) :
             $specialNoticeContent = $specialNotice['content'];
-            $specialNoticeContentId = $this->escapeHtml($specialNotice["contentId"]);
+            $specialNoticeContentId = $this->escapeHtml($specialNotice['contentId']);
             $overdue = (!$specialNotice['isAcknowledged'] && $specialNotice['isExpired']);
             $unread = (!$specialNotice['isAcknowledged'] && !$specialNotice['isExpired']);
         ?>
@@ -19,11 +19,11 @@ $showRemoveButton = isset($showRemoveButton) ? $showRemoveButton : false;
             <ul class="list-unstyled">
                 <li class="row">
                     <div class="col-sm-12"
-                         id=<?php if ($overdue) : echo "special-notice-overdue-" . $specialNoticeContentId ?>
-                        <?php elseif ($unread) : echo "special-notice-unread-" . $specialNoticeContentId ?>
-                        <?php else : echo "special-notice-" . $specialNoticeContentId;
+                         id=<?php if ($overdue) : echo 'special-notice-overdue-'.$specialNoticeContentId ?>
+                        <?php elseif ($unread) : echo 'special-notice-unread-'.$specialNoticeContentId ?>
+                        <?php else : echo 'special-notice-'.$specialNoticeContentId;
                         endif; ?>>
-                        <<?php echo (($overdue || $unread) && $canAcknowledge) ? 'h2' : 'h4 id="title-' . $this->escapeHtmlAttr($specialNoticeContentId) . '"'; ?> class="<?php echo $overdue
+                        <<?php echo (($overdue || $unread) && $canAcknowledge) ? 'h2' : 'h4 id="title-'.$this->escapeHtmlAttr($specialNoticeContentId).'"'; ?> class="<?php echo $overdue
                               ? 'unacknowledged' : ''; ?>">
                             <?php echo $this->escapeHtml($specialNoticeContent['title']); ?>
                         </<?php echo ($overdue || $unread) ? 'h2' : 'h4'; ?>>
@@ -32,9 +32,9 @@ $showRemoveButton = isset($showRemoveButton) ? $showRemoveButton : false;
                                 <?php echo $this->escapeHtml(DateTimeDisplayFormat::textDate($specialNoticeContent['issueDate'])); ?>
                             </li>
                             <li id="status-<?php echo $this->escapeHtmlAttr($specialNoticeContentId); ?>" class="message-details">
-                                Status: <?php echo $specialNoticeContent['isPublished'] ? "Published" : "Draft" ?>
+                                Status: <?php echo $specialNoticeContent['isPublished'] ? 'Published' : 'Draft' ?>
                             </li>
-                            <?php if(!is_null($specialNoticeContent['issueNumber'])): ?>
+                            <?php if (!is_null($specialNoticeContent['issueNumber'])): ?>
                                 <li class="message-details">
                                     Issue number: <?php echo $this->escapeHtml($specialNoticeContent['issueNumber']); ?>
                                 </li>
@@ -46,11 +46,11 @@ $showRemoveButton = isset($showRemoveButton) ? $showRemoveButton : false;
                             <li class="message-details pull-right">
                                 <a href="#special-notice-content<?php echo $this->escapeHtmlAttr($specialNoticeContentId); ?>" class="view-special-notices" data-toggle="collapse">
                                     <span id="<?php if ($overdue) :
-                                        echo 'view-overdue-' . $specialNoticeContentId;
+                                        echo 'view-overdue-'.$specialNoticeContentId;
                                     elseif ($unread) :
-                                        echo 'view-unread-' . $specialNoticeContentId;
+                                        echo 'view-unread-'.$specialNoticeContentId;
                                     else :
-                                        echo 'view-current-' . $specialNoticeContentId;
+                                        echo 'view-current-'.$specialNoticeContentId;
                                     endif;
                                     ?>">
                                         View <?php echo (($overdue || $unread) && $canAcknowledge) ? ' and acknowledge' : '' ?>
@@ -107,7 +107,7 @@ $showRemoveButton = isset($showRemoveButton) ? $showRemoveButton : false;
         <?php if ($noticeCount > 1) : ?>
             <span class="divider full"></span>
         <?php endif; ?>
-        <?php $noticeCount--; ?>
+        <?php --$noticeCount; ?>
         <?php endforeach; ?>
     </div>
 </div>

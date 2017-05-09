@@ -33,7 +33,7 @@ class EventTypeOutcomeCategoryMapRepository extends EntityRepository
      * @param int $eventTypeId
      * @param int $eventOutcomeId
      *
-     * @return boolean
+     * @return bool
      */
     public function isOutcomeAssociatedWithCategoryAndType($eventCategoryId, $eventTypeId, $eventOutcomeId)
     {
@@ -42,14 +42,14 @@ class EventTypeOutcomeCategoryMapRepository extends EntityRepository
         $qb
             ->select('COUNT(eventMap.id)')
             ->from(EventTypeOutcomeCategoryMap::class, 'eventMap')
-            ->where("eventMap.eventCategory = :eventCategoryID")
-            ->andWhere("eventMap.eventType = :eventTypeID")
-            ->andWhere("eventMap.eventOutcome = :eventOutcomeID")
+            ->where('eventMap.eventCategory = :eventCategoryID')
+            ->andWhere('eventMap.eventType = :eventTypeID')
+            ->andWhere('eventMap.eventOutcome = :eventOutcomeID')
             ->setParameters(
                 [
-                    'eventCategoryID'   => $eventCategoryId,
-                    'eventTypeID'       => $eventTypeId,
-                    'eventOutcomeID' => $eventOutcomeId
+                    'eventCategoryID' => $eventCategoryId,
+                    'eventTypeID' => $eventTypeId,
+                    'eventOutcomeID' => $eventOutcomeId,
                 ]
             );
 

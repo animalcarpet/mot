@@ -8,22 +8,19 @@ use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use DvsaAuthentication\Identity;
 use DvsaAuthentication\Identity\OpenAM\OpenAMIdentityByTokenResolver;
 use DvsaAuthentication\IdentityFactory;
-use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use Zend\Log\LoggerInterface;
 
 class OpenAMIdentityByTokenResolverTest extends \PHPUnit_Framework_TestCase
 {
-
     const ATTR_USERNAME = 'uid';
     const ATTR_UUID = 'entryuuid';
     const ATTR_EXPIRY_DATE = 'ds-pwp-password-expiration-time';
 
     private $openAMClient;
 
-    /** @var  OpenAMClientOptions */
+    /** @var OpenAMClientOptions */
     private $openAMClientOptions;
 
     private $logger;
@@ -41,7 +38,6 @@ class OpenAMIdentityByTokenResolverTest extends \PHPUnit_Framework_TestCase
         $this->openAMClientOptions->setIdentityAttributeUuid(self::ATTR_UUID);
         $this->openAMClientOptions->setIdentityAttributePasswordExpiryTime(self::ATTR_EXPIRY_DATE);
     }
-
 
     public function testResolve_givenIdentityRetrievalFailed_shouldReturnNull()
     {
@@ -63,18 +59,18 @@ class OpenAMIdentityByTokenResolverTest extends \PHPUnit_Framework_TestCase
                 $this->removeKey(
                     self::ATTR_USERNAME,
                     $this->validIdentityAttributes()
-                )
+                ),
             ],
             [
                 $this->removeKey(
                     self::ATTR_UUID,
                     $this->validIdentityAttributes()
-                )
+                ),
             ],
             [$this->removeKey(
                 self::ATTR_EXPIRY_DATE,
                 $this->validIdentityAttributes()
-            )]
+            )],
         ];
     }
 
@@ -83,7 +79,6 @@ class OpenAMIdentityByTokenResolverTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolve_givenAttributeDoesNotExistInIdentityAttributes_shouldReturnNull($identityAttributes)
     {
-
         $inputToken = 'abcde';
 
         $this->openAMClient
@@ -94,7 +89,6 @@ class OpenAMIdentityByTokenResolverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($this->create()->resolve($inputToken));
     }
-
 
     public static function dataProvider_differentLetterCase()
     {
@@ -128,9 +122,9 @@ class OpenAMIdentityByTokenResolverTest extends \PHPUnit_Framework_TestCase
     private function removeKey($key, $array)
     {
         unset($array[$key]);
+
         return $array;
     }
-
 
     private function create()
     {
@@ -147,7 +141,7 @@ class OpenAMIdentityByTokenResolverTest extends \PHPUnit_Framework_TestCase
         return [
             self::ATTR_USERNAME => 'usernameValue',
             self::ATTR_UUID => 'uuidValue',
-            self::ATTR_EXPIRY_DATE => '20001112121212'
+            self::ATTR_EXPIRY_DATE => '20001112121212',
         ];
     }
 }

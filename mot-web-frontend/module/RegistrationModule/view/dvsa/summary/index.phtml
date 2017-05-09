@@ -20,7 +20,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <?php echo $this->escapeHtmlAttr($emailAddress) ?>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-email" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->emailStep());?>">Change<span class="visuallyhidden"> email address</span></a>
+            <a id="change-email" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->emailStep()); ?>">Change<span class="visuallyhidden"> email address</span></a>
         </td>
     </tr>
     <tr>
@@ -31,7 +31,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <?php echo $this->escapeHtmlAttr($displayName) ?>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-name" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> name</span></a>
+            <a id="change-name" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep()); ?>">Change<span class="visuallyhidden"> name</span></a>
         </td>
     </tr>
     <tr>
@@ -42,7 +42,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <?php echo $this->escapeHtmlAttr($dateOfBirth); ?>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> date of birth</span></a>
+            <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep()); ?>">Change<span class="visuallyhidden"> date of birth</span></a>
         </td>
     </tr>
     <tr>
@@ -53,13 +53,13 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <?php
                 if (is_array($address) && count($address)) {
                     foreach ($address as $key => $value) {
-                        echo $this->escapeHtmlAttr($value)."<br/>";
+                        echo $this->escapeHtmlAttr($value).'<br/>';
                     }
                 }
             ?>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-address" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>">Change<span class="visuallyhidden"> address</span></a>
+            <a id="change-address" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep()); ?>">Change<span class="visuallyhidden"> address</span></a>
         </td>
     </tr>
     <tr>
@@ -70,7 +70,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <?php echo $this->escapeHtmlAttr($phone) ?>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>">Change<span class="visuallyhidden"> phone number</span></a>
+            <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep()); ?>">Change<span class="visuallyhidden"> phone number</span></a>
         </td>
     </tr>
     </tbody>
@@ -91,7 +91,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <span id="securityQuestionOneAnswer" class="font-small"><?php echo $this->escapeHtml($securityQuestionOneAnswer)  ?></span>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-security-one" href="<?php echo $this->escapeHtmlAttr($this->url('account-register/security-questions'));?>">Change<span class="visuallyhidden"> first security question</span></a>
+            <a id="change-security-one" href="<?php echo $this->escapeHtmlAttr($this->url('account-register/security-questions')); ?>">Change<span class="visuallyhidden"> first security question</span></a>
         </td>
     </tr>
     <tr>
@@ -104,7 +104,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <span id="securityQuestionTwoAnswer" class="font-small"><?php echo $this->escapeHtml($securityQuestionTwoAnswer) ?></span>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-security-two" href="<?php echo $this->escapeHtmlAttr($this->url('account-register/security-questions'));?>">Change<span class="visuallyhidden"> second security question</span></a>
+            <a id="change-security-two" href="<?php echo $this->escapeHtmlAttr($this->url('account-register/security-questions')); ?>">Change<span class="visuallyhidden"> second security question</span></a>
         </td>
     </tr>
     <tr>
@@ -115,19 +115,19 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             <span class="masked-text"><?php echo $passwordObfuscated ?></span>
         </td>
         <td class="key-value-list__item-action">
-            <a id="change-password" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep());?>">Change<span class="visuallyhidden"> password</span></a>
+            <a id="change-password" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep()); ?>">Change<span class="visuallyhidden"> password</span></a>
         </td>
     </tr>
     </tbody>
 </table>
 
-<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->summaryStep());?>" method="POST">
+<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->summaryStep()); ?>" method="POST">
     <?php echo $this->csrfToken(); ?>
     <nav class="content-navigation">
         <input type="submit" value="Create your account" id="continue" class="button">
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep());?>" id="back">Back</a>
+                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep()); ?>" id="back">Back</a>
             </li>
         </ul>
     </nav>

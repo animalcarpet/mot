@@ -16,7 +16,7 @@ use SiteApi\Service\MotTestLogService;
 
 class MotTestLogControllerTest extends AbstractRestfulControllerTestCase
 {
-    const CONTENT_TYPE_JSON =  'application/json; charset=utf-8';
+    const CONTENT_TYPE_JSON = 'application/json; charset=utf-8';
 
     const AE_ID = 1;
 
@@ -51,7 +51,7 @@ class MotTestLogControllerTest extends AbstractRestfulControllerTestCase
     }
 
     /**
-     * Test access for specified action and parameters
+     * Test access for specified action and parameters.
      *
      * @param string $method HTTP request type (get, post, put)
      * @param string $action Route action
@@ -111,50 +111,50 @@ class MotTestLogControllerTest extends AbstractRestfulControllerTestCase
         return [
             // get summary
             [
-                'method'        => 'get',
-                'action'        => 'summary',
-                'params'        => [
+                'method' => 'get',
+                'action' => 'summary',
+                'params' => [
                     'route' => [
                         'id' => self::AE_ID,
                     ],
                 ],
                 'mocks' => [
                     [
-                        'class'  => 'mockMotTestLogSrv',
+                        'class' => 'mockMotTestLogSrv',
                         'method' => 'getMotTestLogSummaryForSite',
                         'params' => self::AE_ID,
                         'result' => $dto,
-                    ]
+                    ],
                 ],
-                'expect'  => [
+                'expect' => [
                     'statusCode' => self::HTTP_OK_CODE,
-                    'result'     => ['data' => DtoHydrator::dtoToJson($dto)],
+                    'result' => ['data' => DtoHydrator::dtoToJson($dto)],
                 ],
             ],
 
             //  get log data :: invalid id
             [
-                'method'        => 'post',
-                'action'        => 'logData',
-                'params'        => [
+                'method' => 'post',
+                'action' => 'logData',
+                'params' => [
                     'route' => [
-                        'id' => 'invalidId'
+                        'id' => 'invalidId',
                     ],
                 ],
                 'mocks' => [],
-                'expect'  => [
+                'expect' => [
                     'statusCode' => self::HTTP_ERR_400,
                     'error' => [
                         'message' => MotTestLogController::ERR_SITE_ID,
-                        'code'    => AbstractDvsaRestfulController::ERROR_CODE_REQUIRED,
+                        'code' => AbstractDvsaRestfulController::ERROR_CODE_REQUIRED,
                     ],
                 ],
             ],
             //  get log data :: valid id
             [
-                'method'        => 'post',
-                'action'        => 'logData',
-                'params'        => [
+                'method' => 'post',
+                'action' => 'logData',
+                'params' => [
                     'route' => [
                         'id' => self::AE_ID,
                     ],
@@ -162,13 +162,13 @@ class MotTestLogControllerTest extends AbstractRestfulControllerTestCase
                 ],
                 'mocks' => [
                     [
-                        'class'  => 'mockEsSrv',
+                        'class' => 'mockEsSrv',
                         'method' => 'findSiteTestsLog',
                         'params' => null,
                         'result' => 'SERVICE RESULT',
-                    ]
+                    ],
                 ],
-                'expect'  => [
+                'expect' => [
                     'statusCode' => self::HTTP_OK_CODE,
                     'result' => ['data' => 'SERVICE RESULT'],
                 ],

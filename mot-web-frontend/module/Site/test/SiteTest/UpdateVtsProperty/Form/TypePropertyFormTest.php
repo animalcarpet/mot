@@ -76,7 +76,7 @@ class TypePropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[TypePropertyForm::FIELD_TYPE => ""]],
+            [[TypePropertyForm::FIELD_TYPE => '']],
             [[]],
         ];
     }

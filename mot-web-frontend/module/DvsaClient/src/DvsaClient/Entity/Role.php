@@ -3,13 +3,10 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class Role
- *
- * @package DvsaClient\Entity
+ * Class Role.
  */
 class Role
 {
-
     protected $id;
     protected $name;
     protected $fullName;
@@ -23,6 +20,7 @@ class Role
     public function setFullName($fullName)
     {
         $this->fullName = $fullName;
+
         return $this;
     }
 
@@ -42,6 +40,7 @@ class Role
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -61,6 +60,7 @@ class Role
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -80,6 +80,7 @@ class Role
     public function setShortName($shortName)
     {
         $this->shortName = $shortName;
+
         return $this;
     }
 
@@ -96,6 +97,6 @@ class Role
      */
     public function getNameForDisplay()
     {
-        return $this->getFullName() . ' (' . $this->getShortName() . ')';
+        return $this->getFullName().' ('.$this->getShortName().')';
     }
 }

@@ -5,7 +5,6 @@ namespace TestSupport\Service;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Client;
 use TestSupport\Helper\NotificationsHelper;
-use TestSupport\Service\AccountDataService;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use DvsaCommon\Constants\Role;
 use Zend\View\Model\JsonModel;
@@ -38,16 +37,17 @@ class UserService
         Client $restClient,
         TestSupportAccessTokenManager $tokenManager)
     {
-        $this->restClient   = $restClient;
+        $this->restClient = $restClient;
         $this->tokenManager = $tokenManager;
         $this->accountDataService = $accountDataService;
         $this->notificationsHelper = $notificationsHelper;
     }
 
     /**
-     * Create a basic user with the data supplied
+     * Create a basic user with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -55,13 +55,17 @@ class UserService
         TestSupportAccessTokenManager::addSchemeManagerAsRequestorIfNecessary($data);
         $resultJson = $this->accountDataService->create($data, Role::USER);
         $this->accountDataService->addRole($resultJson->data['personId'], Role::USER);
+
         return $resultJson;
     }
 
     /**
-     * Creates mot testing certificate
+     * Creates mot testing certificate.
+     *
      * @param $data
+     *
      * @return mixed
+     *
      * @throws UnauthorisedException
      * @throws \Exception
      */
@@ -74,24 +78,27 @@ class UserService
             $result = $this->restClient->post(
                 sprintf('person/%s/mot-testing-certificate', $data['userId']),
                 [
-                    "id" => null,
-                    "vehicleClassGroupCode" => $data['vehicleClassGroupCode'],
-                    "siteNumber" => $data['siteNumber'],
-                    "certificateNumber" => $data['certificateNumber'],
-                    "dateOfQualification" => $data['dateOfQualification']
+                    'id' => null,
+                    'vehicleClassGroupCode' => $data['vehicleClassGroupCode'],
+                    'siteNumber' => $data['siteNumber'],
+                    'certificateNumber' => $data['certificateNumber'],
+                    'dateOfQualification' => $data['dateOfQualification'],
                 ]
             );
 
             return $result['data'];
-        } catch (UnauthorisedException $e){
-            throw new UnauthorisedException('Cannot create certificate: ' . $e->getMessage());
+        } catch (UnauthorisedException $e) {
+            throw new UnauthorisedException('Cannot create certificate: '.$e->getMessage());
         }
     }
 
     /**
-     * Creates mot testing annual assessment certificate
+     * Creates mot testing annual assessment certificate.
+     *
      * @param $data
+     *
      * @return mixed
+     *
      * @throws UnauthorisedException
      * @throws \Exception
      */
@@ -114,10 +121,8 @@ class UserService
             );
 
             return $result['data'];
-        } catch (UnauthorisedException $e){
-            throw new UnauthorisedException('Cannot create annual assessment certificate: ' . $e->getMessage());
+        } catch (UnauthorisedException $e) {
+            throw new UnauthorisedException('Cannot create annual assessment certificate: '.$e->getMessage());
         }
     }
-
-
 }

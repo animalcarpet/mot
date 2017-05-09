@@ -30,19 +30,19 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 
 /**
- * Class RetestEligibilityValidatorTest
+ * Class RetestEligibilityValidatorTest.
  */
 class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
 {
     const VEHICLE_ID = 44;
     const TEST_VTS_ID = 4;
 
-    /** @var  \DateTime */
+    /** @var \DateTime */
     private $currentDate;
-    /** @var  MotTest|MockObj */
+    /** @var MotTest|MockObj */
     private $mockMotTest;
 
-    /** @var  MotTestRepository|MockObj */
+    /** @var MotTestRepository|MockObj */
     private $motTestRepository;
 
     private $nonWorkingDaysHelper;
@@ -59,12 +59,12 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->currentDate = DateUtils::toDate("2014-01-10");
+        $this->currentDate = DateUtils::toDate('2014-01-10');
         $this->dateTimeHolder = new TestDateTimeHolder($this->currentDate);
         $this->mockMotTest = $this->mockMotTest($this->currentDate);
         $this->motTestRepository = $this->setupMotTestRepositoryMock();
         $this->setUpNonWorkingDaysHelper(
-            $this->any(), DateUtils::toDate("2014-01-10"), DateUtils::toDate("2014-01-10"), true
+            $this->any(), DateUtils::toDate('2014-01-10'), DateUtils::toDate('2014-01-10'), true
         );
         $this->mysteryShopperHelper = XMock::of(MysteryShopperHelper::class);
         $this->specialNoticeService = XMock::of(SpecialNoticeService::class);
@@ -90,6 +90,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $country->setCode(CountryCode::ENGLAND);
         $nonWorkingDayCountry = new NonWorkingDayCountry();
         $nonWorkingDayCountry->setCountry($country);
+
         return $nonWorkingDayCountry;
     }
 
@@ -102,7 +103,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $this
             ->motTestRepository
             ->expects($this->at(0))
-            ->method("findLastNormalNotAbortedTest")
+            ->method('findLastNormalNotAbortedTest')
             ->willReturn($this->mockMotTest($this->currentDate, $motTestStatus));
 
         $validator = $this->createRetestEligibilityValidator();
@@ -133,7 +134,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $contactDetail = (new ContactDetail())
             ->setAddress(
                 (new Address())
-                    ->setTown("England")
+                    ->setTown('England')
             );
         $site
             ->setId(self::TEST_VTS_ID)
@@ -143,7 +144,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
 
         $vehicleClass = new VehicleClass();
         $vehicleClass->setId(1);
-        $vehicleClass->setCode("1");
+        $vehicleClass->setCode('1');
 
         $modelDetail = new ModelDetail();
         $modelDetail->setVehicleClass($vehicleClass);
@@ -168,7 +169,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
     private function setupMotTestRepositoryMockReturnsLastNormalMotTest(MockObj $motTestRepository, $motTest)
     {
         $motTestRepository->expects($this->any())
-            ->method("findLastNormalNotAbortedTest")
+            ->method('findLastNormalNotAbortedTest')
             ->withAnyParameters()
             ->willReturn($motTest);
     }
@@ -176,7 +177,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
     private function setupMotTestRepositoryMockFindRetestForNormalTest(MockObj $motTestRepository, $retest)
     {
         $motTestRepository->expects($this->any())
-            ->method("findRetestForMotTest")
+            ->method('findRetestForMotTest')
             ->withAnyParameters()
             ->willReturn($retest);
     }
@@ -230,22 +231,22 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
                 [
                     'refDate' => '2014-01-09',
                     'nthDate' => '2014-01-10',
-                    'result' => true
-                ]
+                    'result' => true,
+                ],
             ],
             [
                 [
                     'refDate' => '2014-01-10',
                     'nthDate' => '2014-01-10',
-                    'result' => true
-                ]
+                    'result' => true,
+                ],
             ],
             [
                 [
                     'refDate' => '2014-01-11',
                     'nthDate' => '2014-01-10',
-                    'result' => false
-                ]
+                    'result' => false,
+                ],
             ],
         ];
     }
@@ -333,7 +334,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $motTest->getVehicleTestingStation()->setNonWorkingDayCountry(null);
         $this->setupMotTestRepositoryMockReturnsLastNormalMotTest($this->motTestRepository, $motTest);
 
-        $this->setExpectedException(NotFoundException::class, "Vts country required");
+        $this->setExpectedException(NotFoundException::class, 'Vts country required');
 
         $this
             ->createRetestEligibilityValidator()
@@ -345,7 +346,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;
@@ -354,6 +355,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $isWithinPeriod
      * @param $expects
+     *
      * @return RetestEligibilityValidator
      */
     private function createRetestEligibilityValidator()

@@ -36,7 +36,7 @@ class MotTestReasonForRejection extends Entity
     private $motTest;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="mot_test_id", type="integer", nullable=false)
      */
@@ -77,14 +77,14 @@ class MotTestReasonForRejection extends Entity
     private $motTestReasonForRejectionComment;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="failure_dangerous", type="boolean", nullable=false)
      */
     private $failureDangerous;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="generated", type="boolean", nullable=false)
      */
@@ -98,9 +98,9 @@ class MotTestReasonForRejection extends Entity
      */
     private $customDescription;
 
-    #TO DO - refactor.
+    //TO DO - refactor.
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="on_original_test", type="boolean", nullable=false)
      */
@@ -137,7 +137,7 @@ class MotTestReasonForRejection extends Entity
      */
     public function isMarkedAsRepaired()
     {
-        return (null !== $this->getMarkedAsRepaired());
+        return null !== $this->getMarkedAsRepaired();
     }
 
     /**
@@ -194,6 +194,7 @@ class MotTestReasonForRejection extends Entity
 
     /**
      * @param ReasonForRejectionType $type
+     *
      * @return $this
      */
     public function setType(ReasonForRejectionType $type)
@@ -213,11 +214,13 @@ class MotTestReasonForRejection extends Entity
 
     /**
      * @param MotTestReasonForRejectionLocation $location
+     *
      * @return MotTestReasonForRejection
      */
     public function setLocation($location)
     {
         $this->location = $location;
+
         return $this;
     }
 
@@ -285,13 +288,14 @@ class MotTestReasonForRejection extends Entity
 
     /**
      * @param MotTestReasonForRejectionComment|null $motTestReasonForRejectionComment
+     *
      * @return MotTestReasonForRejection
      */
     public function setMotTestReasonForRejectionComment(
         MotTestReasonForRejectionComment $motTestReasonForRejectionComment
-    )
-    {
+    ) {
         $this->motTestReasonForRejectionComment = $motTestReasonForRejectionComment;
+
         return $this;
     }
 
@@ -345,13 +349,12 @@ class MotTestReasonForRejection extends Entity
         } catch (EntityNotFoundException $e) {
             return;
         }
-
     }
 
     /**
      * Set failureDangerous.
      *
-     * @param boolean $failureDangerous
+     * @param bool $failureDangerous
      *
      * @return MotTestReasonForRejection
      */
@@ -365,7 +368,7 @@ class MotTestReasonForRejection extends Entity
     /**
      * Get failureDangerous.
      *
-     * @return boolean
+     * @return bool
      */
     public function getFailureDangerous()
     {
@@ -373,7 +376,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * @param boolean $generated
+     * @param bool $generated
      *
      * @return MotTestReasonForRejection
      */
@@ -385,7 +388,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getGenerated()
     {
@@ -396,7 +399,7 @@ class MotTestReasonForRejection extends Entity
      * Generated RFRs can't be deleted by the end-user, other than
      * as part of updating a brake test result.
      *
-     * @return boolean
+     * @return bool
      */
     public function getCanBeDeleted()
     {
@@ -405,6 +408,7 @@ class MotTestReasonForRejection extends Entity
 
     /**
      * @param MotTestReasonForRejectionDescription $description
+     *
      * @return $this
      */
     public function setCustomDescription(MotTestReasonForRejectionDescription $description)
@@ -452,7 +456,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * @param boolean $onOriginalTest
+     * @param bool $onOriginalTest
      *
      * @return MotTestReasonForRejection
      */
@@ -464,7 +468,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getOnOriginalTest()
     {
@@ -473,7 +477,7 @@ class MotTestReasonForRejection extends Entity
 
     public function isFail()
     {
-        return ($this->getType()->getReasonForRejectionType() === ReasonForRejectionTypeName::FAIL);
+        return $this->getType()->getReasonForRejectionType() === ReasonForRejectionTypeName::FAIL;
     }
 
     /**

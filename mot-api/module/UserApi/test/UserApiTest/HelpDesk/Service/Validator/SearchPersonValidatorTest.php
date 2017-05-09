@@ -7,7 +7,7 @@ use DvsaCommon\Validator\EmailAddressValidator;
 use UserApi\HelpDesk\Service\Validator\SearchPersonValidator;
 
 /**
- * Class PersonalDetailsValidatorTest
+ * Class PersonalDetailsValidatorTest.
  */
 class SearchPersonValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,13 +61,13 @@ class SearchPersonValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testEmailNotEmpty()
     {
-        $model = new SearchPersonModel(null, null, null, null, null, null, 'searchpersonvalidatortest@' . EmailAddressValidator::TEST_DOMAIN);
+        $model = new SearchPersonModel(null, null, null, null, null, null, 'searchpersonvalidatortest@'.EmailAddressValidator::TEST_DOMAIN);
         (new SearchPersonValidator())->validate($model);
     }
 
     public function testAllFieldsNotEmpty()
     {
-        $model = new SearchPersonModel('username', 'First name', 'Last name', '1970-12-12', 'Stoke Gifford', 'CM3 7YH', 'searchpersonvalidatortest@' . EmailAddressValidator::TEST_DOMAIN);
+        $model = new SearchPersonModel('username', 'First name', 'Last name', '1970-12-12', 'Stoke Gifford', 'CM3 7YH', 'searchpersonvalidatortest@'.EmailAddressValidator::TEST_DOMAIN);
         (new SearchPersonValidator())->validate($model);
     }
 

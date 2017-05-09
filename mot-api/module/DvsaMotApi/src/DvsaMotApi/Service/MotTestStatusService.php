@@ -92,7 +92,7 @@ class MotTestStatusService
         $hasOdometerValue = !is_null($motTest->getOdometerValue());
         $hasOdometerUnit = !is_null($motTest->getOdometerUnit());
         $hasOdometerResultType = !is_null($motTest->getOdometerResultType()) &&
-            OdometerReadingResultType::OK != $motTest->getOdometerResultType() ;
+            OdometerReadingResultType::OK != $motTest->getOdometerResultType();
 
         return ($hasOdometerValue && $hasOdometerUnit) xor $hasOdometerResultType;
     }

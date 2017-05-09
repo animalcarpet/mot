@@ -1,8 +1,6 @@
 <?php
 
-
 namespace DvsaMotTest\Presenter;
-
 
 use DateTime;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
@@ -56,18 +54,21 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
     public function setMotTest(MotTest $motTest)
     {
         $this->motTest = $motTest;
+
         return $this;
     }
 
     public function setVehicle(DvsaVehicle $vehicle)
     {
         $this->vehicle = $vehicle;
+
         return $this;
     }
 
     public function setIdentity(MotFrontendIdentityInterface $identity)
     {
         $this->identity = $identity;
+
         return $this;
     }
 
@@ -76,9 +77,9 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
      */
     public function getDataFields()
     {
-        $startDate = new DateTime($this->motTest->getStartedDate());;
+        $startDate = new DateTime($this->motTest->getStartedDate());
         $firstUseDate = $this->vehicle->getFirstUsedDate();
-        if(!is_null($firstUseDate)){
+        if (!is_null($firstUseDate)) {
             $firstUseDate = new DateTime($this->vehicle->getFirstUsedDate());
         }
         $site = $this->motTest->getSiteId();
@@ -96,7 +97,7 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
             new MotChecklistPdfField($this->vehicle->getCylinderCapacity(), $this->firstColumnX, $this->thirdLineY, static::FONT_SIZE_9),
         ];
 
-        if(!$this->isClass1or2Vehicle()){
+        if (!$this->isClass1or2Vehicle()) {
             $fields[] = new MotChecklistPdfField($this->pickVehicleWeight(), $this->fourthColumnX, $this->thirdLineY, static::FONT_SIZE_9);
         }
 
@@ -113,10 +114,9 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
         $vehicleWeight = '';
 
         if (in_array($this->vehicle->getVehicleClass()->getCode(), VehicleClassCode::getGroupBClasses())) {
-
             $brakeTestResult = $this->motTest->getBrakeTestResult();
 
-            if(!is_null($brakeTestResult)) {
+            if (!is_null($brakeTestResult)) {
                 $brakeTestResultClass3ndAbove = new BrakeTestResultClass3AndAbove($brakeTestResult);
                 $vehicleWeight = $brakeTestResultClass3ndAbove->getVehicleWeight();
             } else {
@@ -126,5 +126,4 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
 
         return $vehicleWeight;
     }
-
 }

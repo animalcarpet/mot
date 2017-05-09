@@ -16,11 +16,11 @@ class NotificationsViewModelTest extends PHPUnit_Framework_TestCase
         $notificationsViewModel = new NotificationsViewModel(
             [
                 $this->buildReadNotificationViewModel(),
-                $this->buildReadNotificationViewModel()
+                $this->buildReadNotificationViewModel(),
             ],
             2
         );
-        
+
         foreach ($notificationsViewModel as $notificationViewModel) {
             $this->assertInstanceOf(NotificationViewModel::class, $notificationViewModel);
         }
@@ -34,7 +34,7 @@ class NotificationsViewModelTest extends PHPUnit_Framework_TestCase
                 $this->buildUnreadNotificationViewModel(),
                 $this->buildUnreadNotificationViewModel(),
                 $this->buildUnreadNotificationViewModel(),
-                $this->buildUnreadNotificationViewModel()
+                $this->buildUnreadNotificationViewModel(),
             ],
             7
         );

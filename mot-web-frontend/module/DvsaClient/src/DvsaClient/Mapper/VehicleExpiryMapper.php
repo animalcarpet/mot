@@ -11,13 +11,12 @@ use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 
 class VehicleExpiryMapper extends DtoMapper implements AutoWireableInterface
 {
-
     /**
      * @var DtoReflectiveSerializer
      */
     private $reflectiveDeserializer;
 
-    public function __construct(Client $client, DtoReflectiveDeserializer$reflectiveDeserializer)
+    public function __construct(Client $client, DtoReflectiveDeserializer $reflectiveDeserializer)
     {
         parent::__construct($client);
         $this->reflectiveDeserializer = $reflectiveDeserializer;
@@ -26,11 +25,13 @@ class VehicleExpiryMapper extends DtoMapper implements AutoWireableInterface
     /**
      * @param $vehicleId
      * @param bool $isDvlaVehicle
+     *
      * @return VehicleExpiryDto
      */
     public function getExpiryForVehicle($vehicleId, $isDvlaVehicle = false)
     {
         $vehicleExpiry = $this->get(VehicleUrlBuilder::testExpiryCheck($vehicleId, $isDvlaVehicle));
+
         return $this->reflectiveDeserializer->deserialize($vehicleExpiry['checkResult'], VehicleExpiryDto::class);
     }
 }

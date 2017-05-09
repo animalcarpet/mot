@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaClient\Entity;
 
 use DvsaCommon\Domain\SecurityQuestionGroup;

@@ -5,7 +5,6 @@ namespace DvsaCommonApiTest\Service;
 use DvsaAuthentication\Identity;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use Zend\Authentication\AuthenticationService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
@@ -28,20 +27,21 @@ class MotAuthorisationPermissionCheckTest extends \PHPUnit_Framework_TestCase
 
     private $systemPermissions;
 
-    /** @var  ListOfRolesAndPermissions[] */
+    /** @var ListOfRolesAndPermissions[] */
     private $organisationRoles;
 
-    /** @var  ListOfRolesAndPermissions[] */
+    /** @var ListOfRolesAndPermissions[] */
     private $siteRoles;
 
     private $siteOrganisationMap;
 
     /**
-     * Return a mock of the Zend AuthorisationService
+     * Return a mock of the Zend AuthorisationService.
      *
      * @param $identity
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getIdentityMock($identity)
@@ -226,7 +226,7 @@ class MotAuthorisationPermissionCheckTest extends \PHPUnit_Framework_TestCase
     public function testNotHavingRequiredSiteLevelPermissionsDeniesAccessInGivenSite()
     {
         $requiredPermission = PermissionAtSite::VIEW_TESTS_IN_PROGRESS_AT_VTS;
-        $wrongPermission  = PermissionAtSite::MOT_TEST_ABORT_AT_SITE;
+        $wrongPermission = PermissionAtSite::MOT_TEST_ABORT_AT_SITE;
 
         // GIVEN I have a site
         $site = 1;

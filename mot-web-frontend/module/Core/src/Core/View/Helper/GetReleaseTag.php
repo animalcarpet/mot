@@ -2,14 +2,10 @@
 
 namespace Core\View\Helper;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 
 class GetReleaseTag extends AbstractHelper
 {
-
     /**
      * @var string
      */
@@ -24,7 +20,6 @@ class GetReleaseTag extends AbstractHelper
      * @var string
      */
     protected $releaseTagReplaceKey = '{release_tag_name}';
-
 
     public function __construct($releaseTag)
     {
@@ -51,11 +46,12 @@ class GetReleaseTag extends AbstractHelper
 
     /**
      * @param $releaseTagTemplate
+     *
      * @return string
      */
     public function renderReleaseTag($releaseTagTemplate)
     {
-        if(!$this->canRenderReleaseTagName()) {
+        if (!$this->canRenderReleaseTagName()) {
             return '';
         }
 
@@ -80,6 +76,7 @@ class GetReleaseTag extends AbstractHelper
     public function setCanRenderReleaseTagName($can)
     {
         $this->canRenderTagName = $can;
+
         return $this;
     }
 
@@ -97,8 +94,7 @@ class GetReleaseTag extends AbstractHelper
     public function setReleaseTagReplaceKey($key)
     {
         $this->releaseTagReplaceKey = $key;
+
         return $this;
     }
-
-
 }

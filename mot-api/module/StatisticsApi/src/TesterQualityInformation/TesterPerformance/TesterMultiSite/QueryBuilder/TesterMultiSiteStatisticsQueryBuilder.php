@@ -1,11 +1,12 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\QueryBuilder;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryBuilder\TesterPerformanceQueryBuilder;
 
 class TesterMultiSiteStatisticsQueryBuilder extends TesterPerformanceQueryBuilder
 {
-    protected $selectFields = "`class_group`.`code` `vehicleClassGroup`,
+    protected $selectFields = '`class_group`.`code` `vehicleClassGroup`,
                                `vts`.`id` `siteId`,
                                `vts`.`name` `siteName`,
                                `address`.`address_line_1` `siteAddressLine1`,
@@ -13,16 +14,16 @@ class TesterMultiSiteStatisticsQueryBuilder extends TesterPerformanceQueryBuilde
                                `address`.`address_line_4` `siteAddressLine4`,
                                `address`.`postcode` `sitePostcode`,
                                `address`.`town` `siteTown`,
-                               `address`.`country` `siteCountry`,";
+                               `address`.`country` `siteCountry`,';
 
-    protected $index = "USE INDEX (`ix_mot_test_current_person_id_started_date_completed_date`)";
+    protected $index = 'USE INDEX (`ix_mot_test_current_person_id_started_date_completed_date`)';
 
-    protected $where = "AND `test`.`person_id` = :testerId ";
+    protected $where = 'AND `test`.`person_id` = :testerId ';
 
-    protected $join = "JOIN `site_contact_detail_map` ON `site_contact_detail_map`.`site_id` = `vts`.`id`
+    protected $join = 'JOIN `site_contact_detail_map` ON `site_contact_detail_map`.`site_id` = `vts`.`id`
                        JOIN `contact_detail` ON `site_contact_detail_map`.`contact_detail_id` = `contact_detail`.`id`
-                       JOIN `address` ON `contact_detail`.`address_id` = `address`.`id`";
+                       JOIN `address` ON `contact_detail`.`address_id` = `address`.`id`';
 
-    protected $groupBy = "GROUP BY `vts`.`id`, `class_group`.`code`
-                          ORDER BY `totalCount` DESC";
+    protected $groupBy = 'GROUP BY `vts`.`id`, `class_group`.`code`
+                          ORDER BY `totalCount` DESC';
 }

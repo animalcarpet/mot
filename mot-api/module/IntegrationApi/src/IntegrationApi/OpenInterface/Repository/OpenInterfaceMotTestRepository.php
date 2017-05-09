@@ -2,22 +2,19 @@
 
 namespace IntegrationApi\OpenInterface\Repository;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\DvlaVehicle;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\DvlaMake;
 use DvsaEntities\Entity\DvlaModel;
 
 /**
- * Class OpenInterfaceMotTestRepository
+ * Class OpenInterfaceMotTestRepository.
  */
 class OpenInterfaceMotTestRepository
 {
-
     private $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -43,6 +40,7 @@ class OpenInterfaceMotTestRepository
                 $status,
                 $before
             );
+
         return $motTest;
     }
 
@@ -52,14 +50,15 @@ class OpenInterfaceMotTestRepository
      * @param string $vrm
      * @param string $before
      * @param string $status
-     * @param array $excludeCodes
+     * @param array  $excludeCodes
      *
      * @return MotTest
      */
     public function findLatestMotTestForVrm($vrm, $before, $status, $excludeCodes = [
         MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
-        MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST
-    ]) {
+        MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
+    ])
+    {
         return $this->entityManager
             ->getRepository(MotTest::class)
             ->findLatestMotTestByVrmAndResult(

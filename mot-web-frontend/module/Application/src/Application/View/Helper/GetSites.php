@@ -2,19 +2,14 @@
 
 namespace Application\View\Helper;
 
-use Core\Helper\AbstractMotViewHelper;
 use Application\Service\LoggedInUserManager;
 use Zend\View\Helper\AbstractHelper;
 
-
 /**
- * Class GetSites
- *
- * @package Application\View\Helper
+ * Class GetSites.
  */
 class GetSites extends AbstractHelper
 {
-
     /**
      * @var LoggedInUserManager
      */
@@ -31,11 +26,11 @@ class GetSites extends AbstractHelper
     public function __invoke()
     {
         /** @var LoggedInUserManager $manager */
-
         $vtsList = [];
         if ($this->loggedInUserManager) {
             $vtsList = $this->loggedInUserManager->getAllVts();
         }
+
         return $vtsList;
     }
 }

@@ -11,7 +11,6 @@ use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\Service\TradeRolesAssociationsService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
-use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
@@ -24,9 +23,7 @@ use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Model\OrganisationBusinessRoleCode;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use InvalidArgumentException;
-use MailerApi\Service\MailerService;
 
 class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
 {
@@ -73,7 +70,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      */
     private $context;
 
-    /** @var  TwoFaFeatureToggle */
+    /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
     public function setUp()
@@ -267,9 +264,9 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider viewDrivingLicenceProvider
      *
      * @param string $context
-     * @param array $loggedInPerson
-     * @param array $targetPerson
-     * @param bool $result
+     * @param array  $loggedInPerson
+     * @param array  $targetPerson
+     * @param bool   $result
      */
     public function testViewDrivingLicence($context, array $loggedInPerson, array $targetPerson, $result)
     {
@@ -329,9 +326,9 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider changeEmailAddressProvider
      *
      * @param string $context
-     * @param array $loggedInPerson
-     * @param array $targetPerson
-     * @param bool $result
+     * @param array  $loggedInPerson
+     * @param array  $targetPerson
+     * @param bool   $result
      */
     public function testChangeEmailAddress($context, array $loggedInPerson, array $targetPerson, $result)
     {
@@ -381,8 +378,8 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider changeTelephoneNumberProvider
      *
      * @param string $context
-     * @param array $loggedInPerson
-     * @param array $targetPerson
+     * @param array  $loggedInPerson
+     * @param array  $targetPerson
      * @param $result
      */
     public function testChangeTelephoneNumber($context, array $loggedInPerson, array $targetPerson, $result)
@@ -470,9 +467,9 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider changeDrivingLicenceProvider
      *
      * @param string $context
-     * @param array $loggedInPerson
-     * @param array $targetPerson
-     * @param bool $result
+     * @param array  $loggedInPerson
+     * @param array  $targetPerson
+     * @param bool   $result
      */
     public function testChangeDrivingLicence($context, array $loggedInPerson, array $targetPerson, $result)
     {
@@ -483,7 +480,6 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->createPersonProfileGuard($loggedInPerson[0]);
         $this->assertEquals($result, $guard->canChangeDrivingLicence());
     }
-
 
     /**
      * Change Driving licence.
@@ -836,10 +832,10 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider canViewTradeRolesProvider
      *
-     * @param array $loggedInPerson
-     * @param array $targetPerson
+     * @param array  $loggedInPerson
+     * @param array  $targetPerson
      * @param string $context
-     * @param bool $result
+     * @param bool   $result
      */
     public function testCanViewTradeRoles(array $loggedInPerson, array $targetPerson, $context, $result)
     {
@@ -1034,7 +1030,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
                     self::TARGET_PERSON_ID,
                     [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
                     AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
-                    null
+                    null,
                 ],
                 false,
             ],
@@ -1044,7 +1040,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
                     self::TARGET_PERSON_ID,
                     [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
                     null,
-                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED
+                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 ],
                 false,
             ],
@@ -1054,7 +1050,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
                     self::TARGET_PERSON_ID,
                     [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
                     AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
-                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED
+                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 ],
                 false,
             ],
@@ -1064,7 +1060,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
                     self::TARGET_PERSON_ID,
                     [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
                     AuthorisationForTestingMotStatusCode::QUALIFIED,
-                    null
+                    null,
                 ],
                 false,
             ],
@@ -1074,7 +1070,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
                     self::TARGET_PERSON_ID,
                     [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
                     null,
-                    AuthorisationForTestingMotStatusCode::QUALIFIED
+                    AuthorisationForTestingMotStatusCode::QUALIFIED,
                 ],
                 false,
             ],
@@ -1084,7 +1080,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
                     self::TARGET_PERSON_ID,
                     [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
                     AuthorisationForTestingMotStatusCode::QUALIFIED,
-                    AuthorisationForTestingMotStatusCode::QUALIFIED
+                    AuthorisationForTestingMotStatusCode::QUALIFIED,
                 ],
                 true,
             ],
@@ -1202,7 +1198,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider contextProvider
      *
      * @param string $contextName
-     * @param bool $shouldThrowException
+     * @param bool   $shouldThrowException
      */
     public function testInvalidContextsWillThrowException($contextName, $shouldThrowException)
     {
@@ -1269,12 +1265,12 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             [
                 AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
-                false
+                false,
             ],
             [
                 AuthorisationForTestingMotStatusCode::QUALIFIED,
                 AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
-                true
+                true,
             ],
         ];
     }
@@ -1284,7 +1280,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      *
      * @param AuthorisationForTestingMotStatusCode $groupAStatus
      * @param AuthorisationForTestingMotStatusCode $groupBStatus
-     * @param bool $shouldDisplay
+     * @param bool                                 $shouldDisplay
      */
     public function testShouldShowTesterQualificationStatusBox($groupAStatus, $groupBStatus, $shouldDisplay)
     {
@@ -1324,10 +1320,11 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider canEditAddressProvider
-     * @param int $targetPerson
+     *
+     * @param int                $targetPerson
      * @param PermissionInSystem $permissions
-     * @param string $context
-     * @param bool $canChange
+     * @param string             $context
+     * @param bool               $canChange
      */
     public function testCanEditAddress($targetPerson, $permissions, $context, $canChange)
     {
@@ -1486,7 +1483,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      */
     private function withPermissions($permissionsToEnable)
     {
-        $permissionsToEnable = (array)$permissionsToEnable;
+        $permissionsToEnable = (array) $permissionsToEnable;
 
         if (empty($permissionsToEnable)) {
             return $this;
@@ -1506,7 +1503,6 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
 
     private function with2faDisabled()
     {
-
         $this->twoFaFeatureToggle = XMock::of(TwoFaFeatureToggle::class);
         $this->twoFaFeatureToggle->expects($this->any())->method('isEnabled')->willReturn(false);
     }
@@ -1616,7 +1612,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int $targetPersonId
+     * @param int   $targetPersonId
      * @param array $roles
      *
      * @return $this
@@ -1672,7 +1668,6 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->identityProvider
             ->method('getIdentity')
             ->willReturn($this->identity);
-
 
         return new PersonProfileGuard(
             $this->authorisationService,

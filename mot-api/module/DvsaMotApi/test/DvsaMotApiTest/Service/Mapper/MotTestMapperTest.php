@@ -197,7 +197,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
                     ->setUsername('tester1')
                     ->setContactDetails(
                         [
-                            (new ContactDto())->setEmails(([new EmailDto()]))
+                            (new ContactDto())->setEmails(([new EmailDto()])),
                         ]
                     )
             )
@@ -206,15 +206,15 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setTestType((new MotTestTypeDto())->setCode('NT'));
 
         $expectedRfr1 = [
-            'rfrId'                       => 1,
-            'name'                        => 'Rear Stop lamp',
-            'failureText'                 => 'adversely affected by the operation of another lamp',
-            'inspectionManualReference'   => '1.2.1f',
-            'testItemSelectorId'          => 12,
+            'rfrId' => 1,
+            'name' => 'Rear Stop lamp',
+            'failureText' => 'adversely affected by the operation of another lamp',
+            'inspectionManualReference' => '1.2.1f',
+            'testItemSelectorId' => 12,
             'testItemSelectorDescription' => 'aaa',
             'markedAsRepaired' => false,
             'comment' => null,
-            'type' => ReasonForRejectionTypeName::ADVISORY
+            'type' => ReasonForRejectionTypeName::ADVISORY,
         ];
 
         $expectedData->setReasonsForRejection(
@@ -232,8 +232,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setPendingDetails(
                 [
                     'currentSubmissionStatus' => 'INCOMPLETE',
-                    'issuedDate'              => null,
-                    'expiryDate'              => null,
+                    'issuedDate' => null,
+                    'expiryDate' => null,
                 ]
             )
             ->setVehicleClass((new VehicleClassDto())->setCode('4'))
@@ -271,7 +271,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->will($this->returnValue('INCOMPLETE'));
 
         $resultFromDefectSentenceCaseConverter = [
-            'failureText'                 => 'adversely affected by the operation of another lamp',
+            'failureText' => 'adversely affected by the operation of another lamp',
             'testItemSelectorDescription' => 'aaa',
         ];
 
@@ -315,7 +315,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
         $expectedBrakeTestCode = null;
         $defaultBrakeTestType = $motTest->getVehicleTestingStation()->getDefaultBrakeTestClass1And2();
-        if (isset($defaultBrakeTestType)){
+        if (isset($defaultBrakeTestType)) {
             $expectedBrakeTestCode = $defaultBrakeTestType->getCode();
         }
 
@@ -420,13 +420,13 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $defectSentenceCaseConverter = $this->getMockWithDisabledConstructor(DefectSentenceCaseConverter::class);
 
         return [
-            self::MOCK_BRAKE_TEST_RESULT_SERVICE      => $mockBrakeTestResultService,
-            self::MOCK_VEHICLE_SERVICE                => $mockVehicleSearchService,
-            self::MOCK_HYDRATOR                       => $mockHydrator,
-            self::MOCK_CERTIFICATE_EXPIRY_SERVICE     => $mockCertificateExpiryService,
-            self::MOCK_STATUS_SERVICE                 => $motTestStatusService,
-            self::MOCK_DATE_SERVICE                   => $motTestDateService,
-            self::MOCK_PARAMOBFUSCATOR                => $mockParamObfuscator,
+            self::MOCK_BRAKE_TEST_RESULT_SERVICE => $mockBrakeTestResultService,
+            self::MOCK_VEHICLE_SERVICE => $mockVehicleSearchService,
+            self::MOCK_HYDRATOR => $mockHydrator,
+            self::MOCK_CERTIFICATE_EXPIRY_SERVICE => $mockCertificateExpiryService,
+            self::MOCK_STATUS_SERVICE => $motTestStatusService,
+            self::MOCK_DATE_SERVICE => $motTestDateService,
+            self::MOCK_PARAMOBFUSCATOR => $mockParamObfuscator,
             self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER => $defectSentenceCaseConverter,
         ];
     }

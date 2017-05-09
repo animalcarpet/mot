@@ -33,7 +33,7 @@ class SecurityControllerFactoryTest extends \PHPUnit_Framework_TestCase
                 'ZendAuthenticationService' => AuthenticationService::class,
                 AuthenticationAccountLockoutViewModelBuilder::class,
                 TwoFaFeatureToggle::class,
-                SuccessLoginResultRoutingService::class
+                SuccessLoginResultRoutingService::class,
             ]
         );
     }

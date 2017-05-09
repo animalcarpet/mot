@@ -1,6 +1,6 @@
 <?php
 /**
- * @var string $personName
+ * @var string
  * @var string $backButtonUrl
  * @var string $firstLine
  * @var string $secondLine
@@ -9,7 +9,6 @@
  * @var string $country
  * @var string $postcode
  */
-
 ?>
 
 <div class="lede">
@@ -27,12 +26,12 @@
             <th scope="col" class="key-value-list__key">Address</th>
             <td class="key-value-list__value">
                 <?php
-                echo $this->escapeHtml($firstLine) . '<br>';
-                echo ($secondLine != '') ? $this->escapeHtml($secondLine) . '<br>' : '';
-                echo ($thirdLine != '') ? $this->escapeHtml($thirdLine) . '<br>' : '';
-                echo ($townOrCity != '') ? $this->escapeHtml($townOrCity) . '<br>' : '';
-                echo ($country != '') ? $this->escapeHtml($country) . '<br>' : '';
-                echo ($postcode != '') ? $this->escapeHtml($postcode) . '<br>' : '';
+                echo $this->escapeHtml($firstLine).'<br>';
+                echo ($secondLine != '') ? $this->escapeHtml($secondLine).'<br>' : '';
+                echo ($thirdLine != '') ? $this->escapeHtml($thirdLine).'<br>' : '';
+                echo ($townOrCity != '') ? $this->escapeHtml($townOrCity).'<br>' : '';
+                echo ($country != '') ? $this->escapeHtml($country).'<br>' : '';
+                echo ($postcode != '') ? $this->escapeHtml($postcode).'<br>' : '';
                 ?>
             </td>
         </tr>

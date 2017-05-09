@@ -19,7 +19,7 @@ $this->headTitle('Special Notices'); ?>
                     <li class="message-details">
                         <?php echo $this->escapeHtml(DateTimeDisplayFormat::textDate($specialNotice['issueDate'])); ?>
                     </li>
-                    <?php if(!is_null($specialNotice['issueNumber'])): ?>
+                    <?php if (!is_null($specialNotice['issueNumber'])): ?>
                         <li class="message-details">
                             Issue number: <?php echo $this->escapeHtml($specialNotice['issueNumber']); ?>
                         </li>

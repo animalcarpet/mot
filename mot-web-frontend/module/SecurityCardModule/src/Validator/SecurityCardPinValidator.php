@@ -3,26 +3,24 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\Validator;
 
 use Zend\Validator\AbstractValidator;
-use Zend\Validator\Exception;
 
 class SecurityCardPinValidator extends AbstractValidator
 {
     /**
-     * @var SecurityCardPinValidationCallback $validationCallback
+     * @var SecurityCardPinValidationCallback
      */
     private $validationCallback;
 
     const PIN_LENGTH = 6;
 
-    const MSG_KEY_PIN_LENGTH = "pinLength";
-    const MSG_KEY_PIN_NUMERIC = "pinNumeric";
-    const MSG_KEY_PIN_BLANK = "pinBlank";
-
+    const MSG_KEY_PIN_LENGTH = 'pinLength';
+    const MSG_KEY_PIN_NUMERIC = 'pinNumeric';
+    const MSG_KEY_PIN_BLANK = 'pinBlank';
 
     protected $messageTemplates = [
         self::MSG_KEY_PIN_LENGTH => 'Enter a 6 digit number',
         self::MSG_KEY_PIN_BLANK => 'Enter a PIN number',
-        self::MSG_KEY_PIN_NUMERIC => 'Enter a valid PIN number'
+        self::MSG_KEY_PIN_NUMERIC => 'Enter a valid PIN number',
     ];
 
     public function isValid($value, $context = null)
@@ -34,6 +32,7 @@ class SecurityCardPinValidator extends AbstractValidator
             if ($this->validationCallback) {
                 $this->validationCallback->onBlankPin();
             }
+
             return false;
         }
 
@@ -42,6 +41,7 @@ class SecurityCardPinValidator extends AbstractValidator
             if ($this->validationCallback) {
                 $this->validationCallback->onNonNumeric();
             }
+
             return false;
         }
 
@@ -50,6 +50,7 @@ class SecurityCardPinValidator extends AbstractValidator
             if ($this->validationCallback) {
                 $this->validationCallback->onInvalidLength();
             }
+
             return false;
         }
 
@@ -58,11 +59,13 @@ class SecurityCardPinValidator extends AbstractValidator
 
     /**
      * @param SecurityCardPinValidationCallback $validationCallback
+     *
      * @return $this
      */
     public function setValidationCallback(SecurityCardPinValidationCallback $validationCallback = null)
     {
         $this->validationCallback = $validationCallback;
+
         return $this;
     }
 }

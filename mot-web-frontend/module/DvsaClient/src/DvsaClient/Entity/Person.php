@@ -3,9 +3,7 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class Person
- *
- * @package DvsaClient\Entity
+ * Class Person.
  */
 class Person
 {
@@ -36,11 +34,13 @@ class Person
 
     /**
      * @param ContactDetail[] $contactDetails
+     *
      * @return $this
      */
     public function setContactDetails($contactDetails)
     {
         $this->contactDetails = $contactDetails;
+
         return $this;
     }
 
@@ -54,11 +54,13 @@ class Person
 
     /**
      * @param ContactDetail[] $contactDetails
+     *
      * @return $this
      */
     public function setContacts($contactDetails)
     {
         $this->contactDetails = $contactDetails;
+
         return $this;
     }
 
@@ -72,11 +74,13 @@ class Person
 
     /**
      * @param string $familyName
+     *
      * @return $this
      */
     public function setFamilyName($familyName)
     {
         $this->familyName = $familyName;
+
         return $this;
     }
 
@@ -90,11 +94,13 @@ class Person
 
     /**
      * @param string $firstName
+     *
      * @return $this
      */
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+
         return $this;
     }
 
@@ -108,11 +114,13 @@ class Person
 
     /**
      * @param string $id
+     *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -126,11 +134,13 @@ class Person
 
     /**
      * @param string $uuid
+     *
      * @return $this
      */
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
+
         return $this;
     }
 
@@ -144,11 +154,13 @@ class Person
 
     /**
      * @param string $middleName
+     *
      * @return $this
      */
     public function setMiddleName($middleName)
     {
         $this->middleName = $middleName;
+
         return $this;
     }
 
@@ -166,7 +178,8 @@ class Person
     public function getFullName()
     {
         $middleName = $this->getMiddleName();
-        return $this->getFirstName() . (empty($middleName) ? ' ' : ' ' . $middleName . ' ') . $this->getFamilyName();
+
+        return $this->getFirstName().(empty($middleName) ? ' ' : ' '.$middleName.' ').$this->getFamilyName();
     }
 
     /**
@@ -179,11 +192,13 @@ class Person
 
     /**
      * @param string $username
+     *
      * @return $this
      */
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 }

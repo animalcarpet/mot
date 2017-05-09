@@ -30,7 +30,7 @@ class MakeAction
         $this->authorisationService->assertGranted(PermissionInSystem::MOT_TEST_START);
 
         if (!$this->createVehicleStepService->isAllowedOnStep(CreateVehicleStepService::MAKE_STEP)) {
-           return new RedirectToRoute(RegistrationAndVinController::ROUTE);
+            return new RedirectToRoute(RegistrationAndVinController::ROUTE);
         }
 
         $makes = $this->createVehicleStepService->getStaticData()[CreateVehicleStepService::MAKE_STEP];

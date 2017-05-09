@@ -11,7 +11,7 @@ use PersonApi\Controller\ResetClaimAccountController;
 use UserApi\HelpDesk\Service\ResetClaimAccountService;
 
 /**
- * Class ResetClaimAccountControllerTest
+ * Class ResetClaimAccountControllerTest.
  */
 class ResetClaimAccountControllerTest extends AbstractRestfulControllerTestCase
 {
@@ -35,7 +35,6 @@ class ResetClaimAccountControllerTest extends AbstractRestfulControllerTestCase
         $this->serviceManager->setService(ResetClaimAccountService::class, $this->service);
         $this->serviceManager->setService('DvsaAuthenticationService', $this->auth);
     }
-
 
     public function testResetClaimAccountControllerGet()
     {

@@ -8,7 +8,6 @@
 namespace Dvsa\Mot\Frontend\PersonModule;
 
 use Dvsa\Mot\Frontend\PersonModule\Factory\View\PersonProfileUrlGeneratorViewHelperFactory;
-use DvsaCommon\Constants\FeatureToggle;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
@@ -39,7 +38,7 @@ class Module implements
     public function onMergeConfig(ModuleEvent $e)
     {
         $configListener = $e->getConfigListener();
-        $config         = $configListener->getMergedConfig(false);
+        $config = $configListener->getMergedConfig(false);
 
         $configListener->setMergedConfig($config);
     }
@@ -50,8 +49,8 @@ class Module implements
     public function getConfig()
     {
         $config = array_merge(
-            include __DIR__ . '/../config/routes.config.php',
-            include __DIR__ . '/../config/module.config.php'
+            include __DIR__.'/../config/routes.config.php',
+            include __DIR__.'/../config/module.config.php'
         );
 
         return $config;
@@ -62,7 +61,7 @@ class Module implements
      */
     public function getControllerConfig()
     {
-        return include __DIR__ . '/../config/controllers.config.php';
+        return include __DIR__.'/../config/controllers.config.php';
     }
 
     /**
@@ -70,7 +69,7 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/../config/services.config.php';
+        return include __DIR__.'/../config/services.config.php';
     }
 
     /**

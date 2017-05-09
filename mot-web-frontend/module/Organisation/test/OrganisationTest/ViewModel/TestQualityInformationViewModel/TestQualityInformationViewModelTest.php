@@ -22,7 +22,7 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
     /** @var RiskAssessmentScoreRagClassifier */
     private $riskAssessmentScoreRagClassifier;
 
-    /** @var  TestQualityInformationViewModel */
+    /** @var TestQualityInformationViewModel */
     private $testQualityInformationViewModel;
 
     protected function setUp()
@@ -39,7 +39,6 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
      */
     public function testCreateTable($rowsCount, $rowsTotalCount, $pageNr)
     {
-
         $this->testQualityInformationViewModel = new TestQualityInformationViewModel(
             $this->buildAuthorisedExaminerSitePerformanceDto($rowsTotalCount),
             self::RETURN_URL,
@@ -67,21 +66,20 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
                 'rowsCount' => 10,
                 'rowsTotalCount' => 23,
                 'pageNr' => 2,
-            ]
+            ],
         ];
     }
-
 
     protected function mockConfig()
     {
         $this->config = $this->getMockBuilder(MotConfig::class)->disableOriginalConstructor()->getMock();
         $returnMap = [
-            ["site_assessment", "green", "start", 0],
-            ["site_assessment", "amber", "start", 324.11],
-            ["site_assessment", "red", "start", 459.21]
+            ['site_assessment', 'green', 'start', 0],
+            ['site_assessment', 'amber', 'start', 324.11],
+            ['site_assessment', 'red', 'start', 459.21],
         ];
 
-        $this->config->expects($this->any())->method("get")->will($this->returnValueMap($returnMap));
+        $this->config->expects($this->any())->method('get')->will($this->returnValueMap($returnMap));
     }
 
     public function buildAuthorisedExaminerSitePerformanceDto($counter = 1)
@@ -93,7 +91,7 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
             $maxIteration = 10;
         }
 
-        for ($i = 1; $i <= $maxIteration; $i++) {
+        for ($i = 1; $i <= $maxIteration; ++$i) {
             $sites[] = $this->getSiteDto();
         }
 

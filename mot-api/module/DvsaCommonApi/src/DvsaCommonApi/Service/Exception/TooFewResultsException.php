@@ -3,13 +3,11 @@
 namespace DvsaCommonApi\Service\Exception;
 
 /**
- * Class TooFewResultsException
- *
- * @package DvsaCommonApi\Service\Exception
+ * Class TooFewResultsException.
  */
 class TooFewResultsException extends ServiceException
 {
-    const MESSAGE = "Too few results.";
+    const MESSAGE = 'Too few results.';
     const ERROR_CODE_TOO_FEW_RESULTS = 23;
 
     public function __construct($message = null)

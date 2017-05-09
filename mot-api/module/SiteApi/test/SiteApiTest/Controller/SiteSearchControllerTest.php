@@ -2,13 +2,8 @@
 
 namespace SiteApiTest\Controller;
 
-use AccountApi\Controller\PasswordResetController;
-use AccountApi\Service\TokenService;
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Dto\Search\SiteSearchParamsDto;
 use DvsaCommon\Dto\Site\SiteListDto;
-use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -16,15 +11,13 @@ use SiteApi\Controller\SiteSearchController;
 use SiteApi\Service\SiteSearchService;
 
 /**
- * Class SiteSearchControllerTest
- *
- * @package SiteApiTest\Controller
+ * Class SiteSearchControllerTest.
  */
 class SiteSearchControllerTest extends AbstractRestfulControllerTestCase
 {
     const SITE_NAME = 'unitSiteName';
 
-    /** @var  SiteSearchService|MockObj */
+    /** @var SiteSearchService|MockObj */
     private $siteSearchService;
 
     protected function setUp()
@@ -38,6 +31,7 @@ class SiteSearchControllerTest extends AbstractRestfulControllerTestCase
 
     /**
      * @dataProvider dataProviderTestActionsResultAndAccess
+     *
      * @param $method
      * @param $action
      * @param $params
@@ -75,7 +69,7 @@ class SiteSearchControllerTest extends AbstractRestfulControllerTestCase
                         '_class' => SiteSearchParamsDto::class,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
                         'method' => 'findSites',
                         'params' => (new SiteSearchParamsDto())->setSiteName(self::SITE_NAME),

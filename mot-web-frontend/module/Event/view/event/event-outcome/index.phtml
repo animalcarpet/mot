@@ -1,4 +1,4 @@
-<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
+<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorsSummary]); ?>
 
 <form action="<?php echo $this->escapeHtmlAttr($this->url($routes['OUTCOME'], array('type' => $type, 'id' => $id))); ?>" method="POST" autocomplete="off" novalidate="">
     <?php echo $this->csrfToken(); ?>
@@ -6,7 +6,9 @@
     <fieldset>
         <legend class="form-title heading-large visuallyhidden">Outcome of the event</legend>
 
-        <div class="form-group<?php if ($outcomeCodeHasError) echo ' has-error' ?>">
+        <div class="form-group<?php if ($outcomeCodeHasError) {
+    echo ' has-error';
+} ?>">
             <label for="selectStandard" class="form-label">
                 Event outcome
                 <?php

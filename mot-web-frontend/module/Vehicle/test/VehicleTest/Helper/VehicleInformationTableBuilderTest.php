@@ -8,13 +8,10 @@ use Core\ViewModel\Gds\Table\GdsTable;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
-use DvsaCommon\Enum\CountryOfRegistrationCode;
 use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use stdClass;
-use Vehicle\Helper\ColoursContainer;
 use Vehicle\Helper\VehicleInformationTableBuilder;
 use Zend\View\Helper\Url;
 
@@ -25,13 +22,13 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
     const VIN = '1M8GDM9AXKP042788';
     const REGISTRATION = 'FNZ6110';
 
-    /** @var  VehicleInformationTableBuilder */
+    /** @var VehicleInformationTableBuilder */
     private $tableGenerator;
-    /** @var  CatalogService | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var CatalogService | \PHPUnit_Framework_MockObject_MockObject */
     private $catalogService;
-    /** @var  MotAuthorisationServiceInterface | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotAuthorisationServiceInterface | \PHPUnit_Framework_MockObject_MockObject */
     private $authorisationService;
-    /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var Url | \PHPUnit_Framework_MockObject_MockObject */
     private $urlHelper;
 
     public function setUp()
@@ -40,7 +37,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->catalogService->expects($this->any())->method('getCountriesOfRegistration')->willReturn([
             1 => 'B (BE) - Belgium',
-            36 => 'Not Known'
+            36 => 'Not Known',
         ]);
 
         $this->authorisationService = new AuthorisationServiceMock();
@@ -54,7 +51,8 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function assertRowContentEquals(GdsRow $gdsRow, $expectedContent){
+    private function assertRowContentEquals(GdsRow $gdsRow, $expectedContent)
+    {
         $this->assertEquals($expectedContent, $gdsRow->getValue()->getContent());
     }
 
@@ -109,7 +107,6 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertRowContentEquals($table->getRow(5), VehicleInformationTableBuilder::EMPTY_VALUE_TEXT);
     }
 
-
     public function testRegistrationTableGeneration()
     {
         $vehicle = $this->getVehicle();
@@ -143,7 +140,6 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertRowContentEquals($table->getRow(2), 'Not Known');
         $this->assertRowContentEquals($table->getRow(3), 'No');
         $this->assertRowContentEquals($table->getRow(7), VehicleInformationTableBuilder::EMPTY_VALUE_TEXT);
-
     }
 
     private function getVehicle()
@@ -153,15 +149,15 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
             'amendedOn' => '2004-01-11',
             'registration' => self::REGISTRATION,
             'vin' => self::VIN,
-            'emptyVrmReason' => NULL,
-            'emptyVinReason' => NULL,
+            'emptyVrmReason' => null,
+            'emptyVinReason' => null,
             'make' => [
                 'id' => 5,
-                'name' => self::MAKE_NAME
+                'name' => self::MAKE_NAME,
             ],
             'model' => [
                 'id' => 6,
-                'name' => self::MODEL_NAME
+                'name' => self::MODEL_NAME,
             ],
             'colour' => [
                 'code' => 'L',
@@ -172,7 +168,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
                 'name' => 'Black',
             ],
             'countryOfRegistrationId' => 1,
-            'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name'=> '4'],
+            'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name' => '4'],
             'fuelType' => [
                 'code' => 'PE',
                 'name' => 'Petrol',

@@ -7,9 +7,7 @@ use DvsaClient\Entity\SitePosition;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class SitePersonnel
- *
- * @package Site\Model
+ * Class SitePersonnel.
  */
 class SitePersonnel
 {
@@ -92,7 +90,7 @@ class SitePersonnel
     }
 
     /**
-     * Number of people working in site
+     * Number of people working in site.
      *
      * @return int
      */

@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller;
 
-
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\PasswordController;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\PasswordService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
@@ -32,6 +31,6 @@ class PasswordControllerFactory implements FactoryInterface
 
         $passwordService = $serviceLocator->get(PasswordService::class);
 
-        return (new PasswordController($stepService, $passwordService));
+        return new PasswordController($stepService, $passwordService);
     }
 }

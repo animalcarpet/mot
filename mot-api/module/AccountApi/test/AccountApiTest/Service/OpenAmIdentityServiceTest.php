@@ -4,7 +4,6 @@ namespace AccountApiTest\Service;
 
 use AccountApi\Service\OpenAmIdentityService;
 use Dvsa\OpenAM\Exception\OpenAMClientException;
-use Dvsa\OpenAM\Model\OpenAMLoginDetails;
 use Dvsa\OpenAM\OpenAMClient;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
@@ -12,10 +11,10 @@ use PersonApi\Service\PasswordExpiryNotificationService;
 
 class OpenAmIdentityServiceTest extends AbstractServiceTestCase
 {
-    const TEST_REALM    = "mot";
-    const TEST_USERNAME = "test-username";
-    const TEST_PASSWORD = "test-password";
-    const MOCKED_METHOD = "updateIdentity";
+    const TEST_REALM = 'mot';
+    const TEST_USERNAME = 'test-username';
+    const TEST_PASSWORD = 'test-password';
+    const MOCKED_METHOD = 'updateIdentity';
 
     /**
      * @var OpenAmIdentityService
@@ -23,13 +22,13 @@ class OpenAmIdentityServiceTest extends AbstractServiceTestCase
     protected $openAmIdentityService;
 
     /**
-     * @var  OpenAMClient|MockObj
+     * @var OpenAMClient|MockObj
      */
     protected $mockedOpenAmClient;
 
     protected function setUp()
     {
-        $this->mockedOpenAmClient    = XMock::of(OpenAMClient::class, [self::MOCKED_METHOD]);
+        $this->mockedOpenAmClient = XMock::of(OpenAMClient::class, [self::MOCKED_METHOD]);
         $this->openAmIdentityService = new OpenAmIdentityService(
             $this->mockedOpenAmClient,
             $this->createPasswordExpiryNotificationService(),
@@ -38,7 +37,7 @@ class OpenAmIdentityServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @expectedException AccountApi\Service\Exception\OpenAmChangePasswordException
+     * @expectedException \AccountApi\Service\Exception\OpenAmChangePasswordException
      */
     public function testThrowsChangePasswordExceptionWhenOpenAMCallFails()
     {

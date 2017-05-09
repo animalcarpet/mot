@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Dto\Person\PersonContactDto;
@@ -6,9 +7,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\PersonContact;
 
 /**
- * Class PersonContactMapper
- *
- * @package OrganisationApi\Service\Mapper
+ * Class PersonContactMapper.
  */
 class PersonContactMapper
 {
@@ -42,8 +41,8 @@ class PersonContactMapper
      */
     public function toArray(PersonContact $contact)
     {
-        $contactData           = $this->contactMapper->toArray($contact->getDetails());
-        $contactData['type']   = $contact->getType()->getName();
+        $contactData = $this->contactMapper->toArray($contact->getDetails());
+        $contactData['type'] = $contact->getType()->getName();
         $contactData['_clazz'] = 'PersonContact';
 
         return $contactData;

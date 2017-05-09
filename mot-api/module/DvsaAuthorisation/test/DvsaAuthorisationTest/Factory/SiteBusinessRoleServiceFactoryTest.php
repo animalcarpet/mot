@@ -3,17 +3,14 @@
 namespace DvsaAuthorisationTest\Factory;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Repository;
 use DvsaAuthorisation\Factory\SiteBusinessRoleServiceFactory;
 use DvsaAuthorisation\Service\SiteBusinessRoleService;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SiteBusinessRoleServiceFactoryTest
- *
+ * Class SiteBusinessRoleServiceFactoryTest.
  */
 class SiteBusinessRoleServiceFactoryTest extends AbstractServiceTestCase
 {

@@ -1,8 +1,8 @@
 <?php
 
 /** @var $viewModel TestQualityInformationViewModel */
-
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
+
 ?>
 
 <div class='layout-filter-data'>
@@ -20,13 +20,13 @@ use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityI
         <?php
         if ($viewModel->isAVisible()) {
             echo $this->partial('partials/test-quality-group', [
-                'group'       => $viewModel->getA()
+                'group' => $viewModel->getA(),
             ]);
         }
 
         if ($viewModel->isBVisible()) {
             echo $this->partial('partials/test-quality-group', [
-                'group' => $viewModel->getB()
+                'group' => $viewModel->getB(),
             ]);
         }
         ?>

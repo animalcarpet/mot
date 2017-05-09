@@ -1,8 +1,6 @@
 <?php
 
-
 namespace DashboardTest\ViewModel\Notification;
-
 
 use Dashboard\Controller\NotificationController;
 use Dashboard\ViewModel\Notification\NotificationListViewModel;
@@ -12,17 +10,17 @@ use Zend\View\Helper\Url;
 class NotificationListViewModelTest extends \PHPUnit_Framework_TestCase
 {
     const CLASS_LINK_ACTIVE = 'tab-link--active';
-    /** @var  NotificationListViewModel */
+    /** @var NotificationListViewModel */
     private $vm;
 
-    /** @var  Url|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var Url|\PHPUnit_Framework_MockObject_MockObject */
     private $urlPlugin;
 
     public function setUp()
     {
-        /** @var Url $urlPlugin */
+        /* @var Url $urlPlugin */
         $this->urlPlugin = XMock::of(Url::class);
-        $this->urlPlugin->expects($this->any())->method('__invoke')->willReturnCallback(function($route){
+        $this->urlPlugin->expects($this->any())->method('__invoke')->willReturnCallback(function ($route) {
             return $route;
         });
 
@@ -55,7 +53,7 @@ class NotificationListViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0, strpos($inboxTab, "Inbox ({$unreadCount})"));
         $this->assertSame(false, strpos($inboxTab, self::CLASS_LINK_ACTIVE));
         $this->assertGreaterThan(0, strpos($inboxTab, NotificationController::ROUTE_NOTIFICATION_LIST));
-        $this->assertGreaterThan(0, strpos($archiveTab, "Archive"));
+        $this->assertGreaterThan(0, strpos($archiveTab, 'Archive'));
         $this->assertGreaterThan(0, strpos($archiveTab, self::CLASS_LINK_ACTIVE));
     }
 
@@ -72,7 +70,7 @@ class NotificationListViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0, strpos($inboxTab, "Inbox ({$unreadCount})"));
         $this->assertGreaterThan(0, strpos($inboxTab, self::CLASS_LINK_ACTIVE));
         $this->assertSame(false, strpos($archiveTab, self::CLASS_LINK_ACTIVE));
-        $this->assertGreaterThan(0, strpos($archiveTab, "Archive"));
+        $this->assertGreaterThan(0, strpos($archiveTab, 'Archive'));
         $this->assertGreaterThan(0, strpos($archiveTab, NotificationController::ROUTE_NOTIFICATION_ARCHIVE));
     }
 }

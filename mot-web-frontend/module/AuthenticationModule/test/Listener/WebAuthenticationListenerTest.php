@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Listener;
 
-use DvsaApplicationLogger\TokenService\TokenServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Listener\WebAuthenticationListener;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebAuthenticationCookieService;
 use DvsaCommonTest\TestUtils\XMock;
@@ -17,20 +16,12 @@ use Zend\Authentication\Storage\NonPersistent;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Log\Logger;
-use Zend\Log\LoggerInterface;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
-use Zend\Mvc\Router\RouteInterface;
 use Zend\Mvc\Router\RouteStackInterface;
-use Zend\Mvc\Service\RouterFactory;
-use Zend\Navigation\Page\Mvc;
-use Zend\Stdlib\Parameters;
 use Zend\Mvc\MvcEvent;
-use Zend\Uri\Uri;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 
 class WebAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 {
-
     const LOGOUT_URL = 'http://logout.url.com';
     private $authenticationService;
     private $tokenService;
@@ -100,8 +91,6 @@ class WebAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::LOGOUT_URL, $response->getHeaders()->get('Location')->getUri());
     }
 
-
-
     private function requestTokenIs($token)
     {
         $this->tokenService->expects($this->atLeastOnce())->method('getToken')->willReturn($token);
@@ -140,7 +129,6 @@ class WebAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         $this->authenticationService->setAdapter($adapter);
     }
 
-
     /**
      * @return WebAuthenticationListener
      */
@@ -150,4 +138,3 @@ class WebAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             XMock::of(Logger::class));
     }
 }
-

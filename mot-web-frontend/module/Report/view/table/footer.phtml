@@ -3,11 +3,10 @@
 use DvsaCommon\Dto\Search\SearchParamsDto;
 
 /**
- * @var \Zend\Paginator\Paginator               $paginator
+ * @var \Zend\Paginator\Paginator
  * @var \SlotPurchase\Report\Table\TableOptions $tableOptions
- * @var  SearchParamsDto                        $searchParams
+ * @var SearchParamsDto                         $searchParams
  */
-
 $searchParams = $this->searchParams;
 ?>
 
@@ -44,10 +43,10 @@ echo $this->paginationControl(
     'Sliding',
     'table/paginator',
     [
-        'route'        => null,
+        'route' => null,
         'routeOptions' => [
             'query' => $searchParams->toQueryParams()->toArray(),
-        ]
+        ],
     ]
 );
 ?>

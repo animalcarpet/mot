@@ -7,18 +7,16 @@ use DvsaCommonApi\Model\OutputFormat;
 use DvsaEntities\Entity\MotTest;
 
 /**
- * Format output for Table
+ * Format output for Table.
  */
 class OutputFormatDataTablesMotTestLog extends OutputFormat
 {
     /**
-     * Responsible for extracting the current item into the required format
+     * Responsible for extracting the current item into the required format.
      *
      * @param array         $results
      * @param string        $key
      * @param MotTest|array $item
-     *
-     * @return void
      */
     public function extractItem(&$results, $key, $item)
     {
@@ -35,15 +33,15 @@ class OutputFormatDataTablesMotTestLog extends OutputFormat
 
             $result = [
                 'motTestNumber' => $testNr,
-                'siteNumber'    => $item['siteNumber'],
-                'testDate'      => DateTimeDisplayFormat::date($testDateTime),
-                'testTime'      => $testTime,
-                'vehicleVRM'    => $item['registration'],
-                'vehicleMake'   => $item['makeName'],
-                'vehicleModel'  => $item['modelName'],
-                'testUsername'  => $item['userName'],
-                'testType'      => $item['testTypeName'],
-                'status'        => $item['status'],
+                'siteNumber' => $item['siteNumber'],
+                'testDate' => DateTimeDisplayFormat::date($testDateTime),
+                'testTime' => $testTime,
+                'vehicleVRM' => $item['registration'],
+                'vehicleMake' => $item['makeName'],
+                'vehicleModel' => $item['modelName'],
+                'testUsername' => $item['userName'],
+                'testType' => $item['testTypeName'],
+                'status' => $item['status'],
             ];
 
             $results[$testNr] = $result;

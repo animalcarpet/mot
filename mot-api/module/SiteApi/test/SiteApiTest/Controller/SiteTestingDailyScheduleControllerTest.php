@@ -5,9 +5,7 @@ namespace SiteApiTest\Controller;
 use SiteApi\Controller\SiteTestingDailyScheduleController;
 
 /**
- * Class SiteTestingDailyScheduleControllerTest
- *
- * @package SiteApiTest\Controller
+ * Class SiteTestingDailyScheduleControllerTest.
  */
 class SiteTestingDailyScheduleControllerTest extends AbstractSiteApiControllerTest
 {

@@ -7,8 +7,7 @@ use DvsaEntities\Entity\SecurityQuestion;
 use AccountApi\Mapper\SecurityQuestionMapper;
 
 /**
- * Class SecurityQuestionMapperTest
- * @package AccountApiTest\Mapper
+ * Class SecurityQuestionMapperTest.
  */
 class SecurityQuestionMapperTest extends \PHPUnit_Framework_TestCase
 {

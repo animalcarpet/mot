@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApi\Module;
 
 use DvsaCommonApi\Service\Exception\ServiceException;
@@ -10,9 +11,7 @@ use Zend\EventManager\EventManager;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class AbstractErrorHandlingModule
- *
- * @package DvsaCommonApi\Module
+ * Class AbstractErrorHandlingModule.
  */
 abstract class AbstractErrorHandlingModule
 {
@@ -52,7 +51,7 @@ abstract class AbstractErrorHandlingModule
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
                     'message' => $exception->getMessage(),
-                    'stacktrace' => $exception->getTraceAsString()
+                    'stacktrace' => $exception->getTraceAsString(),
                 ];
             }
         }
@@ -83,7 +82,7 @@ abstract class AbstractErrorHandlingModule
     protected function createLogger()
     {
         return function ($serviceManager) {
-            $logger = new Logger;
+            $logger = new Logger();
 
             $config = $serviceManager->get('config');
             if (array_key_exists('logPath', $config)) {

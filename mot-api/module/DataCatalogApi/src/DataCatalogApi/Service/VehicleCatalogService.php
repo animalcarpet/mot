@@ -80,7 +80,7 @@ class VehicleCatalogService
      */
     public function findMakeById($id)
     {
-        return $this->makeRepository()->findOneBy(["id" => $id]);
+        return $this->makeRepository()->findOneBy(['id' => $id]);
     }
 
     /**
@@ -88,7 +88,7 @@ class VehicleCatalogService
      */
     public function getMakes()
     {
-        return $this->makeRepository()->findBy([ 'isVerified' => 1, 'isSelectable' => 1 ], ['name' => 'ASC']);
+        return $this->makeRepository()->findBy(['isVerified' => 1, 'isSelectable' => 1], ['name' => 'ASC']);
     }
 
     /**
@@ -98,7 +98,7 @@ class VehicleCatalogService
      */
     public function getModelById($modelId)
     {
-        return $this->modelRepository()->findOneBy([ 'id' => $modelId ]);
+        return $this->modelRepository()->findOneBy(['id' => $modelId]);
     }
 
     /**
@@ -166,7 +166,7 @@ class VehicleCatalogService
     }
 
     /**
-     * @param integer $code
+     * @param int $code
      *
      * @return \DvsaEntities\Entity\FuelType
      */
@@ -233,7 +233,7 @@ class VehicleCatalogService
             ->entityManager
             ->getRepository(DvlaMakeModelMap::class)
             ->findOneBy([
-                'dvlaMakeCode'  => $dvlaMakeCode,
+                'dvlaMakeCode' => $dvlaMakeCode,
                 'dvlaModelCode' => $dvlaModelCode,
             ]);
 
@@ -249,7 +249,7 @@ class VehicleCatalogService
      */
     public function getMakeNameByDvlaCode($dvlaMakeCode)
     {
-        $sql = "SELECT name FROM dvla_make WHERE code = :code LIMIT 1";
+        $sql = 'SELECT name FROM dvla_make WHERE code = :code LIMIT 1';
 
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->bindParam(':code', $dvlaMakeCode);
@@ -269,7 +269,7 @@ class VehicleCatalogService
      */
     public function getModelNameByDvlaCode($dvlaMakeCode, $dvlaModelCode)
     {
-        $sql = "SELECT name FROM dvla_model WHERE code = :modelCode AND make_code = :makeCode LIMIT 1";
+        $sql = 'SELECT name FROM dvla_model WHERE code = :modelCode AND make_code = :makeCode LIMIT 1';
 
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->bindParam(':modelCode', $dvlaModelCode);
@@ -388,8 +388,8 @@ class VehicleCatalogService
     }
 
     /**
-     * @param integer $id      Vehicle Class Id
-     * @param bool    $refOnly
+     * @param int  $id      Vehicle Class Id
+     * @param bool $refOnly
      *
      * @return \DvsaEntities\Entity\VehicleClass
      */

@@ -10,7 +10,7 @@ class NationalBatchStatisticsController extends AbstractDvsaRestfulController im
 {
     private $service;
 
-    function __construct(BatchStatisticsService $service)
+    public function __construct(BatchStatisticsService $service)
     {
         $this->service = $service;
     }

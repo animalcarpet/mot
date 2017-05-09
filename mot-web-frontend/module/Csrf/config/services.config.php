@@ -8,6 +8,6 @@ return [
         'CsrfSupport' => CsrfSupportFactory::class,
     ],
     'invokables' => [
-        'CsrfValidatingListener' => CsrfValidatingListener::class
-    ]
+        'CsrfValidatingListener' => CsrfValidatingListener::class,
+    ],
 ];

@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * VehicleTestingStationEvidenceOfExclusiveUse
+ * VehicleTestingStationEvidenceOfExclusiveUse.
  *
  * @ORM\Table(
  * name="application_site_evidence_of_exclusive_use",
@@ -42,28 +43,28 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     private $vehicleTestingStationDetails = '';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="copy_of_land_registry", type="boolean", nullable=false)
      */
     private $copyOfLandRegistry;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="proof_of_site_ownership", type="boolean", nullable=false)
      */
     private $proofOfSiteOwnership;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="copy_of_lease", type="boolean", nullable=false)
      */
     private $copyOfLease;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="exclusive_use_of_the_premises", type="boolean", nullable=false)
      */
@@ -77,25 +78,26 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     private $methodOfDelivery;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="document_received", type="boolean", nullable=false)
      */
     private $documentReceived = false;
 
     /**
-     * @param boolean $copyOfLandRegistry
+     * @param bool $copyOfLandRegistry
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationEvidenceOfExclusiveUse
      */
     public function setCopyOfLandRegistry($copyOfLandRegistry)
     {
         $this->copyOfLandRegistry = $copyOfLandRegistry;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getCopyOfLandRegistry()
     {
@@ -103,18 +105,19 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     }
 
     /**
-     * @param boolean $copyOfLease
+     * @param bool $copyOfLease
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationEvidenceOfExclusiveUse
      */
     public function setCopyOfLease($copyOfLease)
     {
         $this->copyOfLease = $copyOfLease;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getCopyOfLease()
     {
@@ -122,18 +125,19 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     }
 
     /**
-     * @param boolean $exclusiveUseOfThePremises
+     * @param bool $exclusiveUseOfThePremises
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationEvidenceOfExclusiveUse
      */
     public function setExclusiveUseOfThePremises($exclusiveUseOfThePremises)
     {
         $this->exclusiveUseOfThePremises = $exclusiveUseOfThePremises;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getExclusiveUseOfThePremises()
     {
@@ -141,18 +145,19 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     }
 
     /**
-     * @param boolean $proofOfSiteOwnership
+     * @param bool $proofOfSiteOwnership
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationEvidenceOfExclusiveUse
      */
     public function setProofOfSiteOwnership($proofOfSiteOwnership)
     {
         $this->proofOfSiteOwnership = $proofOfSiteOwnership;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getProofOfSiteOwnership()
     {
@@ -167,6 +172,7 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     public function setVehicleTestingStationDetails($vehicleTestingStationDetails)
     {
         $this->vehicleTestingStationDetails = $vehicleTestingStationDetails;
+
         return $this;
     }
 
@@ -186,6 +192,7 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     public function setMethodOfDelivery($methodOfDelivery)
     {
         $this->methodOfDelivery = $methodOfDelivery;
+
         return $this;
     }
 
@@ -198,7 +205,7 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     }
 
     /**
-     * @param boolean $documentReceived
+     * @param bool $documentReceived
      *
      * @return VehicleTestingStationEvidenceOfExclusiveUse
      */
@@ -210,7 +217,7 @@ class VehicleTestingStationEvidenceOfExclusiveUse
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDocumentReceived()
     {

@@ -1,21 +1,17 @@
 <?php
+
 namespace SiteApi\Service;
 
-use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommonApi\Service\AbstractService;
-use DvsaEntities\Repository;
 use DvsaEntities\Repository\SiteRepository;
 use SiteApi\Service\Mapper\EquipmentMapper;
 
 /**
- * Class EquipmentService
- *
- * @package SiteApi\Service
+ * Class EquipmentService.
  */
 class EquipmentService extends AbstractService
 {
-
     private $authService;
 
     /** @var SiteRepository */

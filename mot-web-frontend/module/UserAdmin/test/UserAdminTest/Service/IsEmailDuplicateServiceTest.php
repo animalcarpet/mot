@@ -8,7 +8,7 @@ use UserAdmin\Service\IsEmailDuplicateService;
 
 class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  HttpRestJsonClient */
+    /** @var HttpRestJsonClient */
     private $jsonClient;
 
     public function setUp()
@@ -22,7 +22,7 @@ class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
         $this->jsonClient
             ->expects($this->once())
             ->method('get')
-            ->with(IsEmailDuplicateService::URL . $this->validEmailEncoded())
+            ->with(IsEmailDuplicateService::URL.$this->validEmailEncoded())
             ->willReturn(['data' => ['isDuplicate' => true]]);
 
         $actual = $this->buildService()->isEmailDuplicate($this->validDuplicateEmail());
@@ -35,7 +35,7 @@ class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
         $this->jsonClient
             ->expects($this->once())
             ->method('get')
-            ->with(IsEmailDuplicateService::URL . $this->validEmailEncoded())
+            ->with(IsEmailDuplicateService::URL.$this->validEmailEncoded())
             ->willReturn(['data' => ['isDuplicate' => false]]);
 
         $actual = $this->buildService()->isEmailDuplicate($this->validDuplicateEmail());
@@ -48,7 +48,7 @@ class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
         $this->jsonClient
             ->expects($this->once())
             ->method('get')
-            ->with(IsEmailDuplicateService::URL . 'test%2B10%40email.com')
+            ->with(IsEmailDuplicateService::URL.'test%2B10%40email.com')
             ->willReturn(['data' => ['isDuplicate' => false]]);
 
         $this->buildService()->isEmailDuplicate('test+10@email.com');
@@ -61,7 +61,7 @@ class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
 
     private function validDuplicateEmail()
     {
-        return "dummy@email.com";
+        return 'dummy@email.com';
     }
 
     private function validEmailEncoded()

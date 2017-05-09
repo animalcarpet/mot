@@ -9,7 +9,7 @@ use NotificationApi\Service\Helper\TwoFactorNotificationTemplateHelper;
 use NotificationApi\Service\NotificationService;
 
 /**
- * Send organisation nomination to user
+ * Send organisation nomination to user.
  */
 class OrganisationNominationNotificationService
 {
@@ -22,8 +22,8 @@ class OrganisationNominationNotificationService
     }
 
     /**
-     * @param Person                      $nominator
-     * @param OrganisationBusinessRoleMap $nomination
+     * @param Person                                   $nominator
+     * @param OrganisationBusinessRoleMap              $nomination
      * @param TwoFactorNotificationTemplateHelper|null $twoFactorNotificationTemplateHelper
      *
      * @return int notificationId
@@ -58,8 +58,9 @@ class OrganisationNominationNotificationService
     }
 
     /**
-     * @param Person $nominator
+     * @param Person                      $nominator
      * @param OrganisationBusinessRoleMap $nomination
+     *
      * @return int
      */
     public function sendDirectNominationNotification(Person $nominator, OrganisationBusinessRoleMap $nomination)

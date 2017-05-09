@@ -2,9 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service;
 
-use Dvsa\Mot\ApiClient\Request\Validator\Exception;
-use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsSessionService;
-
 class ChangeSecurityQuestionsStepService
 {
     const START_STEP = 'start';
@@ -14,12 +11,13 @@ class ChangeSecurityQuestionsStepService
     const CONFIRMATION_STEP = 'confirmation';
 
     /**
-     * @var ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService
+     * @var ChangeSecurityQuestionsSessionService
      */
     private $changeSecurityQuestionsSessionService;
 
     /**
      * ChangeSecurityQuestionsStepService constructor.
+     *
      * @param ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService
      */
     public function __construct(ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService)
@@ -30,6 +28,7 @@ class ChangeSecurityQuestionsStepService
     /**
      * @param $step
      * @param $status
+     *
      * @throws \Exception
      */
     public function updateStepStatus($step, $status)
@@ -42,7 +41,7 @@ class ChangeSecurityQuestionsStepService
         }
 
         if (!isset($steps[$step])) {
-            throw new \Exception('Step: ' .$step. ' is not a valid step');
+            throw new \Exception('Step: '.$step.' is not a valid step');
         }
 
         if (!is_bool($status)) {
@@ -58,6 +57,7 @@ class ChangeSecurityQuestionsStepService
 
     /**
      * @param $step
+     *
      * @return bool
      */
     public function isAllowedOnStep($step)
@@ -78,6 +78,7 @@ class ChangeSecurityQuestionsStepService
             }
             $previousValue = $value;
         }
+
         return false;
     }
 
@@ -86,6 +87,7 @@ class ChangeSecurityQuestionsStepService
      * @param $questionId
      * @param $questionChosen
      * @param $answer
+     *
      * @throws \Exception
      */
     public function updateQuestion($questionNumber, $questionId, $questionChosen, $answer)
@@ -100,7 +102,7 @@ class ChangeSecurityQuestionsStepService
 
             $sesionStore[ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES] = $values;
             $this->changeSecurityQuestionsSessionService->save(ChangeSecurityQuestionsSessionService::UNIQUE_KEY, $sesionStore);
-        } else if ($questionNumber == self::QUESTION_TWO_STEP) {
+        } elseif ($questionNumber == self::QUESTION_TWO_STEP) {
             $values['questionTwoId'] = $questionId;
             $values['questionTwoText'] = $questionChosen;
             $values['questionTwoAnswer'] = $answer;
@@ -108,7 +110,7 @@ class ChangeSecurityQuestionsStepService
             $sesionStore[ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES] = $values;
             $this->changeSecurityQuestionsSessionService->save(ChangeSecurityQuestionsSessionService::UNIQUE_KEY, $sesionStore);
         } else {
-            throw new \Exception("question number not valid ");
+            throw new \Exception('question number not valid ');
         }
     }
 
@@ -117,9 +119,9 @@ class ChangeSecurityQuestionsStepService
         return $this->changeSecurityQuestionsSessionService->load(ChangeSecurityQuestionsSessionService::UNIQUE_KEY);
     }
 
-
     /**
-     * Returns a list of the steps
+     * Returns a list of the steps.
+     *
      * @return array
      */
     public function getSteps()

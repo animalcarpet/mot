@@ -7,14 +7,12 @@
 
 namespace IntegrationApi\DvlaInfo\Mapper;
 
-use Doctrine\Common\Collections\Collection;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaEntities\Entity\MotTest;
 use IntegrationApi\MotTestCommon\Mapper\AbstractMotTestMapper;
 
 class DvlaInfoMotHistoryMapper extends AbstractMotTestMapper
 {
-
     public function toArray(array $motTests)
     {
         $result = [];
@@ -22,12 +20,12 @@ class DvlaInfoMotHistoryMapper extends AbstractMotTestMapper
         /** @var $motTest MotTest */
         foreach ($motTests as $motTest) {
             $result[] = [
-                'testDate'        => $this->returnFormattedDateOrNull($motTest->getCompletedDate()),
-                'testResult'      => $this->formattedStatus($motTest->getStatus()),
-                'odometerValue'   => $motTest->getOdometerValue(),
-                'odometerUnit'    => $motTest->getOdometerUnit(),
-                'testNumber'      => $motTest->getNumber(),
-                'expiryDate'      => $this->returnFormattedDateOrNull($motTest->getExpiryDate())
+                'testDate' => $this->returnFormattedDateOrNull($motTest->getCompletedDate()),
+                'testResult' => $this->formattedStatus($motTest->getStatus()),
+                'odometerValue' => $motTest->getOdometerValue(),
+                'odometerUnit' => $motTest->getOdometerUnit(),
+                'testNumber' => $motTest->getNumber(),
+                'expiryDate' => $this->returnFormattedDateOrNull($motTest->getExpiryDate()),
             ];
         }
 
@@ -38,9 +36,9 @@ class DvlaInfoMotHistoryMapper extends AbstractMotTestMapper
     {
         switch ($status) {
             case MotTestStatusName::PASSED:
-                return "P";
+                return 'P';
             case MotTestStatusName::FAILED:
-                return "F";
+                return 'F';
             default:
                 return null;
         }

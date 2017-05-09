@@ -10,7 +10,6 @@ use Zend\View\Model\JsonModel;
 
 class DvlaInfoMotHistoryController extends AbstractDvsaRestfulController
 {
-
     /**
      * Returns a list of MOT Tests for given vehicle.
      * vrm and one of v5cReference or testNumber have to be provided in a query.
@@ -21,9 +20,9 @@ class DvlaInfoMotHistoryController extends AbstractDvsaRestfulController
     {
         $request = $this->getRequest();
 
-        $vrm = $request->getQuery("vrm");
-        $v5cReference = $request->getQuery("v5cReference");
-        $testNumber = $request->getQuery("testNumber");
+        $vrm = $request->getQuery('vrm');
+        $v5cReference = $request->getQuery('v5cReference');
+        $testNumber = $request->getQuery('testNumber');
 
         $this->validateRequestHasParameters($vrm, $testNumber, $v5cReference);
 

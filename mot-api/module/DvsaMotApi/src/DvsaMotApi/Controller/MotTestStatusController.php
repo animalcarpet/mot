@@ -3,22 +3,21 @@
 namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaMotApi\Mapper;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestStatusChangeNotificationService;
 use DvsaMotApi\Service\MotTestStatusChangeService;
 
 /**
- * Mot Test Status Controller
+ * Mot Test Status Controller.
  */
 class MotTestStatusController extends AbstractDvsaRestfulController
 {
-    /** @var MotTestStatusChangeService  */
+    /** @var MotTestStatusChangeService */
     private $statusChangeService;
-    /** @var CertificateCreationService  */
+    /** @var CertificateCreationService */
     private $certificateCreationService;
-    /** @var MotTestStatusChangeNotificationService  */
+    /** @var MotTestStatusChangeNotificationService */
     private $statusChangeNotificationService;
 
     /**

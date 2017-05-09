@@ -25,15 +25,14 @@ class ClassAction
     /* @var CreateVehicleStepService $createVehicleStepService */
     private $createVehicleStepService;
 
-    /** @var  CreateNewVehicleService */
+    /** @var CreateNewVehicleService */
     private $createNewVehicleService;
 
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         CreateVehicleStepService $createVehicleStepService,
         CreateNewVehicleService $createNewVehicleService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->createVehicleStepService = $createVehicleStepService;
         $this->createNewVehicleService = $createNewVehicleService;

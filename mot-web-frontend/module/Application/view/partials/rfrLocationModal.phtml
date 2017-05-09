@@ -4,7 +4,7 @@ use DvsaCommon\Constants\ReasonForRejection;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 
 $showRfrName = true;
-$descriptionValidation = "";
+$descriptionValidation = '';
 
 if (!isset($title)) {
     $title = '';
@@ -17,7 +17,7 @@ if (!isset($rfr)) {
         'canBeDangerous' => true,
     ];
     $showRfrName = false;
-    $descriptionValidation = "required";
+    $descriptionValidation = 'required';
 }
 ?>
 
@@ -39,7 +39,7 @@ if (!isset($rfr)) {
                     <?php echo $this->csrfToken() ?>
                     <?php if ($showRfrName): ?>
                         <h4>
-                            <?php echo !empty($rfr['testItemSelectorName']) ? $this->escapeHtml($rfr['testItemSelectorName']) . ' - ': null; ?>
+                            <?php echo !empty($rfr['testItemSelectorName']) ? $this->escapeHtml($rfr['testItemSelectorName']).' - ' : null; ?>
                                <span id="modal-rfr-description-<?php echo $escRfrId; ?>"><?php echo $this->escapeHtml($rfr['description']); ?></span>
                                <span id="modal-rfr-advisory-<?php echo $escRfrId; ?>"><?php echo $this->escapeHtml($rfr['advisoryText']); ?></span>
                         </h4>
@@ -97,7 +97,7 @@ if (!isset($rfr)) {
                                           id="description-<?php echo $escRfrId; ?>" <?php echo $this->escapeHtml($descriptionValidation); ?>></textarea>
                             </div>
                         </div>
-                        <?php if($rfr['canBeDangerous']): ?>
+                        <?php if ($rfr['canBeDangerous']): ?>
                         <div class="row">
                             <div class="col-sm-8">
                                 <label for="dangerous">
@@ -122,7 +122,7 @@ if (!isset($rfr)) {
     </div>
     <!-- /.modal-dialog -->
 
-   <?php echo $this->partial("modalMessages"); ?>
+   <?php echo $this->partial('modalMessages'); ?>
 </div><!-- /.modal -->
 
 

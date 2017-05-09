@@ -6,11 +6,10 @@ use Application\Service\CatalogService;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonTest\TestUtils\XMock;
 use InvalidArgumentException;
-use PHPUnit_Framework_Error;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class MotTestTest
+ * Class MotTestTest.
  */
 class MotTestTest extends PHPUnit_Framework_TestCase
 {
@@ -19,15 +18,15 @@ class MotTestTest extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         parent::__construct();
-        $this->model = new \DvsaMotEnforcement\Model\MotTest;
+        $this->model = new \DvsaMotEnforcement\Model\MotTest();
     }
 
     public function testTranslateMotTestStatusForDisplay()
     {
         $input = [
-            'FAILED'  => 'FAIL',
-            'PASSED'  => 'PASS',
-            'ACTIVE'  => 'IN PROGRESS',
+            'FAILED' => 'FAIL',
+            'PASSED' => 'PASS',
+            'ACTIVE' => 'IN PROGRESS',
             'UNKNOWN' => 'UNKNOWN',
         ];
 
@@ -76,45 +75,46 @@ class MotTestTest extends PHPUnit_Framework_TestCase
         $catalogMock = XMock::of(CatalogService::class);
 
         $this->model->prepareDataForVehicleExaminerListRecentMotTestsView(
-            (object)'thing', $viewRendererMock, $catalogMock
+            (object) 'thing', $viewRendererMock, $catalogMock
         );
     }
 
     protected function getTestMotData()
     {
         $vehicleData = [
-            'id'            => 1,
-            'registration'  => 'ELFA 1111',
-            'vin'           => '1M2GDM9AXKP042725',
+            'id' => 1,
+            'registration' => 'ELFA 1111',
+            'vin' => '1M2GDM9AXKP042725',
             'vehicle_class' => '4',
-            'make'          => 'Volvo',
-            'model'         => 'S80 GTX',
-            'year'          => 2011,
-            'colour'        => 'Black',
-            'fuel_type'     => 'X'
+            'make' => 'Volvo',
+            'model' => 'S80 GTX',
+            'year' => 2011,
+            'colour' => 'Black',
+            'fuel_type' => 'X',
         ];
         $vehicleTestStation = [
-            'id'                   => '1',
-            'siteNumber'           => 'V12345',
+            'id' => '1',
+            'siteNumber' => 'V12345',
             'authorisedExaminerId' => 1,
-            'name'                 => 'Example Name',
-            'address'              => '1 road name, town, postcode',
+            'name' => 'Example Name',
+            'address' => '1 road name, town, postcode',
         ];
         $motTest = [
-            "id"                    => 1,
-            "status"                => 'FAILED',
-            "vehicle"               => $vehicleData,
-            "vehicleTestingStation" => $vehicleTestStation,
-            "startedDate"           => '2014-02-05T10:28:00Z',
-            "completedDate"         => '2014-02-05T11:47:34Z',
-            "testDate"              => '2014-02-05T11:47:00Z',
-            "odometerValue"         => '1234',
-            "odometerUnit"          => 'Km',
-            "reasons_for_rejection" => [['rfr-id' => 1], ['rfr-id' => 2]],
-            "break_test_results"    => [['break-result-id' => 1]],
-            "hasRegistration"       => true,
-            "testType"              => MotTestTypeCode::NORMAL_TEST,
+            'id' => 1,
+            'status' => 'FAILED',
+            'vehicle' => $vehicleData,
+            'vehicleTestingStation' => $vehicleTestStation,
+            'startedDate' => '2014-02-05T10:28:00Z',
+            'completedDate' => '2014-02-05T11:47:34Z',
+            'testDate' => '2014-02-05T11:47:00Z',
+            'odometerValue' => '1234',
+            'odometerUnit' => 'Km',
+            'reasons_for_rejection' => [['rfr-id' => 1], ['rfr-id' => 2]],
+            'break_test_results' => [['break-result-id' => 1]],
+            'hasRegistration' => true,
+            'testType' => MotTestTypeCode::NORMAL_TEST,
         ];
+
         return $motTest;
     }
 }

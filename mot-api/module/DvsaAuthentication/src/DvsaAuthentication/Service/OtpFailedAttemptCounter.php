@@ -91,7 +91,7 @@ class OtpFailedAttemptCounter
      */
     private function getFailedAttempts(Person $person)
     {
-        return $person->getOtpFailedAttempts() ? : 0;
+        return $person->getOtpFailedAttempts() ?: 0;
     }
 
     /**

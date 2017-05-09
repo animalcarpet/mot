@@ -10,11 +10,9 @@ use DvsaMotApi\Model\OutputFormat\OutputFormatDataCsvMotTestLog;
 use DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesMotTestLog;
 
 /**
- * Class ESDocMotTestLog
+ * Class ESDocMotTestLog.
  *
  * I manage the data for an MOT Test Log and can return it in various formats.
- *
- * @package DvsaElasticSearch\Model
  */
 class ESDocMotTestLog extends ESDocType
 {
@@ -24,6 +22,7 @@ class ESDocMotTestLog extends ESDocType
      * @param SearchResultDto $results
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function asJson($results)
@@ -48,7 +47,7 @@ class ESDocMotTestLog extends ESDocType
         }
 
         throw new BadRequestException(
-            'Unknown search format: ' . $results->getSearched()->getFormat(),
+            'Unknown search format: '.$results->getSearched()->getFormat(),
             BadRequestException::ERROR_CODE_INVALID_DATA
         );
     }

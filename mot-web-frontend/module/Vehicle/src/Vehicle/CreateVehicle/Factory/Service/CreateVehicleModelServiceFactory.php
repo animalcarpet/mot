@@ -20,5 +20,4 @@ class CreateVehicleModelServiceFactory implements FactoryInterface
             $client
         );
     }
-
 }

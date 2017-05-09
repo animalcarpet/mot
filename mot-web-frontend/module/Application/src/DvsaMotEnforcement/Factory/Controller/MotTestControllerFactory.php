@@ -26,8 +26,8 @@ class MotTestControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
-        $serviceLocator     = $controllerManager->getServiceLocator();
-        $paramObfuscator    = $serviceLocator->get(ParamObfuscator::class);
+        $serviceLocator = $controllerManager->getServiceLocator();
+        $paramObfuscator = $serviceLocator->get(ParamObfuscator::class);
         $odometerViewObject = new OdometerReadingViewObject();
 
         return new MotTestController($paramObfuscator, $odometerViewObject);

@@ -1,34 +1,35 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Parent class for brake test results
+ * Parent class for brake test results.
  */
 class BrakeTestResult extends Entity
 {
     use CommonIdentityTrait;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="general_pass", type="boolean", nullable=false)
      */
     protected $generalPass;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_latest", type="boolean", nullable=false)
      */
     protected $isLatest = true;
 
     /**
-     * Set generalPass
+     * Set generalPass.
      *
-     * @param boolean $generalPass
+     * @param bool $generalPass
      *
      * @return BrakeTestResult
      */
@@ -40,9 +41,9 @@ class BrakeTestResult extends Entity
     }
 
     /**
-     * Get generalPass
+     * Get generalPass.
      *
-     * @return boolean
+     * @return bool
      */
     public function getGeneralPass()
     {
@@ -50,18 +51,19 @@ class BrakeTestResult extends Entity
     }
 
     /**
-     * @param boolean $isLatest
+     * @param bool $isLatest
      *
      * @return BrakeTestResult
      */
     public function setIsLatest($isLatest)
     {
         $this->isLatest = $isLatest;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsLatest()
     {

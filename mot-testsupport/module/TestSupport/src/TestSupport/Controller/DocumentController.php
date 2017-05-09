@@ -2,15 +2,12 @@
 
 namespace TestSupport\Controller;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
 use TestSupport\Helper\TestDataResponseHelper;
 use TestSupport\Service\DocumentService;
 
 class DocumentController extends BaseTestSupportRestfulController
 {
-
-    const FIELD_MOT_TEST_NUMBER = "mot_test_number";
+    const FIELD_MOT_TEST_NUMBER = 'mot_test_number';
 
     public function get($id)
     {
@@ -44,5 +41,4 @@ class DocumentController extends BaseTestSupportRestfulController
     {
         return $this->getServiceLocator()->get(DocumentService::class);
     }
-
 }

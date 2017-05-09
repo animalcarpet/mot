@@ -2,11 +2,8 @@
 
 namespace TestSupport\Controller;
 
-use Doctrine\ORM\EntityManager;
-use DvsaCommonApi\Service\EntityFinderTrait;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use TestSupport\Service\AccountDataService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**

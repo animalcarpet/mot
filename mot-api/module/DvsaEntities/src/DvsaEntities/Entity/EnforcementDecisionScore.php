@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -42,6 +43,7 @@ class EnforcementDecisionScore
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -61,6 +63,7 @@ class EnforcementDecisionScore
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 
@@ -80,6 +83,7 @@ class EnforcementDecisionScore
     public function setScore($score)
     {
         $this->score = $score;
+
         return $this;
     }
 

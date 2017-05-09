@@ -13,6 +13,7 @@ class DateOfFirstUseControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
         $dateOfFirstUseAction = $serviceLocator->get(DateOfFirstUseAction::class);
+
         return new DateOfFirstUseController($dateOfFirstUseAction);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Core\Routing;
-
 
 class MotTestRouteList
 {
@@ -12,7 +10,7 @@ class MotTestRouteList
     const MOT_TEST_CERTIFICATE_SEARCH_BY_REGISTRATION = 'replacement-certificate-vehicle-search';
     const MOT_TEST_CERTIFICATE_SEARCH_BY_VIN = 'replacement-certificate-vehicle-search-vin';
     const MOT_TEST_CERTIFICATE_SEARCH_RESULTS = 'vehicle-certificates';
-    const MOT_TEST_CERTIFICATE_VIEW ='mot-test-certificate';
+    const MOT_TEST_CERTIFICATE_VIEW = 'mot-test-certificate';
     const MOT_TEST_CERTIFICATE_PRINT = 'mot-test/print-duplicate-certificate';
     const MOT_TEST_CERTIFICATE_EDIT = 'mot-test/replacement-certificate';
     const MOT_TEST_START_TEST = 'start-test-confirmation';

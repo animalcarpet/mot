@@ -1,13 +1,12 @@
 <?php
+
 namespace DvsaCommonApiTest\Service\Exception;
 
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class RequiredFieldExceptionTest
- * @package DvsaCommonApiTest\Service\Exception
+ * Class RequiredFieldExceptionTest.
  */
 class RequiredFieldExceptionTest extends PHPUnit_Framework_TestCase
 {
@@ -17,10 +16,10 @@ class RequiredFieldExceptionTest extends PHPUnit_Framework_TestCase
         $missingFieldname = 'username';
         $message = "$missingFieldname is required";
         $errors = [[
-            "message" => $message,
-            "code" => RequiredFieldException::ERROR_CODE_REQUIRED,
-            "displayMessage" => $message,
-            'field'          => $missingFieldname,
+            'message' => $message,
+            'code' => RequiredFieldException::ERROR_CODE_REQUIRED,
+            'displayMessage' => $message,
+            'field' => $missingFieldname,
         ]];
 
         $requiredFieldException = new RequiredFieldException([$missingFieldname]);
@@ -34,7 +33,7 @@ class RequiredFieldExceptionTest extends PHPUnit_Framework_TestCase
     {
         $data = [
             'field1' => null,
-            'field2' => "",
+            'field2' => '',
         ];
 
         try {

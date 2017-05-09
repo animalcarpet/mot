@@ -1,9 +1,9 @@
 <?php
+
 namespace Core\Service;
 
 use Core\Step\Step;
 use DvsaCommonTest\TestUtils\XMock;
-
 
 /**
  * Class StepServiceTest.
@@ -49,9 +49,10 @@ class StepServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Ensure that getRoutes returns an array of routes in key=>value format
+     * Ensure that getRoutes returns an array of routes in key=>value format.
      *
      * @group step
+     *
      * @throws \Exception
      */
     public function testGetRoutes()
@@ -163,7 +164,7 @@ class StepServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testAdd_Exception()
     {
@@ -182,7 +183,7 @@ class StepServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests first when no steps have been added.
      *
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testFirst_Exception()
     {
@@ -219,11 +220,11 @@ class StepServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testSetActiveById_Exception()
     {
-        $this->stepService->setActiveById("notAStep");
+        $this->stepService->setActiveById('notAStep');
     }
 
     public function testSetActiveByStep()
@@ -241,7 +242,7 @@ class StepServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testSetActiveByStep_Exception()
     {
@@ -265,7 +266,7 @@ class StepServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests current when no steps have been added.
      *
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testCurrent_Exception()
     {
@@ -279,7 +280,7 @@ class StepServiceTest extends \PHPUnit_Framework_TestCase
         foreach ($this->stepService as $step) {
             $expected = $this->stepInterfaceStackMock[$count];
             $this->assertSame($expected, $step);
-            $count++;
+            ++$count;
         }
     }
 

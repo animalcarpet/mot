@@ -33,7 +33,7 @@ class Phone extends Entity
     private $number;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_primary", type="boolean", nullable=false)
      */
@@ -100,7 +100,7 @@ class Phone extends Entity
     }
 
     /**
-     * @param boolean $isPrimary
+     * @param bool $isPrimary
      *
      * @return Phone
      */
@@ -112,7 +112,7 @@ class Phone extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsPrimary()
     {

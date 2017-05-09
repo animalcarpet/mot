@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Service;
 
 use Account\Service\ExpiredPasswordService;
@@ -9,41 +10,40 @@ use DvsaCommon\Authn\AuthenticationResultCode;
 use DvsaCommon\Dto\Authn\AuthenticationResponseDto;
 use DvsaCommon\DtoSerialization\DtoReflectiveDeserializer;
 use DvsaCommon\UrlBuilder\UrlBuilder;
-use DvsaFeature\FeatureToggles;
 use Zend\Authentication\AuthenticationService;
 use DvsaCommon\HttpRestJson\Client;
 use Zend\Session\SessionManager;
 
 class WebLoginService
 {
-    /** @var  AuthenticationService */
+    /** @var AuthenticationService */
     private $authenticationService;
 
-    /** @var  Client */
+    /** @var Client */
     private $client;
 
-    /** @var  DtoReflectiveDeserializer */
+    /** @var DtoReflectiveDeserializer */
     private $deserializer;
 
-    /** @var  SessionManager */
+    /** @var SessionManager */
     private $sessionManager;
 
-    /** @var  WebAuthenticationCookieService */
+    /** @var WebAuthenticationCookieService */
     private $authenticationCookieService;
 
-    /** @var  ExpiredPasswordService */
+    /** @var ExpiredPasswordService */
     private $expiredPasswordService;
 
-    /** @var  LazyMotFrontendAuthorisationService */
+    /** @var LazyMotFrontendAuthorisationService */
     private $authorisationService;
 
     /**
-     * @param AuthenticationService $authenticationService
-     * @param Client $client
-     * @param DtoReflectiveDeserializer $deserializer
-     * @param SessionManager $sessionManager
-     * @param WebAuthenticationCookieService $cookieService
-     * @param ExpiredPasswordService $expiredPasswordService
+     * @param AuthenticationService               $authenticationService
+     * @param Client                              $client
+     * @param DtoReflectiveDeserializer           $deserializer
+     * @param SessionManager                      $sessionManager
+     * @param WebAuthenticationCookieService      $cookieService
+     * @param ExpiredPasswordService              $expiredPasswordService
      * @param LazyMotFrontendAuthorisationService $authorisationService
      */
     public function __construct(
@@ -67,6 +67,7 @@ class WebLoginService
     /**
      * @param $username
      * @param $password
+     *
      * @return WebLoginResult
      */
     public function login($username, $password)
@@ -91,15 +92,17 @@ class WebLoginService
         return $loginResult;
     }
 
-    private function authenticateWithApi($username, $password) {
+    private function authenticateWithApi($username, $password)
+    {
         $restResult = $this->client->post((new UrlBuilder())->session()->toString(),
             ['username' => $username, 'password' => $password]
         );
-        /** @var AuthenticationResponseDto $responseDto */
+        /* @var AuthenticationResponseDto $responseDto */
         return $this->deserializer->deserialize($restResult['data'], AuthenticationResponseDto::class);
     }
 
-    private function mapResponseToIdentity(AuthenticationResponseDto $responseDto) {
+    private function mapResponseToIdentity(AuthenticationResponseDto $responseDto)
+    {
         return (new Identity())
             ->setUserId($responseDto->getUser()->getUserId())
             ->setUsername($responseDto->getUser()->getUsername())

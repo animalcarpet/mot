@@ -115,10 +115,10 @@ class SecurityQuestionsStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            'question1'          => __METHOD__ . '_question1',
-            'answer1'            => __METHOD__ . '_answer1',
-            'question2'          => __METHOD__ . '_question2',
-            'answer2'            => __METHOD__ . '_answer2',
+            'question1' => __METHOD__.'_question1',
+            'answer1' => __METHOD__.'_answer1',
+            'question2' => __METHOD__.'_question2',
+            'answer2' => __METHOD__.'_answer2',
         ];
 
         return $fixture;

@@ -21,6 +21,7 @@ class ClassController extends BaseCreateVehicleController
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
         $this->setLayout(self::PAGE_TITLE, self::SUB_TITLE);
+
         return $this->applyActionResult($result);
     }
 }

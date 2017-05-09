@@ -7,19 +7,15 @@ use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEventApi\Service\EventService;
 use MailerApi\Service\MailerService;
 use UserApi\HelpDesk\Factory\Service\ResetClaimAccountServiceFactory;
 use UserApi\HelpDesk\Service\ResetClaimAccountService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ResetClaimAccountServiceFactoryTest
- *
- * @package AccountApiTest\Service\Factory
+ * Class ResetClaimAccountServiceFactoryTest.
  */
 class ResetClaimAccountServiceFactoryTest extends AbstractServiceTestCase
 {

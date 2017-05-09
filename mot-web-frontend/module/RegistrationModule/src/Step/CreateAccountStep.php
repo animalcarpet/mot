@@ -12,7 +12,7 @@ class CreateAccountStep extends AbstractRegistrationStep
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "CREATE_ACCOUNT";
+    const STEP_ID = 'CREATE_ACCOUNT';
 
     /**
      * @return string

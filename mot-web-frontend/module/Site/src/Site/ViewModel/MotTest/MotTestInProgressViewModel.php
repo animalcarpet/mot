@@ -44,11 +44,10 @@ class MotTestInProgressViewModel
 
     public function getVrmOrItsAbsentReason()
     {
-        $result = !is_null($this->motTestInProgressDto->getVehicleRegisteredNumber())?
-            $this->motTestInProgressDto->getVehicleRegisteredNumber():
+        $result = !is_null($this->motTestInProgressDto->getVehicleRegisteredNumber()) ?
+            $this->motTestInProgressDto->getVehicleRegisteredNumber() :
             $this->motTestInProgressDto->getEmptyVrmReasonName();
 
         return $result;
     }
-
 }

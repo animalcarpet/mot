@@ -7,7 +7,6 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 
 class BrakeTestResultsResource extends ApiResources
 {
-
     public function save($motTestNumber, $data)
     {
         $apiUrl = UrlBuilder::create()

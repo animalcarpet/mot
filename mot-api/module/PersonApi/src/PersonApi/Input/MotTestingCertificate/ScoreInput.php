@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Input\MotTestingCertificate;
 
 use Zend\InputFilter\Input;
@@ -9,10 +10,10 @@ use Zend\I18n\Validator\IsInt;
 
 class ScoreInput extends Input
 {
-    const FIELD = "score";
-    const ERROR_IS_EMPTY = "Score must not be empty";
-    const ERROR_NOT_BETWEEN = "Score must be between 0 and 100";
-    const ERROR_NOT_DIGITS = "Enter whole numbers only";
+    const FIELD = 'score';
+    const ERROR_IS_EMPTY = 'Score must not be empty';
+    const ERROR_NOT_BETWEEN = 'Score must be between 0 and 100';
+    const ERROR_NOT_DIGITS = 'Enter whole numbers only';
 
     public function __construct()
     {

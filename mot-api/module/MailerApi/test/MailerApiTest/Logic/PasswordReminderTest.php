@@ -1,4 +1,5 @@
 <?php
+
 namespace MailerApiTest\Logic;
 
 use DvsaCommon\Dto\Mailer\MailerDto;
@@ -10,7 +11,6 @@ use MailerApi\Logic\PasswordReminder;
 use MailerApi\Service\MailerService;
 use MailerApi\Validator\MailerValidator;
 use PHPUnit_Framework_TestCase;
-use Zend\Log\Logger;
 
 class PasswordReminderTest extends PHPUnit_Framework_TestCase
 {
@@ -51,7 +51,7 @@ class PasswordReminderTest extends PHPUnit_Framework_TestCase
         $this->mailDto = new MailerDto();
         $this->mailDto->setData(['userid' => 5, 'user' => $mockPerson]);
 
-        $emailAddress = 'passwordremindertest@' . EmailAddressValidator::TEST_DOMAIN;
+        $emailAddress = 'passwordremindertest@'.EmailAddressValidator::TEST_DOMAIN;
 
         $logic = new PasswordReminder(
             $this->config['mailer'],

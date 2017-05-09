@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaMotApi\Controller\CertChangeDiffTesterReasonController;
 use DvsaMotApi\Service\CertificateChangeService;
 
 /**
- * Class CertChangeDiffTesterReasonControllerTest
+ * Class CertChangeDiffTesterReasonControllerTest.
  */
 class CertChangeDiffTesterReasonControllerTest extends AbstractMotApiControllerTestCase
 {

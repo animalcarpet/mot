@@ -9,13 +9,10 @@ use DvsaEntities\Entity\VisitReason;
 use DvsaEntities\Entity\EnforcementVisitOutcome;
 
 /**
- * Class VisitTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class VisitTest.
  */
 class VisitTest extends PHPUnit_Framework_TestCase
 {
-
     public function testInitialState()
     {
         $visit = new Visit();
@@ -30,7 +27,7 @@ class VisitTest extends PHPUnit_Framework_TestCase
     {
         $visit = new Visit();
         $visit->setId(1)
-            ->setVehicleTestingStation(new Site)
+            ->setVehicleTestingStation(new Site())
             ->setVisitDate(new \DateTime('2014-01-01'))
             ->setVisitReason(new VisitReason())
             ->setVisitOutcome(new EnforcementVisitOutcome());

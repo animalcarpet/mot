@@ -3,7 +3,6 @@
 namespace UserAdmin\Factory\Controller;
 
 use DvsaClient\MapperFactory;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use UserAdmin\Controller\RecordDemoTestController;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -18,7 +17,7 @@ class RecordDemoTestControllerFactory implements FactoryInterface
         /** @var MapperFactory $mapperFactory */
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 
-        $controller = new RecordDemoTestController (
+        $controller = new RecordDemoTestController(
             $serviceLocator->get('AuthorisationService'),
             $mapperFactory->DemoTestAssessment,
             $mapperFactory->Person

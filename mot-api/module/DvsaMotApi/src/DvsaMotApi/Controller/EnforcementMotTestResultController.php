@@ -5,12 +5,9 @@ namespace DvsaMotApi\Controller;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaMotApi\Service\EnforcementMotTestResultService;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class EnforcementMotTestResultController
- *
- * @package DvsaMotApi\Controller
+ * Class EnforcementMotTestResultController.
  */
 class EnforcementMotTestResultController extends AbstractDvsaRestfulController
 {

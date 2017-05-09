@@ -5,13 +5,12 @@ namespace DvsaEntities\Repository;
 use DvsaEntities\Entity\Gender;
 
 /**
- * Class GenderRepository
- * @package DvsaEntities\Repository
+ * Class GenderRepository.
+ *
  * @codeCoverageIgnore
  */
 class GenderRepository extends AbstractMutableRepository
 {
-
     /**
      * @param $name
      *

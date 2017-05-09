@@ -21,7 +21,7 @@ class Identity implements MotIdentityInterface
     protected $uuid;
 
     /**
-     * @var \DateTime $passwordExpiryDate
+     * @var \DateTime
      */
     protected $passwordExpiryDate;
 
@@ -159,14 +159,15 @@ class Identity implements MotIdentityInterface
         return $this;
     }
 
-
     /**
      * @param \DateTime $passwordExpiryDate
+     *
      * @return $this
      */
     public function setPasswordExpiryDate(\DateTime $passwordExpiryDate)
     {
         $this->passwordExpiryDate = $passwordExpiryDate;
+
         return $this;
     }
 
@@ -188,11 +189,13 @@ class Identity implements MotIdentityInterface
 
     /**
      * @param $isFeatureToggleRequired
+     *
      * @return $this
      */
     public function setIsSecondFactorRequired($isSecondFactorRequired)
     {
         $this->isSecondFactorRequired = $isSecondFactorRequired;
+
         return $this;
     }
 }

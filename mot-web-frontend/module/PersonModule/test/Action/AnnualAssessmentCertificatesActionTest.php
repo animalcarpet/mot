@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Action;
 
 use Core\Action\ViewActionResult;
-use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Action\AnnualAssessmentCertificatesAction;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\PersonProfileBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
@@ -14,11 +13,7 @@ use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\Annual
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesViewModel;
 use DvsaClient\Mapper\AnnualAssessmentCertificatesMapper;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_TestCase;
-use Zend\Session\Container;
-use Zend\View\Model\ViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-
 
 abstract class AnnualAssessmentCertificatesActionTest extends \PHPUnit_Framework_TestCase
 {

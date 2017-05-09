@@ -7,8 +7,7 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\HttpRestJson\Client;
 
 /**
- * Class AuthorisedClassesService
- * @package DvsaMotTest\Service
+ * Class AuthorisedClassesService.
  */
 class AuthorisedClassesService
 {
@@ -26,6 +25,7 @@ class AuthorisedClassesService
     /**
      * @param int $userId
      * @param int $siteId
+     *
      * @return array
      */
     public function getCombinedAuthorisedClassesForPersonAndVts($userId, $siteId)
@@ -37,25 +37,26 @@ class AuthorisedClassesService
     }
 
     /**
-     * Returns approved vehicle classes for the given person
+     * Returns approved vehicle classes for the given person.
      *
      * @param int $userId
+     *
      * @return array
      */
     public function getAuthorisedClassesForPerson($userId)
     {
         return [
-            self::KEY_FOR_PERSON_APPROVED_CLASSES =>
-                $this->getAuthorisedClassesFromEndpoint(
+            self::KEY_FOR_PERSON_APPROVED_CLASSES => $this->getAuthorisedClassesFromEndpoint(
                     UrlBuilder::person($userId)->getMotTesting()->toString()
-                )
+                ),
         ];
     }
 
     /**
-     * Returns approved vehicle classes for the given vehicle testing station
+     * Returns approved vehicle classes for the given vehicle testing station.
      *
      * @param int $siteId
+     *
      * @return array
      */
     public function getAuthorisedClassesForVTS($siteId)
@@ -65,15 +66,15 @@ class AuthorisedClassesService
             ->getAuthorisedClasses();
 
         return [
-            self::KEY_FOR_VTS_APPROVED_CLASSES =>
-                $this->getAuthorisedClassesFromEndpoint(
+            self::KEY_FOR_VTS_APPROVED_CLASSES => $this->getAuthorisedClassesFromEndpoint(
                     $url
-                )
+                ),
         ];
     }
 
     /**
      * @param string $endPoint API's endpoint URI
+     *
      * @return array
      */
     private function getAuthorisedClassesFromEndpoint($endPoint)

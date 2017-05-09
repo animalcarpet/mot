@@ -4,7 +4,7 @@ use Core\ViewModel\Gds\Table\GdsTable;
 
 /** @var GdsTable $table */
 if (!isset($table) || !$table instanceof GdsTable) {
-    throw new InvalidArgumentException('This partial expects variable $table of type ' . GdsTable::class);
+    throw new InvalidArgumentException('This partial expects variable $table of type '.GdsTable::class);
 }
 
 ?>
@@ -34,9 +34,9 @@ if (!isset($table) || !$table instanceof GdsTable) {
 
             <td class="key-value-list__value"
                 <?php
-            echo $id ? ' id="' . $this->escapeHtmlAttr($id) .'"' : '';
-            echo $row->isHtmlClassSet() ? ' class="' . $this->escapeHtmlAttr($row->getHtmlClass()) .'"' : '';
-            echo $colspan ? ' colspan="' . $this->escapeHtmlAttr($colspan) .'"' : '';
+            echo $id ? ' id="'.$this->escapeHtmlAttr($id).'"' : '';
+            echo $row->isHtmlClassSet() ? ' class="'.$this->escapeHtmlAttr($row->getHtmlClass()).'"' : '';
+            echo $colspan ? ' colspan="'.$this->escapeHtmlAttr($colspan).'"' : '';
             ?>>
                 <?php echo $escape ? $this->escapeHtml($value) : $value; ?>
             </td>
@@ -44,9 +44,9 @@ if (!isset($table) || !$table instanceof GdsTable) {
                 echo '<td class="key-value-list__item-action">';
 
                 foreach ($row->getActionLinks() as $actionLink):
-                    $id = ($actionLink->getHtmlId())? $actionLink->getHtmlId() : 'change';
-                    echo '<a href="' . $actionLink->getUrl() . '" title="'. $actionLink->getTooltip() . '"' .($row->getHtmlId() ? (' id="' . $this->escapeHtmlAttr($row->getHtmlId()) . '-'. $id .'"') : '')
-                        . '>'. $actionLink->getText() .'<span class="visuallyhidden"> ' .  $this->escapeHtml($row->getLabel()->getContent()) . '</span>
+                    $id = ($actionLink->getHtmlId()) ? $actionLink->getHtmlId() : 'change';
+                    echo '<a href="'.$actionLink->getUrl().'" title="'.$actionLink->getTooltip().'"'.($row->getHtmlId() ? (' id="'.$this->escapeHtmlAttr($row->getHtmlId()).'-'.$id.'"') : '')
+                        .'>'.$actionLink->getText().'<span class="visuallyhidden"> '.$this->escapeHtml($row->getLabel()->getContent()).'</span>
                         </a>&nbsp';
                 endforeach;
 

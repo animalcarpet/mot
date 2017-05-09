@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\DqlBuilder\SearchParam;
 
 use DvsaCommon\Constants\SearchParamConst;
@@ -7,13 +8,9 @@ use DvsaCommon\Dto\Search\SearchParamsDto;
 use DvsaCommonApi\Model\SearchParam;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaEntities\DqlBuilder\SearchParam\DemoTestRequestsSearchParam;
-use Zend\Form\Element\DateTime;
-use Zend\Form\Element\DateTimeLocal;
 
 /**
- * Class DemoTestRequestsSearchParamTest
- *
- * @package DvsaEntitiesTest\DqlBuilder\SearchParam
+ * Class DemoTestRequestsSearchParamTest.
  */
 class DemoTestRequestsSearchParamTest extends AbstractServiceTestCase
 {

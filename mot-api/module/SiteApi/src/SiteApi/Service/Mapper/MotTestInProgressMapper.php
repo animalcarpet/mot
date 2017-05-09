@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Service\Mapper;
 
 use DvsaCommon\Dto\MotTesting\MotTestInProgressDto;
@@ -6,9 +7,7 @@ use DvsaEntities\Entity\EmptyVrmReason;
 use DvsaEntities\Entity\MotTest;
 
 /**
- * Class MotTestInProgressMapper
- *
- * @package SiteApi\Service\Mapper
+ * Class MotTestInProgressMapper.
  */
 class MotTestInProgressMapper
 {

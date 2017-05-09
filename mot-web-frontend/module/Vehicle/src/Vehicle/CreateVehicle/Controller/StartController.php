@@ -12,8 +12,7 @@ class StartController extends BaseCreateVehicleController
 
     public function __construct(
         StartAction $action
-    )
-    {
+    ) {
         $this->action = $action;
     }
 
@@ -22,6 +21,7 @@ class StartController extends BaseCreateVehicleController
         $result = $this->action->execute();
         $this->buildBreadcrumbs();
         $this->setLayout('Make a new vehicle record', '');
+
         return $this->applyActionResult($result);
     }
 }

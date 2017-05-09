@@ -8,15 +8,12 @@ use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use Organisation\Traits\OrganisationServicesTrait;
 use Organisation\ViewModel\Search\AeSearchViewModel;
 use Zend\Http\Request;
-use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use Zend\Validator\StringLength;
 
 /**
- * Class SearchController
- *
- * @package Organisation\Controller
+ * Class SearchController.
  */
 class SearchController extends AbstractAuthActionController
 {
@@ -49,12 +46,14 @@ class SearchController extends AbstractAuthActionController
                     $organisation = $this->getMapperFactory()->Organisation->getAuthorisedExaminerByNumber(
                         ['number' => $viewModel->getSearch()]
                     );
+
                     return $this->redirect()->toUrl($viewModel->getDetailPage($organisation->getId()));
                 } catch (NotFoundException $e) {
                     $viewModel->setIsAeFound(false);
                 }
             }
         }
+
         return $this->initViewModel($viewModel);
     }
 
@@ -68,6 +67,7 @@ class SearchController extends AbstractAuthActionController
         $this->layout()->setVariable('pageTitle', self::PAGE_TITLE);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $viewModel->setMaxSearchLength(self::MAX_SEARCH_LENGTH);
+
         return new ViewModel(['viewModel' => $viewModel]);
     }
 }

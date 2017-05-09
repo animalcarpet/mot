@@ -6,9 +6,7 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class PersonObjectsFactory
- *
- * @package DvsaMotApiTest\Factory
+ * Class PersonObjectsFactory.
  */
 class PersonObjectsFactory extends AbstractServiceTestCase
 {
@@ -17,7 +15,7 @@ class PersonObjectsFactory extends AbstractServiceTestCase
     private static function getInstance()
     {
         if (self::$testInstance === null) {
-            self::$testInstance = new PersonObjectsFactory();
+            self::$testInstance = new self();
         }
 
         return self::$testInstance;
@@ -34,7 +32,7 @@ class PersonObjectsFactory extends AbstractServiceTestCase
             if (method_exists($person, $key)) {
                 $test->setupMockForSingleCall($person, $key, true);
             } else {
-                $person->{'set' . ucfirst($key)}($value);
+                $person->{'set'.ucfirst($key)}($value);
             }
         }
 

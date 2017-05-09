@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\Action;
 
 use Core\Action\ViewActionResult;
@@ -8,7 +9,6 @@ use Core\Routing\ProfileRoutes;
 use Core\Routing\VtsRouteList;
 use Core\Routing\VtsRoutes;
 use DateTime;
-use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
@@ -29,7 +29,7 @@ use Zend\Mvc\Router\Http\RouteMatch;
 
 class UserTestQualityAction implements AutoWireableInterface
 {
-    const PAGE_TITLE = "Test quality information";
+    const PAGE_TITLE = 'Test quality information';
 
     private $assertion;
     private $componentFailRateApiResource;
@@ -55,8 +55,7 @@ class UserTestQualityAction implements AutoWireableInterface
         ContextProvider $contextProvider,
         RouteMatch $routeMatch,
         MotIdentityProviderInterface $identityProvider
-    )
-    {
+    ) {
         $this->assertion = $assertion;
         $this->componentFailRateApiResource = $componentFailRateApiResource;
         $this->nationalComponentStatisticApiResource = $nationalComponentStatisticApiResource;
@@ -69,7 +68,7 @@ class UserTestQualityAction implements AutoWireableInterface
 
     public function execute($siteId, $userId, $month, $year, $groupCode, array $breadcrumbs, $isReturnToAETQI, Url $urlPlugin)
     {
-        if($this->identityProvider->getIdentity()->getUserId() != $userId) {
+        if ($this->identityProvider->getIdentity()->getUserId() != $userId) {
             $this->assertion->assertGranted($siteId);
         }
 
@@ -100,10 +99,10 @@ class UserTestQualityAction implements AutoWireableInterface
 
             if ($this->routeMatch->getMatchedRouteName() === VtsRouteList::VTS_USER_PROFILE_TEST_QUALITY) {
                 $showCsvLink = false;
-                $returnLink = $urlPlugin->fromRoute("newProfileVTS/test-quality-information", ["vehicleTestingStationId" => $siteId, "id" => $userId, "month" => $month, "year" => $year]);
+                $returnLink = $urlPlugin->fromRoute('newProfileVTS/test-quality-information', ['vehicleTestingStationId' => $siteId, 'id' => $userId, 'month' => $month, 'year' => $year]);
             }
 
-            if($this->checkIfUserHasTests($userBreakdown)) {
+            if ($this->checkIfUserHasTests($userBreakdown)) {
                 $this->site = $this->siteMapper->getById($siteId);
                 $csvMapper = new UserTestQualityCsvMapper($userBreakdown, $nationalBreakdown, $nationalGroupPerformance, $this->site, $groupCode, $month, $year);
                 $csvSizeInBytes = $csvMapper->toCsvFile()->getSizeInBytes();
@@ -140,7 +139,6 @@ class UserTestQualityAction implements AutoWireableInterface
         } else {
             return new NotFoundActionResult();
         }
-
     }
 
     public function getCsv($siteId, $userId, $month, $year, $groupCode)
@@ -174,6 +172,7 @@ class UserTestQualityAction implements AutoWireableInterface
 
     /**
      * @param ComponentBreakdownDto $userBreakdown
+     *
      * @return bool
      */
     private function checkIfUserHasTests(ComponentBreakdownDto $userBreakdown)
@@ -191,7 +190,9 @@ class UserTestQualityAction implements AutoWireableInterface
     /**
      * @param $month
      * @param $year
+     *
      * @return DateTime
+     *
      * @throws IncorrectDateFormatException
      */
     private function setMonthAndYear($month, $year)
@@ -201,22 +202,22 @@ class UserTestQualityAction implements AutoWireableInterface
 
     private function getTertiaryTitle($siteName)
     {
-        return "Tests done at " . $siteName . " in " . $this->viewedDate->format("F Y");
+        return 'Tests done at '.$siteName.' in '.$this->viewedDate->format('F Y');
     }
 
     private function getNationalGroupPerformance($groupCode, $month, $year)
     {
         $nationalPerformance = $this->nationalPerformanceApiResource->getForDate($month, $year);
 
-        switch($groupCode) {
-            case VehicleClassGroupCode::BIKES;
+        switch ($groupCode) {
+            case VehicleClassGroupCode::BIKES:
                 $nationalGroupPerformance = $nationalPerformance->getGroupA();
                 break;
             case VehicleClassGroupCode::CARS_ETC:
                 $nationalGroupPerformance = $nationalPerformance->getGroupB();
                 break;
             default:
-                throw new \InvalidArgumentException("Wrong vehicle group code");
+                throw new \InvalidArgumentException('Wrong vehicle group code');
         }
 
         return $nationalGroupPerformance;

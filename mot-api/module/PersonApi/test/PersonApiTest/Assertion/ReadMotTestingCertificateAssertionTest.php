@@ -42,13 +42,13 @@ class ReadMotTestingCertificateAssertionTest extends \PHPUnit_Framework_TestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUserId")
+            ->method('getUserId')
             ->willReturn(self::USER_ID);
 
         $this
             ->identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity)
         ;
 
@@ -61,7 +61,7 @@ class ReadMotTestingCertificateAssertionTest extends \PHPUnit_Framework_TestCase
         $this
             ->personalDetailsService
             ->expects($expects)
-            ->method("assertViewGranted");
+            ->method('assertViewGranted');
 
         $isGranted = $this->createAssertion()->isGranted($person, $systemRoles);
         $this->assertTrue($isGranted);
@@ -72,20 +72,20 @@ class ReadMotTestingCertificateAssertionTest extends \PHPUnit_Framework_TestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUserId")
+            ->method('getUserId')
             ->willReturn(self::USER_ID);
 
         $this
             ->identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity)
         ;
 
         $this
             ->personalDetailsService
             ->expects($this->exactly(0))
-            ->method("assertViewGranted");
+            ->method('assertViewGranted');
 
         $isGranted = $this->createAssertion()->isGranted((new Person())->setId(self::USER_ID), [Role::USER, Role::DVSA_AREA_OFFICE_1]);
         $this->assertFalse($isGranted);
@@ -96,21 +96,21 @@ class ReadMotTestingCertificateAssertionTest extends \PHPUnit_Framework_TestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUserId")
+            ->method('getUserId')
             ->willReturn(self::USER_ID);
 
         $this
             ->identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity)
         ;
 
         $this
             ->personalDetailsService
             ->expects($this->once())
-            ->method("assertViewGranted")
-            ->willThrowException(new UnauthorisedException(""));
+            ->method('assertViewGranted')
+            ->willThrowException(new UnauthorisedException(''));
 
         $isGranted = $this->createAssertion()->isGranted((new Person())->setId(self::PERSON_ID), [Role::USER, Role::DVSA_AREA_OFFICE_1]);
         $this->assertFalse($isGranted);
@@ -121,20 +121,20 @@ class ReadMotTestingCertificateAssertionTest extends \PHPUnit_Framework_TestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUserId")
+            ->method('getUserId')
             ->willReturn(self::USER_ID);
 
         $this
             ->identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity)
         ;
 
         $this
             ->personalDetailsService
             ->expects($this->once())
-            ->method("assertViewGranted");
+            ->method('assertViewGranted');
 
         $isGranted = $this->createAssertion()->isGranted((new Person())->setId(self::PERSON_ID), [Role::USER, Role::DVSA_AREA_OFFICE_1]);
         $this->assertFalse($isGranted);
@@ -145,20 +145,20 @@ class ReadMotTestingCertificateAssertionTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 (new Person())->setId(self::USER_ID),
-                [Role::USER]
+                [Role::USER],
             ],
             [
                 (new Person())->setId(self::USER_ID),
-                [Role::USER, Role::TESTER_ACTIVE]
+                [Role::USER, Role::TESTER_ACTIVE],
             ],
             [
                 (new Person())->setId(self::PERSON_ID),
-                [Role::USER]
+                [Role::USER],
             ],
             [
                 (new Person())->setId(self::PERSON_ID),
-                [Role::USER, Role::TESTER_ACTIVE]
-            ]
+                [Role::USER, Role::TESTER_ACTIVE],
+            ],
         ];
     }
 }

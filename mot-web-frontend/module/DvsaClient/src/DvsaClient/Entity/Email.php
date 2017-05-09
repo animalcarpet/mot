@@ -3,13 +3,10 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class Email
- *
- * @package DvsaClient\Entity
+ * Class Email.
  */
 class Email
 {
-
     private $id;
     private $email;
     private $contactType;
@@ -23,6 +20,7 @@ class Email
     public function setContactType($contactType)
     {
         $this->contactType = $contactType;
+
         return $this;
     }
 
@@ -42,6 +40,7 @@ class Email
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -61,6 +60,7 @@ class Email
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -80,6 +80,7 @@ class Email
     public function setIsPrimary($isPrimary)
     {
         $this->isPrimary = $isPrimary;
+
         return $this;
     }
 

@@ -18,7 +18,7 @@ use DvsaEntities\Repository\SiteRepository;
 use DvsaFeature\FeatureToggles;
 
 /**
- * Class ElasticSearchService
+ * Class ElasticSearchService.
  *
  * This class is responsible for handling all Elastic Search based "super search" queries
  * from the main API.
@@ -27,8 +27,6 @@ use DvsaFeature\FeatureToggles;
  *
  *    - MOT Tests by
  *    - Vehicles by
- *
- * @package DvsaElasticSearch\Service
  */
 class ElasticSearchService
 {
@@ -45,11 +43,11 @@ class ElasticSearchService
     const MYSTERY_SHOPPER_TEST_TYPE = 'Mystery Shopper';
 
     /**
-     * This creates the ES search service. It requires the following services:
+     * This creates the ES search service. It requires the following services:.
      *
      * @param AuthorisationServiceInterface $authService
-     * @param SiteRepository $siteRepository
-     * @param FeatureToggles $featureToggles
+     * @param SiteRepository                $siteRepository
+     * @param FeatureToggles                $featureToggles
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
@@ -67,6 +65,7 @@ class ElasticSearchService
      * @param MotTestSearchParam $params
      *
      * @return array
+     *
      * @throws \UnexpectedValueException
      */
     public function findTests(MotTestSearchParam $params)
@@ -94,13 +93,13 @@ class ElasticSearchService
         return $result;
     }
 
-
     /**
      * Search for MOT tests Log.
      *
      * @param MotTestSearchParam $params
      *
      * @return array
+     *
      * @throws \UnexpectedValueException
      */
     public function findTestsLog(MotTestSearchParam $params)
@@ -120,6 +119,7 @@ class ElasticSearchService
      * @param MotTestSearchParam $params
      *
      * @return array
+     *
      * @throws \UnexpectedValueException
      */
     public function findSiteTestsLog(MotTestSearchParam $params)
@@ -132,7 +132,7 @@ class ElasticSearchService
         $site = $this->siteRepository->get($params->getSiteId());
         $organisation = $site->getOrganisation();
 
-        if(is_object($organisation)) {
+        if (is_object($organisation)) {
             $params->setOrganisationId($organisation->getId());
             $result = SuperSearchQuery::execute($params, new FbQueryMotTestLog());
             $result = $this->disguiseMysteryShopperTestsAsNormal($result);
@@ -145,16 +145,18 @@ class ElasticSearchService
                 ->setResultCount(0)
                 ->setTotalResultCount(0)
                 ->setIsElasticSearch(false);
+
             return $resultDto;
         }
     }
 
     /**
-     * Search for MOT tests Log for current user
+     * Search for MOT tests Log for current user.
      *
      * @param MotTestSearchParam $params
      *
      * @return array
+     *
      * @throws \UnexpectedValueException
      */
     public function findTesterTestsLog(MotTestSearchParam $params)
@@ -166,7 +168,7 @@ class ElasticSearchService
     }
 
     /**
-     * Provides the ability to check the users access to the current search
+     * Provides the ability to check the users access to the current search.
      *
      * @param string $permission
      */
@@ -176,20 +178,21 @@ class ElasticSearchService
     }
 
     /**
-     * Strip vin and/or registration number if set to perform extra search
+     * Strip vin and/or registration number if set to perform extra search.
+     *
      * @param SearchParam $params
      *
      * @return VehicleSearchParam
      */
     protected function stripParams(SearchParam $params)
     {
-        $strippedParams = clone($params);
+        $strippedParams = clone $params;
 
-        if($params->getVin() != NULL && strpos($params->getVin(), " ") !== FALSE) {
+        if ($params->getVin() != null && strpos($params->getVin(), ' ') !== false) {
             $strippedParams->setVin(preg_replace('/\s+/', '', $params->getVin()));
         }
 
-        if($params->getRegistration() != NULL && strpos($params->getRegistration(), " ") !== FALSE) {
+        if ($params->getRegistration() != null && strpos($params->getRegistration(), ' ') !== false) {
             $strippedParams->setRegistration(preg_replace('/\s+/', '', $params->getRegistration()));
         }
 
@@ -198,20 +201,22 @@ class ElasticSearchService
 
     /**
      * @param SearchParam $params
+     *
      * @return bool
      */
     protected function checkIfParamsNeedStripping(SearchParam $params)
     {
-        if($params->getVin() != NULL && strpos($params->getVin(), " ") !== FALSE) {
+        if ($params->getVin() != null && strpos($params->getVin(), ' ') !== false) {
             return true;
         }
-        if($params->getRegistration() != NULL && strpos($params->getRegistration(), " ") !== FALSE) {
+        if ($params->getRegistration() != null && strpos($params->getRegistration(), ' ') !== false) {
             return true;
         }
     }
 
     /**
      * @param SearchResultDto $result
+     *
      * @return SearchResultDto
      */
     private function disguiseMysteryShopperTestsAsNormal(SearchResultDto $result)

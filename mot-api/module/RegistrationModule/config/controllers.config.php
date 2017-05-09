@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Api\RegistrationModule\Controller\RegistrationController;
 use Dvsa\Mot\Api\RegistrationModule\Factory\Controller\RegistrationControllerFactory;
 

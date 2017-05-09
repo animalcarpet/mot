@@ -21,7 +21,7 @@ class ChangePasswordValidator extends AbstractValidator
     private $requiredFields = [
         ChangePasswordInputFilter::FIELD_OLD_PASSWORD,
         ChangePasswordInputFilter::FIELD_PASSWORD,
-        ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM
+        ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM,
     ];
 
     /**
@@ -64,7 +64,7 @@ class ChangePasswordValidator extends AbstractValidator
             $messages = $this->changePasswordInputFilter->getMessages();
             foreach ($messages as $field => $errors) {
                 foreach ($errors as $errorType => $message) {
-                    $this->errors->add($field . " " .$message, $field);
+                    $this->errors->add($field.' '.$message, $field);
                 }
             }
         }

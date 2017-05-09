@@ -20,9 +20,9 @@ class AddressServiceFactoryTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->addressServiceFactory = new AddressServiceFactory();
-        $this->entityManagerMock     = XMock::of(EntityManager::class, ['getRepository']);
-        $this->hydratorMock          = XMock::of(Hydrator::class);
-        $this->serviceLocator        = new ServiceManager();
+        $this->entityManagerMock = XMock::of(EntityManager::class, ['getRepository']);
+        $this->hydratorMock = XMock::of(Hydrator::class);
+        $this->serviceLocator = new ServiceManager();
         $this->serviceLocator->setService(EntityManager::class, $this->entityManagerMock);
         $this->serviceLocator->setService(Hydrator::class, $this->hydratorMock);
     }

@@ -11,7 +11,6 @@ use UserApi\Application\Service\AccountService;
  */
 class AccountController extends AbstractDvsaRestfulController
 {
-
     public function create($data)
     {
         $service = $this->getAccountService();

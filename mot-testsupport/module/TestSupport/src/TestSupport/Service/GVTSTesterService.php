@@ -5,11 +5,9 @@ namespace TestSupport\Service;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use DvsaCommon\Constants\Role;
 use Zend\View\Model\JsonModel;
-use TestSupport\Service\AccountDataService;
 
 class GVTSTesterService
 {
-
     /**
      * @var AccountDataService
      */
@@ -21,9 +19,10 @@ class GVTSTesterService
     }
 
     /**
-     * Create a GVTS tester with the data supplied
+     * Create a GVTS tester with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -32,6 +31,7 @@ class GVTSTesterService
 
         $resultJson = $this->accountDataService->create($data);
         $this->accountDataService->addRole($resultJson->data['personId'], Role::GVTS_TESTER);
+
         return $resultJson;
     }
 }

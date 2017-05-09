@@ -43,7 +43,7 @@ use Zend\View\Model\ViewModel;
 use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSiteBreadcrumbs;
 
 /**
- * Class SiteControllerTest
+ * Class SiteControllerTest.
  *
  * Tests for adding and editing VTS and viewing overview
  */
@@ -71,11 +71,11 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
      * @var Container
      */
     private $mockSession;
-    /** @var  SiteTestQualityAction */
+    /** @var SiteTestQualityAction */
     private $mockSiteTestQualityAction;
-    /** @var  ViewVtsTestQualityAssertion */
+    /** @var ViewVtsTestQualityAssertion */
     private $mockViewVtsTestQualityAssertion;
-    /** @var  UserTestQualityAction */
+    /** @var UserTestQualityAction */
     private $mockUserTestQualityAction;
 
     protected function setUp()
@@ -125,21 +125,21 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         '"equipmentModelStatus": [
                             {
                                 "id": 1,
-                                "code": "'. EquipmentModelStatusCode::APPROVED . '",
+                                "code": "'.EquipmentModelStatusCode::APPROVED.'",
                                 "name": "Approved"
                             },
                             {
                                 "id": 2,
-                                "code": "'. EquipmentModelStatusCode::NOT_INSTALLABLE . '",
+                                "code": "'.EquipmentModelStatusCode::NOT_INSTALLABLE.'",
                                 "name": "Not Installable"
                             },
                             {
                                 "id": 3,
-                                "code": "'. EquipmentModelStatusCode::WITHDRAWN . '",
+                                "code": "'.EquipmentModelStatusCode::WITHDRAWN.'",
                                 "name": "Withdrawn"
                             }
                         ]'
-                    )
+                    ),
                 ]
             );
     }
@@ -241,16 +241,16 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
             ['get', 'create', [], [], ['viewModel' => true]],
             //  get form from session; form not valid;
             [
-                'method'          => 'post',
-                'action'          => 'create',
+                'method' => 'post',
+                'action' => 'create',
                 'params' => [
                     'get' => [
                         SiteController::SESSION_KEY => self::SESSION_KEY,
                     ],
                 ],
-                'mocks'           => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetGet',
                         'params' => [self::SESSION_KEY],
                         'result' => $formVtsCreate,
@@ -262,34 +262,34 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         'result' => new ValidationException(
                             '/', 'post', [], 10, [['displayMessage' => 'something wrong']]
                         ),
-                    ]
+                    ],
                 ],
-                'expect'          => [
+                'expect' => [
                     'viewModel' => true,
-                    'viewForm'  => [
-                        'obj'    => $formVtsCreate,
+                    'viewForm' => [
+                        'obj' => $formVtsCreate,
                         'isSame' => true,
                     ],
                 ],
             ],
             //  get form from session; form is valid; redirect to confirmation
             [
-                'method'          => 'post',
-                'action'          => 'create',
+                'method' => 'post',
+                'action' => 'create',
                 'params' => [
                     'get' => [
                         SiteController::SESSION_KEY => self::SESSION_KEY,
                     ],
                 ],
-                'mocks'           => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetGet',
                         'params' => [self::SESSION_KEY],
                         'result' => $this->mockMethod($this->cloneObj($formVtsCreate), 'isValid', $this->once(), true),
                     ],
                 ],
-                'expect'          => [
+                'expect' => [
                     'url' => VehicleTestingStationUrlBuilderWeb::createConfirm()
                         ->queryParam(SiteController::SESSION_KEY, self::SESSION_KEY),
                 ],
@@ -305,7 +305,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         SiteController::SESSION_KEY => self::SESSION_KEY,
                     ],
                 ],
-                'mocks'  => [],
+                'mocks' => [],
                 'expect' => [
                     'url' => VehicleTestingStationUrlBuilderWeb::create(),
                 ],
@@ -319,9 +319,9 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         SiteController::SESSION_KEY => self::SESSION_KEY,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetGet',
                         'params' => [self::SESSION_KEY],
                         'result' => $formVtsCreate,
@@ -329,8 +329,8 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 ],
                 'expect' => [
                     'viewModel' => true,
-                    'viewForm'  => [
-                        'obj'    => $formVtsCreate,
+                    'viewForm' => [
+                        'obj' => $formVtsCreate,
                         'isSame' => true,
                     ],
                 ],
@@ -344,21 +344,21 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         SiteController::SESSION_KEY => self::SESSION_KEY,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetGet',
                         'params' => [self::SESSION_KEY],
                         'result' => $formVtsCreate,
                     ],
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetUnset',
                         'params' => [self::SESSION_KEY],
                         'result' => null,
                     ],
                     [
-                        'class'  => 'vehicleTestingStationMapperMock',
+                        'class' => 'vehicleTestingStationMapperMock',
                         'method' => 'create',
                         'params' => [$formVtsCreate->toDto()],
                         'result' => ['id' => self::CURRENT_VTS_ID],
@@ -369,35 +369,35 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
             [
-                'method'          => 'get',
-                'action'          => 'index',
-                'params'          => ['route' => ['id' => null]],
-                'mocks'           => [],
-                'expect'          => [
+                'method' => 'get',
+                'action' => 'index',
+                'params' => ['route' => ['id' => null]],
+                'mocks' => [],
+                'expect' => [
                     'exception' => [
                         'class' => \Exception::class,
-                        'message' => SiteController::ERR_MSG_INVALID_SITE_ID_OR_NR
-                    ]
+                        'message' => SiteController::ERR_MSG_INVALID_SITE_ID_OR_NR,
+                    ],
                 ],
             ],
             [
-                'method'          => 'get',
-                'action'          => 'configureBrakeTestDefaults',
-                'params'          => ['route' => ['id' => null]],
-                'mocks'           => [],
-                'expect'          => [
+                'method' => 'get',
+                'action' => 'configureBrakeTestDefaults',
+                'params' => ['route' => ['id' => null]],
+                'mocks' => [],
+                'expect' => [
                     'exception' => [
                         'class' => \Exception::class,
-                        'message' => SiteController::ERR_MSG_INVALID_SITE_ID_OR_NR
-                    ]
+                        'message' => SiteController::ERR_MSG_INVALID_SITE_ID_OR_NR,
+                    ],
                 ],
             ],
             [
-                'method'          => 'get',
-                'action'          => 'configureBrakeTestDefaults',
-                'params'          => ['route' => ['id' => self::SITE_ID]],
-                'mocks'           => [],
-                'expect'          => [
+                'method' => 'get',
+                'action' => 'configureBrakeTestDefaults',
+                'params' => ['route' => ['id' => self::SITE_ID]],
+                'mocks' => [],
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
@@ -409,11 +409,11 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         'id' => self::SITE_ID,
                     ],
                 ],
-                'mocks'  => [],
+                'mocks' => [],
                 'expect' => [
                     'viewModel' => true,
-                    'viewForm'  => [
-                        'obj'    => $formTestingFacilitiesUpdate,
+                    'viewForm' => [
+                        'obj' => $formTestingFacilitiesUpdate,
                         'isSame' => false,
                     ],
                 ],
@@ -429,9 +429,9 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         'id' => self::SITE_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetGet',
                         'params' => [self::SESSION_KEY],
                         'result' => $formTestingFacilitiesUpdate,
@@ -439,8 +439,8 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 ],
                 'expect' => [
                     'viewModel' => true,
-                    'viewForm'  => [
-                        'obj'    => $formTestingFacilitiesUpdate,
+                    'viewForm' => [
+                        'obj' => $formTestingFacilitiesUpdate,
                         'isSame' => true,
                     ],
                 ],
@@ -458,7 +458,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         'id' => self::SITE_ID,
                     ],
                 ],
-                'mocks'  => [],
+                'mocks' => [],
                 'expect' => [
                     'url' => VehicleTestingStationUrlBuilderWeb::byId(self::SITE_ID),
                 ],
@@ -475,9 +475,9 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         'id' => self::SITE_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetGet',
                         'params' => [self::SESSION_KEY],
                         'result' => $formTestingFacilitiesUpdate,
@@ -485,8 +485,8 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                 ],
                 'expect' => [
                     'viewModel' => true,
-                    'viewForm'  => [
-                        'obj'    => $formTestingFacilitiesUpdate,
+                    'viewForm' => [
+                        'obj' => $formTestingFacilitiesUpdate,
                         'isSame' => true,
                     ],
                 ],
@@ -503,25 +503,25 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                         'id' => self::SITE_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetGet',
                         'params' => [self::SESSION_KEY],
                         'result' => $formTestingFacilitiesUpdate,
                     ],
                     [
-                        'class'  => 'mockSession',
+                        'class' => 'mockSession',
                         'method' => 'offsetUnset',
                         'params' => [self::SESSION_KEY],
                         'result' => null,
                     ],
                     [
-                        'class'  => 'vehicleTestingStationMapperMock',
+                        'class' => 'vehicleTestingStationMapperMock',
                         'method' => 'updateTestingFacilities',
                         'params' => [
                             self::SITE_ID,
-                            $formTestingFacilitiesUpdate->toDto()
+                            $formTestingFacilitiesUpdate->toDto(),
                         ],
                         'result' => ['id' => self::SITE_ID],
                     ],
@@ -659,11 +659,11 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
     {
         $this->config = $this->getMockBuilder(MotConfig::class)->disableOriginalConstructor()->getMock();
         $returnMap = [
-            ["site_assessment", "green", "start", 0],
-            ["site_assessment", "amber", "start", 324.11],
-            ["site_assessment", "red", "start", 459.21]
+            ['site_assessment', 'green', 'start', 0],
+            ['site_assessment', 'amber', 'start', 324.11],
+            ['site_assessment', 'red', 'start', 459.21],
         ];
 
-        $this->config->expects($this->any())->method("get")->will($this->returnValueMap($returnMap));
+        $this->config->expects($this->any())->method('get')->will($this->returnValueMap($returnMap));
     }
 }

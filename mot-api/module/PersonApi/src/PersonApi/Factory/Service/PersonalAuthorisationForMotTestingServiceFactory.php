@@ -12,7 +12,6 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaEventApi\Service\EventService;
 use PersonApi\Service\PersonService;
-use Zend\Authentication\AuthenticationService;
 
 class PersonalAuthorisationForMotTestingServiceFactory implements FactoryInterface
 {

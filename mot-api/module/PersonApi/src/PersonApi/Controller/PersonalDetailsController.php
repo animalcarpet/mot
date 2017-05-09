@@ -7,7 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\PersonalDetailsService;
 
 /**
- * Class PersonalDetailsController
+ * Class PersonalDetailsController.
  */
 class PersonalDetailsController extends AbstractDvsaRestfulController
 {

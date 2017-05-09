@@ -17,8 +17,7 @@ class UpdateEngineAction extends AbstractUpdateVehicleAction implements AutoWire
         VehicleService $vehicleService,
         ParamObfuscator $paramObfuscator,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct($editStepAction, $engineProcess, $vehicleService, $paramObfuscator, $startTestChangeService);
     }
 }

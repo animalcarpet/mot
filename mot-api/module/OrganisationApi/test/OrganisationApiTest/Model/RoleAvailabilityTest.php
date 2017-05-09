@@ -4,8 +4,6 @@ namespace OrganisationApiTest\Model;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Constants\Role;
-use DvsaCommon\Enum\OrganisationBusinessRoleCode;
-use DvsaCommon\Enum\OrganisationBusinessRoleId;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
@@ -16,7 +14,7 @@ use OrganisationApi\Model\RoleRestriction\SchemeManagerRestriction;
 use OrganisationApi\Model\RoleRestrictionsSet;
 
 /**
- * unit tests for RoleAvailability
+ * unit tests for RoleAvailability.
  */
 class RoleAvailabilityTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,7 +25,7 @@ class RoleAvailabilityTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        /** @var $authService AuthorisationServiceInterface */
+        /* @var $authService AuthorisationServiceInterface */
         $this->authService = XMock::of(AuthorisationServiceInterface::class);
 
         $roleRestrictionsSet = new RoleRestrictionsSet(
@@ -38,7 +36,7 @@ class RoleAvailabilityTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $obrRepository     = XMock::of(\Doctrine\ORM\EntityRepository::class);
+        $obrRepository = XMock::of(\Doctrine\ORM\EntityRepository::class);
         $obrRepository->expects($this->any())->method('findAll')->will($this->returnValue([]));
 
         $this->roleAvailability = new RoleAvailability($roleRestrictionsSet, $this->authService, $obrRepository);

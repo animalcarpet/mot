@@ -21,13 +21,12 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
     private $authorisedExaminerSiteMapper;
     private $organisationRepository;
 
-    function __construct(
+    public function __construct(
         SiteRepository $siteRepository,
         OrganisationRepository $organisationRepository,
         MotAuthorisationServiceInterface $authorisationService,
         AuthorisedExaminerSiteMapper $authorisedExaminerSiteMapper
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->organisationRepository = $organisationRepository;
         $this->authorisedExaminerSiteMapper = $authorisedExaminerSiteMapper;
@@ -38,6 +37,7 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
      * @param $aeId
      * @param int $page
      * @param int $limit
+     *
      * @return AuthorisedExaminerSitesPerformanceDto
      */
     public function getListForPage($aeId, $page, $limit)
@@ -54,12 +54,13 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
 
     /**
      * @param Site[] $sites
-     * @param int $siteCount
+     * @param int    $siteCount
+     *
      * @return AuthorisedExaminerSitesPerformanceDto
      */
     protected function returnDto($sites, $siteCount)
     {
-        $sitesPerformanceDto = new AuthorisedExaminerSitesPerformanceDto;
+        $sitesPerformanceDto = new AuthorisedExaminerSitesPerformanceDto();
         $sitesPerformanceDto->setSiteTotalCount($siteCount);
 
         if (is_array($sites)) {
@@ -79,13 +80,14 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
     /**
      * @param int $offset
      * @param int $siteCount
+     *
      * @throws NotFoundException
      */
     private function throw404IfPageIsOutOfBounds($offset, $siteCount)
     {
         if ($offset == 0 && $siteCount == 0) {
             return;
-        } else if (!PaginationCalculator::offsetExists($offset, $siteCount)) {
+        } elseif (!PaginationCalculator::offsetExists($offset, $siteCount)) {
             throw new NotFoundException('Sites associated to AE');
         }
     }

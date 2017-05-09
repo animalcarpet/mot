@@ -1,4 +1,5 @@
 <?php
+
 namespace DataCatalogApi\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
@@ -7,19 +8,21 @@ use DvsaEntities\Entity\Make;
 use DataCatalogApi\Service\VehicleCatalogService;
 
 /**
- * Provides information about make
+ * Provides information about make.
  */
 class MakeController extends AbstractDvsaRestfulController
 {
     public function get($id)
     {
         $make = $this->getVehicleCatalog()->getMake($id);
+
         return ApiResponse::jsonOk(self::mapMakes([$make]));
     }
 
     public function getList()
     {
         $makes = $this->getVehicleCatalog()->getMakes();
+
         return ApiResponse::jsonOk(self::mapMakes($makes));
     }
 
@@ -27,10 +30,10 @@ class MakeController extends AbstractDvsaRestfulController
     {
         return array_map(
             function (Make $make) {
-               return [
+                return [
                    'id' => $make->getId(),
                    'code' => $make->getCode(),
-                   'name' => $make->getName()
+                   'name' => $make->getName(),
                ];
             },
             $makes

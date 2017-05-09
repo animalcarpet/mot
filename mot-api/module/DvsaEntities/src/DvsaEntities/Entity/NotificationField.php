@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * NotificationFields
+ * NotificationFields.
  *
  * @ORM\Table(name="notification_field", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_notification_fields_1", columns={"notification_id"})})
  * @ORM\Entity
@@ -46,6 +47,7 @@ class NotificationField extends Entity
     public function setField($field)
     {
         $this->field = $field;
+
         return $this;
     }
 
@@ -65,6 +67,7 @@ class NotificationField extends Entity
     public function setNotification($notification)
     {
         $this->notification = $notification;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ class NotificationField extends Entity
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 

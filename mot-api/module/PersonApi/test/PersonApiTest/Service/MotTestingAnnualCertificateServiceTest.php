@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service;
 
 use DvsaCommon\Exception\UnauthorisedException;
@@ -24,48 +25,48 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
 {
     const PERSON_ID = 1;
     const GROUP = VehicleClassGroupCode::BIKES;
-    const CERTIFICATE_NUMBER = "CERTIFICATE NUMBER";
+    const CERTIFICATE_NUMBER = 'CERTIFICATE NUMBER';
     const SCORE = 10;
-    const TEST_ASSERT_EXCEPTION = "test assert exception";
-    /** @var  PersonRepository|\PHPUnit_Framework_MockObject_MockObject */
+    const TEST_ASSERT_EXCEPTION = 'test assert exception';
+    /** @var PersonRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $personRepository;
-    /** @var  VehicleClassGroupRepository|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var VehicleClassGroupRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $vehicleClassGroupRepository;
     /** @var QualificationAnnualCertificateRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $certificateRepository;
-    /** @var  MotTestingAnnualCertificateAssertion|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotTestingAnnualCertificateAssertion|\PHPUnit_Framework_MockObject_MockObject */
     private $assertion;
-    /** @var  MotTestingAnnualCertificateEventService|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotTestingAnnualCertificateEventService|\PHPUnit_Framework_MockObject_MockObject */
     private $event;
-    /** @var  MotTestingAnnualCertificateValidator|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotTestingAnnualCertificateValidator|\PHPUnit_Framework_MockObject_MockObject */
     private $validator;
-    /** @var  MotTestingAnnualCertificateMapper|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotTestingAnnualCertificateMapper|\PHPUnit_Framework_MockObject_MockObject */
     private $mapper;
-    /** @var  MotTestingAnnualCertificateService|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotTestingAnnualCertificateService|\PHPUnit_Framework_MockObject_MockObject */
     private $sut;
-    /** @var  \DateTime */
+    /** @var \DateTime */
     private $examDate;
 
     public function setUp()
     {
         $this->personRepository = XMock::of(PersonRepository::class);
         $this->personRepository->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn($this->createPerson());
 
         $this->vehicleClassGroupRepository = XMock::of(VehicleClassGroupRepository::class);
         $this->vehicleClassGroupRepository->expects($this->any())
-            ->method("getByCode")
+            ->method('getByCode')
             ->willReturn($this->createVehicleClassGroup());
 
         $this->certificateRepository = XMock::of(QualificationAnnualCertificateRepository::class);
 
         $this->assertion = XMock::of(MotTestingAnnualCertificateAssertion::class);
         $this->assertion->expects($this->any())
-            ->method("assertGrantedView")
+            ->method('assertGrantedView')
             ->willReturn(null);
         $this->assertion->expects($this->any())
-            ->method("assertGrantedCreate")
+            ->method('assertGrantedCreate')
             ->willReturn(null);
 
         $this->event = XMock::of(MotTestingAnnualCertificateEventService::class);
@@ -86,8 +87,8 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
 
     public function testCreateCertificateIsSavedAndEventIsSent()
     {
-        $repositorySpy = new MethodSpy($this->certificateRepository, "save");
-        $eventSpy = new MethodSpy($this->event, "sendCreateEvent");
+        $repositorySpy = new MethodSpy($this->certificateRepository, 'save');
+        $eventSpy = new MethodSpy($this->event, 'sendCreateEvent');
 
         /** @var MotTestingAnnualCertificateDto $dto */
         $dto = $this->sut->create(
@@ -106,7 +107,6 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
         $this->assertEquals($entity, $eventEntity);
     }
 
-
     public function testCreateExceptionIsThrownWhenInputIsInvalid()
     {
         $this->setExpectedException(BadRequestException::class);
@@ -122,12 +122,12 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->assertion
             ->expects($this->any())
-            ->method("assertGrantedUpdate")
+            ->method('assertGrantedUpdate')
             ->willReturn(null);
 
         $vehicleClassGroup = $this->createVehicleClassGroup();
         $person = $this->createPerson();
-        $person->setUsername("John Tester");
+        $person->setUsername('John Tester');
 
         $certificate = $this->createCertificate($vehicleClassGroup, $person);
 
@@ -136,19 +136,19 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
         $this
             ->certificateRepository
             ->expects($this->any())
-            ->method("getOneByIdAndGroupAndPersonId")
+            ->method('getOneByIdAndGroupAndPersonId')
             ->willReturn($certificate);
 
         $this
             ->certificateRepository
             ->expects($this->once())
-            ->method("save")
+            ->method('save')
             ->with($certificate);
 
         $this
             ->event
             ->expects($this->once())
-            ->method("sendUpdateEvent")
+            ->method('sendUpdateEvent')
             ->with($oldCertificate, $certificate)
         ;
 
@@ -186,10 +186,10 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
     public function testGetByGroupReturnsDtos()
     {
         $this->certificateRepository->expects($this->any())
-            ->method("findAllByGroupAndPersonId")
+            ->method('findAllByGroupAndPersonId')
             ->willReturn([
                 $this->createQualificationAnnualCertificate(1, 2),
-                $this->createQualificationAnnualCertificate(3, 4)
+                $this->createQualificationAnnualCertificate(3, 4),
             ]);
 
         /** @var MotTestingAnnualCertificateDto[] $result */
@@ -208,20 +208,20 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
 
         $this->certificateRepository
             ->expects($this->once())
-            ->method("getOneByIdAndGroupAndPersonId")
+            ->method('getOneByIdAndGroupAndPersonId')
             ->willReturn($certificate);
 
         $this->certificateRepository
             ->expects($this->once())
-            ->method("remove")
+            ->method('remove')
             ->with($certificate);
 
         $this->certificateRepository
             ->expects($this->once())
-            ->method("flush");
+            ->method('flush');
 
         $this->event->expects($this->once())
-            ->method("sendRemoveEvent")
+            ->method('sendRemoveEvent')
             ->with($certificate);
 
         $this->sut->delete(self::PERSON_ID, self::GROUP, self::CERTIFICATE_NUMBER);
@@ -231,7 +231,7 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
     {
         $this->assertion
             ->expects($this->once())
-            ->method("assertGrantedDelete")
+            ->method('assertGrantedDelete')
             ->willThrowException(new UnauthorisedException(self::TEST_ASSERT_EXCEPTION));
 
         $this->setExpectedException(UnauthorisedException::class, self::TEST_ASSERT_EXCEPTION);
@@ -278,14 +278,15 @@ class MotTestingAnnualCertificateServiceTest extends AbstractServiceTestCase
     /**
      * @param $vehicleClassGroup
      * @param $person
+     *
      * @return QualificationAnnualCertificate
      */
     public function createCertificate($vehicleClassGroup, $person)
     {
-        $certificate = $this->createQualificationAnnualCertificate(89, "CERT-NUMB-001");
+        $certificate = $this->createQualificationAnnualCertificate(89, 'CERT-NUMB-001');
 
         $certificate
-            ->setDateAwarded(new \DateTime("2016-07-09"))
+            ->setDateAwarded(new \DateTime('2016-07-09'))
             ->setVehicleClassGroup($vehicleClassGroup)
             ->setPerson($person);
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\View\Model;
 
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
@@ -8,7 +9,6 @@ use DvsaMotTestTest\TestHelper\Fixture;
 
 class MotTestTitleModelTest extends \PHPUnit_Framework_TestCase
 {
-
     const MOT_TESTING_TITLE = 'MOT testing';
     const MOT_TRAINING_TEST_TITLE = 'Training test';
 

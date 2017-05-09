@@ -1,4 +1,5 @@
 <?php
+
 namespace CoreTest\FormWizard\Fake;
 
 use Core\Action\RedirectToRoute;
@@ -6,8 +7,8 @@ use Core\FormWizard\AbstractStep;
 
 class FakeStep extends AbstractStep
 {
-    const RESPONSE_GET = "get";
-    const RESPONSE_POST = "post";
+    const RESPONSE_GET = 'get';
+    const RESPONSE_POST = 'post';
 
     private $name;
     private $storedData;
@@ -28,12 +29,12 @@ class FakeStep extends AbstractStep
 
     public function executeGet($formUuid = null)
     {
-        return self::RESPONSE_GET . " - " .$this->name;
+        return self::RESPONSE_GET.' - '.$this->name;
     }
 
     public function executePost(array $formData, $formUuid = null)
     {
-        return self::RESPONSE_POST . " - " .$this->name;
+        return self::RESPONSE_POST.' - '.$this->name;
     }
 
     public function isValid($formUuid)
@@ -48,6 +49,6 @@ class FakeStep extends AbstractStep
 
     public function getRoute(array $queryParams = [])
     {
-        return new RedirectToRoute($this->name, [], $queryParams );
+        return new RedirectToRoute($this->name, [], $queryParams);
     }
 }

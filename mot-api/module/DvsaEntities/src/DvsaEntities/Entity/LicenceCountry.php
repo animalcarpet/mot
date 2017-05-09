@@ -6,7 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Class LicenceCountry
+ * Class LicenceCountry.
+ *
  * @ORM\Table(name="licence_country_lookup")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\LicenceCountryRepository", readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
@@ -31,7 +32,6 @@ class LicenceCountry
 
     public function __construct()
     {
-
     }
 
     /**
@@ -65,5 +65,4 @@ class LicenceCountry
     {
         $this->code = $code;
     }
-
 }

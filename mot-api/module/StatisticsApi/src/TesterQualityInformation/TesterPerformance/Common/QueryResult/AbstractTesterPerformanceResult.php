@@ -19,6 +19,7 @@ abstract class AbstractTesterPerformanceResult
     public function setVehicleClassGroup($vehicleClassGroup)
     {
         $this->vehicleClassGroup = $vehicleClassGroup;
+
         return $this;
     }
 
@@ -30,6 +31,7 @@ abstract class AbstractTesterPerformanceResult
     public function setTotalTime($totalTime)
     {
         $this->totalTime = $totalTime;
+
         return $this;
     }
 
@@ -41,6 +43,7 @@ abstract class AbstractTesterPerformanceResult
     public function setFailedCount($failedCount)
     {
         $this->failedCount = $failedCount;
+
         return $this;
     }
 
@@ -52,6 +55,7 @@ abstract class AbstractTesterPerformanceResult
     public function setTotalCount($totalCount)
     {
         $this->totalCount = $totalCount;
+
         return $this;
     }
 
@@ -63,6 +67,7 @@ abstract class AbstractTesterPerformanceResult
     public function setAverageVehicleAgeInMonths($averageVehicleAgeInMonths)
     {
         $this->averageVehicleAgeInMonths = $averageVehicleAgeInMonths;
+
         return $this;
     }
 
@@ -74,6 +79,7 @@ abstract class AbstractTesterPerformanceResult
     public function setIsAverageVehicleAgeAvailable($isAverageVehicleAgeAvailable)
     {
         $this->isAverageVehicleAgeAvailable = $isAverageVehicleAgeAvailable;
+
         return $this;
     }
 }

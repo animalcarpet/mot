@@ -11,7 +11,6 @@ use Core\Step\AbstractStep;
 use DvsaCommon\InputFilter\Event\OutcomeInputFilter;
 use DvsaCommon\InputFilter\Event\RecordInputFilter;
 use Event\Service\EventSessionService;
-use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -20,16 +19,16 @@ use Zend\InputFilter\InputFilter;
 abstract class AbstractEventStep extends AbstractStep
 {
     /**
-     * The entity type, one of ae|site|person
+     * The entity type, one of ae|site|person.
      *
-     * @var string $entityType
+     * @var string
      *
-     * Expected values: "ae", "site", "person".
+     * Expected values: "ae", "site", "person"
      */
     protected $entityType;
 
     /**
-     * The id of the current entity we are creating an event for
+     * The id of the current entity we are creating an event for.
      *
      * @var int id of the entity
      */
@@ -63,11 +62,10 @@ abstract class AbstractEventStep extends AbstractStep
     public function routeParams()
     {
         return [
-            'type'  => $this->getEntityType(),
-            'id'    => $this->getEntityId()
+            'type' => $this->getEntityType(),
+            'id' => $this->getEntityId(),
         ];
     }
-
 
     /**
      * @return array
@@ -75,10 +73,11 @@ abstract class AbstractEventStep extends AbstractStep
     protected function getFieldNameMapping()
     {
         $fieldNameMapping = [
-            RecordInputFilter::FIELD_TYPE => "Event",
-            RecordInputFilter::FIELD_DATE => "Date of event",
-            OutcomeInputFilter::FIELD_OUTCOME => "Event outcome",
+            RecordInputFilter::FIELD_TYPE => 'Event',
+            RecordInputFilter::FIELD_DATE => 'Date of event',
+            OutcomeInputFilter::FIELD_OUTCOME => 'Event outcome',
         ];
+
         return $fieldNameMapping;
     }
 

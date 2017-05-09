@@ -4,7 +4,6 @@ namespace DvsaElasticSearchTest\Model;
 
 use DvsaElasticSearch\Model\ESDocVehicle;
 use DvsaEntities\Entity\ModelDetail;
-use \PHPUnit_Framework_TestCase;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
@@ -12,9 +11,7 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommon\Date\DateUtils;
 
 /**
- * Class ESDocVehicleTest
- *
- * @package DvsaElasticSearchTest\Connection
+ * Class ESDocVehicleTest.
  */
 class ESDocVehicleTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,7 +58,7 @@ class ESDocVehicleTest extends \PHPUnit_Framework_TestCase
                 'make' => 'Renault',
                 'model' => 'Clio',
                 'displayDate' => $this->date->format('d M Y'),
-            ]
+            ],
         ];
     }
 
@@ -80,10 +77,10 @@ class ESDocVehicleTest extends \PHPUnit_Framework_TestCase
                             'displayDate' => DateUtils::toIsoString($this->date),
                             'updatedDate_display' => $this->date->format('d M Y'),
                             'updatedDate_timestamp' => strtotime($this->date->format('d M Y h:i')),
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -112,7 +109,6 @@ class ESDocVehicleTest extends \PHPUnit_Framework_TestCase
 
         $modelDetail = new ModelDetail();
         $modelDetail->setModel($model);
-
 
         $vehicle = new Vehicle();
         $vehicle

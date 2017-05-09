@@ -34,8 +34,8 @@ class MotTestLogFormViewModel extends AbstractFormModel
 
     public function parseData(Parameters $formData)
     {
-        $dateFrom = $formData->get(MotTestLogFormViewModel::FLD_DATE_FROM);
-        $dateTo = $formData->get(MotTestLogFormViewModel::FLD_DATE_TO);
+        $dateFrom = $formData->get(self::FLD_DATE_FROM);
+        $dateTo = $formData->get(self::FLD_DATE_TO);
 
         if (is_array($dateFrom)) {
             if (!empty($dateFrom)) {
@@ -61,12 +61,12 @@ class MotTestLogFormViewModel extends AbstractFormModel
         } else {
             $date = $formData->get(SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM);
             if (!empty($date)) {
-                $this->setDateFrom((new DateTimeViewModel())->setDate(new \DateTime('@' . $date)));
+                $this->setDateFrom((new DateTimeViewModel())->setDate(new \DateTime('@'.$date)));
             }
 
             $date = $formData->get(SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM);
             if (!empty($date)) {
-                $this->setDateTo((new DateTimeViewModel())->setDate(new \DateTime('@' . $date)));
+                $this->setDateTo((new DateTimeViewModel())->setDate(new \DateTime('@'.$date)));
             }
         }
 
@@ -115,19 +115,19 @@ class MotTestLogFormViewModel extends AbstractFormModel
 
     public function isValid()
     {
-        $this->validateDate($this->getDateFrom(), MotTestLogFormViewModel::FLD_DATE_FROM);
-        $this->validateDate($this->getDateTo(), MotTestLogFormViewModel::FLD_DATE_TO);
+        $this->validateDate($this->getDateFrom(), self::FLD_DATE_FROM);
+        $this->validateDate($this->getDateTo(), self::FLD_DATE_TO);
 
         $dateFrom = $this->getDateFrom()->getDate();
         $dateTo = $this->getDateTo()->getDate();
 
         if ($dateFrom && $dateTo) {
             if ($dateFrom > $dateTo) {
-                $this->addError(MotTestLogFormViewModel::FLD_DATE_FROM, DateErrors::AFTER_TO);
+                $this->addError(self::FLD_DATE_FROM, DateErrors::AFTER_TO);
             }
 
             if ($dateFrom->diff($dateTo)->days > self::VALIDATION_MAX_DAYS) {
-                $this->addError(MotTestLogFormViewModel::FLD_DATE_FROM, DateErrors::RANGE_31D);
+                $this->addError(self::FLD_DATE_FROM, DateErrors::RANGE_31D);
             }
         }
 
@@ -138,7 +138,7 @@ class MotTestLogFormViewModel extends AbstractFormModel
     {
         $date = $model->getDate();
 
-        if (trim($model->getYear()) === '' || trim($model->getMonth())  === '' || trim($model->getDay()) === '') {
+        if (trim($model->getYear()) === '' || trim($model->getMonth()) === '' || trim($model->getDay()) === '') {
             $this->addError($field, DateErrors::INVALID_FORMAT);
         } elseif (
             $date === null

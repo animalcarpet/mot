@@ -2,16 +2,12 @@
 
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaCommon\Formatting\PersonFullNameFormatter;
-use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
-use DvsaCommon\Enum\BusinessRoleStatusCode;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Aep
+ * Aep.
  *
  * @ORM\Table(name="authorised_examiner_principal")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\AuthorisedExaminerPrincipalRepository")
@@ -143,7 +139,6 @@ class AuthorisedExaminerPrincipal extends Entity
     {
         return $this->middleName;
     }
-
 
     /**
      * @param string $familyName

@@ -24,8 +24,7 @@ class ModelAction
     public function __construct(MotAuthorisationServiceInterface $authorisationService,
                                 CreateVehicleStepService $createVehicleStepService,
                                 CreateVehicleModelService $createVehicleModelService
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->createVehicleStepService = $createVehicleStepService;
         $this->createVehicleModelService = $createVehicleModelService;

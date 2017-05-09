@@ -8,35 +8,36 @@ use Zend\Form\Element\Select;
 $errorMessages = $element->getMessages();
 $errorMessage = ArrayUtils::firstOrNull($errorMessages);
 $params = [
-    "name" => $element->getName(),
-    "label" => $element->getLabel(),
-    "value" => $element->getValue(),
-    "errorMessage" => $errorMessage,
-    "help" => $element->getAttribute("help"),
-    "dataTarget" => $element->getAttribute("data-target"),
-    "dataTargetValue" => $element->getAttribute("data-target-value"),
-    "info" => $info,
-    "formControlClass" => $element->getAttribute("formControlClass"),
+    'name' => $element->getName(),
+    'label' => $element->getLabel(),
+    'value' => $element->getValue(),
+    'errorMessage' => $errorMessage,
+    'help' => $element->getAttribute('help'),
+    'dataTarget' => $element->getAttribute('data-target'),
+    'dataTargetValue' => $element->getAttribute('data-target-value'),
+    'info' => $info,
+    'formControlClass' => $element->getAttribute('formControlClass'),
 ];
 $params = array_merge($params, $element->getAttributes());
 
 if ($element instanceof Select) {
-    $params["options"] = $element->getValueOptions();
-    $params["defaultValue"] = $element->getAttribute("defaultValue");
+    $params['options'] = $element->getValueOptions();
+    $params['defaultValue'] = $element->getAttribute('defaultValue');
 } elseif ($element instanceof Radio) {
-    $params["options"] = ArrayUtils::map($element->getValueOptions(),
+    $params['options'] = ArrayUtils::map($element->getValueOptions(),
         function (array $option) use ($element) {
             if ($option['value'] == $element->getValue()) {
                 $option['checked'] = true;
             }
+
             return $option;
         });
 }
 
-if ($element->hasAttribute("group") && $element->getAttribute("group") === true):
-    $partial = 'partial/gds/form/control-' . $element->getAttribute('type') . '-group';
+if ($element->hasAttribute('group') && $element->getAttribute('group') === true):
+    $partial = 'partial/gds/form/control-'.$element->getAttribute('type').'-group';
 else:
-    $partial = 'partial/gds/form/control-' . $element->getAttribute('type');
+    $partial = 'partial/gds/form/control-'.$element->getAttribute('type');
 endif;
 
 echo $this->partial(

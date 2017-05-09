@@ -18,24 +18,25 @@ use Zend\Validator\NotEmpty;
  */
 class MysteryShopperInputFilter extends InputFilter
 {
-    const FIELD_VEHICLE_ID         = 'vehicle_id';
-    const FIELD_SITE_NUMBER        = 'site_number';
-    const FIELD_START_DATE         = 'start_date';
-    const FIELD_END_DATE           = 'end_date';
-    const FIELD_CAMPAIGN_DATES     = 'campaign_dates';
+    const FIELD_VEHICLE_ID = 'vehicle_id';
+    const FIELD_SITE_NUMBER = 'site_number';
+    const FIELD_START_DATE = 'start_date';
+    const FIELD_END_DATE = 'end_date';
+    const FIELD_CAMPAIGN_DATES = 'campaign_dates';
     const FIELD_BOOKED_DATE_RANGES = 'booked_date_ranges';
-    const FIELD_TEST_DATE          = 'test_date';
-    const FIELD_EXPIRY_DATE        = 'expiry_date';
+    const FIELD_TEST_DATE = 'test_date';
+    const FIELD_EXPIRY_DATE = 'expiry_date';
 
     /**
      * To indicate if we are validating during an update (edit) request or post (creation) will requires all the
      * expected fields, to allow supplying only those field which need to be updated.
+     *
      * @var bool
      */
     private $isRequired = true;
 
     /**
-     * To allow supplying only those fields which need to be updated
+     * To allow supplying only those fields which need to be updated.
      */
     public function setToEditMode()
     {
@@ -43,7 +44,7 @@ class MysteryShopperInputFilter extends InputFilter
     }
 
     /**
-     * To initiate all the validators
+     * To initiate all the validators.
      */
     public function init()
     {
@@ -59,7 +60,7 @@ class MysteryShopperInputFilter extends InputFilter
     private function initValidatorsForSiteNumber($isRequired = true)
     {
         $input = [
-            'name'     => self::FIELD_SITE_NUMBER,
+            'name' => self::FIELD_SITE_NUMBER,
             'required' => $isRequired,
             'validators' => [
                 [
@@ -74,7 +75,7 @@ class MysteryShopperInputFilter extends InputFilter
     private function initValidatorsForVehicleId($isRequired = true)
     {
         $input = [
-            'name'     => self::FIELD_VEHICLE_ID,
+            'name' => self::FIELD_VEHICLE_ID,
             'required' => $isRequired,
             'validators' => [
                 [
@@ -89,14 +90,14 @@ class MysteryShopperInputFilter extends InputFilter
     private function initValidatorsForDates($fieldName, $isRequired = true)
     {
         $input = [
-            'name'     => $fieldName,
+            'name' => $fieldName,
             'required' => $isRequired,
             'validators' => [
                 [
                     'name' => NotEmpty::class,
                 ],
                 [
-                    'name'    => Date::class,
+                    'name' => Date::class,
                     'options' => [
                         'format' => 'Y-m-d H:i:s',
                     ],
@@ -110,14 +111,14 @@ class MysteryShopperInputFilter extends InputFilter
     private function initCampaignDateValidator($isRequired = true)
     {
         $input = [
-            'name'       => self::FIELD_CAMPAIGN_DATES,
-            'required'   => $isRequired,
+            'name' => self::FIELD_CAMPAIGN_DATES,
+            'required' => $isRequired,
             'validators' => [
                 [
-                    'name'    => CampaignDateValidator::class,
+                    'name' => CampaignDateValidator::class,
                     'options' => [
                         CampaignDateValidator::KEY_START => self::FIELD_START_DATE,
-                        CampaignDateValidator::KEY_END   => self::FIELD_END_DATE,
+                        CampaignDateValidator::KEY_END => self::FIELD_END_DATE,
                     ],
                 ],
             ],

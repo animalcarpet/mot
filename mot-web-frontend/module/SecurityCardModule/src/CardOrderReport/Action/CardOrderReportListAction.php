@@ -6,16 +6,12 @@ use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DateInterval;
-use DateTime;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardDailyCount;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
-use Zend\Http\Headers;
-use Zend\Http\Response\Stream;
-use Zend\View\Model\ViewModel;
 
 class CardOrderReportListAction
 {
@@ -59,15 +55,14 @@ class CardOrderReportListAction
         $this->authService->assertGranted(PermissionInSystem::VIEW_SECURITY_CARD_ORDER);
 
         $nowAsTime = $this->dateTimeHolder->getUserCurrent();
-        $tenAmToday =$this->dateTimeHolder->getUserCurrentDate()
-            ->setTime(0,0,0)
+        $tenAmToday = $this->dateTimeHolder->getUserCurrentDate()
+            ->setTime(0, 0, 0)
             ->add(new DateInterval(self::DATE_INTERVAL_10_HOURS));
 
         $clonedNowAsTime = clone $nowAsTime;
-        if ($nowAsTime < $tenAmToday)
-        {
+        if ($nowAsTime < $tenAmToday) {
             $toDate = $clonedNowAsTime
-                ->setTime(0,0,0)
+                ->setTime(0, 0, 0)
                 ->sub(new DateInterval(self::DATE_INTERVAL_ONE_DAY))
                 ->add(new DateInterval(self::DATE_INTERVAL_10_HOURS));
         } else {
@@ -77,8 +72,7 @@ class CardOrderReportListAction
         $fromDate = $clonedToDate->sub(new DateInterval(self::DATE_INTERVAL_ONE_WEEK));
 
         $useHourOffset = date_offset_get($this->dateTimeHolder->getUserCurrent()) === self::ONE_HOUR_IN_SECS;
-        if ($useHourOffset)
-        {
+        if ($useHourOffset) {
             $fromDate->sub(new DateInterval(self::DATE_INTERVAL_1_HOUR));
             $toDate->sub(new DateInterval(self::DATE_INTERVAL_1_HOUR));
         }
@@ -90,8 +84,7 @@ class CardOrderReportListAction
         $rows = [];
         foreach ($dailyCounts->getAll() as $dailyCount) {
             $actDate = new \DateTime($dailyCount->getActivationDate());
-            if ($useHourOffset)
-            {
+            if ($useHourOffset) {
                 $actDate = $actDate->add(new DateInterval(self::DATE_INTERVAL_1_HOUR));
             }
             $rows[] = ['date' => $actDate->format(DateUtils::DATETIME_FORMAT), 'count' => $dailyCount->getCount()];

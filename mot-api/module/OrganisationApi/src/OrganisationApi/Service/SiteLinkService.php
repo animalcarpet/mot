@@ -12,10 +12,8 @@ use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
-use DvsaCommon\HttpRestJson\Exception\ForbiddenApplicationException;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\BadRequestException;
-use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaEntities\Entity\EventOrganisationMap;
@@ -37,12 +35,12 @@ use SiteApi\Service\MotTestInProgressService;
 
 class SiteLinkService extends AbstractService
 {
-    const ERR_UNLINK_SITE_TEST_IN_PROGRESS = <<<ERR_MSG
+    const ERR_UNLINK_SITE_TEST_IN_PROGRESS = <<<'ERR_MSG'
 An MOT Test is in progress at the selected Site and the Site cannot be removed from the AE until the test is complete
 ERR_MSG;
 
     /**
-     * @var  AuthorisationServiceInterface
+     * @var AuthorisationServiceInterface
      */
     protected $authService;
     /**
@@ -50,11 +48,11 @@ ERR_MSG;
      */
     private $identity;
     /**
-     * @var EventService $eventService
+     * @var EventService
      */
     private $eventService;
     /**
-     * @var NotificationService $notificationService
+     * @var NotificationService
      */
     private $notificationService;
     /**
@@ -126,7 +124,8 @@ ERR_MSG;
     }
 
     /**
-     * Search All approved Site Not Linked to an ae
+     * Search All approved Site Not Linked to an ae.
+     *
      * @return array
      */
     public function getApprovedUnlinkedSite()
@@ -153,12 +152,13 @@ ERR_MSG;
 
     /**
      * Establishes a logical link between the Organisation(AE) ($orgId) and the Site ($siteNumber)
-     * if the site is not currently linked
+     * if the site is not currently linked.
      *
      * @param int    $orgId
      * @param string $siteNumber
      *
      * @return bool
+     *
      * @throws BadRequestException
      */
     public function siteLink($orgId, $siteNumber)
@@ -237,9 +237,10 @@ ERR_MSG;
      * If status is Withdraw or Surrendered then it is mean association was removed.
      *
      * @param int    $linkId
-     * @param string $statusCode    see OrganisationSiteStatusCode enum
+     * @param string $statusCode see OrganisationSiteStatusCode enum
      *
      * @return bool
+     *
      * @throws NotFoundException
      * @throws ServiceException
      */
@@ -305,7 +306,7 @@ ERR_MSG;
     }
 
     /**
-     * Create site event
+     * Create site event.
      *
      * @param Organisation $org
      * @param Site         $site
@@ -335,12 +336,11 @@ ERR_MSG;
     }
 
     /**
-     * Create a notification for the manager of the Ae
+     * Create a notification for the manager of the Ae.
      *
      * @param Organisation $org
      * @param Site         $site
      * @param int          $template
-     *
      */
     private function createLinkNotification(Organisation $org, Site $site, $template)
     {
@@ -348,7 +348,7 @@ ERR_MSG;
             || is_null($org->getAuthorisedExaminer()->getDesignatedManager())) {
             return;
         }
-        
+
         $data = (new Notification())
             ->setRecipient($org->getAuthorisedExaminer()->getDesignatedManager()->getId())
             ->setTemplate($template)

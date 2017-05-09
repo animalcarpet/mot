@@ -9,13 +9,10 @@ use DvsaCommon\Dto\Equipment\EquipmentModelDto;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class EquipmentController
- *
- * @package Equipment\Controller
+ * Class EquipmentController.
  */
 class EquipmentController extends AbstractAuthActionController
 {
-
     const ROUTE_MASTER = 'equipment';
 
     public function displayEquipmentListAction()
@@ -28,6 +25,7 @@ class EquipmentController extends AbstractAuthActionController
             $equipmentModels,
             function (EquipmentModelDto $equipmentModel) use ($equipmentModelStatusMap) {
                 $status = $equipmentModelStatusMap[$equipmentModel->getStatus()];
+
                 return new EquipmentModelViewModel($equipmentModel, $status);
             }
         );

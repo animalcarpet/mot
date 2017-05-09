@@ -6,15 +6,11 @@ use DvsaCommon\Dto\Mailer\MailerDto;
 use MailerApi\Service\MailerService;
 use MailerApi\Validator\MailerValidator;
 use PersonApi\Service\PersonalDetailsService;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class UsernameReminder
+ * Class UsernameReminder.
  *
  * All business logic for sending a username reminder is inside here.
- *
- * @package MailerApi\Logic
  */
 class UsernameReminder extends Reminder
 {
@@ -23,15 +19,15 @@ class UsernameReminder extends Reminder
      * of the request (in the parent) and then do what is required to cause an email
      * to be sent to the requesting user.
      *
-     * @param Array $mailerConfig
-     * @param Array $helpdeskConfig
+     * @param array $mailerConfig
+     * @param array $helpdeskConfig
      * @param $mailerService MailerService
      * @param $personalDetailsService $personalDetailsService
      * @param $dto MailerDto
      */
     public function __construct(
-        Array $mailerConfig,
-        Array $helpdeskConfig,
+        array $mailerConfig,
+        array $helpdeskConfig,
         MailerService $mailerService,
         PersonalDetailsService $personalDetailsService,
         MailerDto $dto
@@ -49,12 +45,12 @@ class UsernameReminder extends Reminder
     /**
      * Attempts to deliver a message to a mail subsystem.
      *
-     * @param Array $data Contains data for template expansion
+     * @param array $data Contains data for template expansion
      *
      * @return bool TRUE of the message was accepted by the mail sub-system.
-     *              This does NOT mean the message has been delivered yet.
+     *              This does NOT mean the message has been delivered yet
      */
-    public function send(Array $data = [])
+    public function send(array $data = [])
     {
         $subject = $this->renderTemplate(
             $this->dto,

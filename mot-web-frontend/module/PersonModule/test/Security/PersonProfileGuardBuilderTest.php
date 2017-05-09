@@ -18,7 +18,6 @@ use DvsaCommon\Model\TesterAuthorisation;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 
 class PersonProfileGuardBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +33,6 @@ class PersonProfileGuardBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->twoFaFeatureToggle = XMock::of(TwoFaFeatureToggle::class);
 
         /** @var MotFrontendAuthorisationServiceInterface $authorisationService */

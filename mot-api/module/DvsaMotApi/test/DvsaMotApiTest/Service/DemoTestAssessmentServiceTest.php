@@ -22,12 +22,9 @@ use DvsaMotApi\Helper\TesterQualificationStatusChangeEventHelper;
 use DvsaMotApi\Service\DemoTestAssessmentService;
 use NotificationApi\Dto\Notification;
 use NotificationApi\Service\NotificationService;
-use Zend\Validator\Digits;
 
 /**
- * Class CertificateCreationServiceTest
- *
- * @package DvsaMotApiTest\Service
+ * Class CertificateCreationServiceTest.
  */
 class DemoTestAssessmentServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -148,7 +145,7 @@ class DemoTestAssessmentServiceTest extends \PHPUnit_Framework_TestCase
 
         // with the group in which he is being qualified for
         $this->assertSame($vehicleGroup, $eventSpy->paramsForLastInvocation()[1],
-            "Wrong vehicle group was mentioned in teh event");
+            'Wrong vehicle group was mentioned in teh event');
     }
 
     /**
@@ -179,13 +176,12 @@ class DemoTestAssessmentServiceTest extends \PHPUnit_Framework_TestCase
 
         // addressed to the tester
         $this->assertEquals($this->tester->getId(), $notification['recipient'],
-            "It was addressed to the wrong person");
+            'It was addressed to the wrong person');
 
         // stating he has been qualified for the correct group
         $this->assertEquals($vehicleGroup, $notification['fields']['vehicle_group'],
-            "Wrong vehicle group is displayed in the notification");
+            'Wrong vehicle group is displayed in the notification');
     }
-
 
     /**
      * @dataProvider vehicleGroupsDataProvider
@@ -215,7 +211,7 @@ class DemoTestAssessmentServiceTest extends \PHPUnit_Framework_TestCase
 
         // AND notification is not sent
         $this->assertEquals(0, $notificationSpy->invocationCount(),
-            "Notification service was called, but the notification was not supposed to be sent");
+            'Notification service was called, but the notification was not supposed to be sent');
 
         // AND tester is still in same status in his group
         /** @var AuthorisationForTestingMot[] $authorisationsInGroup */
@@ -224,7 +220,7 @@ class DemoTestAssessmentServiceTest extends \PHPUnit_Framework_TestCase
         foreach ($authorisationsInGroup as $authorisation) {
             $this->assertEquals(AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 $authorisation->getStatus()->getCode(),
-                "The authorisation status was supposed to not change");
+                'The authorisation status was supposed to not change');
         }
 
         // AND the event is not recorded
@@ -247,11 +243,12 @@ class DemoTestAssessmentServiceTest extends \PHPUnit_Framework_TestCase
 
         // THEN Exception is raised
         $this->assertEquals("Unknown group 'C'", $errorMessage,
-            "Validation message was supposed to be thrown");
+            'Validation message was supposed to be thrown');
     }
 
     /**
      * @param $vehicleGroup
+     *
      * @return AuthorisationForTestingMot[]
      */
     public function getAuthorisationsInGroup($vehicleGroup)

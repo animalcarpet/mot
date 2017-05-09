@@ -2,7 +2,6 @@
 
 namespace Vehicle\CreateVehicle\Controller;
 
-use Core\Controller\AbstractDvsaActionController;
 use Vehicle\CreateVehicle\Action\RegistrationAndVinAction;
 
 class RegistrationAndVinController extends BaseCreateVehicleController
@@ -13,8 +12,7 @@ class RegistrationAndVinController extends BaseCreateVehicleController
 
     public function __construct(
         RegistrationAndVinAction $action
-    )
-    {
+    ) {
         $this->action = $action;
     }
 

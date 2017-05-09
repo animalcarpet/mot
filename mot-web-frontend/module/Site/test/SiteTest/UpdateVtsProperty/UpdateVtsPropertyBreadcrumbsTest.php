@@ -12,12 +12,12 @@ use Zend\View\Helper\Url;
 class UpdateVtsPropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
 {
     const ORG_ID = 2;
-    const ORG_NAME = "orgName";
+    const ORG_NAME = 'orgName';
 
     const SITE_ID = 1;
-    const SITE_NAME = "siteName";
+    const SITE_NAME = 'siteName';
 
-    const LINK = "http://link";
+    const LINK = 'http://link';
 
     private $url;
     private $authorisationService;
@@ -28,7 +28,7 @@ class UpdateVtsPropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $url = XMock::of(Url::class);
         $url
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn(self::LINK);
 
         $this->url = $url;
@@ -36,7 +36,7 @@ class UpdateVtsPropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $authorisationService = XMock::of(MotAuthorisationServiceInterface::class);
         $authorisationService
             ->expects($this->any())
-            ->method("isGrantedAtOrganisation")
+            ->method('isGrantedAtOrganisation')
             ->willReturn(true);
 
         $this->authorisationService = $authorisationService;
@@ -55,7 +55,7 @@ class UpdateVtsPropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateReturnsArrayOfLinks()
     {
-        $propertyName = "email property";
+        $propertyName = 'email property';
         $updateVtsPropertyBreadcrumbs = new UpdateVtsPropertyBreadcrumbs(
             $this->vtsDto,
             $this->authorisationService,
@@ -68,7 +68,7 @@ class UpdateVtsPropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $expected = [
             self::ORG_NAME => self::LINK,
             self::SITE_NAME => self::LINK,
-            $propertyName => ""
+            $propertyName => '',
         ];
 
         $this->assertCount(3, $breadcrumbs);

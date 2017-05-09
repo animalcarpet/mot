@@ -1,12 +1,11 @@
 <?php
+
 namespace EventTest\Factory\Service;
 
 use DvsaClient\MapperFactory;
 use DvsaCommonTest\TestUtils\XMock;
 use Event\Service\EventSessionService;
 use Zend\Session\Container;
-use Zend\Session\SessionManager;
-use Zend\Session\Storage\SessionStorage;
 
 /**
  * Class EventSessionServiceTest.

@@ -12,7 +12,7 @@ class StartTestSessionServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sessionContainer =  new Container(StartTestSessionService::UNIQUE_KEY);
+        $sessionContainer = new Container(StartTestSessionService::UNIQUE_KEY);
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 
         return new StartTestSessionService(

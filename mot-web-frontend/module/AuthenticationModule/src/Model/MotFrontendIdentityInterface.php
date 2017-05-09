@@ -10,7 +10,7 @@ namespace Dvsa\Mot\Frontend\AuthenticationModule\Model;
 use DvsaCommon\Auth\MotIdentityInterface;
 
 /**
- * Interface MotFrontendIdentityInterface
+ * Interface MotFrontendIdentityInterface.
  */
 interface MotFrontendIdentityInterface extends MotIdentityInterface
 {

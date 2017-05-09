@@ -1,18 +1,16 @@
 <?php
+
 namespace DvsaCommonApi\Service\Validator;
 
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
-use DvsaCommonApi\Service\Validator\AbstractValidator;
-use DvsaCommonApi\Service\Validator\ValidatorInterface;
 
 /**
- * Class ContactDetailsValidator
+ * Class ContactDetailsValidator.
  */
 class ContactDetailsValidator extends AbstractValidator implements ValidatorInterface
 {
     const ERROR_EMAIL_CONFIRMATION = 'Email address and Confirm email address must match';
-    const ERROR_EMAIL_INCORRECT_FORMAT = "Incorrect email address format";
+    const ERROR_EMAIL_INCORRECT_FORMAT = 'Incorrect email address format';
 
     /** @var AddressValidator */
     private $addressValidator;

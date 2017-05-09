@@ -87,24 +87,24 @@ class CardOrderCsvReportActionTest extends PHPUnit_Framework_TestCase
 //    public function testExecute_whenBuildingCSV_shouldMapSecurityCardOrdersToCsv()
 //    {
 //        $date = date('Y-m-d\TH:i:s\Z', strtotime('yesterday'));
-//
+
 //        $securityCardOrders = [
 //            $this->buildSecurityCardOrder('Robert Arctor', 'Robert Winstone', $date)
 //        ];
-//
+
 //        $this->authorisationServiceClient
 //            ->method('getSecurityCardOrdersInDateRange')
 //            ->willReturn(new Collection($securityCardOrders, SecurityCardOrder::class));
-//
+
 //        $result = $this->buildCardOrderCsvReportAction()->execute($date);
-//
+
 //        $this->assertInstanceOf(HttpResponseResult::class, $result);
-//
+
 //        $csvLines = explode("\n", trim($result->getResponse()->getBody()));
 //        $this->assertEquals(2, count($csvLines));
-//
+
 //        $orderLine1 = str_getcsv($csvLines[1]);
-//
+
 //        $expectedOrderLine = [
 //            $date,
 //            'Robert Arctor',
@@ -115,7 +115,7 @@ class CardOrderCsvReportActionTest extends PHPUnit_Framework_TestCase
 //            'Nottingham',
 //            'NG1 6LP'
 //        ];
-//
+
 //        $this->assertEquals($expectedOrderLine, $orderLine1);
 //    }
 

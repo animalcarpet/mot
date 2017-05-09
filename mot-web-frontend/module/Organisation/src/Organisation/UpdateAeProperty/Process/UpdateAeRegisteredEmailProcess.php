@@ -15,10 +15,10 @@ class UpdateAeRegisteredEmailProcess extends AbstractSingleStepAeProcess impleme
     protected $propertyName = UpdateAePropertyAction::AE_REGISTERED_EMAIL_PROPERTY;
     protected $permission = PermissionAtOrganisation::AE_UPDATE_REGISTERED_OFFICE_EMAIL;
     protected $requiresReview = false;
-    protected $submitButtonText = "Change registered office email address";
-    protected $successfulEditMessage = "Registered office email address has been successfully changed.";
-    protected $formPageTitle = "Change registered office email address";
-    protected $formPartial = "organisation/update-ae-property/partials/edit-email";
+    protected $submitButtonText = 'Change registered office email address';
+    protected $successfulEditMessage = 'Registered office email address has been successfully changed.';
+    protected $formPageTitle = 'Change registered office email address';
+    protected $formPartial = 'organisation/update-ae-property/partials/edit-email';
 
     public function getPropertyName()
     {

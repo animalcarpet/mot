@@ -3,7 +3,7 @@
 namespace DvsaEntities\Repository;
 
 /**
- * Repository for {@link \DvsaEntities\Entity\LicenceType}
+ * Repository for {@link \DvsaEntities\Entity\LicenceType}.
  */
 class LicenceTypeRepository extends AbstractMutableRepository
 {

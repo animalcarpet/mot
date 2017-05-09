@@ -6,13 +6,10 @@ use DvsaEntities\Entity\EnforcementDecisionScore;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class EnforcementDecisionScoreTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class EnforcementDecisionScoreTest.
  */
-class EnforcementDecisionScoreTest extends PHPUnit_Framework_TestCase
+class EnforcementScoreTest extends PHPUnit_Framework_TestCase
 {
-
     public function testInitialState()
     {
         $decisionScore = new EnforcementDecisionScore();

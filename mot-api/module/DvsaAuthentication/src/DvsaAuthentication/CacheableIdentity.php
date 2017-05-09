@@ -2,7 +2,6 @@
 
 namespace DvsaAuthentication;
 
-use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
 use Serializable;

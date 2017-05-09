@@ -15,19 +15,17 @@ use SiteApi\Service\SiteTestingDailyScheduleService;
 use SiteApi\Service\Validator\SiteTestingDailyScheduleValidator;
 
 /**
- * Class SiteTestingDailyScheduleServiceTest
- *
- * @package SiteApiTest\Service
+ * Class SiteTestingDailyScheduleServiceTest.
  */
 class SiteTestingDailyScheduleServiceTest extends AbstractServiceTestCase
 {
     const SITE_ID = 1;
     /**
-     * @var SiteTestingDailyScheduleRepository $scheduleRepository
+     * @var SiteTestingDailyScheduleRepository
      */
     private $scheduleRepository;
     /**
-     * @var SiteRepository $siteRepository
+     * @var SiteRepository
      */
     private $siteRepository;
 
@@ -57,11 +55,11 @@ class SiteTestingDailyScheduleServiceTest extends AbstractServiceTestCase
     {
         $siteData = [];
 
-        for ($i = 1; $i < 8; $i++) {
+        for ($i = 1; $i < 8; ++$i) {
             $siteData[] = [
-                "weekday"   => $i,
-                "openTime"  => "09:00:00",
-                "closeTime" => "17:00:00"
+                'weekday' => $i,
+                'openTime' => '09:00:00',
+                'closeTime' => '17:00:00',
             ];
         }
 
@@ -86,8 +84,10 @@ class SiteTestingDailyScheduleServiceTest extends AbstractServiceTestCase
     /**
      * @return MotAuthorisationServiceInterface
      */
-    private function getAuthorisationService() {
+    private function getAuthorisationService()
+    {
         $service = XMock::of(MotAuthorisationServiceInterface::class);
+
         return $service;
     }
 
@@ -95,11 +95,11 @@ class SiteTestingDailyScheduleServiceTest extends AbstractServiceTestCase
     {
         $weeklySchedule = [];
 
-        for ($i = 1; $i < 8; $i++) {
+        for ($i = 1; $i < 8; ++$i) {
             $tmp = new SiteTestingDailySchedule();
             $tmp->setWeekday($i)
-                ->setOpenTime(Time::fromIso8601("09:00:00"))
-                ->setCloseTime(Time::fromIso8601("17:00:00"));
+                ->setOpenTime(Time::fromIso8601('09:00:00'))
+                ->setCloseTime(Time::fromIso8601('17:00:00'));
             $weeklySchedule[] = $tmp;
         }
 
@@ -129,12 +129,12 @@ class SiteTestingDailyScheduleServiceTest extends AbstractServiceTestCase
     {
         $siteData = [];
 
-        for ($i = 1; $i < 8; $i++) {
+        for ($i = 1; $i < 8; ++$i) {
             $siteData[] = [
-                "weekday"   => $i,
-                "openTime"  => "09:00:00",
-                "closeTime" => "17:00:00",
-                "isClosed"  => false
+                'weekday' => $i,
+                'openTime' => '09:00:00',
+                'closeTime' => '17:00:00',
+                'isClosed' => false,
             ];
         }
 
@@ -168,7 +168,7 @@ class SiteTestingDailyScheduleServiceTest extends AbstractServiceTestCase
 
         $scheduleData = $this->getDummyScheduleData();
 
-        $scheduleData['weeklySchedule'][3]['closeTime'] = "apple";
+        $scheduleData['weeklySchedule'][3]['closeTime'] = 'apple';
         $this->setupMockForCalls(
             $this->siteRepository,
             'getReference',
@@ -188,6 +188,6 @@ class SiteTestingDailyScheduleServiceTest extends AbstractServiceTestCase
     public function testUpdateSchedule_givenEmptySchedule_shouldThrowException()
     {
         $service = $this->getService();
-        $service->updateSchedule(self::SITE_ID, "");
+        $service->updateSchedule(self::SITE_ID, '');
     }
 }

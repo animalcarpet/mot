@@ -16,9 +16,7 @@ use NotificationApi\Service\Helper\NotificationTradeTemplateHelper;
 use NotificationApi\Factory\Service\Helper\NotificationTradeTemplateHelperFactory;
 
 /**
- * Class Module
- *
- * @package NotificationApi
+ * Class Module.
  */
 class Module
 {
@@ -28,13 +26,13 @@ class Module
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function getServiceConfig()
     {
         return [
-            'factories'  => [
+            'factories' => [
                 NotificationService::class => \NotificationApi\Factory\NotificationServiceFactory::class,
                 SiteNominationEventHelper::class => SiteNominationEventHelperFactory::class,
                 OrganisationNominationEventHelper::class => OrganisationNominationEventHelperFactory::class,
@@ -47,7 +45,7 @@ class Module
             ],
             'invokables' => [
 
-            ]
+            ],
         ];
     }
 }

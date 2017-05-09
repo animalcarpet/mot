@@ -64,7 +64,7 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setQuery(
             new Parameters(
                 [
-                    ReasonForRejectionController::QUERY_PARAM_SEARCH => $searchString
+                    ReasonForRejectionController::QUERY_PARAM_SEARCH => $searchString,
                 ]
             )
         );

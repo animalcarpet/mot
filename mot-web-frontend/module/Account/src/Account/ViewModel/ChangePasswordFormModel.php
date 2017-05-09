@@ -7,8 +7,7 @@ use DvsaClient\ViewModel\AbstractFormModel;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Model for change password form
- * @package Account\ViewModel
+ * Model for change password form.
  */
 class ChangePasswordFormModel extends AbstractFormModel
 {
@@ -20,9 +19,9 @@ class ChangePasswordFormModel extends AbstractFormModel
     const ERR_NOT_STRONG = 'The password you have entered is not strong enough';
     const ERR_NOT_USERNAME = 'Your password must not match your user ID';
 
-    /** @var  string */
+    /** @var string */
     private $password;
-    /** @var  string */
+    /** @var string */
     private $passwordConfirm;
     /** @var string */
     private $username;
@@ -32,7 +31,6 @@ class ChangePasswordFormModel extends AbstractFormModel
 
     /** @var bool $tryAgainLink */
     private $tryAgainLink;
-
 
     public function getPassword()
     {
@@ -45,6 +43,7 @@ class ChangePasswordFormModel extends AbstractFormModel
     public function setPassword($password)
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -56,12 +55,14 @@ class ChangePasswordFormModel extends AbstractFormModel
     public function setPasswordConfirm($pass)
     {
         $this->passwordConfirm = $pass;
+
         return $this;
     }
 
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -97,7 +98,6 @@ class ChangePasswordFormModel extends AbstractFormModel
 
     public function isTryAgainLink()
     {
-        return ($this->tryAgainLink ? true : false);
+        return $this->tryAgainLink ? true : false;
     }
-
 }

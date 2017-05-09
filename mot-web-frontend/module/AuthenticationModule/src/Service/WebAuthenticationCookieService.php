@@ -74,9 +74,6 @@ class WebAuthenticationCookieService implements TokenServiceInterface
         $this->response->getHeaders()->addHeader($cookie);
     }
 
-    /**
-     * @return null
-     */
     public function tearDownCookie()
     {
         $cookie = new SetCookie(

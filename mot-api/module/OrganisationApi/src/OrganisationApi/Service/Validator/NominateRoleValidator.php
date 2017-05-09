@@ -5,14 +5,14 @@ namespace OrganisationApi\Service\Validator;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 
 /**
- * Class NominateRoleValidator
+ * Class NominateRoleValidator.
  */
 class NominateRoleValidator extends AbstractValidator
 {
     private $requiredFields
         = [
-            "nomineeId",
-            "roleId",
+            'nomineeId',
+            'roleId',
         ];
 
     public function validate($data)

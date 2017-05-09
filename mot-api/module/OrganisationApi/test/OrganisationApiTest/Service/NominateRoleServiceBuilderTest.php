@@ -274,7 +274,9 @@ class StubNominationPersonRepository extends PersonRepository
     const PERSON_ID_NOMINATOR = 11;
     const PERSON_ID_NOMINEE = 22;
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function get($id)
     {
@@ -286,7 +288,7 @@ class StubNominationPersonRepository extends PersonRepository
 
         $people = [
             self::PERSON_ID_NOMINATOR => $nominator,
-            self::PERSON_ID_NOMINEE => $nominee
+            self::PERSON_ID_NOMINEE => $nominee,
         ];
 
         return isset($people[$id]) ? $people[$id] : null;

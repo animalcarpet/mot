@@ -10,7 +10,6 @@ namespace AccountApiTest\Service;
 use AccountApi\Crypt\SecurityAnswerHashFunction;
 use AccountApi\Service\Validator\PersonSecurityAnswerValidator;
 use Doctrine\DBAL\Driver\Connection;
-use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommon\Obfuscate\ParamObfuscator;
@@ -31,8 +30,7 @@ use Zend\ServiceManager\ServiceManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class SecurityQuestionServiceTest
- * @package AccountApiTest\Service
+ * Class SecurityQuestionServiceTest.
  */
 class SecurityQuestionServiceTest extends AbstractServiceTestCase
 {
@@ -46,10 +44,10 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
 
     protected $mockEntityManager;
 
-    /** @var   SecurityQuestionRepository|MockObj */
+    /** @var SecurityQuestionRepository|MockObj */
     protected $mockSqRepo;
 
-    /** @var  ParamObfuscator|MockObj */
+    /** @var ParamObfuscator|MockObj */
     private $mockParamObfuscator;
 
     /** @var PersonSecurityAnswerRecorder */
@@ -61,7 +59,7 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
     /** @var PersonRepository */
     private $mockPersonRepo;
 
-    /** @var  SecurityQuestionService */
+    /** @var SecurityQuestionService */
     protected $service;
 
     protected function setUp()
@@ -175,7 +173,7 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
             ->method('validate')
             ->will($this->throwException(new BadRequestException('Validation failure', 0)));
 
-        $this->service->updateAnswersForUser(1, ["not even an array"]);
+        $this->service->updateAnswersForUser(1, ['not even an array']);
     }
 
     public function testUpdateAnswersForUserCallsPersonRepository()
@@ -194,16 +192,12 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
 
         $savePersonSpy = new MethodSpy($this->mockEntityManager, 'persist');
 
-        //
-
         $data = [
-            ["questionId" => 1, "answer" => "answer to question 1"],
-            ["questionId" => 2, "answer" => "answer to question 2"]
+            ['questionId' => 1, 'answer' => 'answer to question 1'],
+            ['questionId' => 2, 'answer' => 'answer to question 2'],
         ];
 
         $this->service->updateAnswersForUser(1, $data);
-
-        //
 
         /** @var Person $updatedPerson */
         $updatedPerson = $savePersonSpy->paramsForInvocation(0)[0];
@@ -235,7 +229,6 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
     {
         $dataSet = [];
         foreach ($this->getUnexpectedPersonIds() as $personId) {
-
             $expectedException = new \InvalidArgumentException(
                 sprintf(SecurityQuestionService::ERR_TYPE_PERSON_ID, var_export($personId, true))
             );
@@ -287,7 +280,6 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
     {
         $dataSet = [];
         foreach ($this->getUnexpectedPersonIds() as $personId) {
-
             $expectedException = new \InvalidArgumentException(
                 sprintf(SecurityQuestionService::ERR_TYPE_PERSON_ID, var_export($personId, true))
             );
@@ -312,7 +304,6 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
         $unexpectedQuestionsAndAnswersType[] = ['string' => 'Acceptable answer'];
 
         foreach ($unexpectedQuestionsAndAnswersType as $questionsAndAnswers) {
-
             $expectedException = new \InvalidArgumentException(
                 sprintf(SecurityQuestionService::ERR_MSG_INVALID_ARGUMENT, var_export($questionsAndAnswers, true))
             );
@@ -356,8 +347,7 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
         PersonSecurityAnswer $actualAnswer,
         SecurityQuestion $expectedQuestion,
         $expectedAnswer
-    )
-    {
+    ) {
         $hashFunction = new SecurityAnswerHashFunction();
 
         $this->assertEquals($expectedQuestion, $actualAnswer->getSecurityQuestion());
@@ -365,8 +355,8 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param array $questionsAndAnswers
-     * @param integer $expectedDelay
+     * @param array  $questionsAndAnswers
+     * @param int    $expectedDelay
      * @param string $testSubjectType
      * @dataProvider testDelayDatProvider
      */
@@ -387,7 +377,7 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
             $respondTime < $expectedHigherBound &&
             $respondTime > $expectedLowerBound,
             sprintf(
-                'Failed to assert calling the verification method with %s caused a delay about %s seconds, ' .
+                'Failed to assert calling the verification method with %s caused a delay about %s seconds, '.
                 'instead we measured a %s second delay',
                 $testSubjectType,
                 $expectedDelay,
@@ -416,7 +406,7 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
                 ],
                 'expectedDelay' => 1,
                 'test subject' => 'incorrect answers',
-            ]
+            ],
         ];
     }
 }

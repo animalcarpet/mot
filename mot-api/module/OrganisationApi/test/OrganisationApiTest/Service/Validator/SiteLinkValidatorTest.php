@@ -6,7 +6,6 @@ use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
 use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommonApi\Service\Exception\BadRequestException;
-use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\AuthForAeStatus;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use DvsaEntities\Entity\Organisation;
@@ -15,9 +14,7 @@ use OrganisationApi\Service\Validator\SiteLinkValidator;
 use DvsaEntities\Entity\SiteStatus;
 
 /**
- * Class SiteLinkValidatorTest
- *
- * @package OrganisationApiTest\Service\Validator
+ * Class SiteLinkValidatorTest.
  */
 class SiteLinkValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -56,9 +53,9 @@ class SiteLinkValidatorTest extends \PHPUnit_Framework_TestCase
                     )
             );
 
-        $siteEntity = new Site;
+        $siteEntity = new Site();
         $siteEntity->setStatus(
-            (new SiteStatus)->setCode(SiteStatusCode::APPROVED)
+            (new SiteStatus())->setCode(SiteStatusCode::APPROVED)
         );
 
         return [
@@ -66,46 +63,46 @@ class SiteLinkValidatorTest extends \PHPUnit_Framework_TestCase
             //  no errors
             [
                 'organisation' => $orgEntity,
-                'site'         => $siteEntity,
-                'orgId'        => self::ORGANISATION_ID,
-                'siteNumber'   => self::SITE_NUMBER,
-                'errors'       => false,
+                'site' => $siteEntity,
+                'orgId' => self::ORGANISATION_ID,
+                'siteNumber' => self::SITE_NUMBER,
+                'errors' => false,
             ],
             //  Error no organisation
             [
                 'organisation' => null,
-                'site'         => $siteEntity,
-                'orgId'        => self::ORGANISATION_ID,
-                'siteNumber'   => self::SITE_NUMBER,
-                'errors'       => true,
+                'site' => $siteEntity,
+                'orgId' => self::ORGANISATION_ID,
+                'siteNumber' => self::SITE_NUMBER,
+                'errors' => true,
             ],
             //  Error no site
             [
                 'organisation' => new Organisation(),
-                'site'         => null,
-                'orgId'        => self::ORGANISATION_ID,
-                'siteNumber'   => self::SITE_NUMBER,
-                'errors'       => true,
+                'site' => null,
+                'orgId' => self::ORGANISATION_ID,
+                'siteNumber' => self::SITE_NUMBER,
+                'errors' => true,
             ],
             //  Error site not approved
             [
                 'organisation' => new Organisation(),
-                'site'         => (new Site)->setStatus((new SiteStatus)->setCode(SiteStatusCode::APPLIED)),
-                'orgId'        => self::ORGANISATION_ID,
-                'siteNumber'   => self::SITE_NUMBER,
-                'errors'       => true,
+                'site' => (new Site())->setStatus((new SiteStatus())->setCode(SiteStatusCode::APPLIED)),
+                'orgId' => self::ORGANISATION_ID,
+                'siteNumber' => self::SITE_NUMBER,
+                'errors' => true,
             ],
             //  Error site already linked
             [
                 'organisation' => $orgEntity,
-                'site'         => (new Site())->setOrganisation(
+                'site' => (new Site())->setOrganisation(
                                         (new Organisation())->setAuthorisedExaminer(
                                             (new AuthorisationForAuthorisedExaminer())->setNumber(self::AE_REF)
                                         )
                                   )->setStatus((new SiteStatus())->setCode(SiteStatusCode::APPROVED)),
-                'orgId'        => self::ORGANISATION_ID,
-                'siteNumber'   => self::SITE_NUMBER,
-                'errors'       => true,
+                'orgId' => self::ORGANISATION_ID,
+                'siteNumber' => self::SITE_NUMBER,
+                'errors' => true,
             ],
             //  Error organisation not approved
             [
@@ -117,10 +114,10 @@ class SiteLinkValidatorTest extends \PHPUnit_Framework_TestCase
                                     ->setCode(AuthorisationForAuthorisedExaminerStatusCode::APPLIED)
                             )
                     ),
-                'site'         => $siteEntity,
-                'orgId'        => self::ORGANISATION_ID,
-                'siteNumber'   => self::SITE_NUMBER,
-                'errors'       => true,
+                'site' => $siteEntity,
+                'orgId' => self::ORGANISATION_ID,
+                'siteNumber' => self::SITE_NUMBER,
+                'errors' => true,
             ],
         ];
     }

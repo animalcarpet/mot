@@ -2,7 +2,6 @@
 
 namespace DvsaMotApiTest\Factory;
 
-use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;

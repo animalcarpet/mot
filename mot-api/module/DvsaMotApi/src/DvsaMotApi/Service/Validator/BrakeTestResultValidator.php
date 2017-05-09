@@ -179,7 +179,7 @@ class BrakeTestResultValidator extends AbstractValidator
                         ),
                         self::VALUE_LOCK_NOT_APPLICABLE
                     );
-                };
+                }
                 break;
             default:
                 if ($serviceBrakeData !== null) {

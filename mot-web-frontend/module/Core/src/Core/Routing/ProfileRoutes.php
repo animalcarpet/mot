@@ -15,11 +15,12 @@ class ProfileRoutes extends AbstractRoutes
 
     /**
      * @param Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url $object
+     *
      * @return ProfileRoutes
      */
     public static function of($object)
     {
-        return new ProfileRoutes($object);
+        return new self($object);
     }
 
     public function yourProfile()
@@ -29,26 +30,26 @@ class ProfileRoutes extends AbstractRoutes
 
     public function userSearch($userId)
     {
-        return $this->url(ProfileRouteList::USER_SEARCH, ["id" => $userId]);
+        return $this->url(ProfileRouteList::USER_SEARCH, ['id' => $userId]);
     }
 
     public function yourProfileTqi($month, $year)
     {
-        return $this->url(ProfileRouteList::YOUR_PROFILE_TQI, ["month" => $month, "year" => $year]);
+        return $this->url(ProfileRouteList::YOUR_PROFILE_TQI, ['month' => $month, 'year' => $year]);
     }
 
     public function userSearchTqi($userId, $month, $year)
     {
-        return $this->url(ProfileRouteList::USER_SEARCH_TQI, ["id" => $userId, "month" => $month, "year" => $year]);
+        return $this->url(ProfileRouteList::USER_SEARCH_TQI, ['id' => $userId, 'month' => $month, 'year' => $year]);
     }
 
     public function yourProfileTqiComponentsAtSite($siteId, $month, $year, $group)
     {
-        return $this->url(ProfileRouteList::YOUR_PROFILE_TQI_COMPONENTS_AT_SITE, ["site" => $siteId, "month" => $month, "year" => $year, "group" => $group]);
+        return $this->url(ProfileRouteList::YOUR_PROFILE_TQI_COMPONENTS_AT_SITE, ['site' => $siteId, 'month' => $month, 'year' => $year, 'group' => $group]);
     }
 
     public function userSearchTqiComponentsAtSite($userId, $siteId, $month, $year, $group)
     {
-        return $this->url(ProfileRouteList::USER_SEARCH_TQI_COMPONENTS_AT_SITE, ["id" => $userId, "site" => $siteId, "month" => $month, "year" => $year, "group" => $group]);
+        return $this->url(ProfileRouteList::USER_SEARCH_TQI_COMPONENTS_AT_SITE, ['id' => $userId, 'site' => $siteId, 'month' => $month, 'year' => $year, 'group' => $group]);
     }
 }

@@ -5,13 +5,10 @@ namespace CoreTest\View\Helper;
 use Core\View\Helper\GetReleaseTag;
 
 /**
- * Class GetReleaseTagTest
- *
- * @package Core\View\Helper
+ * Class GetReleaseTagTest.
  */
 class GetReleaseTagTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testNoReleaseTagValueIntoReleaseTagWillNotReturnException()
     {
         $releaseTagHelper = new GetReleaseTag(null);
@@ -23,7 +20,7 @@ class GetReleaseTagTest extends \PHPUnit_Framework_TestCase
         $exampleConfig = [
             'configA' => 'valueA',
             'configB' => 'valueB',
-            'no_release' => 'none'
+            'no_release' => 'none',
         ];
 
         $releaseTagHelper = new GetReleaseTag($exampleConfig);
@@ -49,7 +46,7 @@ class GetReleaseTagTest extends \PHPUnit_Framework_TestCase
     // Edgecase
     public function testValueOfReleaseTagIsArrayOrObjectWillNotReturnException()
     {
-        $releaseTag = [ '1.9.3' ];
+        $releaseTag = ['1.9.3'];
         $releaseHelper = new GetReleaseTag($releaseTag);
         $this->assertEmpty($releaseHelper->getReleaseTag());
 
@@ -115,5 +112,4 @@ class GetReleaseTagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('<div>1.9.3</div>', $releaseHelper->renderReleaseTag('<div>{release_tag_name}</div>'));
     }
-
 }

@@ -2,10 +2,6 @@
 
 namespace TestSupport\Controller;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use DvsaCommon\Enum\OrganisationBusinessRoleCode;
-use DvsaCommon\Enum\OrganisationBusinessRoleId;
 use TestSupport\FieldValidation;
 use TestSupport\Helper\DataGeneratorHelper;
 use TestSupport\Helper\NominatorTrait;
@@ -14,7 +10,6 @@ use TestSupport\Helper\TestDataResponseHelper;
 use TestSupport\Model\Account;
 use TestSupport\Model\AccountPerson;
 use TestSupport\Service\AccountService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -28,7 +23,6 @@ class OrganisationRoleDataController extends BaseTestSupportRestfulController
     use NominatorTrait;
 
     /**
-     *
      * @param mixed $data optional data with differentiator,
      *                    schmUsername => username of DVSA scheme management user with whom to assign AED role
      *                    aeIds => IDs of AEs for which the user is an AED
@@ -41,7 +35,7 @@ class OrganisationRoleDataController extends BaseTestSupportRestfulController
         FieldValidation::checkForRequiredFieldsInData(['aeIds', 'roleId'], $data);
         $roleId = $data['roleId'];
 
-            /** @var $accountService AccountService */
+        /** @var $accountService AccountService */
         $accountService = $this->getServiceLocator()->get(AccountService::class);
         $restClient = $this->getRestClientService($data);
 
@@ -67,12 +61,12 @@ class OrganisationRoleDataController extends BaseTestSupportRestfulController
 
         return TestDataResponseHelper::jsonOk(
             [
-                "message" => "Role for role ID: ".$roleId." created",
-                "username" => $account->getUsername(),
-                "password" => $account->getPassword(),
-                "personId" => $account->getPersonId(),
-                "firstName" => $account->getFirstName(),
-                "surname"  => $account->getSurname()
+                'message' => 'Role for role ID: '.$roleId.' created',
+                'username' => $account->getUsername(),
+                'password' => $account->getPassword(),
+                'personId' => $account->getPersonId(),
+                'firstName' => $account->getFirstName(),
+                'surname' => $account->getSurname(),
             ]
         );
     }

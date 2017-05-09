@@ -36,9 +36,9 @@ echo $this->partial('testItemSelectorSearch', ['motTestNumber' => $motTestNumber
                 <div class="col-xs-4">
                     <a href="<?php echo $this->url('mot-test/test-item-selector', ['tis-id' => $element['id'], 'motTestNumber' => $motTestNumber]); ?>"><?php echo $this->escapeHtml($element['name']); ?></a>
                 </div>
-            <?php endforeach;?>
+            <?php endforeach; ?>
         </div>
-    <?php endforeach;?>
+    <?php endforeach; ?>
 </section>
 
 <div class="row">
@@ -66,6 +66,6 @@ echo $this->partial('testItemSelectorSearch', ['motTestNumber' => $motTestNumber
         'escRfrId' => 0,
         'motTestNumber' => $motTestNumber,
         'title' => 'Manual Advisory',
-        'rfrType' => 'ADVISORY'
+        'rfrType' => 'ADVISORY',
     ]);
 ?>

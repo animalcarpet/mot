@@ -8,7 +8,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ApplicationSessionFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new Container();

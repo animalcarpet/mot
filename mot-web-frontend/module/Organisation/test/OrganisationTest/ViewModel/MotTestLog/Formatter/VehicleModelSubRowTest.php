@@ -15,8 +15,7 @@ class VehicleModelSubRowTest extends \PHPUnit_Framework_TestCase
         //  logical block: create view renderer
         $renderer = $this->getPhpRenderer(
             [
-                'mot-test-log/formatter/vehicle-model-sub-row' =>
-                    __DIR__ . '/../../../../../view/organisation/mot-test-log/formatter/vehicle-model-sub-row.phtml',
+                'mot-test-log/formatter/vehicle-model-sub-row' => __DIR__.'/../../../../../view/organisation/mot-test-log/formatter/vehicle-model-sub-row.phtml',
             ]
         );
 

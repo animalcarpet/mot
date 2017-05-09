@@ -4,7 +4,6 @@ namespace UserAdminTest\Service;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
@@ -13,9 +12,7 @@ use DvsaCommonTest\Bootstrap;
 use Zend\Session\Container;
 
 /**
- * Class UserAdminSessionManagerTest
- *
- * @package UserAdminTest\Service
+ * Class UserAdminSessionManagerTest.
  */
 class UserAdminSessionManagerTest extends AbstractFrontendControllerTestCase
 {
@@ -26,7 +23,7 @@ class UserAdminSessionManagerTest extends AbstractFrontendControllerTestCase
 
     /** @var UserAdminSessionManager */
     protected $session;
-    /** @var  MotFrontendAuthorisationServiceInterface */
+    /** @var MotFrontendAuthorisationServiceInterface */
     private $mockAuthSrv;
 
     public function setUp()

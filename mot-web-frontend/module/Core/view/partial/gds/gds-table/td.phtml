@@ -9,9 +9,9 @@ $value = ($this->value === null ? 'N/A' : $this->value);
 ?>
 
 <td <?php
-    echo $id ? ' id="' . $this->escapeHtmlAttr($id) .'"' : '';
-    echo $class ? ' class="' . $this->escapeHtmlAttr($class) .'"' : '';
-    echo $colspan ? ' colspan="' . $this->escapeHtmlAttr($colspan) .'"' : '';
+    echo $id ? ' id="'.$this->escapeHtmlAttr($id).'"' : '';
+    echo $class ? ' class="'.$this->escapeHtmlAttr($class).'"' : '';
+    echo $colspan ? ' colspan="'.$this->escapeHtmlAttr($colspan).'"' : '';
     ?>>
     <?php echo $escape ? $this->escapeHtml($value) : $value; ?>
 </td>

@@ -30,7 +30,7 @@ class RegisterCardInformationCookieServiceTest extends \PHPUnit_Framework_TestCa
         $request = new Request();
         $request->setMethod('POST');
         $request->setPost(new Parameters([RegisterCardInformationCookieService::COOKIE_NAME => $userId]));
-        $request->getHeaders()->addHeader(new Cookie([RegisterCardInformationCookieService::COOKIE_NAME=> $userId]));
+        $request->getHeaders()->addHeader(new Cookie([RegisterCardInformationCookieService::COOKIE_NAME => $userId]));
 
         $this->assertTrue($this->createService()->validate($request));
     }
@@ -50,13 +50,12 @@ class RegisterCardInformationCookieServiceTest extends \PHPUnit_Framework_TestCa
         $userId = '105';
         $this->setUpAndMockIdentity($userId);
 
-        $userPath = '/' . RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE . '/' .
+        $userPath = '/'.RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE.'/'.
             $userId;
-
 
         $this->createService()->addRegisterCardInformationCookie($response);
 
-        /** @var SetCookie $setCookieHeader  */
+        /** @var SetCookie $setCookieHeader */
         $setCookieHeader = $response->getHeaders()->get('Set-Cookie')[0];
 
         $this->assertEquals(RegisterCardInformationCookieService::COOKIE_NAME, $setCookieHeader->getName());
@@ -64,10 +63,11 @@ class RegisterCardInformationCookieServiceTest extends \PHPUnit_Framework_TestCa
         $this->assertEquals(true, $setCookieHeader->isSecure());
     }
 
-
-    private function createService() {
+    private function createService()
+    {
         $registerCardInformationCookieService = new RegisterCardInformationCookieService(
             $this->identityProviderMock);
+
         return $registerCardInformationCookieService;
     }
 
@@ -79,6 +79,5 @@ class RegisterCardInformationCookieServiceTest extends \PHPUnit_Framework_TestCa
         $this->identityProviderMock->expects($this->any())
             ->method('getIdentity')
             ->willReturn($identity);
-
     }
 }

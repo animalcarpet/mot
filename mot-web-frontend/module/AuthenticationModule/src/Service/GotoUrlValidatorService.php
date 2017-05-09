@@ -43,7 +43,7 @@ class GotoUrlValidatorService
 
         foreach ($whiteListedDomains as $whiteListedDomain) {
             // Prevent things like 'mot.gov.uk.evilsitetime.com'
-            $whiteListedDomain = '.' . trim($whiteListedDomain, '.');
+            $whiteListedDomain = '.'.trim($whiteListedDomain, '.');
             if (strpos($domain, $whiteListedDomain) === (strlen($domain) - strlen($whiteListedDomain))) {
                 return true;
             }

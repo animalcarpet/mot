@@ -2,13 +2,11 @@
 
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Make
+ * Make.
  *
  * @ORM\Table(
  *  name="make",
@@ -39,14 +37,14 @@ class Make extends Entity
     private $name;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_verified", type="boolean")
      */
     private $isVerified;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_selectable", type="boolean")
      */
@@ -60,6 +58,7 @@ class Make extends Entity
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -92,7 +91,7 @@ class Make extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isVerified()
     {
@@ -100,7 +99,7 @@ class Make extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSelectable()
     {

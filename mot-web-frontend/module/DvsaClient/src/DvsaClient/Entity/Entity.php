@@ -3,9 +3,7 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class Entity
- *
- * @package DvsaClient\Entity
+ * Class Entity.
  */
 class Entity
 {

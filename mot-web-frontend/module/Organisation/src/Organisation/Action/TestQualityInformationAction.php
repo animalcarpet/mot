@@ -13,33 +13,32 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Organisation\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
 use Site\Service\RiskAssessmentScoreRagClassifier;
 use Zend\View\Helper\Url;
-use Zend\Stdlib\Parameters;
 
 class TestQualityInformationAction implements AutoWireableInterface
 {
-    const PAGE_SUBTITLE = "Test quality information";
-    const PAGE_TITLE = "Vehicle testing stations";
-    const NO_SITES = "No active site associations";
+    const PAGE_SUBTITLE = 'Test quality information';
+    const PAGE_TITLE = 'Vehicle testing stations';
+    const NO_SITES = 'No active site associations';
     const TABLE_MAX_ROW_COUNT = 10;
 
     /**
-     * @var OrganisationMapper $organisationMapper
+     * @var OrganisationMapper
      */
     private $organisationMapper;
 
     /**
-     * @var AuthorisedExaminerSitePerformanceApiResource $orgSitePerformanceApiResource
+     * @var AuthorisedExaminerSitePerformanceApiResource
      */
     private $orgSitePerformanceApiResource;
 
     private $organisationLink;
-    /** @var  MotConfig $config */
+    /** @var MotConfig $config */
     private $config;
 
-    /** @var  SearchParamsDto $searchParams */
+    /** @var SearchParamsDto $searchParams */
     private $searchParams;
 
-    /** @var  Url $url */
+    /** @var Url $url */
     private $url;
 
     public function __construct(
@@ -47,8 +46,7 @@ class TestQualityInformationAction implements AutoWireableInterface
         AuthorisedExaminerSitePerformanceApiResource $orgSitePerformanceApiResource,
         MotConfig $config,
         Url $url
-    )
-    {
+    ) {
         $this->organisationMapper = $organisationMapper;
         $this->orgSitePerformanceApiResource = $orgSitePerformanceApiResource;
         $this->config = $config;
@@ -105,6 +103,7 @@ class TestQualityInformationAction implements AutoWireableInterface
     {
         $this->setOrganisationLink(AeRoutes::of($urlPlugin)->ae($organisationId));
         $organisationName = $this->organisationMapper->getAuthorisedExaminer($organisationId)->getName();
+
         return [
             $organisationName => $this->getOrganisationLink(),
             self::PAGE_SUBTITLE => '',

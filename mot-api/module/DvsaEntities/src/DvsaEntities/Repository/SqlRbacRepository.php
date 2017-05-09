@@ -3,21 +3,18 @@
 namespace DvsaEntities\Repository;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaCommon\Enum\TransitionStatusCode;
 use DvsaCommon\Model\ListOfRolesAndPermissions;
 use DvsaCommon\Model\PersonAuthorization;
 
 /**
- * Groups the DB queries used by roles and permissions
+ * Groups the DB queries used by roles and permissions.
  */
 class SqlRbacRepository implements RbacRepository
 {
-
     const ALL_ROLES_SQL
-        = <<<EOQ
+        = <<<'EOQ'
 SELECT
     allroles.role_type,
     allroles.site_id,
@@ -90,7 +87,7 @@ order by site_id, organisation_id, role_type;
 EOQ;
 
     const SITE_ORGANISATION_MAP_SQL
-        = <<<EOQ
+        = <<<'EOQ'
 SELECT obrm.person_id, obrm.organisation_id, site.id site_id
 FROM
 	organisation_business_role_map obrm
@@ -105,7 +102,7 @@ WHERE person_id = :personId
 EOQ;
 
     const HAS_ROLE_SQL
-        = <<<EOQ
+        = <<<'EOQ'
 SELECT count(person.id) matchCount
 FROM
 person
@@ -135,7 +132,7 @@ WHERE
 )
 EOQ;
 
-    /** @var  EntityManager $entityManager */
+    /** @var EntityManager $entityManager */
     private $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -154,7 +151,7 @@ EOQ;
         )->setParameters(
             [
                 'personId' => $personId,
-                'roleName' => $roleName
+                'roleName' => $roleName,
             ]
         )->getSingleResult()['matchCount'];
 
@@ -201,7 +198,7 @@ EOQ;
     }
 
     /**
-     * public for unit-test access
+     * public for unit-test access.
      */
     public static function mapToPersonAuthorization($resultRows, $siteOrganisationMap)
     {
@@ -264,7 +261,7 @@ EOQ;
                     self::addValueIfNeededAtKey($orgId, $organisationPermissions, $permissionName);
                     break;
                 default:
-                    throw new \LogicException('Unknown result type: ' . $roleType);
+                    throw new \LogicException('Unknown result type: '.$roleType);
             }
         }
 
@@ -287,7 +284,7 @@ EOQ;
     }
 
     /**
-     * Combines the associative arrays
+     * Combines the associative arrays.
      *
      * @param $arrayOfRoles
      * @param $arrayOfPermissions
@@ -309,6 +306,7 @@ EOQ;
                 $permissionsForSpecificId
             );
         }
+
         return $arrayOfListOfRolesAndPermissions;
     }
 }

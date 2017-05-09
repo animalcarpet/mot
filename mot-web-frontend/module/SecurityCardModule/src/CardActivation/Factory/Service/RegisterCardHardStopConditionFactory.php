@@ -3,9 +3,7 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Factory\Service;
 
 use Core\Service\MotFrontendIdentityProvider;
-use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;

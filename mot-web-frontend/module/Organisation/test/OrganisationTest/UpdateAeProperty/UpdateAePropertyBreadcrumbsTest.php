@@ -11,9 +11,9 @@ use Zend\View\Helper\Url;
 class UpdateAePropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
 {
     const ORG_ID = 2;
-    const ORG_NAME = "orgName";
+    const ORG_NAME = 'orgName';
 
-    const LINK = "http://link";
+    const LINK = 'http://link';
     protected $org;
 
     private $url;
@@ -25,7 +25,7 @@ class UpdateAePropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $url = XMock::of(Url::class);
         $url
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn(self::LINK);
 
         $this->url = $url;
@@ -33,7 +33,7 @@ class UpdateAePropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $authorisationService = XMock::of(MotAuthorisationServiceInterface::class);
         $authorisationService
             ->expects($this->any())
-            ->method("isGrantedAtOrganisation")
+            ->method('isGrantedAtOrganisation')
             ->willReturn(true);
 
         $this->authorisationService = $authorisationService;
@@ -45,7 +45,7 @@ class UpdateAePropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateReturnsArrayOfLinks()
     {
-        $propertyName = "email property";
+        $propertyName = 'email property';
         $updateVtsPropertyBreadcrumbs = new UpdateAePropertyBreadcrumbs(
             $this->org,
             $this->authorisationService,
@@ -57,7 +57,7 @@ class UpdateAePropertyBreadcrumbsTest extends \PHPUnit_Framework_TestCase
 
         $expected = [
             self::ORG_NAME => self::LINK,
-            $propertyName => ""
+            $propertyName => '',
         ];
 
         $this->assertCount(2, $breadcrumbs);

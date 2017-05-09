@@ -20,8 +20,7 @@ class PersonTradeRoleService
     public function __construct(
         OrganisationBusinessRoleMapRepository $organisationPositionRepository,
         SiteBusinessRoleMapRepository $sitePositionRepository
-    )
-    {
+    ) {
         $this->organisationPositionRepository = $organisationPositionRepository;
         $this->sitePositionRepository = $sitePositionRepository;
     }
@@ -52,7 +51,7 @@ class PersonTradeRoleService
             return $positionDto;
         });
 
-        $siteDtos  = ArrayUtils::map($sitePositions, function (SiteBusinessRoleMap $position) {
+        $siteDtos = ArrayUtils::map($sitePositions, function (SiteBusinessRoleMap $position) {
             $contact = $position->getSite()->getContactByType(SiteContactTypeCode::BUSINESS);
             $address = $contact ? $contact->getDetails()->getAddress() : null;
             $addressAsString = $address ? (new AddressFormatter())->format($address) : '';
@@ -60,7 +59,6 @@ class PersonTradeRoleService
             $organisation = $position->getSite()->getOrganisation();
             $organisationNumber = $organisation->getRegisteredCompanyNumber();
             $organisationNumber = !is_null($organisationNumber) ? $organisationNumber : $organisation->getName();
-
 
             $positionDto = new PersonTradeRoleDto();
             $positionDto->setPositionId($position->getId())

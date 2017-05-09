@@ -3,9 +3,7 @@
 namespace TestSupport\Service;
 
 use Aws\S3\S3Client;
-use Doctrine\ORM\EntityManager;
 use TestSupport\Helper\TestDataResponseHelper;
-use Zend\Json\Json;
 
 class StatisticsAmazonCacheService
 {
@@ -34,7 +32,7 @@ class StatisticsAmazonCacheService
         $this->s3Client->deleteObject(
             array(
                 'Bucket' => $this->bucket,
-                'Key'    => $storageKey,
+                'Key' => $storageKey,
             )
         );
     }

@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * AuthorisationForTestingMotStatus
+ * AuthorisationForTestingMotStatus.
  *
  * @ORM\Table(name="auth_for_testing_mot_status")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\AuthorisationForTestingMotStatusRepository", readOnly=true)
@@ -29,7 +29,7 @@ class AuthorisationForTestingMotStatus extends Entity
     private $name;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -43,7 +43,7 @@ class AuthorisationForTestingMotStatus extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */

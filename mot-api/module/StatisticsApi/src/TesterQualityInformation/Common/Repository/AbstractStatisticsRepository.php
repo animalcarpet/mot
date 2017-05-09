@@ -20,6 +20,7 @@ class AbstractStatisticsRepository
     /**
      * @param $sql
      * @param $rsm
+     *
      * @return \Doctrine\ORM\NativeQuery
      */
     protected function getNativeQuery($sql, $rsm)
@@ -41,5 +42,4 @@ class AbstractStatisticsRepository
         $this->startDate = sprintf('%s-%s-1 00:00:00', $year, $month);
         $this->endDate = sprintf('%s-%s-%s 23:59:59', $year, $month, $lastDay);
     }
-
 }

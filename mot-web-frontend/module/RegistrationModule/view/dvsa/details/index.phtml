@@ -4,7 +4,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
 ?>
 
-<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
+<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorsSummary]); ?>
 
 <form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep()); ?>"
       method="POST" autocomplete="off" novalidate="">
@@ -15,47 +15,47 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <p class="lede">Enter all of your names in full - don't use initials.</p>
 
         <?php
-        $classFormGroup =  $firstNameHasError ? 'has-error' : '';
+        $classFormGroup = $firstNameHasError ? 'has-error' : '';
         echo $this->partial(
             'partial/forms/inputBox.phtml', [
-                'id'    => 'firstName',
+                'id' => 'firstName',
                 'label' => 'First name',
                 'labelId' => 'first-name',
-                'type'  => 'text',
+                'type' => 'text',
                 'classFormGroup' => $classFormGroup,
                 'errors' => $errors['firstName'],
                 'classLabel' => 'form-label',
-                'value' => $firstName ? : '',
+                'value' => $firstName ?: '',
                 'optional' => false,
             ]
         );
 
-        $classFormGroup =  $middleNameHasError ? 'has-error' : '';
+        $classFormGroup = $middleNameHasError ? 'has-error' : '';
         echo $this->partial(
             'partial/forms/inputBox.phtml', [
-                'id'    => 'middleName',
+                'id' => 'middleName',
                 'label' => 'Middle name',
                 'labelId' => 'middle-name',
-                'type'  => 'text',
+                'type' => 'text',
                 'classFormGroup' => $classFormGroup,
                 'errors' => $errors['middleName'],
                 'classLabel' => 'form-label',
-                'value' => $middleName ? : '',
+                'value' => $middleName ?: '',
                 'optional' => true,
             ]
         );
 
-        $classFormGroup =  $lastNameHasError ? 'has-error' : '';
+        $classFormGroup = $lastNameHasError ? 'has-error' : '';
         echo $this->partial(
             'partial/forms/inputBox.phtml', [
-                'id'    => 'lastName',
+                'id' => 'lastName',
                 'label' => 'Last name',
                 'labelId' => 'last-name',
-                'type'  => 'text',
+                'type' => 'text',
                 'classFormGroup' => $classFormGroup,
                 'errors' => $errors['lastName'],
                 'classLabel' => 'form-label',
-                'value' => $lastName ? : '',
+                'value' => $lastName ?: '',
                 'optional' => false,
             ]
         ); ?>
@@ -66,9 +66,13 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
     <p class="lede">
         This helps DVSA to identify you if you contact them.
     </p>
-    <div class="form-group <?php if ($dateHasError) echo ' has-error' ?>">
+    <div class="form-group <?php if ($dateHasError) {
+            echo ' has-error';
+        } ?>">
             <fieldset>
-                <div class="form-date <?php if ($dateHasError) echo ' has-error' ?>">
+                <div class="form-date <?php if ($dateHasError) {
+            echo ' has-error';
+        } ?>">
                     <p>Enter your date of birth</p>
                     <span class="form-hint">For example, 31 03 2015
                         <?php
@@ -79,15 +83,15 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
                     </span>
                     <div class="form-group form-group-day">
                         <label for="day">Day</label>
-                        <input type="text" id="day" name="day" class="form-control" value="<?php echo $this->escapeHtmlAttr($day);?>">
+                        <input type="text" id="day" name="day" class="form-control" value="<?php echo $this->escapeHtmlAttr($day); ?>">
                     </div>
                     <div class="form-group form-group-month">
                         <label for="month">Month</label>
-                        <input type="text" id="month" name="month" class="form-control" value="<?php echo $this->escapeHtmlAttr($month);?>">
+                        <input type="text" id="month" name="month" class="form-control" value="<?php echo $this->escapeHtmlAttr($month); ?>">
                     </div>
                     <div class="form-group form-group-year">
                         <label for="year">Year</label>
-                        <input type="text" id="year" name="year" class="form-control" value="<?php echo $this->escapeHtmlAttr($year);?>">
+                        <input type="text" id="year" name="year" class="form-control" value="<?php echo $this->escapeHtmlAttr($year); ?>">
                     </div>
                 </div>
             </fieldset>
@@ -102,7 +106,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
                 'id' => 'continue',
                 'name' => 'action',
                 'value' => 'Continue',
-                'cssClass' => 'button'
+                'cssClass' => 'button',
             ]
         );
         ?>

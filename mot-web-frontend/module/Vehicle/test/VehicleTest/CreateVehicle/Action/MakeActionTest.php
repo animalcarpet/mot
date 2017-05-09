@@ -36,7 +36,7 @@ class MakeActionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::MOT_TEST_START)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $this->createVehicleStepService
             ->expects($this->never())
@@ -91,14 +91,14 @@ class MakeActionTest extends \PHPUnit_Framework_TestCase
 
     private function getMockedSampleData()
     {
-        return ['make' => [['id' => 'HN123' ,'name' => 'Honda'],['id' => 'HN123' ,'name' => 'Honda']]];
+        return ['make' => [['id' => 'HN123', 'name' => 'Honda'], ['id' => 'HN123', 'name' => 'Honda']]];
     }
 
     private function getMockPostData()
     {
         return [
             'vehicleMake' => 'Other',
-            'Other' => 'Batmobile'
+            'Other' => 'Batmobile',
         ];
     }
 
@@ -109,7 +109,6 @@ class MakeActionTest extends \PHPUnit_Framework_TestCase
             ->method('getStaticData')
             ->willReturn($this->getMockedSampleData());
     }
-
 
     private function withPermissionToBeOnStep()
     {

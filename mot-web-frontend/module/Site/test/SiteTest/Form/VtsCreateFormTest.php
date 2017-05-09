@@ -21,7 +21,6 @@ use DvsaCommon\Enum\SiteTypeName;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Form\VtsCreateForm;
-use \PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Zend\Stdlib\Parameters;
 
 class VtsCreateFormTest extends \PHPUnit_Framework_TestCase
@@ -50,12 +49,12 @@ class VtsCreateFormTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . $method}($value);
+        $result = $this->model->{'set'.$method}($value);
         $this->assertInstanceOf(VtsCreateForm::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -107,11 +106,11 @@ class VtsCreateFormTest extends \PHPUnit_Framework_TestCase
                     VtsCreateForm::FIELD_COUNTRY => 'country',
                     VtsCreateForm::FIELD_TESTING_FACILITY_OPTL => 1,
                     VtsCreateForm::FIELD_TESTING_FACILITY_TPTL => 1,
-                    VtsCreateForm::FIELD_VEHICLE_CLASS => [1,2],
+                    VtsCreateForm::FIELD_VEHICLE_CLASS => [1, 2],
                     SiteContactTypeCode::BUSINESS => [
                         AddressFormModel::FIELD_LINE1 => 'test_Addr1',
-                        PhoneFormModel::FIELD_NUMBER  => 'test_Phone1',
-                        EmailFormModel::FIELD_EMAIL   => 'test_Email1',
+                        PhoneFormModel::FIELD_NUMBER => 'test_Phone1',
+                        EmailFormModel::FIELD_EMAIL => 'test_Email1',
                     ],
                 ],
             ],
@@ -149,22 +148,22 @@ class VtsCreateFormTest extends \PHPUnit_Framework_TestCase
                     VtsCreateForm::FIELD_NAME => 'test_SiteName',
                     VtsCreateForm::FIELD_TESTING_FACILITY_OPTL => 1,
                     VtsCreateForm::FIELD_TESTING_FACILITY_TPTL => 2,
-                    VtsCreateForm::FIELD_VEHICLE_CLASS => [1,2],
+                    VtsCreateForm::FIELD_VEHICLE_CLASS => [1, 2],
                     VtsCreateForm::FIELD_COUNTRY => 'country',
                     SiteContactTypeCode::BUSINESS => [
                         AddressFormModel::FIELD_LINE1 => 'test_Addr1',
-                        PhoneFormModel::FIELD_NUMBER  => 'test_Phone1',
-                        EmailFormModel::FIELD_EMAIL   => 'test_Email1',
+                        PhoneFormModel::FIELD_NUMBER => 'test_Phone1',
+                        EmailFormModel::FIELD_EMAIL => 'test_Email1',
                     ],
                 ],
-                'expect'   => (new VehicleTestingStationDto())
+                'expect' => (new VehicleTestingStationDto())
                     ->setIsOptlSelected(true)
                     ->setIsTptlSelected(true)
                     ->setName('test_SiteName')
                     ->setContacts([$contactDto])
                     ->setFacilities($facilities)
                     ->setType(SiteTypeCode::VEHICLE_TESTING_STATION)
-                    ->setTestClasses([1,2])
+                    ->setTestClasses([1, 2]),
             ],
         ];
     }
@@ -202,14 +201,14 @@ class VtsCreateFormTest extends \PHPUnit_Framework_TestCase
     public function testGetDropDown()
     {
         $this->assertSame(
-            [ 0, 1, 2, 3, 4, '5 or more'],
+            [0, 1, 2, 3, 4, '5 or more'],
             $this->model->getTestingFacilities()
         );
         $this->assertSame(
             [
                 SiteTypeCode::VEHICLE_TESTING_STATION => SiteTypeName::VEHICLE_TESTING_STATION,
-                SiteTypeCode::AREA_OFFICE             => SiteTypeName::AREA_OFFICE,
-                SiteTypeCode::TRAINING_CENTRE         => SiteTypeName::TRAINING_CENTRE,
+                SiteTypeCode::AREA_OFFICE => SiteTypeName::AREA_OFFICE,
+                SiteTypeCode::TRAINING_CENTRE => SiteTypeName::TRAINING_CENTRE,
             ],
             $this->model->getSiteTypes()
         );

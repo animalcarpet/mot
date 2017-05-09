@@ -74,7 +74,7 @@ class OdometerReadingDeltaAnomalyChecker
      */
     private function isMuchHigherThanLastOne($delta)
     {
-        $limit = (int)$this->configurationRepository->getValue(self::CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH);
+        $limit = (int) $this->configurationRepository->getValue(self::CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH);
 
         return $delta >= $limit;
     }

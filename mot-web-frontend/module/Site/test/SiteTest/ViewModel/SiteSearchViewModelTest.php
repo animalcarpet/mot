@@ -9,8 +9,7 @@ use Site\ViewModel\SiteSearchViewModel;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 /**
- * Class SiteSearchViewModelTest
- * @package SiteTest\ViewModel
+ * Class SiteSearchViewModelTest.
  */
 class SiteSearchViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +28,7 @@ class SiteSearchViewModelTest extends \PHPUnit_Framework_TestCase
                 SiteSearchParamsDto::SITE_NAME => self::SITE_NAME,
                 SiteSearchParamsDto::SITE_TOWN => self::SITE_TOWN,
                 SiteSearchParamsDto::SITE_POSTCODE => self::SITE_POSTCODE,
-                SiteSearchParamsDto::SITE_VEHICLE_CLASS => []
+                SiteSearchParamsDto::SITE_VEHICLE_CLASS => [],
             ]
         );
 
@@ -50,7 +49,7 @@ class SiteSearchViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(SiteSearchParamsDto::class, $model->prepareSearchParams());
 
         $this->assertEquals(
-            SiteUrlBuilderWeb::search() . '?' . http_build_query($model->toArray()),
+            SiteUrlBuilderWeb::search().'?'.http_build_query($model->toArray()),
             $model->getSearchPage()
         );
         $this->assertEquals(SiteUrlBuilderWeb::result(), $model->getResultPage());
@@ -103,40 +102,40 @@ class SiteSearchViewModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'value'     => '1',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 1',
-                'checked'   => false,
+                'value' => '1',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 1',
+                'checked' => false,
             ],
             [
-                'value'     => '2',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 2',
-                'checked'   => false,
+                'value' => '2',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 2',
+                'checked' => false,
             ],
             [
-                'value'     => '3',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 3',
-                'checked'   => false,
+                'value' => '3',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 3',
+                'checked' => false,
             ],
             [
-                'value'     => '4',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 4',
-                'checked'   => false,
+                'value' => '4',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 4',
+                'checked' => false,
             ],
             [
-                'value'     => '5',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 5',
-                'checked'   => false,
+                'value' => '5',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 5',
+                'checked' => false,
             ],
             [
-                'value'     => '7',
-                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS . '[]',
-                'key'       => 'Class 7',
-                'checked'   => false,
+                'value' => '7',
+                'inputName' => SiteSearchParamsDto::SITE_VEHICLE_CLASS.'[]',
+                'key' => 'Class 7',
+                'checked' => false,
             ],
         ];
     }

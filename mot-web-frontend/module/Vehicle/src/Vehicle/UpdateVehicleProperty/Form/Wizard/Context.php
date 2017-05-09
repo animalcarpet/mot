@@ -1,9 +1,9 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form\Wizard;
 
 use Core\FormWizard\WizardContextInterface;
 use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 
 class Context implements WizardContextInterface
 {
@@ -27,11 +27,13 @@ class Context implements WizardContextInterface
 
     /**
      * @param string $obfuscatedVehicleId
+     *
      * @return Context
      */
     public function setObfuscatedVehicleId($obfuscatedVehicleId)
     {
         $this->obfuscatedVehicleId = $obfuscatedVehicleId;
+
         return $this;
     }
 
@@ -45,11 +47,13 @@ class Context implements WizardContextInterface
 
     /**
      * @param AbstractVehicle $vehicle
+     *
      * @return Context
      */
     public function setVehicle(AbstractVehicle $vehicle)
     {
         $this->vehicle = $vehicle;
+
         return $this;
     }
 }

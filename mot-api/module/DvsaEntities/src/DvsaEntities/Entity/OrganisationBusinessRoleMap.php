@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * OrganisationBusinessRoleMap
+ * OrganisationBusinessRoleMap.
  *
  * @ORM\Table(
  *  name="organisation_business_role_map",
@@ -87,7 +87,7 @@ class OrganisationBusinessRoleMap extends Entity
     private $person;
 
     /**
-     * Set statusChangedOn
+     * Set statusChangedOn.
      *
      * @param \DateTime $statusChangedOn
      *
@@ -101,7 +101,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Get statusChangedOn
+     * Get statusChangedOn.
      *
      * @return \DateTime
      */
@@ -111,7 +111,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Set validFrom
+     * Set validFrom.
      *
      * @param \DateTime $validFrom
      *
@@ -125,7 +125,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Get validFrom
+     * Get validFrom.
      *
      * @return \DateTime
      */
@@ -135,7 +135,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Set expiryDate
+     * Set expiryDate.
      *
      * @param \DateTime $expiryDate
      *
@@ -149,7 +149,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Get expiryDate
+     * Get expiryDate.
      *
      * @return \DateTime
      */
@@ -159,7 +159,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Set organisationBusinessRole
+     * Set organisationBusinessRole.
      *
      * @param \DvsaEntities\Entity\OrganisationBusinessRole $organisationBusinessRole
      *
@@ -173,7 +173,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Get organisationBusinessRole
+     * Get organisationBusinessRole.
      *
      * @return \DvsaEntities\Entity\OrganisationBusinessRole
      */
@@ -183,7 +183,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Set businessRoleStatus
+     * Set businessRoleStatus.
      *
      * @param \DvsaEntities\Entity\BusinessRoleStatus $businessRoleStatus
      *
@@ -197,7 +197,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Get businessRoleStatus
+     * Get businessRoleStatus.
      *
      * @return \DvsaEntities\Entity\BusinessRoleStatus
      */
@@ -207,7 +207,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param \DvsaEntities\Entity\Organisation $organisation
      *
@@ -221,7 +221,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return \DvsaEntities\Entity\Organisation
      */
@@ -231,7 +231,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
      *
@@ -245,7 +245,7 @@ class OrganisationBusinessRoleMap extends Entity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */

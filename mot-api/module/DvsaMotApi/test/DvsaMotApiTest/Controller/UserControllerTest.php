@@ -10,7 +10,6 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaMotApi\Controller\UserController;
 use DvsaMotApi\Service\UserService;
 use Zend\Http\Request;
-use Zend\Http\Response;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -23,14 +22,14 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
     protected function setUp()
     {
         $usernameValidatorMock = $this->createUsernameValidatorMock(true);
-        $this->controller      = new UserController($usernameValidatorMock);
+        $this->controller = new UserController($usernameValidatorMock);
 
         parent::setUp();
     }
 
     public function testGetListCantBeAccessed()
     {
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertEquals(HttpStatus::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -39,7 +38,7 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
 
     public function testGetCanBeAccessed()
     {
-        $username        = 'tester1';
+        $username = 'tester1';
         $expectedResults = ['username' => 'tester1'];
         $this->routeMatch->setParam('username', $username);
 
@@ -49,8 +48,8 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
             ->method('getUserData')
             ->will($this->returnValue($expectedResults));
 
-        $result    = $this->controller->dispatch($this->request);
-        $response  = $this->controller->getResponse();
+        $result = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertInstanceOf(JsonModel::class, $result);
@@ -65,7 +64,7 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
      */
     public function testGetThrowsNotFoundResponseIfNotAuthorised()
     {
-        $username        = 'tester1';
+        $username = 'tester1';
         $this->routeMatch->setParam('username', $username);
 
         $mockUserService = $this->getMockUserService();
@@ -74,8 +73,8 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
             ->method('getUserData')
             ->will($this->throwException(new UnauthorisedException('')));
 
-        $result    = $this->controller->dispatch($this->request);
-        $response  = $this->controller->getResponse();
+        $result = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
 
         $this->assertEquals(HttpStatus::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertInstanceOf(JsonModel::class, $result);
@@ -94,10 +93,10 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
         $this->setController(new UserController($this->createUsernameValidatorMock(false)));
         $this->setUpController($this->getController());
 
-        $this->routeMatch->setParam('username', str_repeat('a', self::MAX_USERNAME_LENGTH+1));
+        $this->routeMatch->setParam('username', str_repeat('a', self::MAX_USERNAME_LENGTH + 1));
 
-        $result    = $this->controller->dispatch($this->request);
-        $response  = $this->controller->getResponse();
+        $result = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
 
         $this->assertEquals(HttpStatus::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         $this->assertInstanceOf(JsonModel::class, $result);
@@ -115,12 +114,12 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
         $validationMessages = $problem['validation_messages'];
         $this->assertArrayHasKey('username', $validationMessages);
         $this->assertArrayHasKey('stringLengthTooLong', $validationMessages['username']);
-        $this->assertEquals(sprintf("Username must be less than %s characters long.", self::MAX_USERNAME_LENGTH),
+        $this->assertEquals(sprintf('Username must be less than %s characters long.', self::MAX_USERNAME_LENGTH),
             $validationMessages['username']['stringLengthTooLong']);
     }
 
     /**
-     * @expectedException     DvsaCommonApi\Service\Exception\NotFoundException
+     * @expectedException     \DvsaCommonApi\Service\Exception\NotFoundException
      * @expectedExceptionCode 404
      */
     public function testGetReturnsErrorForUserWhoDoesNotExist()
@@ -134,7 +133,7 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
             ->method('getUserData')
             ->will($this->throwException(new NotFoundException('User', $username)));
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertUserNotFoundResponse($response, $result, $username);
@@ -181,7 +180,7 @@ class UserControllerTest extends AbstractMotApiControllerTestCase
             ->willReturn($isValid);
 
         if (!$isValid) {
-            $messages = ['stringLengthTooLong' => sprintf("Username must be less than %s characters long.",
+            $messages = ['stringLengthTooLong' => sprintf('Username must be less than %s characters long.',
                 self::MAX_USERNAME_LENGTH)];
 
             $usernameValidatorMock

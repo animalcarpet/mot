@@ -5,12 +5,9 @@ namespace TestSupport\Service;
 use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use Dvsa\Mot\ApiClient\Request\CreateDvsaVehicleRequest;
 use Doctrine\ORM\EntityManager;
-use Doctrine\DBAL\Connection;
 use DvsaCommon\Enum\ColourCode;
-use DvsaCommon\Enum\ColourId;
 use DvsaCommon\Enum\CountryOfRegistrationId;
 use DvsaCommon\Enum\FuelTypeCode;
-use DvsaCommon\Enum\FuelTypeId;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Utility\ArrayUtils;
 use TestSupport\Helper\TestSupportAccessTokenManager;
@@ -37,30 +34,32 @@ class VehicleService
 
     /**
      * VehicleService constructor.
-     * @param EntityManager $entityManager
+     *
+     * @param EntityManager                 $entityManager
      * @param TestSupportAccessTokenManager $tokenManager
-     * @param string $vehicleServiceUrl java vehicle-service url
+     * @param string                        $vehicleServiceUrl java vehicle-service url
      */
     public function __construct(
         EntityManager $entityManager,
         TestSupportAccessTokenManager $tokenManager,
         $vehicleServiceUrl
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->tokenManager = $tokenManager;
 
         $this->newVehicleServiceAdditionalConfig = [
             'http_client' => [
-                'base_uri' =>  $vehicleServiceUrl
-            ]
+                'base_uri' => $vehicleServiceUrl,
+            ],
         ];
     }
 
     /**
-     * Uses save internally to minimise what data is needed to be provided
+     * Uses save internally to minimise what data is needed to be provided.
+     *
      * @param string $token
-     * @param array $overrideData
+     * @param array  $overrideData
+     *
      * @return int
      */
     public function createWithDefaults($token, array $overrideData = [])
@@ -89,25 +88,25 @@ class VehicleService
 
         $createDvsaVehicleRequest = new CreateDvsaVehicleRequest();
         $createDvsaVehicleRequest
-            -> setModelId($data['modelId'])
-            -> setMakeId($data['makeId'])
-            -> setTransmissionTypeId($data['transmissionTypeId'])
-            -> setRegistration($data['registrationNumber'])
-            -> setVin($data['vin'])
-            -> setCountryOfRegistrationId($data['countryOfRegistrationId'])
-            -> setColourCode($data['colourCode'])
-            -> setSecondaryColourCode($data['secondaryColourCode'])
-            -> setFuelTypeCode($data['fuelTypeCode'])
-            -> setFirstUsedDate(new \DateTime($data['dateOfFirstUse']))
-            -> setCylinderCapacity($data['cylinderCapacity'])
-            -> setVehicleClassCode($data['testClass']);
+            ->setModelId($data['modelId'])
+            ->setMakeId($data['makeId'])
+            ->setTransmissionTypeId($data['transmissionTypeId'])
+            ->setRegistration($data['registrationNumber'])
+            ->setVin($data['vin'])
+            ->setCountryOfRegistrationId($data['countryOfRegistrationId'])
+            ->setColourCode($data['colourCode'])
+            ->setSecondaryColourCode($data['secondaryColourCode'])
+            ->setFuelTypeCode($data['fuelTypeCode'])
+            ->setFirstUsedDate(new \DateTime($data['dateOfFirstUse']))
+            ->setCylinderCapacity($data['cylinderCapacity'])
+            ->setVehicleClassCode($data['testClass']);
 
         $vehicleId = $vehicleService->createDvsaVehicle($createDvsaVehicleRequest)->getId();
 
         $connection = $this->entityManager->getConnection();
-        $updateDatesSql = "UPDATE vehicle SET manufacture_date = '" . $data['dateOfManufacture'] . "'";
-        $updateDatesSql .= " ,first_registration_date = '" . $data['dateOfRegistration'] . "'";
-        $updateDatesSql .= " WHERE id = " . $vehicleId . ";";
+        $updateDatesSql = "UPDATE vehicle SET manufacture_date = '".$data['dateOfManufacture']."'";
+        $updateDatesSql .= " ,first_registration_date = '".$data['dateOfRegistration']."'";
+        $updateDatesSql .= ' WHERE id = '.$vehicleId.';';
         $connection->prepare($updateDatesSql)->execute();
 
         return $vehicleId;
@@ -116,7 +115,8 @@ class VehicleService
     /**
      * @param string $testerToken
      * @param string $veToken
-     * @param array $data
+     * @param array  $data
+     *
      * @return int
      */
     public function createMaskedVehicle($testerToken, $veToken, array $data)
@@ -137,6 +137,7 @@ class VehicleService
 
     /**
      * @param array $data
+     *
      * @return int
      */
     public function save(array $data)
@@ -150,8 +151,7 @@ class VehicleService
         $vehicleData['model_detail_id'] = $connection->lastInsertId();
 
         $types = [];
-        if (is_null($vehicleData['manufacture_date']))
-        {
+        if (is_null($vehicleData['manufacture_date'])) {
             $types['manufacture_date'] = \PDO::PARAM_NULL;
         }
 
@@ -161,12 +161,12 @@ class VehicleService
             $types
         );
 
-        return (int)$connection->lastInsertId();
+        return (int) $connection->lastInsertId();
     }
 
     /**
      * @param string $id
-     * @param array $data
+     * @param array  $data
      */
     public function update($id, $data)
     {
@@ -179,28 +179,28 @@ class VehicleService
     {
         $vehicleData = [
             self::KEY_VEHICLE => [],
-            self::KEY_MODEL_DETAIL => []
+            self::KEY_MODEL_DETAIL => [],
         ];
 
         $createdBy = ArrayUtils::tryGet($data, 'createdBy', 2);
 
-        $stmt = $this->entityManager->getConnection()->prepare($this->getSql("model"));
-        $stmt->bindValue("code", ArrayUtils::tryGet($data, 'model'));
+        $stmt = $this->entityManager->getConnection()->prepare($this->getSql('model'));
+        $stmt->bindValue('code', ArrayUtils::tryGet($data, 'model'));
         $stmt->execute();
         $modelId = $stmt->fetchColumn();
 
         $vehicleData[self::KEY_MODEL_DETAIL] = [
-            'body_type_id' => $this->fetchId("body_type", ArrayUtils::tryGet($data, 'bodyType')),
+            'body_type_id' => $this->fetchId('body_type', ArrayUtils::tryGet($data, 'bodyType')),
             'created_by' => $createdBy,
-            'fuel_type_id' => $this->fetchId("fuel_type", ArrayUtils::tryGet($data, 'fuelType')),
+            'fuel_type_id' => $this->fetchId('fuel_type', ArrayUtils::tryGet($data, 'fuelType')),
             'model_id' => $modelId,
-            'transmission_type_id' => $this->fetchId("transmission_type", ArrayUtils::tryGet($data, 'transmissionType')),
-            'vehicle_class_id' => $this->fetchId("vehicle_class", ArrayUtils::tryGet($data, 'testClass')),
+            'transmission_type_id' => $this->fetchId('transmission_type', ArrayUtils::tryGet($data, 'transmissionType')),
+            'vehicle_class_id' => $this->fetchId('vehicle_class', ArrayUtils::tryGet($data, 'testClass')),
         ];
 
         $vehicleData[self::KEY_VEHICLE] = [
             'country_of_registration_id' => $this->fetchId(
-                "country_of_registration_lookup",
+                'country_of_registration_lookup',
                 ArrayUtils::tryGet($data, 'countryOfRegistration')
             ),
             'created_by' => $createdBy,
@@ -208,11 +208,11 @@ class VehicleService
             'first_used_date' => ArrayUtils::tryGet($data, 'dateOfFirstUse'),
             'is_new_at_first_reg' => ArrayUtils::tryGet($data, 'newAtFirstReg', 0),
             'manufacture_date' => ArrayUtils::tryGet($data, 'manufactureDate', null),
-            'primary_colour_id' => $this->fetchId("colour_lookup", ArrayUtils::tryGet($data, 'colour')),
+            'primary_colour_id' => $this->fetchId('colour_lookup', ArrayUtils::tryGet($data, 'colour')),
             'registration' => ArrayUtils::tryGet($data, 'registrationNumber'),
-            'secondary_colour_id' => $this->fetchId("colour_lookup", ArrayUtils::tryGet($data, 'secondaryColour')),
+            'secondary_colour_id' => $this->fetchId('colour_lookup', ArrayUtils::tryGet($data, 'secondaryColour')),
             'vin' => ArrayUtils::tryGet($data, 'vin'),
-            'weight' => ArrayUtils::tryGet($data, "weight", 1000),
+            'weight' => ArrayUtils::tryGet($data, 'weight', 1000),
         ];
 
         return $vehicleData;
@@ -220,17 +220,17 @@ class VehicleService
 
     private function getSql($table)
     {
-        return sprintf("SELECT `id` FROM `%s` where `code` = :code", $table);
+        return sprintf('SELECT `id` FROM `%s` where `code` = :code', $table);
     }
 
     private function fetchId($table, $code)
     {
         $connection = $this->entityManager->getConnection();
         $stmt = $connection->prepare($this->getSql($table));
-        $stmt->bindValue("code", $code);
+        $stmt->bindValue('code', $code);
         $stmt->execute();
 
-        return (int)$stmt->fetchColumn();
+        return (int) $stmt->fetchColumn();
     }
 
     private function prepareInsertQuery($vehicleData)
@@ -248,7 +248,7 @@ class VehicleService
         $vin = $vehicleData['vin'];
         $weight = $vehicleData['weight'];
 
-        $manufactureDate == null ? null : '\'' . $manufactureDate . '\'';
+        $manufactureDate == null ? null : '\''.$manufactureDate.'\'';
 
         $sql = <<<EOF
 INSERT INTO `vehicle` (
@@ -291,12 +291,15 @@ INSERT INTO `vehicle` (
         $weight
 );
 EOF;
+
         return $sql;
     }
 
     /**
      * @param string $token
+     *
      * @return NewVehicleService
+     *
      * @throws \Exception
      */
     private function getNewVehicleServiceForUser($token)

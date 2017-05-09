@@ -54,7 +54,7 @@ class NotificationViewModelTest extends PHPUnit_Framework_TestCase
             ['is-unread', ['readOn' => null]],
             ['is-read', ['readOn' => '2017-01-11T15:00:11Z']],
             ['is-unread is-nomination', ['readOn' => null, 'actions' => ['REJECTED'], 'action' => 'REJECTED']],
-            ['is-read is-nomination', ['readOn' => '2017-01-11T15:00:11Z', 'actions' => ['REJECTED'], 'action' => 'REJECTED']]
+            ['is-read is-nomination', ['readOn' => '2017-01-11T15:00:11Z', 'actions' => ['REJECTED'], 'action' => 'REJECTED']],
         ];
     }
 
@@ -92,7 +92,7 @@ class NotificationViewModelTest extends PHPUnit_Framework_TestCase
             'updatedOn' => '',
             'fields' => [],
             'templateId' => 9,
-            'isArchived' => false
+            'isArchived' => false,
         ];
 
         return new Notification(array_merge($defaults, $data));

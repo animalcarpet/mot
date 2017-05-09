@@ -6,8 +6,8 @@ use Doctrine\ORM\EntityRepository;
 use DvsaEntities\Entity\CensorBlacklist;
 
 /**
- * Class CensorBlacklistRepository
- * @package DvsaEntities\Repository
+ * Class CensorBlacklistRepository.
+ *
  * @codeCoverageIgnore
  */
 class CensorBlacklistRepository extends EntityRepository

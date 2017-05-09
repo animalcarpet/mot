@@ -57,23 +57,23 @@ class UserNameGeneratorTest extends AbstractServiceTestCase
     public function generateUsernameDataProvider()
     {
         return [
-            ['x','o','OXOX'],
-            ['xo','s','SXOS'],
-            ['s','xo','XOSX'],
-            ['s','xox','XOXS'],
-            ['xox','s','SXOX'],
-            ['s','xoxo','XOXO'],
-            ['xoxo','s','SXOX'],
+            ['x', 'o', 'OXOX'],
+            ['xo', 's', 'SXOS'],
+            ['s', 'xo', 'XOSX'],
+            ['s', 'xox', 'XOXS'],
+            ['xox', 's', 'SXOX'],
+            ['s', 'xoxo', 'XOXO'],
+            ['xoxo', 's', 'SXOX'],
             ['test', 'áöß', 'AOSS'], // Test special characters are properly converted
             ['XOXO', 'XOXO', 'XOXO'], // Testing uppercase stays uppercase
             ['this', 'te-st', 'TEST'], // Testing removal of - character
             ['Mr', "O'Shea", 'OSHE'], // Testing removal of apostrophe
-            ['test', "!@£$%^&*()test", "TEST"],
+            ['test', '!@£$%^&*()test', 'TEST'],
         ];
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Forename or Surname is empty
      * @dataProvider invalidInputDataProvider
      */
@@ -127,14 +127,14 @@ class UserNameGeneratorTest extends AbstractServiceTestCase
     }
 
     /**
-     * @expectedException Dvsa\Mot\Api\RegistrationModule\Service\Exception\UserLimitReachedException
+     * @expectedException \Dvsa\Mot\Api\RegistrationModule\Service\Exception\UserLimitReachedException
      * @expectedExceptionMessage Upper limit for usernames reached
      */
     public function testUserLimitReached()
     {
         $this->personRepo->expects($this->once())
             ->method('getLastUsername')
-            ->willReturn('MARI' . UsernameGenerator::USERNAME_UPPER_LIMIT);
+            ->willReturn('MARI'.UsernameGenerator::USERNAME_UPPER_LIMIT);
 
         $this->userNameGenerationService->generateUsername('test', 'MARI', 'password');
     }

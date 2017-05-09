@@ -8,7 +8,6 @@ use DvsaEntities\Repository\SiteRepository;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\VehicleHistoryService;
 use Zend\ServiceManager\FactoryInterface;
-use Doctrine\ORM\EntityManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class VehicleHistoryServiceFactory implements FactoryInterface

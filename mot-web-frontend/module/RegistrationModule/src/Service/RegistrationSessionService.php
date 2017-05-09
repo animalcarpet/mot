@@ -8,7 +8,6 @@
 namespace Dvsa\Mot\Frontend\RegistrationModule\Service;
 
 use Core\Service\SessionService;
-use Zend\Session\Container;
 
 /**
  * Class RegistrationSessionService.
@@ -17,9 +16,6 @@ class RegistrationSessionService extends SessionService
 {
     const UNIQUE_KEY = 'registration';
 
-    /**
-     *
-     */
     public function checkQuestionsAvailable()
     {
         $groupA = 'securityQuestionsGroupA';

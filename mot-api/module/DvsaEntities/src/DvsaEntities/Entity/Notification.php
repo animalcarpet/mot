@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -8,7 +9,7 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Notification
+ * Notification.
  *
  * @ORM\Table(name="notification", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_notification_1", columns={"notification_template_id"}), @ORM\Index(name="fk_notification_2", columns={"recipient_id"})})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\NotificationRepository")
@@ -26,9 +27,8 @@ class Notification extends Entity
      */
     private $readOn;
 
-
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_archived", type="boolean", nullable=false)
      */
@@ -78,7 +78,7 @@ class Notification extends Entity
     private $action;
 
     /**
-     * true if this notification has got at least one possible action
+     * true if this notification has got at least one possible action.
      *
      * @return bool
      */
@@ -104,23 +104,25 @@ class Notification extends Entity
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * true if an action has been taken
+     * true if an action has been taken.
      *
      * @return bool
      */
     public function isActionDone()
     {
-        return (null !== $this->getAction());
+        return null !== $this->getAction();
     }
 
     /**
      * @param string $key
      *
      * @return mixed
+     *
      * @throws NotFoundException | BadRequestException
      */
     public function getFieldValue($key)
@@ -137,7 +139,7 @@ class Notification extends Entity
             throw new NotFoundException(NotificationField::ENTITY_NAME, $key);
         }
         throw new BadRequestException(
-            'Expected not empty array, given ' . gettype($fields) . ' count(' . count($fields) . ')',
+            'Expected not empty array, given '.gettype($fields).' count('.count($fields).')',
             BadRequestException::ERROR_CODE_INVALID_DATA
         );
     }
@@ -155,16 +157,19 @@ class Notification extends Entity
     public function setFields($fields)
     {
         $this->fields = $fields;
+
         return $this;
     }
 
     /**
      * @param NotificationField $field
+     *
      * @return $this
      */
     public function addField(NotificationField $field)
     {
         $this->fields->add($field);
+
         return $this;
     }
 
@@ -184,6 +189,7 @@ class Notification extends Entity
     public function setNotificationTemplate($notificationTemplate)
     {
         $this->notificationTemplate = $notificationTemplate;
+
         return $this;
     }
 
@@ -203,6 +209,7 @@ class Notification extends Entity
     public function setReadOn($readOn)
     {
         $this->readOn = $readOn;
+
         return $this;
     }
 
@@ -222,6 +229,7 @@ class Notification extends Entity
     public function setRecipient($recipient)
     {
         $this->recipient = $recipient;
+
         return $this;
     }
 
@@ -254,7 +262,7 @@ class Notification extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsArchived()
     {
@@ -262,12 +270,14 @@ class Notification extends Entity
     }
 
     /**
-     * @param boolean $isArchived
+     * @param bool $isArchived
+     *
      * @return Notification
      */
     public function setIsArchived($isArchived)
     {
         $this->isArchived = $isArchived;
+
         return $this;
     }
 }

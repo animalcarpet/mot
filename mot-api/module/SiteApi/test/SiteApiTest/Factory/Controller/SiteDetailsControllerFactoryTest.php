@@ -10,7 +10,6 @@ use Zend\ServiceManager\ServiceManager;
 
 class SiteDetailsControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
@@ -29,5 +28,4 @@ class SiteDetailsControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(SiteDetailsController::class, $factoryResult);
     }
-
 }

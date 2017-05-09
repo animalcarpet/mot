@@ -48,7 +48,7 @@ class SurveyToken
      *
      * @param string $uuid The string UUID to test
      *
-     * @return boolean
+     * @return bool
      */
     public static function isValid($uuid)
     {

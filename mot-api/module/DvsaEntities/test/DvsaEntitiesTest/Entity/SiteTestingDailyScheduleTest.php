@@ -2,14 +2,13 @@
 
 namespace DvsaEntitiesTest\Entity;
 
-use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Time;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use PHPUnit_Framework_TestCase;
 
 /**
- * unit tests for SiteTestingDailySchedule
+ * unit tests for SiteTestingDailySchedule.
  */
 class SiteTestingDailyScheduleTest extends PHPUnit_Framework_TestCase
 {
@@ -32,12 +31,13 @@ class SiteTestingDailyScheduleTest extends PHPUnit_Framework_TestCase
     {
         $isOpen = false;
         $isClosed = true;
+
         return [
-            [self::generateSchedule($isClosed), "2012-01-01T12:00:00Z",  true],
-            [self::generateSchedule($isOpen, '12:00:00', '16:00:00'), "11:59:59",  true],
-            [self::generateSchedule($isOpen, '12:00:00', '16:00:00'), "16:00:00",  true],
-            [self::generateSchedule($isOpen, '12:00:00', '00:00:00'), "00:00:00",  true],
-            [self::generateSchedule($isOpen, '12:00:00', '16:00:00'), "12:00:00",  false],
+            [self::generateSchedule($isClosed), '2012-01-01T12:00:00Z',  true],
+            [self::generateSchedule($isOpen, '12:00:00', '16:00:00'), '11:59:59',  true],
+            [self::generateSchedule($isOpen, '12:00:00', '16:00:00'), '16:00:00',  true],
+            [self::generateSchedule($isOpen, '12:00:00', '00:00:00'), '00:00:00',  true],
+            [self::generateSchedule($isOpen, '12:00:00', '16:00:00'), '12:00:00',  false],
         ];
     }
 
@@ -52,11 +52,11 @@ class SiteTestingDailyScheduleTest extends PHPUnit_Framework_TestCase
 
     public function testGetScheduleForWeekday()
     {
-        $expectedSchedule =  new SiteTestingDailySchedule();
+        $expectedSchedule = new SiteTestingDailySchedule();
 
         $expectedSchedule->setWeekday(1)
-            ->setOpenTime(Time::fromIso8601("12:00:00"))
-            ->setCloseTime(Time::fromIso8601("16:00:00"))
+            ->setOpenTime(Time::fromIso8601('12:00:00'))
+            ->setCloseTime(Time::fromIso8601('16:00:00'))
             ->isClosed(false);
 
         $this->assertEquals(
@@ -76,7 +76,7 @@ class SiteTestingDailyScheduleTest extends PHPUnit_Framework_TestCase
     private static function generateSchedule($isClosed = false, $openTime = null, $closeTime = null)
     {
         $arr = [];
-        for ($i = 1; $i <= 7; $i++) {
+        for ($i = 1; $i <= 7; ++$i) {
             $s = new SiteTestingDailySchedule();
             $s->setWeekday($i);
             if (!$isClosed) {
@@ -85,6 +85,7 @@ class SiteTestingDailyScheduleTest extends PHPUnit_Framework_TestCase
             }
             $arr [] = $s;
         }
+
         return $arr;
     }
 }

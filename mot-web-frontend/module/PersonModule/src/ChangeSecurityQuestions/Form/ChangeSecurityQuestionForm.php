@@ -48,17 +48,17 @@ class ChangeSecurityQuestionForm extends Form
 
         if ($securityQuestions->getValue() == '') {
             $this->setCustomError($securityQuestions, self::MSG_INVALID_QUESTION_CHOICE);
-            $this->showLabelOnError(self::FIELD_QUESTIONS, "Choose a question");
+            $this->showLabelOnError(self::FIELD_QUESTIONS, 'Choose a question');
             $fieldsValid = false;
         }
 
         if (empty($answerValue)) {
             $this->setCustomError($securityQuestionAnswer, self::MSG_ANSWER_EMPTY);
-            $this->showLabelOnError(self::FIELD_QUESTION_ANSWER, "Your answer");
+            $this->showLabelOnError(self::FIELD_QUESTION_ANSWER, 'Your answer');
             $fieldsValid = false;
-        } else if (strlen($answerValue) > self::MAX_LENGTH) {
+        } elseif (strlen($answerValue) > self::MAX_LENGTH) {
             $this->setCustomError($securityQuestionAnswer, self::MSG_EXCEEDS_MAX_LENGTH);
-            $this->showLabelOnError(self::FIELD_QUESTION_ANSWER, "Your answer");
+            $this->showLabelOnError(self::FIELD_QUESTION_ANSWER, 'Your answer');
             $fieldsValid = false;
         }
 

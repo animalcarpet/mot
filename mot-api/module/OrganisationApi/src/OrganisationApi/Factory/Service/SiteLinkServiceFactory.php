@@ -15,14 +15,11 @@ use OrganisationApi\Service\Mapper\OrganisationSiteLinkMapper;
 use OrganisationApi\Service\SiteLinkService;
 use OrganisationApi\Service\Validator\SiteLinkValidator;
 use SiteApi\Service\MotTestInProgressService;
-use Zend\Http\Request;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SiteServiceFactory
- *
- * @package OrganisationApi\Factory\Service
+ * Class SiteServiceFactory.
  */
 class SiteLinkServiceFactory implements FactoryInterface
 {

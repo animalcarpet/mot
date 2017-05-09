@@ -25,15 +25,14 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class AbstractRestfulControllerTestCase
+ * Class AbstractRestfulControllerTestCase.
  */
 abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTestCase
 {
     /**
-     * Used when authentication and authorization is mocked
+     * Used when authentication and authorization is mocked.
      */
     const MOCK_USER_ID = 5;
 
@@ -54,9 +53,9 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->serviceManager->setAllowOverride(true);
-        $this->request    = new Request();
+        $this->request = new Request();
         $this->routeMatch = new RouteMatch(['controller' => 'index']);
-        $this->event      = new MvcEvent();
+        $this->event = new MvcEvent();
         $config = $this->serviceManager->get('Config');
         $routerConfig = isset($config['router']) ? $config['router'] : [];
         $router = HttpRouter::factory($routerConfig);
@@ -123,7 +122,7 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
 
     /**
      * This 'pointless' function is to suppress a PHPStorm warning about
-     * ZendAuthorizationHeader->value having protected access
+     * ZendAuthorizationHeader->value having protected access.
      */
     private function setValue($header, $accessToken)
     {
@@ -131,7 +130,7 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
     }
 
     /**
-     * TODO inline this superceded method
+     * TODO inline this superceded method.
      */
     protected function getMockWithDisabledConstructor($mockClass, $methods = null)
     {
@@ -184,8 +183,9 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
 
     /**
      * @param string $action
-     * @param array $postParams
-     * @param array $routeParams
+     * @param array  $postParams
+     * @param array  $routeParams
+     *
      * @return HttpResponse|\Zend\Stdlib\ResponseInterface
      */
     public function getPostResultToAction($action, array $postParams, array $routeParams = [])
@@ -194,12 +194,13 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
     }
 
     /**
-     * @param string $method
+     * @param string      $method
      * @param string|null $action
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param array $postParams
-     * @param array $putParams
+     * @param array       $routeParams
+     * @param array       $queryParams
+     * @param array       $postParams
+     * @param array       $putParams
+     *
      * @return HttpResponse|\Zend\Stdlib\ResponseInterface
      */
     public function getResultForAction(
@@ -221,7 +222,7 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
         //  --  set route params    --
         if (!empty($routeParams) && is_array($routeParams)) {
             $content = null;
-            if (in_array(strtoupper($method) , [Request::METHOD_POST,Request::METHOD_PUT])) {
+            if (in_array(strtoupper($method), [Request::METHOD_POST, Request::METHOD_PUT])) {
                 if (!empty($postParams)) {
                     $content = $postParams;
                 } elseif (!empty($putParams)) {
@@ -237,7 +238,7 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
             }
 
             if (!empty($content)) {
-                $this->request->getHeaders()->addHeader(ContentType::fromString("content-type: application/json"));
+                $this->request->getHeaders()->addHeader(ContentType::fromString('content-type: application/json'));
                 $this->request->setContent(json_encode($content));
             }
         }
@@ -287,12 +288,12 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
     ) {
         $this->assertInstanceOf("Zend\View\Model\JsonModel", $result);
         $vars = $result->getVariables();
-        $this->assertTrue(array_key_exists('errors', $vars), "Should have errors");
+        $this->assertTrue(array_key_exists('errors', $vars), 'Should have errors');
 
         foreach ($errorArray as $error) {
             $this->assertEquals($error['message'], $vars['errors'][0]['message']);
             $this->assertEquals($error['code'], $vars['errors'][0]['code']);
-            $this->assertTrue(array_key_exists('displayMessage', $vars['errors'][0]), "Should have display message");
+            $this->assertTrue(array_key_exists('displayMessage', $vars['errors'][0]), 'Should have display message');
         }
     }
 }

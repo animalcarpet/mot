@@ -31,7 +31,7 @@ use PersonApi\Service\MotTestingCertificate\MotTestingCertificateNotification;
 
 class MotTestingCertificateService implements AutoWireableInterface
 {
-    const ERROR_CERT_EXISTS = "Mot Testing Certificate for group %s already exists";
+    const ERROR_CERT_EXISTS = 'Mot Testing Certificate for group %s already exists';
 
     private $readMotTestingCertificateAssertion;
     private $createMotTestingCertificateAssertion;
@@ -73,7 +73,7 @@ class MotTestingCertificateService implements AutoWireableInterface
         VehicleClassRepository $vehicleClassRepository,
         RemoveMotTestingCertificateService $removeMotTestingCertificateService,
         MotTestingCertificateNotification $notification
-    ){
+    ) {
         $this->readMotTestingCertificateAssertion = $readMotTestingCertificateAssertion;
         $this->createMotTestingCertificateAssertion = $createMotTestingCertificateAssertion;
         $this->updateMotTestingCertificateAssertion = $updateMotTestingCertificateAssertion;
@@ -97,6 +97,7 @@ class MotTestingCertificateService implements AutoWireableInterface
 
     /**
      * @param int $personId
+     *
      * @return MotTestingCertificateDto[]
      */
     public function getList($personId)
@@ -106,13 +107,16 @@ class MotTestingCertificateService implements AutoWireableInterface
         $this->readMotTestingCertificateAssertion->assertGranted($person, $this->getPersonSystemRoles($personId));
 
         $certificates = $this->motTestingCertificateRepository->findAllByPersonId($personId);
+
         return $this->motTestingCertificateMapper->manyToDto($certificates);
     }
 
     /**
      * @param string $group
-     * @param int $personId
+     * @param int    $personId
+     *
      * @return MotTestingCertificateDto
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($group, $personId)
@@ -122,6 +126,7 @@ class MotTestingCertificateService implements AutoWireableInterface
         $this->readMotTestingCertificateAssertion->assertGranted($person, $this->getPersonSystemRoles($personId));
 
         $certificate = $this->motTestingCertificateRepository->getOneByGroupAndPersonId($group, $personId);
+
         return $this->motTestingCertificateMapper->toDto($certificate);
     }
 
@@ -129,7 +134,7 @@ class MotTestingCertificateService implements AutoWireableInterface
     {
         $authorisation = $this->testerGroupAuthorisationMapper->getAuthorisation($personId);
         $personDetails = $this->personalDetailsService->get($personId);
-        $personSystemRoles = $personDetails->getRoles()["system"];
+        $personSystemRoles = $personDetails->getRoles()['system'];
 
         $this->createMotTestingCertificateAssertion->assertGranted($personId, $dto->getVehicleClassGroupCode(), $personSystemRoles, $authorisation);
 
@@ -157,7 +162,7 @@ class MotTestingCertificateService implements AutoWireableInterface
     {
         $authorisation = $this->testerGroupAuthorisationMapper->getAuthorisation($personId);
         $personDetails = $this->personalDetailsService->get($personId);
-        $personSystemRoles = $personDetails->getRoles()["system"];
+        $personSystemRoles = $personDetails->getRoles()['system'];
 
         $this->updateMotTestingCertificateAssertion->assertGranted($personId, $group, $personSystemRoles, $authorisation);
 
@@ -214,12 +219,14 @@ class MotTestingCertificateService implements AutoWireableInterface
 
     /**
      * @param $personId
+     *
      * @return []
      */
     private function getPersonSystemRoles($personId)
     {
         $personDetails = $this->personalDetailsService->get($personId);
-        return $personDetails->getRoles()["system"];
+
+        return $personDetails->getRoles()['system'];
     }
 
     /**
@@ -246,7 +253,6 @@ class MotTestingCertificateService implements AutoWireableInterface
 
                 $this->authorisationForTestingMotRepository->persist($authorisation);
             }
-
         }
 
         $this->authorisationForTestingMotRepository->flush();

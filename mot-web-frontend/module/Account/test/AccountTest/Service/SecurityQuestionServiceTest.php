@@ -17,7 +17,6 @@ use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use UserAdmin\Service\UserAdminSessionManager;
-use Zend\Mail\Protocol\Exception\RuntimeException;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\Session\Container;
 use Zend\Stdlib\Parameters;
@@ -68,7 +67,7 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
     /** @var AccountMapper */
     private $accountMapper;
 
-    /** @var  FlashMessenger|MockObj */
+    /** @var FlashMessenger|MockObj */
     private $messenger;
 
     public function setUp()
@@ -144,7 +143,7 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = $this->getServiceWithRealSessionContainer();
 
-        for ($i = 0; $i < UserAdminSessionManager::MAX_NUMBER_ATTEMPT + 1; $i++) {
+        for ($i = 0; $i < UserAdminSessionManager::MAX_NUMBER_ATTEMPT + 1; ++$i) {
             $service->areBothAnswersCorrectForPerson(self::PERSON_ID, self::ANSWERS);
         }
 
@@ -445,8 +444,8 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param integer $personId
-     * @param string|Exception $return the expected outcome
+     * @param int              $personId
+     * @param string|Exception $return   the expected outcome
      * @dataProvider resetPasswordDataProvider
      */
     public function testResetPassword($personId, $return)
@@ -466,7 +465,7 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'personId' => self::PERSON_ID,
-                'return' => self::PERSON_EMAIL
+                'return' => self::PERSON_EMAIL,
             ],
             [
                 'personId' => self::PERSON_ID_NOT_ACCOUNT_MESSAGE,
@@ -534,8 +533,8 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
         $accountMessage->setPerson(
             (new PersonDto())->setContactDetails([
                 (new ContactDto())->setEmails([
-                    (new EmailDto())->setEmail(self::PERSON_EMAIL)
-                ])
+                    (new EmailDto())->setEmail(self::PERSON_EMAIL),
+                ]),
             ])
         );
 
@@ -551,7 +550,7 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
         $accountMessageWithUnexpectedEmails = new MessageDto();
         $accountMessageWithUnexpectedEmails->setPerson(
             (new PersonDto())->setContactDetails([
-                (new ContactDto())->setEmails([new \stdClass()])
+                (new ContactDto())->setEmails([new \stdClass()]),
             ])
         );
 
@@ -569,6 +568,7 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
                     [self::PERSON_ID_UNEXPECTED_EMAILS, $accountMessageWithUnexpectedEmails],
                 ]);
         }
+
         return $this->accountMapper;
     }
 }

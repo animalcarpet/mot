@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -7,7 +8,7 @@ use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * ReasonForRejection
+ * ReasonForRejection.
  *
  * @ORM\Table(name="reason_for_rejection", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(readOnly=true)
@@ -16,7 +17,7 @@ use DvsaCommon\Utility\ArrayUtils;
 class ReasonForRejection
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -25,7 +26,7 @@ class ReasonForRejection
     private $rfrId;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="test_item_category_id", type="integer", nullable=false)
      * TODO map ManyToOne
@@ -59,28 +60,28 @@ class ReasonForRejection
     private $inspectionManualReference;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="minor_item", type="boolean", nullable=false)
      */
     private $minorItem;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="location_marker", type="boolean", nullable=false)
      */
     private $locationMarker;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="qt_marker", type="boolean", nullable=false)
      */
     private $qtMarker;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="note", type="boolean", nullable=false)
      */
@@ -94,14 +95,14 @@ class ReasonForRejection
     private $manual;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="spec_proc", type="boolean", nullable=false)
      */
     private $specProc;
 
     /**
-     * Owning side
+     * Owning side.
      *
      * @ORM\ManyToMany(targetEntity="DvsaEntities\Entity\VehicleClass")
      * @ORM\JoinTable(name="rfr_vehicle_class_map",
@@ -141,21 +142,21 @@ class ReasonForRejection
     }
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_advisory", type="boolean", nullable=false)
      */
     private $isAdvisory;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_prs_fail", type="boolean", nullable=false)
      */
     private $isPrsFail;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="can_be_dangerous", type="boolean", nullable=false)
      */
@@ -176,9 +177,10 @@ class ReasonForRejection
     private $endDate;
 
     /**
-     * Set rfrId
+     * Set rfrId.
      *
-     * @param integer $rfrId
+     * @param int $rfrId
+     *
      * @return ReasonForRejection
      */
     public function setRfrId($rfrId)
@@ -189,9 +191,9 @@ class ReasonForRejection
     }
 
     /**
-     * Get rfrId
+     * Get rfrId.
      *
-     * @return integer
+     * @return int
      */
     public function getRfrId()
     {
@@ -199,9 +201,9 @@ class ReasonForRejection
     }
 
     /**
-     * Get testItemSelectorId
+     * Get testItemSelectorId.
      *
-     * @return integer
+     * @return int
      */
     public function getTestItemSelectorId()
     {
@@ -209,9 +211,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set testItemSelectorName
+     * Set testItemSelectorName.
      *
      * @param string $testItemSelectorName
+     *
      * @return ReasonForRejection
      */
     public function setTestItemSelectorName($testItemSelectorName)
@@ -222,7 +225,7 @@ class ReasonForRejection
     }
 
     /**
-     * Get testItemSelectorName
+     * Get testItemSelectorName.
      *
      * @return string
      */
@@ -232,9 +235,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set testItemSelectorNameCy
+     * Set testItemSelectorNameCy.
      *
      * @param string $testItemSelectorNameCy
+     *
      * @return ReasonForRejection
      */
     public function setTestItemSelectorNameCy($testItemSelectorNameCy)
@@ -245,7 +249,7 @@ class ReasonForRejection
     }
 
     /**
-     * Get testItemSelectorNameCy
+     * Get testItemSelectorNameCy.
      *
      * @return string
      */
@@ -255,9 +259,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set inspectionManualReference
+     * Set inspectionManualReference.
      *
      * @param string $inspectionManualReference
+     *
      * @return ReasonForRejection
      */
     public function setInspectionManualReference($inspectionManualReference)
@@ -268,7 +273,7 @@ class ReasonForRejection
     }
 
     /**
-     * Get inspectionManualReference
+     * Get inspectionManualReference.
      *
      * @return string
      */
@@ -278,9 +283,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set minorItem
+     * Set minorItem.
      *
-     * @param boolean $minorItem
+     * @param bool $minorItem
+     *
      * @return ReasonForRejection
      */
     public function setMinorItem($minorItem)
@@ -291,9 +297,9 @@ class ReasonForRejection
     }
 
     /**
-     * Get minorItem
+     * Get minorItem.
      *
-     * @return boolean
+     * @return bool
      */
     public function getMinorItem()
     {
@@ -301,9 +307,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set locationMarker
+     * Set locationMarker.
      *
-     * @param boolean $locationMarker
+     * @param bool $locationMarker
+     *
      * @return ReasonForRejection
      */
     public function setLocationMarker($locationMarker)
@@ -314,9 +321,9 @@ class ReasonForRejection
     }
 
     /**
-     * Get locationMarker
+     * Get locationMarker.
      *
-     * @return boolean
+     * @return bool
      */
     public function getLocationMarker()
     {
@@ -324,9 +331,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set qtMarker
+     * Set qtMarker.
      *
-     * @param boolean $qtMarker
+     * @param bool $qtMarker
+     *
      * @return ReasonForRejection
      */
     public function setQtMarker($qtMarker)
@@ -337,9 +345,9 @@ class ReasonForRejection
     }
 
     /**
-     * Get qtMarker
+     * Get qtMarker.
      *
-     * @return boolean
+     * @return bool
      */
     public function getQtMarker()
     {
@@ -347,9 +355,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set note
+     * Set note.
      *
-     * @param boolean $note
+     * @param bool $note
+     *
      * @return ReasonForRejection
      */
     public function setNote($note)
@@ -360,9 +369,9 @@ class ReasonForRejection
     }
 
     /**
-     * Get note
+     * Get note.
      *
-     * @return boolean
+     * @return bool
      */
     public function getNote()
     {
@@ -370,9 +379,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set manual
+     * Set manual.
      *
      * @param string $manual
+     *
      * @return ReasonForRejection
      */
     public function setManual($manual)
@@ -383,7 +393,7 @@ class ReasonForRejection
     }
 
     /**
-     * Get manual
+     * Get manual.
      *
      * @return string
      */
@@ -393,9 +403,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set specProc
+     * Set specProc.
      *
-     * @param boolean $specProc
+     * @param bool $specProc
+     *
      * @return ReasonForRejection
      */
     public function setSpecProc($specProc)
@@ -406,9 +417,9 @@ class ReasonForRejection
     }
 
     /**
-     * Get specProc
+     * Get specProc.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSpecProc()
     {
@@ -416,9 +427,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set testItemSelector
+     * Set testItemSelector.
      *
      * @param \DvsaEntities\Entity\TestItemSelector $testItemSelector
+     *
      * @return ReasonForRejection
      */
     public function setTestItemSelector(\DvsaEntities\Entity\TestItemSelector $testItemSelector = null)
@@ -429,7 +441,7 @@ class ReasonForRejection
     }
 
     /**
-     * Get testItemSelector
+     * Get testItemSelector.
      *
      * @return \DvsaEntities\Entity\TestItemSelector
      */
@@ -439,9 +451,10 @@ class ReasonForRejection
     }
 
     /**
-     * Set sectionTestItemSelector
+     * Set sectionTestItemSelector.
      *
      * @param \DvsaEntities\Entity\TestItemSelector $sectionTestItemSelector
+     *
      * @return ReasonForRejection
      */
     public function setSectionTestItemSelector(\DvsaEntities\Entity\TestItemSelector $sectionTestItemSelector = null)
@@ -452,7 +465,7 @@ class ReasonForRejection
     }
 
     /**
-     * Get sectionTestItemSelector
+     * Get sectionTestItemSelector.
      *
      * @return \DvsaEntities\Entity\TestItemSelector
      */
@@ -462,7 +475,7 @@ class ReasonForRejection
     }
 
     /**
-     * Add to vehicleClasses
+     * Add to vehicleClasses.
      *
      * @param VehicleClass $vehicleClass
      *
@@ -476,7 +489,7 @@ class ReasonForRejection
     }
 
     /**
-     * Get vehicleClasses
+     * Get vehicleClasses.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection()
      */
@@ -486,7 +499,7 @@ class ReasonForRejection
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsAdvisory()
     {
@@ -494,7 +507,7 @@ class ReasonForRejection
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsPrsFail()
     {
@@ -502,7 +515,7 @@ class ReasonForRejection
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getCanBeDangerous()
     {
@@ -517,6 +530,7 @@ class ReasonForRejection
     public function setAudience($audience)
     {
         $this->audience = $audience;
+
         return $this;
     }
 
@@ -537,13 +551,14 @@ class ReasonForRejection
     }
 
     /**
-     * @param  ArrayCollection|ReasonForRejectionDescription[] $descriptions
+     * @param ArrayCollection|ReasonForRejectionDescription[] $descriptions
      *
      * @return $this
      */
     public function setDescriptions($descriptions)
     {
         $this->descriptions = $descriptions;
+
         return $this;
     }
 
@@ -573,11 +588,13 @@ class ReasonForRejection
 
     /**
      * @param \DateTime $endDate
+     *
      * @return $this
      */
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
+
         return $this;
     }
 

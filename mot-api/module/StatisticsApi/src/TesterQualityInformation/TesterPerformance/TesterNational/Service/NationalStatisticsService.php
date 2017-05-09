@@ -23,8 +23,7 @@ class NationalStatisticsService
         NationalTesterPerformanceStatisticsStorage $storage,
         DateTimeHolderInterface $dateTimeHolder,
         TimeSpan $timeoutPeriod
-    )
-    {
+    ) {
         $this->repository = $nationalStatisticsRepository;
         $this->storage = $storage;
         $this->dateTimeHolder = $dateTimeHolder;
@@ -34,7 +33,9 @@ class NationalStatisticsService
     /**
      * @param $year
      * @param $month
+     *
      * @return NationalPerformanceReportDto
+     *
      * @throws NotFoundException
      */
     public function get($year, $month)
@@ -59,7 +60,7 @@ class NationalStatisticsService
     {
         $validator = new StatisticsParameterCheck();
         if (!$validator->isValid($year, $month)) {
-            throw new NotFoundException("National Statistics");
+            throw new NotFoundException('National Statistics');
         }
     }
 }

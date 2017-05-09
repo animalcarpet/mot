@@ -13,14 +13,10 @@ use DvsaMotApi\Service\TesterService;
 use PersonApi\Factory\Service\PersonServiceFactory;
 use PersonApi\Service\PersonService;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class PersonServiceFactoryTest.
  */
 class PersonServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

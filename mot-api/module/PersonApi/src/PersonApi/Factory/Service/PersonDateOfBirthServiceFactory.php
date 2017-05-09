@@ -12,9 +12,10 @@ use PersonApi\Helper\PersonDetailsChangeNotificationHelper;
 class PersonDateOfBirthServiceFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return PersonDateOfBirthService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

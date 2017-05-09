@@ -2,7 +2,8 @@
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
 use Dvsa\Mot\Frontend\MotTestModule\Model\SurveyRating;
-/**
+
+/*
 * @var SurveyRating $ratings
 */
 
@@ -37,7 +38,7 @@ $this->layout()->setVariable('pageTitle', "You've successfully signed out");
             [
                 'name' => 'satisfactionRating',
                 'splitLastOption' => false,
-                'options' => $options
+                'options' => $options,
             ]
         );
         ?>

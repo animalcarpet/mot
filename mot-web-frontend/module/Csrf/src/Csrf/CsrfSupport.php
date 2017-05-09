@@ -6,13 +6,10 @@ use DvsaCommon\Guid\Guid;
 use Zend\Session\Container;
 
 /**
- * Class CsrfSupport
- *
- * @package Csrf
+ * Class CsrfSupport.
  */
 class CsrfSupport
 {
-
     /**
      * @var Container
      */
@@ -34,6 +31,7 @@ class CsrfSupport
         if (!$this->csrfSession['csrfToken']) {
             $this->csrfSession['csrfToken'] = Guid::newGuid();
         }
+
         return $this->csrfSession['csrfToken'];
     }
 }

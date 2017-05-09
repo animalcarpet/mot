@@ -5,8 +5,7 @@ namespace Account\ViewModel;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * ViewModel for the Claim Account Review screen
- * @package Account\ViewModel
+ * ViewModel for the Claim Account Review screen.
  */
 class ReviewViewModel
 {
@@ -39,7 +38,8 @@ class ReviewViewModel
     /** @var string */
     private $answerB;
 
-    public function setData(array $data) {
+    public function setData(array $data)
+    {
         $this->setSecurityQuestions(ArrayUtils::tryGet($data, self::FIELD_SECURITY_QUESTIONS));
 
         if (isset($data[self::FIELD_CONFIRM_PASSWORD])) {
@@ -80,6 +80,7 @@ class ReviewViewModel
     public function setPassword($password)
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -131,6 +132,7 @@ class ReviewViewModel
     public function setSecurityQuestions($securityQuestions)
     {
         $this->securityQuestions = $securityQuestions;
+
         return $this;
     }
 
@@ -148,6 +150,7 @@ class ReviewViewModel
     public function setAnswerA($answerA)
     {
         $this->answerA = $answerA;
+
         return $this;
     }
 
@@ -173,6 +176,7 @@ class ReviewViewModel
     public function setAnswerB($answerB)
     {
         $this->answerB = $answerB;
+
         return $this;
     }
 
@@ -215,5 +219,4 @@ class ReviewViewModel
     {
         $this->securityQuestionB = $securityQuestionB;
     }
-
 }

@@ -10,7 +10,7 @@ interface VehicleInterface
     /**
      * @return \DateTime
      *
-     * Date vehicle was first registered.
+     * Date vehicle was first registered
      */
     public function getFirstRegistrationDate();
 
@@ -18,7 +18,7 @@ interface VehicleInterface
      * @return \DateTime
      *
      * First used date is either derived from DVLA vehicle data (Date of Manufacture and Date of First Registration) at
-     * time of test registration or is entered by the NT.
+     * time of test registration or is entered by the NT
      */
     public function getFirstUsedDate();
 

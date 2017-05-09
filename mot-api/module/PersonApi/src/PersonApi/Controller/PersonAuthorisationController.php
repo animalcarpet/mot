@@ -29,12 +29,12 @@ class PersonAuthorisationController extends AbstractDvsaRestfulController
         $identity = $this->authorisationService->getIdentity();
 
         if (is_null($identity)) {
-            return ApiResponse::jsonError("Not logged in");
+            return ApiResponse::jsonError('Not logged in');
         }
 
         if (!($identity->getUserId() == $id)) {
             throw new UnauthorisedException(
-                "Cannot retrieve authorization for a different user [" . $identity->getUserId() . "] vs [" . $id . "]"
+                'Cannot retrieve authorization for a different user ['.$identity->getUserId().'] vs ['.$id.']'
             );
         }
 

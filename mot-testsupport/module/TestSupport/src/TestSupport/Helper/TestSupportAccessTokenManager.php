@@ -5,7 +5,7 @@ namespace TestSupport\Helper;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 
 /**
- * Temporarily copied from Fitnesse (TestShared.php) until OpenAM is in
+ * Temporarily copied from Fitnesse (TestShared.php) until OpenAM is in.
  */
 class TestSupportAccessTokenManager
 {
@@ -19,12 +19,12 @@ class TestSupportAccessTokenManager
 
     public function getToken($username, $password)
     {
-        $curlHandle = curl_init($this->apiUrl . UrlBuilder::of()->session()->toString());
+        $curlHandle = curl_init($this->apiUrl.UrlBuilder::of()->session()->toString());
 
         self::setupCurlOptions($curlHandle);
         $postFields = [
             'username' => $username,
-            'password' => $password
+            'password' => $password,
         ];
         self::setCurlPost($curlHandle, $postFields);
 
@@ -38,29 +38,28 @@ class TestSupportAccessTokenManager
         }
         $accessToken = $jsonResult->{'data'}->{'accessToken'};
 
-        $this->tokenCache[$username . ';' . $password] = $accessToken;
+        $this->tokenCache[$username.';'.$password] = $accessToken;
 
         return $accessToken;
     }
 
     public static function addSchemeManagerAsRequestorIfNecessary(&$data)
     {
-        if(!isset($data['requestor'])) {
+        if (!isset($data['requestor'])) {
             $data['requestor'] = ['username' => 'schememgt', 'password' => 'Password1'];
         }
     }
 
     public function invalidateTokens()
     {
-        $curlHandle = curl_init($this->apiUrl . UrlBuilder::of()->session()->toString());
+        $curlHandle = curl_init($this->apiUrl.UrlBuilder::of()->session()->toString());
 
-        foreach($this->tokenCache as $token)
-        {
+        foreach ($this->tokenCache as $token) {
             curl_setopt($curlHandle, CURLOPT_CUSTOMREQUEST, 'DELETE');
             $this->setupCurlOptions($curlHandle);
             curl_setopt($curlHandle, CURLOPT_HTTPHEADER,
                 ['Content-Type: application/json',
-                 'Authorization: Bearer ' . $token]);
+                 'Authorization: Bearer '.$token, ]);
             $this->execCurlForJson($curlHandle);
         }
     }
@@ -72,7 +71,7 @@ class TestSupportAccessTokenManager
         $curlInfo = curl_getinfo($curlHandle);
 
         $curlError = curl_error($curlHandle);
-        if ($curlError != "") {
+        if ($curlError != '') {
             throw new \Exception("Curl exception: [$curlError]");
         }
 
@@ -85,7 +84,7 @@ class TestSupportAccessTokenManager
             $contentType = $curlInfo['content_type'];
         }
 
-        if (!strstr($contentType, "application/json")) {
+        if (!strstr($contentType, 'application/json')) {
             error_log("Unexpected response: [$curlResult]");
             throw new \Exception("Expected to get JSON, got [$contentType]; response body: [$curlResult]");
         }
@@ -107,7 +106,7 @@ class TestSupportAccessTokenManager
         curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curlHandle, CURLOPT_TIMEOUT, 30);
         curl_setopt($curlHandle, CURLOPT_HEADER, false);
-        curl_setopt($curlHandle, CURLOPT_USERAGENT, "testsupport;phpcurl;DVSA-MOT");
+        curl_setopt($curlHandle, CURLOPT_USERAGENT, 'testsupport;phpcurl;DVSA-MOT');
     }
 
     private static function setCurlPost($curlHandle, $data)

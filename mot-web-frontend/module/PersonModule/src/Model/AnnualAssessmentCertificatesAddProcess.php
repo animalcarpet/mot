@@ -1,13 +1,12 @@
 <?php
-namespace Dvsa\Mot\Frontend\PersonModule\Model;
 
+namespace Dvsa\Mot\Frontend\PersonModule\Model;
 
 use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
 use Core\TwoStepForm\FormContextInterface;
 use Core\TwoStepForm\TwoStepProcessInterface;
 use Core\ViewModel\Gds\Table\GdsTable;
-use DateTime;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Form\AnnualAssessmentCertificatesForm;
 use Dvsa\Mot\Frontend\PersonModule\Routes\AnnualAssessmentCertificatesRoutes;
@@ -22,7 +21,6 @@ use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
 use Zend\Form\Form;
-use Zend\View\Model\ViewModel;
 
 class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface, AutoWireableInterface
 {
@@ -33,7 +31,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     /** @var FormContext */
     private $context;
 
-    /** @var  AnnualAssessmentCertificatesRoutes */
+    /** @var AnnualAssessmentCertificatesRoutes */
     private $annualAssessmentCertificatesRoutes;
 
     /** @var CertificatesBreadcrumbs */
@@ -54,8 +52,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
         AnnualAssessmentCertificatesMapper $annualAssessmentCertificatesMapper,
         CertificatesBreadcrumbs $certificatesBreadcrumbs,
         AnnualAssessmentCertificatesPermissions $certificatesPermissions
-    )
-    {
+    ) {
         $this->contextProvider = $contextProvider;
         $this->annualAssessmentCertificatesRoutes = $annualAssessmentCertificatesRoutes;
         $this->annualAssessmentCertificatesMapper = $annualAssessmentCertificatesMapper;
@@ -70,9 +67,10 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     }
 
     /**
-     * Will make a call to API to update the data from the form
+     * Will make a call to API to update the data from the form.
      *
      * @param $formData
+     *
      * @return mixed
      */
     public function update($formData)
@@ -84,7 +82,6 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
         );
     }
 
-
     private function mapFormToDto(array $formData)
     {
         return $this->annualAssessmentCertificatesMapper->mapFormDataToDto($formData);
@@ -92,7 +89,8 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
 
     /**
      * Gets the values that the form should be pre-populated with.
-     * (e.g. old values)
+     * (e.g. old values).
+     *
      * @return array
      */
     public function getPrePopulatedData()
@@ -115,6 +113,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
      * Returning null means there are no breadcrumbs to display.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return array
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
@@ -127,7 +126,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     }
 
     /**
-     * Zend form used to edit values
+     * Zend form used to edit values.
      *
      * @return Form
      */
@@ -137,7 +136,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     }
 
     /**
-     * Tells what message should be shown to the user when the form has been successfully submitted
+     * Tells what message should be shown to the user when the form has been successfully submitted.
      *
      * @return string
      */
@@ -147,7 +146,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     }
 
     /**
-     * The title that will be displayed on the form page
+     * The title that will be displayed on the form page.
      *
      * @return string
      */
@@ -157,7 +156,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     }
 
     /**
-     * The sub title that will be displayed on the edit and review pages
+     * The sub title that will be displayed on the edit and review pages.
      *
      * @return string
      */
@@ -169,7 +168,8 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
 
     /**
      * @param $form
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildEditStepViewModel($form)
     {
@@ -184,8 +184,9 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     {
         $route = $this->annualAssessmentCertificatesRoutes->getRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-                self::ROUTE_PARAM_ID => $this->context->getTargetPersonId()
+                self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             ];
+
         return $this->context->getController()->url()->fromRoute($route, $params);
     }
 
@@ -194,7 +195,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
         $route = $this->annualAssessmentCertificatesRoutes->getAddRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
-                self::ROUTE_PARAM_GROUP => $this->context->getGroup()
+                self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             ];
 
         $formUuid = $this->context->getController()->params()->fromRoute('formUuid');
@@ -203,7 +204,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
             $formUuid = $this->context->getController()->params()->fromQuery('formUuid');
         }
 
-        return $this->context->getController()->url()->fromRoute($route, $params, ["query" => ["formUuid" => $formUuid]]);
+        return $this->context->getController()->url()->fromRoute($route, $params, ['query' => ['formUuid' => $formUuid]]);
     }
 
     /**
@@ -215,6 +216,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
         $params = $this->context->getController()->params()->fromRoute() + [
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             ];
+
         return new RedirectToRoute($route, $params);
     }
 
@@ -226,16 +228,19 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
         $route = $this->annualAssessmentCertificatesRoutes->getAddRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
-                self::ROUTE_PARAM_GROUP => $this->context->getGroup()
+                self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             ];
+
         return new RedirectToRoute($route, $params);
     }
 
     /**
-     * Says if the users is authorised to reach the page
+     * Says if the users is authorised to reach the page.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return bool
+     *
      * @throws UnauthorisedException
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
@@ -251,6 +256,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
      * for user to review before completing the form.
      *
      * @param array $formData
+     *
      * @return GdsTable
      */
     public function transformFormIntoGdsTable(array $formData)
@@ -261,40 +267,40 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
 
         $date = new \DateTime();
         $date->setDate(
-            (int)$formData[AnnualAssessmentCertificatesForm::FIELD_DATE_YEAR],
-            (int)$formData[AnnualAssessmentCertificatesForm::FIELD_DATE_MONTH],
-            (int)$formData[AnnualAssessmentCertificatesForm::FIELD_DATE_DAY]
+            (int) $formData[AnnualAssessmentCertificatesForm::FIELD_DATE_YEAR],
+            (int) $formData[AnnualAssessmentCertificatesForm::FIELD_DATE_MONTH],
+            (int) $formData[AnnualAssessmentCertificatesForm::FIELD_DATE_DAY]
         );
         $table->newRow()->setLabel('Date awarded')->setValue($date->format(DateTimeDisplayFormat::FORMAT_DATE));
 
-        $score = (int)$formData[AnnualAssessmentCertificatesForm::FIELD_SCORE];
-        $table->newRow()->setLabel('Score achieved')->setValue($score . '%');
+        $score = (int) $formData[AnnualAssessmentCertificatesForm::FIELD_SCORE];
+        $table->newRow()->setLabel('Score achieved')->setValue($score.'%');
 
         return $table;
     }
 
     /**
-     * The title that will be displayed on the review page
+     * The title that will be displayed on the review page.
      *
      * @return string
      */
     public function getReviewPageTitle()
     {
-        return "Review your assessment certificate";
+        return 'Review your assessment certificate';
     }
 
     /**
-     * The page lede that will be displayed on the review page
+     * The page lede that will be displayed on the review page.
      *
      * @return string
      */
     public function getReviewPageLede()
     {
-        return "Check that the details below are correct before you save the certificate.";
+        return 'Check that the details below are correct before you save the certificate.';
     }
 
     /**
-     * The text that will be displayed on the review page button text
+     * The text that will be displayed on the review page button text.
      *
      * @return string
      */
@@ -307,7 +313,8 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
      * @param $formUuid
      * @param $formData
      * @param GdsTable $table
-     * @return Object Anything you want to pass to the view file
+     *
+     * @return object Anything you want to pass to the view file
      */
     public function buildReviewStepViewModel($formUuid, $formData, GdsTable $table)
     {
@@ -321,6 +328,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
 
     /**
      * @param $formUuid
+     *
      * @return AbstractRedirectActionResult $authorisationService
      */
     public function redirectToReviewPage($formUuid)
@@ -331,6 +339,7 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
                 self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
                 self::ROUTE_PARAM_FORM_UUID => $formUuid,
             ];
+
         return new RedirectToRoute($route, $params);
     }
 
@@ -342,19 +351,18 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
      */
     public function getSessionStoreKey()
     {
-        return 'annual-assessment-certificate-' . $this->context->getTargetPersonId() . '-' . $this->context->getGroup();
+        return 'annual-assessment-certificate-'.$this->context->getTargetPersonId().'-'.$this->context->getGroup();
     }
 
     public function getEditPageLede()
     {
         return null;
     }
-    
 
     /**
      * Does the process have a confirmation page at the end.
      * If true, will redirect to the confirmation page on the process,
-     * if false will redirect to start with success message
+     * if false will redirect to start with success message.
      *
      * @return bool
      */

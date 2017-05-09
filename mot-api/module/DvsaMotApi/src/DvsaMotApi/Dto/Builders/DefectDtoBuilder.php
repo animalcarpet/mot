@@ -24,7 +24,7 @@ class DefectDtoBuilder
     }
 
     /**
-     * @param ReasonForRejection $reasonForRejection
+     * @param ReasonForRejection          $reasonForRejection
      * @param DefectSentenceCaseConverter $defectSentenceCaseConverter
      *
      * @return DefectDto
@@ -46,5 +46,4 @@ class DefectDtoBuilder
 
         return $defectDto;
     }
-
 }

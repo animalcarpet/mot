@@ -3,15 +3,11 @@
 namespace Core\TwoStepForm;
 
 use Core\Action\AbstractRedirectActionResult;
-use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
-use Core\Routing\VehicleRouteList;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
-use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
-use Vehicle\UpdateVehicleProperty\Process\UpdateVehicleInterface;
 use Zend\Form\Form;
 
 final class EditStepAction implements AutoWireableInterface
@@ -22,8 +18,7 @@ final class EditStepAction implements AutoWireableInterface
     public function __construct(
         TwoStepFormContainer $formContainer,
         MotAuthorisationServiceInterface $authorisationService
-    )
-    {
+    ) {
         $this->formContainer = $formContainer;
         $this->authorisationService = $authorisationService;
     }
@@ -31,9 +26,10 @@ final class EditStepAction implements AutoWireableInterface
     /**
      * @param $isPost
      * @param SingleStepProcessInterface $process
-     * @param FormContextInterface $context
+     * @param FormContextInterface       $context
      * @param $formUuid
      * @param array $formData
+     *
      * @return ViewActionResult
      */
     public function execute($isPost, SingleStepProcessInterface $process, FormContextInterface $context, $formUuid, array $formData = [])
@@ -68,9 +64,11 @@ final class EditStepAction implements AutoWireableInterface
 
     /**
      * @param SingleStepProcessInterface $process
-     * @param FormContextInterface $context
-     * @param array $formData
+     * @param FormContextInterface       $context
+     * @param array                      $formData
+     *
      * @return AbstractRedirectActionResult|ViewActionResult
+     *
      * @throws UnauthorisedException
      */
     protected function executePost(SingleStepProcessInterface $process, FormContextInterface $context, array $formData = [])
@@ -86,6 +84,7 @@ final class EditStepAction implements AutoWireableInterface
         if ($form->isValid()) {
             if ($process instanceof TwoStepProcessInterface) {
                 $formUuid = $this->formContainer->store($process->getSessionStoreKey(), $formData);
+
                 return $process->redirectToReviewPage($formUuid);
             }
             try {
@@ -100,7 +99,8 @@ final class EditStepAction implements AutoWireableInterface
 
     /**
      * @param SingleStepProcessInterface $process
-     * @param array $formData
+     * @param array                      $formData
+     *
      * @return AbstractRedirectActionResult
      */
     protected function updateAndRedirectToStartPage(SingleStepProcessInterface $process, array $formData)
@@ -115,7 +115,7 @@ final class EditStepAction implements AutoWireableInterface
     private function assertGranted(SingleStepProcessInterface $process)
     {
         if (!$process->isAuthorised($this->authorisationService)) {
-            throw new UnauthorisedException("Not authorised to edit the form");
+            throw new UnauthorisedException('Not authorised to edit the form');
         }
     }
 

@@ -16,13 +16,9 @@ use Zend\Mvc\Controller\Plugin\Redirect;
 use Zend\Stdlib\ParametersInterface;
 use Zend\View\Model\ViewModel;
 use PHPUnit_Framework_MockObject_MockObject;
-use Zend\Mvc\Service\ViewHelperManagerFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 use Zend\View\Helper\HeadTitle;
-
 
 class EmailControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -68,7 +64,7 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->getMockBuilder(EmailController::class)
             ->setConstructorArgs([
                 $stepService,
-                $this->emailDuplicateService
+                $this->emailDuplicateService,
             ])
             ->setMethods(['getRequest'])
             ->getMockForAbstractClass();
@@ -106,7 +102,7 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->getMockBuilder(EmailController::class)
             ->setConstructorArgs([
                 $stepService,
-                $this->emailDuplicateService
+                $this->emailDuplicateService,
             ])
             ->setMethods(['getRequest'])
             ->getMockForAbstractClass();
@@ -123,7 +119,6 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testPostRequestValidValuesAndNonDuplicateGoesToNextStep()
     {
-
         $this->emailDuplicateService
             ->expects($this->once())
             ->method('isEmailDuplicate')
@@ -154,7 +149,7 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->getMockBuilder(EmailController::class)
             ->setConstructorArgs([
                 $stepService,
-                $this->emailDuplicateService
+                $this->emailDuplicateService,
             ])
             ->setMethods(['getRequest', 'redirect'])
             ->getMockForAbstractClass();
@@ -197,7 +192,7 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->getMockBuilder(EmailController::class)
             ->setConstructorArgs([
                 $stepService,
-                $this->emailDuplicateService
+                $this->emailDuplicateService,
             ])
             ->setMethods(['getRequest', 'redirect'])
             ->getMockForAbstractClass();
@@ -214,13 +209,14 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
     private function getFakeDetailsArray()
     {
         return [
-            EmailInputFilter::FIELD_EMAIL     => "test@dvsa.com",
-            EmailInputFilter::FIELD_EMAIL_CONFIRM    => "test@dvsa.com",
+            EmailInputFilter::FIELD_EMAIL => 'test@dvsa.com',
+            EmailInputFilter::FIELD_EMAIL_CONFIRM => 'test@dvsa.com',
         ];
     }
 
     /**
      * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     *
      * @throws \Exception
      */
     private function getServiceLocatorMock()
@@ -232,13 +228,14 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
             ->with('headTitle')
             ->willReturn(XMock::of(HeadTitle::class));
 
-        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        /** @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
         $serviceLocator = XMock::of(ServiceLocatorInterface::class);
         $serviceLocator
             ->expects($this->any())
             ->method('get')
             ->with('ViewHelperManager')
             ->willReturn($helperPluginManager);
+
         return $serviceLocator;
     }
 }

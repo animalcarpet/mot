@@ -30,11 +30,11 @@ abstract class AbstractRoutes
                 return $object->fromRoute($name, $params, $options, $reuseMatchedParams);
             };
         } else {
-            throw new \InvalidArgumentException("First parameter must be of class: " .
+            throw new \InvalidArgumentException('First parameter must be of class: '.
                 Url::class
-                . ", " . PhpRenderer::class
-                . ", " . AbstractController::class
-                . " or " . \Zend\Mvc\Controller\Plugin\Url::class
+                .', '.PhpRenderer::class
+                .', '.AbstractController::class
+                .' or '.\Zend\Mvc\Controller\Plugin\Url::class
             );
         }
     }
@@ -42,6 +42,7 @@ abstract class AbstractRoutes
     protected function url($name = null, $params = array(), $options = array(), $reuseMatchedParams = false)
     {
         $helper = $this->urlHelperAdapter;
+
         return $helper($name, $params, $options, $reuseMatchedParams);
     }
 }

@@ -7,7 +7,7 @@ use TestSupport\Helper\TestDataResponseHelper;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
- * Manipulates caches in the application
+ * Manipulates caches in the application.
  */
 class CacheController extends AbstractRestfulController
 {
@@ -15,14 +15,14 @@ class CacheController extends AbstractRestfulController
     {
         apc_clear_cache();
 
-        return TestDataResponseHelper::jsonOk(["message" => "APC cache has been reset"]);
+        return TestDataResponseHelper::jsonOk(['message' => 'APC cache has been reset']);
     }
 
     public function opCacheClearAction()
     {
         opcache_reset();
 
-        return TestDataResponseHelper::jsonOk(["message" => "OPCache has been reset"]);
+        return TestDataResponseHelper::jsonOk(['message' => 'OPCache has been reset']);
     }
 
     public function motApiCacheClearAction()
@@ -33,7 +33,7 @@ class CacheController extends AbstractRestfulController
         $this->removeFile($configCachePath)->removeFile($moduleMapCachePath);
         $this->clearDoctrineCache();
 
-        return TestDataResponseHelper::jsonOk(["message" => "mot-api cache has been reset"]);
+        return TestDataResponseHelper::jsonOk(['message' => 'mot-api cache has been reset']);
     }
 
     public function motWebFrontendCacheClearAction()
@@ -44,7 +44,7 @@ class CacheController extends AbstractRestfulController
         $this->removeFile($configCachePath)->removeFile($moduleMapCachePath);
         $this->clearDoctrineCache();
 
-        return TestDataResponseHelper::jsonOk(["message" => "mot-web-frontend cache has been reset"]);
+        return TestDataResponseHelper::jsonOk(['message' => 'mot-web-frontend cache has been reset']);
     }
 
     public function deleteList($data)
@@ -54,15 +54,15 @@ class CacheController extends AbstractRestfulController
         $this->motApiCacheClearAction();
         $this->motWebFrontendCacheClearAction();
 
-        return TestDataResponseHelper::jsonOk(["message" => "APC, OPCache, mot-api, mot-web-frontend caches have been reset"]);
+        return TestDataResponseHelper::jsonOk(['message' => 'APC, OPCache, mot-api, mot-web-frontend caches have been reset']);
     }
 
     private function tryGetConfigValue($key)
     {
         $config = $this->getServiceLocator()->get('config');
 
-        if(!array_key_exists($key, $config)) {
-            throw new \Exception("Cannot find config value for key: ".$key);
+        if (!array_key_exists($key, $config)) {
+            throw new \Exception('Cannot find config value for key: '.$key);
         }
 
         return $config[$key];
@@ -70,7 +70,7 @@ class CacheController extends AbstractRestfulController
 
     private function removeFile($filePath)
     {
-        if(file_exists($filePath)) {
+        if (file_exists($filePath)) {
             unlink($filePath);
         }
 

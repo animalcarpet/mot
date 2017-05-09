@@ -20,21 +20,19 @@ use DvsaMotApi\Service\TesterService;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
-use Dvsa\Mot\ApiClient\Resource\Item\Vehicle as NewVehicle;
 
 /**
  * Class VehicleService.
  */
 class VehicleSearchService
 {
-
-    /** @var  VehicleRepository */
+    /** @var VehicleRepository */
     protected $vehicleRepository;
-    /** @var  DvlaVehicleRepository */
+    /** @var DvlaVehicleRepository */
     protected $dvlaVehicleRepository;
-    /** @var  MotTestRepository */
+    /** @var MotTestRepository */
     protected $motTestRepository;
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     protected $authService;
     /** @var \DvsaEntities\Repository\DvlaVehicleImportChangesRepository */
     private $dvlaVehicleImportChangesRepository;
@@ -42,13 +40,13 @@ class VehicleSearchService
     private $testerService;
     /** @var VehicleCatalogService */
     private $vehicleCatalog;
-    /** @var  ParamObfuscator */
+    /** @var ParamObfuscator */
     private $paramObfuscator;
     /** @var RetestEligibilityValidator */
     private $retestEligibilityValidator;
     /** @var AbstractStringConverter */
     private $searchStringConverter;
-    /** @var  AbstractStringConverter */
+    /** @var AbstractStringConverter */
     private $enforcementSearchStringConverter;
     /** @var NewVehicleService */
     private $vehicleService;
@@ -56,19 +54,19 @@ class VehicleSearchService
     private $mysteryShopperHelper;
 
     /**
-     * @param AuthorisationServiceInterface $authService
-     * @param VehicleRepository $vehicleRepository
-     * @param DvlaVehicleRepository $dvlaVehicleRepository
+     * @param AuthorisationServiceInterface      $authService
+     * @param VehicleRepository                  $vehicleRepository
+     * @param DvlaVehicleRepository              $dvlaVehicleRepository
      * @param DvlaVehicleImportChangesRepository $dvlaVehicleImportChangesRepository
-     * @param MotTestRepository $motTestRepository
-     * @param TesterService $testerService
-     * @param VehicleCatalogService $vehicleCatalog
-     * @param ParamObfuscator $paramObfuscator
-     * @param RetestEligibilityValidator $retestEligibilityValidator
-     * @param AbstractStringConverter $searchStringConverter
-     * @param AbstractStringConverter $enforcementSearchStringConverter
-     * @param NewVehicleService $vehicleService
-     * @param MysteryShopperHelper $mysteryShopperHelper
+     * @param MotTestRepository                  $motTestRepository
+     * @param TesterService                      $testerService
+     * @param VehicleCatalogService              $vehicleCatalog
+     * @param ParamObfuscator                    $paramObfuscator
+     * @param RetestEligibilityValidator         $retestEligibilityValidator
+     * @param AbstractStringConverter            $searchStringConverter
+     * @param AbstractStringConverter            $enforcementSearchStringConverter
+     * @param NewVehicleService                  $vehicleService
+     * @param MysteryShopperHelper               $mysteryShopperHelper
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
@@ -101,11 +99,11 @@ class VehicleSearchService
     }
 
     /**
-     * @param string  $vin        VIN number
-     * @param string  $reg        Registration number
-     * @param bool    $isFullVin  Indicates whether passed VIN number is full
-     * @param bool    $searchDvla True to search DVLA data source as well
-     * @param integer $limit      Max records to search for in the query
+     * @param string $vin        VIN number
+     * @param string $reg        Registration number
+     * @param bool   $isFullVin  Indicates whether passed VIN number is full
+     * @param bool   $searchDvla True to search DVLA data source as well
+     * @param int    $limit      Max records to search for in the query
      *
      * @return array
      */
@@ -117,9 +115,9 @@ class VehicleSearchService
         $vehicles = $this->searchAndExtractVehicle($vin, $reg, $isFullVin, $searchDvla, $limit);
 
         if (empty($vehicles)) {
-                $vin = $this->searchStringConverter->convert($vin);
-                $reg = $this->searchStringConverter->convert($reg);
-                $vehicles = $this->searchAndExtractVehicle($vin, $reg, $isFullVin, $searchDvla, $limit);
+            $vin = $this->searchStringConverter->convert($vin);
+            $reg = $this->searchStringConverter->convert($reg);
+            $vehicles = $this->searchAndExtractVehicle($vin, $reg, $isFullVin, $searchDvla, $limit);
         } else {
             $exactMatch = true;
         }
@@ -133,6 +131,7 @@ class VehicleSearchService
 
     /**
      * @param VehicleSearchParam $searchParam
+     *
      * @return mixed
      */
     public function searchVehicleWithAdditionalData(VehicleSearchParam $searchParam)
@@ -159,6 +158,7 @@ class VehicleSearchService
 
     /**
      * @param Vehicle[] $vehicles
+     *
      * @return array
      */
     private function extractEnforcementVehicles($vehicles)
@@ -166,16 +166,17 @@ class VehicleSearchService
         $results = [];
         foreach ($vehicles as $vehicle) {
             $results[$vehicle->getId()] = [
-                'id'            => $vehicle->getId(),
-                'vin'           => $vehicle->getVin(),
-                'registration'  => $vehicle->getRegistration(),
-                'make'          => $vehicle->getMakeName(),
-                'model'         => $vehicle->getModelName(),
-                'displayDate'   => $vehicle->getLastUpdatedOn() !== null ?
+                'id' => $vehicle->getId(),
+                'vin' => $vehicle->getVin(),
+                'registration' => $vehicle->getRegistration(),
+                'make' => $vehicle->getMakeName(),
+                'model' => $vehicle->getModelName(),
+                'displayDate' => $vehicle->getLastUpdatedOn() !== null ?
                     $vehicle->getLastUpdatedOn()->format('d M Y') :
                     null,
             ];
         }
+
         return $results;
     }
 
@@ -200,18 +201,21 @@ class VehicleSearchService
     /**
      * @param string|null $vin
      * @param string|null $reg
-     * @param bool|null $excludeDvla
+     * @param bool|null   $excludeDvla
+     *
      * @return array
      */
     private function searchAndExtractVehicle($vin = null, $reg = null, $excludeDvla = null)
     {
         $result = $this->vehicleService->tradeSearch($reg, $vin, $excludeDvla);
+
         return $result->getAll();
     }
 
     /**
      * @param array $vehicles
-     * @param bool $vtsId
+     * @param bool  $vtsId
+     *
      * @return array
      */
     private function mergeMotDataToVehicles($vehicles, $vtsId = false, $contingencyDto = null)
@@ -228,6 +232,7 @@ class VehicleSearchService
 
     /**
      * @param array $vehicle
+     *
      * @return array
      */
     private function mergeMotDataToVehicle(array $vehicle, $vtsId = false, $contingencyDto = null)
@@ -254,7 +259,7 @@ class VehicleSearchService
             try {
                 $this->retestEligibilityValidator->checkEligibilityForRetest($vehicle['id'], $vtsId, $contingencyDto);
                 $vehicle['retest_eligibility'] = true;
-            } catch(BadRequestException $exception) {
+            } catch (BadRequestException $exception) {
                 $vehicle['retest_eligibility'] = false;
             }
         }

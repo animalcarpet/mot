@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Core\Catalog\Vts;
-
 
 use Application\Service\CatalogService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -22,6 +20,7 @@ class VtsTypeCatalog implements AutoWireableInterface
 
     /**
      * @param $code
+     *
      * @return VtsType
      */
     public function getByCode($code)
@@ -39,6 +38,7 @@ class VtsTypeCatalog implements AutoWireableInterface
 
     /**
      * @param CatalogService $catalog
+     *
      * @return VtsType[]
      */
     private function buildVtsTypesCatalog(CatalogService $catalog)

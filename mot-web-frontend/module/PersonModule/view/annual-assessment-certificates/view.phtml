@@ -2,7 +2,7 @@
 
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesViewModel;
 
-/**
+/*
  * @var AnnualAssessmentCertificatesViewModel $viewModel
  */
 
@@ -14,7 +14,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
 ?>
 <?php echo $this->partial('errorMessages', array('getFromFlash' => true)); ?>
 
-<?php if($viewModel->isUserViewingHisOwnProfile()): ?>
+<?php if ($viewModel->isUserViewingHisOwnProfile()): ?>
     <div class="message">
         <p>You can only record an annual assessment once you’ve passed your tester qualification and recorded it in
             <a href="<?php echo $this->url($viewModel->getQualificationDetailsLink())?>">MOT tester training certificates</a>
@@ -23,7 +23,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
 <?php endif ?>
 
 <div>
-    <?php if($viewModel->isUserViewingHisOwnProfile()): ?>
+    <?php if ($viewModel->isUserViewingHisOwnProfile()): ?>
         <div class="text">
             <p class="lede">
                 You must pass an assessment each year (between 1 April and 31 March) and record it here to keep your tester status.
@@ -80,7 +80,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
         ?>
         <?php endif; ?>
 
-        <?php if($viewModel->isUserViewingHisOwnProfile()): ?>
+        <?php if ($viewModel->isUserViewingHisOwnProfile()): ?>
             <div class="message--important">
                 <h3 class="message__heading">
                     Keep your assessment certificates

@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Country
+ * Country.
  *
  * @ORM\Table(name="country_lookup", indexes={@ORM\Index(name="fk_country_of_registration_created_by", columns={"created_by"}), @ORM\Index(name="fk_country_of_registration_last_updated_by", columns={"last_updated_by"})})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\CountryRepository", readOnly=true)
@@ -45,11 +46,13 @@ class Country extends Entity
 
     /**
      * @param string $code
+     *
      * @return $this;
      */
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -78,7 +81,7 @@ class Country extends Entity
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getDisplayOrder()
     {
@@ -86,7 +89,7 @@ class Country extends Entity
     }
 
     /**
-     * @param integer $displayOrder
+     * @param int $displayOrder
      */
     public function setDisplayOrder($displayOrder)
     {
@@ -101,6 +104,7 @@ class Country extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

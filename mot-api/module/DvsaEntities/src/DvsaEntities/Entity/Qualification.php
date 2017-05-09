@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Qualification
+ * Qualification.
  *
  * @ORM\Table(name="qualification", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_qualification_1_idx", columns={"awarded_by_organisation_id"}), @ORM\Index(name="fk_qualification_2_idx", columns={"created_by"}), @ORM\Index(name="fk_qualification_3_idx", columns={"last_updated_by"}), @ORM\Index(name="fk_qualification_4_idx", columns={"qualification_type_id"})})
  * @ORM\Entity(readOnly=true)
@@ -61,7 +61,7 @@ class Qualification extends Entity
     private $qualificationType;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -75,7 +75,7 @@ class Qualification extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -85,7 +85,7 @@ class Qualification extends Entity
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -99,7 +99,7 @@ class Qualification extends Entity
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -129,7 +129,7 @@ class Qualification extends Entity
     }
 
     /**
-     * Set awardedByOrganisation
+     * Set awardedByOrganisation.
      *
      * @param \DvsaEntities\Entity\Organisation $awardedByOrganisation
      *
@@ -143,7 +143,7 @@ class Qualification extends Entity
     }
 
     /**
-     * Get awardedByOrganisation
+     * Get awardedByOrganisation.
      *
      * @return \DvsaEntities\Entity\Organisation
      */
@@ -153,7 +153,7 @@ class Qualification extends Entity
     }
 
     /**
-     * Set qualificationType
+     * Set qualificationType.
      *
      * @param \DvsaEntities\Entity\QualificationType $qualificationType
      *
@@ -167,7 +167,7 @@ class Qualification extends Entity
     }
 
     /**
-     * Get qualificationType
+     * Get qualificationType.
      *
      * @return \DvsaEntities\Entity\QualificationType
      */

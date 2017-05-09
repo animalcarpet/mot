@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Breadcrumbs;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -24,7 +25,7 @@ class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
 
     public function getQualificationDetailsRoute()
     {
-        return $this->getRoute() . self::ROUTE_QUALIFICATION_DETAILS;
+        return $this->getRoute().self::ROUTE_QUALIFICATION_DETAILS;
     }
 
     public function getBreadcrumbsForAnnualAssessmentCertificate(
@@ -62,7 +63,8 @@ class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
     public function getRouteForData($breadcrumbRouteName)
     {
         $route = $this->getRoute();
-        return $route . $breadcrumbRouteName;
+
+        return $route.$breadcrumbRouteName;
     }
 
     private function getBreadcrumbsForData(

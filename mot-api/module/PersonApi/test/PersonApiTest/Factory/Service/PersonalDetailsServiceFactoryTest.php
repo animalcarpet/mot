@@ -11,14 +11,10 @@ use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Factory\Service\PersonalDetailsServiceFactory;
 use PersonApi\Service\PersonalDetailsService;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonalDetailsServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class PersonalDetailsServiceFactoryTest.
  */
 class PersonalDetailsServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -17,8 +17,7 @@ class UpdateClassAction extends AbstractUpdateVehicleAction implements AutoWirea
         VehicleService $vehicleService,
         ParamObfuscator $paramObfuscator,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct($editStepAction, $classProcess, $vehicleService, $paramObfuscator, $startTestChangeService);
     }
 }

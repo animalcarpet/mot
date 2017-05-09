@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
@@ -6,13 +7,10 @@ use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\EquipmentService;
 
 /**
- * Class EquipmentController
- *
- * @package SiteApi\Controller
+ * Class EquipmentController.
  */
 class EquipmentController extends AbstractDvsaRestfulController
 {
-
     public function get($vtsId)
     {
         $service = $this->getEquipmentService();
@@ -22,7 +20,6 @@ class EquipmentController extends AbstractDvsaRestfulController
     }
 
     /**
-     *
      * @return EquipmentService
      */
     private function getEquipmentService()

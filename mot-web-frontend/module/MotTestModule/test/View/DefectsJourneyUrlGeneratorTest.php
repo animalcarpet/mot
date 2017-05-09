@@ -33,28 +33,29 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->router = new TreeRouteStack();
-        $this->router->setRoutes(require __DIR__ . '/Fixtures/routes_for_defects_url_generator.php');
+        $this->router->setRoutes(require __DIR__.'/Fixtures/routes_for_defects_url_generator.php');
         $this->request = new Request();
     }
 
     /**
-     * happy path data for addDefect
+     * happy path data for addDefect.
+     *
      * @return array
      */
     public function toAddDefectProvider()
     {
         return [
             // browse single category context
-            [ self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI . '/add/111/advisory'],
-            [ self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI . '/add/111/advisory'],
-            [ self::DEFECT_ID, 'prs',      self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI . '/add/111/prs'],
-            [ self::DEFECT_ID, 'failure',  self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI . '/add/111/failure'],
+            [self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI.'/add/111/advisory'],
+            [self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI.'/add/111/advisory'],
+            [self::DEFECT_ID, 'prs',      self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI.'/add/111/prs'],
+            [self::DEFECT_ID, 'failure',  self::BROWSE_DEFECT_CATEGORY_URI,  self::BROWSE_DEFECT_CATEGORY_URI.'/add/111/failure'],
             // search context
-            [ self::DEFECT_ID, 'advisory', self::SEARCH_DEFECT_URI,           self::SEARCH_DEFECT_URI . '/add/111/advisory'],
-            [ self::DEFECT_ID, 'prs',      self::SEARCH_DEFECT_URI,           self::SEARCH_DEFECT_URI . '/add/111/prs'],
-            [ self::DEFECT_ID, 'failure',  self::SEARCH_DEFECT_URI,           self::SEARCH_DEFECT_URI . '/add/111/failure'],
+            [self::DEFECT_ID, 'advisory', self::SEARCH_DEFECT_URI,           self::SEARCH_DEFECT_URI.'/add/111/advisory'],
+            [self::DEFECT_ID, 'prs',      self::SEARCH_DEFECT_URI,           self::SEARCH_DEFECT_URI.'/add/111/prs'],
+            [self::DEFECT_ID, 'failure',  self::SEARCH_DEFECT_URI,           self::SEARCH_DEFECT_URI.'/add/111/failure'],
             // search query passing
-            [ self::DEFECT_ID, 'failure',  self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . '/add/111/failure' . self::SEARCH_QUERY, true],
+            [self::DEFECT_ID, 'failure',  self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.'/add/111/failure'.self::SEARCH_QUERY, true],
         ];
     }
 
@@ -63,8 +64,8 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
      * @param $defectType
      * @param $currentUrl
      * @param $expectedUrl
-     *
      * @param bool $addQueryString
+     *
      * @throws RouteNotAllowedInContextException
      * @dataProvider toAddDefectProvider
      */
@@ -75,7 +76,6 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedUrl, $defectsJourneyUrlGenerator->toAddDefect($defectId, $defectType));
     }
 
-
     /**
      * @return array
      */
@@ -83,16 +83,16 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     {
         return [
             // no context
-            [ self::DEFECT_ID, 'advisory', ''],
-            [ self::DEFECT_ID, 'advisory', '/unknownUri'],
+            [self::DEFECT_ID, 'advisory', ''],
+            [self::DEFECT_ID, 'advisory', '/unknownUri'],
             // mot test result context
-            [ self::DEFECT_ID, 'advisory', self::MOT_TEST_RESULT_URI ],
-            [ self::DEFECT_ID, 'advisory', self::MOT_TEST_RESULT_URI . '/unknownUri' ],
-            [ self::DEFECT_ID, 'advisory', self::MOT_TEST_RESULT_URI . '/add/123' ],
+            [self::DEFECT_ID, 'advisory', self::MOT_TEST_RESULT_URI],
+            [self::DEFECT_ID, 'advisory', self::MOT_TEST_RESULT_URI.'/unknownUri'],
+            [self::DEFECT_ID, 'advisory', self::MOT_TEST_RESULT_URI.'/add/123'],
             // browse categories (root/primary view)
-            [ self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORIES_URI ],
-            [ self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORIES_URI . '/unknownUri' ],
-            [ self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORIES_URI . '/add/123'],
+            [self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORIES_URI],
+            [self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORIES_URI.'/unknownUri'],
+            [self::DEFECT_ID, 'advisory', self::BROWSE_DEFECT_CATEGORIES_URI.'/add/123'],
         ];
     }
 
@@ -100,8 +100,8 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
      * @param $defectId
      * @param $defectType
      * @param $currentUrl
-     *
      * @param bool $addQueryString
+     *
      * @throws RouteNotAllowedInContextException
      * @dataProvider toAddDefectInWrongContextProvider
      */
@@ -113,22 +113,21 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
         $defectsJourneyUrlGenerator->toAddDefect($defectId, $defectType);
     }
 
-
     public function toAddManualAdvisoryProvider()
     {
         return [
-            [self::SEARCH_DEFECT_URI, self:: SEARCH_DEFECT_URI . '/add/0/advisory'],
-            [self::SEARCH_DEFECT_URI . self::SEARCH_QUERY,  self:: SEARCH_DEFECT_URI . '/add/0/advisory' . self::SEARCH_QUERY, true],
-            [self::BROWSE_DEFECT_CATEGORIES_URI, self::BROWSE_DEFECT_CATEGORIES_URI . '/add/0/advisory'],
-            [self::BROWSE_DEFECT_CATEGORY_URI, self::BROWSE_DEFECT_CATEGORY_URI . '/add/0/advisory'],
+            [self::SEARCH_DEFECT_URI, self:: SEARCH_DEFECT_URI.'/add/0/advisory'],
+            [self::SEARCH_DEFECT_URI.self::SEARCH_QUERY,  self:: SEARCH_DEFECT_URI.'/add/0/advisory'.self::SEARCH_QUERY, true],
+            [self::BROWSE_DEFECT_CATEGORIES_URI, self::BROWSE_DEFECT_CATEGORIES_URI.'/add/0/advisory'],
+            [self::BROWSE_DEFECT_CATEGORY_URI, self::BROWSE_DEFECT_CATEGORY_URI.'/add/0/advisory'],
         ];
     }
 
     /**
      * @param $currentUrl
      * @param $expectedUrl
-     *
      * @param bool $addQueryString
+     *
      * @throws RouteNotAllowedInContextException
      * @dataProvider toAddManualAdvisoryProvider
      */
@@ -138,7 +137,6 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedUrl, $defectsJourneyUrlGenerator->toAddManualAdvisory());
     }
-
 
     public function toAddManualAdvisoryInWrongContextProvider()
     {
@@ -151,6 +149,7 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     }
     /**
      * @param $currentUrl
+     *
      * @throws RouteNotAllowedInContextException
      *
      * @dataProvider toAddManualAdvisoryInWrongContextProvider
@@ -169,11 +168,11 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     public function testToEditDefectProvider()
     {
         return [
-            [ self::DEFECT_ID, self::MOT_TEST_RESULT_URI, self::BASE_URI . '/111/edit'],
-            [ self::DEFECT_ID, self::MOT_TEST_RESULT_URI . self::SEARCH_QUERY, self::BASE_URI . '/111/edit' . self::SEARCH_QUERY, true],
-            [ self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORIES_URI, self::BROWSE_DEFECT_CATEGORIES_URI . '/111/edit' ],
-            [ self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORY_URI, self::BROWSE_DEFECT_CATEGORY_URI . '/111/edit' ],
-            [ self::DEFECT_ID, self::SEARCH_DEFECT_URI, self::SEARCH_DEFECT_URI . '/111/edit' ],
+            [self::DEFECT_ID, self::MOT_TEST_RESULT_URI, self::BASE_URI.'/111/edit'],
+            [self::DEFECT_ID, self::MOT_TEST_RESULT_URI.self::SEARCH_QUERY, self::BASE_URI.'/111/edit'.self::SEARCH_QUERY, true],
+            [self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORIES_URI, self::BROWSE_DEFECT_CATEGORIES_URI.'/111/edit'],
+            [self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORY_URI, self::BROWSE_DEFECT_CATEGORY_URI.'/111/edit'],
+            [self::DEFECT_ID, self::SEARCH_DEFECT_URI, self::SEARCH_DEFECT_URI.'/111/edit'],
         ];
     }
 
@@ -181,8 +180,8 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
      * @param $defectId
      * @param $currentUrl
      * @param $expectedUrl
-     *
      * @param bool $addQueryString
+     *
      * @throws RouteNotAllowedInContextException
      * @dataProvider testToEditDefectProvider
      */
@@ -192,7 +191,6 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedUrl, $defectsJourneyUrlGenerator->toEditDefect($defectId));
     }
-
 
     /**
      * @return array
@@ -209,8 +207,8 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     /**
      * @param $defectId
      * @param $currentUrl
-     *
      * @param bool $addQueryString
+     *
      * @throws RouteNotAllowedInContextException
      * @dataProvider testToEditDefectWithNoContextProvider
      */
@@ -228,12 +226,12 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     public function testToRemoveDefectProvider()
     {
         return [
-            [ self::DEFECT_ID, self::MOT_TEST_RESULT_URI, self::BASE_URI . '/111/remove'],
-            [ self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORIES_URI, self::BROWSE_DEFECT_CATEGORIES_URI . '/111/remove' ],
-            [ self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORY_URI, self::BROWSE_DEFECT_CATEGORY_URI . '/111/remove' ],
-            [ self::DEFECT_ID, self::SEARCH_DEFECT_URI, self::SEARCH_DEFECT_URI . '/111/remove' ],
+            [self::DEFECT_ID, self::MOT_TEST_RESULT_URI, self::BASE_URI.'/111/remove'],
+            [self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORIES_URI, self::BROWSE_DEFECT_CATEGORIES_URI.'/111/remove'],
+            [self::DEFECT_ID, self::BROWSE_DEFECT_CATEGORY_URI, self::BROWSE_DEFECT_CATEGORY_URI.'/111/remove'],
+            [self::DEFECT_ID, self::SEARCH_DEFECT_URI, self::SEARCH_DEFECT_URI.'/111/remove'],
 
-            [ self::DEFECT_ID, self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . '/111/remove' . self::SEARCH_QUERY, true ],
+            [self::DEFECT_ID, self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.'/111/remove'.self::SEARCH_QUERY, true],
         ];
     }
 
@@ -241,6 +239,7 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
      * @param $identifiedDefectId
      * @param $currentUrl
      * @param $expectedUrl
+     *
      * @throws RouteNotAllowedInContextException
      *
      * @dataProvider testToRemoveDefectProvider
@@ -268,6 +267,7 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
      * @param $identifiedDefectId
      * @param $currentUrl
      * @param bool $addQueryString
+     *
      * @throws RouteNotAllowedInContextException
      * @dataProvider testToRemoveDefectWithNoContextProvider
      */
@@ -285,37 +285,37 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     public function testGoBackProvider()
     {
         return [
-            [self::BROWSE_DEFECT_CATEGORY_URI , self::BROWSE_DEFECT_CATEGORY_URI],
-            [self::BROWSE_DEFECT_CATEGORY_URI . '/111/edit', self::BROWSE_DEFECT_CATEGORY_URI],
-            [self::BROWSE_DEFECT_CATEGORY_URI . '/111/remove', self::BROWSE_DEFECT_CATEGORY_URI],
-            [self::BROWSE_DEFECT_CATEGORY_URI . '/add/111/advisory', self::BROWSE_DEFECT_CATEGORY_URI],
-            [self::BROWSE_DEFECT_CATEGORY_URI . '/add/111/prs', self::BROWSE_DEFECT_CATEGORY_URI],
-            [self::BROWSE_DEFECT_CATEGORY_URI . '/add/111/failure', self::BROWSE_DEFECT_CATEGORY_URI],
-            [self::BROWSE_DEFECT_CATEGORY_URI . '/add/0/advisory', self::BROWSE_DEFECT_CATEGORY_URI],
+            [self::BROWSE_DEFECT_CATEGORY_URI, self::BROWSE_DEFECT_CATEGORY_URI],
+            [self::BROWSE_DEFECT_CATEGORY_URI.'/111/edit', self::BROWSE_DEFECT_CATEGORY_URI],
+            [self::BROWSE_DEFECT_CATEGORY_URI.'/111/remove', self::BROWSE_DEFECT_CATEGORY_URI],
+            [self::BROWSE_DEFECT_CATEGORY_URI.'/add/111/advisory', self::BROWSE_DEFECT_CATEGORY_URI],
+            [self::BROWSE_DEFECT_CATEGORY_URI.'/add/111/prs', self::BROWSE_DEFECT_CATEGORY_URI],
+            [self::BROWSE_DEFECT_CATEGORY_URI.'/add/111/failure', self::BROWSE_DEFECT_CATEGORY_URI],
+            [self::BROWSE_DEFECT_CATEGORY_URI.'/add/0/advisory', self::BROWSE_DEFECT_CATEGORY_URI],
 
-            [self::BROWSE_DEFECT_CATEGORIES_URI , self::BROWSE_DEFECT_CATEGORIES_URI],
-            [self::BROWSE_DEFECT_CATEGORIES_URI . '/111/edit', self::BROWSE_DEFECT_CATEGORIES_URI],
-            [self::BROWSE_DEFECT_CATEGORIES_URI . '/111/remove', self::BROWSE_DEFECT_CATEGORIES_URI],
-            [self::BROWSE_DEFECT_CATEGORIES_URI . '/111/edit', self::BROWSE_DEFECT_CATEGORIES_URI],
-            [self::BROWSE_DEFECT_CATEGORIES_URI . '/add/0/advisory', self::BROWSE_DEFECT_CATEGORIES_URI],
+            [self::BROWSE_DEFECT_CATEGORIES_URI, self::BROWSE_DEFECT_CATEGORIES_URI],
+            [self::BROWSE_DEFECT_CATEGORIES_URI.'/111/edit', self::BROWSE_DEFECT_CATEGORIES_URI],
+            [self::BROWSE_DEFECT_CATEGORIES_URI.'/111/remove', self::BROWSE_DEFECT_CATEGORIES_URI],
+            [self::BROWSE_DEFECT_CATEGORIES_URI.'/111/edit', self::BROWSE_DEFECT_CATEGORIES_URI],
+            [self::BROWSE_DEFECT_CATEGORIES_URI.'/add/0/advisory', self::BROWSE_DEFECT_CATEGORIES_URI],
 
             [self::SEARCH_DEFECT_URI, self::SEARCH_DEFECT_URI],
-            [self::SEARCH_DEFECT_URI . '/111/edit', self::SEARCH_DEFECT_URI],
-            [self::SEARCH_DEFECT_URI . '/111/remove', self::SEARCH_DEFECT_URI],
-            [self::SEARCH_DEFECT_URI . '/add/111/advisory', self::SEARCH_DEFECT_URI],
-            [self::SEARCH_DEFECT_URI . '/add/111/prs', self::SEARCH_DEFECT_URI],
-            [self::SEARCH_DEFECT_URI . '/add/111/failure', self::SEARCH_DEFECT_URI],
-            [self::SEARCH_DEFECT_URI . '/add/0/advisory', self::SEARCH_DEFECT_URI],
+            [self::SEARCH_DEFECT_URI.'/111/edit', self::SEARCH_DEFECT_URI],
+            [self::SEARCH_DEFECT_URI.'/111/remove', self::SEARCH_DEFECT_URI],
+            [self::SEARCH_DEFECT_URI.'/add/111/advisory', self::SEARCH_DEFECT_URI],
+            [self::SEARCH_DEFECT_URI.'/add/111/prs', self::SEARCH_DEFECT_URI],
+            [self::SEARCH_DEFECT_URI.'/add/111/failure', self::SEARCH_DEFECT_URI],
+            [self::SEARCH_DEFECT_URI.'/add/0/advisory', self::SEARCH_DEFECT_URI],
 
-            [self::SEARCH_DEFECT_URI . '/111/edit' . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, true],
-            [self::SEARCH_DEFECT_URI . '/111/remove' . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, true],
-            [self::SEARCH_DEFECT_URI . '/add/111/prs' . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, true],
-            [self::SEARCH_DEFECT_URI . '/add/111/failure' . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, true],
-            [self::SEARCH_DEFECT_URI . '/add/111/advisory' . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, true],
-            [self::SEARCH_DEFECT_URI . '/add/0/advisory' . self::SEARCH_QUERY, self::SEARCH_DEFECT_URI . self::SEARCH_QUERY, true],
+            [self::SEARCH_DEFECT_URI.'/111/edit'.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, true],
+            [self::SEARCH_DEFECT_URI.'/111/remove'.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, true],
+            [self::SEARCH_DEFECT_URI.'/add/111/prs'.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, true],
+            [self::SEARCH_DEFECT_URI.'/add/111/failure'.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, true],
+            [self::SEARCH_DEFECT_URI.'/add/111/advisory'.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, true],
+            [self::SEARCH_DEFECT_URI.'/add/0/advisory'.self::SEARCH_QUERY, self::SEARCH_DEFECT_URI.self::SEARCH_QUERY, true],
 
-            [self::BASE_URI . '/111/remove', self::MOT_TEST_RESULT_URI],
-            [self::BASE_URI . '/111/edit', self::MOT_TEST_RESULT_URI],
+            [self::BASE_URI.'/111/remove', self::MOT_TEST_RESULT_URI],
+            [self::BASE_URI.'/111/edit', self::MOT_TEST_RESULT_URI],
         ];
     }
 
@@ -323,6 +323,7 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
      * @param $currentUrl
      * @param $expectedUrl
      * @param bool $addQueryString
+     *
      * @throws RouteNotAllowedInContextException
      * @dataProvider testGoBackProvider
      */
@@ -347,6 +348,7 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param $currentUrl
+     *
      * @throws RouteNotAllowedInContextException
      *
      * @dataProvider testGoBackWithNoContextProvider
@@ -362,6 +364,7 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     /**
      * @param $currentUrl
      * @param bool $setUpQueryParams
+     *
      * @return DefectsJourneyUrlGenerator
      */
     private function createUrlGenerator($currentUrl, $setUpQueryParams = false)
@@ -394,7 +397,7 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     {
         $this->request->setMethod(Request::METHOD_GET);
         $this->request->setUri($currentUrl);
-        if($setUpQueryParam){
+        if ($setUpQueryParam) {
             $params = new Parameters([
                 'q' => 'testSearch',
                 'p' => 10,

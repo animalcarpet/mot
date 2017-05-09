@@ -1,14 +1,13 @@
 <?php
 /**
- * @var array $errorMessages
- * @var int $dobDay
- * @var int $dobMonth
- * @var int $dobYear
+ * @var array
+ * @var int   $dobDay
+ * @var int   $dobMonth
+ * @var int   $dobYear
  */
-
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeDateOfBirthController;
 
-echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorMessages]);
+echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorMessages]);
 ?>
 
 <form method="POST">
@@ -17,15 +16,15 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
     <fieldset>
         <?php echo $this->partial('partial/gds/form/datePickerBox.phtml',
             [
-                'id'     => 'dateOfBirth',
-                'label'  => 'Date of birth',
+                'id' => 'dateOfBirth',
+                'label' => 'Date of birth',
                 'required' => false,
                 'optional' => false,
                 'errorMessage' => !empty($errors[ChangeDateOfBirthController::FIELD_NAME]) ? $errors[ChangeDateOfBirthController::FIELD_NAME] : null,
-                'day'    => $this->withDefault('')->getValue($dobDay),
-                'month'  => $this->withDefault('')->getValue($dobMonth),
-                'year'   => $this->withDefault('')->getValue($dobYear),
-                'help'   => 'For example: 02 12 1970',
+                'day' => $this->withDefault('')->getValue($dobDay),
+                'month' => $this->withDefault('')->getValue($dobMonth),
+                'year' => $this->withDefault('')->getValue($dobYear),
+                'help' => 'For example: 02 12 1970',
             ]
             );
         ?>

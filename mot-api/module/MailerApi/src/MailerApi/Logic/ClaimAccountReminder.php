@@ -5,13 +5,9 @@ namespace MailerApi\Logic;
 use MailerApi\Service\MailerService;
 use DvsaCommon\Dto\Mailer\MailerDto;
 use MailerApi\Validator\MailerValidator;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * All business logic for sending a link by email to reclaim an account
- *
- * @package MailerApi\Logic
+ * All business logic for sending a link by email to reclaim an account.
  */
 class ClaimAccountReminder extends Reminder
 {
@@ -23,11 +19,11 @@ class ClaimAccountReminder extends Reminder
      * of the request (in the parent) and then do what is required to cause an email
      * to be sent to the requesting user.
      *
-     * @param array $mailerConfig
-     * @param array $helpdeskConfig
+     * @param array         $mailerConfig
+     * @param array         $helpdeskConfig
      * @param MailerService $mailerService
-     * @param MailerDto $dto
-     * @param string $emailAddress to send the reminder to
+     * @param MailerDto     $dto
+     * @param string        $emailAddress   to send the reminder to
      */
     public function __construct(
         array $mailerConfig,
@@ -53,9 +49,9 @@ class ClaimAccountReminder extends Reminder
      * @param $data
      *
      * @return bool TRUE of the message was accepted by the mail sub-system.
-     *              This does NOT mean the message has been delivered yet.
+     *              This does NOT mean the message has been delivered yet
      */
-    public function send(Array $data = [])
+    public function send(array $data = [])
     {
         $subject = $this->renderTemplate(
             $this->dto,

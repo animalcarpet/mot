@@ -7,7 +7,7 @@ use DvsaCommon\Enum\WeightSourceCode;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 
 /**
- * Class BrakeTestResultClass3AndAboveTest
+ * Class BrakeTestResultClass3AndAboveTest.
  */
 class BrakeTestResultClass3AndAboveTest extends \PHPUnit_Framework_TestCase
 {
@@ -114,31 +114,31 @@ class BrakeTestResultClass3AndAboveTest extends \PHPUnit_Framework_TestCase
     public static function getTestData()
     {
         return [
-            'id'                          => 2,
-            'serviceBrake1TestType'       => BrakeTestTypeCode::ROLLER,
-            'parkingBrakeTestType'        => BrakeTestTypeCode::ROLLER,
-            'parkingBrakeEffortOffside'   => 15,
-            'parkingBrakeEffortNearside'  => 16,
-            'parkingBrakeEffortSecondaryOffside'  => 17,
+            'id' => 2,
+            'serviceBrake1TestType' => BrakeTestTypeCode::ROLLER,
+            'parkingBrakeTestType' => BrakeTestTypeCode::ROLLER,
+            'parkingBrakeEffortOffside' => 15,
+            'parkingBrakeEffortNearside' => 16,
+            'parkingBrakeEffortSecondaryOffside' => 17,
             'parkingBrakeEffortSecondaryNearside' => 18,
-            'parkingBrakeLockOffside'     => true,
-            'parkingBrakeLockNearside'    => false,
-            'parkingBrakeLockSecondaryOffside'  => true,
+            'parkingBrakeLockOffside' => true,
+            'parkingBrakeLockNearside' => false,
+            'parkingBrakeLockSecondaryOffside' => true,
             'parkingBrakeLockSecondaryNearside' => false,
-            'serviceBrakeIsSingleLine'    => false,
-            'isCommercialVehicle'         => false,
-            'vehicleWeight'               => 2000,
-            'weightType'                  => WeightSourceCode::PRESENTED,
-            'weightIsUnladen'             => true,
-            'serviceBrake1Efficiency'     => 51,
-            'serviceBrake2Efficiency'     => 50,
-            'parkingBrakeEfficiency'      => 52,
+            'serviceBrakeIsSingleLine' => false,
+            'isCommercialVehicle' => false,
+            'vehicleWeight' => 2000,
+            'weightType' => WeightSourceCode::PRESENTED,
+            'weightIsUnladen' => true,
+            'serviceBrake1Efficiency' => 51,
+            'serviceBrake2Efficiency' => 50,
+            'parkingBrakeEfficiency' => 52,
             'serviceBrake1EfficiencyPass' => true,
             'serviceBrake2EfficiencyPass' => false,
-            'parkingBrakeEfficiencyPass'  => false,
-            'generalPass'                 => false,
-            'numberOfAxles'               => 2,
-            'riderWeight'                 => null
+            'parkingBrakeEfficiencyPass' => false,
+            'generalPass' => false,
+            'numberOfAxles' => 2,
+            'riderWeight' => null,
         ];
     }
 }

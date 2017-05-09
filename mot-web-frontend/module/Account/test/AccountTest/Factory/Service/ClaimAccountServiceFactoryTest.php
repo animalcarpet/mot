@@ -7,7 +7,6 @@ use Account\Service\ClaimAccountService;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaClient\MapperFactory;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;

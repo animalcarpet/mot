@@ -1,6 +1,5 @@
 <?php
 
-
 namespace CoreTest\TestUtils\Identity;
 
 use Core\Service\MotFrontendIdentityProviderInterface;

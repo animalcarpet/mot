@@ -27,7 +27,7 @@ class TesterAuthorisationStatusService
     /** @var array the default tester qualification status is set to qualified */
     private $defaultTestQualificationStatus = [
         VehicleClassGroupCode::BIKES => AuthorisationForTestingMotStatusCode::QUALIFIED,
-        VehicleClassGroupCode::CARS_ETC => AuthorisationForTestingMotStatusCode::QUALIFIED
+        VehicleClassGroupCode::CARS_ETC => AuthorisationForTestingMotStatusCode::QUALIFIED,
     ];
 
     private $resultSet = [
@@ -37,7 +37,7 @@ class TesterAuthorisationStatusService
 
     /**
      * @param TestSupportRestClientHelper $testSupportRestClientHelper
-     * @param EntityManager $entityManager
+     * @param EntityManager               $entityManager
      */
     public function __construct(
         TestSupportRestClientHelper $testSupportRestClientHelper,
@@ -48,9 +48,11 @@ class TesterAuthorisationStatusService
     }
 
     /**
-     * @param int $testerId a.k.a person id
+     * @param int   $testerId       a.k.a person id
      * @param array $qualifications e.g. ['A'=> 'QLFD' , 'B' => 'DMTN'] or just 'QLFD'
+     *
      * @return JsonModel
+     *
      * @throws \Exception
      */
     public function setTesterQualificationStatus($testerId, $qualifications)
@@ -80,14 +82,13 @@ class TesterAuthorisationStatusService
     private function insert($testerId, $qualifications)
     {
         $qryInsertQualification = $this->entityManager->getConnection()->prepare(
-            "INSERT INTO auth_for_testing_mot (person_id, status_id, vehicle_class_id, created_by)
-             VALUES (:testerId, :statusId, :vehicleClassId, 1)"
+            'INSERT INTO auth_for_testing_mot (person_id, status_id, vehicle_class_id, created_by)
+             VALUES (:testerId, :statusId, :vehicleClassId, 1)'
         );
 
         $qryInsertQualification->bindValue(':testerId', $testerId);
 
         foreach ($qualifications as $group => $status) {
-
             $qryInsertQualification->bindValue(':statusId', $this->fetchQualificationStatusId($status));
 
             if (VehicleClassGroupCode::BIKES === $group) {
@@ -115,16 +116,16 @@ class TesterAuthorisationStatusService
 
         $conn = $this->entityManager->getConnection();
         $conn->executeQuery(
-            "DELETE FROM auth_for_testing_mot WHERE person_id = :personId AND vehicle_class_id IN (:classes)",
-            ["personId" => $personId, "classes" => $classes],
-            ["personId" => \Pdo::PARAM_INT, "classes" => Connection::PARAM_STR_ARRAY]
+            'DELETE FROM auth_for_testing_mot WHERE person_id = :personId AND vehicle_class_id IN (:classes)',
+            ['personId' => $personId, 'classes' => $classes],
+            ['personId' => \Pdo::PARAM_INT, 'classes' => Connection::PARAM_STR_ARRAY]
         );
     }
 
     private function deleteTesterQualificationStatus($personId)
     {
         $qryFetchStatusId = $this->entityManager->getConnection()->prepare(
-            "DELETE FROM auth_for_testing_mot WHERE person_id = :personId"
+            'DELETE FROM auth_for_testing_mot WHERE person_id = :personId'
         );
 
         $qryFetchStatusId->execute([':personId' => $personId]);
@@ -132,16 +133,17 @@ class TesterAuthorisationStatusService
 
     /**
      * @param string $status e.g. QLFD or Qualified
+     *
      * @return int
      */
     private function fetchQualificationStatusId($status)
     {
         $qryFetchStatusId = $this->entityManager->getConnection()->prepare(
-            "SELECT id FROM auth_for_testing_mot_status WHERE code = :keyword OR name = :keyword"
+            'SELECT id FROM auth_for_testing_mot_status WHERE code = :keyword OR name = :keyword'
         );
 
         $qryFetchStatusId->execute([':keyword' => $status]);
-        $statusId = (int)$qryFetchStatusId->fetchColumn(0);
+        $statusId = (int) $qryFetchStatusId->fetchColumn(0);
 
         return $statusId;
     }
@@ -153,7 +155,6 @@ class TesterAuthorisationStatusService
         }
 
         foreach ($qualifications as $group => $status) {
-
             if (!in_array($group, VehicleClassGroupCode::getAll())) {
                 return false;
             }
@@ -192,17 +193,13 @@ class TesterAuthorisationStatusService
     private function getResultSet()
     {
         if (count($this->resultSet[self::RESULT_FAILED_KEY]) === 0) {
-
             $resultSet = TestDataResponseHelper::jsonOk(
                 $this->resultSet[self::RESULT_SUCCESS_KEY]
             );
-
-        }else{
-
+        } else {
             $resultSet = TestDataResponseHelper::jsonError(
                 $this->resultSet
             );
-
         }
 
         return $resultSet;

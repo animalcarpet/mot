@@ -12,103 +12,103 @@ use Site\Factory\Controller\SiteSearchControllerFactory;
 use Site\UpdateVtsProperty\UpdateVtsPropertyController;
 
 return [
-    'router'       => [
+    'router' => [
         'routes' => [
-            'vehicle-testing-station-search-for-person'  => [
-                'type'    => 'segment',
+            'vehicle-testing-station-search-for-person' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle-testing-station/:vehicleTestingStationId/search-for-person',
+                    'route' => '/vehicle-testing-station/:vehicleTestingStationId/search-for-person',
                     'defaults' => [
                         'controller' => RoleController::class,
-                        'action'     => 'searchForPerson',
+                        'action' => 'searchForPerson',
                     ],
                 ],
             ],
-            'vehicle-testing-station-list-user-roles'    => [
-                'type'    => 'segment',
+            'vehicle-testing-station-list-user-roles' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:vehicleTestingStationId/:personId/list-roles',
+                    'route' => '/vehicle-testing-station/:vehicleTestingStationId/:personId/list-roles',
                     'constraints' => [
                         'personId' => '[1-9]+[0-9]*',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => RoleController::class,
-                        'action'     => 'listUserRoles',
+                        'action' => 'listUserRoles',
                     ],
                 ],
             ],
             'vehicle-testing-station-confirm-nomination' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle-testing-station/:vehicleTestingStationId/:nomineeId/confirm-nomination/:roleCode',
+                    'route' => '/vehicle-testing-station/:vehicleTestingStationId/:nomineeId/confirm-nomination/:roleCode',
                     'defaults' => [
                         'controller' => RoleController::class,
-                        'action'     => 'confirmNomination',
+                        'action' => 'confirmNomination',
                     ],
                 ],
             ],
-            'vehicle-testing-station'            => [
-                'type'    => 'segment',
+            'vehicle-testing-station' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:id',
+                    'route' => '/vehicle-testing-station/:id',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
-            'vehicle-testing-station-rag-status'             => [
-                'type'    => 'segment',
+            'vehicle-testing-station-rag-status' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:id/risk-assessment',
+                    'route' => '/vehicle-testing-station/:id/risk-assessment',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteController::class,
-                        'action'     => 'risk-assessment',
+                        'action' => 'risk-assessment',
                     ],
                 ],
             ],
-            'vehicle-testing-station-add-rag-status'             => [
-                'type'    => 'segment',
+            'vehicle-testing-station-add-rag-status' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:id/add-risk-assessment',
+                    'route' => '/vehicle-testing-station/:id/add-risk-assessment',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteController::class,
-                        'action'     => 'add-risk-assessment',
+                        'action' => 'add-risk-assessment',
                     ],
                 ],
             ],
-            'vehicle-testing-station-cancel-add-rag-status'             => [
-                'type'    => 'segment',
+            'vehicle-testing-station-cancel-add-rag-status' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:id/add-risk-assessment/cancel',
+                    'route' => '/vehicle-testing-station/:id/add-risk-assessment/cancel',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteController::class,
-                        'action'     => 'cancel-add-risk-assessment',
+                        'action' => 'cancel-add-risk-assessment',
                     ],
                 ],
             ],
-            'vehicle-testing-station-add-rag-status-confirmation'             => [
-                'type'    => 'segment',
+            'vehicle-testing-station-add-rag-status-confirmation' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:id/add-risk-assessment/confirmation',
+                    'route' => '/vehicle-testing-station/:id/add-risk-assessment/confirmation',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteController::class,
-                        'action'     => 'add-risk-assessment-confirmation',
+                        'action' => 'add-risk-assessment-confirmation',
                     ],
                 ],
             ],
@@ -152,7 +152,7 @@ return [
                                         'action' => 'userTestQualityCsv',
                                     ],
                                 ],
-                            ]
+                            ],
                         ],
                     ],
                     'user-profile-test-quality' => [
@@ -181,178 +181,178 @@ return [
                                 'action' => 'testQualityCsv',
                             ],
                         ],
-                    ]
-                ],
-            ],
-            'vehicle-testing-station-search'             => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'    => '/vehicle-testing-station/search',
-                    'defaults' => [
-                        'controller' => SiteSearchControllerFactory::class,
-                        'action'     => 'search',
                     ],
                 ],
             ],
-            'vehicle-testing-station-result'             => [
-                'type'    => 'segment',
+            'vehicle-testing-station-search' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle-testing-station/result',
+                    'route' => '/vehicle-testing-station/search',
                     'defaults' => [
                         'controller' => SiteSearchControllerFactory::class,
-                        'action'     => 'result',
+                        'action' => 'search',
                     ],
                 ],
             ],
-            'vehicle-testing-station-by-site'            => [
-                'type'    => 'segment',
+            'vehicle-testing-station-result' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/site/:id',
+                    'route' => '/vehicle-testing-station/result',
+                    'defaults' => [
+                        'controller' => SiteSearchControllerFactory::class,
+                        'action' => 'result',
+                    ],
+                ],
+            ],
+            'vehicle-testing-station-by-site' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/vehicle-testing-station/site/:id',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => SiteController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
-            'vehicle-testing-station-edit-property'     => [
-                'type'    => 'segment',
+            'vehicle-testing-station-edit-property' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:id/:propertyName/change',
+                    'route' => '/vehicle-testing-station/:id/:propertyName/change',
                     'constraints' => [
                         'id' => '[0-9]+',
                         'propertyName' => 'name|classes|status|type|email|phone|address|country',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => UpdateVtsPropertyController::class,
-                        'action'     => 'edit',
+                        'action' => 'edit',
                     ],
                 ],
             ],
-            'vehicle-testing-station-edit-property-review'     => [
-                'type'    => 'segment',
+            'vehicle-testing-station-edit-property-review' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/vehicle-testing-station/:id/:propertyName/review/:formUuid',
+                    'route' => '/vehicle-testing-station/:id/:propertyName/review/:formUuid',
                     'constraints' => [
                         'id' => '[0-9]+',
                         'propertyName' => 'name|classes|status|type|email|phone|address|country',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => UpdateVtsPropertyController::class,
-                        'action'     => 'review',
+                        'action' => 'review',
                     ],
                 ],
             ],
-            'site'                                       => [
-                'type'          => 'Zend\Mvc\Router\Http\Literal',
-                'options'       => [
+            'site' => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
                     'route' => '/vehicle-testing-station',
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'create'             => [
-                        'type'    => 'segment',
+                'child_routes' => [
+                    'create' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/create',
+                            'route' => '/create',
                             'defaults' => [
                                 'controller' => SiteController::class,
-                                'action'     => 'create',
+                                'action' => 'create',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'confirmation' => [
-                                'type'    => 'literal',
+                                'type' => 'literal',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'controller' => SiteController::class,
-                                        'action'     => 'confirmation',
+                                        'action' => 'confirmation',
                                     ],
                                 ],
                             ],
                         ],
                     ],
                     'configure-brake-test-defaults' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:id/configure-brake-test-defaults',
+                            'route' => '/:id/configure-brake-test-defaults',
                             'defaults' => [
-                                'id'         => '[0-9]+',
+                                'id' => '[0-9]+',
                                 'controller' => SiteController::class,
-                                'action'     => 'configureBrakeTestDefaults',
+                                'action' => 'configureBrakeTestDefaults',
                             ],
                         ],
                     ],
-                    'remove-role'                   => [
-                        'type'    => 'segment',
+                    'remove-role' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:siteId/remove-role/:positionId',
+                            'route' => '/:siteId/remove-role/:positionId',
                             'defaults' => [
-                                'siteId'     => '[0-9]+',
+                                'siteId' => '[0-9]+',
                                 'positionId' => '[0-9]+',
                                 'controller' => RoleController::class,
-                                'action'     => 'remove',
+                                'action' => 'remove',
                             ],
                         ],
                     ],
-                    'edit-opening-hours'            => [
-                        'type'    => 'segment',
+                    'edit-opening-hours' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:siteId/opening-hours/edit',
+                            'route' => '/:siteId/opening-hours/edit',
                             'defaults' => [
-                                'siteId'     => '[0-9]+',
+                                'siteId' => '[0-9]+',
                                 'controller' => SiteTestingDailyScheduleController::class,
-                                'action'     => 'edit',
+                                'action' => 'edit',
                             ],
                         ],
                     ],
-                    'edit-testing-facilities'            => [
-                        'type'    => 'segment',
+                    'edit-testing-facilities' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:id/testing-facilities',
+                            'route' => '/:id/testing-facilities',
                             'defaults' => [
-                                'siteId'     => '[0-9]+',
+                                'siteId' => '[0-9]+',
                                 'controller' => SiteController::class,
-                                'action'     => 'testingFacilities',
+                                'action' => 'testingFacilities',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'confirmation' => [
-                                'type'    => 'literal',
+                                'type' => 'literal',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'controller' => SiteController::class,
-                                        'action'     => 'testingFacilitiesConfirmation',
+                                        'action' => 'testingFacilitiesConfirmation',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'mot-test-log'       => [
-                        'type'    => 'segment',
+                    'mot-test-log' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/:id/mot-test-log',
-                            'defaults'    => [
-                                'id'         => '[0-9]+',
+                            'route' => '/:id/mot-test-log',
+                            'defaults' => [
+                                'id' => '[0-9]+',
                                 'controller' => MotTestLogController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
 
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
-                            'download'    => [
-                                'type'    => 'segment',
+                        'child_routes' => [
+                            'download' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/csv',
-                                    'defaults'    => [
+                                    'route' => '/csv',
+                                    'defaults' => [
                                         'controller' => MotTestLogController::class,
-                                        'action'     => 'downloadCsv',
+                                        'action' => 'downloadCsv',
                                     ],
                                 ],
                             ],
@@ -362,15 +362,15 @@ return [
             ],
         ],
     ],
-    'controllers'  => [
+    'controllers' => [
         'invokables' => [
             SiteTestingDailyScheduleController::class => SiteTestingDailyScheduleController::class,
         ],
-        'factories'  => [
-            MotTestLogController::class            => MotTestLogControllerFactory::class,
-            RoleController::class                  => RoleControllerFactory::class,
-            SiteSearchControllerFactory::class     => SiteSearchControllerFactory::class,
-            SiteController::class                  => SiteControllerFactory::class,
+        'factories' => [
+            MotTestLogController::class => MotTestLogControllerFactory::class,
+            RoleController::class => RoleControllerFactory::class,
+            SiteSearchControllerFactory::class => SiteSearchControllerFactory::class,
+            SiteController::class => SiteControllerFactory::class,
         ],
         'abstract_factories' => [
             AutoWireFactory::class,
@@ -378,11 +378,11 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
-        'template_map'        => [
-            'siteRiskAndScore'           => __DIR__ . '/../view/site/vehicle-testing-station/partials/siteRiskAndScore.phtml',
-            'brakeTestConfiguration'     => __DIR__ . '/../view/site/vehicle-testing-station/partials/brakeTestConfiguration.phtml',
+        'template_map' => [
+            'siteRiskAndScore' => __DIR__.'/../view/site/vehicle-testing-station/partials/siteRiskAndScore.phtml',
+            'brakeTestConfiguration' => __DIR__.'/../view/site/vehicle-testing-station/partials/brakeTestConfiguration.phtml',
         ],
     ],
 ];

@@ -36,7 +36,7 @@ class PersonRepository extends AbstractMutableRepository
     {
         $person = $this->find($id);
         if (null === $person) {
-            throw new NotFoundException('Person ' . $id . ' not found');
+            throw new NotFoundException('Person '.$id.' not found');
         }
 
         return $person;
@@ -55,11 +55,12 @@ class PersonRepository extends AbstractMutableRepository
     }
 
     /**
-     * Gets a person by id or username, in that order
+     * Gets a person by id or username, in that order.
      *
      * @param mixed $userId or $username
      *
      * @return Person
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getByIdOrUsername($idOrUsername)
@@ -70,8 +71,9 @@ class PersonRepository extends AbstractMutableRepository
         }
 
         if (!$person) {
-            throw new NotFoundException('Person ' . $idOrUsername . ' not found');
+            throw new NotFoundException('Person '.$idOrUsername.' not found');
         }
+
         return $person;
     }
 
@@ -88,7 +90,7 @@ class PersonRepository extends AbstractMutableRepository
     {
         $person = $this->findOneBy(['username' => $login]);
         if (null === $person) {
-            throw new NotFoundException('Person ' . $login . ' not found');
+            throw new NotFoundException('Person '.$login.' not found');
         }
 
         return $person;
@@ -96,21 +98,24 @@ class PersonRepository extends AbstractMutableRepository
 
     /**
      * Retrieves all done necessary to set up identity in one query.
+     *
      * @param $username
+     *
      * @return null|Person
      */
-    public function findIdentity($username) {
-
-            $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-            $queryBuilder
+    public function findIdentity($username)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
                 ->select('p, am')
                 ->from(Person::class, 'p')
                 ->join(AuthenticationMethod::class, 'am', Join::INNER_JOIN, 'p.authenticationMethod = am.id')
                 ->where('p.username = :username')
                 ->setParameter('username', $username);
 
-            $result = $queryBuilder->getQuery()->getResult();
-            return empty($result) ? null: $result[0];
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return empty($result) ? null : $result[0];
     }
 
     /**
@@ -127,7 +132,7 @@ class PersonRepository extends AbstractMutableRepository
         $person = $this->findOneBy(['userReference' => $user_reference]);
 
         if (null === $person) {
-            throw new NotFoundException('Person/user_ref: ' . $user_reference . ' not found');
+            throw new NotFoundException('Person/user_ref: '.$user_reference.' not found');
         }
 
         return $person;
@@ -218,15 +223,17 @@ class PersonRepository extends AbstractMutableRepository
 
     /**
      * For use in New User Registration
-     * Passes in the letters of the user's username and assigns a number to them based on the la
+     * Passes in the letters of the user's username and assigns a number to them based on the la.
+     *
      * @param string $username
+     *
      * @return mixed|null
      */
     public function getLastUsername($username, $lowerLimit, $upperLimit)
     {
         $lowerLimit = $username.$lowerLimit;
         $upperLimit = $username.$upperLimit;
-        $username = $username . '%';
+        $username = $username.'%';
 
         // Query set to use Upper and Lower limits from DBA advice
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
@@ -237,8 +244,8 @@ class PersonRepository extends AbstractMutableRepository
             ->andWhere('person.username > :lowerLimit')
             ->andWhere('person.username <= :upperLimit')
             ->setParameter('username', $username)
-            ->setParameter('lowerLimit' , $lowerLimit)
-            ->setParameter('upperLimit' , $upperLimit)
+            ->setParameter('lowerLimit', $lowerLimit)
+            ->setParameter('upperLimit', $upperLimit)
             ->setMaxResults(1);
 
         $result = $queryBuilder->getQuery()->getOneOrNullResult();

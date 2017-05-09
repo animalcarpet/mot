@@ -46,7 +46,7 @@ class TokenAwareCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->cache = new TokenAwareCache($this->decoratedCache, $this->tokenService);
     }
-    
+
     public function testItImplementsDoctrineCommonCacheInterface()
     {
         $this->assertInstanceOf(Cache::class, $this->cache);
@@ -56,7 +56,7 @@ class TokenAwareCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->decoratedCache->expects($this->any())
             ->method('fetch')
-            ->with($this->hashedToken . '_foo')
+            ->with($this->hashedToken.'_foo')
             ->willReturn('bar');
 
         $this->assertSame('bar', $this->cache->fetch('foo'));
@@ -66,7 +66,7 @@ class TokenAwareCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->decoratedCache->expects($this->any())
             ->method('contains')
-            ->with($this->hashedToken . '_foo')
+            ->with($this->hashedToken.'_foo')
             ->willReturn(true);
 
         $this->assertTrue($this->cache->contains('foo'));
@@ -76,7 +76,7 @@ class TokenAwareCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->decoratedCache->expects($this->once())
             ->method('save')
-            ->with($this->hashedToken . '_foo', 'bar', 42)
+            ->with($this->hashedToken.'_foo', 'bar', 42)
             ->willReturn(true);
 
         $this->assertTrue($this->cache->save('foo', 'bar', 42));
@@ -86,7 +86,7 @@ class TokenAwareCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->decoratedCache->expects($this->once())
             ->method('delete')
-            ->with($this->hashedToken . '_foo')
+            ->with($this->hashedToken.'_foo')
             ->willReturn(true);
 
         $this->assertTrue($this->cache->delete('foo'));

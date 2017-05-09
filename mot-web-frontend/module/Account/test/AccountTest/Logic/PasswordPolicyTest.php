@@ -9,21 +9,21 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class PasswordPolicyTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  PasswordPolicyTestFormModel */
+    /** @var PasswordPolicyTestFormModel */
     private $formModel;
 
     public function setUp()
     {
-        $this->formModel = XMock::of(PasswordPolicyTestFormModel::class, ['isValid','addError','hasErrors']);
+        $this->formModel = XMock::of(PasswordPolicyTestFormModel::class, ['isValid', 'addError', 'hasErrors']);
     }
 
     public function testPasswordIsNotUsernameRaisesError()
     {
         $policy = new PasswordPolicy(
             $this->formModel,
-            "theUsername1",
-            "theUsername1",
-            "theUsername1"
+            'theUsername1',
+            'theUsername1',
+            'theUsername1'
         );
 
         $this->formModel->expects($this->once())
@@ -40,9 +40,9 @@ class PasswordPolicyTest extends \PHPUnit_Framework_TestCase
     {
         $policy = new PasswordPolicy(
             $this->formModel,
-            "theusername",
-            "",
-            "idontmatterforthistest"
+            'theusername',
+            '',
+            'idontmatterforthistest'
         );
 
         $this->formModel->expects($this->once())
@@ -59,9 +59,9 @@ class PasswordPolicyTest extends \PHPUnit_Framework_TestCase
     {
         $policy = new PasswordPolicy(
             $this->formModel,
-            "theusername",
-            "password-A1",
-            "password-A2"
+            'theusername',
+            'password-A1',
+            'password-A2'
         );
 
         $this->formModel->expects($this->once())
@@ -74,4 +74,3 @@ class PasswordPolicyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($policy->enforce());
     }
 }
-

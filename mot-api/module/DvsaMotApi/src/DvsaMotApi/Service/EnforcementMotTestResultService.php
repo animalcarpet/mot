@@ -3,7 +3,6 @@
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -22,7 +21,6 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
-use DvsaMotApi\Service\RfrValidator;
 use DvsaMotApi\Service\RfrValidator\CheckAdvisoryWarningHasJustificationAgainstScore;
 use DvsaMotApi\Service\RfrValidator\CheckCategoryAllowedForDefectNotApplicable;
 use DvsaMotApi\Service\RfrValidator\CheckCategoryExistsForScore;
@@ -35,9 +33,7 @@ use DvsaMotApi\Service\RfrValidator\CheckNoFurtherActionHasJustificationAgainstS
 use DvsaMotApi\Service\RfrValidator\CheckScoreForDefectNotApplicable;
 
 /**
- * Class EnforcementMotTestResultService
- *
- * @package DvsaMotApi\Service
+ * Class EnforcementMotTestResultService.
  */
 class EnforcementMotTestResultService extends AbstractService
 {
@@ -64,10 +60,10 @@ class EnforcementMotTestResultService extends AbstractService
     protected $validationErrors = [];
 
     /**
-     * @param EntityManager                    $entityManager
-     * @param DoctrineObject                   $objectHydrator
-     * @param AuthorisationServiceInterface             $authService
-     * @param MotTestMapper                    $motTestMapper
+     * @param EntityManager                 $entityManager
+     * @param DoctrineObject                $objectHydrator
+     * @param AuthorisationServiceInterface $authService
+     * @param MotTestMapper                 $motTestMapper
      */
     public function __construct(
         EntityManager $entityManager,
@@ -84,11 +80,12 @@ class EnforcementMotTestResultService extends AbstractService
     }
 
     /**
-     * Return an array containing the saved Vehicle Examiners decisions
+     * Return an array containing the saved Vehicle Examiners decisions.
      *
      * @param $resultId
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getEnforcementMotTestResultData($resultId)
@@ -111,6 +108,7 @@ class EnforcementMotTestResultService extends AbstractService
      * @param string $username
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
@@ -241,7 +239,7 @@ class EnforcementMotTestResultService extends AbstractService
 
     /**
      * @param EnforcementMotTestResult $entity
-     * @param array $data
+     * @param array                    $data
      */
     private function updateResultEntity(EnforcementMotTestResult $entity, $data)
     {
@@ -316,7 +314,6 @@ class EnforcementMotTestResultService extends AbstractService
      * @param $data
      * @param $calculatedTotalScore
      *
-     * @return null
      * @throws \DvsaCommonApi\Service\Exception\BadRequestExceptionWithMultipleErrors
      */
     public function validateResults($data, $calculatedTotalScore)
@@ -354,7 +351,7 @@ class EnforcementMotTestResultService extends AbstractService
                 $catalog,
                 $enfMotTestResult
             );
-            $totalScore += (int)$testDifference->getScore()->getScore();
+            $totalScore += (int) $testDifference->getScore()->getScore();
             $this->entityManager->persist($testDifference);
         }
 
@@ -364,8 +361,6 @@ class EnforcementMotTestResultService extends AbstractService
     /**
      * @param $mappedRfrId
      * @param $item
-     *
-     * @return null
      */
     public function validateMappedRfr($mappedRfrId, $item)
     {
@@ -379,7 +374,7 @@ class EnforcementMotTestResultService extends AbstractService
     }
 
     /**
-     * Extract the Doctrine entity to an array
+     * Extract the Doctrine entity to an array.
      *
      * @param EnforcementMotTestResult $testResult
      *
@@ -463,6 +458,7 @@ class EnforcementMotTestResultService extends AbstractService
     {
         $collection = $this->entityManager->getRepository(\DvsaEntities\Entity\MotTestReasonForRejection::class)
             ->findBy(['id' => $input]);
+
         return $this->createHashMap($collection);
     }
 
@@ -470,12 +466,14 @@ class EnforcementMotTestResultService extends AbstractService
     {
         $decisionScores = $this->entityManager->getRepository(\DvsaEntities\Entity\EnforcementDecisionScore::class)->findAll(
         );
+
         return $this->createHashMap($decisionScores);
     }
 
     protected function getDecisions()
     {
         $decisions = $this->entityManager->getRepository(\DvsaEntities\Entity\EnforcementDecision::class)->findAll();
+
         return $this->createHashMap($decisions);
     }
 
@@ -483,36 +481,39 @@ class EnforcementMotTestResultService extends AbstractService
     {
         $decisionCategories = $this->entityManager->getRepository(\DvsaEntities\Entity\EnforcementDecisionCategory::class)
             ->findAll();
+
         return $this->createHashMap($decisionCategories);
     }
 
     /**
-     * Index a collection of object by their Id
+     * Index a collection of object by their Id.
      *
      * @param array $input
      *
      * @return array
+     *
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
     protected function createHashMap($input)
     {
         if (!is_array($input)) {
-            throw new \InvalidArgumentException("input is not an array");
+            throw new \InvalidArgumentException('input is not an array');
         }
         $output = [];
         foreach ($input as $object) {
             if (is_object($object) && method_exists($object, 'getId')) {
                 $output[$object->getId()] = $object;
             } else {
-                throw new \Exception("Unable to create hash map");
+                throw new \Exception('Unable to create hash map');
             }
         }
+
         return $output;
     }
 
     /**
-     * Helper function to create and populate a new EnforcementMotTestDifference entity
+     * Helper function to create and populate a new EnforcementMotTestDifference entity.
      *
      * @param array                                         $item
      * @param int                                           $mappedRfrId
@@ -523,6 +524,7 @@ class EnforcementMotTestResultService extends AbstractService
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \InvalidArgumentException
      * @throws \Exception
+     *
      * @return \DvsaEntities\Entity\EnforcementMotTestDifference
      *
      * $item Data Structure is posted from the front-end controller: e.g.
@@ -532,7 +534,6 @@ class EnforcementMotTestResultService extends AbstractService
      *   'decision' => string '2' (length=1)
      *   'category' => string '3' (length=1)
      *   'justification' => string 'missed brake binding' (length=20)
-     *
      */
     protected function createEnforcementMotTestDifference(
         $item,
@@ -543,11 +544,11 @@ class EnforcementMotTestResultService extends AbstractService
     ) {
         $this->validateItem($item);
 
-        $motTestDifference = new EnforcementMotTestDifference;
+        $motTestDifference = new EnforcementMotTestDifference();
 
         // Find the Mapped RFR object from the rfrId and catalog provided.
         if (!array_key_exists($mappedRfrId, $catalog['mappedRfrs'])) {
-            throw new NotFoundException("mappedRfrId", $mappedRfrId);
+            throw new NotFoundException('mappedRfrId', $mappedRfrId);
         }
         $mappedRfr = $catalog['mappedRfrs'][$mappedRfrId];
 
@@ -557,7 +558,7 @@ class EnforcementMotTestResultService extends AbstractService
             $rfr = $this->entityManager->getRepository(\DvsaEntities\Entity\ReasonForRejection::class)
                 ->findOneBy(['rfrId' => $item['rfrId']]);
             if (!$rfr instanceof \DvsaEntities\Entity\ReasonForRejection) {
-                throw new \Exception("ReasonForRejection", $item['rfrId']);
+                throw new \Exception('ReasonForRejection', $item['rfrId']);
             }
         }
 
@@ -567,19 +568,19 @@ class EnforcementMotTestResultService extends AbstractService
 
         // Get the decision score from the posted json and the catalog
         if (!array_key_exists($item['score'], $catalog['decisionScores'])) {
-            throw new NotFoundException("DecisionScore", $item['score']);
+            throw new NotFoundException('DecisionScore', $item['score']);
         }
         $decisionScore = $catalog['decisionScores'][$item['score']];
 
         // Get the decision from the posted json and catalog
         if (!array_key_exists($item['decision'], $catalog['decisions'])) {
-            throw new NotFoundException("Decision", $item['decision']);
+            throw new NotFoundException('Decision', $item['decision']);
         }
         $decision = $catalog['decisions'][$item['decision']];
 
         // Get the decisionCategory from the posted json and catalog
         if (!array_key_exists($item['category'], $catalog['decisionCategories'])) {
-            throw new NotFoundException("Category", $item['category']);
+            throw new NotFoundException('Category', $item['category']);
         }
         $decisionCategory = $catalog['decisionCategories'][$item['category']];
 
@@ -610,28 +611,28 @@ class EnforcementMotTestResultService extends AbstractService
     }
 
     /**
-     * Help function to create and populate a Comment
+     * Help function to create and populate a Comment.
      *
      * @param string                      $input
      * @param \DvsaEntities\Entity\Person $user
      *
      * @return \DvsaEntities\Entity\Comment;|null
-     *
      */
     protected function createComment($input, $user)
     {
         $input = trim($input);
         $comment = null;
         if (strlen($input) > 0) {
-            $comment = new Comment;
+            $comment = new Comment();
             $comment->setComment($input);
             $comment->setCommentAuthor($user);
         }
+
         return $comment;
     }
 
     /**
-     * Extract an EnforcementMotTestDifference to an array
+     * Extract an EnforcementMotTestDifference to an array.
      *
      * @param EnforcementMotTestDifference $difference
      *
@@ -672,6 +673,7 @@ class EnforcementMotTestResultService extends AbstractService
             $data['lastUpdatedOn'] = DateTimeDisplayFormat::dateTime($difference->getLastUpdatedOn());
         }
         unset($data['motTestResult']);
+
         return $data;
     }
 
@@ -687,6 +689,7 @@ class EnforcementMotTestResultService extends AbstractService
         $catalog['decisions'] = $this->getDecisions();
         $catalog['decisionCategories'] = $this->getDecisionCategories();
         $catalog['mappedRfrs'] = $this->getMappedRfrs(array_keys($data['mappedRfrs']));
+
         return $catalog;
     }
 
@@ -699,6 +702,7 @@ class EnforcementMotTestResultService extends AbstractService
     {
         /** @var MotTestRepository $repository */
         $repository = $this->entityManager->getRepository(MotTest::class);
+
         return $repository->getMotTestByNumber($motTestNumber);
     }
 
@@ -706,6 +710,7 @@ class EnforcementMotTestResultService extends AbstractService
      * @param $username
      *
      * @return null|\DvsaEntities\Entity\Person
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function getUser($username)
@@ -716,6 +721,7 @@ class EnforcementMotTestResultService extends AbstractService
         if (!$user) {
             throw new BadRequestException('Invalid user', BadRequestException::ERROR_CODE_INVALID_DATA);
         }
+
         return $user;
     }
 
@@ -723,6 +729,7 @@ class EnforcementMotTestResultService extends AbstractService
      * @param $outcomeId
      *
      * @return null|object
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getOutcome($outcomeId)
@@ -732,6 +739,7 @@ class EnforcementMotTestResultService extends AbstractService
         if (!$outcome) {
             throw new NotFoundException('EnforcementDecisionOutcome', $outcomeId);
         }
+
         return $outcome;
     }
 
@@ -747,6 +755,7 @@ class EnforcementMotTestResultService extends AbstractService
             $comment,
             $user
         );
+
         return $finalComment;
     }
 

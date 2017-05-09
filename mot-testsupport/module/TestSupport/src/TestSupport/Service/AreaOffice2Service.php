@@ -5,11 +5,9 @@ namespace TestSupport\Service;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use DvsaCommon\Constants\Role;
 use Zend\View\Model\JsonModel;
-use TestSupport\Service\AccountDataService;
 
 class AreaOffice2Service
 {
-
     /**
      * @var AccountDataService
      */
@@ -21,9 +19,10 @@ class AreaOffice2Service
     }
 
     /**
-     * Create a AO2 with the data supplied
+     * Create a AO2 with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -32,6 +31,7 @@ class AreaOffice2Service
 
         $resultJson = $this->accountDataService->create($data);
         $this->accountDataService->addRole($resultJson->data['personId'], Role::DVSA_AREA_OFFICE_2);
+
         return $resultJson;
     }
 }

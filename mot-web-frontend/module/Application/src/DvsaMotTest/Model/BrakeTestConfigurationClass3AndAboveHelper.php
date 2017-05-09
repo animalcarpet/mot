@@ -8,9 +8,7 @@ use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface as ConfigDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 
 /**
- * Class BrakeTestConfigurationClass3AndAboveHelper
- *
- * @package DvsaMotTest\Model
+ * Class BrakeTestConfigurationClass3AndAboveHelper.
  */
 class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurationHelperInterface
 {
@@ -249,7 +247,7 @@ class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurati
             $type,
             [
                 BrakeTestTypeCode::ROLLER,
-                BrakeTestTypeCode::PLATE
+                BrakeTestTypeCode::PLATE,
             ]
         );
     }

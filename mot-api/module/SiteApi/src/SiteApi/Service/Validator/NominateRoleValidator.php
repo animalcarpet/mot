@@ -6,14 +6,14 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 
 /**
- * Class NominateRoleValidator
+ * Class NominateRoleValidator.
  */
 class NominateRoleValidator extends AbstractValidator
 {
     private $requiredFields
         = [
             'nomineeId',
-            'roleCode'
+            'roleCode',
         ];
 
     public function validate($data)
@@ -23,7 +23,7 @@ class NominateRoleValidator extends AbstractValidator
         $roleCode = $data['roleCode'];
 
         if (!SiteBusinessRoleCode::exists($roleCode)) {
-            $this->errors->add('Site Role "' . $roleCode . '" does not exist', 'roleCode');
+            $this->errors->add('Site Role "'.$roleCode.'" does not exist', 'roleCode');
         }
 
         $this->errors->throwIfAny();

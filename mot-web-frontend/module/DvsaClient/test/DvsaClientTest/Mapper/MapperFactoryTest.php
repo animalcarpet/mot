@@ -2,18 +2,15 @@
 
 namespace DvsaClientTest\Mapper;
 
-use DvsaClient\Mapper\VehicleTestingStationDtoMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\HttpRestJson\Client;
 
 /**
- * Class MapperFactoryTest
- *
- * @package DvsaClientTest\Mapper
+ * Class MapperFactoryTest.
  */
 class MapperFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  MapperFactory */
+    /** @var MapperFactory */
     private $mapperFactory;
 
     public function setUp()

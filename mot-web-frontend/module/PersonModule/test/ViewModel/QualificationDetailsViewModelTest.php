@@ -5,7 +5,6 @@ namespace Dvsa\Mot\Frontend\PersonModuleTest\ViewModel;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\QualificationDetailsGroupViewModel;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\QualificationDetailsViewModel;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 /**
  * Class QualificationDetailsViewModelTest.
@@ -20,11 +19,11 @@ class QualificationDetailsViewModelTest extends \PHPUnit_Framework_TestCase
 
     /** @var QualificationDetailsViewModel */
     private $view;
-    /** @var  QualificationDetailsGroupViewModel */
+    /** @var QualificationDetailsGroupViewModel */
     private $groupAViewModelMock;
-    /** @var  QualificationDetailsGroupViewModel */
+    /** @var QualificationDetailsGroupViewModel */
     private $groupBViewModelMock;
-    private $isGuidanceShown = TRUE;
+    private $isGuidanceShown = true;
 
     public function setup()
     {

@@ -1,9 +1,9 @@
 <?php
 use UserAdmin\Presenter\UserProfilePresenter;
 
-/** @var $profilePresenter UserProfilePresenter */
-/** @var string $userProfileUrl */
-/** @var string $resetClaimAccountUrlPost */
+/* @var $profilePresenter UserProfilePresenter */
+/* @var string $userProfileUrl */
+/* @var string $resetClaimAccountUrlPost */
 $this->headTitle('Reclaim account');
 $personFullnameWithTitle = $profilePresenter->displayTitleAndFullName();
 ?>
@@ -17,9 +17,9 @@ $personFullnameWithTitle = $profilePresenter->displayTitleAndFullName();
         [
             'messages' => [
                 'This will reset the user\'s password and require them to set up their security questions '
-                .' and PIN when they next sign in.'
+                .' and PIN when they next sign in.',
             ],
-            'type' => 'important'
+            'type' => 'important',
         ]
     ); ?>
 
@@ -31,12 +31,12 @@ $personFullnameWithTitle = $profilePresenter->displayTitleAndFullName();
         <?php echo $this->partial(
             'partial/gds/form/control-navigation',
             [
-                'id'            => 'reclaim-account-submit',
-                'class'         => 'button-warning',
-                'value'         => 'Reclaim account by post',
-                'navigation'    => [
+                'id' => 'reclaim-account-submit',
+                'class' => 'button-warning',
+                'value' => 'Reclaim account by post',
+                'navigation' => [
                     'Cancel and return to user profile' => $userProfileUrl,
-                ]
+                ],
             ]
         ); ?>
     </nav>

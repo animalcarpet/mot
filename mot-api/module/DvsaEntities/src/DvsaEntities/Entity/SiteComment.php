@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SiteComment
+ * SiteComment.
  *
  * @ORM\Table(name="site_comment_map", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity
@@ -45,11 +45,13 @@ class SiteComment extends Entity
 
     /**
      * @param Site $site
+     *
      * @return $this
      */
     public function setSite($site)
     {
         $this->site = $site;
+
         return $this;
     }
 
@@ -63,11 +65,13 @@ class SiteComment extends Entity
 
     /**
      * @param Comment $comment
+     *
      * @return $this
      */
     public function setComment($comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 }

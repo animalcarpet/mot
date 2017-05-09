@@ -5,7 +5,6 @@ namespace Dashboard\ViewModel;
 use Dashboard\Security\DashboardGuard;
 use DvsaCommonTest\TestUtils\XMock;
 use Dashboard\Model\AuthorisedExaminer;
-use PHPUnit_Framework_TestCase;
 use Zend\Mvc\Controller\Plugin\Url;
 
 class AuthorisedExaminerViewModelTest extends \PHPUnit_Framework_TestCase
@@ -27,7 +26,7 @@ class AuthorisedExaminerViewModelTest extends \PHPUnit_Framework_TestCase
         $authorisedExaminer = $this->buildAuthorisedExaminer();
 
         $aeId = 1;
-        $url = 'authorised-examiner/' . $aeId;
+        $url = 'authorised-examiner/'.$aeId;
         $this->mockUrl
             ->method('fromRoute')
             ->willReturn($url);
@@ -61,10 +60,10 @@ class AuthorisedExaminerViewModelTest extends \PHPUnit_Framework_TestCase
                     'id' => 1,
                     'name' => 'V1234',
                     'siteNumber' => 'V1',
-                    'positions' => []
-                ]
+                    'positions' => [],
+                ],
             ],
-            'position' => ''
+            'position' => '',
         ];
 
         return new AuthorisedExaminer($authorisedExaminerData);

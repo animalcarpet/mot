@@ -17,7 +17,6 @@ class RegisterCardGetActionTest extends AbstractLightWebControllerTest
     private $skipCtaTemplate = 'someTemplate';
     private $subTitle = 'somePageSubtitle';
 
-
     public function setUp()
     {
         $this->viewStrategy = XMock::of(RegisterCardViewStrategy::class);

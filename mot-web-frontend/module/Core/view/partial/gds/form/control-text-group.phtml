@@ -9,13 +9,13 @@ $dataTarget = $this->dataTarget;
 $labelVisuallyHidden = $this->labelVisuallyHidden;
 $errorOutsideLabel = $this->errorOutsideLabel;
 
-$tabIndex  = $this->tabIndex;
+$tabIndex = $this->tabIndex;
 
-$inputModifier  = isset($inputModifier) ? $inputModifier : '';
-$divModifier    = isset($this->divModifier) ? $this->divModifier : '';
+$inputModifier = isset($inputModifier) ? $inputModifier : '';
+$divModifier = isset($this->divModifier) ? $this->divModifier : '';
 $autoCompleteOff = isset($this->autoCompleteOff) ? $this->autoCompleteOff : false;
 
-$cssClass = join(
+$cssClass = implode(
     ' ', array_filter(
         [
             (isset($this->errorMessage) ? 'has-error' : null),
@@ -49,17 +49,17 @@ $cssClass = join(
     <?php echo $this->partial(
         'partial/gds/form/control-text',
         [
-            'id'            => $id,
-            'name'          => $name,
-            'value'         => $value,
+            'id' => $id,
+            'name' => $name,
+            'value' => $value,
             'inputModifier' => $inputModifier,
-            'type'          => $type,
-            'maxLength'     => isset($maxLength) ? $maxLength : '',
-            'tabIndex'      => $tabIndex,
-            'autofocus'     => $this->autofocus,
-            'pattern'       => $this->pattern,
+            'type' => $type,
+            'maxLength' => isset($maxLength) ? $maxLength : '',
+            'tabIndex' => $tabIndex,
+            'autofocus' => $this->autofocus,
+            'pattern' => $this->pattern,
             'patternErrorMsg' => $this->patternErrorMsg,
-            'autoCompleteOff' => $this->autoCompleteOff
+            'autoCompleteOff' => $this->autoCompleteOff,
         ]
     ); ?>
 

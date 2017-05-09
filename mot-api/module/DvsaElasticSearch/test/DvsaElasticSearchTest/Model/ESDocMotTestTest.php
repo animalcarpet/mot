@@ -32,13 +32,9 @@ use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
-use DvsaEntities\Entity\VehicleHistory;
-use PHPUnit_Framework_TestCase;
 
 /**
- * Class ESDocMotTestTest
- *
- * @package DvsaElasticSearchTest\Connection
+ * Class ESDocMotTestTest.
  */
 class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
 {
@@ -100,7 +96,7 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
                 [
                     (new \DvsaEntities\Entity\ReasonForRejectionDescription())
                         ->setLanguage((new Language())->setCode('EN'))
-                        ->setName('MotTestReasonForRejection')
+                        ->setName('MotTestReasonForRejection'),
                 ]
             )
         );
@@ -116,10 +112,10 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
         $motTestEs['reasonsForRejection'] = [
             1 => [
                 [
-                    'id'   => 1,
-                    'name' => 'MotTestReasonForRejection'
-                ]
-            ]
+                    'id' => 1,
+                    'name' => 'MotTestReasonForRejection',
+                ],
+            ],
         ];
 
         $this->assertSame($motTestEs, $this->docMotTest->asEsData($motTest));
@@ -168,7 +164,6 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
         $motTest->setOdometerValue($value);
         $motTest->setOdometerUnit(OdometerUnit::MILES);
 
-
         $motTestEs['odometerValue'] = $value;
         $motTestEs['odometerUnit'] = OdometerUnit::MILES;
 
@@ -195,22 +190,22 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
     {
         return [
             '123456789012' => [
-                'status'              => 'ABORTED',
-                'motTestNumber'       => '123456789012',
-                'primaryColour'       => 'Black',
-                'hasRegistration'     => true,
-                'odometer'            => '10000 mi',
-                'vin'                 => '1M8GDM9AXKP042788',
-                'registration'        => 'FNZ6110',
-                'make'                => 'Renault',
-                'model'               => 'Clio',
-                'testType'            => 'Normal Test',
-                'siteId'              => self::SITE_ID,
-                'siteNumber'          => 'V1234',
-                'testDate'            => '2011-02-02T11:11:11Z',
-                'startedDate'         => null,
-                'completedDate'       => null,
-                'testerUsername'      => 'tester1',
+                'status' => 'ABORTED',
+                'motTestNumber' => '123456789012',
+                'primaryColour' => 'Black',
+                'hasRegistration' => true,
+                'odometer' => '10000 mi',
+                'vin' => '1M8GDM9AXKP042788',
+                'registration' => 'FNZ6110',
+                'make' => 'Renault',
+                'model' => 'Clio',
+                'testType' => 'Normal Test',
+                'siteId' => self::SITE_ID,
+                'siteNumber' => 'V1234',
+                'testDate' => '2011-02-02T11:11:11Z',
+                'startedDate' => null,
+                'completedDate' => null,
+                'testerUsername' => 'tester1',
                 'reasonsForRejection' => [],
             ],
         ];
@@ -222,63 +217,62 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
             'data' => [
                 [
                     '_source' => [
-                        'motTestNumber'       => '123456789012',
-                        'status'              => 'ABORTED',
-                        'number'              => '123456789012',
-                        'primaryColour'       => 'Black',
-                        'hasRegistration'     => true,
-                        'odometerType'        => OdometerReadingResultType::OK,
-                        'odometerValue'       => 10000,
-                        'odometerUnit'        => 'mi',
-                        'vin'                 => '1M8GDM9AXKP042788',
-                        'registration'        => 'FNZ6110',
-                        'make'                => 'Renault',
-                        'model'               => 'Clio',
-                        'testType'            => 'Normal Test',
-                        'siteId'              => self::SITE_ID,
-                        'siteNumber'          => 'V1234',
-                        'testDate'            => '2011-02-02T11:11:11Z',
-                        'startedDate'         => null,
-                        'completedDate'       => null,
-                        'testerUsername'      => 'tester1',
+                        'motTestNumber' => '123456789012',
+                        'status' => 'ABORTED',
+                        'number' => '123456789012',
+                        'primaryColour' => 'Black',
+                        'hasRegistration' => true,
+                        'odometerType' => OdometerReadingResultType::OK,
+                        'odometerValue' => 10000,
+                        'odometerUnit' => 'mi',
+                        'vin' => '1M8GDM9AXKP042788',
+                        'registration' => 'FNZ6110',
+                        'make' => 'Renault',
+                        'model' => 'Clio',
+                        'testType' => 'Normal Test',
+                        'siteId' => self::SITE_ID,
+                        'siteNumber' => 'V1234',
+                        'testDate' => '2011-02-02T11:11:11Z',
+                        'startedDate' => null,
+                        'completedDate' => null,
+                        'testerUsername' => 'tester1',
                         'reasonsForRejection' => [],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
     protected function getMotTestData()
     {
         return [
-            'motTestNumber'           => '123456789012',
-            'status'                  => 'ACTIVE',
-            'status_display'          => 'IN PROGRESS',
-            'number'                  => '123456789012',
-            'primaryColour'           => 'Blue',
-            'hasRegistration'         => 1,
-            'odometerValue'           => null,
-            'odometerUnit'            => null,
-            'vehicleId'               => 1,
-            'vin'                     => self::VIN,
-            'registration'            => self::REG,
-            'make'                    => 'Porshe',
-            'model'                   => '911 Turbo',
-            'testType'                => 'Normal Test',
-            'siteNumber'              => 'V1234',
-            'testDate'                => null,
-            'testDate_display'        =>  null,
-            'startedDate'             => null,
-            'completedDate'           => null,
-            'startedDate_display'     => null,
-            'completedDate_display'   => null,
-            'startedDate_timestamp'   => null,
+            'motTestNumber' => '123456789012',
+            'status' => 'ACTIVE',
+            'status_display' => 'IN PROGRESS',
+            'number' => '123456789012',
+            'primaryColour' => 'Blue',
+            'hasRegistration' => 1,
+            'odometerValue' => null,
+            'odometerUnit' => null,
+            'vehicleId' => 1,
+            'vin' => self::VIN,
+            'registration' => self::REG,
+            'make' => 'Porshe',
+            'model' => '911 Turbo',
+            'testType' => 'Normal Test',
+            'siteNumber' => 'V1234',
+            'testDate' => null,
+            'testDate_display' => null,
+            'startedDate' => null,
+            'completedDate' => null,
+            'startedDate_display' => null,
+            'completedDate_display' => null,
+            'startedDate_timestamp' => null,
             'completedDate_timestamp' => null,
-            'testerId'                => 1,
-            'testerUsername'          => 'ft-catb',
-            'reasonsForRejection'     => [],
+            'testerId' => 1,
+            'testerUsername' => 'ft-catb',
+            'reasonsForRejection' => [],
         ];
-
     }
 
     protected function getMotEntity()
@@ -315,7 +309,7 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
         $site->setSiteNumber('V1234');
 
         $type = new MotTestType();
-        $type->setDescription("Normal Test");
+        $type->setDescription('Normal Test');
         $type->setCode('NT');
 
         $motTest->setId(1)
@@ -358,7 +352,7 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;

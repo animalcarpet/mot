@@ -15,15 +15,15 @@ $maxLength = isset($maxLength) ? $maxLength : '';
 $max = isset($max) ? $max : '';
 $title = isset($title) ? $title : '';
 $elementId = isset($elementId) ? $elementId : '';
-$escapedHintText = isset($hintText) ? '<p class="help-block">' . $this->escapeHtmlAttr($hintText) . '</p>' : '';
+$escapedHintText = isset($hintText) ? '<p class="help-block">'.$this->escapeHtmlAttr($hintText).'</p>' : '';
 $classFormGroup = isset($classFormGroup) ? $classFormGroup : '';
 $classLabel = isset($classLabel) ? $classLabel : '';
-$labelId = isset($labelId) ? $labelId : str_replace(' ', '-', $classFormGroup . $label);
+$labelId = isset($labelId) ? $labelId : str_replace(' ', '-', $classFormGroup.$label);
 $formHintText = isset($formHintText) ? $formHintText : '';
 $errors = isset($errors) ? $errors : '';
 ?>
 
-<div class="form-group <?php echo $this->escapeHtmlAttr($classFormGroup); ?>" <?php echo $elementId ? 'id="'. $this->escapeHtmlAttr($elementId) .'"' : ''; ?>>
+<div class="form-group <?php echo $this->escapeHtmlAttr($classFormGroup); ?>" <?php echo $elementId ? 'id="'.$this->escapeHtmlAttr($elementId).'"' : ''; ?>>
     <label for="<?php echo $this->escapeHtmlAttr($id); ?>" id="<?php echo $this->escapeHtmlAttr($labelId); ?>" class="<?php echo $this->escapeHtmlAttr($classLabel); ?>">
             <?php 
                 echo $this->escapeHtml($label);
@@ -45,18 +45,18 @@ $errors = isset($errors) ? $errors : '';
     <?php echo $this->partial(
         'partial/forms/inputElement.phtml',
         [
-            'id'        => $id,
-            'type'      => $type,
-            'name'      => $name,
-            'cssClass'  => $cssClass,
-            'value'     => $value,
-            'disabled'  => $disabled,
-            'required'  => $required,
-            'pattern'   => $pattern,
-            'min'       => $min,
+            'id' => $id,
+            'type' => $type,
+            'name' => $name,
+            'cssClass' => $cssClass,
+            'value' => $value,
+            'disabled' => $disabled,
+            'required' => $required,
+            'pattern' => $pattern,
+            'min' => $min,
             'maxLength' => $maxLength,
-            'max'       => $max,
-            'title'     => $title
+            'max' => $max,
+            'title' => $title,
         ]
     ); ?>
 </div>

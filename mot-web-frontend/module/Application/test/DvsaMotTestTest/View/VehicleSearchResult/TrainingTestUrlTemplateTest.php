@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\View\VehicleSearchResult;
 
 use DvsaApplicationLogger\Log\Logger;
@@ -13,7 +14,6 @@ use InvalidArgumentException;
 
 class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
 {
-
     const VALIDATOR_VEHICLE_REQUIRED = 'Vehicle is required';
     const VALIDATOR_INVALID_PARAMETER_ERROR = 'Vehicle ID and/or Search parameters are missing';
 
@@ -53,7 +53,7 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(InvalidArgumentException::class, self::VALIDATOR_INVALID_PARAMETER_ERROR);
 
-        $this->trainingTestUrlTemplate->getUrl([ 'invalidKey' ]);
+        $this->trainingTestUrlTemplate->getUrl(['invalidKey']);
     }
 
     public function testPassingOneButNotAllRequiredVehicleParametersReturnsException()
@@ -63,7 +63,7 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
         $vehicle = [
             'id' => '1',
             'invalidKey' => '2',
-            'searchVrm' => 'test'
+            'searchVrm' => 'test',
         ];
 
         $this->trainingTestUrlTemplate->getUrl($vehicle);
@@ -78,7 +78,7 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
     public function testPassingToGetStartMotTestUrlNoRequiredVehicleParametersReturnsException()
     {
         $this->setExpectedException(InvalidArgumentException::class, self::VALIDATOR_INVALID_PARAMETER_ERROR);
-        $this->getStartMotTestUrl([ 'invalidKey' ]);
+        $this->getStartMotTestUrl(['invalidKey']);
     }
 
     public function testPassingOneButNotAllRequiredVehicleParametersToGetStartMotTestUrlReturnsException()
@@ -88,7 +88,7 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
         $vehicle = [
             'id' => '1',
             'invalidKey' => '2',
-            'searchVrm' => 'test'
+            'searchVrm' => 'test',
         ];
 
         $this->getStartMotTestUrl($vehicle);
@@ -96,7 +96,9 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $searchParams
+     *
      * @return string
+     *
      * @throws \Exception
      */
     private function getStartMotTestUrl(array $searchParams)
@@ -108,5 +110,4 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
 
         return $this->trainingTestUrlTemplate->getStartMotTestUrl($vehicle, $searchParams);
     }
-
 }

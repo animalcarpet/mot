@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,11 +12,10 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  */
 class EnforcementMotTestResult extends Entity
 {
-
     use CommonIdentityTrait;
 
     /**
-     * @var \DvsaEntities\Entity\MotTest This is the re-inspection mot test id.
+     * @var \DvsaEntities\Entity\MotTest This is the re-inspection mot test id
      *
      * @ORM\OneToOne(targetEntity="DvsaEntities\Entity\MotTest", fetch="EAGER")
      * @ORM\JoinColumn(name="re_inspection_mot_test_id", referencedColumnName="id")
@@ -23,7 +23,7 @@ class EnforcementMotTestResult extends Entity
     protected $motTestInspection;
 
     /**
-     * @var \DvsaEntities\Entity\MotTest This is the mot test id.
+     * @var \DvsaEntities\Entity\MotTest This is the mot test id
      *
      * @ORM\OneToOne(targetEntity="DvsaEntities\Entity\MotTest", fetch="EAGER")
      * @ORM\JoinColumn(name="mot_test_id", referencedColumnName="id")
@@ -264,6 +264,7 @@ class EnforcementMotTestResult extends Entity
     public function setComment($comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 
@@ -283,6 +284,7 @@ class EnforcementMotTestResult extends Entity
     public function setDecisionOutcome($decisionOutcome)
     {
         $this->decisionOutcome = $decisionOutcome;
+
         return $this;
     }
 
@@ -302,6 +304,7 @@ class EnforcementMotTestResult extends Entity
     public function setTotalScore($totalScore)
     {
         $this->totalScore = $totalScore;
+
         return $this;
     }
 
@@ -321,6 +324,7 @@ class EnforcementMotTestResult extends Entity
     public function setMotTest($motTest)
     {
         $this->motTest = $motTest;
+
         return $this;
     }
 
@@ -348,6 +352,7 @@ class EnforcementMotTestResult extends Entity
     public function setMotTestInspection($motTestInspection)
     {
         $this->motTestInspection = $motTestInspection;
+
         return $this;
     }
 
@@ -367,6 +372,7 @@ class EnforcementMotTestResult extends Entity
     public function setDecisionInspectionOutcome($decisionInspectionOutcome)
     {
         $this->decisionInspectionOutcome = $decisionInspectionOutcome;
+
         return $this;
     }
 
@@ -379,7 +385,6 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @return the string
      */
     public function getStep()
@@ -388,13 +393,13 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param
      *            $step
      */
     public function setStep($step)
     {
         $this->step = $step;
+
         return $this;
     }
 
@@ -409,6 +414,7 @@ class EnforcementMotTestResult extends Entity
     public function addEnforcementMotTestResultWitness($enforcementMotTestResultWitness)
     {
         $this->enforcementMotTestResultWitnesses->add($enforcementMotTestResultWitness);
+
         return $this;
     }
 
@@ -417,6 +423,7 @@ class EnforcementMotTestResult extends Entity
         foreach ($enforcementMotTestResultWitnesses as $enforcementMotTestResultWitness) {
             $this->addEnforcementMotTestResultWitness($enforcementMotTestResultWitness);
         }
+
         return $this;
     }
 
@@ -428,7 +435,6 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAwlAdviceGiven()
@@ -437,17 +443,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $awlAdviceGiven
      */
     public function setAwlAdviceGiven($awlAdviceGiven)
     {
         $this->awlAdviceGiven = $awlAdviceGiven;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAwlImmediateAttention()
@@ -456,17 +461,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $awlImmediateAttention
      */
     public function setAwlImmediateAttention($awlImmediateAttention)
     {
         $this->awlImmediateAttention = $awlImmediateAttention;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAwlReplyComments()
@@ -475,17 +479,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $awlReplyComments
      */
     public function setAwlReplyComments($awlReplyComments)
     {
         $this->awlReplyComments = $awlReplyComments;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAwlNameAEre()
@@ -494,18 +497,17 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $awlNameAEre
      */
     public function setAwlNameAEre($awlNameAEre)
     {
         $this->awlNameAEre = $awlNameAEre;
+
         return $this;
     }
 
     /**
-     *
-     * @return  string|null
+     * @return string|null
      */
     public function getAwlMotRoles()
     {
@@ -513,17 +515,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $awlMotRoles
      */
     public function setAwlMotRoles($awlMotRoles)
     {
         $this->awlMotRoles = $awlMotRoles;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAwlPositionVts()
@@ -532,17 +533,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $awlPositionVts
      */
     public function setAwlPositionVts($awlPositionVts)
     {
         $this->awlPositionVts = $awlPositionVts;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAwlUserId()
@@ -551,17 +551,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $awlUserId
      */
     public function setAwlUserId($awlUserId)
     {
         $this->awlUserId = $awlUserId;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getComplaintName()
@@ -570,17 +569,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $complaintName
      */
     public function setComplaintName($complaintName)
     {
         $this->complaintName = $complaintName;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getComplaintDetail()
@@ -589,17 +587,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $complaintDetail
      */
     public function setComplaintDetail($complaintDetail)
     {
         $this->complaintDetail = $complaintDetail;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getRepairsDetail()
@@ -608,17 +605,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $repairsDetail
      */
     public function setRepairsDetail($repairsDetail)
     {
         $this->repairsDetail = $repairsDetail;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getComplainantAddress()
@@ -627,17 +623,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $complainantAddress
      */
     public function setComplainantAddress($complainantAddress)
     {
         $this->complainantAddress = $complainantAddress;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getComplainantPostcode()
@@ -646,17 +641,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $complainantPostcode
      */
     public function setComplainantPostcode($complainantPostcode)
     {
         $this->complainantPostcode = $complainantPostcode;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getComplainantPhoneNumber()
@@ -665,17 +659,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $complainantPhoneNumber
      */
     public function setComplainantPhoneNumber($complainantPhoneNumber)
     {
         $this->complainantPhoneNumber = $complainantPhoneNumber;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getVeCompleted()
@@ -684,17 +677,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $veCompleted
      */
     public function setVeCompleted($veCompleted)
     {
         $this->veCompleted = $veCompleted;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAgreeVehicleToCertificate()
@@ -703,17 +695,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $agreeVehicleToCertificate
      */
     public function setAgreeVehicleToCertificate($agreeVehicleToCertificate)
     {
         $this->agreeVehicleToCertificate = $agreeVehicleToCertificate;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getInputAgreeVehicleToCertificate()
@@ -722,17 +713,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $inputAgreeVehicleToCertificate
      */
     public function setInputAgreeVehicleToCertificate($inputAgreeVehicleToCertificate)
     {
         $this->inputAgreeVehicleToCertificate = $inputAgreeVehicleToCertificate;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getAgreeVehicleToFail()
@@ -741,17 +731,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $agreeVehicleToFail
      */
     public function setAgreeVehicleToFail($agreeVehicleToFail)
     {
         $this->agreeVehicleToFail = $agreeVehicleToFail;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getInputAgreeVehicleToFail()
@@ -760,17 +749,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $inputAgreeVehicleToFail
      */
     public function setInputAgreeVehicleToFail($inputAgreeVehicleToFail)
     {
         $this->inputAgreeVehicleToFail = $inputAgreeVehicleToFail;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getVehicleSwitch()
@@ -779,17 +767,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $vehicleSwitch
      */
     public function setVehicleSwitch($vehicleSwitch)
     {
         $this->vehicleSwitch = $vehicleSwitch;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getInputVehicleSwitch()
@@ -798,17 +785,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $inputVehicleSwitch
      */
     public function setInputVehicleSwitch($inputVehicleSwitch)
     {
         $this->inputVehicleSwitch = $inputVehicleSwitch;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getSwitchPoliceStatusReport()
@@ -817,17 +803,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $switchPoliceStatusReport
      */
     public function setSwitchPoliceStatusReport($switchPoliceStatusReport)
     {
         $this->switchPoliceStatusReport = $switchPoliceStatusReport;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getInputSwitchDetailReport()
@@ -836,17 +821,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $inputSwitchDetailReport
      */
     public function setInputSwitchDetailReport($inputSwitchDetailReport)
     {
         $this->inputSwitchDetailReport = $inputSwitchDetailReport;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getSwitchVehicleResult()
@@ -855,17 +839,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $switchVehicleResult
      */
     public function setSwitchVehicleResult($switchVehicleResult)
     {
         $this->switchVehicleResult = $switchVehicleResult;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getInputSwitchPoliceStatusReport()
@@ -874,17 +857,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $inputSwitchPoliceStatusReport
      */
     public function setInputSwitchPoliceStatusReport($inputSwitchPoliceStatusReport)
     {
         $this->inputSwitchPoliceStatusReport = $inputSwitchPoliceStatusReport;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getPromoteSaleInterest()
@@ -893,17 +875,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $promoteSaleInterest
      */
     public function setPromoteSaleInterest($promoteSaleInterest)
     {
         $this->promoteSaleInterest = $promoteSaleInterest;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getInputPromoteSaleInterest()
@@ -912,17 +893,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $inputPromoteSaleInterest
      */
     public function setInputPromoteSaleInterest($inputPromoteSaleInterest)
     {
         $this->inputPromoteSaleInterest = $inputPromoteSaleInterest;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getVehicleDefects()
@@ -931,17 +911,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $vehicleDefects
      */
     public function setVehicleDefects($vehicleDefects)
     {
         $this->vehicleDefects = $vehicleDefects;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getReasonOfDefects()
@@ -950,17 +929,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $reasonOfDefects
      */
     public function setReasonOfDefects($reasonOfDefects)
     {
         $this->reasonOfDefects = $reasonOfDefects;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getItemsDiscussed()
@@ -969,17 +947,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $itemsDiscussed
      */
     public function setItemsDiscussed($itemsDiscussed)
     {
         $this->itemsDiscussed = $itemsDiscussed;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getConcludingRemarksTester()
@@ -988,17 +965,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $concludingRemarksTester
      */
     public function setConcludingRemarksTester($concludingRemarksTester)
     {
         $this->concludingRemarksTester = $concludingRemarksTester;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getConcludingRemarksAe()
@@ -1007,17 +983,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $concludingRemarksAe
      */
     public function setConcludingRemarksAe($concludingRemarksAe)
     {
         $this->concludingRemarksAe = $concludingRemarksAe;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getConcludingRemarksRecommendation()
@@ -1026,17 +1001,16 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $concludingRemarksRecommendation
      */
     public function setConcludingRemarksRecommendation($concludingRemarksRecommendation)
     {
         $this->concludingRemarksRecommendation = $concludingRemarksRecommendation;
+
         return $this;
     }
 
     /**
-     *
      * @return string|null
      */
     public function getConcludingRemarksName()
@@ -1045,12 +1019,12 @@ class EnforcementMotTestResult extends Entity
     }
 
     /**
-     *
      * @param string|null $concludingRemarksName
      */
     public function setConcludingRemarksName($concludingRemarksName)
     {
         $this->concludingRemarksName = $concludingRemarksName;
+
         return $this;
     }
 }

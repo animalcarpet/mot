@@ -1,4 +1,5 @@
 <?php
+
 namespace UserApiTest\SpecialNotice\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
@@ -6,15 +7,10 @@ use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
 use UserApi\SpecialNotice\Controller\SpecialNoticeBroadcastController;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
-use Zend\Http\Header\ContentType;
 use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class SpecialNoticeBroadcastControllerTest
- *
- * @package DvsaMotApiTest\Controller
+ * Class SpecialNoticeBroadcastControllerTest.
  */
 class SpecialNoticeBroadcastControllerTest extends AbstractRestfulControllerTestCase
 {

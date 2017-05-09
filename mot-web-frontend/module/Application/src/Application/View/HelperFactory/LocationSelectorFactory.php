@@ -9,9 +9,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class LocationSelectorFactory
- *
- * @package Application\View\HelperFactory
+ * Class LocationSelectorFactory.
  */
 class LocationSelectorFactory implements FactoryInterface
 {

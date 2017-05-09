@@ -6,7 +6,6 @@ use DvsaCommon\HttpRestJson\Client as JsonClient;
 
 class TestSupportRestClientHelper
 {
-
     /**
      * @var JsonClient
      */
@@ -30,8 +29,8 @@ class TestSupportRestClientHelper
 
     public function getJsonClient($data)
     {
-        if (!isset($data["requestor"])) {
-            $data["requestor"] = ["username" => "schememgt", "password" => "Password1"];
+        if (!isset($data['requestor'])) {
+            $data['requestor'] = ['username' => 'schememgt', 'password' => 'Password1'];
         }
 
         list($requestorUsername, $requestorPassword) = RequestorParserHelper::parse($data);
@@ -41,7 +40,7 @@ class TestSupportRestClientHelper
         $this->tokenCache[$requestorUsername] = $accessToken;
 
         $this->jsonClient->setAccessToken($accessToken);
+
         return $this->jsonClient;
     }
 }
-

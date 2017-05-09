@@ -11,6 +11,7 @@ class SiteEventControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return SiteEventController
      */
     public function createService(ServiceLocatorInterface $controllerManager)

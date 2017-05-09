@@ -6,9 +6,7 @@ use DvsaMotApi\Model\MotTestComparator;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class MotTestComparatorTest
- *
- * @package DvsaMotApiTest\Model
+ * Class MotTestComparatorTest.
  */
 class MotTestComparatorTest extends AbstractServiceTestCase
 {
@@ -19,7 +17,7 @@ class MotTestComparatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * Make sure that different rfrIds fail an equality check
+     * Make sure that different rfrIds fail an equality check.
      */
     public function testRfrEqualityCheck()
     {
@@ -33,7 +31,7 @@ class MotTestComparatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * test that comparing an array of the same RFRs, returns an array but with no differences
+     * test that comparing an array of the same RFRs, returns an array but with no differences.
      */
     public function testCompareRfrArrayWithSameArray()
     {
@@ -47,20 +45,20 @@ class MotTestComparatorTest extends AbstractServiceTestCase
     /**
      * Test comparing the array items between the arrays but without testing the actual
      * value differences between the items in the array..
-     * That would be too complex for a single test :)
+     * That would be too complex for a single test :).
      */
     public function testCompareRfrArrayItems()
     {
         $rfrA = $this->makeDefaultRfr(1);
 
         $fixtures = [];
-        $fixtures[] = ['a'=>[], 'b'=>[],'count'=>0];
-        $fixtures[] = ['a'=>[$rfrA], 'b'=>[$rfrA],'count'=>0];
-        $fixtures[] = ['a'=>[$rfrA], 'b'=>[],'count'=>1];
-        $fixtures[] = ['a'=>[], 'b'=>[$rfrA],'count'=>1];
-        $fixtures[] = ['a'=>[$rfrA, $rfrA], 'b'=>[],'count'=>2];
-        $fixtures[] = ['a'=>[$rfrA, $rfrA], 'b'=>[$rfrA],'count'=>0];
-        $fixtures[] = ['a'=>[$rfrA, $rfrA], 'b'=>[$rfrA, $rfrA],'count'=>0];
+        $fixtures[] = ['a' => [], 'b' => [], 'count' => 0];
+        $fixtures[] = ['a' => [$rfrA], 'b' => [$rfrA], 'count' => 0];
+        $fixtures[] = ['a' => [$rfrA], 'b' => [], 'count' => 1];
+        $fixtures[] = ['a' => [], 'b' => [$rfrA], 'count' => 1];
+        $fixtures[] = ['a' => [$rfrA, $rfrA], 'b' => [], 'count' => 2];
+        $fixtures[] = ['a' => [$rfrA, $rfrA], 'b' => [$rfrA], 'count' => 0];
+        $fixtures[] = ['a' => [$rfrA, $rfrA], 'b' => [$rfrA, $rfrA], 'count' => 0];
 
         foreach ($fixtures as $fixture) {
             $result = $this->comparator->compareRfrArray($fixture['a'], $fixture['b']);
@@ -69,7 +67,7 @@ class MotTestComparatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * test comparing the same Rfr items but with different values within each array
+     * test comparing the same Rfr items but with different values within each array.
      */
     public function testCompareRfrArrayItemsWithDifferences()
     {
@@ -81,9 +79,9 @@ class MotTestComparatorTest extends AbstractServiceTestCase
 
         $fixtures = [];
 
-        $fixtures[] = ['a'=>[$rfr1A], 'b'=>[$rfr1B],'count'=>2];
-        $fixtures[] = ['a'=>[], 'b'=>[$rfr1B],'count'=>1];
-        $fixtures[] = ['a'=>[$rfr1A], 'b'=>[],'count'=>1];
+        $fixtures[] = ['a' => [$rfr1A], 'b' => [$rfr1B], 'count' => 2];
+        $fixtures[] = ['a' => [], 'b' => [$rfr1B], 'count' => 1];
+        $fixtures[] = ['a' => [$rfr1A], 'b' => [], 'count' => 1];
 
         foreach ($fixtures as $fixture) {
             $result = $this->comparator->compareRfrArray($fixture['a'], $fixture['b']);
@@ -115,7 +113,7 @@ class MotTestComparatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * Create an Rfr array with all fields set to 0
+     * Create an Rfr array with all fields set to 0.
      *
      * @param int $rfrId
      *
@@ -130,7 +128,7 @@ class MotTestComparatorTest extends AbstractServiceTestCase
             'locationLongitudinal' => 0,
             'locationVertical' => 0,
             'comment' => 0,
-            'failureDangerous' => 0
+            'failureDangerous' => 0,
         ];
     }
 }

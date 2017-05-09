@@ -1,8 +1,6 @@
 <?php
 
-
 namespace UserAdmin\Factory\Service;
-
 
 use UserAdmin\Service\IsEmailDuplicateService;
 use Zend\ServiceManager\FactoryInterface;

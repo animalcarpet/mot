@@ -5,8 +5,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Form;
 use Zend\Form\Element\Text;
 use Zend\Form\ElementInterface;
 use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\NotEmpty;
 
 class LostOrForgottenSecurityQuestionForm extends Form
 {
@@ -40,11 +38,13 @@ class LostOrForgottenSecurityQuestionForm extends Form
 
         if (empty($answerValue)) {
             $this->setCustomError($answerField, self::MSG_ANSWER_IS_EMPTY);
+
             return false;
         }
 
         if (strlen($answerValue) > self::MAX_LENGTH) {
             $this->setCustomError($answerField, self::MSG_EXCEEDS_MAX_LENGTH);
+
             return false;
         }
 

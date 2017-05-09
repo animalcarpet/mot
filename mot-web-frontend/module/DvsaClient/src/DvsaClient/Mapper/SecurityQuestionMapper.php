@@ -14,6 +14,7 @@ class SecurityQuestionMapper extends DtoMapper
     public function fetchAll()
     {
         $url = (new UrlBuilder())->securityQuestion()->toString();
+
         return $this->get($url);
     }
 

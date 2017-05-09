@@ -16,9 +16,8 @@ use OrganisationApi\Model\RoleRestriction\AedmRestriction;
 use OrganisationApi\Model\RoleRestriction\AedRestriction;
 use OrganisationApi\Model\RoleRestrictionsSet;
 
-
 /**
- * unit tests for RoleRestrictionSet
+ * unit tests for RoleRestrictionSet.
  */
 class RoleRestrictionSetTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,7 +63,7 @@ class RoleRestrictionSetTest extends \PHPUnit_Framework_TestCase
 
     public function test_getRestrictionForRole_bothRoles()
     {
-        $aed  = new AedRestriction($this->authService);
+        $aed = new AedRestriction($this->authService);
         $aedm = new AedmRestriction($this->authService);
 
         $setWithBothRole = new RoleRestrictionsSet([$aed, $aedm]);
@@ -91,7 +90,7 @@ class RoleRestrictionSetTest extends \PHPUnit_Framework_TestCase
             ->method('getPositions')
             ->willReturn(new ArrayCollection());
 
-        $aed  = new AedRestriction($this->authService);
+        $aed = new AedRestriction($this->authService);
         $aedm = new AedmRestriction($this->authService);
 
         $this->assertContains(

@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\Action;
 
 use Core\Action\ViewActionResult;
@@ -23,14 +24,14 @@ use Zend\Mvc\Controller\Plugin\Url;
 
 class SiteTestQualityAction implements AutoWireableInterface
 {
-    const PAGE_TITLE = "Test quality information";
+    const PAGE_TITLE = 'Test quality information';
 
     private $sitePerformanceApiResource;
     private $nationalPerformanceApiResource;
     private $assertion;
     private $siteMapper;
 
-    /** @var  VehicleTestingStationDto */
+    /** @var VehicleTestingStationDto */
     private $site;
 
     /** @var DateTime */
@@ -62,8 +63,8 @@ class SiteTestQualityAction implements AutoWireableInterface
             }
         } else {
             $this->viewedDate = $this->setMonthAndYear();
-            $month = $this->viewedDate->format("m");
-            $year = $this->viewedDate->format("Y");
+            $month = $this->viewedDate->format('m');
+            $year = $this->viewedDate->format('Y');
         }
 
         $sitePerformance = $this->sitePerformanceApiResource->getForDate($siteId, $month, $year);
@@ -105,7 +106,7 @@ class SiteTestQualityAction implements AutoWireableInterface
                 $csvMapper = $this->getCsvMapperForGroupB($sitePerformance, $nationalPerformance, $month, $year);
                 break;
             default:
-                throw new \InvalidArgumentException("Wrong group code");
+                throw new \InvalidArgumentException('Wrong group code');
         }
 
         return new FileAction($csvMapper->toCsvFile());
@@ -138,7 +139,7 @@ class SiteTestQualityAction implements AutoWireableInterface
 
     private function getPageTertiaryTitle()
     {
-        return "Tests done in " . $this->viewedDate->format("F Y");
+        return 'Tests done in '.$this->viewedDate->format('F Y');
     }
 
     private function getPageTitle()

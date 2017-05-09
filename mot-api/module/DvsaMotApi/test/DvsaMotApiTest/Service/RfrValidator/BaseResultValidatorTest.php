@@ -1,14 +1,12 @@
 <?php
+
 namespace DvsaMotApiTest\Service\RfrValidator;
 
 use PHPUnit_Framework_TestCase;
-use DvsaMotApi\Service\RfrValidator\BaseValidator;
 use DvsaMotApi\Service\RfrValidator\BaseResultValidator;
 
 /**
- * Class BaseResultValidatorTest
- *
- * @package DvsaMotApiTest\Service\RfrValidator
+ * Class BaseResultValidatorTest.
  */
 class BaseResultValidatorTest extends PHPUnit_Framework_TestCase
 {

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SiteContact
+ * SiteContact.
  *
  * @ORM\Table(name="site_contact_detail_map")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SiteContactRepository")

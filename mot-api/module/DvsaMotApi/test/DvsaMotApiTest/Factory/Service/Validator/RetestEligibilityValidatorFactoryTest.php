@@ -12,8 +12,7 @@ use NonWorkingDaysApi\NonWorkingDaysHelper;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ClaimServiceFactoryTest
- * @package AccountApiTest\Factory
+ * Class ClaimServiceFactoryTest.
  */
 class RetestEligibilityValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -16,10 +16,10 @@ class UpdateVtsTypeProcess extends AbstractSingleStepVtsProcess implements AutoW
 {
     private $propertyName = UpdateVtsPropertyAction::VTS_TYPE_PROPERTY;
     private $permission = PermissionAtSite::VTS_UPDATE_TYPE;
-    private $submitButtonText = "Change site type";
-    private $successfulEditMessage = "Site type has been successfully changed.";
-    private $formPageTitle = "Change site type";
-    private $formPartial = "site/update-vts-property/partials/edit-type";
+    private $submitButtonText = 'Change site type';
+    private $successfulEditMessage = 'Site type has been successfully changed.';
+    private $formPageTitle = 'Change site type';
+    private $formPartial = 'site/update-vts-property/partials/edit-type';
     private $vtsTypeCatalog;
 
     public function __construct(SiteMapper $siteMapper, VtsTypeCatalog $vtsTypeCatalog, Url $urlHelper)
@@ -51,6 +51,7 @@ class UpdateVtsTypeProcess extends AbstractSingleStepVtsProcess implements AutoW
     public function getPrePopulatedData()
     {
         $vtsData = $this->siteMapper->getById($this->context->getVtsId());
+
         return [$this->propertyName => $vtsData->getType()];
     }
 

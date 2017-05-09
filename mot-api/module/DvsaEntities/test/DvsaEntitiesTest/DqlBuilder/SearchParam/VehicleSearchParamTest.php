@@ -1,26 +1,22 @@
 <?php
+
 namespace DvsaEntitiesTest\DqlBuilder\SearchParam;
 
-use DoctrineORMModule\Options\EntityManager;
-use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class VehicleSearchParamTest
- *
- * @package DvsaEntities\DqlBuilder\SearchParam
+ * Class VehicleSearchParamTest.
  */
 class VehicleSearchParamTest extends AbstractServiceTestCase
 {
-    const SEARCH_TEST   = 'FNZ6110';
+    const SEARCH_TEST = 'FNZ6110';
     const TYPE_VIN_TEST = 'vin';
     const TYPE_VRM_TEST = 'registration';
     const TYPE_INVALID_TEST = 'INVALID';
 
     /**
-     * Test we can create a VehicleSearchParam by vrm
+     * Test we can create a VehicleSearchParam by vrm.
      */
     public function testVehicleSearchParamVrm()
     {
@@ -33,7 +29,7 @@ class VehicleSearchParamTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test we can create a VehicleSearchParam by vrm
+     * Test we can create a VehicleSearchParam by vrm.
      */
     public function testVehicleSearchParamVin()
     {
@@ -46,7 +42,7 @@ class VehicleSearchParamTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test that an invalid type throw an exception
+     * Test that an invalid type throw an exception.
      */
     public function testVehicleSearchParamInvalidTypeThrowException()
     {
@@ -57,7 +53,7 @@ class VehicleSearchParamTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test that an invalid search throw an exception
+     * Test that an invalid search throw an exception.
      */
     public function testVehicleSearchParamInvalidSearchThrowException()
     {
@@ -68,7 +64,7 @@ class VehicleSearchParamTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test we can create a VehicleSearchParam and the toArray function
+     * Test we can create a VehicleSearchParam and the toArray function.
      */
     public function testVehicleSearchParamToArray()
     {

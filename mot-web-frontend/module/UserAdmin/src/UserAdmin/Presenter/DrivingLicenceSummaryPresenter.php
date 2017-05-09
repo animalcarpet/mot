@@ -32,11 +32,13 @@ class DrivingLicenceSummaryPresenter
 
     /**
      * @param int $personId
+     *
      * @return $this
      */
     public function setPersonId($personId)
     {
         $this->personId = $personId;
+
         return $this;
     }
 
@@ -50,6 +52,7 @@ class DrivingLicenceSummaryPresenter
 
     /**
      * @param string $code
+     *
      * @return string
      */
     public function getCountryDescriptionByCode($code)
@@ -61,6 +64,7 @@ class DrivingLicenceSummaryPresenter
 
     /**
      * @param string $description
+     *
      * @return string
      */
     public function getCountryCodeByDescription($description)

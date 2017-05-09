@@ -9,7 +9,7 @@ $this->headTitle($title);
 <?php
 $form = $this->form;
 $form->setAttribute('action', $this->url('vts-select', array('action' => 'index')));
-$form->prepare(); 
+$form->prepare();
 $vtsNameElement = $form->get('vtsName');
 $submitElement = $form->get('submit');
 ?>
@@ -24,7 +24,7 @@ $submitElement = $form->get('submit');
             <fieldset>
                 <div class="form-group ">
                     <?php
-                        $vtsNameElement->setAttribute('class','form-control');
+                        $vtsNameElement->setAttribute('class', 'form-control');
                         echo $this->formLabel($vtsNameElement);
                         echo $this->formSelect($vtsNameElement);
                     ?>
@@ -32,7 +32,7 @@ $submitElement = $form->get('submit');
 
 
                 <?php
-                    $submitElement->setAttribute('class','btn btn-default');
+                    $submitElement->setAttribute('class', 'btn btn-default');
                     echo $this->formSubmit($submitElement);
                     echo $this->form()->closeTag();
                 ?>

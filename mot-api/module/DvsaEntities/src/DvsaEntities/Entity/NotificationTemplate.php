@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -6,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * NotificationTemplate
+ * NotificationTemplate.
  *
  * @ORM\Table(name="notification_template", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})})
  * @ORM\Entity(readOnly=true)
@@ -50,6 +51,7 @@ class NotificationTemplate extends Entity
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
@@ -69,6 +71,7 @@ class NotificationTemplate extends Entity
     public function setContent($content)
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -88,6 +91,7 @@ class NotificationTemplate extends Entity
     public function setActions($actions)
     {
         $this->actions = $actions;
+
         return $this;
     }
 

@@ -10,13 +10,10 @@ use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use SiteApi\Controller\SiteController;
 use SiteApi\Service\SiteService;
-use Zend\Http\Header\ContentType;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class SiteControllerTest
- *
- * @package SiteApiTest\Controller
+ * Class SiteControllerTest.
  */
 class SiteControllerTest extends AbstractRestfulControllerTestCase
 {
@@ -41,7 +38,7 @@ class SiteControllerTest extends AbstractRestfulControllerTestCase
     }
 
     /**
-     * Test method is accessible for call with valid parameters
+     * Test method is accessible for call with valid parameters.
      *
      * @param string $method        HTTP method
      * @param string $action        route action
@@ -109,7 +106,7 @@ class SiteControllerTest extends AbstractRestfulControllerTestCase
     }
 
     /**
-     * Test service method return errors when call with invalid parameters
+     * Test service method return errors when call with invalid parameters.
      *
      * @param string $method        HTTP method
      * @param string $action        route action
@@ -129,7 +126,7 @@ class SiteControllerTest extends AbstractRestfulControllerTestCase
 
         $this->setExpectedException(
             NotFoundException::class,
-            sprintf(NotFoundException::ERROR_MSG_NOT_FOUND, 'Site', ' ' . $paramValue),
+            sprintf(NotFoundException::ERROR_MSG_NOT_FOUND, 'Site', ' '.$paramValue),
             NotFoundException::ERROR_CODE_NOT_FOUND
         );
 
@@ -140,10 +137,10 @@ class SiteControllerTest extends AbstractRestfulControllerTestCase
     {
         return [
             [
-                'method'        => 'get',
-                'action'        => null,
+                'method' => 'get',
+                'action' => null,
                 'serviceMethod' => 'getSite',
-                'paramName'     => 'id',
+                'paramName' => 'id',
             ],
         ];
     }
@@ -160,8 +157,8 @@ class SiteControllerTest extends AbstractRestfulControllerTestCase
     {
         return [
             'data' => [
-                'vehicleTestingStation' => $siteData
-            ]
+                'vehicleTestingStation' => $siteData,
+            ],
         ];
     }
 }

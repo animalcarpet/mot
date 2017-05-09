@@ -5,7 +5,6 @@ namespace UserApi\HelpDesk\Service;
 use AccountApi\Service\Exception\OpenAmChangePasswordException;
 use AccountApi\Service\OpenAmIdentityService;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\EventDescription;
@@ -22,8 +21,7 @@ use MailerApi\Logic\ClaimAccountReminder;
 use MailerApi\Service\MailerService;
 
 /**
- * Class ResetClaimAccountService
- * @package UserApi\HelpDesk\Service
+ * Class ResetClaimAccountService.
  */
 class ResetClaimAccountService
 {
@@ -40,31 +38,31 @@ class ResetClaimAccountService
     const CONFIG_KEY_MAILER_SECTION = 'mailer';
     const MTS_PROD_URL_DEFAULT = 'https://www.mot-testing.service.gov.uk/';
 
-    /** @var  PersonRepository */
+    /** @var PersonRepository */
     private $personRepository;
-    /** @var  EntityManager */
+    /** @var EntityManager */
     private $entityManager;
-    /** @var  MailerService */
+    /** @var MailerService */
     private $mailerService;
-    /** @var  OpenAmIdentityService */
+    /** @var OpenAmIdentityService */
     private $openAmService;
-    /** @var  EventService */
+    /** @var EventService */
     private $eventService;
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     private $authorisationService;
-    /** @var  array */
+    /** @var array */
     private $config;
     /** @var DateTimeHolder */
     private $dateTimeHolder;
 
     /**
-     * Constructor of the ResetClaimAccountService
+     * Constructor of the ResetClaimAccountService.
      *
-     * @param EntityManager $entityManager
-     * @param PersonRepository $personRepository
-     * @param MailerService $mailerService
-     * @param OpenAmIdentityService $openAmService
-     * @param EventService $eventService
+     * @param EntityManager                 $entityManager
+     * @param PersonRepository              $personRepository
+     * @param MailerService                 $mailerService
+     * @param OpenAmIdentityService         $openAmService
+     * @param EventService                  $eventService
      * @param AuthorisationServiceInterface $authorisationService
      * @param $config
      * @param DateTimeHolder $dateTimeHolder
@@ -92,11 +90,13 @@ class ResetClaimAccountService
     /**
      * This function is gonna check that the user has an email
      * Reset the password to a random one, reset the account and
-     * send an email to the user with the information to follow
+     * send an email to the user with the information to follow.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $helpDesk
+     *
      * @return bool
+     *
      * @throws NotFoundException
      * @throws \Exception
      */
@@ -134,7 +134,7 @@ class ResetClaimAccountService
      * Generation of an 8 length password with at least:
      * a lowercase
      * a uppercase
-     * a number
+     * a number.
      *
      * @return string
      */
@@ -143,27 +143,29 @@ class ResetClaimAccountService
         $alpha = self::ALPHA;
         $alpha_upper = strtoupper($alpha);
         $numeric = self::NUMERIC;
-        $chars = $alpha . $alpha_upper . $numeric;
+        $chars = $alpha.$alpha_upper.$numeric;
 
-        $pw = substr($alpha, mt_rand(0, strlen($alpha)-1), 1);
-        $pw .= substr($alpha_upper, mt_rand(0, strlen($alpha_upper)-1), 1);
-        $pw .= substr($numeric, mt_rand(0, strlen($numeric)-1), 1);
+        $pw = substr($alpha, mt_rand(0, strlen($alpha) - 1), 1);
+        $pw .= substr($alpha_upper, mt_rand(0, strlen($alpha_upper) - 1), 1);
+        $pw .= substr($numeric, mt_rand(0, strlen($numeric) - 1), 1);
 
         $len = strlen($chars);
 
-        for ($i = 3; $i < self::LENGTH_PASSWORD; $i++) {
-            $pw .= substr($chars, mt_rand(0, $len-1), 1);
+        for ($i = 3; $i < self::LENGTH_PASSWORD; ++$i) {
+            $pw .= substr($chars, mt_rand(0, $len - 1), 1);
         }
 
         return str_shuffle($pw);
     }
 
     /**
-     * Call openAm to change the user password to the generated one
+     * Call openAm to change the user password to the generated one.
      *
      * @param Person $person
      * @param $newPassword
+     *
      * @return string
+     *
      * @throws OpenAmChangePasswordException
      */
     private function changePassword(Person $person, $newPassword)
@@ -174,15 +176,17 @@ class ResetClaimAccountService
         } catch (OpenAmChangePasswordException $e) {
             throw new OpenAmChangePasswordException($e->getMessage());
         }
+
         return $newPassword;
     }
 
     /**
-     * Send the email to the user with the new password and the information to follow
+     * Send the email to the user with the new password and the information to follow.
      *
      * @param Person $person
      * @param $emailAddress
      * @param $newPassword
+     *
      * @return bool
      */
     private function sendCustomEmail(Person $person, $emailAddress, $newPassword)
@@ -191,7 +195,7 @@ class ResetClaimAccountService
         $mailerDto->setData(
             [
                 'userid' => $person->getId(),
-                'user' => $person
+                'user' => $person,
             ]
         );
 

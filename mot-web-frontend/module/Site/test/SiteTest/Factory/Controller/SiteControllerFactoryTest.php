@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteTest\Factory\Controller;
 
 use Application\Service\CatalogService;
@@ -14,13 +15,11 @@ use Site\Action\SiteTestQualityAction;
 use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Site\Factory\Controller\SiteControllerFactory;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSiteBreadcrumbs;
 
 /**
- * Class SiteControllerFactoryTest
- * @package SiteTest\Factory\Controller
+ * Class SiteControllerFactoryTest.
  */
 class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

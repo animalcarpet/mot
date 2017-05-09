@@ -4,7 +4,6 @@ namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
-use DvsaMotApi\Mapper;
 use DvsaMotApi\Service\MotTestOptionsService;
 
 class MotTestOptionsController extends AbstractDvsaRestfulController

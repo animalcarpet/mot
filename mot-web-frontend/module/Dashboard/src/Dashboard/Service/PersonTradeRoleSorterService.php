@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dashboard\Service;
-
 
 use Core\Catalog\BusinessRole\BusinessRole;
 use Core\Catalog\EnumCatalog;
@@ -12,9 +10,9 @@ use DvsaCommon\Model\OrganisationBusinessRoleCode;
 
 class PersonTradeRoleSorterService
 {
-
     /**
-     * Used for sorting
+     * Used for sorting.
+     *
      * @var array
      */
     public static $roleWeights = [
@@ -32,7 +30,6 @@ class PersonTradeRoleSorterService
      */
     protected $catalog;
 
-
     public function __construct(EnumCatalog $catalog)
     {
         $this->catalog = $catalog;
@@ -40,17 +37,20 @@ class PersonTradeRoleSorterService
 
     /**
      * @param PersonTradeRoleDto[] $tradeRoles
+     *
      * @return array
      */
     public function sortTradeRoles($tradeRoles)
     {
         $groupedRoles = $this->groupRoles($tradeRoles);
         $sortedRoles = $this->sortRoles($groupedRoles);
+
         return $sortedRoles;
     }
 
     /**
      * @param PersonTradeRoleDto[] $tradeRoles
+     *
      * @return array[array[PersonTradeRoleDto[]]
      */
     protected function groupRoles($tradeRoles)
@@ -69,6 +69,7 @@ class PersonTradeRoleSorterService
 
     /**
      * @param $groupedRoles
+     *
      * @return array[array[PersonTradeRoleDto[]]
      */
     protected function sortRoles($groupedRoles)
@@ -78,13 +79,16 @@ class PersonTradeRoleSorterService
                 usort($roles, [$this, 'usortRoles']);
             }
         }
+
         return $groupedRoles;
     }
 
     /**
-     * usort implementation
+     * usort implementation.
+     *
      * @param PersonTradeRoleDto $roleA
      * @param PersonTradeRoleDto $roleB
+     *
      * @return int
      */
     protected function usortRoles(PersonTradeRoleDto $roleA, PersonTradeRoleDto $roleB)
@@ -102,6 +106,7 @@ class PersonTradeRoleSorterService
         if ($roleAweight == $roleBweight) {
             return 0;
         }
+
         return ($roleAweight > $roleBweight) ? 1 : -1;
     }
 }

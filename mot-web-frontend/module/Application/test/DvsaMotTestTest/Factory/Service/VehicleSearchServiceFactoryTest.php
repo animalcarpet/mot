@@ -8,7 +8,6 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\DataConversion\FuzzySearchConverter;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\Service\VehicleSearchService;
 use DvsaMotTest\Factory\Service\VehicleSearchServiceFactory;

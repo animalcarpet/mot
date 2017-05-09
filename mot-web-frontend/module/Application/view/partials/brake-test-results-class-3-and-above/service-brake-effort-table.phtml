@@ -1,10 +1,9 @@
 <?php
 /**
- * @var \DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper $brakeTestConfiguration
- * @var \DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel $brakeTestResult
- * @var int $serviceBrakeNumber
+ * @var \DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper
+ * @var \DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel     $brakeTestResult
+ * @var int                                                           $serviceBrakeNumber
  */
-
 if ($serviceBrakeNumber === 2) {
     $tableHeader = 'Service brake 2 for';
 } elseif ($brakeTestConfiguration->hasTwoServiceBrakes()) {
@@ -46,7 +45,7 @@ if ($serviceBrakeNumber === 2) {
                 'brakeTestConfiguration' => $brakeTestConfiguration,
                 'serviceBrakeNumber' => $serviceBrakeNumber,
                 'axleNumber' => 1,
-                'rowHeader' => 'Axle 1'
+                'rowHeader' => 'Axle 1',
             ]
         ); ?>
     <?php endif; ?>
@@ -60,7 +59,7 @@ if ($serviceBrakeNumber === 2) {
                 'brakeTestConfiguration' => $brakeTestConfiguration,
                 'serviceBrakeNumber' => $serviceBrakeNumber,
                 'axleNumber' => 2,
-                'rowHeader' => 'Axle 2'
+                'rowHeader' => 'Axle 2',
             ]
         ); ?>
         <?php if ($serviceBrakeNumber === 1 && $brakeTestConfiguration->hasThreeAxles()) : ?>

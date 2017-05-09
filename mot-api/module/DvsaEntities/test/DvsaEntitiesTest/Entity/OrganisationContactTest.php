@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\ContactDetail;
@@ -8,7 +9,7 @@ use DvsaEntities\Entity\OrganisationContactType;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class OrganisationContactTest
+ * Class OrganisationContactTest.
  */
 class OrganisationContactTest extends PHPUnit_Framework_TestCase
 {
@@ -26,7 +27,6 @@ class OrganisationContactTest extends PHPUnit_Framework_TestCase
         $type = new OrganisationContactType();
         $this->org->setContact($this->contactDetail, $type);
         $this->orgContact = new OrganisationContact($this->contactDetail, $type);
-
     }
 
     public function testSettersAndGetters()

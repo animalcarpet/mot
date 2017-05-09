@@ -15,7 +15,7 @@ class OrganisationBusinessRoleRepository extends EntityRepository
         );
 
         if ($role === null) {
-            throw new NotFoundException("Organisation business role");
+            throw new NotFoundException('Organisation business role');
         }
 
         return $role;
@@ -25,6 +25,7 @@ class OrganisationBusinessRoleRepository extends EntityRepository
      * @param $id
      *
      * @return OrganisationBusinessRole
+     *
      * @throws NotFoundException
      */
     public function get($id)
@@ -32,7 +33,7 @@ class OrganisationBusinessRoleRepository extends EntityRepository
         $role = $this->find($id);
 
         if ($role === null) {
-            throw new NotFoundException("Organisation business role");
+            throw new NotFoundException('Organisation business role');
         }
 
         return $role;

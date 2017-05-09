@@ -18,6 +18,7 @@ class VtsServiceFactory implements FactoryInterface
             $serviceLocator->get(EntityManager::class),
             new UrlBuilder()
         );
+
         return $service;
     }
 }

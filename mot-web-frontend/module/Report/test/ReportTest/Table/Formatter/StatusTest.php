@@ -8,12 +8,8 @@ use DvsaCommonTest\TestUtils\XMock;
 use Organisation\Presenter\StatusPresenterData;
 use Report\Table\ColumnOptions;
 use Report\Table\Formatter\Status;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\View\Helper\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver as Resolver;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 class StatusTest extends \PHPUnit_Framework_TestCase
@@ -25,7 +21,7 @@ class StatusTest extends \PHPUnit_Framework_TestCase
         /** @var PhpRenderer|MockObj $viewRendererMock */
         $viewRendererMock = $this->getMockBuilder(PhpRenderer::class)->disableOriginalConstructor()->getMock();
 
-        $viewRendererMock->method("partial")->with($this->anything());
+        $viewRendererMock->method('partial')->with($this->anything());
 
         // logical block: prepare parameters
         $column = new ColumnOptions();
@@ -34,7 +30,7 @@ class StatusTest extends \PHPUnit_Framework_TestCase
         $column->setField('Vts status');
 
         $rowData = [
-            'Vts status' => $status
+            'Vts status' => $status,
         ];
 
         //  logical block: call
@@ -54,7 +50,7 @@ class StatusTest extends \PHPUnit_Framework_TestCase
         $column->setField('Vts status');
 
         $rowData = [
-            'Vts status' => 'value'
+            'Vts status' => 'value',
         ];
 
         //  logical block: call

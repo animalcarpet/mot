@@ -16,7 +16,8 @@ class NonMotTestViewModelTest extends PHPUnit_Framework_TestCase
     /** @var Url|\PHPUnit_Framework_MockObject_MockObject $mockUrl */
     private $mockUrl;
 
-    public function setup() {
+    public function setup()
+    {
         $this->mockDashboardGuard = XMock::of(DashboardGuard::class);
         $this->mockUrl = XMock::of(Url::class);
     }

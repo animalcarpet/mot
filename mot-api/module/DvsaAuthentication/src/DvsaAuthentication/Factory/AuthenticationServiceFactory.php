@@ -2,7 +2,6 @@
 
 namespace DvsaAuthentication\Factory;
 
-use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Authentication\Adapter\OpenAM\OpenAMApiTokenBasedAdapter;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Storage\NonPersistent;
@@ -10,9 +9,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class AuthenticationServiceFactory
- *
- * @package DvsaAuthentication\Factory
+ * Class AuthenticationServiceFactory.
  */
 class AuthenticationServiceFactory implements FactoryInterface
 {
@@ -23,6 +20,7 @@ class AuthenticationServiceFactory implements FactoryInterface
         $adapter = $serviceLocator->get(OpenAMApiTokenBasedAdapter::class);
         $authService->setAdapter($adapter);
         $authService->setStorage(new NonPersistent());
+
         return $authService;
     }
 }

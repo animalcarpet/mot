@@ -3,7 +3,7 @@ use Vehicle\UpdateVehicleProperty\Form\MakeForm;
 use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 
 /**
- * @var UpdateVehiclePropertyViewModel $viewModel
+ * @var UpdateVehiclePropertyViewModel
  */
 
 /** @var MakeForm $form */
@@ -13,21 +13,21 @@ $form = $viewModel->getForm();
     <?php echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getMakeElement()
+            'element' => $form->getMakeElement(),
         ]
-    );?>
+    ); ?>
 
     <div id="<?php echo MakeForm::DATA_TARGET_ID ?>" class="panel-indent" aria-hidden="false">
-        <label for="<?php echo $form->getOtherMakeElement()->getAttribute("id") ?>" class="form-label">
+        <label for="<?php echo $form->getOtherMakeElement()->getAttribute('id') ?>" class="form-label">
             <?php echo MakeForm::FIELD_OTHER_MAKE_LABEL ?>
         </label>
 
         <?php echo $this->partial(
             'partial/gds/form/control',
             [
-                'element' => $form->getOtherMakeElement()
+                'element' => $form->getOtherMakeElement(),
             ]
-        );?>
+        ); ?>
     </div>
 </fieldset>
 

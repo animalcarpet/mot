@@ -13,7 +13,7 @@ class GtmSecurityCardPinValidationCallback implements SecurityCardPinValidationC
         $this->data[] = [
             'event' => 'activate-card-fail',
             'reason' => 'invalid-pin',
-            'title' => 'User - Activate Security Card'
+            'title' => 'User - Activate Security Card',
         ];
     }
 
@@ -22,7 +22,7 @@ class GtmSecurityCardPinValidationCallback implements SecurityCardPinValidationC
         $this->data[] = [
             'event' => 'activate-card-fail',
             'reason' => 'invalid-pin',
-            'title' => 'User - Activate Security Card'
+            'title' => 'User - Activate Security Card',
         ];
     }
 
@@ -31,7 +31,7 @@ class GtmSecurityCardPinValidationCallback implements SecurityCardPinValidationC
         $this->data[] = [
             'event' => 'activate-card-fail',
             'reason' => 'empty-pin',
-            'title' => 'User - Activate Security Card'
+            'title' => 'User - Activate Security Card',
         ];
     }
 

@@ -25,11 +25,11 @@ class OrderSecurityCardNotificationService
         $url = NotificationUrlBuilder::newNotification()->toString();
 
         $postData = [
-            'template' => OrderSecurityCardNotificationService::SECURITY_CARD_ORDER_NOTIFICATION_TEMPLATE_ID,
+            'template' => self::SECURITY_CARD_ORDER_NOTIFICATION_TEMPLATE_ID,
             'recipient' => $recipientId,
             'fields' => [
                 'dateTimeOrdered' => $this->getDateTimeOrdered(),
-            ]
+            ],
         ];
 
         return $this->client->post($url, $postData);
@@ -38,7 +38,7 @@ class OrderSecurityCardNotificationService
     private function getDateTimeOrdered()
     {
         $dateTime = $this->dateTimeHolder->getUserCurrent();
+
         return $dateTime->format('g.ia \o\n j F Y');
     }
-
 }

@@ -19,6 +19,7 @@ class ConfirmationController extends BaseCreateVehicleController
     {
         $result = $this->action->execute($this->getRequest());
         $this->setLayout('MOT test started', 'MOT test');
+
         return $this->applyActionResult($result);
     }
 }

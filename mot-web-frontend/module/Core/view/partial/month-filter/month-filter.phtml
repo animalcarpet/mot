@@ -2,7 +2,7 @@
 
 use Core\ViewModel\MonthFilter\MonthFilter;
 
-/** @var $monthFilter MonthFilter */
+/* @var $monthFilter MonthFilter */
 
 ?>
 
@@ -28,7 +28,7 @@ use Core\ViewModel\MonthFilter\MonthFilter;
                             <?php echo $month; ?>
                         </strong>
                     <?php else : ?>
-                        <a href="<?php echo $monthFilter->getUrlForMonth($monthFilter->getUrl(), $key, $year); ?>" id="<?php echo $key . '/' . $year ?>">
+                        <a href="<?php echo $monthFilter->getUrlForMonth($monthFilter->getUrl(), $key, $year); ?>" id="<?php echo $key.'/'.$year ?>">
                             <?php echo $month; ?>
                         </a>
                     <?php endif; ?>

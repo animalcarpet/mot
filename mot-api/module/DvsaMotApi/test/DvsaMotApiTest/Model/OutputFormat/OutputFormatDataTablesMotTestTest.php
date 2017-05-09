@@ -19,19 +19,15 @@ use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestCancelled;
-use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesMotTest;
-use PHPUnit_Framework_TestCase;
 
 /**
- * Class OutputFormatDataTablesMotTestTest
- *
- * @package DvsaMotApiTest\Model\OutputFormat
+ * Class OutputFormatDataTablesMotTestTest.
  */
 class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
 {
@@ -96,27 +92,27 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
     {
         return [
             '_source' => [
-                'motTestNumber'       => '1',
-                'status'              => 'ABORTED',
-                'number'              => '1234567890005',
-                'primaryColour'       => self::COLOUR,
-                'hasRegistration'     => true,
-                'odometerType'        => OdometerReadingResultType::OK,
-                'odometerValue'       => 10000,
-                'odometerUnit'        => 'mi',
-                'vin'                 => self::VIN,
-                'registration'        => self::REG,
-                'make'                => self::MAKE,
-                'model'               => self::MODEL,
-                'testType'            => 'Normal Test',
-                'siteId'              => self::SITE_ID,
-                'siteNumber'          => 'V1234',
-                'startedDate'         => '2011-01-01T11:11:11Z',
-                'completedDate'       => '2011-01-01T11:11:11Z',
-                'testerUsername'      => 'tester1',
-                'testDate'            => '2011-01-01T11:11:11Z',
+                'motTestNumber' => '1',
+                'status' => 'ABORTED',
+                'number' => '1234567890005',
+                'primaryColour' => self::COLOUR,
+                'hasRegistration' => true,
+                'odometerType' => OdometerReadingResultType::OK,
+                'odometerValue' => 10000,
+                'odometerUnit' => 'mi',
+                'vin' => self::VIN,
+                'registration' => self::REG,
+                'make' => self::MAKE,
+                'model' => self::MODEL,
+                'testType' => 'Normal Test',
+                'siteId' => self::SITE_ID,
+                'siteNumber' => 'V1234',
+                'startedDate' => '2011-01-01T11:11:11Z',
+                'completedDate' => '2011-01-01T11:11:11Z',
+                'testerUsername' => 'tester1',
+                'testDate' => '2011-01-01T11:11:11Z',
                 'reasonsForRejection' => null,
-            ]
+            ],
         ];
     }
 
@@ -167,24 +163,24 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
     {
         return [
             '1234567890005' => [
-                'status'              => 'ABORTED',
-                'motTestNumber'       => '1234567890005',
-                'primaryColour'       => self::COLOUR,
-                'hasRegistration'     => 1,
-                'odometer'            => '10000 mi',
-                'vin'                 => self::VIN,
-                'registration'        => self::REG,
-                'make'                => self::MAKE,
-                'model'               => self::MODEL,
-                'testType'            => 'Normal Test',
-                'siteId'              => self::SITE_ID,
-                'siteNumber'          => 'V1234',
-                'startedDate'         => '2011-01-01T11:11:11Z',
-                'completedDate'       => '2011-01-01T11:11:11Z',
-                'testerUsername'      => 'tester1',
-                'testDate'            => '2011-01-01T11:11:11Z',
+                'status' => 'ABORTED',
+                'motTestNumber' => '1234567890005',
+                'primaryColour' => self::COLOUR,
+                'hasRegistration' => 1,
+                'odometer' => '10000 mi',
+                'vin' => self::VIN,
+                'registration' => self::REG,
+                'make' => self::MAKE,
+                'model' => self::MODEL,
+                'testType' => 'Normal Test',
+                'siteId' => self::SITE_ID,
+                'siteNumber' => 'V1234',
+                'startedDate' => '2011-01-01T11:11:11Z',
+                'completedDate' => '2011-01-01T11:11:11Z',
+                'testerUsername' => 'tester1',
+                'testDate' => '2011-01-01T11:11:11Z',
                 'reasonsForRejection' => null,
-            ]
+            ],
         ];
     }
 
@@ -193,7 +189,7 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn(MotTestStatusName::ABORTED);
 
         return $status;

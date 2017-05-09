@@ -1,15 +1,13 @@
 <?php
+
 namespace DvsaMotApiTest\Service\RfrValidator;
 
-use PHPUnit_Framework_TestCase;
 use DvsaMotApi\Service\RfrValidator\BaseValidator;
 use DvsaMotApi\Service\RfrValidator\BaseResultValidator;
-use \DvsaMotApi\Service\RfrValidator\CheckNoFurtherActionHasJustificationAgainstScore;
+use DvsaMotApi\Service\RfrValidator\CheckNoFurtherActionHasJustificationAgainstScore;
 
 /**
- * Class CheckNoFurtherActionHasJustificationAgainstScoreTest
- *
- * @package DvsaMotApiTest\Service\RfrValidator
+ * Class CheckNoFurtherActionHasJustificationAgainstScoreTest.
  */
 class CheckNoFurtherActionHasJustificationAgainstScoreTest extends AbstractResultValidatorTest
 {
@@ -22,22 +20,22 @@ class CheckNoFurtherActionHasJustificationAgainstScoreTest extends AbstractResul
     protected function getValidator($mappedRfrId, $fixture)
     {
         $mappedRfrId = null;
+
         return new CheckNoFurtherActionHasJustificationAgainstScore($fixture, $fixture['totalScore']);
     }
 
     /**
-     * Get the name for this fixture to appear in generated tests
+     * Get the name for this fixture to appear in generated tests.
      *
      * @return array|string
      */
     public function getFixtureName()
     {
-        return "Check No Further Action Has Justification Against Score";
+        return 'Check No Further Action Has Justification Against Score';
     }
 
     /**
-     *
-     * range 11-29 must have a justification
+     * range 11-29 must have a justification.
      *
      * @return array
      */

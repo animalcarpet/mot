@@ -6,9 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * Class SearchParamDqlBuilder
- *
- * @package DvsaEntities\DqlBuilder
+ * Class SearchParamDqlBuilder.
  */
 abstract class SearchParamDqlBuilder
 {
@@ -18,25 +16,25 @@ abstract class SearchParamDqlBuilder
     protected $em;
 
     /**
-     * The standard search DQL statement
+     * The standard search DQL statement.
      *
      * @var null
      */
     protected $searchDql = null;
     /**
-     * The count search DQL statement
+     * The count search DQL statement.
      *
      * @var null
      */
     protected $searchCountDql = null;
     /**
-     * The standard search query object
+     * The standard search query object.
      *
      * @var null
      */
     protected $searchQuery;
     /**
-     * The count search query object
+     * The count search query object.
      *
      * @var null
      */
@@ -48,7 +46,6 @@ abstract class SearchParamDqlBuilder
     protected $params = null;
 
     /**
-     *
      * @param EntityManager $em
      * @param SearchParam   $params
      */
@@ -82,9 +79,6 @@ abstract class SearchParamDqlBuilder
         return $this->searchQuery;
     }
 
-    /**
-     * @return null
-     */
     public function getSearchCountDql()
     {
         return $this->searchCountDql;
@@ -99,7 +93,7 @@ abstract class SearchParamDqlBuilder
     }
 
     /**
-     * Generate both the DQL and the Query objects
+     * Generate both the DQL and the Query objects.
      */
     public function generate()
     {
@@ -113,7 +107,7 @@ abstract class SearchParamDqlBuilder
     }
 
     /**
-     * Provides an opportunity to initialize and values before processing
+     * Provides an opportunity to initialize and values before processing.
      *
      * @return $this
      */
@@ -123,7 +117,7 @@ abstract class SearchParamDqlBuilder
     }
 
     /**
-     * Build the DQL from the params
+     * Build the DQL from the params.
      *
      * @param bool $totalCount
      *
@@ -132,7 +126,7 @@ abstract class SearchParamDqlBuilder
     abstract protected function buildDql($totalCount = false);
 
     /**
-     * Build the Query from the params
+     * Build the Query from the params.
      *
      * @param bool $totalCount
      *
@@ -156,15 +150,15 @@ abstract class SearchParamDqlBuilder
     {
         if (count($values)) {
             $parts = [];
-            for ($i = 0; $i < count($values); $i++) {
+            for ($i = 0; $i < count($values); ++$i) {
                 $parts[] = sprintf($dql, $i);
             }
-            $filters[] = "(" . join(' ' . $joinType . ' ', $parts) . ")";
+            $filters[] = '('.implode(' '.$joinType.' ', $parts).')';
         }
     }
 
     /**
-     * Add parameters to the passed query object
+     * Add parameters to the passed query object.
      *
      * Examples:
      *
@@ -185,13 +179,13 @@ abstract class SearchParamDqlBuilder
                     sprintf($name, $ctr),
                     sprintf($format, $value)
                 );
-                $ctr++;
+                ++$ctr;
             }
         }
     }
 
     /**
-     * Initialize the Query object using the correct DQL
+     * Initialize the Query object using the correct DQL.
      *
      * @param $totalCount
      *
@@ -207,9 +201,9 @@ abstract class SearchParamDqlBuilder
     }
 
     /**
-     * Assign to the correct Query object
+     * Assign to the correct Query object.
      *
-     * @param boolean             $totalCount
+     * @param bool                $totalCount
      * @param \Doctrine\ORM\Query $query
      */
     protected function assignQuery($totalCount, $query)

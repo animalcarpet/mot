@@ -6,7 +6,7 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 
 /**
  * Calls to api, path:
- *   /person/:id/site-count
+ *   /person/:id/site-count.
  */
 class ApiUserSiteCount extends ApiResources
 {
@@ -18,11 +18,13 @@ class ApiUserSiteCount extends ApiResources
     public function getUserSiteCount($personId)
     {
         $path = $this->personalDetailsUrlBuilder($personId)->toString();
+
         return $this->restGet($path)['data'];
     }
 
     /**
      * Gets the API Endpoint URL for the site count.
+     *
      * @param $id
      *
      * @return $this

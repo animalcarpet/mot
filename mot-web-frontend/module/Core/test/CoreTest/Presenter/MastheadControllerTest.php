@@ -4,7 +4,7 @@ namespace CoreTest\Presenter;
 
 use Core\Presenter\MastheadPresenter;
 
-class MastheadPresenterTest extends \PHPUnit_Framework_TestCase
+class MastheadControllerTest extends \PHPUnit_Framework_TestCase
 {
     protected $presenter;
 
@@ -12,7 +12,7 @@ class MastheadPresenterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->presenter = new MastheadPresenter;
+        $this->presenter = new MastheadPresenter();
     }
 
     protected function tearDown()

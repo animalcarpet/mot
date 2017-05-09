@@ -42,8 +42,7 @@ class PersonRoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->willReturnCallback(
                 function ($entityName) {
-
-                    $repositoryName = str_replace('Entity', 'Repository', $entityName) . 'Repository';
+                    $repositoryName = str_replace('Entity', 'Repository', $entityName).'Repository';
 
                     if (class_exists($repositoryName)) {
                         $mokRepo = XMock::of($repositoryName);
@@ -52,7 +51,6 @@ class PersonRoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
                     }
 
                     return $mokRepo;
-
                 }
             );
 

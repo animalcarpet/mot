@@ -8,11 +8,9 @@ use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Session\Container;
 
 /**
- * Class OdometerControllerTest
+ * Class OdometerControllerTest.
  */
 class OdometerControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -35,7 +33,7 @@ class OdometerControllerTest extends AbstractFrontendControllerTestCase
      */
     public function testMotTestUpdateOdometerWithValidData($odometerReadingValidData)
     {
-        $this->markTestSkipped('Due to the route being removed when the FT is off this test is temporarily disabled ' .
+        $this->markTestSkipped('Due to the route being removed when the FT is off this test is temporarily disabled '.
             'until the base test class supports FT awareness at Module bootstrap level.');
 
         $motTestNumber = 1;
@@ -59,7 +57,7 @@ class OdometerControllerTest extends AbstractFrontendControllerTestCase
      */
     public function testMotTestUpdateOdometerWithInvalidData_shouldFlashErrorAndRedirect($odometerReadingInvalidData, $flashMessage)
     {
-        $this->markTestSkipped('Due to the route being removed when the FT is off this test is temporarily disabled ' .
+        $this->markTestSkipped('Due to the route being removed when the FT is off this test is temporarily disabled '.
             'until the base test class supports FT awareness at Module bootstrap level.');
 
         $motTestNumber = 1;
@@ -88,20 +86,20 @@ class OdometerControllerTest extends AbstractFrontendControllerTestCase
         return [
             [
                 ['odometer' => '', 'unit' => OdometerUnit::MILES, 'resultType' => OdometerReadingResultType::OK],
-                'Odometer value must be entered to update odometer reading'
+                'Odometer value must be entered to update odometer reading',
             ],
             [
                 ['odometer' => 'ABC', 'unit' => OdometerUnit::MILES, 'resultType' => OdometerReadingResultType::OK],
-                'The odometer reading should be a valid number between 0 and 999,999'
+                'The odometer reading should be a valid number between 0 and 999,999',
             ],
             [
                 ['odometer' => '100.5', 'unit' => OdometerUnit::MILES, 'resultType' => OdometerReadingResultType::OK],
-                'The odometer reading should be a valid number between 0 and 999,999'
+                'The odometer reading should be a valid number between 0 and 999,999',
             ],
             [
                 ['odometer' => '1234567', 'unit' => OdometerUnit::MILES, 'resultType' => OdometerReadingResultType::OK],
-                'The odometer reading should be a valid number between 0 and 999,999'
-            ]
+                'The odometer reading should be a valid number between 0 and 999,999',
+            ],
         ];
     }
 }

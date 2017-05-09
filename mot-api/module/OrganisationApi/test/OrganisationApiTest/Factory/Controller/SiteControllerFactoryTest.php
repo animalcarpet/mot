@@ -2,13 +2,10 @@
 
 namespace OrganisationApiTest\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
 use OrganisationApi\Controller\SiteController;
 use OrganisationApi\Factory\Controller\SiteControllerFactory;
 use OrganisationApi\Service\SiteService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase

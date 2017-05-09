@@ -6,7 +6,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
 
 class LoginFormTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  LoginForm */
+    /** @var LoginForm */
     private $form;
 
     public function setUp()

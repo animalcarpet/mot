@@ -15,15 +15,11 @@ use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\Client as HttpClient;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Session\Container;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class ClaimAccountServiceTest
- *
- * @package AccountTest\Service
+ * Class ClaimAccountServiceTest.
  */
 class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,18 +35,18 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
 
     /** @var ClaimAccountService */
     private $claimAccountService;
-    /** @var  Identity|MockObj */
+    /** @var Identity|MockObj */
     private $mockIdentity;
-    /** @var  MotFrontendAuthorisationServiceInterface|MockObj */
+    /** @var MotFrontendAuthorisationServiceInterface|MockObj */
     private $mockAuthSrv;
-    /** @var  MapperFactory|MockObj */
+    /** @var MapperFactory|MockObj */
     private $mockMapper;
-    /** @var  ParamObfuscator|MockObj */
+    /** @var ParamObfuscator|MockObj */
     private $mockParamObfuscator;
 
-    /** @var  AccountMapper|MockObj */
+    /** @var AccountMapper|MockObj */
     private $mockAccountMapper;
-    /** @var  SecurityQuestionMapper|MockObj */
+    /** @var SecurityQuestionMapper|MockObj */
     private $mockSecurityQuestionMapper;
 
     public function setUp()
@@ -162,7 +158,7 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
                     'password-confirm' => self::PASSWORD,
                     'submitted_step' => 'firstStep',
                     'username' => null,
-                ]
+                ],
             ],
             $this->unPin($dataOnSession)
         );
@@ -205,7 +201,6 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($service->isStepRecorded($stepThreeName));
     }
 
-
     /**
      * @dataProvider dataProviderTestGetSecurityQuestions
      */
@@ -214,7 +209,7 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
         //  --  mock    --
         $dtos = [];
         foreach ($questions as $item) {
-            $dtos[] = (new SecurityQuestionDto)
+            $dtos[] = (new SecurityQuestionDto())
                 ->setId($item[0])
                 ->setText($item[1])
                 ->setGroup($item[2]);
@@ -263,7 +258,6 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
-
 
     /**
      * @dataProvider dataProviderTestSendToApi
@@ -370,51 +364,51 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
     public function getSampleData()
     {
         return [
-            'user_id'                  => self::USER_ID,
-            'is_tester'                => false,
-            'username'                 => 'tester1',
-            'password'                 => self::PASSWORD,
-            'password-confirm'         => self::PASSWORD,
+            'user_id' => self::USER_ID,
+            'is_tester' => false,
+            'username' => 'tester1',
+            'password' => self::PASSWORD,
+            'password-confirm' => self::PASSWORD,
             'security-question-one-id' => self::QUESTION_1_ID,
-            'security-answer-one-id'   => self::QUESTION_1_ANSWER,
+            'security-answer-one-id' => self::QUESTION_1_ANSWER,
             'security-question-two-id' => self::QUESTION_2_ID,
-            'security-answer-two-id'   => self::QUESTION_2_ANSWER,
+            'security-answer-two-id' => self::QUESTION_2_ANSWER,
         ];
     }
 
     public function getSampleSessionData()
     {
         return [
-            'user_id'                 => self::USER_ID,
+            'user_id' => self::USER_ID,
             'is_tester' => true,
             'username' => 'tester1',
             'pin' => '908986',
             'confirmPassword' => [
                 'username' => 'tester1',
-                'password'         => self::PASSWORD,
+                'password' => self::PASSWORD,
                 'confirm_password' => self::PASSWORD,
                 '_csrf_token' => 'F590F72E-D9FB-82FD-493E-D661EC0CF06E',
                 'submitted_step' => 'confirmPassword',
-                'btSubmitForm' => ''
+                'btSubmitForm' => '',
             ],
             'setSecurityQuestion' => [
-                'question_a'     => self::QUESTION_1_ID,
-                'answer_a'       => self::QUESTION_1_ANSWER,
-                'question_b'     => self::QUESTION_2_ID,
-                'answer_b'       => self::QUESTION_2_ANSWER,
+                'question_a' => self::QUESTION_1_ID,
+                'answer_a' => self::QUESTION_1_ANSWER,
+                'question_b' => self::QUESTION_2_ID,
+                'answer_b' => self::QUESTION_2_ANSWER,
                 'btSubmitForm' => '',
                 '_csrf_token' => 'F590F72E-D9FB-82FD-493E-D661EC0CF06E',
-                'submitted_step' => 'setSecurityQuestion'
-            ]
+                'submitted_step' => 'setSecurityQuestion',
+            ],
         ];
     }
 
     private function unPin(&$dataSet)
     {
         unset($dataSet['pin']);
+
         return $dataSet;
     }
-
 
     private function getMapperFactory()
     {

@@ -3,23 +3,20 @@
 namespace TestSupport\Service;
 
 use Doctrine\ORM\EntityManager;
-use DvsaCommon\Enum\CountryOfRegistrationCode;
 use DvsaCommon\Enum\LicenceCountryCode;
-use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\UrlBuilder\UrlBuilder;
-use DvsaEntities\Repository\LicenceCountryRepository;
 use TestSupport\Helper\DataGeneratorHelper;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use TestSupport\Model\Account;
 use TestSupport\Model\AccountPerson;
 
 /**
- * Service to deal with accounts in system
+ * Service to deal with accounts in system.
  */
 class AccountService
 {
-    const PASSWORD = "Password1";
+    const PASSWORD = 'Password1';
     const SECURITY_QUESTION_ID_FIRST_KISS = 1;
     const SECURITY_QUESTION_ID_NAME_OF_DOG = 2;
 
@@ -39,7 +36,7 @@ class AccountService
     private $tokenManager;
 
     /**
-     * @var SecurityQuestionsService $securityQuestionsService
+     * @var SecurityQuestionsService
      */
     private $securityQuestionsService;
 
@@ -58,7 +55,8 @@ class AccountService
     /**
      * @param DataGeneratorHelper $dataGeneratorHelper
      * @param AccountPerson       $accountPerson
-     * @param boolean             $addLicence
+     * @param bool                $addLicence
+     *
      * @return Account
      */
     public function createAccount($role, DataGeneratorHelper $dataGeneratorHelper, AccountPerson $accountPerson, $addLicence = true)
@@ -75,7 +73,7 @@ class AccountService
             'username' => $username,
             'title' => 'Mr',
             'firstName' => $accountPerson->getFirstName(),
-            'middleName'=> $accountPerson->getMiddleName(),
+            'middleName' => $accountPerson->getMiddleName(),
             'surname' => $accountPerson->getSurname(),
             'gender' => 'Male',
             'addressLine1' => $accountPerson->getAddressLine1(),
@@ -91,7 +89,7 @@ class AccountService
             'accountClaimRequired' => $accountPerson->isAccountClaimRequired(),
             'passwordChangeRequired' => $accountPerson->isPasswordChangeRequired(),
             'pin' => '123456',
-            'authenticationMethod' => $accountPerson->getAuthenticationMethod()
+            'authenticationMethod' => $accountPerson->getAuthenticationMethod(),
         ];
 
         if ($addLicence) {

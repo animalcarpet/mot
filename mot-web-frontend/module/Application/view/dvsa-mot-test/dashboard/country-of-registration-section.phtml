@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var $countryOfRegistration
+ * @var
  * @var $countryOfRegistrationList
  */
 ?>
@@ -20,11 +20,11 @@
     <div class="clearfix">
         <div class="form-group">
             <?php echo $this->partial(
-                "selectElement", [
-                    "id"      => "input-cor",
-                    "name"    => "cor",
-                    "value"   => $countryOfRegistration['id'],
-                    "options" => $countryOfRegistrationList
+                'selectElement', [
+                    'id' => 'input-cor',
+                    'name' => 'cor',
+                    'value' => $countryOfRegistration['id'],
+                    'options' => $countryOfRegistrationList,
                 ]
             ); ?>
         </div>
@@ -33,7 +33,7 @@
 <?php echo $this->partial(
     'dvsa-mot-test/dashboard/generic-section',
     [
-        'sectionId'  => 'cor',
+        'sectionId' => 'cor',
         'actionName' => 'updateCor',
     ]
 );

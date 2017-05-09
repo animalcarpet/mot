@@ -13,7 +13,7 @@ use DvsaEntities\Entity\Person;
 
 class MessageMapperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  MessageMapper */
+    /** @var MessageMapper */
     private $mapper;
 
     public function setUp()

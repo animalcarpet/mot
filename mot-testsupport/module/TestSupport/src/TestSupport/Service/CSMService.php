@@ -2,12 +2,11 @@
 
 namespace TestSupport\Service;
 
-use TestSupport\Service\AccountDataService;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use DvsaCommon\Constants\Role;
 
-class CSMService {
-
+class CSMService
+{
     /**
      * @var AccountDataService
      */
@@ -15,15 +14,15 @@ class CSMService {
 
     public function __construct(
         AccountDataService $accountDataService
-    )
-    {
+    ) {
         $this->accountDataService = $accountDataService;
     }
 
     /**
-     * Create a basic user with the data supplied
+     * Create a basic user with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -31,6 +30,7 @@ class CSMService {
         TestSupportAccessTokenManager::addSchemeManagerAsRequestorIfNecessary($data);
         $resultJson = $this->accountDataService->create($data, Role::CUSTOMER_SERVICE_MANAGER);
         $this->accountDataService->addRole($resultJson->data['personId'], Role::CUSTOMER_SERVICE_MANAGER);
+
         return $resultJson;
     }
 }

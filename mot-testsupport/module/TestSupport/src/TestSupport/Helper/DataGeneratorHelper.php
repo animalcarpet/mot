@@ -10,7 +10,7 @@ class DataGeneratorHelper
     const NUMBER_FORMAT = 'AE%05d';
 
     /**
-     * A number to help distinguish generated entities
+     * A number to help distinguish generated entities.
      *
      * @var int
      */
@@ -18,7 +18,7 @@ class DataGeneratorHelper
 
     private function __construct()
     {
-        $this->differentiator = uniqid("", true);
+        $this->differentiator = uniqid('', true);
     }
 
     /**
@@ -36,23 +36,24 @@ class DataGeneratorHelper
         return $dataGenSupport;
     }
 
-    public function generateAeRef(){
+    public function generateAeRef()
+    {
         return sprintf(self::NUMBER_FORMAT, rand(10, 10000));
     }
 
     public function addressLine1()
     {
-        return substr('Flat ' . $this->differentiator . ' Lord House', 0, 45);
+        return substr('Flat '.$this->differentiator.' Lord House', 0, 45);
     }
 
     public function addressLine2()
     {
-        return substr('Apartment ' . $this->differentiator, 0 , 45);
+        return substr('Apartment '.$this->differentiator, 0, 45);
     }
 
     public function emailAddress()
     {
-        return 'success+' . $this->differentiator . '@simulator.amazonses.com';
+        return 'success+'.$this->differentiator.'@simulator.amazonses.com';
     }
 
     public function startDate()
@@ -62,32 +63,32 @@ class DataGeneratorHelper
 
     public function organisationName()
     {
-        return 'Test Organisation ' . $this->differentiator;
+        return 'Test Organisation '.$this->differentiator;
     }
 
     public function siteName()
     {
-        return 'Test Site ' . $this->differentiator;
+        return 'Test Site '.$this->differentiator;
     }
 
     public function firstName()
     {
-        return substr($this->differentiator . 'FakeTest', 0, 12);
+        return substr($this->differentiator.'FakeTest', 0, 12);
     }
 
     public function surname()
     {
-        return substr('Surname-Mc' . $this->differentiator, 0, 12);
+        return substr('Surname-Mc'.$this->differentiator, 0, 12);
     }
 
     public function middleName()
     {
-        return substr('Middle-Mc' . $this->differentiator, 0, 7);
+        return substr('Middle-Mc'.$this->differentiator, 0, 7);
     }
 
     public function drivingLicenceNumber()
     {
-        return 'D' . $this->differentiator;
+        return 'D'.$this->differentiator;
     }
 
     public function drivingLicenceRegion()
@@ -97,20 +98,21 @@ class DataGeneratorHelper
 
     public function phoneNumber()
     {
-        return '01-' . rand(1000000000, 9999999999);
+        return '01-'.rand(1000000000, 9999999999);
     }
 
     public function username()
     {
-        return substr('User' . $this->generateRandomString(15) . $this->differentiator, 0, 25);
+        return substr('User'.$this->generateRandomString(15).$this->differentiator, 0, 25);
     }
 
     public function prefix($role)
     {
-        return (is_null($role)) ? 'user-' : strtolower($role) . '-';
+        return (is_null($role)) ? 'user-' : strtolower($role).'-';
     }
 
-    public function generateRandomString($length = 5) {
-        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    public function generateRandomString($length = 5)
+    {
+        return substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
     }
 }

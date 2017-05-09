@@ -6,7 +6,6 @@ use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\ReviewStepAction;
-use Doctrine\DBAL\Schema\View;
 use Dvsa\Mot\Frontend\PersonModule\Action\QualificationDetailsAction;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsAddProcess;
@@ -15,9 +14,7 @@ use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsAbstractProcess;
 use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsEditProcess;
 use Dvsa\Mot\Frontend\PersonModule\Service\RemoveCertificateDetailsService;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
-use DvsaClient\MapperFactory;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use Zend\View\Model\ViewModel;
 use Core\TwoStepForm\ConfirmationStepAction;
 
 class QualificationDetailsController extends AbstractAuthActionController implements AutoWireableInterface
@@ -48,8 +45,7 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         RemoveCertificateDetailsService $removeCertificateDetailsService,
         CertificatesBreadcrumbs $breadcrumbs,
         ContextProvider $contextProvider
-    )
-    {
+    ) {
         $this->viewAction = $viewAction;
         $this->editStepAction = $editStepAction;
         $this->reviewStepAction = $reviewStepAction;
@@ -81,27 +77,26 @@ class QualificationDetailsController extends AbstractAuthActionController implem
             $this
         );
         $formUuid = $this->params()->fromRoute('formUuid');
-        if(empty($formUuid)) {
+        if (empty($formUuid)) {
             $formUuid = $this->params()->fromQuery('formUuid');
         }
 
         //todo eh
-        if(get_class($action) == EditStepAction::class) {
+        if (get_class($action) == EditStepAction::class) {
             $formData = $this->getRequest()->getPost()->getArrayCopy();
             $actionResult = $action->execute($isPost, $process, $context, $formUuid, $formData);
-        } elseif(get_class($action) == ReviewStepAction::class) {
+        } elseif (get_class($action) == ReviewStepAction::class) {
             $actionResult = $action->execute($isPost, $process, $context, $formUuid);
-        } elseif(get_class($action) == ConfirmationStepAction::class) {
+        } elseif (get_class($action) == ConfirmationStepAction::class) {
             $actionResult = $action->execute($isPost, $process, $context);
         }
 
         //todo if there's no redirect
-        if(get_class($actionResult) == ViewActionResult::class) {
+        if (get_class($actionResult) == ViewActionResult::class) {
             $actionResult->setTemplate($template);
         }
 
         return $this->applyActionResult($actionResult);
-
     }
 
     public function addAction()
@@ -147,7 +142,7 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForQualificationDetails(
             $personId,
             $this,
-            "Remove certificate");
+            'Remove certificate');
 
         $this->removeCertificateDetailsService->setBreadcrumbs($breadcrumbs);
 

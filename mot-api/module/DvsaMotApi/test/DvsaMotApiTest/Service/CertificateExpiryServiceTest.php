@@ -4,9 +4,7 @@ namespace DvsaMotApiTest\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
-use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\ModelDetail;
@@ -26,7 +24,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 class CertificateExpiryServiceTest extends AbstractServiceTestCase
 {
     const TEST_CALENDAR_MONTHS_ALLOWED_TO_POST_DATE = 1;
-    const YEARS_BEFORE_FIRST_TEST_IS_DUE            = 3;
+    const YEARS_BEFORE_FIRST_TEST_IS_DUE = 3;
 
     const VEHICLE_ID = '42';
 
@@ -36,32 +34,30 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
     protected $authorisationService;
 
     /**
-     * @var  MotTestRepository|MockObj
+     * @var MotTestRepository|MockObj
      */
     protected $motTestRepository;
 
     /**
-     * @var  VehicleRepository|MockObj
+     * @var VehicleRepository|MockObj
      */
     protected $vehicleRepository;
 
     /**
-     * @var  ConfigurationRepository|MockObj
+     * @var ConfigurationRepository|MockObj
      */
     protected $configurationRepository;
 
     public function setUp()
     {
-
         $this->configurationRepository = \DvsaCommonTest\TestUtils\XMock::of(
             ConfigurationRepository::class,
-            ["getValue"]
+            ['getValue']
         );
 
-        $this->motTestRepository       = XMock::of(MotTestRepository::class);
-        $this->vehicleRepository       = XMock::of(VehicleRepository::class, ['find']);
-        $this->authorisationService    = $this->getMockAuthorizationService();
-
+        $this->motTestRepository = XMock::of(MotTestRepository::class);
+        $this->vehicleRepository = XMock::of(VehicleRepository::class, ['find']);
+        $this->authorisationService = $this->getMockAuthorizationService();
     }
 
     public function testCheckVehicleWithNoTestHavingExpiryDate()
@@ -100,7 +96,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
     {
         //given
         $dateInvalid = DateUtils::toDate('2012-05-30');
-        $date        = DateUtils::toDate('2012-05-30');
+        $date = DateUtils::toDate('2012-05-30');
 
         $this->setupMotTestRepositoryMockReturnsLastCertificateExpiryDate(null);
 
@@ -121,7 +117,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
         // when
         // vehicleId = 3
         $dateTimeHolder = new TestDateTimeHolder($date);
-        $checkExpiryResults  = $certificateExpiryService->getExpiryDetailsForVehicle(
+        $checkExpiryResults = $certificateExpiryService->getExpiryDetailsForVehicle(
             self::VEHICLE_ID,
             $dateTimeHolder
         );
@@ -137,7 +133,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
     {
         //given
         $dateInvalid = DateUtils::toDate('2012-05-29');
-        $date        = DateUtils::toDate('2012-05-30');
+        $date = DateUtils::toDate('2012-05-30');
 
         $this->setupMotTestRepositoryMockReturnsLastCertificateExpiryDate(null);
 
@@ -160,7 +156,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
         $dateTimeHolder = new TestDateTimeHolder($date);
         // when
         // vehicleId = 3
-        $checkExpiryResults  = $certificateExpiryService->getExpiryDetailsForVehicle(
+        $checkExpiryResults = $certificateExpiryService->getExpiryDetailsForVehicle(
             self::VEHICLE_ID,
             $dateTimeHolder
         );
@@ -172,7 +168,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
     {
         //given
         $currentDate = (new \DateTime())->setDate(2014, 4, 20);
-        $expiryDate  = (new \DateTime())->setDate(2014, 5, 10);
+        $expiryDate = (new \DateTime())->setDate(2014, 5, 10);
         $this->setupMotTestRepositoryMockReturnsLastCertificateExpiryDate($expiryDate);
 
         $certificateExpiryService = new CertificateExpiryService(
@@ -198,7 +194,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
 
         //given
         $currentDate = (new \DateTime())->setDate(2014, 4, 2);
-        $expiryDate  = (new \DateTime())->setDate(2014, 5, 10);
+        $expiryDate = (new \DateTime())->setDate(2014, 5, 10);
         $this->setupMotTestRepositoryMockReturnsLastCertificateExpiryDate($expiryDate);
 
         $certificateExpiryService = new CertificateExpiryService(
@@ -219,15 +215,15 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param string $vehicleClass the type of vehicle
-     * @param string $newAtFirstReg the word yes or no
-     * @param string $dateFirstUsed the date the vehicle was first used as YYYY-MM-DD, like all the CSV dates
-     * @param string $dateRegistered the date the vehicle was registered
-     * @param string $dateManufactured the date the vehicle made
-     * @param string $dateFirstMotDue when the first MOT is due with respect to vehicle class
-     * @param string $preservationDate the preservation date start period
-     * @param string $dateOfMotTest the date the test was performed for the test case
-     * @param string $expiryDate the expected expiry of the MOT test
+     * @param string $vehicleClass         the type of vehicle
+     * @param string $newAtFirstReg        the word yes or no
+     * @param string $dateFirstUsed        the date the vehicle was first used as YYYY-MM-DD, like all the CSV dates
+     * @param string $dateRegistered       the date the vehicle was registered
+     * @param string $dateManufactured     the date the vehicle made
+     * @param string $dateFirstMotDue      when the first MOT is due with respect to vehicle class
+     * @param string $preservationDate     the preservation date start period
+     * @param string $dateOfMotTest        the date the test was performed for the test case
+     * @param string $expiryDate           the expected expiry of the MOT test
      * @param string $testPreservationDate the expectec preservation of the NEXT mot test
      *
      * @SuppressWarnings(unused)
@@ -253,7 +249,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
             $this->authorisationService);
 
         $this->configurationRepository->expects($this->any())
-            ->method("getValue")
+            ->method('getValue')
             ->willReturnCallback(
                 function ($key) {
                     switch ($key) {
@@ -270,7 +266,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
 
         $calculatedExpiryDate = $certificateExpiryService->getInitialClassAwareExpiryDate(
             $vehicleClass,
-            "Yes" === $newAtFirstReg,
+            'Yes' === $newAtFirstReg,
             new \DateTime($dateManufactured),
             new \DateTime($dateRegistered)
         );
@@ -282,14 +278,14 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
 
     public function dpTestExpiryDate2()
     {
-        return new CsvFileIterator(__DIR__ . '/Fixtures/10110.csv');
+        return new CsvFileIterator(__DIR__.'/Fixtures/10110.csv');
     }
 
     protected function setupMotTestRepositoryMockReturnsLastCertificateExpiryDate($date)
     {
         $this->motTestRepository
             ->expects($this->any())
-            ->method("findLastCertificateExpiryDate")
+            ->method('findLastCertificateExpiryDate')
             ->withAnyParameters()
             ->will($this->returnValue($date));
     }
@@ -298,7 +294,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
     {
         $this->vehicleRepository
             ->expects($this->any())
-            ->method("find")
+            ->method('find')
             ->withAnyParameters()
             ->will($this->returnValue($vehicle));
     }
@@ -307,20 +303,19 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
     {
         $this->configurationRepository
             ->expects($this->once())
-            ->method("getValue")
+            ->method('getValue')
             ->will($this->returnValue(self::TEST_CALENDAR_MONTHS_ALLOWED_TO_POST_DATE));
     }
 
     protected function setupConfigurationRepositoryMockFindValueForNoTestHavingExpiryDate()
     {
         $this->configurationRepository->expects($this->at(0))
-            ->method("getValue")
+            ->method('getValue')
             ->will($this->returnValue(self::YEARS_BEFORE_FIRST_TEST_IS_DUE));
     }
 
     protected function createVehicle($id = self::VEHICLE_ID, $vehicleClassCode = 4, $newAtFirstReg = false)
     {
-
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode($vehicleClassCode);
 
@@ -329,7 +324,7 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
 
         $vehicle = new Vehicle();
         $vehicle->setId($id);
-        $vehicle->setVin("TEST-VIN-001");
+        $vehicle->setVin('TEST-VIN-001');
         $vehicle->setNewAtFirstReg($newAtFirstReg);
         $vehicle->setModelDetail($modelDetail);
 

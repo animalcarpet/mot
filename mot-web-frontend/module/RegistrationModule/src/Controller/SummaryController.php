@@ -25,15 +25,14 @@ class SummaryController extends RegistrationBaseController
     private $helpDeskConfig;
 
     /**
-     * @param StepService $stepService
+     * @param StepService         $stepService
      * @param RegisterUserService $registerUserService
-     * @param array $helpDeskConfig
+     * @param array               $helpDeskConfig
      */
     public function __construct(
         StepService $stepService,
         $helpDeskConfig
-    )
-    {
+    ) {
         parent::__construct($stepService);
         $this->helpDeskConfig = $helpDeskConfig;
     }
@@ -49,6 +48,7 @@ class SummaryController extends RegistrationBaseController
         }
 
         $this->setHeadTitle('Review your account details');
+
         return $viewModel;
     }
 }

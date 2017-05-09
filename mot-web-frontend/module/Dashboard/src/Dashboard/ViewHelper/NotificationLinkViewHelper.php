@@ -17,10 +17,10 @@ class NotificationLinkViewHelper extends AbstractHelper
         switch ($notification->getTemplateId()) {
             case self::TEMPLATE_NOMINATION_BLOCKED_UNTIL_CARD_ORDERED:
             case self::TEMPLATE_DIRECT_NOMINATION_BLOCKED_UNTIL_CARD_ORDERED:
-                return '<a href="' . $this->url('security-card-order/new') . '"  id="orderCard" class="button">Order a security card</a>';
+                return '<a href="'.$this->url('security-card-order/new').'"  id="orderCard" class="button">Order a security card</a>';
             case self::TEMPLATE_NOMINATION_BLOCKED_UNTIL_CARD_ACTIVATED:
             case self::TEMPLATE_DIRECT_NOMINATION_BLOCKED_UNTIL_CARD_ACTIVATED:
-                return '<a href="' . $this->url('register-card') . '" id="activateCard" class="button">Activate your security card</a>';
+                return '<a href="'.$this->url('register-card').'" id="activateCard" class="button">Activate your security card</a>';
             default:
                 return '';
         }

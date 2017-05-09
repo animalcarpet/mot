@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\View\Model;
 
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
@@ -11,8 +12,7 @@ use DvsaMotTest\View\Model\MotPrintModel;
 use DvsaMotTestTest\TestHelper\Fixture;
 
 /**
- * Class MotPrintModelTest
- *
+ * Class MotPrintModelTest.
  */
 class MotPrintModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -134,7 +134,7 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
             [(new MotTestTypeDto())->setCode(MotTestTypeCode::MOT_COMPLIANCE_SURVEY), true, false],
             [(new MotTestTypeDto())->setCode(MotTestTypeCode::OTHER), true, false],
             [(new MotTestTypeDto())->setCode(MotTestTypeCode::INVERTED_APPEAL), true, true],
-            [(new MotTestTypeDto())->setCode(MotTestTypeCode::STATUTORY_APPEAL), true, true]
+            [(new MotTestTypeDto())->setCode(MotTestTypeCode::STATUTORY_APPEAL), true, true],
         ];
     }
 
@@ -146,11 +146,11 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
 
         $vehicle = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
-        if ($prsMotTestNumber === 1 && $status === MotTestStatusname::FAILED){
+        if ($prsMotTestNumber === 1 && $status === MotTestStatusname::FAILED) {
             $motTestData = $this->getMotTestDataClass4Failed($motTestData);
-        } else if ($status === MotTestStatusname::FAILED && $prsMotTestNumber !== null){
+        } elseif ($status === MotTestStatusname::FAILED && $prsMotTestNumber !== null) {
             $motTestData = $this->getMotTestDataClass4WithPrsFailed($motTestData);
-        } else if ($prsMotTestNumber !== null) {
+        } elseif ($prsMotTestNumber !== null) {
             $motTestData = $this->getMotTestDataClass4WithPrs($motTestData);
         } else {
             $motTestData->status = MotTestStatusName::PASSED;
@@ -167,20 +167,21 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
             || $testType->getCode() === MotTestTypeCode::MOT_COMPLIANCE_SURVEY
             || $testType->getCode() === MotTestTypeCode::OTHER
             || $testType->getCode() === MotTestTypeCode::INVERTED_APPEAL
-            || $testType->getCode() === MotTestTypeCode::STATUTORY_APPEAL ) {
+            || $testType->getCode() === MotTestTypeCode::STATUTORY_APPEAL) {
             $motTestData = $this->getMotTestNonStandardTypes($motTestData, $testType->getCode());
         }
         $motDetails = new MotTest($motTestData);
 
         return [
             'motDetails' => $motDetails,
-            'vehicle' => $vehicle
+            'vehicle' => $vehicle,
         ];
     }
 
     private function getMotTestNonStandardTypes($motTestData, $testTypeCode)
     {
         $motTestData->testTypeCode = $testTypeCode;
+
         return $motTestData;
     }
 
@@ -188,33 +189,37 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
     {
         $motTestData->status = MotTestStatusName::PASSED;
         $motTestData->testTypeCode = MotTestTypeCode::NON_MOT_TEST;
-        return $motTestData;
 
+        return $motTestData;
     }
 
     private function getMotTestDataClass4ReTest($motTestData)
     {
         $motTestData->testTypeCode = MotTestTypeCode::RE_TEST;
+
         return $motTestData;
     }
 
     private function getMotTestDataClass4Failed($motTestData)
     {
         $motTestData->status = MotTestStatusName::FAILED;
+
         return $motTestData;
     }
 
     private function getMotTestDataClass4WithPrs($motTestData)
     {
-        $motTestData->prsMotTestNumber = "999999991234";
+        $motTestData->prsMotTestNumber = '999999991234';
         $motTestData->status = MotTestStatusName::PASSED;
+
         return $motTestData;
     }
 
     private function getMotTestDataClass4WithPrsFailed($motTestData)
     {
-        $motTestData->prsMotTestNumber = "999999991234";
+        $motTestData->prsMotTestNumber = '999999991234';
         $motTestData->status = MotTestStatusName::FAILED;
+
         return $motTestData;
     }
 }

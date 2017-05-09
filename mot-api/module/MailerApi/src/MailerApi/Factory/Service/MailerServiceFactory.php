@@ -1,4 +1,5 @@
 <?php
+
 namespace MailerApi\Factory\Service;
 
 use DvsaCommon\Validator\EmailAddressValidator;

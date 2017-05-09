@@ -10,7 +10,6 @@ use Zend\Validator\StringLength;
 
 class AddressPropertyForm extends Form
 {
-
     const FIELD_ADDRESS_LINE_1 = 'address_line1';
     const FIELD_ADDRESS_LINE_2 = 'address_line2';
     const FIELD_ADDRESS_LINE_3 = 'address_line3';
@@ -62,107 +61,107 @@ class AddressPropertyForm extends Form
         $filter = new InputFilter();
 
         $filter->add([
-            'name'       => self::FIELD_ADDRESS_LINE_1,
-            'required'   => true,
+            'name' => self::FIELD_ADDRESS_LINE_1,
+            'required' => true,
             'validators' => [
                 [
-                    'name'    => NotEmpty::class,
+                    'name' => NotEmpty::class,
                     'options' => [
                         'messages' => [
-                            NotEmpty::IS_EMPTY => 'you must enter the first line of the address'
+                            NotEmpty::IS_EMPTY => 'you must enter the first line of the address',
                         ],
                     ],
                 ],
                 [
-                    'name'    => StringLength::class,
+                    'name' => StringLength::class,
                     'options' => [
-                        'max'      => 50,
+                        'max' => 50,
                         'messages' => [
-                            StringLength::TOO_LONG => self::MSG_TOO_LONG
+                            StringLength::TOO_LONG => self::MSG_TOO_LONG,
                         ],
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $filter->add([
-            'name'       => self::FIELD_ADDRESS_LINE_2,
-            'required'   => false,
+            'name' => self::FIELD_ADDRESS_LINE_2,
+            'required' => false,
             'validators' => [
                 [
-                    'name'    => StringLength::class,
+                    'name' => StringLength::class,
                     'options' => [
-                        'max'      => 50,
+                        'max' => 50,
                         'messages' => [
-                            StringLength::TOO_LONG => self::MSG_TOO_LONG
+                            StringLength::TOO_LONG => self::MSG_TOO_LONG,
                         ],
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $filter->add([
-            'name'       => self::FIELD_ADDRESS_LINE_3,
-            'required'   => false,
+            'name' => self::FIELD_ADDRESS_LINE_3,
+            'required' => false,
             'validators' => [
                 [
-                    'name'    => StringLength::class,
+                    'name' => StringLength::class,
                     'options' => [
-                        'max'      => 50,
+                        'max' => 50,
                         'messages' => [
-                            StringLength::TOO_LONG => self::MSG_TOO_LONG
+                            StringLength::TOO_LONG => self::MSG_TOO_LONG,
                         ],
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $filter->add([
-            'name'       => self::FIELD_TOWN,
-            'required'   => true,
+            'name' => self::FIELD_TOWN,
+            'required' => true,
             'validators' => [
                 [
-                    'name'    => NotEmpty::class,
+                    'name' => NotEmpty::class,
                     'options' => [
                         'messages' => [
-                            NotEmpty::IS_EMPTY => 'you must enter a town or city'
+                            NotEmpty::IS_EMPTY => 'you must enter a town or city',
                         ],
                     ],
                 ],
                 [
-                    'name'    => StringLength::class,
+                    'name' => StringLength::class,
                     'options' => [
-                        'max'      => 50,
+                        'max' => 50,
                         'messages' => [
-                            StringLength::TOO_LONG => self::MSG_TOO_LONG
+                            StringLength::TOO_LONG => self::MSG_TOO_LONG,
                         ],
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $filter->add([
-            'name'       => self::FIELD_POSTCODE,
-            'required'   => true,
+            'name' => self::FIELD_POSTCODE,
+            'required' => true,
             'validators' => [
                 [
-                    'name'    => NotEmpty::class,
+                    'name' => NotEmpty::class,
                     'options' => [
                         'messages' => [
-                            NotEmpty::IS_EMPTY => 'you must enter a postcode'
+                            NotEmpty::IS_EMPTY => 'you must enter a postcode',
                         ],
                     ],
                 ],
                 [
-                    'name'    => StringLength::class,
+                    'name' => StringLength::class,
                     'options' => [
-                        'max'      => 10,
+                        'max' => 10,
                         'messages' => [
-                            StringLength::TOO_LONG => self::MSG_TOO_LONG
+                            StringLength::TOO_LONG => self::MSG_TOO_LONG,
                         ],
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $this->setInputFilter($filter);
@@ -175,6 +174,7 @@ class AddressPropertyForm extends Form
             $this->showLabelOnError(self::FIELD_ADDRESS_LINE_2, 'Address Line 2');
             $this->showLabelOnError(self::FIELD_ADDRESS_LINE_3, 'Address Line 3');
         }
+
         return $isValid;
     }
 

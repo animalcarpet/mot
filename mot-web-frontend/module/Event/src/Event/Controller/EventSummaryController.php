@@ -68,13 +68,13 @@ class EventSummaryController extends EventBaseController
      */
     public function makeDate(ViewModel $viewModel)
     {
-        $dt =  new \DateTime(
-            $viewModel->getVariable('month') . '/' .
-            $viewModel->getVariable('day') . '/' .
+        $dt = new \DateTime(
+            $viewModel->getVariable('month').'/'.
+            $viewModel->getVariable('day').'/'.
             $viewModel->getVariable('year')
         );
 
-        return $dt->format("jS F Y");
+        return $dt->format('jS F Y');
     }
 
     /**

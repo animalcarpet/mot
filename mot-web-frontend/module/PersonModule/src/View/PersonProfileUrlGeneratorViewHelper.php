@@ -63,7 +63,7 @@ class PersonProfileUrlGeneratorViewHelper extends AbstractHelper
     /**
      * @param string     $subRouteName
      * @param array      $params       Parameters to use in url generation, if any
-     * @param array|bool $options      RouteInterface-specific options to use in url generation, if any.
+     * @param array|bool $options      RouteInterface-specific options to use in url generation, if any
      *
      * @return string
      */

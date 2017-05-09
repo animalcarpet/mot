@@ -52,7 +52,6 @@ use DvsaEventApi\Service\EventService;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapMapper;
 use SiteApi\Service\Mapper\VtsMapper;
 use SiteApi\Service\Validator\SiteValidator;
-use Zend\Http\Request;
 
 /**
  * Service which creates/edits new VTS.
@@ -111,26 +110,26 @@ class SiteService extends AbstractService
     private $dateTimeHolder;
 
     /**
-     * @param EntityManager $entityManager
-     * @param AuthorisationServiceInterface $authService
-     * @param MotIdentityInterface $motIdentity
-     * @param ContactDetailsService $contactService
-     * @param EventService $eventService
-     * @param SiteTypeRepository $siteTypeRepository
-     * @param SiteRepository $repository
-     * @param SiteContactTypeRepository $siteContactTypeRepository
-     * @param BrakeTestTypeRepository $brakeTestTypeRepository
-     * @param FacilityTypeRepository $facilityTypeRepository
-     * @param VehicleClassRepository $vehicleClassRepository
+     * @param EntityManager                                    $entityManager
+     * @param AuthorisationServiceInterface                    $authService
+     * @param MotIdentityInterface                             $motIdentity
+     * @param ContactDetailsService                            $contactService
+     * @param EventService                                     $eventService
+     * @param SiteTypeRepository                               $siteTypeRepository
+     * @param SiteRepository                                   $repository
+     * @param SiteContactTypeRepository                        $siteContactTypeRepository
+     * @param BrakeTestTypeRepository                          $brakeTestTypeRepository
+     * @param FacilityTypeRepository                           $facilityTypeRepository
+     * @param VehicleClassRepository                           $vehicleClassRepository
      * @param AuthorisationForTestingMotAtSiteStatusRepository $authForTestingMotStatusRepository
-     * @param SiteTestingDailyScheduleRepository $siteTestingDailyScheduleRepository
-     * @param NonWorkingDayCountryRepository $nonWorkingDayCountryRepository
-     * @param SiteStatusRepository $siteStatusRepository
-     * @param XssFilter $xssFilter
-     * @param SiteBusinessRoleMapMapper $positionMapper
-     * @param UpdateVtsAssertion $updateVtsAssertion
-     * @param Hydrator $objectHydrator
-     * @param SiteValidator $validator
+     * @param SiteTestingDailyScheduleRepository               $siteTestingDailyScheduleRepository
+     * @param NonWorkingDayCountryRepository                   $nonWorkingDayCountryRepository
+     * @param SiteStatusRepository                             $siteStatusRepository
+     * @param XssFilter                                        $xssFilter
+     * @param SiteBusinessRoleMapMapper                        $positionMapper
+     * @param UpdateVtsAssertion                               $updateVtsAssertion
+     * @param Hydrator                                         $objectHydrator
+     * @param SiteValidator                                    $validator
      */
     public function __construct(
         EntityManager $entityManager,
@@ -179,7 +178,7 @@ class SiteService extends AbstractService
 
         $this->vtsMapper = new VtsMapper();
 
-        $this->dateTimeHolder = new DateTimeHolder;
+        $this->dateTimeHolder = new DateTimeHolder();
         $this->validator = $validator;
     }
 
@@ -187,6 +186,7 @@ class SiteService extends AbstractService
      * @param VehicleTestingStationDto $dto
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function create(VehicleTestingStationDto $dto)
@@ -288,7 +288,7 @@ class SiteService extends AbstractService
         $this->repository->save($site);
 
         return [
-            'id'         => $site->getId(),
+            'id' => $site->getId(),
             'siteNumber' => $site->getSiteNumber(),
         ];
     }
@@ -296,7 +296,7 @@ class SiteService extends AbstractService
     /**
      * Create the default opening/closing time for a site
      * Monday->Friday
-     * 9am->5pm
+     * 9am->5pm.
      *
      * @param Site $site
      * @param Time $openTime
@@ -307,7 +307,7 @@ class SiteService extends AbstractService
         $openTime = $openTime === null ? new Time(9, 0, 0) : $openTime;
         $closeTime = $closeTime === null ? new Time(17, 0, 0) : $closeTime;
 
-        for ($weekday = self::MONDAY; $weekday <= self::FRIDAY; $weekday++) {
+        for ($weekday = self::MONDAY; $weekday <= self::FRIDAY; ++$weekday) {
             $this->siteTestingDailyScheduleRepository->createOpeningHours($site, $weekday, $openTime, $closeTime);
         }
         $this->siteTestingDailyScheduleRepository->createOpeningHours($site, self::SATURDAY, null, null);
@@ -315,10 +315,11 @@ class SiteService extends AbstractService
     }
 
     /**
-     * Create the Site Facilities relation to the site
+     * Create the Site Facilities relation to the site.
      *
-     * @param Site $site
+     * @param Site                     $site
      * @param VehicleTestingStationDto $dto
+     *
      * @throws NotFoundException
      */
     private function createSiteFacility(Site $site, VehicleTestingStationDto $dto)
@@ -346,11 +347,12 @@ class SiteService extends AbstractService
     }
 
     /**
-     * Create the Site authorisation and classes in relation to the site
+     * Create the Site authorisation and classes in relation to the site.
      *
-     * @param Site $site
+     * @param Site                     $site
      * @param VehicleTestingStationDto $dto
-     * @param string $status
+     * @param string                   $status
+     *
      * @throws NotFoundException
      */
     private function createAuthorisationForTestingMotAtSite(Site $site, VehicleTestingStationDto $dto, $status)
@@ -374,9 +376,9 @@ class SiteService extends AbstractService
     }
 
     /**
-     * Create site event
+     * Create site event.
      *
-     * @param Site $site
+     * @param Site   $site
      * @param string $eventType
      * @param string $eventDesc
      *
@@ -399,7 +401,9 @@ class SiteService extends AbstractService
 
     /**
      * @param $id
+     *
      * @return VehicleTestingStationDto
+     *
      * @throws NotFoundException
      */
     public function getSite($id)
@@ -407,7 +411,7 @@ class SiteService extends AbstractService
         $this->authService->assertGrantedAtSite(PermissionAtSite::VEHICLE_TESTING_STATION_READ, $id);
 
         /** @var Site $site */
-        $site = $this->repository->find((int)$id);
+        $site = $this->repository->find((int) $id);
         if ($site === null) {
             throw new NotFoundException('Site', $id);
         }
@@ -416,12 +420,12 @@ class SiteService extends AbstractService
     }
 
     /**
-     * Used when tester gets information for site where demo test should happen
+     * Used when tester gets information for site where demo test should happen.
+     *
      * @param $siteNumber
      */
     public function getSiteByNumber($siteNumber)
     {
-
     }
 
     public function getSiteName($id)
@@ -429,13 +433,15 @@ class SiteService extends AbstractService
         $this->authService->assertGrantedAtSite(PermissionAtSite::VEHICLE_TESTING_STATION_READ, $id);
 
         /** @var Site $site */
-        $site = $this->repository->get((int)$id);
+        $site = $this->repository->get((int) $id);
+
         return $site->getName();
     }
 
     public function getSiteAuthorisedClasses($siteId)
     {
         $approvedVehicleClasses = $this->extractApprovedVehicleClasses($this->getSite($siteId));
+
         return $approvedVehicleClasses;
     }
 
@@ -446,6 +452,7 @@ class SiteService extends AbstractService
      * @param $siteNumber
      *
      * @return VehicleTestingStationDto
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getSiteBySiteNumber($siteNumber)
@@ -465,6 +472,7 @@ class SiteService extends AbstractService
 
     /**
      * @param $countryCode
+     *
      * @return NonWorkingDayCountry
      */
     private function getNonWorkingDayCountry($countryCode)
@@ -474,6 +482,7 @@ class SiteService extends AbstractService
 
     /**
      * @param VehicleTestingStationDto $site
+     *
      * @return array
      */
     private function extractApprovedVehicleClasses($site)
@@ -483,7 +492,7 @@ class SiteService extends AbstractService
         $result = [];
         $allClasses = VehicleClassCode::getAll();
         foreach ($allClasses as $class) {
-            $result['class'. $class] = in_array($class, $vtsApprovedClasses)
+            $result['class'.$class] = in_array($class, $vtsApprovedClasses)
                 ? AuthorisationForTestingMotStatusCode::QUALIFIED
                 : null;
         }
@@ -492,7 +501,7 @@ class SiteService extends AbstractService
     }
 
     /**
-     * @return integer
+     * @return int
      * @description return ID from zend identity
      */
     private function getUserName()

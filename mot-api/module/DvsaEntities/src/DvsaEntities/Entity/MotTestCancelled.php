@@ -10,7 +10,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class MotTestCancelled
+ * Class MotTestCancelled.
  *
  * @ORM\Entity
  * @ORM\Table(
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 class MotTestCancelled extends Entity
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -60,15 +60,15 @@ class MotTestCancelled extends Entity
         if (null != $id && !is_numeric($id)) {
             throw new \InvalidArgumentException("Expected numeric id, got [$id]");
         }
-        $this->id =(int)$id;
+        $this->id = (int) $id;
 
         return $this;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -85,11 +85,13 @@ class MotTestCancelled extends Entity
 
     /**
      * @param MotTestReasonForCancel $motTestReasonForCancel
+     *
      * @return MotTestCancelled
      */
     public function setMotTestReasonForCancel(MotTestReasonForCancel $motTestReasonForCancel)
     {
         $this->motTestReasonForCancel = $motTestReasonForCancel;
+
         return $this;
     }
 
@@ -103,11 +105,13 @@ class MotTestCancelled extends Entity
 
     /**
      * @param Comment $comment
+     *
      * @return MotTestCancelled
      */
     public function setComment(Comment $comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 }

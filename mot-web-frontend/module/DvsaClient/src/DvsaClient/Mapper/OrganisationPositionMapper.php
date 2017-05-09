@@ -6,9 +6,7 @@ use DvsaCommon\Dto\Organisation\OrganisationPositionDto;
 use DvsaCommon\UrlBuilder\OrganisationUrlBuilder;
 
 /**
- * Class OrganisationPositionMapper
- *
- * @package DvsaClient\Mapper
+ * Class OrganisationPositionMapper.
  */
 class OrganisationPositionMapper extends DtoMapper implements BusinessPositionMapperInterface
 {
@@ -29,7 +27,7 @@ class OrganisationPositionMapper extends DtoMapper implements BusinessPositionMa
         $apiUrl = OrganisationUrlBuilder::position($organisationId);
         $data = [
             'nomineeId' => $nomineeId,
-            'roleId'    => $roleId
+            'roleId' => $roleId,
         ];
 
         return parent::post($apiUrl, $data);
@@ -40,14 +38,14 @@ class OrganisationPositionMapper extends DtoMapper implements BusinessPositionMa
         $apiUrl = OrganisationUrlBuilder::position($organisationId);
         $data = [
             'nomineeId' => $nomineeId,
-            'roleId'    => $roleId
+            'roleId' => $roleId,
         ];
 
         return parent::put($apiUrl, $data);
     }
 
     /**
-     * Removes position in organisation from a person
+     * Removes position in organisation from a person.
      *
      * @param $workplaceId
      * @param $positionId

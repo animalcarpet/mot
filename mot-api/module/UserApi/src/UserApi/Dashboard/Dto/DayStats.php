@@ -3,11 +3,10 @@
 namespace UserApi\Dashboard\Dto;
 
 /**
- * All the tester's stats for the day
+ * All the tester's stats for the day.
  */
 class DayStats
 {
-
     private $total;
     private $numberOfPasses;
     private $numberOfFails;
@@ -28,9 +27,9 @@ class DayStats
     public function toArray()
     {
         return [
-            'total'           => $this->total,
-            'numberOfPasses'  => $this->numberOfPasses,
-            'numberOfFails'   => $this->numberOfFails,
+            'total' => $this->total,
+            'numberOfPasses' => $this->numberOfPasses,
+            'numberOfFails' => $this->numberOfFails,
         ];
     }
 }

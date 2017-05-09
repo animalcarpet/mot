@@ -8,7 +8,6 @@ use DvsaCommonApi\Listener\JsonContentTypeFilter;
 
 class JsonContentTypeFilterFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new JsonContentTypeFilter();

@@ -5,9 +5,8 @@ use Dashboard\Controller\NotificationController;
 /* SINGLE NOTIFICATION VIEW */
 
 /** @var $notification \Dashboard\Model\Notification */
-
 $fields = $notification->getFields();
-$backTo = ($backLinkUrl === NotificationController::ROUTE_USER_HOME)? NotificationController::BACK_TO_HOME_PARAM : null;
+$backTo = ($backLinkUrl === NotificationController::ROUTE_USER_HOME) ? NotificationController::BACK_TO_HOME_PARAM : null;
 
 ?>
 
@@ -36,7 +35,7 @@ $backTo = ($backLinkUrl === NotificationController::ROUTE_USER_HOME)? Notificati
             </p>
         </div>
     <?php
-        if(!$notification->getIsArchived()){
+        if (!$notification->getIsArchived()) {
             echo $this->partial('dashboard/notification/archive-notification-button.phtml', [
                 'notificationId' => $notification->getId(),
             ]);
@@ -63,18 +62,18 @@ $backTo = ($backLinkUrl === NotificationController::ROUTE_USER_HOME)? Notificati
                 <?php echo $this->partial(
                     'hiddenElement',
                     [
-                        'name'  => 'notificationId',
-                        'value' => $notificationId
+                        'name' => 'notificationId',
+                        'value' => $notificationId,
                     ]
                 ); ?>
                 <?php echo $this->partial(
                     'hiddenElement',
                     [
-                        'name'  => 'url',
+                        'name' => 'url',
                         'value' => $this->url(
                                 NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notificationId],
-                                ["query" => ["backTo" => $backTo]]
-                            )
+                                ['query' => ['backTo' => $backTo]]
+                            ),
                     ]
                 ); ?>
                 <?php foreach ($notification->getActions() as $action => $label) : ?>
@@ -82,8 +81,8 @@ $backTo = ($backLinkUrl === NotificationController::ROUTE_USER_HOME)? Notificati
                     $params = [
                         'value' => $action,
                         'label' => $label,
-                        'name'  => 'action',
-                        'id'    => 'action-' . strtolower($action)
+                        'name' => 'action',
+                        'id' => 'action-'.strtolower($action),
                     ];
                     if (strrpos($action, 'REJECT') > 0) {
                         $params['cssClass'] = 'button-warning ';

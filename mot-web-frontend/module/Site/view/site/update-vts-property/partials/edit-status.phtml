@@ -2,7 +2,7 @@
 use Site\UpdateVtsProperty\Process\Form\StatusPropertyForm;
 use Site\UpdateVtsProperty\UpdateVtsPropertyViewModel;
 
-/** @var UpdateVtsPropertyViewModel $viewModel */
+/* @var UpdateVtsPropertyViewModel $viewModel */
 
 $this->headTitle('Change status');
 
@@ -13,7 +13,7 @@ $form = $viewModel->getForm();
     <?php  echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getStatusElement()
+            'element' => $form->getStatusElement(),
         ]
-    );?>
+    ); ?>
 </fieldset>

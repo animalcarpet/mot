@@ -7,9 +7,7 @@ use DvsaCommonApi\Service\Validator\AbstractValidator;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 
 /**
- * Class PersonalAuthorisationForMotTestingValidator
- *
- * @package PersonApi\Service\Validator
+ * Class PersonalAuthorisationForMotTestingValidator.
  */
 class PersonalAuthorisationForMotTestingValidator extends AbstractValidator
 {

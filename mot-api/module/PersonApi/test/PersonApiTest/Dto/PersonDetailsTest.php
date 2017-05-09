@@ -4,9 +4,7 @@ namespace PersonApiTest\Dto;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use DvsaCommon\Constants\PersonContactType;
 use DvsaCommon\Enum\PhoneContactTypeCode;
-use DvsaCommonApi\Service\EntityHelperService;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\Email;
@@ -21,25 +19,25 @@ use PersonApi\Dto\PersonDetails;
 
 class PersonDetailsTest extends \PHPUnit_Framework_TestCase
 {
-    const ID                     = 1;
-    const FIRST_NAME             = 'John';
-    const MIDDLE_NAME            = 'Steven';
-    const SURNAME                = 'Smith';
-    const DOB                    = '1980-10-10';
-    const TITLE                  = 'Mr';
-    const GENDER                 = 'Male';
-    const ADDRESS_LINE_1         = 'London';
-    const ADDRESS_LINE_2         = 'Abc';
-    const ADDRESS_LINE_3         = '213';
-    const TOWN                   = 'Dublin';
-    const POSTCODE               = 'LON 123';
-    const EMAIL                  = MailerService::AWS_MAIL_SIMULATOR_SUCCESS;
-    const PHONE                  = '123456765432';
+    const ID = 1;
+    const FIRST_NAME = 'John';
+    const MIDDLE_NAME = 'Steven';
+    const SURNAME = 'Smith';
+    const DOB = '1980-10-10';
+    const TITLE = 'Mr';
+    const GENDER = 'Male';
+    const ADDRESS_LINE_1 = 'London';
+    const ADDRESS_LINE_2 = 'Abc';
+    const ADDRESS_LINE_3 = '213';
+    const TOWN = 'Dublin';
+    const POSTCODE = 'LON 123';
+    const EMAIL = MailerService::AWS_MAIL_SIMULATOR_SUCCESS;
+    const PHONE = '123456765432';
     const DRIVING_LICENCE_NUMBER = '2343213';
-    const REGION                 = 'Other';
-    const ROLE_TESTER            = 'tester';
-    const POSITIONS              = 'test';
-    const USERNAME               = 'tester1';
+    const REGION = 'Other';
+    const ROLE_TESTER = 'tester';
+    const POSITIONS = 'test';
+    const USERNAME = 'tester1';
 
     /**
      * @var EntityManager
@@ -63,8 +61,8 @@ class PersonDetailsTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->person              = $this->createPerson();
-        $this->roles               = [];
+        $this->person = $this->createPerson();
+        $this->roles = [];
     }
 
     /**
@@ -174,7 +172,7 @@ class PersonDetailsTest extends \PHPUnit_Framework_TestCase
 
     public function testPersonTitleIsEmptyWhenIdZero()
     {
-        $personZero    = $this->createPerson(0);
+        $personZero = $this->createPerson(0);
         $contactDetail = $this->createValidContactDetail();
 
         $this->configureEntityManagerWithValidEntities($personZero, $contactDetail);
@@ -211,11 +209,11 @@ class PersonDetailsTest extends \PHPUnit_Framework_TestCase
      */
     private function configureEntityManagerWithValidEntities(Person $person, ContactDetail $contactDetail)
     {
-        $phone             = (new Phone())->setNumber(self::PHONE);
-        $phoneContactType  = PhoneContactTypeCode::PERSONAL;
-        $email             = (new Email())->setEmail(self::EMAIL);
+        $phone = (new Phone())->setNumber(self::PHONE);
+        $phoneContactType = PhoneContactTypeCode::PERSONAL;
+        $email = (new Email())->setEmail(self::EMAIL);
         $personContactType = new \DvsaEntities\Entity\PersonContactType();
-        $personContact     = new PersonContact($contactDetail, $personContactType, $person);
+        $personContact = new PersonContact($contactDetail, $personContactType, $person);
 
         $this->configureEntityManager($personContactType, $personContact, $phoneContactType, $phone, $email);
     }
@@ -306,7 +304,7 @@ class PersonDetailsTest extends \PHPUnit_Framework_TestCase
             ->setTown(self::TOWN)
             ->setPostcode(self::POSTCODE);
 
-        $contactDetail     = $this
+        $contactDetail = $this
             ->getMockBuilder(ContactDetail::class)
             ->disableOriginalConstructor()
             ->setMethods(['getAddress'])

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * EventOutcome
+ * EventOutcome.
  *
  * @ORM\Table(
  * name="event_outcome_lookup",
@@ -42,7 +42,7 @@ class EventOutcome extends Entity
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="display_order", type="smallint", nullable=false)
      */

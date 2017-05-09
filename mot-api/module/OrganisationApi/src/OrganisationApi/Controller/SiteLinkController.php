@@ -2,15 +2,13 @@
 
 namespace OrganisationApi\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\SiteLinkService;
 
 /**
- * Class SiteLinkController
- * @package OrganisationApi\Controller
+ * Class SiteLinkController.
  */
 class SiteLinkController extends AbstractDvsaRestfulController
 {

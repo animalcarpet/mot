@@ -5,15 +5,15 @@ namespace DvsaEntities\Repository;
 use DvsaEntities\Entity\AuthorisationForTestingMotAtSite;
 
 /**
- * Class AuthorisationForTestingMotAtSiteRepository
+ * Class AuthorisationForTestingMotAtSiteRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class AuthorisationForTestingMotAtSiteRepository extends AbstractMutableRepository
 {
     /**
      * @param AuthorisationForTestingMotAtSite $entity
+     *
      * @return AuthorisationForTestingMotAtSite
      */
     public function persist($entity)
@@ -21,8 +21,8 @@ class AuthorisationForTestingMotAtSiteRepository extends AbstractMutableReposito
         /** @var AuthorisationForTestingMotAtSite $result */
         $result = $this->findOneBy(
             [
-                'site'       => $entity->getSite()->getId(),
-                'vehicleClass' => $entity->getVehicleClass()->getId()
+                'site' => $entity->getSite()->getId(),
+                'vehicleClass' => $entity->getVehicleClass()->getId(),
             ]
         );
 
@@ -32,6 +32,7 @@ class AuthorisationForTestingMotAtSiteRepository extends AbstractMutableReposito
             $this->getEntityManager()->persist($entity);
             $ret = $entity;
         }
+
         return $ret;
     }
 }

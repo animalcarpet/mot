@@ -61,8 +61,8 @@ class MotTestController extends AbstractDvsaMotTestController
     const DATE_FORMAT = 'j F Y';
     const DATETIME_FORMAT = 'd M Y H:i';
 
-    const ODOMETER_VALUE_REQUIRED_MESSAGE = "Odometer value must be entered to update odometer reading";
-    const ODOMETER_FORM_ERROR_MESSAGE = "The odometer reading should be a valid number between 0 and 999999";
+    const ODOMETER_VALUE_REQUIRED_MESSAGE = 'Odometer value must be entered to update odometer reading';
+    const ODOMETER_FORM_ERROR_MESSAGE = 'The odometer reading should be a valid number between 0 and 999999';
     const TEST_DOCUMENT_VT30 = 'VT30';
     const TEST_DOCUMENT_VT32 = 'VT32';
 
@@ -70,7 +70,6 @@ class MotTestController extends AbstractDvsaMotTestController
     const ROUTE_MOT_TEST_SHORT_SUMMARY = 'mot-test/short-summary';
 
     const ERROR_NO_SITE_FOR_NON_MOT_TEST = 'Uh oh, no site for non-mot test';
-
 
     /**
      * @var MotAuthorisationServiceInterface
@@ -90,9 +89,10 @@ class MotTestController extends AbstractDvsaMotTestController
 
     /**
      * MotTestController constructor.
-     * @param MotAuthorisationServiceInterface $authorisationService
-     * @param EventManager $eventManager
-     * @param OdometerReadingViewObject $odometerViewObject
+     *
+     * @param MotAuthorisationServiceInterface       $authorisationService
+     * @param EventManager                           $eventManager
+     * @param OdometerReadingViewObject              $odometerViewObject
      * @param MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource
      */
     public function __construct(
@@ -132,7 +132,7 @@ class MotTestController extends AbstractDvsaMotTestController
     {
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
 
         if ($request->isPost()) {
             $odometerForm = $this->getForm(new OdometerUpdate());
@@ -149,7 +149,7 @@ class MotTestController extends AbstractDvsaMotTestController
                             return $this->redirect()->toUrl(MotTestUrlBuilderWeb::motTest($motTestNumber));
                         }
                         $data = [
-                            'value' => (int)$validatedData['odometer'],
+                            'value' => (int) $validatedData['odometer'],
                             'unit' => $validatedData['unit'],
                             'resultType' => $readingResultType,
                         ];
@@ -181,7 +181,7 @@ class MotTestController extends AbstractDvsaMotTestController
      */
     public function submitTestResultsAction()
     {
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', null);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', null);
 
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
@@ -199,7 +199,7 @@ class MotTestController extends AbstractDvsaMotTestController
 
                     return $this->redirect()->toRoute('mot-test/test-summary', ['motTestNumber' => $motTestNumber]);
                 }
-                
+
                 $apiUrl = MotTestUrlBuilder::motTestStatus($motTestNumber)->toString();
 
                 // TODO: Nobody ever checked that the results were submitted successfully!
@@ -247,7 +247,7 @@ class MotTestController extends AbstractDvsaMotTestController
                     'operation' => 'updateSiteLocation',
                 ]
             );
-        } else if ($isRequired) {
+        } elseif ($isRequired) {
             throw new ValidationException(new ValidationResult(false, [self::ERROR_NO_SITE_FOR_NON_MOT_TEST]));
         }
     }
@@ -339,11 +339,11 @@ class MotTestController extends AbstractDvsaMotTestController
             return null;
         } elseif ($vin === null) {
             return [
-                DuplicateCertificateSearchType::SEARCH_TYPE_VRM => $vrm
+                DuplicateCertificateSearchType::SEARCH_TYPE_VRM => $vrm,
             ];
         } else {
             return [
-                DuplicateCertificateSearchType::SEARCH_TYPE_VIN => $vin
+                DuplicateCertificateSearchType::SEARCH_TYPE_VIN => $vin,
             ];
         }
     }
@@ -365,7 +365,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $prgHelper = new PrgHelper($request);
         if ($prgHelper->isRepeatPost()) {
             return $this->redirect()->toUrl($prgHelper->getRedirectUrl());
-        };
+        }
 
         $otpErrorData = null;
         $errorMessage = null;
@@ -382,7 +382,7 @@ class MotTestController extends AbstractDvsaMotTestController
         }
 
         if ($request->isPost()) {
-            $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+            $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
 
             $urlFinish = MotTestUrlBuilderWeb::showResult($motTestNumber);
             $prgHelper->setRedirectUrl($urlFinish->toString());
@@ -407,7 +407,6 @@ class MotTestController extends AbstractDvsaMotTestController
                 }
 
                 return $this->redirect()->toUrl($urlFinish);
-
             } catch (OtpApplicationException $e) {
                 $errorData = $e->getErrorData();
 
@@ -418,7 +417,6 @@ class MotTestController extends AbstractDvsaMotTestController
                 if (isset($errorData['shortMessage'])) {
                     $this->addErrorMessages($errorData['shortMessage']);
                 }
-
             } catch (RestApplicationException $e) {
                 if ($e->containsError('This test has been aborted by DVSA and cannot be continued')
                     || $e->containsError('This test is completed and cannot be changed')) {
@@ -448,8 +446,8 @@ class MotTestController extends AbstractDvsaMotTestController
         /** @var VehicleTestingStationDto $siteDto */
         $siteDto = null;
 
-        if(!$isDemo && !MotTestType::isNonMotTypes($testType)) {
-            $apiUrl = UrlBuilder::of()->vehicleTestingStation()->routeParam('id',$motTest->getSiteId())->toString();
+        if (!$isDemo && !MotTestType::isNonMotTypes($testType)) {
+            $apiUrl = UrlBuilder::of()->vehicleTestingStation()->routeParam('id', $motTest->getSiteId())->toString();
             $response = $this->getRestClient()->get($apiUrl);
             $siteDto = $response['data'];
         }
@@ -505,10 +503,10 @@ class MotTestController extends AbstractDvsaMotTestController
         $prgHelper = new PrgHelper($request);
         if ($prgHelper->isRepeatPost()) {
             return $this->redirect()->toUrl($prgHelper->getRedirectUrl());
-        };
+        }
 
         //  --  get mot test data   --
-        $motTestNumber = (int)$this->params('motTestNumber', 0);
+        $motTestNumber = (int) $this->params('motTestNumber', 0);
 
         /** @var MotTest $motTest */
         $motTest = $this->getMotTestFromApi($motTestNumber);
@@ -617,8 +615,8 @@ class MotTestController extends AbstractDvsaMotTestController
     {
         return ArrayUtils::filter(
             $reasons, function (ReasonForCancelDto $reason) {
-            return $reason->getIsDisplayable();
-        }
+                return $reason->getIsDisplayable();
+            }
         );
     }
 
@@ -643,8 +641,8 @@ class MotTestController extends AbstractDvsaMotTestController
 
     public function deleteReasonForRejectionAction()
     {
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
-        $rfrId = (int)$this->params()->fromRoute('rfr-id', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
+        $rfrId = (int) $this->params()->fromRoute('rfr-id', 0);
         $redirectUrl = MotTestUrlBuilderWeb::motTest($motTestNumber);
 
         try {
@@ -672,7 +670,7 @@ class MotTestController extends AbstractDvsaMotTestController
      */
     public function retrievePdfAction()
     {
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         $isDuplicate = $this->params('isDuplicate');
 
         $certificateUrl = ReportUrlBuilder::printCertificate($motTestNumber, ($isDuplicate ? 'dup' : null));
@@ -715,7 +713,7 @@ class MotTestController extends AbstractDvsaMotTestController
                 'motDetails' => $motDetails,
                 'motTestNumber' => $motTestNumber,
                 'isDuplicate' => false,
-                'vehicle' => $vehicle
+                'vehicle' => $vehicle,
             ]
         );
 
@@ -791,7 +789,7 @@ class MotTestController extends AbstractDvsaMotTestController
      */
     public function shortSummaryAction()
     {
-        $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         /** @var MotTest $motTest */
         $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
@@ -866,14 +864,14 @@ class MotTestController extends AbstractDvsaMotTestController
             }
         );
 
-        return (new ViewModel(
+        return new ViewModel(
             [
                 'motTest' => $motTest,
                 'reasonsForCancel' => $reasonsForCancel,
                 'selectedReasonId' => $selectedReasonId,
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
             ]
-        ));
+        );
     }
 
     /**
@@ -890,13 +888,13 @@ class MotTestController extends AbstractDvsaMotTestController
 
         $this->assertCanAbortTest($motTest);
 
-        return (new ViewModel(
+        return new ViewModel(
             [
                 'motTest' => $motTest,
                 'success' => $this->params()->fromRoute('success', false),
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
             ]
-        ));
+        );
     }
 
     /**
@@ -1005,7 +1003,7 @@ class MotTestController extends AbstractDvsaMotTestController
 
     /**
      * @param string $template
-     * @param array $variables
+     * @param array  $variables
      *
      * @return ViewModel
      */

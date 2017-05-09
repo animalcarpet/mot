@@ -21,7 +21,6 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\View\Model\ViewModel;
 
 class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
 {
@@ -68,12 +67,12 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
     ];
 
     /**
-     * @var LostOrForgottenService $lostAndForgottenService
+     * @var LostOrForgottenService
      */
     private $lostAndForgottenService;
 
     /**
-     * @var AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService
+     * @var AlreadyOrderedCardCookieService
      */
     private $alreadyOrderedCardCookieService;
 
@@ -165,8 +164,10 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
     }
 
     /**
-     * Checks the conditions under which user should be directed to question one of the security questions
+     * Checks the conditions under which user should be directed to question one of the security questions.
+     *
      * @dataProvider redirectionAlreadyOrderedDataProvider
+     *
      * @param $hasLoggedInTodayViaLostForgottenCard
      * @param $isEnteringThroughAlreadyOrdered
      * @param $hasSeenOrderLandingPage
@@ -185,8 +186,7 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
 
         $controller = $this->buildController();
 
-        if ($redirectionToQuestionOne)
-        {
+        if ($redirectionToQuestionOne) {
             $this->expectRedirect(LostOrForgottenCardController::QUESTION_ONE_ROUTE);
         } else {
             $this->expectNoRedirect();
@@ -400,7 +400,6 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
             ->method('setAuthenticatedWith2FA')
             ->with(true);
 
-
         $controller = $this->buildController();
 
         $this->expectNoRedirect();
@@ -511,6 +510,7 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
 
     /**
      * @param bool $isFeatureToggleEnabled
+     *
      * @return $this
      */
     private function withHasFeatureToggle($isFeatureToggleEnabled)
@@ -524,6 +524,7 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
 
     /**
      * @param bool $isTwoFactorIdentity
+     *
      * @return $this
      */
     private function withTwoFactorRegisteredIdentity($isTwoFactorIdentity)
@@ -571,10 +572,10 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         return $controller;
     }
 
-
     /**
      * @param string $currentStepRoute
-     * @param bool $isAllowedOnStep
+     * @param bool   $isAllowedOnStep
+     *
      * @return $this
      */
     private function withIsAllowedOnStep($currentStepRoute, $isAllowedOnStep)
@@ -608,6 +609,7 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
 
     /**
      * @param bool $isAnswerValid
+     *
      * @return $this
      */
     private function withAnswerValid($isAnswerValid)
@@ -661,4 +663,3 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         return $this;
     }
 }
-

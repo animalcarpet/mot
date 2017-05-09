@@ -9,9 +9,7 @@ use OrganisationApi\Service\SiteService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class SiteControllerTest
- *
- * @package OrganisationApiTest\Controller
+ * Class SiteControllerTest.
  */
 class SiteControllerTest extends AbstractRestfulControllerTestCase
 {

@@ -1,10 +1,9 @@
 <?php
+
 namespace NotificationApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -20,23 +19,20 @@ use DvsaEntities\Repository\NotificationRepository;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class NotificationService
- *
- * @package NotificationApi\Service
+ * Class NotificationService.
  */
 class NotificationService extends AbstractService
 {
-
     /** @var $validator NotificationValidator */
     private $validator;
 
     /** @var $serviceManager ServiceManager */
     private $serviceManager;
 
-    /** @var  $authService AuthorisationServiceInterface */
+    /** @var $authService AuthorisationServiceInterface */
     private $authService;
 
-    /** @var  NotificationRepository */
+    /** @var NotificationRepository */
     private $notificationRepository;
 
     public function __construct(
@@ -111,6 +107,7 @@ class NotificationService extends AbstractService
      * @param int $id notification ID
      *
      * @return bool
+     *
      * @throws ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \Exception
@@ -131,6 +128,7 @@ class NotificationService extends AbstractService
      * @param $id Integer the notification message to retrieve
      *
      * @return Notification
+     *
      * @throws ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \Exception
@@ -152,16 +150,18 @@ class NotificationService extends AbstractService
                 throw new ForbiddenException('Access Denied invalid user');
             }
         } else {
-            throw new \Exception('Failed to get recipientId for notification : ' . $id);
+            throw new \Exception('Failed to get recipientId for notification : '.$id);
         }
+
         return $notification;
     }
 
     /**
-     * Gets all notifications (and nominations) by personId
+     * Gets all notifications (and nominations) by personId.
      *
-     * @param int $personId
+     * @param int  $personId
      * @param bool $archived
+     *
      * @return \DvsaEntities\Entity\Notification[]
      */
     private function getByPersonId($personId, $archived = false)
@@ -174,6 +174,7 @@ class NotificationService extends AbstractService
 
     /**
      * @param int $personId
+     *
      * @return \DvsaEntities\Entity\Notification[]
      */
     public function getAllArchivedByPersonId($personId)
@@ -183,6 +184,7 @@ class NotificationService extends AbstractService
 
     /**
      * @param int $personId
+     *
      * @return \DvsaEntities\Entity\Notification[]
      */
     public function getAllInboxByPersonId($personId)
@@ -199,11 +201,13 @@ class NotificationService extends AbstractService
     }
 
     /**
-     * Gets unread notifications by personId
+     * Gets unread notifications by personId.
      *
      * @param $personId
      * @param int $limit
+     *
      * @return Notification[]
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getUnreadByPersonId($personId, $limit = null)
@@ -216,7 +220,9 @@ class NotificationService extends AbstractService
 
     /**
      * @param int $personId
+     *
      * @return int
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function countUnreadByPersonId($personId)
@@ -235,7 +241,7 @@ class NotificationService extends AbstractService
     public function markAsRead($id)
     {
         $this->authService->assertGranted(PermissionInSystem::NOTIFICATION_UPDATE);
-        /** @var  $notification Notification */
+        /** @var $notification Notification */
         $notification = $this->get($id);
 
         if (null === $notification->getReadOn()) {
@@ -251,6 +257,7 @@ class NotificationService extends AbstractService
      * @param array $data
      *
      * @return bool
+     *
      * @throws BadRequestException
      */
     public function action($notificationId, $data)
@@ -281,7 +288,7 @@ class NotificationService extends AbstractService
 
         if (false === $notification->isActionValid($action)) {
             throw new BadRequestException(
-                'Action ' . $action . ' is illegal for this nomination',
+                'Action '.$action.' is illegal for this nomination',
                 BadRequestException::ERROR_CODE_BUSINESS_FAILURE
             );
         }

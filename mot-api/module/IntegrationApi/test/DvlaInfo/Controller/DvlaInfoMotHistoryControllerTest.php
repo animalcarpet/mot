@@ -11,7 +11,6 @@ use Zend\Stdlib\Parameters;
 
 class DvlaInfoMotHistoryControllerTest extends AbstractRestfulControllerTestCase
 {
-
     protected function setUp()
     {
         $this->controller = new DvlaInfoMotHistoryController();
@@ -31,7 +30,7 @@ class DvlaInfoMotHistoryControllerTest extends AbstractRestfulControllerTestCase
         $this->controller->dispatch($this->request);
 
         //then exception is thrown and below is not invoked
-        $this->assertTrue(false, "An exception expected to be thrown.");
+        $this->assertTrue(false, 'An exception expected to be thrown.');
     }
 
     /** @expectedException \DvsaCommonApi\Service\Exception\BadRequestException */
@@ -45,7 +44,7 @@ class DvlaInfoMotHistoryControllerTest extends AbstractRestfulControllerTestCase
         $this->controller->dispatch($this->request);
 
         //then exception is thrown and below is not invoked
-        $this->assertTrue(false, "An exception expected to be thrown.");
+        $this->assertTrue(false, 'An exception expected to be thrown.');
     }
 
     public function test_givenVrmAndTestNumber_controllerOk()

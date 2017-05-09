@@ -18,10 +18,11 @@ class DateOfBirthFilterServiceTest extends \PHPUnit_Framework_TestCase
     /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
     private $authorisationService;
 
-    /** @var ApiPersonalDetails $personalDetailsService*/
+    /** @var ApiPersonalDetails $personalDetailsService */
     private $personalDetailsService;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->authorisationService = XMock::of(MotFrontendAuthorisationServiceInterface::class);
         $this->personalDetailsService = XMock::of(ApiPersonalDetails::class);
         $this->dateOfBirthFilterService
@@ -30,10 +31,12 @@ class DateOfBirthFilterServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testPermissionCheckDataProvider
+     *
      * @param array $hasViewDateOfBirthPermission
      * @param array $canViewDateOfBirth
      */
-    public function testPermissionCheckOfLoggedInUser($hasViewDateOfBirthPermission, $canViewDateOfBirth) {
+    public function testPermissionCheckOfLoggedInUser($hasViewDateOfBirthPermission, $canViewDateOfBirth)
+    {
         $this->authorisationService
             ->expects($this->once())
             ->method('isGranted')
@@ -49,7 +52,8 @@ class DateOfBirthFilterServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($canViewDateOfBirth, $canViewResult);
     }
 
-    public function testPermissionCheckDataProvider() {
+    public function testPermissionCheckDataProvider()
+    {
         return [
             [true, true],
             [false, false],
@@ -58,10 +62,12 @@ class DateOfBirthFilterServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testRoleCheckDataProvider
+     *
      * @param array $roles
      * @param array $canViewDateOfBirth
      */
-    public function testWhenUserHasPermissionCorrectRolesCanViewDateOfBirth($roles, $canViewDateOfBirth) {
+    public function testWhenUserHasPermissionCorrectRolesCanViewDateOfBirth($roles, $canViewDateOfBirth)
+    {
         $this->authorisationService
             ->expects($this->once())
             ->method('isGranted')
@@ -77,7 +83,8 @@ class DateOfBirthFilterServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($canViewDateOfBirth, $canViewResult);
     }
 
-    public function testRoleCheckDataProvider() {
+    public function testRoleCheckDataProvider()
+    {
         return [
             [[RoleCode::USER, RoleCode::TESTER], true],
             [[RoleCode::USER, RoleCode::SITE_MANAGER], true],

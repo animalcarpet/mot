@@ -14,7 +14,7 @@ use VehicleApi\Controller\VehicleSearchController;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
 
 /**
- * Create instance of VehicleSearchController
+ * Create instance of VehicleSearchController.
  *
  * Class VehicleSearchControllerFactory
  */
@@ -30,6 +30,5 @@ class VehicleSearchControllerFactory implements FactoryInterface
         $controller = new VehicleSearchController($vehicleSearchService, $vehicleSearchParam);
 
         return $controller;
-
     }
 }

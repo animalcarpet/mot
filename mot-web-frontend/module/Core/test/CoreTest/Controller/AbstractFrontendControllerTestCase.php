@@ -1,4 +1,5 @@
 <?php
+
 namespace CoreTest\Controller;
 
 use Application\Service\LoggedInUserManager;
@@ -374,8 +375,9 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
 
     /**
      * @param array $payload to mimic the response's body
-     * @param int $status to mimic the response's status, default to success (200)
+     * @param int   $status  to mimic the response's status, default to success (200)
      * @param array $headers
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     public function getMockHttpClientFactory($payload = [], $status = 200, $headers = [])
@@ -529,11 +531,11 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
 
     /**
      * @param string $action
-     * @param array $params
+     * @param array  $params
      *
      * @return \Zend\Http\Response
      */
-    public function getResponseForAction($action = "", $params = [])
+    public function getResponseForAction($action = '', $params = [])
     {
         $this->routeMatch->setParam('action', $action);
 
@@ -550,7 +552,7 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
     /**
      * Check response status code.
      *
-     * @param int $expectStatusCode
+     * @param int      $expectStatusCode
      * @param Response $response
      */
     protected function assertResponseStatus($expectStatusCode, $response = null)
@@ -564,7 +566,7 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
 
     /**
      * @param Response $response
-     * @param string $expectedLocation
+     * @param string   $expectedLocation
      */
     protected function assertRedirectLocation2($expectedLocation, $response = null)
     {
@@ -578,7 +580,7 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
 
     /**
      * @param Response $response
-     * @param string $expectedLocation
+     * @param string   $expectedLocation
      */
     protected function assertRedirectLocation($response, $expectedLocation)
     {
@@ -599,7 +601,7 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
         }
     }
 
-    public function getResultForAction($action = "", $params = [])
+    public function getResultForAction($action = '', $params = [])
     {
         $this->routeMatch->setParam('action', $action);
 
@@ -615,9 +617,9 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
     /**
      * @param string $method
      * @param string $action
-     * @param array $routeParams
-     * @param array $queryParams
-     * @param array $postParams
+     * @param array  $routeParams
+     * @param array  $queryParams
+     * @param array  $postParams
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -685,7 +687,7 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
     {
         return json_decode(
             file_get_contents(
-                $root . '/fixtures/' . $filename . '.json'
+                $root.'/fixtures/'.$filename.'.json'
             ),
             true
         );

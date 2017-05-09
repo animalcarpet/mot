@@ -8,7 +8,7 @@ use UserApi\Dashboard\Dto\DashboardData;
 use PersonApi\Service\DashboardService;
 
 /**
- * Returns all data for dashboard
+ * Returns all data for dashboard.
  */
 class DashboardController extends AbstractDvsaRestfulController
 {

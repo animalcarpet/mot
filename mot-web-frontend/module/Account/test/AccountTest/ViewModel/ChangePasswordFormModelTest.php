@@ -7,7 +7,7 @@ use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 
 class ChangePasswordFormModelTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  ChangePasswordFormModel */
+    /** @var ChangePasswordFormModel */
     private $model;
 
     public function setUp()
@@ -25,7 +25,7 @@ class ChangePasswordFormModelTest extends \PHPUnit_Framework_TestCase
         $this->model->populateFromPost(
             [
                 ChangePasswordFormModel::FIELD_PASS => $passw,
-                ChangePasswordFormModel::FIELD_PASS_CONFIRM => $passConf
+                ChangePasswordFormModel::FIELD_PASS_CONFIRM => $passConf,
             ]
         );
 
@@ -38,34 +38,34 @@ class ChangePasswordFormModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'pass'     => '',
+                'pass' => '',
                 'passConf' => '',
                 'username' => 'tester1',
-                'expect'   => [
+                'expect' => [
                     'field' => ChangePasswordFormModel::FIELD_PASS,
-                    'msg'   => ChangePasswordFormModel::ERR_REQUIRED,
+                    'msg' => ChangePasswordFormModel::ERR_REQUIRED,
                 ],
             ],
 
             //  --  confirmation is not same    --
             [
-                'pass'     => 'Aa345678',
+                'pass' => 'Aa345678',
                 'passConf' => 'not same',
                 'username' => 'tester1',
-                'expect'   => [
+                'expect' => [
                     'field' => ChangePasswordFormModel::FIELD_PASS_CONFIRM,
-                    'msg'   => PasswordInputFilter::MSG_PASSWORD_CONFIRM_DIFFER,
+                    'msg' => PasswordInputFilter::MSG_PASSWORD_CONFIRM_DIFFER,
                 ],
             ],
 
             //  --  confirmation username is not password
             [
-                'pass'     => 'Tester11',
+                'pass' => 'Tester11',
                 'passConf' => 'Tester11',
                 'username' => 'Tester11',
-                'expect'   => [
+                'expect' => [
                     'field' => ChangePasswordFormModel::FIELD_PASS,
-                    'msg'   => ChangePasswordFormModel::ERR_NOT_USERNAME,
+                    'msg' => ChangePasswordFormModel::ERR_NOT_USERNAME,
                 ],
             ],
         ];

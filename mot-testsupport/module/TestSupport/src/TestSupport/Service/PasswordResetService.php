@@ -22,6 +22,7 @@ class PasswordResetService
 
     /**
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)

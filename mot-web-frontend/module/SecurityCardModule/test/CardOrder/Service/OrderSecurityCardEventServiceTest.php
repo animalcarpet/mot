@@ -38,7 +38,7 @@ class OrderSecurityCardEventServiceTest extends \PHPUnit_Framework_TestCase
         $this->jsonClient
             ->expects($this->once())
             ->method('post')
-            ->with('event/add/person/' . self::ID, $this->getMockPostData());
+            ->with('event/add/person/'.self::ID, $this->getMockPostData());
 
         $this->dateTimeHolder
             ->expects($this->once())
@@ -75,8 +75,7 @@ class OrderSecurityCardEventServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'eventTypeCode' => EventTypeCode::CREATE_SECURITY_CARD_ORDER,
-            'description' => 'Security card ordered by ' . self::USERNAME . ' at ' . self::TIME_FORMAT .' to ' . self::ADDRESS,
+            'description' => 'Security card ordered by '.self::USERNAME.' at '.self::TIME_FORMAT.' to '.self::ADDRESS,
         ];
     }
-
 }

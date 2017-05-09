@@ -78,44 +78,44 @@ class RegisterUserService
     {
         $emailData = $this->dataExists($sessionData, EmailStep::STEP_ID);
         $array[self::STEP_EMAIL] = [
-            EmailInputFilter::FIELD_EMAIL         => $this->dataExists($emailData, EmailInputFilter::FIELD_EMAIL),
+            EmailInputFilter::FIELD_EMAIL => $this->dataExists($emailData, EmailInputFilter::FIELD_EMAIL),
             EmailInputFilter::FIELD_EMAIL_CONFIRM => $this->dataExists($emailData, EmailInputFilter::FIELD_EMAIL_CONFIRM),
         ];
 
         $detailsData = $this->dataExists($sessionData, DetailsStep::STEP_ID);
         $array[self::STEP_DETAILS] = [
-            DetailsInputFilter::FIELD_FIRST_NAME    => $this->dataExists($detailsData, DetailsInputFilter::FIELD_FIRST_NAME),
-            DetailsInputFilter::FIELD_MIDDLE_NAME   => $this->dataExists($detailsData, DetailsInputFilter::FIELD_MIDDLE_NAME),
-            DetailsInputFilter::FIELD_LAST_NAME     => $this->dataExists($detailsData, DetailsInputFilter::FIELD_LAST_NAME),
-            DetailsInputFilter::FIELD_DATE          => [
-                DetailsInputFilter::FIELD_DAY           => $this->dataExists($detailsData, DetailsInputFilter::FIELD_DAY),
-                DetailsInputFilter::FIELD_MONTH         => $this->dataExists($detailsData, DetailsInputFilter::FIELD_MONTH),
-                DetailsInputFilter::FIELD_YEAR          => $this->dataExists($detailsData, DetailsInputFilter::FIELD_YEAR),
+            DetailsInputFilter::FIELD_FIRST_NAME => $this->dataExists($detailsData, DetailsInputFilter::FIELD_FIRST_NAME),
+            DetailsInputFilter::FIELD_MIDDLE_NAME => $this->dataExists($detailsData, DetailsInputFilter::FIELD_MIDDLE_NAME),
+            DetailsInputFilter::FIELD_LAST_NAME => $this->dataExists($detailsData, DetailsInputFilter::FIELD_LAST_NAME),
+            DetailsInputFilter::FIELD_DATE => [
+                DetailsInputFilter::FIELD_DAY => $this->dataExists($detailsData, DetailsInputFilter::FIELD_DAY),
+                DetailsInputFilter::FIELD_MONTH => $this->dataExists($detailsData, DetailsInputFilter::FIELD_MONTH),
+                DetailsInputFilter::FIELD_YEAR => $this->dataExists($detailsData, DetailsInputFilter::FIELD_YEAR),
             ],
         ];
 
         $contactDetailsData = $this->dataExists($sessionData, ContactDetailsStep::STEP_ID);
         $array[self::STEP_CONTACT_DETAILS] = [
-            ContactDetailsInputFilter::FIELD_ADDRESS_1    => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_1),
-            ContactDetailsInputFilter::FIELD_ADDRESS_2    => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_2),
-            ContactDetailsInputFilter::FIELD_ADDRESS_3    => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_3),
+            ContactDetailsInputFilter::FIELD_ADDRESS_1 => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_1),
+            ContactDetailsInputFilter::FIELD_ADDRESS_2 => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_2),
+            ContactDetailsInputFilter::FIELD_ADDRESS_3 => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_3),
             ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_TOWN_OR_CITY),
-            ContactDetailsInputFilter::FIELD_POSTCODE     => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_POSTCODE),
-            ContactDetailsInputFilter::FIELD_PHONE        => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_PHONE),
+            ContactDetailsInputFilter::FIELD_POSTCODE => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_POSTCODE),
+            ContactDetailsInputFilter::FIELD_PHONE => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_PHONE),
         ];
 
         $passwordData = $this->dataExists($sessionData, PasswordStep::STEP_ID);
         $array[self::STEP_PASSWORD] = [
-            PasswordInputFilter::FIELD_PASSWORD         => $this->dataExists($passwordData, PasswordInputFilter::FIELD_PASSWORD),
+            PasswordInputFilter::FIELD_PASSWORD => $this->dataExists($passwordData, PasswordInputFilter::FIELD_PASSWORD),
             PasswordInputFilter::FIELD_PASSWORD_CONFIRM => $this->dataExists($passwordData, PasswordInputFilter::FIELD_PASSWORD_CONFIRM),
         ];
 
         $securityData = $this->dataExists($sessionData, SecurityQuestionsStep::STEP_ID);
         $array[self::STEP_SECURITY_QUESTIONS] = [
             SecurityQuestionsInputFilter::FIELD_QUESTION_1 => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_QUESTION_1),
-            SecurityQuestionsInputFilter::FIELD_ANSWER_1   => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_ANSWER_1),
+            SecurityQuestionsInputFilter::FIELD_ANSWER_1 => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_ANSWER_1),
             SecurityQuestionsInputFilter::FIELD_QUESTION_2 => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_QUESTION_2),
-            SecurityQuestionsInputFilter::FIELD_ANSWER_2   => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_ANSWER_2),
+            SecurityQuestionsInputFilter::FIELD_ANSWER_2 => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_ANSWER_2),
         ];
 
         return $array;

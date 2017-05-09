@@ -12,7 +12,7 @@ class CreateVehicleSessionServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sessionContainer =  new Container(CreateVehicleSessionService::UNIQUE_KEY);
+        $sessionContainer = new Container(CreateVehicleSessionService::UNIQUE_KEY);
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 
         return new CreateVehicleSessionService(

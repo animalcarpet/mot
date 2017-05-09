@@ -13,12 +13,12 @@ use NotificationApi\Service\Helper\SiteNominationEventHelper;
 use NotificationApi\Service\Helper\OrganisationNominationEventHelper;
 
 /**
- * Notification action handlers factory
+ * Notification action handlers factory.
  */
 abstract class AbstractNotificationActionHandler
 {
     /**
-     * notification field keys
+     * notification field keys.
      */
     const NOMINEE_NAME = 'nomineeName';
     const NOMINATOR_ID = 'nominatorId';
@@ -28,23 +28,24 @@ abstract class AbstractNotificationActionHandler
     const ROLE = 'role';
 
     /**
-     * notification field values
+     * notification field values.
      */
     const ACTION_ACCEPTED_FIELD = 'accepted';
     const ACTION_REJECTED_FIELD = 'rejected';
 
     /**
-     * @var string $action
+     * @var string
      */
     protected $action;
 
     /**
-     * Returns action handler
+     * Returns action handler.
      *
      * @param string         $action
      * @param ServiceManager $serviceManager
      *
      * @return AbstractNotificationActionHandler
+     *
      * @throws NotFoundException
      */
     public static function getInstance($action, ServiceManager $serviceManager = null)
@@ -76,7 +77,7 @@ abstract class AbstractNotificationActionHandler
     }
 
     /**
-     * Every handler must implement this method
+     * Every handler must implement this method.
      *
      * @param Notification $notification
      */

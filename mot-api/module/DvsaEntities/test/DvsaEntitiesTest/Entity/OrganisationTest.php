@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,7 +21,7 @@ use DvsaEntities\Entity\Site;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class OrganisationTest
+ * Class OrganisationTest.
  */
 class OrganisationTest extends PHPUnit_Framework_TestCase
 {
@@ -96,7 +97,7 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         $org = $this->setUpTestGetDesignatedManager(
             [
                 self::buildOrganisationPosition(OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE),
-                self::buildOrganisationPosition(OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL)
+                self::buildOrganisationPosition(OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL),
             ]
         );
         $this->assertNull($org->getDesignatedManager());
@@ -107,7 +108,7 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
         $org = $this->setUpTestGetDesignatedManager(
             [
                 self::buildOrganisationPosition(OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE),
-                self::buildOrganisationPosition(OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL)
+                self::buildOrganisationPosition(OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL),
             ]
         );
         $this->assertNull($org->getDesignatedManager());
@@ -174,14 +175,14 @@ class OrganisationTest extends PHPUnit_Framework_TestCase
     public static function getTestData()
     {
         return [
-            'id'                      => 1,
-            'name'                    => 'Zdzisiuo',
+            'id' => 1,
+            'name' => 'Zdzisiuo',
             'registeredCompanyNumber' => 'Gdansk',
-            'addressId'               => '1',
-            'correspondenceAddress'   => null,
-            'organisationType'        => 'Company',
+            'addressId' => '1',
+            'correspondenceAddress' => null,
+            'organisationType' => 'Company',
             'correspondenceAddressId' => null,
-            'tradingAs'               => 'My garage'
+            'tradingAs' => 'My garage',
         ];
     }
 

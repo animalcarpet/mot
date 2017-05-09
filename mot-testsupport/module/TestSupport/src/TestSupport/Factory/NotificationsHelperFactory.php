@@ -15,5 +15,4 @@ class NotificationsHelperFactory implements FactoryInterface
             $serviceLocator->get(TestSupportRestClientHelper::class)
         );
     }
-
 }

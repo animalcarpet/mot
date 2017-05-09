@@ -25,6 +25,7 @@ class CountryOfRegistrationForm extends Form
 
     /**
      * CountryOfRegistrationForm constructor.
+     *
      * @param CountryOfRegistration[] $countries
      */
     public function __construct($countries)
@@ -57,11 +58,11 @@ class CountryOfRegistrationForm extends Form
 
         $this->add($this->countryOfRegistrationElement);
 
-        $countryValidator = (new NotEmpty())->setMessage(" you must choose a country", NotEmpty::IS_EMPTY);
+        $countryValidator = (new NotEmpty())->setMessage(' you must choose a country', NotEmpty::IS_EMPTY);
         $countryInArrayValidator = (new InArray())
             ->setHaystack(array_keys($countrySelectValue));
 
-        $countryInArrayValidator->setMessage(" you must choose a country");
+        $countryInArrayValidator->setMessage(' you must choose a country');
         $countryInput = new Input(self::FIELD_COUNTRY_OF_REGISTRATION);
         $countryInput
             ->setRequired(true)

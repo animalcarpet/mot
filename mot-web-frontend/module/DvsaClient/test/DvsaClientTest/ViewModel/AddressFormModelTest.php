@@ -35,12 +35,12 @@ class AddressFormModelTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . $method}($value);
+        $result = $this->model->{'set'.$method}($value);
         $this->assertInstanceOf(AddressFormModel::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -49,7 +49,7 @@ class AddressFormModelTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'property' => 'addressLine1',
-                'value'    => 'test_addressLine1',
+                'value' => 'test_addressLine1',
             ],
             ['addressLine2', 'test_addressLine2'],
             ['addressLine3', 'test_addressLine3'],
@@ -124,19 +124,19 @@ class AddressFormModelTest extends \PHPUnit_Framework_TestCase
                 'postData' => [
                     AddressFormModel::FIELD_TOWN => 'test_Tows',
                 ],
-                'errors'   => [
-                    AddressFormModel::FIELD_LINE1    => AddressFormModel::ERR_ADDRESS_REQUIRE,
-                    AddressFormModel::FIELD_LINE2    => '',
-                    AddressFormModel::FIELD_LINE3    => '',
+                'errors' => [
+                    AddressFormModel::FIELD_LINE1 => AddressFormModel::ERR_ADDRESS_REQUIRE,
+                    AddressFormModel::FIELD_LINE2 => '',
+                    AddressFormModel::FIELD_LINE3 => '',
                     AddressFormModel::FIELD_POSTCODE => AddressFormModel::ERR_POSTCODE_REQUIRE,
                 ],
             ],
             [
                 'postData' => [
-                    AddressFormModel::FIELD_LINE1    => 'test_addrLine',
+                    AddressFormModel::FIELD_LINE1 => 'test_addrLine',
                     AddressFormModel::FIELD_POSTCODE => 'test_PostCode',
                 ],
-                'errors'   => [
+                'errors' => [
                     AddressFormModel::FIELD_TOWN => AddressFormModel::ERR_TOWN_REQUIRE,
                 ],
             ],

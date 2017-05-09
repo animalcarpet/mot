@@ -11,6 +11,7 @@ class PersonPendingRoleControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return PersonPendingRoleController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

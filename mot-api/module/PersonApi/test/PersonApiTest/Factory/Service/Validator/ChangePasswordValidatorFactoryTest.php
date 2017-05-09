@@ -9,7 +9,6 @@ use PersonApi\Service\Validator\ChangePasswordValidator;
 use PersonApi\Factory\Service\Validator\ChangePasswordValidatorFactory;
 use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use Dvsa\OpenAM\OpenAMClientInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class ChangePasswordValidatorFactoryTest extends \PHPUnit_Framework_TestCase
@@ -38,13 +37,13 @@ class ChangePasswordValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUsername")
-            ->willReturn("tester");
+            ->method('getUsername')
+            ->willReturn('tester');
 
         $identityProvider = XMock::of(MotIdentityProviderInterface::class);
         $identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         return $identityProvider;

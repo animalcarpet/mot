@@ -5,13 +5,10 @@ namespace DvsaClient\Mapper;
 use DvsaClient\Entity\Email;
 
 /**
- * Class EmailMapper
- *
- * @package DvsaClient\Mapper
+ * Class EmailMapper.
  */
 class EmailMapper extends AutoMapper
 {
-
     protected $entityClass = Email::class;
 
     /**

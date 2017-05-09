@@ -6,7 +6,7 @@ use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaEntities\Entity\BrakeTestType;
 
 /**
- * Creates BrakeTestType entity populated with given values
+ * Creates BrakeTestType entity populated with given values.
  */
 class BrakeTestTypeFactory
 {
@@ -23,7 +23,7 @@ class BrakeTestTypeFactory
     }
 
     /**
-     * Creates BrakeTestType with type = roller
+     * Creates BrakeTestType with type = roller.
      *
      * @return BrakeTestType
      */
@@ -33,7 +33,7 @@ class BrakeTestTypeFactory
     }
 
     /**
-     * Creates BrakeTestType with type = plate
+     * Creates BrakeTestType with type = plate.
      *
      * @return BrakeTestType
      */
@@ -43,7 +43,7 @@ class BrakeTestTypeFactory
     }
 
     /**
-     * Creates BrakeTestType with type = decelerometer
+     * Creates BrakeTestType with type = decelerometer.
      *
      * @return BrakeTestType
      */
@@ -53,7 +53,7 @@ class BrakeTestTypeFactory
     }
 
     /**
-     * Creates BrakeTestType with type = gradient
+     * Creates BrakeTestType with type = gradient.
      *
      * @return BrakeTestType
      */
@@ -63,7 +63,7 @@ class BrakeTestTypeFactory
     }
 
     /**
-     * Creates BrakeTestType with type = floor
+     * Creates BrakeTestType with type = floor.
      *
      * @return BrakeTestType
      */

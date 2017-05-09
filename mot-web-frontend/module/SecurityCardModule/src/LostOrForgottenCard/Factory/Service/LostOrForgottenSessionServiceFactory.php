@@ -17,7 +17,7 @@ class LostOrForgottenSessionServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sessionContainer =  new Container(LostOrForgottenSessionService::UNIQUE_KEY);
+        $sessionContainer = new Container(LostOrForgottenSessionService::UNIQUE_KEY);
         $mapperFactory = $serviceLocator->get(MapperFactory::class);
 
         return new LostOrForgottenSessionService(

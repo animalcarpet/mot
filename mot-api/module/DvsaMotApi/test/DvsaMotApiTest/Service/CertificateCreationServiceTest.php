@@ -26,9 +26,7 @@ use NumberFormatter;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class CertificateCreationServiceTest
- *
- * @package DvsaMotApiTest\Service
+ * Class CertificateCreationServiceTest.
  */
 class CertificateCreationServiceTest extends AbstractServiceTestCase
 {
@@ -100,7 +98,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setTestType((new MotTestTypeDto())->setCode($testTypeCode))
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -111,7 +109,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -161,7 +159,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setStatus('PASSED')
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -172,7 +170,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -214,7 +212,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setStatus('FAILED')
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -223,10 +221,10 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
             ->setCountryOfRegistration((new CountryDto())->setName('UK'))
             ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
-            ->setReasonsForRejection([ 0=> ['markedAsRepaired' => true]]);
+            ->setReasonsForRejection([0 => ['markedAsRepaired' => true]]);
 
         $additionalData = [
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -279,7 +277,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setStatus('FAILED')
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -309,7 +307,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setStatus('PASSED')
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -327,7 +325,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
 
         $additionalData = array(
             'TestStationAddress' => array(
-            )
+            ),
         );
 
         $this->mockMotService->expects($this->exactly(2))
@@ -385,7 +383,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setStatus('PASSED')
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -415,7 +413,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setStatus('FAILED')
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -433,7 +431,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
 
         $additionalData = array(
             'TestStationAddress' => array(
-            )
+            ),
         );
 
         $this->mockMotService->expects($this->exactly(2))
@@ -488,11 +486,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
 
         $additionalData = [
             'vehicleTestingStation' => [
-                'name'       => 'Montys Mots',
+                'name' => 'Montys Mots',
                 'siteNumber' => 'asdfasda',
                 'primaryTelephone' => '011712013243',
             ],
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -543,11 +541,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
 
         $additionalData = [
             'vehicleTestingStation' => [
-                'name'       => 'Montys Mots',
+                'name' => 'Montys Mots',
                 'siteNumber' => 'asdfasda',
                 'primaryTelephone' => '011712013243',
             ],
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -603,7 +601,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             )
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'dualLanguage' => true,
                     'primaryTelephone' => '011712013243',
@@ -617,7 +615,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -653,7 +651,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST))
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -664,7 +662,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -697,7 +695,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
         $certificateDataAfterAmendedDuringNonMotInspection = [
             'TestNumber' => '',
             'TestStation' => '',
-            'InspectionAuthority' => 'Driver Vehicles & Standards Agency' . "\n" . 'Telephone number - 03001239000',
+            'InspectionAuthority' => 'Driver Vehicles & Standards Agency'."\n".'Telephone number - 03001239000',
             'Odometer' => 'Not recorded',
             'IssuedDate' => '1 Jan 2014',
             'IssuersName' => '',
@@ -758,7 +756,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::MYSTERY_SHOPPER))
             ->setVehicleTestingStation(
                 [
-                    'name'       => 'Montys Mots',
+                    'name' => 'Montys Mots',
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
@@ -769,7 +767,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
-            'TestStationAddress'    => []
+            'TestStationAddress' => [],
         ];
 
         $this->mockMotService->expects($this->once())
@@ -800,19 +798,19 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
         ];
 
         $expiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
-        $expiryDateFormatted = $expiryDate->format("j F Y");
-        $numberFormatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-        $year = $expiryDate->format("y");
+        $expiryDateFormatted = $expiryDate->format('j F Y');
+        $numberFormatter = new NumberFormatter('en', NumberFormatter::SPELLOUT);
+        $year = $expiryDate->format('y');
         $yearFormatted = $numberFormatter->format((int) $year);
 
-        $expiryDateOnCert = $expiryDateFormatted . ' (' . strtoupper($yearFormatted) . ')';
+        $expiryDateOnCert = $expiryDateFormatted.' ('.strtoupper($yearFormatted).')';
         //custom logic for preservation date is used so we need to use direct calculation method
-        $renewalDateOnCert = MotTestDate::preservationDate($expiryDate)->format("j F Y");
+        $renewalDateOnCert = MotTestDate::preservationDate($expiryDate)->format('j F Y');
 
         $certificateDataAfterAmendedDuringMysteryShopper = [
             'TestNumber' => '',
             'TestStation' => 'asdfasda',
-            'InspectionAuthority' => 'Montys Mots' . "\n" . '		011712013243' . "\n",
+            'InspectionAuthority' => 'Montys Mots'."\n".'		011712013243'."\n",
             'Odometer' => 'Not recorded',
             'IssuedDate' => '1 Jan 2014',
             'IssuersName' => '',
@@ -825,7 +823,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             'Colour' => 'Primary and Secondary',
             'AdvisoryInformation' => '',
             'ExpiryDate' => $expiryDateOnCert,
-            'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can present your vehicle for test is ' . $renewalDateOnCert . '.'
+            'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can present your vehicle for test is '.$renewalDateOnCert.'.',
         ];
 
         $motTestMapperMock = $this

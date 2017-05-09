@@ -15,22 +15,19 @@ use SiteApi\Model\Operation\NominateOperation;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class NominateRoleService
- *
- * @package SiteApi\Service
+ * Class NominateRoleService.
  */
 class NominateRoleService
 {
-
-    /** @var  EntityManager $entityManager */
+    /** @var EntityManager $entityManager */
     protected $entityManager;
 
-    /** @var  AuthenticationService $authenticationService */
+    /** @var AuthenticationService $authenticationService */
     private $authenticationService;
 
     /**
-    * @var  AbstractMotAuthorisationService $authorisationService
-    */
+     * @var AbstractMotAuthorisationService
+     */
     private $authorisationService;
 
     private $nominateOperation;
@@ -75,7 +72,9 @@ class NominateRoleService
      * @param $siteId
      * @param $nomineeId
      * @param $roleCode
+     *
      * @return SiteBusinessRoleMap
+     *
      * @throws \Exception
      */
     public function updateRoleNominationNotification($siteId, $nomineeId, $roleCode)
@@ -83,7 +82,7 @@ class NominateRoleService
         $roleId = $this->getRole($roleCode)->getId();
 
         /**
-         * @var SiteBusinessRoleMap $siteBusinessRoleMap
+         * @var SiteBusinessRoleMap
          */
         $siteBusinessRoleMap = $this->getSiteBusinessRoleMap($siteId, $nomineeId, $roleId);
 
@@ -119,7 +118,7 @@ class NominateRoleService
         $site = $this->getSite($siteId);
         $nominee = $this->getNominee($nomineeId);
         if (!$nominee) {
-            throw new NotFoundException('Person ' . $nomineeId . ' not found');
+            throw new NotFoundException('Person '.$nomineeId.' not found');
         }
         $status = $this->getStatus(BusinessRoleStatusCode::PENDING);
 
@@ -128,6 +127,7 @@ class NominateRoleService
             ->setSiteBusinessRole($role)
             ->setPerson($nominee)
             ->setBusinessRoleStatus($status);
+
         return $map;
     }
 
@@ -150,6 +150,7 @@ class NominateRoleService
 
     /**
      * @param $roleCode
+     *
      * @return SiteBusinessRole
      */
     private function getRole($roleCode)
@@ -159,6 +160,7 @@ class NominateRoleService
 
     /**
      * @param $siteId
+     *
      * @return Site
      */
     private function getSite($siteId)
@@ -170,6 +172,7 @@ class NominateRoleService
      * @param $nomineeId
      * @param $roleId
      * @param $siteId
+     *
      * @return SiteBusinessRoleMap
      */
     private function getSiteBusinessRoleMap($siteId, $nomineeId, $roleId)
@@ -180,7 +183,7 @@ class NominateRoleService
                     'site' => $siteId,
                     'person' => $nomineeId,
                     'siteBusinessRole' => $roleId,
-                    'businessRoleStatus' => $this->getStatus(BusinessRoleStatusCode::PENDING)
+                    'businessRoleStatus' => $this->getStatus(BusinessRoleStatusCode::PENDING),
                 ]
             );
     }

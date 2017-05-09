@@ -5,10 +5,9 @@ namespace NotificationApi\Service\Validator;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
-use Zend\Form\Annotation\ErrorMessage;
 
 /**
- * Class NotificationValidator
+ * Class NotificationValidator.
  */
 class NotificationValidator extends AbstractValidator
 {

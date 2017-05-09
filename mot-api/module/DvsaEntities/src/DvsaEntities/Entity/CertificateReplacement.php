@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * CertificateReplacement
+ * CertificateReplacement.
  *
  * @ORM\Table(name="certificate_replacement")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\CertificateReplacementRepository")
@@ -16,7 +16,7 @@ class CertificateReplacement extends Entity
     use CommonIdentityTrait;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="mot_test_version", type="integer", nullable=false)
      */
@@ -53,28 +53,28 @@ class CertificateReplacement extends Entity
     private $certificateType;
 
     /**
-     * @var string $replacementReason
+     * @var string
      *
      * @ORM\Column(name="reason", type="string", nullable=true)
      */
     private $replacementReason;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_vin_vrm_expiry_changed", type="boolean", length=1, nullable=true)
      */
     private $isVinVrmExpiryChanged;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="include_in_mismatch_file", type="boolean", length=1, nullable=true)
      */
     private $includeInMismatchFile;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="include_in_passes_file", type="boolean", length=1, nullable=true)
      */
@@ -88,6 +88,7 @@ class CertificateReplacement extends Entity
     public function setMotTest($motTest)
     {
         $this->motTest = $motTest;
+
         return $this;
     }
 
@@ -107,6 +108,7 @@ class CertificateReplacement extends Entity
     public function setMotTestVersion($motTestVersion)
     {
         $this->motTestVersion = $motTestVersion;
+
         return $this;
     }
 
@@ -120,11 +122,13 @@ class CertificateReplacement extends Entity
 
     /**
      * @param CertificateType $certificateType
+     *
      * @return $this
      */
     public function setCertificateType($certificateType)
     {
         $this->certificateType = $certificateType;
+
         return $this;
     }
 
@@ -144,6 +148,7 @@ class CertificateReplacement extends Entity
     public function setReplacementReason($replacementReason)
     {
         $this->replacementReason = $replacementReason;
+
         return $this;
     }
 
@@ -163,6 +168,7 @@ class CertificateReplacement extends Entity
     public function setReasonForDifferentTester($differentTesterReason)
     {
         $this->differentTesterReason = $differentTesterReason;
+
         return $this;
     }
 
@@ -175,38 +181,43 @@ class CertificateReplacement extends Entity
     }
 
     /**
-     * @param boolean $isVinVrmExpiryChanged
+     * @param bool $isVinVrmExpiryChanged
      *
      * @return $this
      */
     public function setIsVinVrmExpiryChanged($isVinVrmExpiryChanged)
     {
         $this->isVinVrmExpiryChanged = $isVinVrmExpiryChanged;
+
         return $this;
     }
 
     /**
-     * @param boolean $includeInMismatch
+     * @param bool $includeInMismatch
+     *
      * @return $this
      */
     public function includeInMismatchFile($includeInMismatch)
     {
         $this->includeInMismatchFile = $includeInMismatch;
+
         return $this;
     }
 
     /**
-     * @param boolean $includeInPass
+     * @param bool $includeInPass
+     *
      * @return $this
      */
     public function includeInPassFile($includeInPass)
     {
         $this->includeInPassFile = $includeInPass;
+
         return $this;
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getIsVinVrmExpiryChanged()
     {

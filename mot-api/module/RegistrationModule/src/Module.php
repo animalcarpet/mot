@@ -24,8 +24,8 @@ class Module implements
      */
     public function getConfig()
     {
-        $moduleConfig = include __DIR__ . '/../config/module.config.php';
-        $routesConfig = include __DIR__ . '/../config/routes.config.php';
+        $moduleConfig = include __DIR__.'/../config/module.config.php';
+        $routesConfig = include __DIR__.'/../config/routes.config.php';
 
         return array_merge($moduleConfig, $routesConfig);
     }
@@ -35,7 +35,7 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        $servicesConfig = include __DIR__ . '/../config/services.config.php';
+        $servicesConfig = include __DIR__.'/../config/services.config.php';
 
         return $servicesConfig;
     }
@@ -45,7 +45,7 @@ class Module implements
      */
     public function getControllerConfig()
     {
-        $controllersConfig = include __DIR__ . '/../config/controllers.config.php';
+        $controllersConfig = include __DIR__.'/../config/controllers.config.php';
 
         return $controllersConfig;
     }

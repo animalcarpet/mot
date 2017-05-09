@@ -10,17 +10,14 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Class PersonMapper
- *
- * @package DvsaClient\Mapper
+ * Class PersonMapper.
  */
 class PersonMapper extends AutoMapper implements AutoWireableInterface
 {
-
     protected $entityClass = Person::class;
 
     /**
-     * @param     $organisationId
+     * @param   $organisationId
      *
      * @return PersonDto[]
      */
@@ -33,6 +30,7 @@ class PersonMapper extends AutoMapper implements AutoWireableInterface
         $dtoHydrator = new DtoHydrator();
 
         $principals = $dtoHydrator->doHydration($persons['data']);
+
         return $principals;
     }
 
@@ -47,6 +45,7 @@ class PersonMapper extends AutoMapper implements AutoWireableInterface
         $person = $this->client->get($url);
 
         $obj = $this->doHydration($person['data']);
+
         return $obj;
     }
 
@@ -61,6 +60,7 @@ class PersonMapper extends AutoMapper implements AutoWireableInterface
         $person = $this->client->get($url);
 
         $obj = $this->doHydration($person['data']);
+
         return $obj;
     }
 
@@ -68,6 +68,7 @@ class PersonMapper extends AutoMapper implements AutoWireableInterface
     {
         $url = UrlBuilder::authorisedExaminer()->routeParam('id', $organisationId)->authorisedExaminerPrincipal()
             ->toString();
+
         return $this->client->postJson($url, $data)['data']['authorisedExaminerPrincipalId'];
     }
 

@@ -1,17 +1,16 @@
 <?php
+
 namespace Site\ViewModel\TestQuality;
 
 use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
-use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 
 class UserTestQualityViewModel
 {
-
-    static $subtitles = [
+    public static $subtitles = [
         VehicleClassGroupCode::BIKES => 'Class 1 and 2',
         VehicleClassGroupCode::CARS_ETC => 'Class 3, 4, 5 and 7',
     ];
@@ -20,7 +19,7 @@ class UserTestQualityViewModel
     private $groupCode;
     private $userId;
     private $siteId;
-    /** @var  \DateTime */
+    /** @var \DateTime */
     private $viewedDate;
     private $csvFileSize;
     private $returnLink;
@@ -64,6 +63,7 @@ class UserTestQualityViewModel
 
     /**
      * @param ComponentStatisticsTable $table
+     *
      * @return UserTestQualityViewModel
      */
     public function setTable($table)
@@ -85,19 +85,19 @@ class UserTestQualityViewModel
 
     public function getMonth()
     {
-        return (int)$this->viewedDate->format('m');
+        return (int) $this->viewedDate->format('m');
     }
 
     public function getYear()
     {
-        return (int)$this->viewedDate->format('Y');
+        return (int) $this->viewedDate->format('Y');
     }
 
     public function getCsvFileSize()
     {
         $kb = $this->csvFileSize / 1024;
         if ($kb > 1) {
-            return round($kb) . 'KB';
+            return round($kb).'KB';
         } else {
             return '1KB';
         }

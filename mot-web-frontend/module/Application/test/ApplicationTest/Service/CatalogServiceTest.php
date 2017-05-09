@@ -8,19 +8,18 @@ use DvsaCommon\HttpRestJson\Client;
 use DvsaCommonTest\Bootstrap;
 
 /**
- * Class CatalogServiceTest
+ * Class CatalogServiceTest.
  */
 class CatalogServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  CatalogService */
+    /** @var CatalogService */
     private $service;
 
     public function setUp()
     {
-
         $fixture = json_decode(
             file_get_contents(
-                __DIR__ . '/../../DvsaMotEnforcementTest/Controller/fixtures/catalog.json'
+                __DIR__.'/../../DvsaMotEnforcementTest/Controller/fixtures/catalog.json'
             ),
             true
         );

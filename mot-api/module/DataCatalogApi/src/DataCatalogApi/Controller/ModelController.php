@@ -1,4 +1,5 @@
 <?php
+
 namespace DataCatalogApi\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
@@ -6,13 +7,11 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaEntities\Entity\Model;
 use DataCatalogApi\Service\VehicleCatalogService;
 
-/** */
 class ModelController extends AbstractDvsaRestfulController
 {
-
     public function getModelsAction()
     {
-        $make = $this->params()->fromRoute("id");
+        $make = $this->params()->fromRoute('id');
         $models = $this->getVehicleCatalog()->getModelsByMakeId($make);
         $modelsData = array_map(
             function (Model $model) {
@@ -20,12 +19,13 @@ class ModelController extends AbstractDvsaRestfulController
             },
             $models
         );
+
         return ApiResponse::jsonOk($modelsData);
     }
 
     public function getModelsByMakeIdAction()
     {
-        $make = $this->params()->fromRoute("id");
+        $make = $this->params()->fromRoute('id');
         $models = $this->getVehicleCatalog()->getModelsByMakeId($make);
         $modelsData = array_map(
             function (Model $model) {
@@ -33,6 +33,7 @@ class ModelController extends AbstractDvsaRestfulController
             },
             $models
         );
+
         return ApiResponse::jsonOk($modelsData);
     }
 

@@ -15,13 +15,13 @@ class MotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
 {
     const ORG_ID = 9999;
 
-    /** @var  MotTestLogViewModel */
+    /** @var MotTestLogViewModel */
     private $model;
-    /** @var  OrganisationDto */
+    /** @var OrganisationDto */
     private $orgDto;
-    /** @var  MotTestLogSummaryDto */
+    /** @var MotTestLogSummaryDto */
     private $logSummaryDto;
-    /** @var  MotTestLogFormViewModel */
+    /** @var MotTestLogFormViewModel */
     private $formModel;
 
     /**
@@ -35,8 +35,8 @@ class MotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->sundayLastWeek = new \DateTime('@' . strtotime('sunday last week 23:59:59'));
-        $this->mondayLastWeek = new \DateTime('@' . strtotime('monday last week 00:00:00'));
+        $this->sundayLastWeek = new \DateTime('@'.strtotime('sunday last week 23:59:59'));
+        $this->mondayLastWeek = new \DateTime('@'.strtotime('monday last week 00:00:00'));
 
         //  logic block :: prepare instance of tested class
         $this->orgDto = (new OrganisationDto())->setId(self::ORG_ID);
@@ -67,12 +67,12 @@ class MotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . $method}($value);
+        $result = $this->model->{'set'.$method}($value);
         $this->assertInstanceOf(MotTestLogViewModel::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -81,7 +81,7 @@ class MotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'property' => 'organisation',
-                'value'    => new OrganisationDto(),
+                'value' => new OrganisationDto(),
             ],
             ['formModel', new MotTestLogFormViewModel()],
             ['table', new Table()],
@@ -110,12 +110,12 @@ class MotTestLogViewModelTest extends \PHPUnit_Framework_TestCase
         $dateFromTs = $this->mondayLastWeek->getTimestamp();
         $dateToTs = $this->sundayLastWeek->getTimestamp();
 
-        $expect = AuthorisedExaminerUrlBuilderWeb::motTestLogDownloadCsv(self::ORG_ID)->toString() .
-            '?' .
+        $expect = AuthorisedExaminerUrlBuilderWeb::motTestLogDownloadCsv(self::ORG_ID)->toString().
+            '?'.
             http_build_query(
                 [
                     SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $dateFromTs,
-                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => $dateToTs,
+                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $dateToTs,
                 ]
             );
 

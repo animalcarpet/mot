@@ -3,10 +3,8 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Controller;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaCommonApi\Model\ApiResponse;
 
 class NationalStatisticsController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
@@ -19,8 +17,8 @@ class NationalStatisticsController extends AbstractDvsaRestfulController impleme
 
     public function getList()
     {
-        $year = (int)$this->params()->fromRoute("year");
-        $month = (int)$this->params()->fromRoute("month");
+        $year = (int) $this->params()->fromRoute('year');
+        $month = (int) $this->params()->fromRoute('month');
 
         $dto = $this->nationalStatisticsService->get($year, $month);
 

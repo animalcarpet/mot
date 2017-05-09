@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteTest\Mapper;
 
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
@@ -23,15 +24,15 @@ class SiteTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
     const MONTH = 5;
     const YEAR = 2016;
 
-    /** @var  SiteTestQualityCsvMapper */
+    /** @var SiteTestQualityCsvMapper */
     private $sut;
-    /** @var  SiteGroupPerformanceDto */
+    /** @var SiteGroupPerformanceDto */
     private $siteGroupPerformanceDto;
-    /** @var  MotTestingPerformanceDto */
+    /** @var MotTestingPerformanceDto */
     private $nationalGroupPerformanceDto;
-    /** @var  VehicleTestingStationDto */
+    /** @var VehicleTestingStationDto */
     private $vehicleTestingStationDto;
-    /** @var  string */
+    /** @var string */
     private $group;
 
     public function setUp()
@@ -62,7 +63,7 @@ class SiteTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
         return [
             'tester1',
             'tester2',
-            'tester3'
+            'tester3',
         ];
     }
 
@@ -192,7 +193,7 @@ class SiteTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
     {
         $csvFile = $this->sut->toCsvFile();
         $csvFile->getFileName();
-        $this->assertEquals("Test-quality-information_SITE-NAME_SITE-NUMBER_Group-A_May-2016.csv",
+        $this->assertEquals('Test-quality-information_SITE-NAME_SITE-NUMBER_Group-A_May-2016.csv',
             $csvFile->getFileName());
     }
 }

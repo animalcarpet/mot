@@ -21,6 +21,7 @@ class BasePersonServiceFactory implements FactoryInterface
 {
     /**
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     *
      * @return \PersonApi\Service\BasePersonService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

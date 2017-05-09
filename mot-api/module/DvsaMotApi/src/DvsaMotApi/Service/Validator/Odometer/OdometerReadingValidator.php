@@ -7,25 +7,22 @@ use Api\Check\CheckResult;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommonApi\Service\Exception\BadRequestException;
-use DvsaCommon\Dto\Common\OdometerReadingDto;
 use ZendPdf\BinaryParser\DataSource\String;
 
 /**
- * Encapsulates all validation rules for OdometerReading
+ * Encapsulates all validation rules for OdometerReading.
  *
  * Class OdometerReadingValidator
- *
- * @package DvsaMotApi\Service\Odometer\Validator
  */
 class OdometerReadingValidator
 {
     /**
-     * @var integer
+     * @var int
      */
     private $value;
 
     /**
-     * @var String
+     * @var string
      */
     private $unit;
 
@@ -39,6 +36,7 @@ class OdometerReadingValidator
      * @param $unit
      * @param $resultType
      * @param null $fieldContext
+     *
      * @return CheckResult
      */
     public function validate($value, $unit, $resultType, $fieldContext = null)
@@ -50,41 +48,42 @@ class OdometerReadingValidator
 
         if (!OdometerReadingResultType::isValid($this->getResultType())) {
             $result->add(
-                CM::create($fieldContext)->field("resultType")->code(BadRequestException::ERROR_CODE_INVALID_DATA)
-                    ->text("Invalid odometer result type")
+                CM::create($fieldContext)->field('resultType')->code(BadRequestException::ERROR_CODE_INVALID_DATA)
+                    ->text('Invalid odometer result type')
             );
         }
         if ($this->getResultType() === OdometerReadingResultType::OK) {
             $value = $this->getValue();
             if (!is_null($value) && (!is_int($value) || $value < 0) || is_null($value)) {
                 $result->add(
-                    CM::create($fieldContext)->field("value")->code($errorCodeInvalidData)->text(
-                        "Invalid odometer value"
+                    CM::create($fieldContext)->field('value')->code($errorCodeInvalidData)->text(
+                        'Invalid odometer value'
                     )
                 );
             }
             if (!OdometerUnit::isValid($this->getUnit())) {
                 $result->add(
-                    CM::create($fieldContext)->field("unit")->code(BadRequestException::ERROR_CODE_INVALID_DATA)
+                    CM::create($fieldContext)->field('unit')->code(BadRequestException::ERROR_CODE_INVALID_DATA)
                         ->text('Invalid odometer unit')
                 );
             }
         } else {
             if (!is_null($this->getValue())) {
                 $result->add(
-                    CM::create($fieldContext)->field("value")->code(
+                    CM::create($fieldContext)->field('value')->code(
                         BadRequestException::ERROR_CODE_INVALID_ENTITY_STATE
                     )
-                        ->text("Odometer value given though result type is not OK")
+                        ->text('Odometer value given though result type is not OK')
                 );
             }
             if (!is_null($this->getUnit())) {
                 $result->add(
-                    CM::create($fieldContext)->field("unit")->code(BadRequestException::ERROR_CODE_INVALID_ENTITY_STATE)
-                        ->text("Odometer unit given though result type is not OK")
+                    CM::create($fieldContext)->field('unit')->code(BadRequestException::ERROR_CODE_INVALID_ENTITY_STATE)
+                        ->text('Odometer unit given though result type is not OK')
                 );
             }
         }
+
         return $result;
     }
 
@@ -98,16 +97,18 @@ class OdometerReadingValidator
 
     /**
      * @param int $value
+     *
      * @return OdometerReadingValidator
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getUnit()
     {
@@ -115,12 +116,14 @@ class OdometerReadingValidator
     }
 
     /**
-     * @param String $unit
+     * @param string $unit
+     *
      * @return OdometerReadingValidator
      */
     public function setUnit($unit)
     {
         $this->unit = $unit;
+
         return $this;
     }
 
@@ -134,11 +137,13 @@ class OdometerReadingValidator
 
     /**
      * @param string $resultType
+     *
      * @return OdometerReadingValidator
      */
     public function setResultType($resultType)
     {
         $this->resultType = $resultType;
+
         return $this;
     }
 }

@@ -61,7 +61,7 @@ class ModelForm extends Form
 
         if ($this->getModel()->getValue() === self::LABEL_PLEASE_SELECT) {
             $this->addErrorMessage(self::MODEL_EMPTY_MSG);
-            $this->addLabelError($this->getModel(), [self::MODEL_EMPTY_MSG] );
+            $this->addLabelError($this->getModel(), [self::MODEL_EMPTY_MSG]);
             $fieldsValid = false;
         }
 

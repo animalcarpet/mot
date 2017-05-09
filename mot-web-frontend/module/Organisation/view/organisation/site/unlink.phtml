@@ -1,12 +1,11 @@
 <?php
 
 /**
- * @var \Organisation\ViewModel\AuthorisedExaminer\AeSiteUnlinkModel $model
+ * @var \Organisation\ViewModel\AuthorisedExaminer\AeSiteUnlinkModel
  * @var \Organisation\Form\AeUnlinkSiteForm                          $form
  * @var \DvsaCommon\Dto\Site\SiteDto                                 $site
  * @var \Zend\Mvc\Controller\Plugin\FlashMessenger                   $flashMessenger
  */
-
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Organisation\OrganisationSiteLinkDto;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -52,7 +51,7 @@ echo $this->partial(
                             DateTimeDisplayFormat::textDate($linkWithAe->getStatusChangedOn())
                         );
                         ?>
-                    <?php endif;?>
+                    <?php endif; ?>
                 </strong>
             </span>
         </td>
@@ -74,10 +73,10 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
-                'id'           => AeUnlinkSiteForm::FIELD_STATUS,
-                'label'        => 'Choose a status',
-                'value'        => $form->getStatus(),
-                'options'      => $form->getStatuses(),
+                'id' => AeUnlinkSiteForm::FIELD_STATUS,
+                'label' => 'Choose a status',
+                'value' => $form->getStatus(),
+                'options' => $form->getStatuses(),
                 'errorMessage' => $form->getError(AeUnlinkSiteForm::FIELD_STATUS),
             ]
         );
@@ -89,8 +88,8 @@ echo $this->partial(
     echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'submitAeSiteUnlink',
-            'value'      => 'Remove association',
+            'id' => 'submitAeSiteUnlink',
+            'value' => 'Remove association',
             'navigation' => [
                 'Cancel and return to Authorised Examiner' => $model->getCancelUrl(),
             ],

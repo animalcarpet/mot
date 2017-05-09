@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * WheelplanType
+ * WheelplanType.
  *
  * @ORM\Table(name="wheelplan_type", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})})
  * @ORM\Entity(readOnly=true)
@@ -51,6 +51,7 @@ class WheelplanType extends Entity
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -72,6 +73,7 @@ class WheelplanType extends Entity
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 
@@ -85,7 +87,7 @@ class WheelplanType extends Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -99,7 +101,7 @@ class WheelplanType extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -109,7 +111,7 @@ class WheelplanType extends Entity
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
      *
@@ -123,7 +125,7 @@ class WheelplanType extends Entity
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */

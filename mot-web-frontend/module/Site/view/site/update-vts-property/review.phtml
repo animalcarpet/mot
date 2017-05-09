@@ -3,7 +3,7 @@
 use Core\Routing\VtsRoutes;
 use Site\UpdateVtsProperty\UpdateVtsPropertyReviewViewModel;
 
-/**
+/*
  * @var UpdateVtsPropertyReviewViewModel $viewModel
  */
 ?>
@@ -16,7 +16,7 @@ echo $this->partial(
     ]
 );
 ?>
-<?php $this->headTitle('Review ' . $viewModel->getPropertyName()); ?>
+<?php $this->headTitle('Review '.$viewModel->getPropertyName()); ?>
 
 <form novalidate="" autocomplete="off" method="POST" action="<?php echo VtsRoutes::of($this)->vtsReviewEditProperty($viewModel->getVtsId(), $viewModel->getPropertyName(), $viewModel->getFormUuid()); ?>">
     <?php echo $this->csrfToken(); ?>

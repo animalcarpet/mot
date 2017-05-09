@@ -16,7 +16,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for BrakeTestResultService
+ * Factory for BrakeTestResultService.
  */
 class BrakeTestResultServiceFactory implements FactoryInterface
 {

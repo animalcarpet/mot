@@ -3,7 +3,7 @@
 namespace TestSupport;
 
 /**
- * Originally copied from \DvsaCommonApi\Service\Exception\RequiredFieldException
+ * Originally copied from \DvsaCommonApi\Service\Exception\RequiredFieldException.
  */
 class FieldValidation
 {
@@ -17,7 +17,7 @@ class FieldValidation
         }
 
         if (count($missingFieldNames) > 0) {
-            throw new \Exception("Missing: " . print_r($missingFieldNames, true));
+            throw new \Exception('Missing: '.print_r($missingFieldNames, true));
         }
     }
 }

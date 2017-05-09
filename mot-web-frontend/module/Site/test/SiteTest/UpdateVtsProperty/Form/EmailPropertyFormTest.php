@@ -4,7 +4,6 @@ namespace SiteTest\UpdateVtsProperty\Form;
 
 use DvsaCommon\Validator\EmailAddressValidator;
 use Site\UpdateVtsProperty\Process\Form\EmailPropertyForm;
-use Zend\Validator\EmailAddress;
 use Zend\Validator\StringLength;
 
 class EmailPropertyFormTest extends \PHPUnit_Framework_TestCase
@@ -24,8 +23,8 @@ class EmailPropertyFormTest extends \PHPUnit_Framework_TestCase
     public function validData()
     {
         return [
-            [[EmailPropertyForm::FIELD_EMAIL => ""]],
-            [[EmailPropertyForm::FIELD_EMAIL => "emailpropertyformtest@dvsa.test"]],
+            [[EmailPropertyForm::FIELD_EMAIL => '']],
+            [[EmailPropertyForm::FIELD_EMAIL => 'emailpropertyformtest@dvsa.test']],
         ];
     }
 
@@ -49,40 +48,40 @@ class EmailPropertyFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                [EmailPropertyForm::FIELD_EMAIL => "email"],
-                [EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG]
+                [EmailPropertyForm::FIELD_EMAIL => 'email'],
+                [EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG],
             ],
             [
-                [EmailPropertyForm::FIELD_EMAIL => "email@"],
-                [EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG]
+                [EmailPropertyForm::FIELD_EMAIL => 'email@'],
+                [EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG],
             ],
             [
-                [EmailPropertyForm::FIELD_EMAIL => "email@email"],
-                [EmailAddressValidator::INVALID_HOSTNAME => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG]
+                [EmailPropertyForm::FIELD_EMAIL => 'email@email'],
+                [EmailAddressValidator::INVALID_HOSTNAME => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG],
             ],
             [
-                [EmailPropertyForm::FIELD_EMAIL => "email.com"],
-                [EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG]
+                [EmailPropertyForm::FIELD_EMAIL => 'email.com'],
+                [EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG],
             ],
             [
                 [EmailPropertyForm::FIELD_EMAIL => $this->createTooLongEmail()],
                 [
                     EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG,
-                    StringLength::TOO_LONG => str_replace("%max%", EmailPropertyForm::FIELD_EMAIL_MAX_LENGTH, EmailPropertyForm::EMAIL_ADDRESS_TOO_LONG_MSG),
-                ]
-            ]
+                    StringLength::TOO_LONG => str_replace('%max%', EmailPropertyForm::FIELD_EMAIL_MAX_LENGTH, EmailPropertyForm::EMAIL_ADDRESS_TOO_LONG_MSG),
+                ],
+            ],
         ];
     }
 
     private function createTooLongEmail()
     {
-        $email = "";
+        $email = '';
         $length = EmailPropertyForm::FIELD_EMAIL_MAX_LENGTH;
         while ($length) {
             $email .= 'x';
-            $length--;
+            --$length;
         }
 
-        return $email . '@' . EmailAddressValidator::TEST_DOMAIN;
+        return $email.'@'.EmailAddressValidator::TEST_DOMAIN;
     }
 }

@@ -4,14 +4,13 @@ namespace DvsaCommonApi\Transaction;
 
 /**
  * Provides default functionality to handle transactional code in the implementing class.
- * Should be used along with TransactionAwareInterface
+ * Should be used along with TransactionAwareInterface.
  *
  * Class TransactionAwareTrait
- * @package DvsaCommonApi\Transaction
  */
 trait TransactionAwareTrait
 {
-    /** @var  TransactionExecutorInterface $transactionExecutor */
+    /** @var TransactionExecutorInterface $transactionExecutor */
     private $transactionExecutor;
 
     public function setTransactionExecutor(TransactionExecutorInterface $transactionExecutor)

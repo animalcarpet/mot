@@ -1,8 +1,8 @@
 <?php
+
 namespace Organisation\Presenter;
 
 use DvsaCommon\Dto\Organisation\OrganisationDto;
-use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommon\Enum\CompanyTypeName;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\Utility\AddressUtils;

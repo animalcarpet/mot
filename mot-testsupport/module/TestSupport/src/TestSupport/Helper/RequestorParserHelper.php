@@ -5,7 +5,7 @@ namespace TestSupport\Helper;
 use TestSupport\FieldValidation;
 
 /**
- * Parses requestor username and password from the request payload
+ * Parses requestor username and password from the request payload.
  */
 class RequestorParserHelper
 {

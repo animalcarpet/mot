@@ -5,11 +5,10 @@ namespace DvsaEntityTest\EntityTrait;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Test for CommonIdentityTrait
+ * Test for CommonIdentityTrait.
  */
 class CommonIdentityTraitTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testTrait()
     {
         /** @var CommonIdentityTrait $mock */

@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\MotTestingCertificate;
 
 use DvsaCommon\Auth\Assertion\RemoveMotTestingCertificateAssertion;

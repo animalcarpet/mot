@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var \DvsaCommon\Dto\Common\MotTestDto $motTest
+ * @var \DvsaCommon\Dto\Common\MotTestDto
  */
 $vehicle = $motTest->getVehicle();
 
@@ -15,7 +15,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test results');
     <ul class="content-header__tertiary-list">
         <li id="vehicleMakeModel" class="content-header__list-item--primary"><?php echo ucwords(strtolower($vehicle->getMakeAndModel())) ?></li>
         <li id="vehicleRegistration" class="content-header__list-item"><?php echo $vehicle->getRegistration() ?></li>
-        <li id="firstUsedDate" class="content-header__list-item"><?php echo 'First used ' . DateTime::createFromFormat('Y-m-d', $vehicle->getFirstUsedDate())->format('j M Y'); ?></li>
+        <li id="firstUsedDate" class="content-header__list-item"><?php echo 'First used '.DateTime::createFromFormat('Y-m-d', $vehicle->getFirstUsedDate())->format('j M Y'); ?></li>
     </ul>
 </header>
 
@@ -63,7 +63,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test results');
 <nav class="content-navigation">
 
     <form action="<?php echo $this->url('mot-test/test-summary', ['motTestNumber' => $motTest->getMotTestNumber()]) ?>" method="get">
-        <input id="reviewTest" type="submit" class="button" value="Review test" <?php if ($submissionStatus == "INCOMPLETE") : ?>disabled<?php endif; ?>>
+        <input id="reviewTest" type="submit" class="button" value="Review test" <?php if ($submissionStatus == 'INCOMPLETE') : ?>disabled<?php endif; ?>>
     </form>
     <ul class="content-navigation__secondary">
         <li>

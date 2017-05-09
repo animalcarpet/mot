@@ -1,18 +1,18 @@
 <?php
+
 namespace DvsaCommonApiTest\Service\Exception;
 
 use DvsaCommonApi\Service\Exception\ServiceException;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ServiceExceptionTest
+ * Class ServiceExceptionTest.
  */
 class ServiceExceptionTest extends PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
-        $message = "error";
+        $message = 'error';
         $statusCode = 501;
         $serviceException = new ServiceException($message, $statusCode);
 
@@ -22,7 +22,7 @@ class ServiceExceptionTest extends PHPUnit_Framework_TestCase
 
     public function testConstructorWithDefaults()
     {
-        $message = "error";
+        $message = 'error';
         $serviceException = new ServiceException($message);
 
         $this->assertEquals($message, $serviceException->getMessage());
@@ -46,9 +46,9 @@ class ServiceExceptionTest extends PHPUnit_Framework_TestCase
         $serviceException->addError($errorMessage, $code, $displayMessage);
 
         $expectedErrors = [[
-            "message" => $errorMessage,
-            "code" => $code,
-            "displayMessage" => $displayMessage
+            'message' => $errorMessage,
+            'code' => $code,
+            'displayMessage' => $displayMessage,
         ]];
 
         $this->assertEquals($expectedErrors, $serviceException->getErrors());
@@ -63,9 +63,9 @@ class ServiceExceptionTest extends PHPUnit_Framework_TestCase
         $serviceException->addError($errorMessage, $code);
 
         $expectedErrors = [[
-            "message" => $errorMessage,
-            "code" => $code,
-            "displayMessage" => ServiceException::ERROR_GENERIC_MSG
+            'message' => $errorMessage,
+            'code' => $code,
+            'displayMessage' => ServiceException::ERROR_GENERIC_MSG,
         ]];
 
         $this->assertEquals($expectedErrors, $serviceException->getErrors());
@@ -77,9 +77,9 @@ class ServiceExceptionTest extends PHPUnit_Framework_TestCase
         $code = 11;
 
         $expectedError = [
-            "message" => $errorMessage,
-            "code" => $code,
-            "displayMessage" => ServiceException::ERROR_GENERIC_MSG
+            'message' => $errorMessage,
+            'code' => $code,
+            'displayMessage' => ServiceException::ERROR_GENERIC_MSG,
         ];
 
         $this->assertEquals($expectedError, ServiceException::createError($errorMessage, $code));
@@ -94,9 +94,9 @@ class ServiceExceptionTest extends PHPUnit_Framework_TestCase
         $serviceException->addError($errorMessage, $code);
 
         $expectedErrors = [[
-            "message" => $errorMessage,
-            "code" => $code,
-            "displayMessage" => ServiceException::ERROR_GENERIC_MSG
+            'message' => $errorMessage,
+            'code' => $code,
+            'displayMessage' => ServiceException::ERROR_GENERIC_MSG,
         ]];
 
         $jsonModel = $serviceException->getJsonModel();
@@ -148,17 +148,17 @@ class ServiceExceptionTest extends PHPUnit_Framework_TestCase
         $array1 = [
             'rfrs' => [
                 '2035' => [
-                    'justification' => 0
-                ]
-            ]
+                    'justification' => 0,
+                ],
+            ],
         ];
 
         $array2 = [
             'rfrs' => [
                 '2031' => [
-                    'justification' => 1
-                ]
-            ]
+                    'justification' => 1,
+                ],
+            ],
         ];
 
         $expected = [

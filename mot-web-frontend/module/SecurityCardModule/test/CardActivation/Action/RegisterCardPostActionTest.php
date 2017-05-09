@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardActivation\Action;
 
 use Application\Model\RoleSummaryCollection;
 use Core\Action\ViewActionResult;
-use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
 use Dvsa\Mot\ApiClient\Exception\ResourceConflictException;
@@ -15,19 +14,10 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action\RegisterCardPostA
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardViewStrategy;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardViewModel;
-use DvsaCommon\Enum\RoleCode;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
-use DvsaFeature\FeatureToggles;
-use Zend\Di\ServiceLocator;
-use Zend\EventManager\Exception\DomainException;
 use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\View\Model\ViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\TwoFactorNominationNotificationService;
 
 class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
@@ -60,7 +50,6 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('sendNotificationsForPendingNominations')
             ->willReturn(new RoleSummaryCollection([]));
-        ;
     }
 
     public function testWhenFormInvalid_shouldReturnErrors()
@@ -69,7 +58,6 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         $this->request->setPost(new Parameters());
         /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
-
 
         $this->assertInstanceOf(ViewActionResult::class, $result);
         /** @var RegisterCardViewModel $vm */
@@ -103,12 +91,10 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
-
         $this->assertInstanceOf(ViewActionResult::class, $result);
         /** @var RegisterCardViewModel $vm */
         $vm = $result->getViewModel();
         $this->assertEquals('', $vm->getForm()->getPinField()->getValue());
-
     }
 
     public function testWhenFormValid_shouldRedirectToSuccessPage()
@@ -188,7 +174,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
-        $this->assertEquals("Enter a valid serial number",
+        $this->assertEquals('Enter a valid serial number',
             $result->getViewModel()->getForm()->getSerialNumberField()->getMessages()[0]
         );
         $this->assertTrue($result->getViewModel()->isInvalidSerialNumber());

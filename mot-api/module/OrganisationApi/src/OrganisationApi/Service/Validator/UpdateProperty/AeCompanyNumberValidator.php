@@ -11,9 +11,9 @@ class AeCompanyNumberValidator extends AbstractValidator implements ValidatorInt
 {
     public function validate(array $data)
     {
-        if(empty($data[AuthorisedExaminerPatchModel::COMPANY_NUMBER])) {
+        if (empty($data[AuthorisedExaminerPatchModel::COMPANY_NUMBER])) {
             $errorSchema = new ErrorSchema();
-            $errorSchema->add("Company number - must not be empty");
+            $errorSchema->add('Company number - must not be empty');
             $errorSchema->throwIfAny();
         }
     }

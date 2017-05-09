@@ -64,7 +64,7 @@ class ContingencyTestController extends AbstractDvsaMotTestController
 
         /* @var LoggedInUserManager $loggedInManager */
         $loggedInManager = $this->getServiceLocator()->get('LoggedInUserManager');
-        $loggedInVts     = $loggedInManager->getAllVts();
+        $loggedInVts = $loggedInManager->getAllVts();
 
         $parameters = new ContingencyTestParameters();
         $validationSummary = null;
@@ -110,11 +110,11 @@ class ContingencyTestController extends AbstractDvsaMotTestController
         $this->enableGdsLayout('Record contingency test', 'MOT testing');
 
         return $this->createViewModel('contingency-test/index.phtml', [
-            'params'                 => $parameters,
-            'sites'                  => $loggedInVts,
+            'params' => $parameters,
+            'sites' => $loggedInVts,
             'contingencyReasonCodes' => $this->getContingencyReasonCodes(),
-            'inlineMessages'         => $inlineMessages,
-            'validationSummary'      => $validationSummary,
+            'inlineMessages' => $inlineMessages,
+            'validationSummary' => $validationSummary,
         ]);
     }
 
@@ -149,9 +149,9 @@ class ContingencyTestController extends AbstractDvsaMotTestController
     private function getContingencyReasonCodes()
     {
         return [
-            'systemOutage'         => EmergencyReasonCode::SYSTEM_OUTAGE,
+            'systemOutage' => EmergencyReasonCode::SYSTEM_OUTAGE,
             'communicationProblem' => EmergencyReasonCode::COMMUNICATION_PROBLEM,
-            'other'                => EmergencyReasonCode::OTHER,
+            'other' => EmergencyReasonCode::OTHER,
         ];
     }
 
@@ -163,12 +163,12 @@ class ContingencyTestController extends AbstractDvsaMotTestController
     private function getValidationSummary(array $messages)
     {
         $map = [
-            ContingencyTestValidator::FIELDSET_SITE              => 'Location where the test was performed',
-            ContingencyTestValidator::FIELDSET_DATE              => 'Date the test was performed',
-            ContingencyTestValidator::FIELDSET_TIME              => 'Time the test was performed',
-            ContingencyTestValidator::FIELDSET_REASON            => 'Reason for contingency testing',
+            ContingencyTestValidator::FIELDSET_SITE => 'Location where the test was performed',
+            ContingencyTestValidator::FIELDSET_DATE => 'Date the test was performed',
+            ContingencyTestValidator::FIELDSET_TIME => 'Time the test was performed',
+            ContingencyTestValidator::FIELDSET_REASON => 'Reason for contingency testing',
             ContingencyTestValidator::FIELDSET_OTHER_REASON_TEXT => 'Reason for contingency testing',
-            ContingencyTestValidator::FIELDSET_CONTINGENCY_CODE  => 'Contingency code',
+            ContingencyTestValidator::FIELDSET_CONTINGENCY_CODE => 'Contingency code',
         ];
 
         foreach (array_keys($messages) as $k) {
@@ -176,7 +176,7 @@ class ContingencyTestController extends AbstractDvsaMotTestController
                 continue;
             }
 
-            $messages[$k] = $map[$k] . ' - ' . $messages[$k];
+            $messages[$k] = $map[$k].' - '.$messages[$k];
         }
 
         return $messages;

@@ -6,7 +6,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class InspectionLocationValidator
+ * Class InspectionLocationValidator.
  *
  * Performs validation for an inspection location data bundle. The service may be omitted in which case
  * only the presence / absence of the fields can be checked. If the service is given then it will verify
@@ -14,8 +14,6 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
  *
  * This class does not produce error messages, that is within the domain of the call site. Instead it will
  * create bit masks for the various types of errors that it can detect.
- *
- * @package DvsaMotEnforcement\Validator
  */
 class InspectionLocationValidator
 {
@@ -119,7 +117,7 @@ class InspectionLocationValidator
     }
 
     /**
-     * @return Int site id or null if it was not set or validated
+     * @return int site id or null if it was not set or validated
      */
     public function getSiteId()
     {
@@ -127,7 +125,7 @@ class InspectionLocationValidator
     }
 
     /**
-     * @return String|null  the free text that was entered or null
+     * @return string|null the free text that was entered or null
      */
     public function getLocation()
     {
@@ -135,7 +133,7 @@ class InspectionLocationValidator
     }
 
     /**
-     * The internal name from the POST data we use for the site id value
+     * The internal name from the POST data we use for the site id value.
      *
      * @return string
      */
@@ -145,7 +143,7 @@ class InspectionLocationValidator
     }
 
     /**
-     * The internal name from the POST data we use for the free text comment
+     * The internal name from the POST data we use for the free text comment.
      *
      * @return string
      */
@@ -155,7 +153,7 @@ class InspectionLocationValidator
     }
 
     /**
-     * @return String the site name or null if it was not used / validated
+     * @return string the site name or null if it was not used / validated
      */
     public function getSiteName()
     {

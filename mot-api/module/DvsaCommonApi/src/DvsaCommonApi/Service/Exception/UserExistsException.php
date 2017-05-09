@@ -3,7 +3,7 @@
 namespace DvsaCommonApi\Service\Exception;
 
 /**
- * Class UserExistsException
+ * Class UserExistsException.
  */
 class UserExistsException extends \Exception
 {

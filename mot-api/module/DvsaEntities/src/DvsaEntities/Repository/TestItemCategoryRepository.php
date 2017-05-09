@@ -11,7 +11,7 @@ use DvsaEntities\Entity\TestItemCategoryDescription;
 use DvsaEntities\Entity\TestItemSelector;
 
 /**
- * A repository for Test Item Category related functionality
+ * A repository for Test Item Category related functionality.
  *
  * @codeCoverageIgnore
  */
@@ -54,7 +54,7 @@ class TestItemCategoryRepository extends EntityRepository
     }
 
     /**
-     * @param int $id
+     * @param int    $id
      * @param string $vehicleClass
      *
      * @return TestItemSelector[]
@@ -77,13 +77,14 @@ class TestItemCategoryRepository extends EntityRepository
     }
 
     /**
-     * @param int $parentId
+     * @param int    $parentId
      * @param string $vehicleClass
      *
      * @return TestItemSelector[]
      */
-    public function findByParentIdAndVehicleClass($parentId, $vehicleClass, $audience) {
-        $sql = <<<SQL
+    public function findByParentIdAndVehicleClass($parentId, $vehicleClass, $audience)
+    {
+        $sql = <<<'SQL'
             SELECT
             cat.id, cat.`parent_test_item_category_id`, cat.`section_test_item_category_id`,
             cat_l.id AS desc_id, cat_l.name, cat_l_lang.id AS lang_id, cat_l_lang.code AS lang_code, child.id AS child_id

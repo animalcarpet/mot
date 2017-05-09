@@ -1,4 +1,5 @@
 <?php
+
 use Application\Data\ApiPersonalDetails;
 use Core\TwoStepForm\FormContextInterface;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
@@ -16,7 +17,6 @@ use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Mvc\Controller\AbstractActionController;
 
 class QualificationDetailsEditProcessTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,27 +25,27 @@ class QualificationDetailsEditProcessTest extends \PHPUnit_Framework_TestCase
     const VTS_ID = 1;
     /** @var QualificationDetailsMapper */
     private $qualificationDetailsMapperMock;
-    /** @var  SiteMapper */
+    /** @var SiteMapper */
     private $siteMapperMock;
-    /** @var  CertificatesBreadcrumbs */
+    /** @var CertificatesBreadcrumbs */
     private $qualificationDetailsBreadcrumbsMock;
-    /** @var  ApiPersonalDetails */
+    /** @var ApiPersonalDetails */
     private $personalDetailsServiceMock;
-    /** @var  PersonProfileGuardBuilder */
+    /** @var PersonProfileGuardBuilder */
     private $personProfileGuardBuilderMock;
-    /** @var  ContextProvider */
+    /** @var ContextProvider */
     private $contextProviderMock;
     /** @var AuthorisationServiceInterface */
     private $authorisationServiceMock;
     /** @var FormContextInterface */
     private $contextMock;
-    /** @var  QualificationDetailsEditProcess */
+    /** @var QualificationDetailsEditProcess */
     private $sut;
-    /** @var  QualificationDetailsController */
+    /** @var QualificationDetailsController */
     private $controllerMock;
-    /** @var  PersonProfileGuard */
+    /** @var PersonProfileGuard */
     private $personProfileGuardMock;
-    /** @var  QualificationDetailsRoutes */
+    /** @var QualificationDetailsRoutes */
     private $qualificationDetailsRoutesMock;
 
     private $formData = [
@@ -118,7 +118,8 @@ class QualificationDetailsEditProcessTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if providing correct form data results in createQualificationDetails execution
+     * Test if providing correct form data results in createQualificationDetails execution.
+     *
      * @dataProvider dataProviderTestUpdate
      */
     public function testUpdate($formData, $expected)
@@ -154,26 +155,26 @@ class QualificationDetailsEditProcessTest extends \PHPUnit_Framework_TestCase
         $personalDetailsServiceMock = Xmock::of(ApiPersonalDetails::class);
         $personalDetailsServiceMock->method('getPersonalDetailsData')
             ->willReturn([
-                'id'                   => 1,
-                'firstName'            => 'foo',
-                'middleName'           => 'bar',
-                'surname'              => 'baz',
-                'username'             => 'tester1',
-                'dateOfBirth'          => '1979-12-20',
-                'title'                => 'Mr',
-                'gender'               => 'male',
-                'addressLine1'         => 'foo',
-                'addressLine2'         => 'foo',
-                'addressLine3'         => 'foo',
-                'town'                 => 'foo',
-                'postcode'             => 'AA11 1AA',
-                'email'                => 'foo',
-                'emailConfirmation'    => null,
-                'phone'                => 1234,
+                'id' => 1,
+                'firstName' => 'foo',
+                'middleName' => 'bar',
+                'surname' => 'baz',
+                'username' => 'tester1',
+                'dateOfBirth' => '1979-12-20',
+                'title' => 'Mr',
+                'gender' => 'male',
+                'addressLine1' => 'foo',
+                'addressLine2' => 'foo',
+                'addressLine3' => 'foo',
+                'town' => 'foo',
+                'postcode' => 'AA11 1AA',
+                'email' => 'foo',
+                'emailConfirmation' => null,
+                'phone' => 1234,
                 'drivingLicenceNumber' => 'foo',
                 'drivingLicenceRegion' => 'bar',
-                'positions'            => [],
-                'roles'                => $this->setMockRoles(),
+                'positions' => [],
+                'roles' => $this->setMockRoles(),
             ]);
 
         return $personalDetailsServiceMock;
@@ -182,21 +183,21 @@ class QualificationDetailsEditProcessTest extends \PHPUnit_Framework_TestCase
     private function setMockRoles()
     {
         return [
-            'system'        => [
+            'system' => [
                 'roles' => ['USER'],
             ],
             'organisations' => [10 => [
-                'name'    => 'testing',
-                'number'  => 'VTESTING',
+                'name' => 'testing',
+                'number' => 'VTESTING',
                 'address' => '34 Test Road',
-                'roles'   => ['AEDM'],
+                'roles' => ['AEDM'],
             ]],
-            'sites'         => [20 => [
-                'name'    => 'testing',
-                'number'  => 'VTESTING',
+            'sites' => [20 => [
+                'name' => 'testing',
+                'number' => 'VTESTING',
                 'address' => '34 Test Road',
-                'roles'   => ['TESTER'],
-            ]]
+                'roles' => ['TESTER'],
+            ]],
         ];
     }
 }

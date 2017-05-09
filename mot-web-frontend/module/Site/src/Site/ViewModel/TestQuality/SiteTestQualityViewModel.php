@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\ViewModel\TestQuality;
 
 use Core\Routing\AeRouteList;
@@ -35,13 +36,13 @@ class SiteTestQualityViewModel
     /** @var DateTime */
     private $viewedDate;
 
-    /** @var  UrlPresenterData */
+    /** @var UrlPresenterData */
     private $returnLink;
 
-    /** @var  bool */
+    /** @var bool */
     private $isReturnLinkToAETQI;
 
-    /** @var  TestQualityMonthFilter $monthFilter */
+    /** @var TestQualityMonthFilter $monthFilter */
     private $monthFilter;
 
     public function __construct(
@@ -98,8 +99,7 @@ class SiteTestQualityViewModel
 
         $this->viewedDate = $viewedDate;
 
-        if ($isReturnLinkToAETQI)
-        {
+        if ($isReturnLinkToAETQI) {
             $this->returnLink = new UrlPresenterData(self::RETURN_TO_AE_TQI, AeRouteList::AE_TEST_QUALITY, ['id' => $this->site->getOrganisation()->getId()]);
         } else {
             $this->returnLink = new UrlPresenterData(self::RETURN_TO_VTS, VtsRouteList::VTS, ['id' => $this->getSiteId()]);
@@ -136,7 +136,7 @@ class SiteTestQualityViewModel
 
     public function getTestingPeriodTitle()
     {
-        return "Initial tests " . date("F o", strtotime('last month'));
+        return 'Initial tests '.date('F o', strtotime('last month'));
     }
 
     public function getSiteId()
@@ -150,7 +150,7 @@ class SiteTestQualityViewModel
             return [
                 'query' => [
                     'returnToAETQI' => true,
-                ]
+                ],
             ];
         } else {
             return [];

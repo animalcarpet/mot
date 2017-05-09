@@ -4,7 +4,7 @@ use Vehicle\UpdateVehicleProperty\Form\ModelForm;
 use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 
 /**
- * @var UpdateVehiclePropertyViewModel $viewModel
+ * @var UpdateVehiclePropertyViewModel
  */
 
 /** @var OtherModelForm $form */
@@ -12,16 +12,16 @@ $form = $viewModel->getForm();
 ?>
 <fieldset>
     <div id="<?php echo ModelForm::DATA_TARGET_ID ?>"  aria-hidden="false">
-        <label for="<?php echo $form->getOtherModelElement()->getAttribute("id") ?>" class="form-label">
+        <label for="<?php echo $form->getOtherModelElement()->getAttribute('id') ?>" class="form-label">
             Enter vehicle model
         </label>
 
         <?php echo $this->partial(
             'partial/gds/form/control',
             [
-                'element' => $form->getOtherModelElement()
+                'element' => $form->getOtherModelElement(),
             ]
-        );?>
+        ); ?>
     </div>
 </fieldset>
 

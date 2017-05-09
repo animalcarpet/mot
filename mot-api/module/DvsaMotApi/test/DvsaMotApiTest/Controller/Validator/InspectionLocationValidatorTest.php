@@ -6,9 +6,7 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaMotApi\Controller\Validator\InspectionLocationValidator;
 
 /**
- * Class InspectionLocationValidatorTest
- *
- * @package DvsaMotApiTest\Controller\Validator
+ * Class InspectionLocationValidatorTest.
  */
 class InspectionLocationValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,8 +18,8 @@ class InspectionLocationValidatorTest extends \PHPUnit_Framework_TestCase
         $v = new InspectionLocationValidator();
         $v->validate(
             [
-                'siteid'   => 'V1234',
-                'location' => 'this is excess informaiton'
+                'siteid' => 'V1234',
+                'location' => 'this is excess informaiton',
             ]
         );
     }
@@ -34,8 +32,8 @@ class InspectionLocationValidatorTest extends \PHPUnit_Framework_TestCase
         $v = new InspectionLocationValidator('eric', 'ernie');
         $v->validate(
             [
-                'eric'  => 'V1234',
-                'ernie' => 'this is excess informaiton'
+                'eric' => 'V1234',
+                'ernie' => 'this is excess informaiton',
             ]
         );
     }
@@ -100,6 +98,7 @@ class InspectionLocationValidatorTest extends \PHPUnit_Framework_TestCase
                 ->setName('V1234')
                 ->setId(42);
         }
+
         return null;
     }
 }

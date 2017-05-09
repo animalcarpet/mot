@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * EventPersonMap
+ * EventPersonMap.
  *
  * @ORM\Table(
  *  name="event_person_map",

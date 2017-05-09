@@ -24,13 +24,12 @@ class TesterStatisticsService implements AutoWireableInterface
 
     private $mapper;
 
-    function __construct(
+    public function __construct(
         TesterStatisticsRepository $repository,
         MotAuthorisationServiceInterface $authorisationService,
         ViewTesterTestQualityAssertion $viewTesterTestQualityAssertion,
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->authorisationService = $authorisationService;
         $this->viewTesterTestQualityAssertion = $viewTesterTestQualityAssertion;
@@ -44,7 +43,7 @@ class TesterStatisticsService implements AutoWireableInterface
 
         $validator = new StatisticsParameterCheck();
         if (!$validator->isValid($year, $month)) {
-            throw new NotFoundException("Site Statistics");
+            throw new NotFoundException('Site Statistics');
         }
 
         $statistics = $this->repository->getForSite($siteId, $year, $month);
@@ -59,7 +58,7 @@ class TesterStatisticsService implements AutoWireableInterface
 
         $validator = new StatisticsParameterCheck();
         if (!$validator->isValid($year, $month)) {
-            throw new NotFoundException("Tester Statistics");
+            throw new NotFoundException('Tester Statistics');
         }
 
         $statistics = $this->repository->getForTester($testerId, $year, $month);

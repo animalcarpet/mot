@@ -5,16 +5,15 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SiteContact
+ * SiteContact.
  *
  * @ORM\Table(name="enforcement_site_assessment")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SiteRiskAssessmentRepository")
  */
 class EnforcementSiteAssessment extends Entity
 {
-
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -97,6 +96,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -116,6 +116,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param mixed $aeOrganisationId
+     *
      * @return $this
      */
     public function setAeOrganisationId($aeOrganisationId)
@@ -135,6 +136,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param mixed $siteAssessmentScore
+     *
      * @return $this
      */
     public function setSiteAssessmentScore($siteAssessmentScore)
@@ -154,6 +156,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param mixed $aeRepresentativeName
+     *
      * @return $this
      */
     public function setAeRepresentativeName($aeRepresentativeName)
@@ -173,6 +176,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param mixed $aeRepresentativePosition
+     *
      * @return $this
      */
     public function setAeRepresentativePosition($aeRepresentativePosition)
@@ -192,6 +196,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param Person $tester
+     *
      * @return $this
      */
     public function setTester($tester)
@@ -211,6 +216,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param Person $examiner
+     *
      * @return $this
      */
     public function setExaminer($examiner)
@@ -230,6 +236,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param Person $representative
+     *
      * @return $this
      */
     public function setRepresentative($representative)
@@ -249,6 +256,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param mixed $visitDate
+     *
      * @return $this
      */
     public function setVisitDate($visitDate)
@@ -268,6 +276,7 @@ class EnforcementSiteAssessment extends Entity
 
     /**
      * @param Site $site
+     *
      * @return $this
      */
     public function setSite($site)

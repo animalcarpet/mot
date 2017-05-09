@@ -7,9 +7,9 @@ use Site\Service\RiskAssessmentScoreRagClassifier;
 
 class StatusPresenter
 {
-
     /**
      * @param string $ragScore
+     *
      * @return StatusPresenterData
      */
     public function getStatusFields($ragScore)
@@ -21,7 +21,7 @@ class StatusPresenter
                 return new StatusPresenterData(RiskAssessmentScoreRagClassifier::AMBER_STATUS, Badge::warning());
             case RiskAssessmentScoreRagClassifier::GREEN_STATUS:
                 return new StatusPresenterData(RiskAssessmentScoreRagClassifier::GREEN_STATUS, Badge::success());
-            default :
+            default:
                 return new StatusPresenterData(RiskAssessmentScoreRagClassifier::WHITE_STATUS, Badge::normal());
         }
     }

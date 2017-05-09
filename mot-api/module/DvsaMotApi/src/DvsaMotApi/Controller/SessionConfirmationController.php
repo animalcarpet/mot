@@ -7,7 +7,6 @@ use DvsaCommon\Http\HttpStatus;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use Zend\Http\Response;
-use Zend\View\Model\JsonModel;
 
 class SessionConfirmationController extends AbstractDvsaRestfulController
 {

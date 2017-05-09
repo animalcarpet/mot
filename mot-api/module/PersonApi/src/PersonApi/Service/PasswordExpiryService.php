@@ -2,15 +2,12 @@
 
 namespace PersonApi\Service;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaEntities\Entity;
 use DvsaEntities\Repository\PasswordDetailRepository;
-use DvsaEntities\Repository\PersonRepository;
 
 /**
- * Data for dashboard
+ * Data for dashboard.
  */
 class PasswordExpiryService
 {
@@ -44,11 +41,11 @@ class PasswordExpiryService
         $passwordNotificationSentOn = $this->passwordDetailRepository->findPasswordNotificationSentDateByPersonId($userId);
         $daysUntilPasswordExpires = $this->getDaysUntilPasswordExpires($passwordExpiryDate);
 
-        foreach($this->getNotificationDays() as $days) {
+        foreach ($this->getNotificationDays() as $days) {
             $daysToExpire = clone $passwordExpiryDate;
             $daysToExpire->sub(new \DateInterval("P{$days}D"));
 
-            if($daysToExpire < $today && $daysToExpire > $passwordNotificationSentOn) {
+            if ($daysToExpire < $today && $daysToExpire > $passwordNotificationSentOn) {
                 $this->passwordExpiryNotificationService->send($userId, $daysUntilPasswordExpires);
                 break;
             }

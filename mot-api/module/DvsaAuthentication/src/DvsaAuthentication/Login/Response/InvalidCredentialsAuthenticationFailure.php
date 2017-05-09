@@ -5,7 +5,7 @@ namespace DvsaAuthentication\Login\Response;
 use DvsaCommon\Authn\AuthenticationResultCode;
 
 /**
- * Represents error occurred due to invalid credentials (e.g username and/or password)
+ * Represents error occurred due to invalid credentials (e.g username and/or password).
  */
 class InvalidCredentialsAuthenticationFailure extends AuthenticationResponse
 {

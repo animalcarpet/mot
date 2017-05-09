@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\InputFilter;
 
 use DvsaClient\Mapper\QualificationDetailsMapper;
@@ -26,8 +27,9 @@ class QualificationDetailsInputFilter extends InputFilter implements AutoWireabl
         try {
             $data = QualificationDetailsMapper::mapFormDataToDto($this->data, $this->group);
             $this->qualificationDetailsMapper->validateQualificationDetails($this->personId, $data);
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->validationMessages = $e->getErrors();
+
             return false;
         }
 

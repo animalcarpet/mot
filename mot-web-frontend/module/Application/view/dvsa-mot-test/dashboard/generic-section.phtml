@@ -3,16 +3,15 @@
 /**
  * placeholders:
  * dashboard-section-body
- * dashboard-section-js
+ * dashboard-section-js.
  *
- * @var $sectionId
+ * @var
  * @var $bodyVisible
  * @var $actionName
  * @var $caption
  * @var $captionValue
  * @var $useDefaultJS
  * @var $bodyVisible
- *
  */
 $bodyVisible = isset($bodyVisible) ? $bodyVisible : true;
 $useDefaultJS = isset($useDefaultJS) ? $useDefaultJS : true;
@@ -30,7 +29,7 @@ $displayBody = isset($displayBody) ? $displayBody : false;
                    <?php echo $this->placeholder('dashboard-section-header-value'); ?>
                 </div>
                 <div class="col-sm-3" id="dashboard-section-header-toggler-<?php echo $sectionId ?>">
-                    <?php if($bodyVisible): ?>
+                    <?php if ($bodyVisible): ?>
                     <button type="button" class="btn btn-primary pull-right "
                             id="dashboard-section-toggler-<?php echo $sectionId ?>"
                             data-toggle="collapse" data-target="#dashboard-section-body-<?php echo $sectionId ?>">
@@ -51,7 +50,7 @@ $displayBody = isset($displayBody) ? $displayBody : false;
                     <div class="col-sm-12">
                         <form method="POST">
                             <?php echo $this->csrfToken() ?>
-                            <?php echo $this->placeholder("dashboard-section-body") ?>
+                            <?php echo $this->placeholder('dashboard-section-body') ?>
 
                             <div>
                                 <input type="hidden" name="action" value="<?php echo $actionName ?>"/>
@@ -92,7 +91,7 @@ $this->placeholder('dashboard-section-js')->captureStart();
 JS;
 $this->placeholder('dashboard-section-js')->captureEnd();
 
-$this->placeholder("dashboard-section-body")->set("");
+$this->placeholder('dashboard-section-body')->set('');
 ?>
 
 

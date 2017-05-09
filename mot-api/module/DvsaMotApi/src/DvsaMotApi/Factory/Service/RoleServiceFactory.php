@@ -8,8 +8,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class RoleServiceFactory
- * @package DvsaMotApi\Factory\Service
+ * Class RoleServiceFactory.
  */
 class RoleServiceFactory implements FactoryInterface
 {

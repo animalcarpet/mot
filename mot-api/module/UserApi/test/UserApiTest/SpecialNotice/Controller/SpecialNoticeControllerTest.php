@@ -1,4 +1,5 @@
 <?php
+
 namespace UserApiTest\SpecialNotice\Controller;
 
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
@@ -7,7 +8,7 @@ use UserApi\SpecialNotice\Controller\SpecialNoticeController;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 
 /**
- * Class SpecialNoticeControllerTest
+ * Class SpecialNoticeControllerTest.
  */
 class SpecialNoticeControllerTest extends AbstractRestfulControllerTestCase
 {

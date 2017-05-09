@@ -1,11 +1,11 @@
 <?php
 use DvsaMotTest\Form\VehicleSearch\DuplicateCertificateRegistrationSearchForm;
-/** @var \DvsaMotTest\ViewModel\VehicleSearch\DuplicateCertificateSearchViewModel $viewModel*/
 
+/** @var \DvsaMotTest\ViewModel\VehicleSearch\DuplicateCertificateSearchViewModel $viewModel */
 $form = $viewModel->getForm();
 $vinSearchUrl = $this->url('replacement-certificate-vehicle-search-vin');
 
-if($viewModel->getShowNoResultsMessage()): ?>
+if ($viewModel->getShowNoResultsMessage()): ?>
     <div class="message">
         <p><strong>0</strong> vehicles found with registration <strong><?php echo $this->escapeHtml($form->getSearchInputElement()->getValue()) ?></strong></p>
         <p>Your search returned no results.</p>
@@ -19,9 +19,9 @@ echo $this->form()->openTag($form); ?>
             <?php echo $this->partial(
                 'partial/gds/form/control',
                 [
-                    'element' => $form->getSearchInputElement()
+                    'element' => $form->getSearchInputElement(),
                 ]
-            );?>
+            ); ?>
 
         <p><a href="<?php echo $vinSearchUrl; ?>">Search by VIN</a></p>
     </div>
@@ -30,9 +30,9 @@ echo $this->form()->openTag($form); ?>
         echo $this->partial(
             'partial/gds/form/control-navigation',
             [
-                'id'         => DuplicateCertificateRegistrationSearchForm::FIELD_SUBMIT,
-                'name'       => DuplicateCertificateRegistrationSearchForm::FIELD_SUBMIT,
-                'value'      => 'Search',
+                'id' => DuplicateCertificateRegistrationSearchForm::FIELD_SUBMIT,
+                'name' => DuplicateCertificateRegistrationSearchForm::FIELD_SUBMIT,
+                'value' => 'Search',
                 'navigation' => [
                     'Return to home' => '/',
                 ],

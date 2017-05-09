@@ -5,9 +5,7 @@ namespace DvsaCommonApiTest\Stub;
 use DvsaEntities\Repository\ConfigurationRepositoryInterface;
 
 /**
- * Class ConfigurationRepositoryStub
- *
- * @package DvsaCommonApiTest\Stub
+ * Class ConfigurationRepositoryStub.
  */
 class ConfigurationRepositoryStub implements ConfigurationRepositoryInterface
 {
@@ -28,7 +26,7 @@ class ConfigurationRepositoryStub implements ConfigurationRepositoryInterface
      */
     public static function returningValue($value)
     {
-        return new ConfigurationRepositoryStub($value);
+        return new self($value);
     }
 
     /**

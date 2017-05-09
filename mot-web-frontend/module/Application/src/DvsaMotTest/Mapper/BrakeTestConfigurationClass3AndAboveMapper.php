@@ -142,21 +142,16 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $brakeResult = $motTest->getBrakeTestResult();
 
         if ($vehicleClass == VehicleClassCode::CLASS_7) {
-
             if (is_null($brakeResult)) {
-
                 if (!empty($motTest->getPreviousTestVehicleWight())) {
                     return WeightSourceCode::DGW;
                 }
-
             } else {
-
                 $brakeResultObject = new BrakeTestResultClass3AndAbove($brakeResult);
 
                 if (!empty($brakeResultObject->getVehicleWeight())) {
                     return WeightSourceCode::DGW;
                 }
-
             }
         }
 

@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Model;
 
-
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Controller\AddAnnualAssessmentCertificatesController;
 use Dvsa\Mot\Frontend\PersonModule\Form\AnnualAssessmentCertificatesForm;
@@ -15,26 +14,25 @@ use DvsaClient\Mapper\AnnualAssessmentCertificatesMapper;
 use DvsaCommon\ApiClient\Person\MotTestingAnnualCertificate\Dto\MotTestingAnnualCertificateDto;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Mvc\Controller\AbstractActionController;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 class AnnualAssessmentCertificatesAddProcessTest extends \PHPUnit_Framework_TestCase
 {
     /** @var AnnualAssessmentCertificatesMapper|MockObj */
     private $annualAssessmentCertificatesMapper;
-    /** @var  CertificatesBreadcrumbs|MockObj */
+    /** @var CertificatesBreadcrumbs|MockObj */
     private $certificatesBreadcrumbs;
-    /** @var  ContextProvider|MockObj */
+    /** @var ContextProvider|MockObj */
     private $contextProviderMock;
-    /** @var  AnnualAssessmentCertificatesRoutes|MockObj */
+    /** @var AnnualAssessmentCertificatesRoutes|MockObj */
     private $annualAssessmentCertificatesRoutes;
-    /** @var  AnnualAssessmentCertificatesPermissions|MockObj */
+    /** @var AnnualAssessmentCertificatesPermissions|MockObj */
     private $certificatesPermissions;
-    /** @var  AddAnnualAssessmentCertificatesController|MockObj */
+    /** @var AddAnnualAssessmentCertificatesController|MockObj */
     private $controllerMock;
-    /** @var  AnnualAssessmentCertificatesAddProcess */
+    /** @var AnnualAssessmentCertificatesAddProcess */
     private $process;
-    /** @var  MotAuthorisationServiceInterface|MockObj */
+    /** @var MotAuthorisationServiceInterface|MockObj */
     private $motAuthorisationServiceInterface;
 
     private $badFormData = [
@@ -69,7 +67,6 @@ class AnnualAssessmentCertificatesAddProcessTest extends \PHPUnit_Framework_Test
             $this->certificatesPermissions
             );
 
-
         $this->controllerMock = Xmock::of(AddAnnualAssessmentCertificatesController::class);
 
         $context = (new FormContext(1, 1, 'A', $this->controllerMock));
@@ -81,6 +78,7 @@ class AnnualAssessmentCertificatesAddProcessTest extends \PHPUnit_Framework_Test
 
     /**
      * @dataProvider dataProviderTestIsAuthorisedToCreateAnnualAssessmentCertificates
+     *
      * @param $result
      */
     public function testIsAuthorisedToCreateAnnualAssessmentCertificates($result)
@@ -101,6 +99,7 @@ class AnnualAssessmentCertificatesAddProcessTest extends \PHPUnit_Framework_Test
 
     /**
      * @dataProvider dataProviderTestUpdate
+     *
      * @param $formData
      * @param $expected
      */
@@ -134,6 +133,7 @@ class AnnualAssessmentCertificatesAddProcessTest extends \PHPUnit_Framework_Test
 
     /**
      * @dataProvider dataProviderTestTransformFormIntoGdsTable
+     *
      * @param $input
      * @param $expected
      */
@@ -145,20 +145,19 @@ class AnnualAssessmentCertificatesAddProcessTest extends \PHPUnit_Framework_Test
         $scoreAchieved = $result->getRow(2)->getValue();
 
         $this->assertEquals($certificateNumber->getContent(), $expected[AnnualAssessmentCertificatesForm::FIELD_CERT_NUMBER]);
-        $this->assertEquals($scoreAchieved->getContent(), ($expected[AnnualAssessmentCertificatesForm::FIELD_SCORE] . '%'));
+        $this->assertEquals($scoreAchieved->getContent(), ($expected[AnnualAssessmentCertificatesForm::FIELD_SCORE].'%'));
     }
-
 
     public function dataProviderTestTransformFormIntoGdsTable()
     {
         return [
             [
-                'input'     => $this->formData,
-                'expected'  => $this->formData,
+                'input' => $this->formData,
+                'expected' => $this->formData,
             ],
             [
-                'input'     => $this->badFormData,
-                'expected'  => $this->formData,
+                'input' => $this->badFormData,
+                'expected' => $this->formData,
             ],
         ];
     }

@@ -147,11 +147,11 @@ class SearchParamTest extends AbstractServiceTestCase
     {
         $this->setExpectedException(
             \InvalidArgumentException::class,
-            'fromDto Expects instance of SearchParamsDto, you passed ' . VehicleDto::class
+            'fromDto Expects instance of SearchParamsDto, you passed '.VehicleDto::class
         );
 
         $obj = new SearchParam($this->mockEntityManager);
-        $obj->fromDto(new VehicleDto);
+        $obj->fromDto(new VehicleDto());
     }
 
     public function testToDto()

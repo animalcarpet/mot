@@ -55,8 +55,8 @@ use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrde
 
 return [
     'factories' => [
-        RegisteredCardService::class       => RegisteredCardServiceFactory::class,
-        RegisterCardService::class         => RegisterCardServiceFactory::class,
+        RegisteredCardService::class => RegisteredCardServiceFactory::class,
+        RegisterCardService::class => RegisterCardServiceFactory::class,
         AlreadyLoggedInTodayWithLostForgottenCardCookieService::class => AlreadyLoggedInTodayWithLostForgottenCardCookieServiceFactory::class,
         RegisterCardInformationCookieService::class => RegisterCardInformationCookieServiceFactory::class,
         OrderSecurityCardStepService::class => OrderSecurityCardStepServiceFactory::class,
@@ -82,5 +82,5 @@ return [
         OrderSecurityCardEventService::class => OrderSecurityCardEventServiceFactory::class,
         OrderSecurityCardNotificationService::class => OrderSecurityCardNotificationServiceFactory::class,
         AlreadyOrderedCardCookieService::class => AlreadyOrderedCardCookieService::class,
-    ]
+    ],
 ];

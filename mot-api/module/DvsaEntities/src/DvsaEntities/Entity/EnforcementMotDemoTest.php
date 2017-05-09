@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -63,7 +64,7 @@ class EnforcementMotDemoTest extends Entity
 
     //  ----    Test Result functions   --
     /**
-     * @param boolean $satisfactory
+     * @param bool $satisfactory
      *
      * @return EnforcementMotDemoTest
      */
@@ -90,6 +91,7 @@ class EnforcementMotDemoTest extends Entity
     public function setComment($comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 

@@ -9,7 +9,6 @@ use Application\Data\ApiPersonalDetails;
 
 class PersonStoreFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new PersonStore(

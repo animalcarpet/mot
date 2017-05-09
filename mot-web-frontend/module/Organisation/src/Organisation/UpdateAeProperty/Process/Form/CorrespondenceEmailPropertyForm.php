@@ -8,4 +8,3 @@ class CorrespondenceEmailPropertyForm extends RegisteredEmailPropertyForm
 {
     const FIELD_EMAIL = UpdateAePropertyAction::AE_CORRESPONDENCE_EMAIL_PROPERTY;
 }
-

@@ -22,8 +22,7 @@ class UpdateAePropertyReviewAction implements AutoWireableInterface
     public function __construct(
         UpdateAePropertyProcessBuilder $processBuilder,
         ReviewStepAction $reviewStepProcess
-    )
-    {
+    ) {
         $this->processBuilder = $processBuilder;
         $this->reviewStepProcess = $reviewStepProcess;
     }

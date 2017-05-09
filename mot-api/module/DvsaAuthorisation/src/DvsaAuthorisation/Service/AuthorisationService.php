@@ -3,7 +3,6 @@
 namespace DvsaAuthorisation\Service;
 
 use DvsaCommon\Auth\AbstractMotAuthorisationService;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Model\PersonAuthorization;
@@ -25,41 +24,42 @@ class AuthorisationService extends AbstractMotAuthorisationService implements Au
     const HERO_FINANCE = 'finance';
 
     /**
-     * @var AuthenticationService $authenticationService
+     * @var AuthenticationService
      */
     private $authenticationService;
 
     /**
-     * @var RbacRepository $rbacRepository
+     * @var RbacRepository
      */
     private $rbacRepository;
 
     /**
-     * An array containing PersonAuthorization objects for user ID's
-     * @var array $cachedPersonAuthorization
+     * An array containing PersonAuthorization objects for user ID's.
+     *
+     * @var array
      */
     private $cachedPersonAuthorization = [];
 
     /**
      * @param AuthenticationService $authenticationService
-     * @param RbacRepository $rbacRepository
+     * @param RbacRepository        $rbacRepository
      */
     public function __construct(
         AuthenticationService $authenticationService,
         RbacRepository $rbacRepository
     ) {
         $this->authenticationService = $authenticationService;
-        $this->rbacRepository        = $rbacRepository;
+        $this->rbacRepository = $rbacRepository;
     }
 
     /**
-     * Set the cache back to an empty array
+     * Set the cache back to an empty array.
      */
     public function flushAuthorisationCache()
     {
         $this->cachedPersonAuthorization = [];
     }
-    
+
     /**
      * @param $id
      *
@@ -78,14 +78,16 @@ class AuthorisationService extends AbstractMotAuthorisationService implements Au
     public function assertAuthenticatedAsPerson($id)
     {
         if (!$this->isAuthenticatedAsPerson($id)) {
-            throw new UnauthorisedException("You are not authorised to access this resource");
+            throw new UnauthorisedException('You are not authorised to access this resource');
         }
     }
 
     /**
      * Get the PersonAuthorization object for a user by ID. If $personId is
-     * not supplied then the ID of the logged in user will be used
+     * not supplied then the ID of the logged in user will be used.
+     *
      * @param null|int $personId The ID of the user to retrieve the authorisation for
+     *
      * @return PersonAuthorization
      */
     public function getPersonAuthorization($personId = null)
@@ -111,7 +113,7 @@ class AuthorisationService extends AbstractMotAuthorisationService implements Au
     public function personHasRole($person, $roleName)
     {
         if (!$person instanceof Person) {
-            throw new \Exception("Expecting a Person, got " . get_class($person));
+            throw new \Exception('Expecting a Person, got '.get_class($person));
         }
 
         return $this->personIdHasRole(
@@ -132,6 +134,7 @@ class AuthorisationService extends AbstractMotAuthorisationService implements Au
 
     /**
      * @param null|int $personId The ID of the user to retrieve the hero status for
+     *
      * @return mixed
      */
     public function getHero($personId = null)

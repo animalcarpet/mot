@@ -1,7 +1,9 @@
 <?php
+
 use DvsaEntities\DataConversion\FuzzySearchConverter;
 
-class FuzzySearchConverterTest extends \PHPUnit_Framework_TestCase{
+class FuzzySearchConverterTest extends \PHPUnit_Framework_TestCase
+{
     private $fuzzySearchConverter;
 
     public function setUp()
@@ -24,7 +26,7 @@ class FuzzySearchConverterTest extends \PHPUnit_Framework_TestCase{
         return [
             ['-', ''],
             ['OIZEASGTLB-/. ', '0123456778'],
-            [null, null]
+            [null, null],
         ];
     }
 }

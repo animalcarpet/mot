@@ -9,11 +9,10 @@ use DvsaEntities\Repository\GenderRepository;
 use DvsaEntities\Repository\TitleRepository;
 
 /**
- * Person details mapper
+ * Person details mapper.
  */
 class PersonMapper
 {
-
     private $titleRepository;
     private $genderRepository;
 

@@ -10,9 +10,9 @@ $label = isset($label) ? $label : '';
 ?>
 <?php echo $this->partial(
     'partial/forms/hidden-element.phtml', [
-        'name'  => $name,
+        'name' => $name,
         'value' => $defaultValue,
-        'id'    => 'hidden_' . $id
+        'id' => 'hidden_'.$id,
     ]
 ); ?>
 <label for="<?php echo $this->escapeHtmlAttr($id); ?>" id="<?php echo $this->escapeHtmlAttr($labelId); ?>"

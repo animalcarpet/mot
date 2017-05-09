@@ -19,7 +19,7 @@ class VtsOverviewRagStatus extends GeneralSidebarStatusItem
 
     public function getSecondaryText()
     {
-        return "Score: " . $this->score;
+        return 'Score: '.$this->score;
     }
 
     public function escapeSecondaryText()

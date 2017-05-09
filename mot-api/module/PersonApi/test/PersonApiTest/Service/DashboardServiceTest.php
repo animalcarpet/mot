@@ -30,7 +30,7 @@ use SiteApi\Service\SiteService;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 
 /**
- * Tests for DashboardService
+ * Tests for DashboardService.
  */
 class DashboardServiceTest extends AbstractServiceTestCase
 {
@@ -118,25 +118,25 @@ class DashboardServiceTest extends AbstractServiceTestCase
         $ae1Id = 123;
         $aesById = [
             $ae1Id => (new AuthorisationForAuthorisedExaminerEntity())
-                ->setId($ae1Id)->setOrganisation(new Organisation())
+                ->setId($ae1Id)->setOrganisation(new Organisation()),
         ];
         $personId = 18765;
         $site1Id = 12345;
         $sitesByAe = [
             $ae1Id => [
-                (new Site())->setId($site1Id)
-            ]
+                (new Site())->setId($site1Id),
+            ],
         ];
         $sitePosition = 'NOBODY';
         $positionsBySite = [
             $site1Id => [
                 (new SiteBusinessRoleMap())
-                    ->setSiteBusinessRole((new Entity\SiteBusinessRole())->setName($sitePosition))
-            ]
+                    ->setSiteBusinessRole((new Entity\SiteBusinessRole())->setName($sitePosition)),
+            ],
         ];
         $ae1Position = 'GOD';
         $aesPositionNames = [
-            $ae1Id => $ae1Position
+            $ae1Id => $ae1Position,
         ];
 
         //when
@@ -155,13 +155,13 @@ class DashboardServiceTest extends AbstractServiceTestCase
     public function testGetDataForDashboardByPersonIdAssemblesDashboardData()
     {
         $specialNoticeSummary = [
-            'overdueCount'            => 1,
-            'unreadCount'             => 2,
-            'acknowledgementDeadline' => date('Y-m-d', strtotime('tomorrow'))
+            'overdueCount' => 1,
+            'unreadCount' => 2,
+            'acknowledgementDeadline' => date('Y-m-d', strtotime('tomorrow')),
         ];
 
         $overdueSpecialNoticesForClasses = [
-            3 => 1
+            3 => 1,
         ];
 
         $notification = new Notification();
@@ -169,8 +169,6 @@ class DashboardServiceTest extends AbstractServiceTestCase
         $inProgressDemoTestNumber = 'ABCD1234';
 
         $hero = 'vehicle-examiner';
-
-        //
 
         $this->setDummyDependenciesForGetDataForDashboardByPersonId();
 
@@ -199,11 +197,7 @@ class DashboardServiceTest extends AbstractServiceTestCase
             ->method('getHero')
             ->willReturn($hero);
 
-        //
-
         $dashboardData = $this->buildService()->getDataForDashboardByPersonId(1);
-
-        //
 
         $this->assertEquals($hero, $dashboardData->getHero());
         $this->assertCount(0, $dashboardData->getAuthorisedExaminers());
@@ -317,9 +311,9 @@ class DashboardServiceTest extends AbstractServiceTestCase
             ->expects($this->any())
             ->method('specialNoticeSummaryForUser')
             ->willReturn([
-                'overdueCount'            => 0,
-                'unreadCount'             => 0,
-                'acknowledgementDeadline' => date('Y-m-d')
+                'overdueCount' => 0,
+                'unreadCount' => 0,
+                'acknowledgementDeadline' => date('Y-m-d'),
             ]);
 
         $this->specialNoticeService

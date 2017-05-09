@@ -1,4 +1,5 @@
 <?php
+
 if (empty($elements = $this->elements)) {
     return;
 }
@@ -19,19 +20,16 @@ foreach ($elements as $key => $title) {
         $title = sprintf($this->titleFormat, $title);
     }
 
-
     //  --  define field id and name    --
     $fldId = !empty($this->id) ? $this->id : '';
     $fldName = !empty($this->name) ? $this->name : $fldId;
 
     if (empty($fldId) && empty($fldName)) {
-
         $fldId = $fldName = $key;
     } else {
-        $fldId = (!empty($fldId) ? $fldId : $fldName) . '[' . $key . ']';
-        $fldName = (!empty($fldName) ? $fldName : $fldId) . '[]';
+        $fldId = (!empty($fldId) ? $fldId : $fldName).'['.$key.']';
+        $fldName = (!empty($fldName) ? $fldName : $fldId).'[]';
     }
-
 
     //  ----  set attributes and css  ----
     $isDisabled = ($this->disabled
@@ -43,27 +41,26 @@ foreach ($elements as $key => $title) {
 
     $css
         = (!empty($this->cssClass) ? $this->cssClass : 'block-label label-clear')
-        . ($isDisabled ? ' disabled' : '')
-        . ($isSelected ? ' selected' : '');
+        .($isDisabled ? ' disabled' : '')
+        .($isSelected ? ' selected' : '');
 
     $isTitleAtLeftPos = !empty($this->titleAtLeftPos);
-
 
     //  --  assemble    --
     $t = [
         '<label class="', $css, '" for="', $fldId, '"',
-            (!empty($this->cssStyle) ? 'style="' . $this->cssStyle . '"' : ''),
+            (!empty($this->cssStyle) ? 'style="'.$this->cssStyle.'"' : ''),
         '>',
         '<input type="checkbox"',
             ' value="', $key, '"',
             ' id="', $fldId, '"',
             ' name="', $fldName, '"',
-            ($isDisabled ? ' disabled="disabled"' : '' ),
-            ($isSelected ? ' checked="checked"' : '' ),
+            ($isDisabled ? ' disabled="disabled"' : ''),
+            ($isSelected ? ' checked="checked"' : ''),
             ($this->required ? ' required' : ''),
         '>',
         $title,
-        '</label>'
+        '</label>',
     ];
 
     echo implode('', $t);

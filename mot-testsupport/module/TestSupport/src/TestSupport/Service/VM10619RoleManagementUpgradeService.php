@@ -3,7 +3,6 @@
 namespace TestSupport\Service;
 
 use TestSupport\Helper\TestSupportAccessTokenManager;
-use DvsaCommon\Constants\Role;
 use Zend\View\Model\JsonModel;
 
 class VM10619RoleManagementUpgradeService
@@ -22,6 +21,7 @@ class VM10619RoleManagementUpgradeService
     {
         TestSupportAccessTokenManager::addSchemeManagerAsRequestorIfNecessary($data);
         $this->accountDataService->addRole($data['personId'], 'VM-10619-USER');
+
         return new JsonModel([]);
     }
 }

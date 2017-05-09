@@ -6,7 +6,6 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\MotTesting\DemoTestRequestsListDto;
 use DvsaCommon\Dto\Search\DemoTestRequestsSearchParamsDto;
-use DvsaCommon\Dto\Search\SearchParamsDto;
 use DvsaEntities\DqlBuilder\SearchParam\DemoTestRequestsSearchParam;
 use DvsaEntities\Repository\QualificationAwardRepository;
 use DvsaEntities\Repository\PersonRepository;
@@ -25,7 +24,7 @@ class DemoTestRequestsService implements AutoWireableInterface
         PersonRepository $personRepository,
         MotAuthorisationServiceInterface $authorisationService,
         DemoTestRequestsMapper $demoTestRequestsMapper
-    ){
+    ) {
         $this->motTestingCertificateRepository = $motTestingCertificateRepository;
         $this->personRepository = $personRepository;
         $this->authorisationService = $authorisationService;
@@ -35,7 +34,6 @@ class DemoTestRequestsService implements AutoWireableInterface
     public function findDemoTestRequestsForUsers(DemoTestRequestsSearchParamsDto $params)
     {
         $this->authorisationService->assertGranted(PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE);
-
 
         $searchParams = (new DemoTestRequestsSearchParam())
             ->fromDto($params)

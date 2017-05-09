@@ -4,7 +4,6 @@ namespace DvsaAuthentication\Identity\OpenAM\Utils;
 
 class PasswordExpiryAttributeParser
 {
-
     public static function parse($value)
     {
         try {

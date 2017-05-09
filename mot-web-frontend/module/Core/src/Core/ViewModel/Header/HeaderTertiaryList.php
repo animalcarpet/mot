@@ -4,7 +4,7 @@ namespace Core\ViewModel\Header;
 
 class HeaderTertiaryList
 {
-    /** @var HeaderTertiaryListElementInterface[]  */
+    /** @var HeaderTertiaryListElementInterface[] */
     protected $rows = [];
 
     /**

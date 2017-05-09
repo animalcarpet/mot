@@ -17,6 +17,7 @@ class OrganisationNominationEventHelperFactory implements FactoryInterface
     {
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get(EntityManager::class);
+
         return new OrganisationNominationEventHelper(
             $serviceLocator->get(EventService::class),
             $entityManager->getRepository(EventOrganisationMap::class),

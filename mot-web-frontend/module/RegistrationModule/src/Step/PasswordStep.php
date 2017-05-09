@@ -14,7 +14,7 @@ class PasswordStep extends AbstractRegistrationStep
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "PASSWORD";
+    const STEP_ID = 'PASSWORD';
 
     /**
      * @var string
@@ -68,7 +68,7 @@ class PasswordStep extends AbstractRegistrationStep
     public function toArray()
     {
         return [
-            PasswordInputFilter::FIELD_PASSWORD         => $this->getPassword(),
+            PasswordInputFilter::FIELD_PASSWORD => $this->getPassword(),
             PasswordInputFilter::FIELD_PASSWORD_CONFIRM => $this->getPasswordConfirm(),
         ];
     }

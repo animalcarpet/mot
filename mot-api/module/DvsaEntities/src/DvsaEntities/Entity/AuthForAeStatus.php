@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * AuthForAeStatus
+ * AuthForAeStatus.
  *
  * @ORM\Table(name="auth_for_ae_status")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\AuthForAeStatusRepository", readOnly=true)
@@ -27,7 +27,7 @@ class AuthForAeStatus extends Entity
     private $name;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -41,7 +41,7 @@ class AuthForAeStatus extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */

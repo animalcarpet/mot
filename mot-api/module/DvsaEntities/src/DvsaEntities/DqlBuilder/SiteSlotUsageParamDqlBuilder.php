@@ -5,13 +5,12 @@ namespace DvsaEntities\DqlBuilder;
 use DvsaCommon\Domain\MotTestType;
 
 /**
- * Class SiteSlotUsageParamDqlBuilder
+ * Class SiteSlotUsageParamDqlBuilder.
  */
 class SiteSlotUsageParamDqlBuilder extends SearchParamDqlBuilder
 {
-
     /**
-     * Build the Dql from the params
+     * Build the Dql from the params.
      *
      * @param bool $totalCount
      *
@@ -19,8 +18,8 @@ class SiteSlotUsageParamDqlBuilder extends SearchParamDqlBuilder
      */
     protected function buildDql($totalCount = false)
     {
-        $dql         = [];
-        $filters     = [];
+        $dql = [];
+        $filters = [];
 
         $dql[] = $this->generateDqlHeader($totalCount);
 
@@ -28,7 +27,7 @@ class SiteSlotUsageParamDqlBuilder extends SearchParamDqlBuilder
         $filters[] = '(tt.code IN (:TEST_TYPES))';
 
         $vtsId = $this->params->getVtsId();
-        $this->addFiltersByValues($filters, [$vtsId], "t.vehicleTestingStation = :SITE_ID", 'AND');
+        $this->addFiltersByValues($filters, [$vtsId], 't.vehicleTestingStation = :SITE_ID', 'AND');
 
         if ($this->params->getDateFrom() != null) {
             $this->addFiltersByValues($filters, [$this->params->getDateFrom()], 't.completedDate >= :DATE_FROM', '%s');
@@ -38,13 +37,13 @@ class SiteSlotUsageParamDqlBuilder extends SearchParamDqlBuilder
             $this->addFiltersByValues($filters, [$this->params->getDateTo()], 't.completedDate <= :DATE_TO', '%s');
         }
 
-        $dql[] = count($filters) ? join(' AND ', $filters): '1';
+        $dql[] = count($filters) ? implode(' AND ', $filters) : '1';
 
         $this->generateDqlFooter($totalCount, $dql);
     }
 
     /**
-     * Build the Query and add any parameters
+     * Build the Query and add any parameters.
      *
      * @param bool $totalCount
      *
@@ -79,27 +78,27 @@ class SiteSlotUsageParamDqlBuilder extends SearchParamDqlBuilder
     {
         $select = $totalCount ? 'count(distinct t)' : 't';
 
-        return 'SELECT ' . $select . ' from DvsaEntities\Entity\MotTest t'
-            . ' LEFT JOIN DvsaEntities\Entity\Person p WITH t.tester = p.id'
-            . ' LEFT JOIN DvsaEntities\Entity\Vehicle v WITH v.id = t.vehicle'
-            . ' LEFT JOIN DvsaEntities\Entity\MotTestType tt WITH t.motTestType = tt.id'
-            . ' LEFT JOIN DvsaEntities\Entity\MotTestStatus ts WITH t.status = ts.id'
-            . ' WHERE';
+        return 'SELECT '.$select.' from DvsaEntities\Entity\MotTest t'
+            .' LEFT JOIN DvsaEntities\Entity\Person p WITH t.tester = p.id'
+            .' LEFT JOIN DvsaEntities\Entity\Vehicle v WITH v.id = t.vehicle'
+            .' LEFT JOIN DvsaEntities\Entity\MotTestType tt WITH t.motTestType = tt.id'
+            .' LEFT JOIN DvsaEntities\Entity\MotTestStatus ts WITH t.status = ts.id'
+            .' WHERE';
     }
 
     /**
-    * Build the correct DQL footer depending on the current settings.
-    *
-    * @param $totalCount
-    * @param $dql
-    */
+     * Build the correct DQL footer depending on the current settings.
+     *
+     * @param $totalCount
+     * @param $dql
+     */
     protected function generateDqlFooter($totalCount, $dql)
     {
         if ($totalCount) {
-            $this->searchCountDql = join(" ", $dql);
+            $this->searchCountDql = implode(' ', $dql);
         } else {
             $dql[] = "ORDER BY {$this->getOrderForDql()}";
-            $this->searchDql = join(" ", $dql);
+            $this->searchDql = implode(' ', $dql);
         }
     }
 
@@ -110,13 +109,13 @@ class SiteSlotUsageParamDqlBuilder extends SearchParamDqlBuilder
         switch ($name) {
             case 'date':
             default:
-                $name = 't.completedDate ' . $this->params->getSortDirection();
+                $name = 't.completedDate '.$this->params->getSortDirection();
                 break;
             case 'tester':
-                $name = 'p.firstName ' . $this->params->getSortDirection() . ', p.familyName';
+                $name = 'p.firstName '.$this->params->getSortDirection().', p.familyName';
                 break;
             case 'vrn':
-                $name = 'v.registration ' . $this->params->getSortDirection();
+                $name = 'v.registration '.$this->params->getSortDirection();
                 break;
         //@codeCoverageIgnoreStart
         }

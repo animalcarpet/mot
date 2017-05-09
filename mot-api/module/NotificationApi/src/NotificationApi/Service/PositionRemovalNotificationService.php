@@ -6,11 +6,10 @@ use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 
 /**
- * Calculate which message to display
+ * Calculate which message to display.
  */
 class PositionRemovalNotificationService
 {
-
     const DVSA_OFFICE = 'your local DVSA office';
     const ORGANISATION = 'the AEDM of the Organisation';
     const VTS = 'the VTS';
@@ -28,6 +27,7 @@ class PositionRemovalNotificationService
 
     /**
      * @param $siteId
+     *
      * @return string
      */
     public function getSiteRoleRemovalContactText($siteId)
@@ -55,6 +55,7 @@ class PositionRemovalNotificationService
 
     /**
      * @param $orgId
+     *
      * @return string
      */
     public function getOrganisationRoleRemovalContactText($orgId)
@@ -74,6 +75,7 @@ class PositionRemovalNotificationService
 
     /**
      * @param $siteId
+     *
      * @return bool
      */
     private function isSiteManager($siteId)
@@ -93,6 +95,7 @@ class PositionRemovalNotificationService
 
     /**
      * @param $siteId
+     *
      * @return bool|mixed
      */
     private function getOrganisationIdFromMap($siteId)
@@ -108,6 +111,7 @@ class PositionRemovalNotificationService
 
     /**
      * @param $orgId
+     *
      * @return bool
      */
     private function getOrganisationRoles($orgId)
@@ -124,6 +128,7 @@ class PositionRemovalNotificationService
     /**
      * @param $roleName
      * @param $roles
+     *
      * @return bool
      */
     private function hasRole($roleName, $roles)
@@ -133,11 +138,11 @@ class PositionRemovalNotificationService
 
     /**
      * @param $siteId
+     *
      * @return bool
      */
     private function rolesInSite($siteId)
     {
-        return (isset($this->roles['sites'][$siteId]));
+        return isset($this->roles['sites'][$siteId]);
     }
-
 }

@@ -5,7 +5,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action;
 use Application\Data\ApiPersonalDetails;
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
-use Core\Service\MotFrontendIdentityProvider;
 use Dashboard\Model\PersonalDetails;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardEventService;
@@ -13,7 +12,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardNoti
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderReviewViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
-use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Zend\Http\Request;
 
 class CardOrderReviewAction
@@ -22,37 +20,37 @@ class CardOrderReviewAction
     const REVIEW_PAGE_SUBTITLE = 'Order a security card';
 
     /**
-     * @var OrderNewSecurityCardSessionService $sessionService
+     * @var OrderNewSecurityCardSessionService
      */
     private $sessionService;
 
     /**
-     * @var ApiPersonalDetails $apiPersonalDetails
+     * @var ApiPersonalDetails
      */
     private $apiPersonalDetails;
 
     /**
-     * @var SecurityCardService $securityCardService
+     * @var SecurityCardService
      */
     private $securityCardService;
 
     /**
-     * @var OrderSecurityCardStepService $stepService
+     * @var OrderSecurityCardStepService
      */
     private $stepService;
 
     /**
-     * @var CardOrderProtection $cardOrderProtection
+     * @var CardOrderProtection
      */
     private $cardOrderProtection;
 
     /**
-     * @var OrderSecurityCardEventService $eventService
+     * @var OrderSecurityCardEventService
      */
     private $eventService;
 
     /**
-     * @var OrderSecurityCardNotificationService $notificationService
+     * @var OrderSecurityCardNotificationService
      */
     private $notificationService;
 
@@ -81,7 +79,7 @@ class CardOrderReviewAction
             return $cardOrderProtectionResult;
         }
 
-        if(!$this->stepService->isAllowedOnStep($userId, OrderSecurityCardStepService::REVIEW_STEP)) {
+        if (!$this->stepService->isAllowedOnStep($userId, OrderSecurityCardStepService::REVIEW_STEP)) {
             return new RedirectToRoute('security-card-order/address', ['userId' => $userId]);
         }
 
@@ -91,11 +89,12 @@ class CardOrderReviewAction
         if ($request->isPost()) {
             if (!$this->hasAlreadySubmittedOrder($userId)) {
                 $addressStepData = $this->sessionService->loadByGuid($userId)[OrderNewSecurityCardSessionService::ADDRESS_STEP_STORE];
-                $cardOrdered = (bool)$this->securityCardService->orderNewCard($personalDetails->getUsername(), $userId, $addressStepData);
+                $cardOrdered = (bool) $this->securityCardService->orderNewCard($personalDetails->getUsername(), $userId, $addressStepData);
                 if ($cardOrdered === true) {
                     $this->setUpHasAlreadySubmittedOrder($userId, $cardOrdered);
                     $this->eventService->createEvent($userId, $this->formatAddressForEvent($addressStepData));
                     $this->notificationService->sendNotification($userId);
+
                     return new RedirectToRoute('security-card-order/confirmation', ['userId' => $userId]);
                 }
             } else {
@@ -146,7 +145,8 @@ class CardOrderReviewAction
     private function formatAddressForEvent(array $addressData)
     {
         $addressData['addressChoice'] = '';
-        $test =  implode(', ', array_filter($addressData));
+        $test = implode(', ', array_filter($addressData));
+
         return $test;
     }
 }

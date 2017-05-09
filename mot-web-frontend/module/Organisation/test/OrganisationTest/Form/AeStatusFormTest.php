@@ -38,12 +38,12 @@ class AeStatusFormTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->form->{'set' . $method}($value);
+        $result = $this->form->{'set'.$method}($value);
         $this->assertInstanceOf(AeStatusForm::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->form->{$method}());
     }
 
@@ -109,7 +109,7 @@ class AeStatusFormTest extends \PHPUnit_Framework_TestCase
     {
         $errors = [
             'field' => 'field',
-            'displayMessage' => 'message'
+            'displayMessage' => 'message',
         ];
 
         $this->form->addErrorsFromApi([$errors]);

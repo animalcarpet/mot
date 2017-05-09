@@ -11,12 +11,13 @@ use PersonApi\Service\Validator\PersonalDetailsValidator;
 use DvsaCommonApi\Filter\XssFilter;
 
 /**
- * Factory for PersonalDetailsService
+ * Factory for PersonalDetailsService.
  */
 class PersonalDetailsServiceFactory implements FactoryInterface
 {
     /**
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     *
      * @return \PersonApi\Service\PersonalDetailsService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

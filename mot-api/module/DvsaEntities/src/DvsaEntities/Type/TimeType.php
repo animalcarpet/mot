@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Type;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -10,7 +11,6 @@ use DvsaCommon\Date\Time;
  */
 class TimeType extends Type
 {
-
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'Time';
@@ -29,11 +29,11 @@ class TimeType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return $value != null ? $value->toIso8601(): null;
+        return $value != null ? $value->toIso8601() : null;
     }
 
     /**
-     * @param string           $value iso 8601
+     * @param string           $value    iso 8601
      * @param AbstractPlatform $platform
      *
      * @return int|mixed

@@ -42,7 +42,7 @@ class SurveyConfiguration
     public function __construct(array $config)
     {
         $this->numberOfTestsBetweenSurveys = isset($config[self::KEY__NUMBER_OF_TESTS_BETWEEN_SURVEYS]) ?
-            intval($config[self::KEY__NUMBER_OF_TESTS_BETWEEN_SURVEYS]) : self::DEFAULT__NUMBER_OF_TESTS_BETWEEN_SURVEYS ;
+            intval($config[self::KEY__NUMBER_OF_TESTS_BETWEEN_SURVEYS]) : self::DEFAULT__NUMBER_OF_TESTS_BETWEEN_SURVEYS;
 
         $this->timeBeforeSurveyRedisplayed = isset($config[self::KEY__TIME_BEFORE_SURVEY_REDISPLAYED]) ?
             $config[self::KEY__TIME_BEFORE_SURVEY_REDISPLAYED] : self::DEFAULT__TIME_BEFORE_SURVEY_REDISPLAYED;

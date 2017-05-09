@@ -30,6 +30,7 @@ class UpdateVtsPropertyReviewViewModel
 
     /**
      * @return
+     *
      * @deprecated Check if this exists, if not remove it
      */
     public function getFormData()

@@ -16,7 +16,6 @@ use DvsaEntities\Repository\SiteRepository;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
-
 class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
 {
     use TestCasePermissionTrait;
@@ -35,11 +34,11 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     const AE_REPRESENTATIVE_ROLE = 'AE Rep';
     const DATE_OF_ASSESSMENT = '2015-01-01';
 
-    /** @var  EnforcementSiteAssessmentDto */
+    /** @var EnforcementSiteAssessmentDto */
     private $dto;
-    /** @var  EnforcementSiteAssessmentValidator */
+    /** @var EnforcementSiteAssessmentValidator */
     private $validator;
-    /** @var  EntityManager|MockObj */
+    /** @var EntityManager|MockObj */
     private $entityManager;
 
     private $entityManagerIndex;
@@ -69,7 +68,6 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
 
         $this->createValidator();
     }
-
 
     public function testValidationWithCorrectFullData()
     {
@@ -108,7 +106,6 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     {
         $dto = $this->createDto(0, true)
             ->setSiteId(null);
-        ;
 
         $this->prepareMocksWithoutSite();
         $this->createValidator();
@@ -151,7 +148,6 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     {
         $dto = $this->createDto(0, true)
             ->setTesterUserId(null);
-        ;
 
         $this->prepareMocksWithoutTester();
         $this->createValidator();
@@ -219,8 +215,7 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     public function testValidationWithInvalidAssessmentDateNotProvided()
     {
         $dto = $this->createDto(0, true)
-            ->setDateOfAssessment("");
-        ;
+            ->setDateOfAssessment('');
 
         $this->prepareAllMocks();
         $this->createValidator();
@@ -234,8 +229,7 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     public function testValidationWithInvalidFutureAssessmentDateProvided()
     {
         $dto = $this->createDto(0, true)
-            ->setDateOfAssessment("2030-01-01");
-        ;
+            ->setDateOfAssessment('2030-01-01');
 
         $this->prepareAllMocks();
         $this->createValidator();
@@ -249,8 +243,7 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     public function testValidationWithInvalidWrongAssessmentDateProvided()
     {
         $dto = $this->createDto(0, true)
-            ->setDateOfAssessment("2015-02-31");
-        ;
+            ->setDateOfAssessment('2015-02-31');
 
         $this->prepareAllMocks();
         $this->createValidator();
@@ -265,8 +258,7 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     public function testValidationWithInvalidWrongAssessmentScoreProvided($score)
     {
         $dto = $this->createDto($score, true)
-            ->setDateOfAssessment("2015-02-31");
-        ;
+            ->setDateOfAssessment('2015-02-31');
 
         $this->prepareAllMocks();
         $this->createValidator();
@@ -285,8 +277,9 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param int $score
+     * @param int  $score
      * @param bool $userIsNotAssessor
+     *
      * @return EnforcementSiteAssessmentDto
      */
     private function createDto($score = 0, $userIsNotAssessor = false)
@@ -383,7 +376,6 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
         $this->mockPersonRepositoryForAeRepresentative(true);
     }
 
-
     /**
      * @return Person
      */
@@ -401,7 +393,7 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
      */
     private function createAeRepresentativePersonEntity()
     {
-        return (new Person)
+        return (new Person())
             ->setId(self::AE_REPRESENTATIVE_ID)
             ->setFirstName(self::AE_REPRESENTATIVE_NAME)
             ->setUsername(self::AE_REPRESENTATIVE_USERNAME)
@@ -540,5 +532,4 @@ class EnforcementSiteAssessmentValidatorTest extends AbstractServiceTestCase
             ['site_assessment', 'red', 'end']
         );
     }
-
 }

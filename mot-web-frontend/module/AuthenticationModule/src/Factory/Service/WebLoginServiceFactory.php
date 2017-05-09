@@ -15,25 +15,24 @@ use Zend\Session\SessionManager;
 
 class WebLoginServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var AuthenticationService $authenticationService */
         $authenticationService = $serviceLocator->get('ZendAuthenticationService');
 
-        /** @var  DtoReflectiveDeserializer $deserializer*/
+        /** @var DtoReflectiveDeserializer $deserializer */
         $deserializer = $serviceLocator->get(DtoReflectiveDeserializer::class);
 
-        /** @var  Client $client */
+        /** @var Client $client */
         $client = $serviceLocator->get(Client::class);
 
-        /** @var  WebAuthenticationCookieService $authenticationCookieService*/
+        /** @var WebAuthenticationCookieService $authenticationCookieService */
         $authenticationCookieService = $serviceLocator->get('tokenService');
 
-        /** @var  ExpiredPasswordService $expiredPasswordService*/
+        /** @var ExpiredPasswordService $expiredPasswordService */
         $expiredPasswordService = $serviceLocator->get(ExpiredPasswordService::class);
 
-        /** @var  LazyMotFrontendAuthorisationService $authorisationService*/
+        /** @var LazyMotFrontendAuthorisationService $authorisationService */
         $authorisationService = $serviceLocator->get('AuthorisationService');
 
         return new WebLoginService(

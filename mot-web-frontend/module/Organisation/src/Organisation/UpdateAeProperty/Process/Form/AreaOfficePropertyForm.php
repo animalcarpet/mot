@@ -13,7 +13,7 @@ use Zend\Validator\NotEmpty;
 class AreaOfficePropertyForm extends Form
 {
     const FIELD_AREA_OFFICE = UpdateAePropertyAction::AE_DVSA_AREA_OFFICE_STATUS_PROPERTY;
-    const STATUS_EMPTY_MSG = "you must choose an area office";
+    const STATUS_EMPTY_MSG = 'you must choose an area office';
 
     private $areaOfficeElement;
 
@@ -41,7 +41,7 @@ class AreaOfficePropertyForm extends Form
         $areaOfficeEmptyValidator = (new NotEmpty())->setMessage(self::STATUS_EMPTY_MSG, NotEmpty::IS_EMPTY);
         $areaOfficeInArrayValidator = (new InArray())
             ->setHaystack($possibleAreaOffices);
-        $areaOfficeInArrayValidator->setMessage(" you must choose an area office");
+        $areaOfficeInArrayValidator->setMessage(' you must choose an area office');
         $areaOfficeInput = new Input(self::FIELD_AREA_OFFICE);
         $areaOfficeInput
             ->setRequired(true)

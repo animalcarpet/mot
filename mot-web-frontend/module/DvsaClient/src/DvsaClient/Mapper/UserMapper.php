@@ -3,24 +3,18 @@
 namespace DvsaClient\Mapper;
 
 use DvsaClient\Entity\User;
-use DvsaCommon\Dto\Person\PersonDto;
-use DvsaCommon\Dto\Search\SearchParamsDto;
-use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 
 /**
- * Class UserMapper
- *
- * @package DvsaClient\Mapper
+ * Class UserMapper.
  */
 class UserMapper extends Mapper
 {
-
     protected $entityClass = User::class;
 
     public function fetchAllLinkedUsersForOrganisation($managerId, $offset = 0, $limit = 15)
     {
-        $url = 'organisation/' . $managerId . '/position' . $this->getPaginationUrlString($offset, $limit);
+        $url = 'organisation/'.$managerId.'/position'.$this->getPaginationUrlString($offset, $limit);
         $usersAndRoles = $this->client->get($url);
 
         return $this->hydrateArrayOfEntities($usersAndRoles['data']);
@@ -37,6 +31,7 @@ class UserMapper extends Mapper
             $this->getHydrator()->hydrate($user, $obj);
             $stack[] = $obj;
         }
+
         return $stack;
     }
 
@@ -50,6 +45,7 @@ class UserMapper extends Mapper
         $user = $this->client->get(UrlBuilder::user($username));
 
         $obj = $this->doHydration($user['data']);
+
         return $obj;
     }
 }

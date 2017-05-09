@@ -3,7 +3,7 @@
 namespace DvsaCommonApi\Service\Exception;
 
 /**
- * Class UnauthenticatedException
+ * Class UnauthenticatedException.
  */
 class UnauthenticatedException extends \Exception
 {

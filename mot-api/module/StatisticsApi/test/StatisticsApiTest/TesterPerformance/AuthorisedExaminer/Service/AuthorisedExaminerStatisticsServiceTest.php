@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\AuthorisedExaminer\Service;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Mapper\AuthorisedExaminerSiteMapper;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Service\AuthorisedExaminerStatisticsService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -33,8 +32,7 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
     private $organisationRepository;
 
     public function setUp(
-    )
-    {
+    ) {
         $this->authorisationService = new AuthorisationServiceMock();
         $this->authorisationService->grantedAtOrganisation(PermissionAtOrganisation::AE_VIEW_TEST_QUALITY, self::AE_ID);
         $this->organisationRepository = XMock::of(OrganisationRepository::class);
@@ -61,7 +59,6 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
         $dtos = $this->authorisedExaminerStatisticService->getListForPage(self::AE_ID, 1, 10);
         $this->assertEquals(2, $dtos->getSiteTotalCount());
         $this->assertEquals(2, count($dtos->getSites()));
-
     }
 
     /**
@@ -77,7 +74,6 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
 
         $this->authorisedExaminerStatisticService->getListForPage(self::AE_ID, 1, 10);
     }
-
 
     /**
      * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
@@ -109,13 +105,12 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
         $this->assertEquals(0, count($dto->getSites()));
     }
 
-
     private function getSiteEntity()
     {
-        $siteEntity = new Site;
-        $contactDetail = new ContactDetail;
-        $address = new Address;
-        $siteContactType = new SiteContactType;
+        $siteEntity = new Site();
+        $contactDetail = new ContactDetail();
+        $address = new Address();
+        $siteContactType = new SiteContactType();
         $contactDetail->setAddress($address
             ->setAddressLine1('address1')
             ->setAddressLine2('address2')
@@ -128,7 +123,7 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
         $siteEntity->setName('siteName')
             ->setId(1)
             ->setSiteNumber('siteNumber')
-            ->setLastSiteAssessment((new EnforcementSiteAssessment)->setSiteAssessmentScore(100.03))
+            ->setLastSiteAssessment((new EnforcementSiteAssessment())->setSiteAssessmentScore(100.03))
             ->setContact(
                 $contactDetail, $siteContactType->setCode(SiteContactTypeCode::BUSINESS)
             );

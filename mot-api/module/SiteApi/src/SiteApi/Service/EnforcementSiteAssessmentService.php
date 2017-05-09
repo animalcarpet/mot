@@ -18,9 +18,7 @@ use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\EventSiteMap;
 use DvsaEntities\Entity\Site;
 use DvsaEventApi\Service\EventService;
-use SebastianBergmann\Exporter\Exception;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
-use Zend\XmlRpc\Value\DateTime;
 use DvsaEntities\Entity\Person;
 
 class EnforcementSiteAssessmentService
@@ -53,7 +51,7 @@ class EnforcementSiteAssessmentService
     private $xssFilter;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManager                      $em
      * @param EnforcementSiteAssessmentValidator $validator
      * @param $config
      * @param MotIdentityInterface $identity
@@ -66,8 +64,7 @@ class EnforcementSiteAssessmentService
         EventService $eventService,
         AuthorisationServiceInterface $authService,
         XssFilter $xssFilter
-    )
-    {
+    ) {
         $this->em = $em;
         $this->validator = $validator;
         $this->config = $config;
@@ -84,7 +81,9 @@ class EnforcementSiteAssessmentService
 
     /**
      * @param $siteId
+     *
      * @return EnforcementSiteAssessmentDto
+     *
      * @throws NotFoundException
      */
     public function getRiskAssessment($siteId)
@@ -93,13 +92,13 @@ class EnforcementSiteAssessmentService
         $site = $this->getSiteById($siteId);
 
         if (!$site instanceof Site) {
-            throw new NotFoundException("Site not found for ID " . $siteId);
+            throw new NotFoundException('Site not found for ID '.$siteId);
         }
 
         $assessment = $site->getLastSiteAssessment();
 
         if (!$assessment instanceof EnforcementSiteAssessment) {
-            throw new NotFoundException("No assessment found for site " . $siteId);
+            throw new NotFoundException('No assessment found for site '.$siteId);
         }
 
         return $this->generateDto($assessment);
@@ -107,6 +106,7 @@ class EnforcementSiteAssessmentService
 
     /**
      * @param EnforcementSiteAssessmentDto $dto
+     *
      * @return EnforcementSiteAssessmentDto
      */
     public function validateRiskAssessment(EnforcementSiteAssessmentDto $dto)
@@ -116,11 +116,13 @@ class EnforcementSiteAssessmentService
         $dto = $this->xssFilter->filter($dto);
         $this->validator->validate($dto);
         $riskAssessment = $this->generateEnforcementEntity($dto);
+
         return $this->generateDto($riskAssessment, $dto->getUserIsNotAssessor());
     }
 
     /**
      * @param EnforcementSiteAssessmentDto $dto
+     *
      * @return int
      */
     public function createRiskAssessment(EnforcementSiteAssessmentDto $dto)
@@ -128,7 +130,7 @@ class EnforcementSiteAssessmentService
         $this->authService->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_SITE_RISK_ASSESSMENT, $dto->getSiteId());
         $dto = $this->xssFilter->filter($dto);
         $this->validator->validate($dto);
-        
+
         $riskAssessment = $this->generateEnforcementEntity($dto);
 
         $site = $this->getSiteById($dto->getSiteId());
@@ -144,8 +146,8 @@ class EnforcementSiteAssessmentService
         $examiner = $riskAssessment->getExaminer();
         $examinerName = $this->getUserName();
 
-        if($examiner){
-            $examinerName = $examiner->getDisplayName() . ' ' . $examiner->getUsername();
+        if ($examiner) {
+            $examinerName = $examiner->getDisplayName().' '.$examiner->getUsername();
         }
 
         $this->createSiteEvent(
@@ -168,6 +170,7 @@ class EnforcementSiteAssessmentService
 
     /**
      * @param EnforcementSiteAssessmentDto $dto
+     *
      * @return EnforcementSiteAssessment
      */
     private function generateEnforcementEntity(EnforcementSiteAssessmentDto $dto)
@@ -191,10 +194,9 @@ class EnforcementSiteAssessmentService
 
         $riskAssessment->setAeRepresentativePosition($dto->getAeRepresentativesRole());
 
-        if($dto->getDvsaExaminersUserId() && $dto->getUserIsNotAssessor() === true){
+        if ($dto->getDvsaExaminersUserId() && $dto->getUserIsNotAssessor() === true) {
             $username = $dto->getDvsaExaminersUserId();
-        }
-        else {
+        } else {
             $username = $this->getUsername();
         }
 
@@ -210,6 +212,7 @@ class EnforcementSiteAssessmentService
 
     /**
      * @param EnforcementSiteAssessment $assessment
+     *
      * @return EnforcementSiteAssessmentDto
      */
     private function generateDto(EnforcementSiteAssessment $assessment, $userIsNotAssessor = false)
@@ -238,6 +241,7 @@ class EnforcementSiteAssessmentService
 
     /**
      * @param $username
+     *
      * @return null|Person
      */
     private function getPersonByUsername($username)
@@ -247,6 +251,7 @@ class EnforcementSiteAssessmentService
 
     /**
      * @param $siteId
+     *
      * @return null|Site
      */
     private function getSiteById($siteId)

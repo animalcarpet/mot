@@ -3,19 +3,18 @@
 namespace DvsaEntities\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use DvsaEntities\Repository\SearchRepositoryTrait;
 
 /**
- * An abstract repository as a unified approach to creating repositories capable of doing mutable operations
+ * An abstract repository as a unified approach to creating repositories capable of doing mutable operations.
  *
  * Class AbstractMutableRepository
- * @package DvsaEntities\Repository
+ *
  * @codeCoverageIgnore
  */
 abstract class AbstractMutableRepository extends EntityRepository
 {
     /**
-     * Persist an entity
+     * Persist an entity.
      */
     public function persist($entity)
     {
@@ -23,7 +22,8 @@ abstract class AbstractMutableRepository extends EntityRepository
     }
 
     /**
-     * Persists and flushes an entity
+     * Persists and flushes an entity.
+     *
      * @param $entity
      */
     public function save($entity)
@@ -33,7 +33,8 @@ abstract class AbstractMutableRepository extends EntityRepository
     }
 
     /**
-     * Removes an entity
+     * Removes an entity.
+     *
      * @param $entity
      */
     public function remove($entity)

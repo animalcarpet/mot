@@ -89,7 +89,7 @@ class TesterServiceTest extends PHPUnit_Framework_TestCase
             ->willReturnCallback(function ($className) {
                 if ($className == Person::class) {
                     return XMock::of(PersonRepository::class);
-                } else if ($className == MotTest::class) {
+                } elseif ($className == MotTest::class) {
                     return $this->motTestRepository;
                 } else {
                     return null;

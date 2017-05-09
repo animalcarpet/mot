@@ -1,15 +1,13 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller;
-
 
 use Core\Controller\AbstractDvsaActionController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionOneAction;
 
 class ChangeSecurityQuestionOneController extends AbstractDvsaActionController
 {
-    const ROUTE = "newProfile/change-security-questions/question-one";
+    const ROUTE = 'newProfile/change-security-questions/question-one';
 
     private $action;
 
@@ -23,6 +21,7 @@ class ChangeSecurityQuestionOneController extends AbstractDvsaActionController
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
         $this->setHeadTitle('First security question');
+
         return $this->applyActionResult($result);
     }
 

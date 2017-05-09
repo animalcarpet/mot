@@ -1,6 +1,6 @@
 <?php
-namespace SiteTest\Mapper;
 
+namespace SiteTest\Mapper;
 
 use Core\File\CsvFile;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
@@ -16,13 +16,13 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
     const GROUP = 'A';
     const MONTH = 6;
     const YEAR = 2016;
-    const SITE_NAME = "Test site name";
+    const SITE_NAME = 'Test site name';
     const NOT_AVAILABLE = 'n/a';
-    const SITE_ID = "V1234";
-    const COMPONENT_1_NAME = "Component 1";
-    const COMPONENT_2_NAME = "Component 2";
-    const TESTER_NAME = "John Smith Tester";
-    const TESTER_USER_ID = "tester123";
+    const SITE_ID = 'V1234';
+    const COMPONENT_1_NAME = 'Component 1';
+    const COMPONENT_2_NAME = 'Component 2';
+    const TESTER_NAME = 'John Smith Tester';
+    const TESTER_USER_ID = 'tester123';
 
     const COLUMN_COUNT = 13;
 
@@ -53,31 +53,31 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
     const NATIONAL_TEST_TIME = 31;
 
     const TESTER_TESTS_FAILED = 45.1;
-    const EXPECTED_TESTER_TESTS_FAILED = "45%";
+    const EXPECTED_TESTER_TESTS_FAILED = '45%';
     const NATIONAL_TESTS_FAILED = 45.9;
-    const EXPECTED_NATIONAL_TESTS_FAILED = "46%";
+    const EXPECTED_NATIONAL_TESTS_FAILED = '46%';
 
     const TESTER_COMPONENT_1_FAIL_RATE = 33.3;
-    const EXPECTED_TESTER_COMPONENT_1_FAIL_RATE = "33.3%";
+    const EXPECTED_TESTER_COMPONENT_1_FAIL_RATE = '33.3%';
     const NATIONAL_COMPONENT_1_FAIL_RATE = 34.3;
-    const EXPECTED_NATIONAL_COMPONENT_1_FAIL_RATE = "34.3%";
+    const EXPECTED_NATIONAL_COMPONENT_1_FAIL_RATE = '34.3%';
 
     const TESTER_COMPONENT_2_FAIL_RATE = 66.6;
-    const EXPECTED_TESTER_COMPONENT_2_FAIL_RATE = "66.6%";
+    const EXPECTED_TESTER_COMPONENT_2_FAIL_RATE = '66.6%';
     const NATIONAL_COMPONENT_2_FAIL_RATE = 67.6;
-    const EXPECTED_NATIONAL_COMPONENT_2_FAIL_RATE = "67.6%";
+    const EXPECTED_NATIONAL_COMPONENT_2_FAIL_RATE = '67.6%';
 
-    /** @var  ComponentBreakdownDto */
+    /** @var ComponentBreakdownDto */
     private $userBreakdownDto;
-    /** @var  NationalComponentStatisticsDto */
+    /** @var NationalComponentStatisticsDto */
     private $nationalBreakdownDto;
-    /** @var  MotTestingPerformanceDto */
+    /** @var MotTestingPerformanceDto */
     private $nationalGroupPerformanceDto;
-    /** @var  VehicleTestingStationDto */
+    /** @var VehicleTestingStationDto */
     private $vehicleTestingStationDto;
-    /** @var  UserTestQualityCsvMapper */
+    /** @var UserTestQualityCsvMapper */
     private $sut;
-    /** @var  CsvFile */
+    /** @var CsvFile */
     private $csvFile;
 
     public function setUp()
@@ -100,7 +100,7 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
         $this->nationalBreakdownDto = $this->buildNationalComponentStatisticsDto(
             [
                 $this->buildComponentDto(self::COMPONENT_1_NAME, 1, self::NATIONAL_COMPONENT_1_FAIL_RATE),
-                $this->buildComponentDto(self::COMPONENT_2_NAME, 2, self::NATIONAL_COMPONENT_2_FAIL_RATE)
+                $this->buildComponentDto(self::COMPONENT_2_NAME, 2, self::NATIONAL_COMPONENT_2_FAIL_RATE),
             ]
         );
 
@@ -115,7 +115,6 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->vehicleTestingStationDto = $this->buildVehicleTestingStationDto();
 
-
         $this->sut = new UserTestQualityCsvMapper(
             $this->userBreakdownDto,
             $this->nationalBreakdownDto,
@@ -128,7 +127,6 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->csvFile = $this->sut->toCsvFile();
     }
-
 
     private function buildComponentDto($name, $id, $percentageFailed)
     {
@@ -173,7 +171,6 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testCsvFileHasCorrectColumnCount()
     {
-
         $this->assertCount(self::COLUMN_COUNT, $this->csvFile->getHeaders());
 
         $rows = $this->csvFile->getRows();
@@ -194,8 +191,8 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::SITE_ID, $testerRow[self::SITE_ID_COLUMN]);
         $this->assertEquals(self::NOT_AVAILABLE, $nationalRow[self::SITE_ID_COLUMN]);
 
-        $this->assertEquals("Tester", $testerRow[self::TESTER_NATIONAL_COLUMN]);
-        $this->assertEquals("National", $nationalRow[self::TESTER_NATIONAL_COLUMN]);
+        $this->assertEquals('Tester', $testerRow[self::TESTER_NATIONAL_COLUMN]);
+        $this->assertEquals('National', $nationalRow[self::TESTER_NATIONAL_COLUMN]);
 
         $this->assertEquals(self::TESTER_NAME, $testerRow[self::TESTER_NAME_COLUMN]);
         $this->assertEquals(self::NOT_AVAILABLE, $nationalRow[self::TESTER_NAME_COLUMN]);
@@ -223,7 +220,6 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(self::EXPECTED_TESTER_COMPONENT_2_FAIL_RATE, $testerRow[self::COMPONENT_2_COLUMN]);
         $this->assertEquals(self::EXPECTED_NATIONAL_COMPONENT_2_FAIL_RATE, $nationalRow[self::COMPONENT_2_COLUMN]);
-
     }
 
     public function testComponentColumnsAreAdded()
@@ -236,7 +232,7 @@ class UserTestQualityCsvMapperTest extends \PHPUnit_Framework_TestCase
     public function testFileNameIsCorrect()
     {
         $fileName = $this->csvFile->getFileName();
-        $this->assertEquals("Test-quality-information_John-Smith-Tester_tester123_V1234_Group-A_June-2016.csv", $fileName);
+        $this->assertEquals('Test-quality-information_John-Smith-Tester_tester123_V1234_Group-A_June-2016.csv', $fileName);
     }
 
     private function buildNationalComponentStatisticsDto($components)

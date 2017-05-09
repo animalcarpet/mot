@@ -39,7 +39,7 @@ class OrganisationPositionMapperTest extends AbstractMapperTest
     public function testCreatePosition()
     {
         $nomineeId = 999;
-        $roleId    = 888;
+        $roleId = 888;
 
         $expect = 'expectResult';
 
@@ -47,7 +47,7 @@ class OrganisationPositionMapperTest extends AbstractMapperTest
             OrganisationUrlBuilder::position(self::ORG_ID),
             [
                 'nomineeId' => $nomineeId,
-                'roleId'    => $roleId
+                'roleId' => $roleId,
             ],
             ['data' => $expect]
         );
@@ -60,7 +60,7 @@ class OrganisationPositionMapperTest extends AbstractMapperTest
     public function testUpdatePosition()
     {
         $nomineeId = 999;
-        $roleId    = 888;
+        $roleId = 888;
 
         $expect = 'expectResult';
 
@@ -68,7 +68,7 @@ class OrganisationPositionMapperTest extends AbstractMapperTest
             OrganisationUrlBuilder::position(self::ORG_ID),
             [
                 'nomineeId' => $nomineeId,
-                'roleId'    => $roleId
+                'roleId' => $roleId,
             ],
             ['data' => $expect]
         );

@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\UUIDIdentityTrait;
 
 /**
- * AuthorisedExaminerDesignatedManagerApplication
+ * AuthorisedExaminerDesignatedManagerApplication.
  *
  * @ORM\Table(name="application_authorised_examiner_designated_manager_application",
  * options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"}
@@ -49,9 +50,10 @@ class AuthorisedExaminerDesignatedManagerApplication
     }
 
     /**
-     * Set startDateTime
+     * Set startDateTime.
      *
      * @param \DateTime $startDateTime
+     *
      * @return AuthorisedExaminerDesignatedManagerApplication
      */
     public function setStartDateTime($startDateTime)
@@ -62,7 +64,7 @@ class AuthorisedExaminerDesignatedManagerApplication
     }
 
     /**
-     * Get startDateTime
+     * Get startDateTime.
      *
      * @return \DateTime
      */
@@ -72,9 +74,10 @@ class AuthorisedExaminerDesignatedManagerApplication
     }
 
     /**
-     * Set applicationStatus
+     * Set applicationStatus.
      *
      * @param string $applicationStatus
+     *
      * @return AuthorisedExaminerDesignatedManagerApplication
      */
     public function setApplicationStatus($applicationStatus)
@@ -85,7 +88,7 @@ class AuthorisedExaminerDesignatedManagerApplication
     }
 
     /**
-     * Get applicationStatus
+     * Get applicationStatus.
      *
      * @return string
      */

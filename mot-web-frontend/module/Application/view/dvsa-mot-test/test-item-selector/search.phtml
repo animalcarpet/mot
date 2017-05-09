@@ -10,9 +10,9 @@ $vehicleClassCode = $motTestDetails->getVehicleClass()->getCode();
 <?php echo $this->partial(
     'motHeaderDetails',
     [
-        'motTestDetails'    => $motTestDetails,
-        'motTestNumber'     => $motTestNumber,
-        'isMotContingency'     => $this->isMotContingency,
+        'motTestDetails' => $motTestDetails,
+        'motTestNumber' => $motTestNumber,
+        'isMotContingency' => $this->isMotContingency,
     ]
 ); ?>
 
@@ -30,50 +30,53 @@ echo $this->partial('testItemSelectorSearch', ['motTestNumber' => $motTestNumber
 <?php echo $this->partial('errorMessages', ['getFromFlash' => true]); ?>
 <?php echo $this->partial('infoMessages', ['getFromFlash' => true]); ?>
 
-<?php echo $this->partial('rfrList', ['motTestNumber'           => $motTestNumber,
+<?php echo $this->partial('rfrList', ['motTestNumber' => $motTestNumber,
                                            'reasonsForRejection' => $reasonsForRejection,
-                                           'searchString'        => $searchString,
-                                           'vehicleClassCode' => $vehicleClassCode
+                                           'searchString' => $searchString,
+                                           'vehicleClassCode' => $vehicleClassCode,
 ]); ?>
 
-<?php  if ($reasonsForRejection && count($reasonsForRejection) > 0) { ?>
+<?php  if ($reasonsForRejection && count($reasonsForRejection) > 0) {
+    ?>
 <div class="row">
     <?php
         $start = is_null($start) ? 0 : $start;
-        $pageSize = 10;
-        $searchUrl = $this->url(
+    $pageSize = 10;
+    $searchUrl = $this->url(
             'mot-test/test-item-selector-search', ['motTestNumber' => $motTestNumber],
             ['query' => ['search' => $searchString]]
-        );
-    ?>
-    <?php  if ($start > 0) { ?>
+        ); ?>
+    <?php  if ($start > 0) {
+            ?>
     <?php
         $prevEnd = $start;
-        $prevStart = $start - $pageSize;
-        $escPreviousSearchUrl = $this->url(
+            $prevStart = $start - $pageSize;
+            $escPreviousSearchUrl = $this->url(
             'mot-test/test-item-selector-search', ['motTestNumber' => $motTestNumber],
             ['query' => ['search' => $searchString, 'start' => $prevStart, 'end' => $prevEnd]]
-        );
-    ?>
+        ); ?>
     <div class="col-sm-1 col-md-1">
         <a href="<?php echo $escPreviousSearchUrl; ?>" class="btn btn-primary" id="search_previous">Previous</a>
     </div>
-    <?php } ?>
-    <?php  if ($hasMore) { ?>
+    <?php 
+        } ?>
+    <?php  if ($hasMore) {
+            ?>
     <?php
         $nextStart = $start + $pageSize;
-        $nextEnd = $nextStart + $pageSize;
-        $escNextSearchUrl = $this->url(
+            $nextEnd = $nextStart + $pageSize;
+            $escNextSearchUrl = $this->url(
             'mot-test/test-item-selector-search', ['motTestNumber' => $motTestNumber],
             ['query' => ['search' => $searchString, 'start' => $nextStart, 'end' => $nextEnd]]
-        );
-    ?>
+        ); ?>
     <div class="col-sm-1 col-md-1">
         <a href="<?php echo $escNextSearchUrl; ?>" class="btn btn-primary" id="search_next">More Results</a>
     </div>
-    <?php } ?>
+    <?php 
+        } ?>
 </div>
-<?php } ?>
+<?php 
+} ?>
 <hr class="hr-thin">
 <div class="row">
       <div class="col-lg-12">

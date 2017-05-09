@@ -7,7 +7,6 @@ namespace DvsaCommonApi\Transaction;
  * through TransactionExecutorInterface.
  *
  * Interface TransactionAwareInterface
- * @package DvsaCommonApi\Transaction
  */
 interface TransactionAwareInterface
 {

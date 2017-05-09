@@ -11,15 +11,15 @@ class PasswordForm extends Form
     const FIELD_PASSWORD = PasswordInputFilter::FIELD_PASSWORD;
     const FIELD_RETYPE_PASSWORD = PasswordInputFilter::FIELD_PASSWORD_CONFIRM;
 
-    const LABEL_PASSWORD = "New password";
-    const LABEL_RETYPE_PASSWORD = "Re-type your new password ";
+    const LABEL_PASSWORD = 'New password';
+    const LABEL_RETYPE_PASSWORD = 'Re-type your new password ';
 
     const PASSWORD_MAX_LENGTH = 32;
     const PASSWORD_MIN_LENGTH = 8;
 
     private $identityProvider;
 
-    public function __construct(MotFrontendIdentityProviderInterface $identityProvider,$options = [])
+    public function __construct(MotFrontendIdentityProviderInterface $identityProvider, $options = [])
     {
         $name = 'passwordForm';
         parent::__construct($name, $options);
@@ -32,12 +32,12 @@ class PasswordForm extends Form
             [
                 'name' => self::FIELD_PASSWORD,
                 'options' => [
-                    'label' => self::LABEL_PASSWORD
+                    'label' => self::LABEL_PASSWORD,
                 ],
                 'type' => 'password',
                 'attributes' => [
                     'maxlength' => self::PASSWORD_MAX_LENGTH,
-                    'group' => true
+                    'group' => true,
                 ],
             ]
         );
@@ -46,12 +46,12 @@ class PasswordForm extends Form
             [
                 'name' => self::FIELD_RETYPE_PASSWORD,
                 'options' => [
-                    'label' => self::LABEL_RETYPE_PASSWORD
+                    'label' => self::LABEL_RETYPE_PASSWORD,
                 ],
                 'type' => 'password',
                 'attributes' => [
                     'maxlength' => self::PASSWORD_MAX_LENGTH,
-                    'group' => true
+                    'group' => true,
                 ],
             ]
         );
@@ -69,6 +69,7 @@ class PasswordForm extends Form
     {
         $inputFilter = new PasswordInputFilter($this->identityProvider);
         $inputFilter->init();
+
         return $inputFilter;
     }
 

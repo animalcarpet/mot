@@ -139,10 +139,10 @@ class SecurityCardGuard
 
     public function is2faEligibleUserWhichCanActivateACard(MotFrontendIdentityInterface $identity)
     {
-         $hasSecurityCardOrders = $this->hasSecurityCardOrders($identity);
-         $isEligibleForActivatingAfterNomination = $this->isEligibleForActivatingTwoFaCardAfterNomination($identity);
-         $isEligibleForReplacementCard = $this->isEligibleForReplacementTwoFaCard($identity);
-         $isGrantedToOrderCard = $this->authorisationService->isGranted(PermissionInSystem::CAN_ORDER_2FA_SECURITY_CARD);
+        $hasSecurityCardOrders = $this->hasSecurityCardOrders($identity);
+        $isEligibleForActivatingAfterNomination = $this->isEligibleForActivatingTwoFaCardAfterNomination($identity);
+        $isEligibleForReplacementCard = $this->isEligibleForReplacementTwoFaCard($identity);
+        $isGrantedToOrderCard = $this->authorisationService->isGranted(PermissionInSystem::CAN_ORDER_2FA_SECURITY_CARD);
 
         return $hasSecurityCardOrders || $isEligibleForActivatingAfterNomination ||
                 $isEligibleForReplacementCard || $isGrantedToOrderCard;

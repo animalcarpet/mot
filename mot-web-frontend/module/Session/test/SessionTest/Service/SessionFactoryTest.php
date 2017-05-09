@@ -5,7 +5,7 @@ namespace SessionTest\Service;
 use Session\Service\SessionFactory;
 
 /**
- * Class SessionFactoryTest
+ * Class SessionFactoryTest.
  */
 class SessionFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,6 +28,7 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideCanCreateServiceWithName
+     *
      * @param $config
      * @param $name
      * @param $expected
@@ -50,8 +51,8 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[], 'namespace\test', false],
-            [['session_namespace_prefixes'=> ['othernamespace\\']], 'namespace\test', false],
-            [['session_namespace_prefixes'=> ['namespace\\']], 'namespace\test', true]
+            [['session_namespace_prefixes' => ['othernamespace\\']], 'namespace\test', false],
+            [['session_namespace_prefixes' => ['namespace\\']], 'namespace\test', true],
         ];
     }
 }

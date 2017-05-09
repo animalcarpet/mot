@@ -13,6 +13,7 @@ class StartControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
         $startAction = $serviceLocator->get(StartAction::class);
+
         return new StartController($startAction);
     }
 }

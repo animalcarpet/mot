@@ -8,13 +8,11 @@ use MailerApi\Model\Attachment;
 use MailerApi\Validator\MailerValidator;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Exception\BadRequestException;
-use Zend\Mvc\Router\Http\Hostname;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mail;
 use Zend\Mime;
 
 /**
- * Class MailerEngine
+ * Class MailerEngine.
  *
  * General purpose way to send outgoing emails from the application.
  *
@@ -36,7 +34,7 @@ class MailerService
     const ERROR_TYPE_STRING = 'Expected a string for ';
     const ERROR_TYPE_LENGTH = 'Length must be non-zero for ';
 
-    /** @var  Array contains mailer configuration data */
+    /** @var array contains mailer configuration data */
     protected $config;
 
     /** The application logging service */
@@ -54,19 +52,21 @@ class MailerService
     const DEFAULT_FROM = 'info@mot-testing.service.gov.uk';
 
     /**
-     * Helper function to generate an test email address for AWS SES-enabled environments (e.g FBs)
+     * Helper function to generate an test email address for AWS SES-enabled environments (e.g FBs).
+     *
      * @see https://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html
      *
      * @param string $label
+     *
      * @return string
      */
     public static function getTestEmailAddress($label = '')
     {
-        if(empty($label) || !is_string($label)){
+        if (empty($label) || !is_string($label)) {
             return self::AWS_MAIL_SIMULATOR_SUCCESS;
         }
 
-        return sprintf("%s+%s@%s",
+        return sprintf('%s+%s@%s',
             self::AWS_MAIL_SIMULATOR_SUCCESS_MAILBOX,
             $label,
             self::AWS_MAIL_SIMULATOR_DOMAIN
@@ -76,9 +76,9 @@ class MailerService
     /**
      * The mail engine. A reusable class for sending emails using Zend.
      *
-     * @param Array $config contains the system-wide configuration data
-     * @param Object $logger contains the application logger instance
-     * @param MailerValidator|Object $validator contains the Mail service validation handler
+     * @param array                  $config    contains the system-wide configuration data
+     * @param object                 $logger    contains the application logger instance
+     * @param MailerValidator|object $validator contains the Mail service validation handler
      * @param EmailAddressValidator
      */
     public function __construct($config, $logger, MailerValidator $validator, EmailAddressValidator $emailValidator)
@@ -92,7 +92,9 @@ class MailerService
     /**
      * @param MailerDto $dto
      * @param $type
+     *
      * @return bool
+     *
      * @throws BadRequestException
      */
     public function validate(MailerDto $dto, $type)
@@ -106,12 +108,13 @@ class MailerService
      * We consult the mailer configuration for direction on how to log and
      * what values to use in certain parts of the email.
      *
-     * @param $recipient string the recipient email(s) to send to.
-     * @param $subject   string the subject line of the email.
-     * @param $message   string the full email body content.
+     * @param $recipient string the recipient email(s) to send to
+     * @param $subject   string the subject line of the email
+     * @param $message   string the full email body content
      * @param $attachment Attachment
      *
      * @return bool TRUE if the mail was successfully spooled
+     *
      * @throws BadRequestException
      * @throws \Exception
      */
@@ -145,7 +148,7 @@ class MailerService
         $mimeMessage = new Mime\Message();
         $mimeMessage->addPart($text);
 
-        if(!is_null($attachment)) {
+        if (!is_null($attachment)) {
             $attachmentPart = new Mime\Part($attachment->getContent());
             $attachmentPart->type = $attachment->getType();
             $attachmentPart->filename = $attachment->getFilename();
@@ -168,7 +171,6 @@ class MailerService
             $transport->send($mail);
 
             return true;
-
         } catch (\Exception $e) {
             if ($this->logger) {
                 $this->logger->err(
@@ -181,6 +183,7 @@ class MailerService
                 );
             }
         }
+
         return false;
     }
 
@@ -190,8 +193,9 @@ class MailerService
      *
      * @param $tentativeRecipient string contains the intended recipient
      *
-     * @return Array [String,bool] => the actual email recipient and TRUE if
-     *                an overriding of the $tentativeRecipient took place.
+     * @return array [String,bool] => the actual email recipient and TRUE if
+     *               an overriding of the $tentativeRecipient took place
+     *
      * @throws \Exception
      */
     private function getActualRecipient($tentativeRecipient)
@@ -212,6 +216,7 @@ class MailerService
             }
             throw new \Exception($errorText);
         }
+
         return [$actualRecipient, $actualRecipient != $tentativeRecipient];
     }
 
@@ -220,7 +225,8 @@ class MailerService
      * but we check the configuration file as well. The configuration can specify an actual class
      * name (string) or an instance to be used (is_object). Useful for mock testing too.
      *
-     * @return Object instance of a class to encode a mail message
+     * @return object instance of a class to encode a mail message
+     *
      * @throws \Exception if an instance cannot be returned
      */
     protected function getMailInstance()
@@ -239,14 +245,15 @@ class MailerService
             }
             throw new \Exception($errorText);
         }
+
         return $mailInstance;
     }
-
 
     /**
      * Returns an instance of a class to send a message.
      *
      * @return mixed instance of a class to send a mail message
+     *
      * @throws \Exception
      */
     protected function getTransportInstance()
@@ -267,9 +274,9 @@ class MailerService
                 throw new \Exception($errorText);
             }
         }
+
         return $transportInstance;
     }
-
 
     /**
      * Ensure the arguments to send() are well formed and of the correct types.
@@ -278,20 +285,21 @@ class MailerService
      * @param $label String contains the context for an error message
      *
      * @return $this
+     *
      * @throws BadRequestException
      */
     protected function mustBeGiven($value, $label)
     {
         if (!is_string($value)) {
             throw new BadRequestException(
-                self::ERROR_TYPE_STRING . $label,
+                self::ERROR_TYPE_STRING.$label,
                 BadRequestException::BAD_REQUEST_STATUS_CODE
             );
         }
 
         if (!strlen(trim($value))) {
             throw new BadRequestException(
-                self::ERROR_TYPE_LENGTH . $label,
+                self::ERROR_TYPE_LENGTH.$label,
                 BadRequestException::BAD_REQUEST_STATUS_CODE
             );
         }

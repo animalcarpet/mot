@@ -7,10 +7,9 @@ use Doctrine\ORM\EntityManager;
 use DvsaCommon\Utility\ArrayUtils;
 use TestSupport\Helper\TestDataResponseHelper;
 use TestSupport\Service\VehicleService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
- * Vehicle related methods
+ * Vehicle related methods.
  *
  * Should not be deployed in production.
  */
@@ -36,16 +35,16 @@ class VehicleDataController extends BaseTestSupportRestfulController
                     'UPDATE vehicle_v5c SET last_seen = now() WHERE vehicle_id = :vehicleId',
                     ['vehicleId' => $vehicleId]
                 );
-                $date = date("Y-m-d h:i:s.u");
+                $date = date('Y-m-d h:i:s.u');
                 $connection->executeUpdate(
                     'INSERT INTO vehicle_v5c(vehicle_id, v5c_ref, first_seen, last_seen, created_by)
                     VALUE(:vehicleId, :v5cRef, :firstSeen, :lastSeen, :createdBy)',
                     [
-                        'vehicleId'    => $vehicleId,
-                        'v5cRef'       => $v5cRef,
-                        'firstSeen'    => $firstSeen === null ? $date : $firstSeen,
-                        'lastSeen'     => $lastSeen,
-                        'createdBy'    => 1
+                        'vehicleId' => $vehicleId,
+                        'v5cRef' => $v5cRef,
+                        'firstSeen' => $firstSeen === null ? $date : $firstSeen,
+                        'lastSeen' => $lastSeen,
+                        'createdBy' => 1,
                     ]
                 );
             }
@@ -69,5 +68,4 @@ class VehicleDataController extends BaseTestSupportRestfulController
 
         return TestDataResponseHelper::jsonOk($vehicleId);
     }
-
 }

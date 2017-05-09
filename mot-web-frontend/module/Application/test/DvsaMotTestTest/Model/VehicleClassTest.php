@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Model;
 
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
@@ -6,9 +7,7 @@ use DvsaCommon\Enum\VehicleClassCode;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class VehicleClassTest
- *
- * @package DvsaMotTest\Model
+ * Class VehicleClassTest.
  */
 class VehicleClassTest extends PHPUnit_Framework_TestCase
 {

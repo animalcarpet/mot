@@ -10,10 +10,9 @@ use DvsaCommon\Enum\SiteTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
-use DvsaEntities\Entity\SiteStatus;
 
 /**
- * Site
+ * Site.
  *
  * @ORM\Table(name="site",
  *  options={
@@ -122,14 +121,14 @@ class Site extends Entity
     private $organisation;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="dual_language", type="boolean", nullable=false)
      */
     private $dualLanguage = '0';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="scottish_bank_holiday", type="boolean", nullable=false)
      */
@@ -151,7 +150,7 @@ class Site extends Entity
 
     /**
      * @var SiteBusinessRoleMap[]
-     * The personnel that works
+     *                            The personnel that works
      *
      * @ORM\OneToMany(targetEntity="SiteBusinessRoleMap", mappedBy="site", fetch="LAZY")
      */
@@ -292,7 +291,7 @@ class Site extends Entity
     }
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -325,7 +324,7 @@ class Site extends Entity
     }
 
     /**
-     * Get the associated Authorised Examiner
+     * Get the associated Authorised Examiner.
      *
      * @return AuthorisationForAuthorisedExaminer|null
      */
@@ -341,7 +340,7 @@ class Site extends Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -355,7 +354,7 @@ class Site extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -370,11 +369,12 @@ class Site extends Entity
                 }
             }
         }
+
         return $this->name;
     }
 
     /**
-     * Get address
+     * Get address.
      *
      * @return Address
      */
@@ -432,7 +432,7 @@ class Site extends Entity
     }
 
     /**
-     * Set site number - the existing VTS "ID"
+     * Set site number - the existing VTS "ID".
      *
      * @param string $siteNumber
      *
@@ -446,7 +446,7 @@ class Site extends Entity
     }
 
     /**
-     * Get siteNumber
+     * Get siteNumber.
      *
      * @return string
      */
@@ -455,6 +455,7 @@ class Site extends Entity
         if ($this->siteNumber === null) {
             return '';
         }
+
         return $this->siteNumber;
     }
 
@@ -519,7 +520,7 @@ class Site extends Entity
     }
 
     /**
-     * Get authorisationsForTestingMotAtSite
+     * Get authorisationsForTestingMotAtSite.
      *
      * @return AuthorisationForTestingMotAtSite[]
      */
@@ -542,11 +543,11 @@ class Site extends Entity
     }
 
     /**
-     * Checks if Site has authorisation to test a particular vehicle class
+     * Checks if Site has authorisation to test a particular vehicle class.
      *
      * @param VehicleClass $vehicleClass
      *
-     * @return boolean
+     * @return bool
      */
     public function hasAuthForVehicleClass(VehicleClass $vehicleClass)
     {
@@ -563,7 +564,7 @@ class Site extends Entity
     }
 
     /**
-     * Set the associated Site Assessment
+     * Set the associated Site Assessment.
      *
      * @param EnforcementSiteAssessment $siteAssessment
      *
@@ -577,7 +578,7 @@ class Site extends Entity
     }
 
     /**
-     * Get the associated Site Assessment
+     * Get the associated Site Assessment.
      *
      * @return EnforcementSiteAssessment
      */
@@ -624,9 +625,9 @@ class Site extends Entity
     }
 
     /**
-     * Set dualLanguage
+     * Set dualLanguage.
      *
-     * @param boolean $dualLanguage
+     * @param bool $dualLanguage
      *
      * @return Site
      */
@@ -638,9 +639,9 @@ class Site extends Entity
     }
 
     /**
-     * Get dualLanguage
+     * Get dualLanguage.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDualLanguage()
     {
@@ -648,9 +649,9 @@ class Site extends Entity
     }
 
     /**
-     * Set scottishBankHoliday
+     * Set scottishBankHoliday.
      *
-     * @param boolean $scottishBankHoliday
+     * @param bool $scottishBankHoliday
      *
      * @return Site
      */
@@ -662,9 +663,9 @@ class Site extends Entity
     }
 
     /**
-     * Get scottishBankHoliday
+     * Get scottishBankHoliday.
      *
-     * @return boolean
+     * @return bool
      */
     public function getScottishBankHoliday()
     {
@@ -672,7 +673,7 @@ class Site extends Entity
     }
 
     /**
-     * Set latitude
+     * Set latitude.
      *
      * @param string $latitude
      *
@@ -686,7 +687,7 @@ class Site extends Entity
     }
 
     /**
-     * Get latitude
+     * Get latitude.
      *
      * @return string
      */
@@ -696,7 +697,7 @@ class Site extends Entity
     }
 
     /**
-     * Set longitude
+     * Set longitude.
      *
      * @param string $longitude
      *
@@ -710,7 +711,7 @@ class Site extends Entity
     }
 
     /**
-     * Get longitude
+     * Get longitude.
      *
      * @return string
      */
@@ -720,7 +721,7 @@ class Site extends Entity
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param SiteType $type
      *
@@ -734,7 +735,7 @@ class Site extends Entity
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return \DvsaEntities\Entity\SiteType
      */
@@ -754,7 +755,7 @@ class Site extends Entity
      *
      * TODO: Change this to a relevant business-centric value that makes sense!
      *
-     * @return String the reinspection number that was created
+     * @return string the reinspection number that was created
      */
     public function setReinspectionSiteNumber()
     {
@@ -783,6 +784,7 @@ class Site extends Entity
 
     /**
      * @param $authId
+     *
      * @return AuthorisationForTestingMotAtSite[]
      */
     private function getAuthorisationForTestingMotAtSiteOfType($authId)
@@ -827,11 +829,13 @@ class Site extends Entity
 
     /**
      * @param NonWorkingDayCountry $nonWorkingDayCountry
+     *
      * @return $this
      */
     public function setNonWorkingDayCountry(NonWorkingDayCountry $nonWorkingDayCountry = null)
     {
         $this->nonWorkingDayCountry = $nonWorkingDayCountry;
+
         return $this;
     }
 
@@ -844,7 +848,7 @@ class Site extends Entity
     {
         $maps = ArrayUtils::filter(
             $this->getAssociationWithAe(),
-            function(OrganisationSiteMap $map) {
+            function (OrganisationSiteMap $map) {
                 return $map->getStatus()->getCode() === OrganisationSiteStatusCode::ACTIVE;
             }
         );
@@ -854,11 +858,13 @@ class Site extends Entity
 
     /**
      * @param SiteStatus $status
+     *
      * @return $this
      */
     public function setStatus(SiteStatus $status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -879,7 +885,7 @@ class Site extends Entity
     }
 
     /**
-     * Set statusChangedOn
+     * Set statusChangedOn.
      *
      * @param \DateTime $statusChangedOn
      *
@@ -893,7 +899,7 @@ class Site extends Entity
     }
 
     /**
-     * Get statusChangedOn
+     * Get statusChangedOn.
      *
      * @return \DateTime
      */
@@ -917,5 +923,4 @@ class Site extends Entity
     {
         $this->siteRiskAssessments->add($riskAssessment);
     }
-
 }

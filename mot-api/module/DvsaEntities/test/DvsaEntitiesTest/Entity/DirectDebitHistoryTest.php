@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\DirectDebit;
@@ -8,7 +9,7 @@ use DvsaEntities\Entity\TestSlotTransaction;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class DirectDebitHistoryTest
+ * Class DirectDebitHistoryTest.
  */
 class DirectDebitHistoryTest extends PHPUnit_Framework_TestCase
 {

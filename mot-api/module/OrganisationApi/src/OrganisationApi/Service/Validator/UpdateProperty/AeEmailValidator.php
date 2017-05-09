@@ -8,7 +8,6 @@ use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 use DvsaCommonApi\Service\Validator\ErrorSchema;
 use DvsaCommonApi\Service\Validator\ValidatorInterface;
-use Zend\Validator\EmailAddress;
 
 class AeEmailValidator extends AbstractValidator implements ValidatorInterface
 {
@@ -27,7 +26,7 @@ class AeEmailValidator extends AbstractValidator implements ValidatorInterface
             return;
         }
 
-        $this->emailField = $prefix . ucfirst($this->emailField);
+        $this->emailField = $prefix.ucfirst($this->emailField);
     }
 
     public function validate(array $data)
@@ -48,13 +47,13 @@ class AeEmailValidator extends AbstractValidator implements ValidatorInterface
 
         $validator = new EmailAddressValidator();
         if (!$validator->isValid($data[$this->emailField])) {
-            $errorSchema->add($this->emailField . " - is invalid email", $this->emailField);
+            $errorSchema->add($this->emailField.' - is invalid email', $this->emailField);
         }
 
         if (StringUtils::strlen($data[$this->emailField]) > self::MAX_EMAIL_LENGTH
         ) {
-            $errorSchema->add($this->emailField . " - must be " . self::MAX_EMAIL_LENGTH . " characters or less", $this->emailField);
-        };
+            $errorSchema->add($this->emailField.' - must be '.self::MAX_EMAIL_LENGTH.' characters or less', $this->emailField);
+        }
 
         $errorSchema->throwIfAny();
     }

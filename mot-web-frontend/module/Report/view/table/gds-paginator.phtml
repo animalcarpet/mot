@@ -7,11 +7,10 @@ use Report\Table\TableOptions;
 /** @var int $firstItemNumber */
 /** @var int $lastItemNumber */
 /** @var int $totalItemCount */
-
-
 $urlForPage = function ($pageNumber) use ($searchParams) {
     $urlSearchParams = clone $searchParams;
     $urlSearchParams->setPageNr($pageNumber);
+
     return $this->url(null, [], ['query' => $urlSearchParams->toQueryParams()->toArray()], true);
 };
 ?>
@@ -49,7 +48,7 @@ $urlForPage = function ($pageNumber) use ($searchParams) {
         </div>
     <?php endif; ?>
 
-    <?php if($totalItemCount > 0): ?>
+    <?php if ($totalItemCount > 0): ?>
     <div class="pager__summary">Showing <?php
        echo $this->escapeHtml(
             sprintf('%s – %s of %s %s', $firstItemNumber, $lastItemNumber, $totalItemCount, $tableOptions->getItemsText())

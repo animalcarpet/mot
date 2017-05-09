@@ -5,12 +5,9 @@ namespace PersonApi\Controller;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\PersonContactService;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class PersonContactController
- *
- * @package PersonApi\Controller
+ * Class PersonContactController.
  */
 class PersonContactController extends AbstractDvsaRestfulController
 {
@@ -27,6 +24,7 @@ class PersonContactController extends AbstractDvsaRestfulController
     public function patch($id, $data)
     {
         $details = $this->personContactService->updateEmailForPerson($id, $data);
+
         return ApiResponse::jsonOk($details);
     }
 }

@@ -1,10 +1,11 @@
 <?php
+
 namespace NotificationApiTest\Controller;
 
 use NotificationApi\Controller\PersonReadNotificationController;
 
 /**
- * Unit tests for PersonReadNotificationController
+ * Unit tests for PersonReadNotificationController.
  */
 class PersonReadNotificationControllerTest extends AbstractNotificationApiControllerTestCase
 {

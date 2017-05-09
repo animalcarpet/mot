@@ -10,13 +10,10 @@ use DvsaEntities\Entity\Person;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class EnforcementTestResultTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class EnforcementTestResultTest.
  */
-class EnforcementTestResultTest extends PHPUnit_Framework_TestCase
+class EnforcementMotTestResultTest extends PHPUnit_Framework_TestCase
 {
-
     public function testInitialState()
     {
         $testResult = new EnforcementMotTestResult();
@@ -29,7 +26,7 @@ class EnforcementTestResultTest extends PHPUnit_Framework_TestCase
     public function testFluentInterface()
     {
         $testResult = new EnforcementMotTestResult();
-        $comment = new Comment;
+        $comment = new Comment();
         $decisionOutcome = new EnforcementDecisionOutcome();
         $score = 42;
         $id = 1;

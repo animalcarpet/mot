@@ -11,23 +11,26 @@ class EditTelephoneController extends AbstractDvsaRestfulController
     const PHONE_NUMBER_FIELD = 'personTelephone';
 
     /**
-     * @var TelephoneService $phoneService
+     * @var TelephoneService
      */
     private $phoneService;
-    
+
     /**
      * EditTelephoneController constructor.
+     *
      * @param TelephoneService $service
      */
-    public function __construct(TelephoneService $service) {
+    public function __construct(TelephoneService $service)
+    {
         $this->phoneService = $service;
     }
 
     /**
-     * Update a user's telephone number
+     * Update a user's telephone number.
      *
      * @param int   $personId
      * @param array $data
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function update($personId, $data)

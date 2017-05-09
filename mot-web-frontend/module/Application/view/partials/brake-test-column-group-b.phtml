@@ -1,13 +1,14 @@
 <?php
+
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData;
 
-/** @var DvsaVehicleViewModel $vehicle */
+/* @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
-/** @var BrakeTestResultClass3AndAbove */
+/* @var BrakeTestResultClass3AndAbove */
 $brakeResult;
 
 $vehicleClass = $vehicle->getVehicleClass()->getCode();
@@ -26,7 +27,7 @@ if (!$brakeResult instanceof BrakeTestResultClass3AndAbove) {
 
 $imbalanceData = [];
 
-$hasTwoServiceBrakes = (boolean)$brakeResult->getServiceBrake2Efficiency();
+$hasTwoServiceBrakes = (bool) $brakeResult->getServiceBrake2Efficiency();
 
 $isSingleInFront = $brakeResult->getSingleInFront();
 
@@ -38,19 +39,18 @@ $serviceBrake2Data = is_null($brakeResult->getServiceBrake2Data()) ? null :
 
 echo '<div class="row service-brake">';
 
-
 /***********************************************************
  * calculate and render the first column-set "Service brake"
  **********************************************************/
-for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
+for ($brakeNumber = 1; $brakeNumber <= 2; ++$brakeNumber) {
     $serviceBrakeEfficiency = null;
     $lockPercentValue = null;
     $testPassValue = null;
     //  --  draw service brake result   --
-    $key = 'serviceBrake' . $brakeNumber;
+    $key = 'serviceBrake'.$brakeNumber;
 
     // to be $serviceBrake1Data or $serviceBrake2Data
-    $serviceBrakeData = $brakeNumber == 1 ? $serviceBrake1Data: $serviceBrake2Data;
+    $serviceBrakeData = $brakeNumber == 1 ? $serviceBrake1Data : $serviceBrake2Data;
     // to be getServiceBrake1Efficiency or getServiceBrake2Efficiency
     $getServiceBrakeEfficiency = sprintf('getServiceBrake%sEfficiency', $brakeNumber);
     // to be getServiceBrake1EfficiencyPass or getServiceBrake2EfficiencyPass
@@ -66,14 +66,14 @@ for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
         $brakeResult->$getServiceBrakeEfficiencyPass();
 
     if ($serviceBrakeEfficiency !== null) {
-        $title = 'Service brake' . ($brakeNumber > 1 ? ' ' . $brakeNumber : '');
+        $title = 'Service brake'.($brakeNumber > 1 ? ' '.$brakeNumber : '');
 
         echo $this->partial(
             'brakeTestResult',
             [
                 'title' => $title,
                 'idPrefix' => strtolower(str_replace(' ', '-', $title)),
-                'columnTitle' => $title . ' item',
+                'columnTitle' => $title.' item',
                 'rows' => [
                     [
                         'name' => 'Brake efficiency',
@@ -93,7 +93,7 @@ for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
     /***********************************************************
      * calculate the "Imbalance" data
      **********************************************************/
-    for ($axleNumber = 1; $axleNumber <= 3; $axleNumber++) {
+    for ($axleNumber = 1; $axleNumber <= 3; ++$axleNumber) {
         if ($axleNumber === 1) {
             $effortNearsideAxle = is_null($serviceBrakeData) || is_null($serviceBrakeData->getEffortNearsideAxel1()) ?
                 null :
@@ -123,9 +123,8 @@ for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
         $operatingOnOneWheelAxle = $singleInFrontOnAxleOne || $notSingleInFrontOnAxleTwo;
 
         if (!empty($effortNearsideAxle) && !$operatingOnOneWheelAxle) {
-
-            $brakeName = $hasTwoServiceBrakes ? 'Brake ' . $brakeNumber : '';
-            $axelName = trim($brakeName) . ' Axle ' . $axleNumber;
+            $brakeName = $hasTwoServiceBrakes ? 'Brake '.$brakeNumber : '';
+            $axelName = trim($brakeName).' Axle '.$axleNumber;
 
             $imbalanceData[$brakeName.$axleNumber] = [
                 'name' => $axelName,
@@ -134,7 +133,6 @@ for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
         }
     }
 }
-
 
 //  --  imbalance:parking   --
 $showParkingBrakeImbalance = $brakeResult->getServiceBrakeIsSingleLine();
@@ -187,7 +185,7 @@ echo $this->partial(
         'columnTitle' => 'Brake imbalance',
         'rows' => $imbalanceData,
         'testPass' => $isTestPass,
-        'resultText' => 'Brake imbalance test'
+        'resultText' => 'Brake imbalance test',
     ]
 );
 
@@ -195,7 +193,6 @@ if ($hasTwoServiceBrakes) {
     echo '</div>';
     echo '<div class="row">';
 }
-
 
 echo $this->partial(
     'brakeTestResult', [
@@ -210,7 +207,7 @@ echo $this->partial(
             [
                 'name' => 'Brake lock',
                 'value' => $brakeResult->getParkingBrakeLockPercent(),
-            ]
+            ],
         ],
         'testPass' => $brakeResult->getParkingBrakeEfficiencyPass(),
         'resultText' => 'Parking brake test',

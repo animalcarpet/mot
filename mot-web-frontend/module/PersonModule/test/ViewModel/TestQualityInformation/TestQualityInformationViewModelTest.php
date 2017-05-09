@@ -20,7 +20,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
     const COMPONENT_LINK_TEXT_GROUP = 'component link group';
     const NOT_AVAILABLE = 'Not available';
 
-    /** @var TestQualityInformationMonthFilter $testQualityInformationMonthFilter  */
+    /** @var TestQualityInformationMonthFilter $testQualityInformationMonthFilter */
     private $testQualityInformationMonthFilter;
 
     public function setUp()
@@ -41,7 +41,6 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
             self::buildTesterPerformanceDto(false, false), [], [], self::buildNationalStatisticsPerformanceDto(), self::buildTesterAuthorisation(false, false), $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
         );
-
 
         $this->assertEquals(($testQualityInformationViewModel->getA()->getNationalTestCount()), 10);
         $this->assertEquals(($testQualityInformationViewModel->getA()->getNationalPercentageFailed()), '50%');
@@ -90,6 +89,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataProviderTestGetTable
+     *
      * @param $testerPerformance
      * @param $testerAuthorisation
      * @param $resultA
@@ -186,16 +186,14 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
         return $national;
     }
 
-
     public static function buildTesterPerformanceDto($isGroupA, $isGroupB)
     {
         $tester = new TesterPerformanceDto();
 
-        if ($isGroupA)
-        {
+        if ($isGroupA) {
             $stats1 = new EmployeePerformanceDto();
 
-            $stats1->setUsername("Tester");
+            $stats1->setUsername('Tester');
             $stats1->setTotal(1);
             $stats1->setAverageTime(new TimeSpan(1, 1, 1, 1));
             $stats1->setPercentageFailed(100);
@@ -203,11 +201,10 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
             $tester->setGroupAPerformance($stats1);
         }
 
-        if ($isGroupB)
-        {
+        if ($isGroupB) {
             $stats2 = new EmployeePerformanceDto();
 
-            $stats2->setUsername("Tester");
+            $stats2->setUsername('Tester');
             $stats2->setTotal(200);
             $stats2->setAverageTime(new TimeSpan(2, 2, 2, 2));
             $stats2->setPercentageFailed(33.33);
@@ -218,17 +215,14 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
         return $tester;
     }
 
-
     public static function buildTesterAuthorisation($isGroupAQualified, $isGroupBQualified)
     {
-        if ($isGroupAQualified)
-        {
+        if ($isGroupAQualified) {
             $groupA = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, '');
         } else {
             $groupA = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, '');
         }
-        if ($isGroupBQualified)
-        {
+        if ($isGroupBQualified) {
             $groupB = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, '');
         } else {
             $groupB = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, '');

@@ -3,7 +3,6 @@
 namespace Dashboard\Factory\Service;
 
 use Application\Data\ApiPersonalDetails;
-use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dashboard\Service\TradeRolesAssociationsService;

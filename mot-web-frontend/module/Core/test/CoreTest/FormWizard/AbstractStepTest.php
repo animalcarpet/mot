@@ -1,10 +1,11 @@
 <?php
+
 namespace CoreTest\FormWizard;
 
 use Core\FormWizard\AbstractStep;
 use CoreTest\FormWizard\Fake\FakeStep;
 
-class AbstractStepTest extends  \PHPUnit_Framework_TestCase
+class AbstractStepTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AbstractStep
@@ -18,8 +19,8 @@ class AbstractStepTest extends  \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $stepOne = new FakeStep("first step", true, []);
-        $stepTwo = new FakeStep("second step", true, []);
+        $stepOne = new FakeStep('first step', true, []);
+        $stepTwo = new FakeStep('second step', true, []);
 
         $stepOne->setNextStep($stepTwo);
         $stepTwo->setPrevStep($stepOne);
@@ -30,7 +31,7 @@ class AbstractStepTest extends  \PHPUnit_Framework_TestCase
 
     public function testHasPrevStepReturnsFalseIfDoesNotHavePreviousStep()
     {
-         $this->assertFalse($this->stepOne->hasPrevStep());
+        $this->assertFalse($this->stepOne->hasPrevStep());
     }
 
     public function tesGetPrevStepReturnsNullIfDoesNotHavePreviousStep()

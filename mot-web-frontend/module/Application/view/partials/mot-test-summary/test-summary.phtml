@@ -6,12 +6,11 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use DvsaMotTest\Adapter\MotTestServiceResponseAdapter;
 
-/** @var MotTest $motTest */
+/* @var MotTest $motTest */
 $motTest;
 
-/** @var DvsaVehicleViewModel $vehicle */
+/* @var DvsaVehicleViewModel $vehicle */
 $vehicle;
-
 
 /** @var string $motTestType */
 $motTestType = $motTest->getTestTypeCode();
@@ -25,7 +24,7 @@ $pendingStatus = null;
 
 $isTestActive = ($motTest->getStatus() == MotTestStatusName::ACTIVE);
 
-if($isTestActive) {
+if ($isTestActive) {
     $pendingDetails = $motTest->getPendingDetails();
     $pendingStatus = $pendingDetails->getCurrentSubmissionStatus();
     $isTestReady = ($pendingStatus != 'INCOMPLETE');
@@ -55,9 +54,9 @@ $isReinspection = \DvsaCommon\Domain\MotTestType::isReinspection($motTestType);
             echo $this->partial(
                 'partials/mot-test-summary/field-mot-test-number',
                 [
-                    'cssDlClass'      => 'col-sm-6 no-bot-marg',
-                    'isReinspection'  => $isReinspection,
-                    'motTestNumber'   => $motTest->getMotTestNumber(),
+                    'cssDlClass' => 'col-sm-6 no-bot-marg',
+                    'isReinspection' => $isReinspection,
+                    'motTestNumber' => $motTest->getMotTestNumber(),
                 ]
             );
 
@@ -65,7 +64,7 @@ $isReinspection = \DvsaCommon\Domain\MotTestType::isReinspection($motTestType);
                 'partials/mot-test-summary/site-address',
                 [
                     'cssDlClass' => 'col-sm-6 no-bot-marg',
-                    'siteData'   => $motTest->getSite(),
+                    'siteData' => $motTest->getSite(),
                 ]
             );
             ?>
@@ -77,7 +76,7 @@ $isReinspection = \DvsaCommon\Domain\MotTestType::isReinspection($motTestType);
                 'partials/mot-test-summary/field-issued-date.phtml',
                 [
                     'cssDlClass' => 'col-sm-6',
-                    'motTest'    => $motTest,
+                    'motTest' => $motTest,
                 ]
             );
 
@@ -86,7 +85,7 @@ $isReinspection = \DvsaCommon\Domain\MotTestType::isReinspection($motTestType);
                 [
                     'cssDlClass' => 'col-sm-6',
                     'motTest' => $motTest,
-                    'expiryDate'    => $this->expiryDate,
+                    'expiryDate' => $this->expiryDate,
                 ]
             );
             ?>
@@ -116,8 +115,8 @@ echo $this->partial(
 if (isset($isReinspection) && $isReinspection && $motTest->getBrakeTestResult() !== null) {
     echo $this->partial(
         'partials/mot-test-summary/brake-values-in-kg-block', [
-            'vehicle'           => $vehicle,
-            'motTest'       => $motTest,
+            'vehicle' => $vehicle,
+            'motTest' => $motTest,
             'isEnforcementUser' => false,
             'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
         ]
@@ -127,7 +126,7 @@ if (isset($isReinspection) && $isReinspection && $motTest->getBrakeTestResult() 
 //  --  failures    --
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [
-        'id'    => 'fails',
+        'id' => 'fails',
         'title' => 'Fails',
         'items' => $fails,
     ]
@@ -135,7 +134,7 @@ echo $this->partial(
 
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [
-        'id'    => 'prses',
+        'id' => 'prses',
         'title' => 'PRS',
         'items' => $prses,
     ]
@@ -143,7 +142,7 @@ echo $this->partial(
 
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [
-        'id'    => 'advisoryText',
+        'id' => 'advisoryText',
         'title' => 'Advisory text',
         'items' => $advisories,
     ]

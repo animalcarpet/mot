@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Form;
 
 use Zend\Form\Annotation;
@@ -9,7 +10,6 @@ use Zend\Form\Annotation;
  */
 class VehicleRetestSearch
 {
-
     /**
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\AllowEmpty({"true"})

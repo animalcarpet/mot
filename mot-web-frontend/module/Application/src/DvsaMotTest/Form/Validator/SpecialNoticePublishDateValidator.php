@@ -12,22 +12,22 @@ use Zend\Validator\AbstractValidator;
  */
 class SpecialNoticePublishDateValidator extends AbstractValidator
 {
-    const ERROR_PAST        = 'Date cannot be in the past';
-    const ERROR_FORMAT      = 'Incorrect date format, dd-mm-yyyy expected';
-    const ERROR_INCORRECT   = 'Date is incorrect';
+    const ERROR_PAST = 'Date cannot be in the past';
+    const ERROR_FORMAT = 'Incorrect date format, dd-mm-yyyy expected';
+    const ERROR_INCORRECT = 'Date is incorrect';
     const ERROR_NONEXISTENT = 'Date does not exist';
 
     protected $messageTemplates = [
-        self::ERROR_PAST        => self::ERROR_PAST,
-        self::ERROR_FORMAT      => self::ERROR_FORMAT,
-        self::ERROR_INCORRECT   => self::ERROR_INCORRECT,
+        self::ERROR_PAST => self::ERROR_PAST,
+        self::ERROR_FORMAT => self::ERROR_FORMAT,
+        self::ERROR_INCORRECT => self::ERROR_INCORRECT,
         self::ERROR_NONEXISTENT => self::ERROR_NONEXISTENT,
     ];
 
     public function isValid($value)
     {
         try {
-            $part = explode("-", $value);
+            $part = explode('-', $value);
             $date = DateUtils::toDateFromParts($part[2], $part[1], $part[0]);
         } catch (IncorrectDateFormatException $e) {
             $this->error(self::ERROR_FORMAT);

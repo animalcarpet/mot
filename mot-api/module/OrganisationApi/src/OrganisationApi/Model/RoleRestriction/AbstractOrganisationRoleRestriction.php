@@ -24,7 +24,7 @@ abstract class AbstractOrganisationRoleRestriction implements RoleRestrictionInt
      * Checks if all requirements are met to assign a to the user in the given organisation.
      * Return unmet conditions.
      *
-     * @param Person $person
+     * @param Person                $person
      * @param OrganisationPersonnel $personnel
      *
      * @return ErrorSchema

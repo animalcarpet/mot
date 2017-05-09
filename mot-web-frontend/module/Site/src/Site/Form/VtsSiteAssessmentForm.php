@@ -4,7 +4,6 @@ namespace Site\Form;
 
 use DvsaClient\ViewModel\AbstractFormModel;
 use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\DateException;
 use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
@@ -121,11 +120,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $siteAssessmentScore
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setSiteAssessmentScore($siteAssessmentScore)
     {
         $this->siteAssessmentScore = $siteAssessmentScore;
+
         return $this;
     }
 
@@ -139,11 +140,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $userIsNotAssessor
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setUserIsNotAssessor($userIsNotAssessor)
     {
         $this->userIsNotAssessor = $userIsNotAssessor;
+
         return $this;
     }
 
@@ -157,11 +160,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $dvsaExaminersUserId
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setDvsaExaminersUserId($dvsaExaminersUserId)
     {
         $this->dvsaExaminersUserId = $dvsaExaminersUserId;
+
         return $this;
     }
 
@@ -175,11 +180,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $aeRepresentativesFullName
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setAeRepresentativesFullName($aeRepresentativesFullName)
     {
         $this->aeRepresentativesFullName = $aeRepresentativesFullName;
+
         return $this;
     }
 
@@ -193,11 +200,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $aeRepresentativesRole
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setAeRepresentativesRole($aeRepresentativesRole)
     {
         $this->aeRepresentativesRole = $aeRepresentativesRole;
+
         return $this;
     }
 
@@ -211,11 +220,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $aeRepresentativesUserId
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setAeRepresentativesUserId($aeRepresentativesUserId)
     {
         $this->aeRepresentativesUserId = $aeRepresentativesUserId;
+
         return $this;
     }
 
@@ -229,22 +240,25 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $testerUserId
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setTesterUserId($testerUserId)
     {
         $this->testerUserId = $testerUserId;
+
         return $this;
     }
 
-
     /**
      * @param $formUrl
+     *
      * @return $this
      */
     public function setFormUrl($formUrl)
     {
         $this->formUrl = $formUrl;
+
         return $this;
     }
 
@@ -266,11 +280,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $dateOfAssessment
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setDateOfAssessment(\DateTime $dateOfAssessment)
     {
         $this->dateOfAssessment = $dateOfAssessment;
+
         return $this;
     }
 
@@ -284,11 +300,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $dvsaExaminersFullName
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setDvsaExaminersFullName($dvsaExaminersFullName)
     {
         $this->dvsaExaminersFullName = $dvsaExaminersFullName;
+
         return $this;
     }
 
@@ -302,16 +320,19 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $testerFullName
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setTesterFullName($testerFullName)
     {
         $this->testerFullName = $testerFullName;
+
         return $this;
     }
 
     /**
      * @param Parameters $postData
+     *
      * @return \DateTime|null
      */
     private function extractDate(Parameters $postData)
@@ -320,14 +341,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
         $this->monthOfAssessment = $postData->get('dobMonth');
         $this->yearOfAssessment = $postData->get('dobYear');
 
-        try{
+        try {
             $date = DateUtils::toDateFromParts(
                 $this->dayOfAssessment,
                 $this->monthOfAssessment,
                 $this->yearOfAssessment
             );
-        }
-        catch (DateException $ex) {
+        } catch (DateException $ex) {
             $date = null;
         }
 
@@ -344,11 +364,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $dayOfAssessment
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setDayOfAssessment($dayOfAssessment)
     {
         $this->dayOfAssessment = $dayOfAssessment;
+
         return $this;
     }
 
@@ -362,11 +384,13 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $monthOfAssessment
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setMonthOfAssessment($monthOfAssessment)
     {
         $this->monthOfAssessment = $monthOfAssessment;
+
         return $this;
     }
 
@@ -380,23 +404,25 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
     /**
      * @param mixed $yearOfAssessment
+     *
      * @return VtsSiteAssessmentForm
      */
     public function setYearOfAssessment($yearOfAssessment)
     {
         $this->yearOfAssessment = $yearOfAssessment;
+
         return $this;
     }
 
     /**
      * @param EnforcementSiteAssessmentDto $dto
+     *
      * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
      */
     private function updateDateFields(EnforcementSiteAssessmentDto $dto)
     {
         $dateOfAssessmentStr = $dto->getDateOfAssessment();
-        if(!empty($dateOfAssessmentStr)){
-
+        if (!empty($dateOfAssessmentStr)) {
             $dateOfAssessmentDate = DateUtils::toDate($dateOfAssessmentStr);
             $this
                 ->setDateOfAssessment($dateOfAssessmentDate)
@@ -426,5 +452,4 @@ class VtsSiteAssessmentForm extends AbstractFormModel
 
         return isset($fieldLabelMapping) ? $fieldLabelMapping[$field] : null;
     }
-
 }

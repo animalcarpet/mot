@@ -6,14 +6,12 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Listener\RegisterCardHar
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\SimpleRouteStack;
 
 class RegisterCardHardStopListenerTest extends PHPUnit_Framework_TestCase
 {
-
     private $identityProvider;
 
     private $hardStopCondition;
@@ -88,7 +86,6 @@ class RegisterCardHardStopListenerTest extends PHPUnit_Framework_TestCase
         return $event;
     }
 
-
     private function withIdentity($identity)
     {
         $this->identityProvider->expects($this->any())
@@ -100,5 +97,4 @@ class RegisterCardHardStopListenerTest extends PHPUnit_Framework_TestCase
     {
         return new RegisterCardHardStopListener($this->identityProvider, $this->hardStopCondition);
     }
-
 }

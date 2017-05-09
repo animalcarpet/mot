@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * OrganisationContactType
+ * OrganisationContactType.
  *
  * @ORM\Table(name="organisation_contact_type")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\OrganisationContactTypeRepository", readOnly=true)

@@ -41,7 +41,7 @@ class PersonRoleManagementService
     /** @var CatalogService */
     private $catalogService;
 
-    /** @var  array containing person's both internal and trade roles*/
+    /** @var array containing person's both internal and trade roles */
     private $personInternalRoles;
 
     /**
@@ -129,14 +129,14 @@ class PersonRoleManagementService
      */
     public function personToManageIsSelf($personToBeManagedId)
     {
-        return ($this->motIdentityProvider->getIdentity()->getUserId() == $personToBeManagedId);
+        return $this->motIdentityProvider->getIdentity()->getUserId() == $personToBeManagedId;
     }
 
     /**
      * @param int $personId
      * @param int $personSystemRoleId
      *
-     * @return boolean
+     * @return bool
      */
     public function addRole($personId, $personSystemRoleId)
     {
@@ -187,7 +187,7 @@ class PersonRoleManagementService
     }
 
     /**
-     * @param int  $personId
+     * @param int $personId
      *
      * @return \DvsaCommon\Dto\Person\PersonHelpDeskProfileDto
      */
@@ -318,7 +318,7 @@ class PersonRoleManagementService
      */
     private function canManageThisRole($roleCode)
     {
-        $manageRoleCode = 'MANAGE-ROLE-' . $roleCode;
+        $manageRoleCode = 'MANAGE-ROLE-'.$roleCode;
 
         return $this->authorisationService->isGranted($manageRoleCode);
     }

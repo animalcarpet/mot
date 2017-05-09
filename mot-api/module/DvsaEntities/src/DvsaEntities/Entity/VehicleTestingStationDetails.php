@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * VehicleTestingStationDetails
+ * VehicleTestingStationDetails.
  *
  * @ORM\Table(
  * name="application_site_details",
@@ -102,6 +102,7 @@ class VehicleTestingStationDetails
     public function setVehicleTestingStationEvidenceOfExclusiveUse($vehicleTestingStationEvidenceOfExclusiveUse)
     {
         $this->vehicleTestingStationEvidenceOfExclusiveUse = $vehicleTestingStationEvidenceOfExclusiveUse;
+
         return $this;
     }
 
@@ -122,6 +123,7 @@ class VehicleTestingStationDetails
     public function setVehicleTestingStationTestingFacility($vehicleTestingStationTestingFacility)
     {
         $this->vehicleTestingStationTestingFacility = $vehicleTestingStationTestingFacility;
+
         return $this;
     }
 
@@ -141,6 +143,7 @@ class VehicleTestingStationDetails
     public function setAddress($address)
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -160,6 +163,7 @@ class VehicleTestingStationDetails
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -180,6 +184,7 @@ class VehicleTestingStationDetails
     public function setVehicleTestingStationVehicleClass($vehicleTestingStationVehicleClass)
     {
         $this->vehicleTestingStationVehicleClass = $vehicleTestingStationVehicleClass;
+
         return $this;
     }
 
@@ -200,6 +205,7 @@ class VehicleTestingStationDetails
     public function setVehicleTestingStationPlanningPermission($vehicleTestingStationPlanningPermission)
     {
         $this->vehicleTestingStationPlanningPermission = $vehicleTestingStationPlanningPermission;
+
         return $this;
     }
 
@@ -220,6 +226,7 @@ class VehicleTestingStationDetails
     public function setVehicleTestingStationPlansAndDimensions($vehicleTestingStationPlansAndDimensions)
     {
         $this->vehicleTestingStationPlansAndDimensions = $vehicleTestingStationPlansAndDimensions;
+
         return $this;
     }
 

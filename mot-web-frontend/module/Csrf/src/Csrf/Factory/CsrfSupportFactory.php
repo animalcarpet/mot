@@ -9,10 +9,10 @@ use Csrf\CsrfSupport;
 
 class CsrfSupportFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $csrfSession = new SessionContainer('csrf');
+
         return new CsrfSupport(
             $csrfSession
         );

@@ -46,7 +46,6 @@ class WebLogoutServiceTest extends \PHPUnit_Framework_TestCase
         $this->expectSessionClear();
 
         $this->createService()->logout();
-
     }
 
     public function testLogout_givenNoToken_shouldNotLogoutFromOpenAM_and_shouldClearSessionStorage()

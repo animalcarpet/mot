@@ -19,6 +19,7 @@ abstract class AbstractActionResult
     public function addErrorMessage($error)
     {
         $this->errorMessages[] = $error;
+
         return $this;
     }
 
@@ -27,6 +28,7 @@ abstract class AbstractActionResult
         foreach ($errors as $error) {
             $this->addErrorMessage($error);
         }
+
         return $this;
     }
 
@@ -38,6 +40,7 @@ abstract class AbstractActionResult
     public function addSuccessMessage($successMessage)
     {
         $this->successMessages[] = $successMessage;
+
         return $this;
     }
 
@@ -46,6 +49,7 @@ abstract class AbstractActionResult
         foreach ($successMessages as $successMessage) {
             $this->addErrorMessage($successMessage);
         }
+
         return $this;
     }
 
@@ -62,7 +66,7 @@ abstract class AbstractActionResult
 
         return ArrayUtils::filter(
             $this->flashMessages,
-            function(FlashMessage $message) use ($namespaceFilter) {
+            function (FlashMessage $message) use ($namespaceFilter) {
                 return $message->getNamespace()->equals($namespaceFilter);
             });
     }

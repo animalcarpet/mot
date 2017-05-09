@@ -1,8 +1,8 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
@@ -54,6 +54,7 @@ class Visit extends Entity
     public function setVehicleTestingStation($vehicleTestingStation)
     {
         $this->vehicleTestingStation = $vehicleTestingStation;
+
         return $this;
     }
 
@@ -73,6 +74,7 @@ class Visit extends Entity
     public function setVisitDate($visitDate)
     {
         $this->visitDate = $visitDate;
+
         return $this;
     }
 
@@ -92,6 +94,7 @@ class Visit extends Entity
     public function setVisitOutcome($visitOutcome)
     {
         $this->visitOutcome = $visitOutcome;
+
         return $this;
     }
 
@@ -111,6 +114,7 @@ class Visit extends Entity
     public function setVisitReason($visitReason)
     {
         $this->visitReason = $visitReason;
+
         return $this;
     }
 

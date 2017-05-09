@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Equipment
+ * Equipment.
  *
  * @ORM\Table(name="equipment")
  * @ORM\Entity

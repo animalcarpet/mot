@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Comment
+ * Comment.
  *
  * @ORM\Table(
  *      name="emergency_reason_lookup",
@@ -16,7 +16,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  *              name="id_UNIQUE_CODE",
  *              columns={"code"}
  *          ),
-     *          @ORM\UniqueConstraint(
+ *          @ORM\UniqueConstraint(
  *              name="id_UNIQUE_POS",
  *              columns={"display_order"}
  *          )
@@ -51,7 +51,7 @@ class EmergencyReason extends Entity
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="display_order", type="smallint", nullable=true)
      */

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\UUIDIdentityTrait;
 
 /**
- * ApplicationTesterApplication
+ * ApplicationTesterApplication.
  *
  * @ORM\Table(name="application_tester_application", indexes={@ORM\Index(name="fk_tester_application_status", columns={"application_status"}), @ORM\Index(name="fk_tester", columns={"application_tester_id"}), @ORM\Index(name="fk_user", columns={"person_id"})})
  * @ORM\Entity
@@ -88,7 +88,7 @@ class ApplicationTesterApplication
     private $person;
 
     /**
-     * Set startDateTime
+     * Set startDateTime.
      *
      * @param \DateTime $startDateTime
      *
@@ -102,7 +102,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get startDateTime
+     * Get startDateTime.
      *
      * @return \DateTime
      */
@@ -112,7 +112,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set submitDateTime
+     * Set submitDateTime.
      *
      * @param \DateTime $submitDateTime
      *
@@ -126,7 +126,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get submitDateTime
+     * Get submitDateTime.
      *
      * @return \DateTime
      */
@@ -136,7 +136,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set vehicleTestClassSectionState
+     * Set vehicleTestClassSectionState.
      *
      * @param string $vehicleTestClassSectionState
      *
@@ -150,7 +150,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get vehicleTestClassSectionState
+     * Get vehicleTestClassSectionState.
      *
      * @return string
      */
@@ -160,7 +160,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set experienceSectionState
+     * Set experienceSectionState.
      *
      * @param string $experienceSectionState
      *
@@ -174,7 +174,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get experienceSectionState
+     * Get experienceSectionState.
      *
      * @return string
      */
@@ -184,7 +184,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set qualificationsSectionState
+     * Set qualificationsSectionState.
      *
      * @param string $qualificationsSectionState
      *
@@ -198,7 +198,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get qualificationsSectionState
+     * Get qualificationsSectionState.
      *
      * @return string
      */
@@ -208,7 +208,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set convictionsSectionState
+     * Set convictionsSectionState.
      *
      * @param string $convictionsSectionState
      *
@@ -222,7 +222,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get convictionsSectionState
+     * Get convictionsSectionState.
      *
      * @return string
      */
@@ -232,7 +232,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set applicationTester
+     * Set applicationTester.
      *
      * @param \DvsaEntities\Entity\ApplicationTester $applicationTester
      *
@@ -246,7 +246,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get applicationTester
+     * Get applicationTester.
      *
      * @return \DvsaEntities\Entity\ApplicationTester
      */
@@ -256,7 +256,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set applicationStatus
+     * Set applicationStatus.
      *
      * @param \DvsaEntities\Entity\ApplicationStatus $applicationStatus
      *
@@ -270,7 +270,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get applicationStatus
+     * Get applicationStatus.
      *
      * @return \DvsaEntities\Entity\ApplicationStatus
      */
@@ -280,7 +280,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
      *
@@ -294,7 +294,7 @@ class ApplicationTesterApplication
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */

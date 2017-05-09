@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Dto\Organisation\OrganisationPositionDto;
@@ -8,7 +9,7 @@ use DvsaCommonApi\Service\Mapper\AbstractApiMapper;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 
 /**
- * Class OrganisationPositionMapper
+ * Class OrganisationPositionMapper.
  */
 class OrganisationPositionMapper extends AbstractApiMapper
 {

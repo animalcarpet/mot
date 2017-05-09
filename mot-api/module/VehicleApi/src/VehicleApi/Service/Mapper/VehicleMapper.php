@@ -3,20 +3,15 @@
 namespace VehicleApi\Service\Mapper;
 
 use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaCommon\Dto\Vehicle\MakeDto;
-use DvsaCommon\Dto\Vehicle\ModelDetailDto;
-use DvsaCommon\Dto\Vehicle\ModelDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\Vehicle\VehicleParamDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Utility\TypeCheck;
 use DvsaCommonApi\Service\Mapper\ColourMapper;
 use DvsaEntities\Entity\Vehicle;
-use DvsaEntities\Entity\BodyType;
-use SebastianBergmann\Exporter\Exception;
 
 /**
- * Class VehicleMapper
+ * Class VehicleMapper.
  */
 class VehicleMapper extends AbstractVehicleMapper
 {
@@ -24,6 +19,7 @@ class VehicleMapper extends AbstractVehicleMapper
      * @param Vehicle $vehicle
      *
      * @return VehicleDto
+     *
      * @throws \RuntimeException
      */
     public function toDto($vehicle)

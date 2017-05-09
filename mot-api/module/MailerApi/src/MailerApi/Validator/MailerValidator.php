@@ -7,7 +7,6 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Validator\EmailAddressValidator;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaMotApi\Service\UserService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Validator\EmailAddress;
 
 /**
@@ -20,11 +19,10 @@ class MailerValidator
     const ERROR_UNKNOWN_TYPE = 'Unknown mail request type';
     const ERROR_NO_USERID = 'Username reminder requires a user-id';
     const ERROR_INVALID_DTO = 'DTO object was null';
-    const ERROR_NO_RECIPIENT = "Email recipient must be provided";
-    const ERROR_NO_FIRSTNAME = "Recipient first name must be provided";
-    const ERROR_NO_FAMILYNAME = "Recipient last name must be provided";
-    const ERROR_NO_ATTACHMENT = "An attachment must be provided";
-
+    const ERROR_NO_RECIPIENT = 'Email recipient must be provided';
+    const ERROR_NO_FIRSTNAME = 'Recipient first name must be provided';
+    const ERROR_NO_FAMILYNAME = 'Recipient last name must be provided';
+    const ERROR_NO_ATTACHMENT = 'An attachment must be provided';
 
     /** Code to generate a username reminder by email */
     const TYPE_REMIND_USERNAME = 1;
@@ -46,7 +44,6 @@ class MailerValidator
      */
     private $emailValidator;
 
-
     /**
      * @param UserService $userService
      */
@@ -59,10 +56,11 @@ class MailerValidator
     /**
      * Designated validation entry point.
      *
-     * @param MailerDto $dto contains the JSON as a DTO instance
-     * @param integer $type contains the request context type
+     * @param MailerDto $dto  contains the JSON as a DTO instance
+     * @param int       $type contains the request context type
      *
-     * @return bool TRUE on exit, otherwise it would have failed with an exception.
+     * @return bool TRUE on exit, otherwise it would have failed with an exception
+     *
      * @throws BadRequestException
      */
     public function validate(MailerDto $dto, $type)
@@ -94,6 +92,7 @@ class MailerValidator
      * @param MailerDto $dto
      *
      * @return bool
+     *
      * @throws BadRequestException
      */
     protected function validateUsernameReminder(MailerDto $dto)
@@ -109,6 +108,7 @@ class MailerValidator
      * @param MailerDto $dto
      *
      * @return bool
+     *
      * @throws BadRequestException
      */
     protected function validatePasswordReminder(MailerDto $dto)
@@ -124,6 +124,7 @@ class MailerValidator
      * @param MailerDto $dto
      *
      * @return bool
+     *
      * @throws BadRequestException
      */
     protected function validateReclaimAccount(MailerDto $dto)
@@ -192,9 +193,9 @@ class MailerValidator
             $this->emailValidator = new EmailAddressValidator();
         }
 
-        if(!$this->emailValidator->isValid($email) ) {
+        if (!$this->emailValidator->isValid($email)) {
             throw new BadRequestException(
-                implode(";", $this->emailValidator->getMessages()),
+                implode(';', $this->emailValidator->getMessages()),
                 BadRequestException::BAD_REQUEST_STATUS_CODE
             );
         }

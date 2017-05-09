@@ -1,8 +1,6 @@
 <?php
 
-
 namespace UserAdminTest\Service;
-
 
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Search\DemoTestRequestsSearchParamsDto;
@@ -13,11 +11,12 @@ use Zend\Stdlib\Parameters;
 
 class DemoTestRequestServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @dataProvider testSearchParamsDataProvider
+     *
      * @param array $parameters
      * @param array $expectedParameters
+     *
      * @throws \Exception
      */
     public function testSearchParamsAreGeneratedCorrectly(array $parameters, array $expectedParameters)
@@ -33,8 +32,10 @@ class DemoTestRequestServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testSearchParamsDataProvider
+     *
      * @param array $parameters
      * @param array $expectedParameters
+     *
      * @throws \Exception
      */
     public function testSearchParamsForCsvDownloadAreGeneratedCorrectly(array $parameters, array $expectedParameters)
@@ -61,7 +62,7 @@ class DemoTestRequestServiceTest extends \PHPUnit_Framework_TestCase
                 [
                     DemoTestRequestService::DEFAULT_SORT_BY,
                     1,
-                    DemoTestRequestService::DEFAULT_SORT_DIRECTION
+                    DemoTestRequestService::DEFAULT_SORT_DIRECTION,
                 ],
             ],
             [
@@ -73,7 +74,7 @@ class DemoTestRequestServiceTest extends \PHPUnit_Framework_TestCase
                 [
                     DemoTestRequestsSearchParamsDto::SORT_BY_USERNAME,
                     20,
-                    SearchParamConst::SORT_DIRECTION_DESC
+                    SearchParamConst::SORT_DIRECTION_DESC,
                 ],
             ],
             [
@@ -85,7 +86,7 @@ class DemoTestRequestServiceTest extends \PHPUnit_Framework_TestCase
                 [
                     DemoTestRequestService::DEFAULT_SORT_BY,
                     1,
-                    DemoTestRequestService::DEFAULT_SORT_DIRECTION
+                    DemoTestRequestService::DEFAULT_SORT_DIRECTION,
                 ],
             ],
         ];

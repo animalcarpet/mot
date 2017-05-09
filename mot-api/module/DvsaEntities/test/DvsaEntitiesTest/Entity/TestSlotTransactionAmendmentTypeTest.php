@@ -7,9 +7,7 @@ use DvsaEntitiesTest\EntityTrait\EntityTestTrait;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class PaymentTest
- *
- * @package DvsaEntityTest\Entity
+ * Class PaymentTest.
  */
 class TestSlotTransactionAmendmentTypeTest extends PHPUnit_Framework_TestCase
 {
@@ -21,7 +19,7 @@ class TestSlotTransactionAmendmentTypeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test data for entity
+     * Test data for entity.
      *
      * @return array
      */
@@ -31,12 +29,12 @@ class TestSlotTransactionAmendmentTypeTest extends PHPUnit_Framework_TestCase
             [
                 [
                     [
-                        'code'         => 123,
-                        'title'        => 'test type',
-                        'isActive'     => true,
+                        'code' => 123,
+                        'title' => 'test type',
+                        'isActive' => true,
                         'displayOrder' => 1,
-                    ]
-                ]
+                    ],
+                ],
             ];
     }
 }

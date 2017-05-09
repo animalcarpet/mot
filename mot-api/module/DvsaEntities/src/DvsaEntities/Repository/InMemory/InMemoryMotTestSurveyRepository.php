@@ -4,7 +4,6 @@ namespace DvsaEntities\Repository\InMemory;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestSurvey;
 use DvsaEntities\Repository\MotTestSurveyRepository;
 
@@ -22,7 +21,7 @@ class InMemoryMotTestSurveyRepository extends EntityRepository implements MotTes
      */
     public function __construct(array $entities)
     {
-        parent::__construct($this->_em, InMemoryMotTestSurveyRepository::class);
+        parent::__construct($this->_em, self::class);
 
         $this->entityStore = $entities;
     }

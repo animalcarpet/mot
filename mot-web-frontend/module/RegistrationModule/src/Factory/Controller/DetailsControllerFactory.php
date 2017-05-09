@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller;
 
-
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\DetailsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
 use Zend\ServiceManager\FactoryInterface;

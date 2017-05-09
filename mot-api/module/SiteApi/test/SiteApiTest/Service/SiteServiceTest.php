@@ -21,7 +21,6 @@ use DvsaCommon\Utility\Hydrator;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\AddressService;
 use DvsaCommonApi\Service\ContactDetailsService;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Validator\AddressValidator;
 use DvsaCommonApi\Service\Validator\ContactDetailsValidator;
@@ -55,7 +54,7 @@ use SiteApi\Service\Validator\SiteValidator;
 use DvsaEntities\Repository\SiteStatusRepository;
 
 /**
- * SiteServiceTest
+ * SiteServiceTest.
  */
 class SiteServiceTest extends AbstractServiceTestCase
 {
@@ -66,33 +65,33 @@ class SiteServiceTest extends AbstractServiceTestCase
     private $siteService;
     /** @var SiteRepository|MockObj */
     private $repository;
-    /** @var  SiteTypeRepository|MockObj */
+    /** @var SiteTypeRepository|MockObj */
     private $siteTypeRepository;
     /** @var BrakeTestTypeRepository|MockObj */
     private $brakeTestTypeRepo;
-    /**@var SiteContactTypeRepository */
+    /** @var SiteContactTypeRepository */
     private $siteContactTypeRepository;
-    /** @var  AuthorisationServiceInterface|MockObj */
+    /** @var AuthorisationServiceInterface|MockObj */
     private $mockAuthService;
-    /** @var  FacilityTypeRepository|MockObj */
+    /** @var FacilityTypeRepository|MockObj */
     private $facilityTypeRepository;
-    /** @var  VehicleClassRepository|MockObj */
+    /** @var VehicleClassRepository|MockObj */
     private $vehicleClassRepository;
-    /** @var  AuthorisationForTestingMotAtSiteStatusRepository|MockObj */
+    /** @var AuthorisationForTestingMotAtSiteStatusRepository|MockObj */
     private $authForTestingMotStatusRepository;
-    /** @var  SiteTestingDailyScheduleRepository|MockObj */
+    /** @var SiteTestingDailyScheduleRepository|MockObj */
     private $siteTestingDailyScheduleRepository;
-    /** @var  NonWorkingDayCountryRepository|MockObj */
+    /** @var NonWorkingDayCountryRepository|MockObj */
     private $nonWorkingDayCountryRepository;
-    /** @var  SiteStatusRepository|MockObj */
+    /** @var SiteStatusRepository|MockObj */
     private $siteStatusRepository;
-    /** @var  MotIdentityInterface|MockObj */
+    /** @var MotIdentityInterface|MockObj */
     private $mockIdentity;
-    /** @var  EventService|MockObj */
+    /** @var EventService|MockObj */
     private $eventService;
-    /** @var  Hydrator|MockObj */
+    /** @var Hydrator|MockObj */
     private $mockHydrator;
-    /** @var  SiteValidator|MockObj */
+    /** @var SiteValidator|MockObj */
     private $validator;
 
     public function setup()
@@ -218,113 +217,113 @@ class SiteServiceTest extends AbstractServiceTestCase
         $vtsDto = (new VtsMapper())->toDto($siteEntity);
 
         $unauthException = [
-            'class'   => UnauthorisedException::class,
+            'class' => UnauthorisedException::class,
             'message' => 'You not have permissions',
         ];
 
         $notFoundExceptionById = [
-            'class'   => NotFoundException::class,
-            'message' => 'Site ' . self::SITE_ID . ' not found',
+            'class' => NotFoundException::class,
+            'message' => 'Site '.self::SITE_ID.' not found',
         ];
 
         $notFoundExceptionByNr = [
-            'class'   => NotFoundException::class,
-            'message' => 'Site ' . self::SITE_NR . ' not found',
+            'class' => NotFoundException::class,
+            'message' => 'Site '.self::SITE_NR.' not found',
         ];
 
         return [
             //  --  getVehicleTestingStationDataBySiteNumber method --
             [
-                'method'      => 'getSiteBySiteNumber',
-                'params'      => [
+                'method' => 'getSiteBySiteNumber',
+                'params' => [
                     'siteNumber' => self::SITE_NR,
-                    'isNeedDto'  => false,
+                    'isNeedDto' => false,
                 ],
-                'repo'        => [
+                'repo' => [
                     'method' => 'findOneBy',
                     'result' => null,
                     'params' => [['siteNumber' => self::SITE_NR]],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'exception' => $notFoundExceptionByNr,
                 ],
             ],
             [
-                'method'     => 'getSiteBySiteNumber',
-                'params'     => [
+                'method' => 'getSiteBySiteNumber',
+                'params' => [
                     'siteNumber' => self::SITE_NR,
-                    'isNeedDto'  => false,
+                    'isNeedDto' => false,
                 ],
-                'repo'       => [
+                'repo' => [
                     'method' => 'findOneBy',
                     'result' => $siteEntity,
                     'params' => [['siteNumber' => self::SITE_NR]],
                 ],
                 'permission' => [],
-                'expect'     => [
+                'expect' => [
                     'exception' => $unauthException,
                 ],
             ],
             [
-                'method'      => 'getSiteBySiteNumber',
-                'params'      => [
+                'method' => 'getSiteBySiteNumber',
+                'params' => [
                     'siteNumber' => self::SITE_NR,
-                    'isNeedDto'  => true,
+                    'isNeedDto' => true,
                 ],
-                'repo'        => [
+                'repo' => [
                     'method' => 'findOneBy',
                     'result' => $siteEntity,
                     'params' => [['siteNumber' => self::SITE_NR]],
                 ],
                 'permissions' => [PermissionAtSite::VEHICLE_TESTING_STATION_READ],
-                'expect'      => [
+                'expect' => [
                     'result' => $vtsDto,
                 ],
             ],
 
             //  --  getVehicleTestingStationData method --
             [
-                'method'     => 'getSite',
-                'params'     => [
-                    'siteId'    => self::SITE_ID,
+                'method' => 'getSite',
+                'params' => [
+                    'siteId' => self::SITE_ID,
                     'isNeedDto' => false,
                 ],
-                'repo'       => null,
+                'repo' => null,
                 'permission' => [],
-                'expect'     => [
+                'expect' => [
                     'exception' => $unauthException,
                 ],
             ],
             [
-                'method'      => 'getSite',
-                'params'      => [
-                    'siteId'    => self::SITE_ID,
+                'method' => 'getSite',
+                'params' => [
+                    'siteId' => self::SITE_ID,
                     'isNeedDto' => false,
                 ],
-                'repo'        => [
+                'repo' => [
                     'method' => 'find',
                     'result' => null,
                     'params' => [self::SITE_ID],
                 ],
                 'permissions' => [PermissionAtSite::VEHICLE_TESTING_STATION_READ],
-                'expect'      => [
+                'expect' => [
                     'exception' => $notFoundExceptionById,
                 ],
             ],
             [
-                'method'      => 'getSite',
-                'params'      => [
-                    'siteId'    => self::SITE_ID,
+                'method' => 'getSite',
+                'params' => [
+                    'siteId' => self::SITE_ID,
                     'isNeedDto' => true,
                 ],
-                'repo'        => [
+                'repo' => [
                     'method' => 'find',
                     'result' => $siteEntity,
                     'params' => [self::SITE_ID],
                 ],
                 'permissions' => [PermissionAtSite::VEHICLE_TESTING_STATION_READ],
-                'expect'      => [
+                'expect' => [
                     'result' => $vtsDto,
                 ],
             ],

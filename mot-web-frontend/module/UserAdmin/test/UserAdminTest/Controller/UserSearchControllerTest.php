@@ -17,9 +17,7 @@ use Zend\ServiceManager\ServiceManager;
 use DvsaCommon\Exception\UnauthorisedException;
 
 /**
- * Class UserSearchControllerTest
- *
- * @package UserAdminTest\Controller
+ * Class UserSearchControllerTest.
  */
 class UserSearchControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -31,7 +29,7 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
 
     public function setUp()
     {
-        $appTestConfig = include getcwd() . '/test/test.config.php';
+        $appTestConfig = include getcwd().'/test/test.config.php';
         Bootstrap::init($appTestConfig);
 
         $this->serviceManager = Bootstrap::getServiceManager();
@@ -54,7 +52,7 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Test has user access to page or not with/out auth and permission
+     * Test has user access to page or not with/out auth and permission.
      *
      * @param string $action
      * @param array  $params               Query parameters
@@ -90,7 +88,7 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
     public function dataProviderUserProfileControllerTestCanAccessHasRight()
     {
         // Parameters
-        /**
+        /*
          * $action, $params = [], $permissions = [],
          * $expectCanAccess = true, $shouldThrowException = true
         */
@@ -99,7 +97,7 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
             ['index', [], [PermissionInSystem::USER_SEARCH], false],
             ['results', [], [PermissionInSystem::MOT_TEST_START], true],
             ['results', [], [PermissionInSystem::USER_SEARCH], false],
-            ['results', ['username'=>'tester1'], [PermissionInSystem::USER_SEARCH], false],
+            ['results', ['username' => 'tester1'], [PermissionInSystem::USER_SEARCH], false],
         ];
     }
 
@@ -134,7 +132,7 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
             'addressLine2' => '',
             'addressLine3' => '',
             'addressLine4' => '',
-            'username' => 'test'
+            'username' => 'test',
         ];
 
         $mapper->expects($this->any())

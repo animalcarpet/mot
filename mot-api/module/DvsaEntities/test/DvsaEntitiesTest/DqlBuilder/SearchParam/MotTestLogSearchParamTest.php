@@ -9,7 +9,7 @@ use DvsaEntities\DqlBuilder\SearchParam\MotTestLogSearchParam;
 class MotTestLogSearchParamTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var  MotTestLogSearchParam
+     * @var MotTestLogSearchParam
      */
     private $searchParam;
 

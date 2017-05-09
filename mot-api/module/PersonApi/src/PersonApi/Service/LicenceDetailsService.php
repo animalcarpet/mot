@@ -3,7 +3,6 @@
 namespace PersonApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use DvsaCommon\Validator\DrivingLicenceValidator;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\AbstractService;
@@ -58,7 +57,9 @@ class LicenceDetailsService extends AbstractService
     /**
      * @param $personId
      * @param $data
+     *
      * @return Licence
+     *
      * @throws InvalidFieldValueException
      */
     public function updateOrCreate($personId, $data)
@@ -67,7 +68,7 @@ class LicenceDetailsService extends AbstractService
         $licence = $person->getDrivingLicence();
 
         if (!$this->validator->isValid($data)) {
-            throw new InvalidFieldValueException(join(", ", $this->validator->getMessages()));
+            throw new InvalidFieldValueException(implode(', ', $this->validator->getMessages()));
         }
 
         // uppercase the driving licence number
@@ -102,7 +103,7 @@ class LicenceDetailsService extends AbstractService
     }
 
     /**
-     * Delete the licence associated with user $personId
+     * Delete the licence associated with user $personId.
      *
      * @param int $personId
      */
@@ -119,6 +120,7 @@ class LicenceDetailsService extends AbstractService
     /**
      * @param Licence $licence
      * @param array   $data
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     private function updateLicenceDetails(Licence $licence, array $data)
@@ -154,5 +156,4 @@ class LicenceDetailsService extends AbstractService
     {
         $this->notificationHelper->sendChangedPersonalDetailsNotification($person);
     }
-
 }

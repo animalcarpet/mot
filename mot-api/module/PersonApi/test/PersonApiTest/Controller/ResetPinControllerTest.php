@@ -3,14 +3,11 @@
 namespace PersonApiTest\Controller;
 
 use DvsaCommon\Enum\SiteBusinessRoleCode;
-use DvsaCommonTest\Bootstrap;
-use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Controller\ResetPinController;
 use PersonApi\Service\PersonService;
 
 class ResetPinControllerTest extends AbstractPersonControllerTestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -20,7 +17,7 @@ class ResetPinControllerTest extends AbstractPersonControllerTestCase
     {
         $mockPersonServiceMethods = [
             'regeneratePinForPerson',
-            'validateCredentials'
+            'validateCredentials',
         ];
 
         $this->mockPersonService = $this->getMockBuilder(PersonService::class)
@@ -46,12 +43,12 @@ class ResetPinControllerTest extends AbstractPersonControllerTestCase
         $response = $this->controller->getResponse();
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals("Can only reset your own PIN", $viewModel->getVariable('errors')['message']);
+        $this->assertEquals('Can only reset your own PIN', $viewModel->getVariable('errors')['message']);
     }
 
     /**
      * The person's PIN can only be updated when requested with a token of same person (i.e. user can only update
-     * their own PIN)
+     * their own PIN).
      */
     public function testPinUpdateableOnlyBySelf()
     {
@@ -71,7 +68,7 @@ class ResetPinControllerTest extends AbstractPersonControllerTestCase
     }
 
     /**
-     * A 200 should present us with a pin value
+     * A 200 should present us with a pin value.
      */
     public function testNewPinReturnedWhenValidRequestMade()
     {

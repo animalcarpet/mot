@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * @author Jakub Igla <jakub.igla@gmail.com>
  */
 

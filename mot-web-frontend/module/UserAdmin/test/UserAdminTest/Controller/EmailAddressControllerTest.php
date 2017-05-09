@@ -21,10 +21,7 @@ use Zend\Http\Request;
 use Zend\Stdlib\ParametersInterface;
 use Zend\View\Model\ViewModel;
 use PHPUnit_Framework_MockObject_MockObject;
-use Zend\Mvc\Service\ViewHelperManagerFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 use Zend\View\Helper\HeadTitle;
 
@@ -45,25 +42,25 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
     /*** @var MapperFactory */
     private $mapperFactory;
 
-    /** @var  PersonProfileUrlGenerator */
+    /** @var PersonProfileUrlGenerator */
     private $personProfileUrlGenerator;
 
     /*** @var ContextProvider */
     private $contextProvider;
 
-    /** @var  IsEmailDuplicateService */
+    /** @var IsEmailDuplicateService */
     private $duplicateEmailService;
 
-    /** @var  TesterAuthorisation */
+    /** @var TesterAuthorisation */
     private $testerAuthorisation;
 
     /** @var PersonHelpDeskProfileDto */
     private $personHelpDeskProfileDto;
 
-    /** @var  Request */
+    /** @var Request */
     protected $request;
 
-    /** @var  MotIdentityProviderInterface */
+    /** @var MotIdentityProviderInterface */
     private $identityProvider;
 
     public function setUp()
@@ -302,6 +299,7 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
 
     /**
      * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     *
      * @throws \Exception
      */
     private function getServiceLocatorMock()
@@ -313,13 +311,14 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
             ->with('headTitle')
             ->willReturn(XMock::of(HeadTitle::class));
 
-        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        /** @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
         $serviceLocator = XMock::of(ServiceLocatorInterface::class);
         $serviceLocator
             ->expects($this->any())
             ->method('get')
             ->with('ViewHelperManager')
             ->willReturn($helperPluginManager);
+
         return $serviceLocator;
     }
 }

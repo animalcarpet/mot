@@ -1,13 +1,12 @@
 <?php
+
 namespace DvsaCommonApi\Service\Mapper;
 
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\DtoHydrator;
 
 /**
- * Class AbstractApiMapper
- *
- * @package DvsaCommonApi\Service\Mapper
+ * Class AbstractApiMapper.
  */
 abstract class AbstractApiMapper
 {

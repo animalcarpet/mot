@@ -25,8 +25,7 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Log\LoggerInterface;
 
 /**
- * Class TokenService
- * @package Account\Service
+ * Class TokenService.
  */
 class TokenService extends AbstractService
 {
@@ -54,13 +53,12 @@ class TokenService extends AbstractService
 
     /** \MailerApi\Service\MailerService */
     private $mailerService;
-    /** @var OpenAmIdentityService  */
+    /** @var OpenAmIdentityService */
     protected $openAmIdentityService;
 
-
-    /** @var  Array  */
+    /** @var array */
     private $mailerConfig;
-    /** @var  Array  */
+    /** @var array */
     private $helpdeskConfig;
 
     /** @var string */
@@ -73,16 +71,16 @@ class TokenService extends AbstractService
     /** @var DateTimeHolder */
     protected $dateTimeHolder;
 
-    /** @var MessageMapper  */
+    /** @var MessageMapper */
     protected $messageMapper;
 
     /** @var ParamObfuscator */
     protected $obfuscator;
 
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     protected $authService;
 
-    /** @var  AuthenticationService */
+    /** @var AuthenticationService */
     protected $identityService;
 
     /**
@@ -103,7 +101,7 @@ class TokenService extends AbstractService
         LoggerInterface $logger,
         MailerService $mailerService,
         OpenAmIdentityService $openAmIdentityService,
-        Array $config,
+        array $config,
         ParamObfuscator $obfuscator,
         AuthenticationService $identityService,
         AuthorisationServiceInterface $authService
@@ -142,10 +140,12 @@ class TokenService extends AbstractService
 
     /**
      * This function create a token to store in the database and
-     * send an email to the user to reset his password
+     * send an email to the user to reset his password.
      *
      * @param string $userId
+     *
      * @return array
+     *
      * @throws NotFoundException
      * @throws \Exception
      */
@@ -158,10 +158,12 @@ class TokenService extends AbstractService
     }
 
     /**
-     * Creates a unique token and inserts the relevant message against the user supplied
+     * Creates a unique token and inserts the relevant message against the user supplied.
      *
      * @param mixed $userId or $username
+     *
      * @return array
+     *
      * @throws NotFoundException
      * @throws \Exception
      */
@@ -189,14 +191,14 @@ class TokenService extends AbstractService
         $this->entityManager->flush();
 
         return [
-            'person'    => $person,
+            'person' => $person,
             'tokenData' => $tokenData,
-            'message'   => $message
+            'message' => $message,
         ];
     }
 
     /**
-     * This function will check if a token has been already generate but not use and make it unusable if there's one
+     * This function will check if a token has been already generate but not use and make it unusable if there's one.
      *
      * @param Person $person
      */
@@ -212,7 +214,7 @@ class TokenService extends AbstractService
 
     /**
      * This function generate a Token for the user to reset his password
-     * We check that the token does not already exist in the db and iterate until we have a unique one
+     * We check that the token does not already exist in the db and iterate until we have a unique one.
      *
      * We then return the array use to generate the token
      *
@@ -220,6 +222,7 @@ class TokenService extends AbstractService
      * @param int    $iteration
      *
      * @return array
+     *
      * @throws \Exception
      */
     private function createUniqueToken($userName, $iteration = 0)
@@ -230,7 +233,7 @@ class TokenService extends AbstractService
         }
 
         $issuedDate = $this->dateTimeHolder->getTimestamp(true);
-        $expiryDate = $issuedDate + (float)$this->expireTime;
+        $expiryDate = $issuedDate + (float) $this->expireTime;
         $token = $this->defineToken([$issuedDate, $expiryDate, $userName]);
 
         try {
@@ -245,19 +248,21 @@ class TokenService extends AbstractService
         return [
             'issued' => $issuedDate,
             'expiry' => $expiryDate,
-            'token'  => $token,
+            'token' => $token,
         ];
     }
 
     /**
-     * Create the unique token for the password reset link
+     * Create the unique token for the password reset link.
      *
      * @param array $data
+     *
      * @return string
      */
     protected function defineToken(array $data)
     {
         $secret = hash($this->encoding, $this->secret);
+
         return hash_hmac($this->encoding, implode('|', $data), $secret);
     }
 
@@ -265,9 +270,9 @@ class TokenService extends AbstractService
      * This will creates the formatted email and cause it to be sent to
      * the email address of the recipient.
      *
-     * @param Person $person        contains the target user for the reminder
-     * @param string $token         the reset token to put in the mail
-     * @param string $emailAddress  the recipient address for the reminder
+     * @param Person $person       contains the target user for the reminder
+     * @param string $token        the reset token to put in the mail
+     * @param string $emailAddress the recipient address for the reminder
      *
      * @return bool TRUE of the mail was forwarded successfully
      */
@@ -278,7 +283,7 @@ class TokenService extends AbstractService
         $mailerDto->setData(
             [
                 'userid' => $person->getId(),
-                'user' => $person
+                'user' => $person,
             ]
         );
 
@@ -293,35 +298,36 @@ class TokenService extends AbstractService
 
         return $passwordReminder->send(
             [
-                'reminderLink' => $this->generateResetLink($token)
+                'reminderLink' => $this->generateResetLink($token),
             ]
         );
     }
 
     /**
      * Get the address to the front end from the configuration
-     * and add the path to the reset password url
+     * and add the path to the reset password url.
      *
      * @param $token
+     *
      * @return string
      */
     protected function generateResetLink($token)
     {
-
         $appUrl = ArrayUtils::tryGet(
             $this->mailerConfig,
             AbstractMailerLogic::CONFIG_KEY_BASE_URL
         );
 
-        return $appUrl . AccountUrlBuilderWeb::resetPasswordByToken($token);
+        return $appUrl.AccountUrlBuilderWeb::resetPasswordByToken($token);
     }
 
     /**
-     * This function validate if the token use by the user is valid
+     * This function validate if the token use by the user is valid.
      *
      * @param string $token
      *
      * @return \DvsaCommon\Dto\Account\MessageDto
+     *
      * @throws NotFoundException
      */
     public function getToken($token, $onlyValid = false)
@@ -332,22 +338,26 @@ class TokenService extends AbstractService
     }
 
     /**
-     * This function validate if the token use by the user is valid
+     * This function validate if the token use by the user is valid.
      *
      * @param string $token
+     *
      * @return int
+     *
      * @throws NotFoundException
      */
     public function assertTokenIsValid($token)
     {
         $result = $this->messageRepository->getHydratedMessageByToken($token, true);
-        return ($result instanceof Message);
+
+        return $result instanceof Message;
     }
 
     /**
-     * Acknowledge the token
+     * Acknowledge the token.
      *
      * @param string $token
+     *
      * @throws NotFoundException
      */
     public function acknowledge($token)
@@ -360,11 +370,13 @@ class TokenService extends AbstractService
     }
 
     /**
-     * Call openAm to change the user password to the new one
+     * Call openAm to change the user password to the new one.
      *
      * @param $token
      * @param $newPassword
+     *
      * @return array
+     *
      * @throws OpenAmChangePasswordException
      */
     public function changePassword($token, $newPassword)
@@ -396,11 +408,13 @@ class TokenService extends AbstractService
 
     /**
      * Call openAm to change the user password to the new one
-     * Does not require a pre-existing token
+     * Does not require a pre-existing token.
      *
      * @param $userId
      * @param $newPassword
+     *
      * @return array
+     *
      * @throws OpenAmChangePasswordException
      * @throws NotFoundException
      */
@@ -429,6 +443,7 @@ class TokenService extends AbstractService
         } catch (OpenAmChangePasswordException $e) {
             throw new OpenAmChangePasswordException($e->getMessage());
         }
+
         return ['success' => true];
     }
 
@@ -442,26 +457,24 @@ class TokenService extends AbstractService
     {
         $connection = $entityManager->getConnection();
 
-        if($connection !== null) {
+        if ($connection !== null) {
             $connection->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data' LIMIT 1)");
         }
     }
 
-
     /**
      * Performs assertion based on whether the user has authenticated and whether they are authenticated
-     * as the supplied user id
+     * as the supplied user id.
      *
      * @param $id
-     * @throws UnauthorisedException
      *
+     * @throws UnauthorisedException
      */
     private function assertAuthenticatedMatchesId($id)
     {
         if (!$this->identityService->getIdentity()
             || $this->identityService->getIdentity()->getUserId() !== intval($id)) {
-            throw new UnauthorisedException("You are not authorised to access this resource");
+            throw new UnauthorisedException('You are not authorised to access this resource');
         }
     }
-
 }

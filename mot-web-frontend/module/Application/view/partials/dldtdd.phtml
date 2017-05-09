@@ -8,9 +8,8 @@ $itemId = $this->itemId;
 $items = is_array($this->items) && !empty($this->items) ? $this->items : [];
 ?>
 
-<dl <?php echo
-    ($dlCssClass ? 'class="'.$dlCssClass.'" ' : '') .
-    ($dlId ? ' id="' . $this->escapeHtmlAttr($dlId) . '"' : '')
+<dl <?php echo($dlCssClass ? 'class="'.$dlCssClass.'" ' : '').
+    ($dlId ? ' id="'.$this->escapeHtmlAttr($dlId).'"' : '')
     ?>>
     <?php foreach ($items as $idx => $item):
         if (!is_array($item) || empty($item)) {
@@ -37,7 +36,7 @@ $items = is_array($this->items) && !empty($this->items) ? $this->items : [];
         if ($value === '') {
             $value = '&nbsp;';
             $isNeedEscape = false;
-        } else if ($value  === null) {
+        } elseif ($value === null) {
             $value = 'N/A';
         }
 
@@ -47,22 +46,20 @@ $items = is_array($this->items) && !empty($this->items) ? $this->items : [];
         //  --  id  --
         $ddId = ArrayUtils::tryGet($item, 'id');
         if (!$ddId && $itemId) {
-            $ddId = $itemId . '-dd' . $idx;
+            $ddId = $itemId.'-dd'.$idx;
         }
 
         $dtId = ArrayUtils::tryGet($item, 'dtId');
         if (!$dtId && $itemId) {
-            $dtId = $itemId . '-dt' . $idx;
+            $dtId = $itemId.'-dt'.$idx;
         }
 
         if ($isShow) : ?>
-            <dt <?php echo
-                ($dtCssClass ? ' class="' . $this->escapeHtmlAttr($dtCssClass) . '"' : '') .
-                ($dtId ? ' id="' . $this->escapeHtmlAttr($dtId) . '"' : '')
+            <dt <?php echo($dtCssClass ? ' class="'.$this->escapeHtmlAttr($dtCssClass).'"' : '').
+                ($dtId ? ' id="'.$this->escapeHtmlAttr($dtId).'"' : '')
             ?>><?php echo $escLabel; ?></dt>
-            <dd <?php echo
-                ($ddCssClass ? ' class="' . $this->escapeHtmlAttr($ddCssClass) . '"' : '') .
-                ($ddId ? ' id="' . $this->escapeHtmlAttr($ddId) . '"' : '');
+            <dd <?php echo($ddCssClass ? ' class="'.$this->escapeHtmlAttr($ddCssClass).'"' : '').
+                ($ddId ? ' id="'.$this->escapeHtmlAttr($ddId).'"' : '');
             ?>><?php echo $isNeedEscape ? $this->escapeHtml($value) : $value; ?></dd>
         <?php endif;
     endforeach; ?>

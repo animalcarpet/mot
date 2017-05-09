@@ -26,8 +26,8 @@ class ExpiredPasswordServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $openAMClientOptions = XMock::of(OpenAMClientOptions::class);
         $openAMClientOptions
             ->expects($this->any())
-            ->method("getRealm")
-            ->willReturn("/realm");
+            ->method('getRealm')
+            ->willReturn('/realm');
 
         $serviceManager->setService(OpenAMClientOptions::class, $openAMClientOptions);
 

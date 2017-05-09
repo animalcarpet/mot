@@ -17,8 +17,7 @@ class UpdateCountryAction extends AbstractUpdateVehicleAction implements AutoWir
         VehicleService $vehicleService,
         ParamObfuscator $paramObfuscator,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct($editStepAction, $countryProcess, $vehicleService, $paramObfuscator, $startTestChangeService);
     }
 }

@@ -6,7 +6,7 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ServiceException;
 
 /**
- * Class ErrorSchema
+ * Class ErrorSchema.
  */
 class ErrorSchema
 {
@@ -22,8 +22,8 @@ class ErrorSchema
 
     /**
      * @param string $errorMessage
-     * @param null   $field , if specified the error will be attached to the given field,
-     *                      if not then it's attached as a global error
+     * @param null   $field        , if specified the error will be attached to the given field,
+     *                             if not then it's attached as a global error
      */
     public function add($errorMessage, $field = null)
     {
@@ -35,7 +35,7 @@ class ErrorSchema
     }
 
     /**
-     * Adds errors from exception
+     * Adds errors from exception.
      *
      * @param ServiceException $exception
      */
@@ -151,7 +151,7 @@ class ErrorSchema
     }
 
     /**
-     * Instantly throws a validation error
+     * Instantly throws a validation error.
      *
      * @param      $errorMessage
      * @param null $field
@@ -160,7 +160,7 @@ class ErrorSchema
      */
     public static function throwError($errorMessage, $field = null)
     {
-        $errors = new ErrorSchema();
+        $errors = new self();
         $errors->add($errorMessage, $field);
 
         throw $errors->getException();

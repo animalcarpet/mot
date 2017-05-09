@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\QueryResult;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryResult\AbstractTesterPerformanceResult;
@@ -20,11 +21,13 @@ class TesterMultiSitePerformanceResult extends AbstractTesterPerformanceResult
 
     /**
      * @param Address $address
+     *
      * @return $this
      */
     public function setSiteAddress($address)
     {
         $this->siteAddress = $address;
+
         return $this;
     }
 
@@ -36,6 +39,7 @@ class TesterMultiSitePerformanceResult extends AbstractTesterPerformanceResult
     public function setSiteId($siteId)
     {
         $this->siteId = $siteId;
+
         return $this;
     }
 
@@ -47,6 +51,7 @@ class TesterMultiSitePerformanceResult extends AbstractTesterPerformanceResult
     public function setSiteName($siteName)
     {
         $this->siteName = $siteName;
+
         return $this;
     }
 }

@@ -5,7 +5,6 @@ namespace Dashboard\ViewModel;
 use Dashboard\Model\SpecialNotice;
 use Dashboard\Security\DashboardGuard;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_TestCase;
 
 class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +17,8 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
         $this->mockDashboardGuard = XMock::of(DashboardGuard::class);
     }
 
-    public function testIfSpecialNoticeIsVisible() {
+    public function testIfSpecialNoticeIsVisible()
+    {
         $this->mockDashboardGuard
             ->method('canReceiveSpecialNotices')
             ->willReturn(true);
@@ -41,7 +41,7 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
      * @dataProvider specialNoticesUrlDataProvider
      *
      * @param string $expectedURL
-     * @param bool $canUserReadAllSpecialNotices
+     * @param bool   $canUserReadAllSpecialNotices
      */
     public function testValidUrlBasedOnUserPermission($expectedURL, $canUserReadAllSpecialNotices)
     {
@@ -71,9 +71,9 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
      * @dataProvider overdueSpecialNoticeDataProvider
      *
      * @param bool $canAcknowledge
-     * @param int $unreadCount
-     * @param int $overdueCount
-     * @param int $daysLeftToView
+     * @param int  $unreadCount
+     * @param int  $overdueCount
+     * @param int  $daysLeftToView
      * @param bool $expectedResult
      */
     public function testOverdueSpecialNotices(
@@ -82,8 +82,7 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
         $overdueCount,
         $daysLeftToView,
         $expectedResult
-    )
-    {
+    ) {
         $specialNotices = new SpecialNoticesViewModel(
             $unreadCount,
             $overdueCount,
@@ -108,8 +107,7 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
         $overdueCount,
         $daysLeftToView,
         $expectedNumberOfNotices
-    )
-    {
+    ) {
         $specialNotices = new SpecialNoticesViewModel(
             $unreadCount,
             $overdueCount,
@@ -122,6 +120,7 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $returnValue
+     *
      * @return mixed
      */
     private function mockCanAcknowledgeSpecialNotices($returnValue)
@@ -133,6 +132,7 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $returnValue
+     *
      * @return mixed
      */
     private function mockCanReadAllSpecialNotices($returnValue)
@@ -149,11 +149,11 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                0, 10, 0, 10
+                0, 10, 0, 10,
             ],
             [
-                10, 0, 0, 0
-            ]
+                10, 0, 0, 0,
+            ],
         ];
     }
 
@@ -164,11 +164,11 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                true, 0, 1, 0, true
+                true, 0, 1, 0, true,
             ],
             [
-                false, 0, 10, 0, false
-            ]
+                false, 0, 10, 0, false,
+            ],
         ];
     }
 
@@ -179,11 +179,11 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                true, true
+                true, true,
             ],
             [
-                false, false
-            ]
+                false, false,
+            ],
         ];
     }
 
@@ -194,11 +194,11 @@ class SpecialNoticeViewModelTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'special-notices/all', true
+                'special-notices/all', true,
             ],
             [
-                'special-notices', false
-            ]
+                'special-notices', false,
+            ],
         ];
     }
 }

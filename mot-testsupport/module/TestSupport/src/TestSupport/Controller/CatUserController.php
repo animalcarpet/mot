@@ -2,11 +2,8 @@
 
 namespace TestSupport\Controller;
 
-use Doctrine\ORM\EntityManager;
 use TestSupport\Service\CatUserService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
-
 
 class CatUserController extends BaseTestSupportRestfulController
 {
@@ -20,6 +17,7 @@ class CatUserController extends BaseTestSupportRestfulController
     {
         $catUserService = $this->getServiceLocator()->get(CatUserService::class);
         $resultJson = $catUserService->create($data);
+
         return $resultJson;
     }
 }

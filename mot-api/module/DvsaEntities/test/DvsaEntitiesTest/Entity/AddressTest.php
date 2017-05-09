@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Address;
@@ -6,7 +7,7 @@ use DvsaEntities\Entity\Person;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class AddressTest
+ * Class AddressTest.
  */
 class AddressTest extends PHPUnit_Framework_TestCase
 {
@@ -36,11 +37,11 @@ class AddressTest extends PHPUnit_Framework_TestCase
             'addressLine4' => 'South West',
             'country' => 'United Kingdom',
             'createdBy' => $person,
-            'createdOn' => new \DateTime,
+            'createdOn' => new \DateTime(),
             'lastUpdatedBy' => $person,
-            'lastUpdatedOn' => new \DateTime,
+            'lastUpdatedOn' => new \DateTime(),
             'postcode' => 'BS13',
-            'version' => '1'
+            'version' => '1',
         ];
 
         $address = new Address();

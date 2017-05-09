@@ -19,9 +19,10 @@ class AreaOffice1Service
     }
 
     /**
-     * Create a AO1 with the data supplied
+     * Create a AO1 with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)

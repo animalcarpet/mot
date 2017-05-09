@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Service;
 
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
@@ -6,7 +7,6 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Core\ViewModel\Gds\Table\GdsTable;
 use Core\Action\ViewActionResult;
 use Zend\View\Model\ViewModel;
@@ -19,15 +19,15 @@ use DvsaCommon\Exception\UnauthorisedException;
 
 class RemoveCertificateDetailsService implements AutoWireableInterface
 {
-    const PAGE_TITLE = "Remove certificate";
-    const PAGE_SUBTITLE_YOUR_PROFILE = "Your profile";
-    const PAGE_SUBTITLE_USER_PROFILE = "User profile";
-    const PAGE_LEDE = "Confirm that you want to remove the Group %s certificate";
+    const PAGE_TITLE = 'Remove certificate';
+    const PAGE_SUBTITLE_YOUR_PROFILE = 'Your profile';
+    const PAGE_SUBTITLE_USER_PROFILE = 'User profile';
+    const PAGE_LEDE = 'Confirm that you want to remove the Group %s certificate';
 
-    const SUCCESS_MESSAGE = "Group %s certificate removed successfully. Qualification status has been changed to Not applied.";
-    const ERROR_MESSAGE = "Group %s certificate has not been removed. Please try again";
+    const SUCCESS_MESSAGE = 'Group %s certificate removed successfully. Qualification status has been changed to Not applied.';
+    const ERROR_MESSAGE = 'Group %s certificate has not been removed. Please try again';
 
-    const ACCESS_DENIED = "You have no access to see this page.";
+    const ACCESS_DENIED = 'You have no access to see this page.';
 
     private $authorisationService;
     private $qualificationDetailsMapper;
@@ -53,6 +53,7 @@ class RemoveCertificateDetailsService implements AutoWireableInterface
     public function setBreadcrumbs(array $breadcrumbs)
     {
         $this->breadcrumbs = $breadcrumbs;
+
         return $this;
     }
 
@@ -74,8 +75,7 @@ class RemoveCertificateDetailsService implements AutoWireableInterface
                 ->qualificationDetailsMapper
                 ->removeQualificationDetails($personId, $group);
 
-
-            $rtr = new RedirectToRoute($backUrl, ["id" => $personId, "group" => $group]);
+            $rtr = new RedirectToRoute($backUrl, ['id' => $personId, 'group' => $group]);
             $rtr->addSuccessMessage(sprintf(self::SUCCESS_MESSAGE, strtoupper($group)));
 
             return $rtr;
@@ -93,8 +93,8 @@ class RemoveCertificateDetailsService implements AutoWireableInterface
     {
         $vm = new ViewModel();
         $vm
-            ->setVariable("table", $this->getGdsTable($personId, $group))
-            ->setVariable("backUrl", $backUrl)
+            ->setVariable('table', $this->getGdsTable($personId, $group))
+            ->setVariable('backUrl', $backUrl)
             ->setVariable('personId', $personId)
         ;
 
@@ -106,7 +106,7 @@ class RemoveCertificateDetailsService implements AutoWireableInterface
 
         $actionResult->layout()->setPageTitle(self::PAGE_TITLE);
         $actionResult->layout()->setPageSubTitle(
-            $this->contextProvider->getContext() == ContextProvider::YOUR_PROFILE_CONTEXT ? static::PAGE_SUBTITLE_YOUR_PROFILE: static::PAGE_SUBTITLE_USER_PROFILE
+            $this->contextProvider->getContext() == ContextProvider::YOUR_PROFILE_CONTEXT ? static::PAGE_SUBTITLE_YOUR_PROFILE : static::PAGE_SUBTITLE_USER_PROFILE
         );
         $actionResult->layout()->setPageLede(sprintf(self::PAGE_LEDE, strtoupper($group)));
 
@@ -132,6 +132,7 @@ class RemoveCertificateDetailsService implements AutoWireableInterface
     /**
      * @param $personId
      * @param $group
+     *
      * @return MotTestingCertificateDto
      */
     private function retrieveCertificate($personId, $group)

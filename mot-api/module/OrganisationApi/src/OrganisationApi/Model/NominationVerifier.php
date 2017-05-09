@@ -5,16 +5,13 @@ namespace OrganisationApi\Model;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 
 /**
- * Verifies if the given nomination is possible and doesn't break nomination rules
+ * Verifies if the given nomination is possible and doesn't break nomination rules.
  *
  * Class NominationVerifier
- *
- * @package OrganisationApi\Model
  */
 class NominationVerifier
 {
-
-    const ERROR_ALREADY_HAS_ROLE       = 'This person already has this role';
+    const ERROR_ALREADY_HAS_ROLE = 'This person already has this role';
     const ERROR_ALREADY_HAS_NOMINATION = 'This person has been already nominated to this role';
 
     private $roleAvailability;

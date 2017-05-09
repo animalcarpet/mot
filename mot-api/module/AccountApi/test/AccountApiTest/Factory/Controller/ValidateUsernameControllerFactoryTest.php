@@ -1,4 +1,5 @@
 <?php
+
 namespace AccountApiTest\Factory\Controller;
 
 use AccountApi\Controller\ValidateUsernameController;
@@ -6,12 +7,10 @@ use AccountApi\Factory\Controller\ValidateUsernameControllerFactory;
 use PersonApi\Service\PersonService;
 use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ValidateUsernameControllerFactoryTest
- * @package AccountTest\Factory
+ * Class ValidateUsernameControllerFactoryTest.
  */
 class ValidateUsernameControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

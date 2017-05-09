@@ -10,7 +10,6 @@ use DvsaEntities\Entity\VehicleInterface;
  */
 class VehicleTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testImplementsVehicleInterface()
     {
         $r = new \ReflectionClass(Vehicle::class);

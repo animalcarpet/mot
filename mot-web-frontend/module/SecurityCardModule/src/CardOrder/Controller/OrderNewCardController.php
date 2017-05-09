@@ -4,15 +4,13 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderNewAction;
-use Zend\Authentication\AuthenticationService;
-use Zend\View\Model\ViewModel;
 use Zend\Http\Request;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 
 class OrderNewCardController extends AbstractDvsaActionController
 {
     /**
-     * @var CardOrderNewAction $action
+     * @var CardOrderNewAction
      */
     private $action;
 
@@ -31,6 +29,7 @@ class OrderNewCardController extends AbstractDvsaActionController
         $userId = $this->params()->fromRoute('userId', $this->identity->getUserId());
 
         $result = $this->action->execute($this->request, $userId);
+
         return $this->applyActionResult($result);
     }
 

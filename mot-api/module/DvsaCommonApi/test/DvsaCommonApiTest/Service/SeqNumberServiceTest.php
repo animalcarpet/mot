@@ -4,12 +4,10 @@ namespace DvsaCommonApiTest\Service;
 
 use DvsaCommonApi\Service\SeqNumberService;
 use DvsaCommonTest\TestUtils\XMock;
-use \PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
- * Class SeqNumberServiceTest
- *
- * @package DvsaCommonApiTest\Service
+ * Class SeqNumberServiceTest.
  */
 class SeqNumberServiceTest extends AbstractServiceTestCase
 {
@@ -19,15 +17,15 @@ class SeqNumberServiceTest extends AbstractServiceTestCase
     public function testGetNextSeqNumber()
     {
         /**
-         * @var \Doctrine\ORM\EntityManager|MockObject $entityManager
+         * @var \Doctrine\ORM\EntityManager|MockObject
          */
         $entityManager = XMock::of(\Doctrine\ORM\EntityManager::class);
         /**
-         * @var \Doctrine\DBAL\Connection|MockObject $connexion
+         * @var \Doctrine\DBAL\Connection|MockObject
          */
         $connection = XMock::of(\Doctrine\DBAL\Connection::class);
         /**
-         * @var \Doctrine\DBAL\Driver\Statement|MockObject $connexion
+         * @var \Doctrine\DBAL\Driver\Statement|MockObject
          */
         $statement = XMock::of(\Doctrine\DBAL\Driver\Statement::class);
 
@@ -55,7 +53,7 @@ class SeqNumberServiceTest extends AbstractServiceTestCase
     private function getResults()
     {
         return [
-            'sequence' => self::RESULT
+            'sequence' => self::RESULT,
         ];
     }
 }

@@ -8,7 +8,7 @@ use Zend\Form\Element\Text;
 class ChangeSecurityQuestionsPasswordFormTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ChangeSecurityQuestionsPasswordForm $form
+     * @var ChangeSecurityQuestionsPasswordForm
      */
     private $form;
 

@@ -6,7 +6,6 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use TestSupport\Service\AEService;
 use Doctrine\ORM\EntityManager;
-use DvsaCommon\UrlBuilder\UrlBuilder;
 use TestSupport\Helper\TestSupportRestClientHelper;
 
 class AEServiceFactory implements FactoryInterface
@@ -17,6 +16,7 @@ class AEServiceFactory implements FactoryInterface
             $serviceLocator->get(TestSupportRestClientHelper::class),
             $serviceLocator->get(EntityManager::class)
         );
+
         return $service;
     }
 }

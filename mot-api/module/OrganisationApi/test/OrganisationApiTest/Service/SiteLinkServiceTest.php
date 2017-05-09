@@ -51,11 +51,11 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
     const LINK_ID = 1234564;
 
     /**
-     * @var  EntityManager|MockObj
+     * @var EntityManager|MockObj
      */
     private $mockEntityMngr;
     /**
-     * @var  AuthorisationServiceInterface|MockObj
+     * @var AuthorisationServiceInterface|MockObj
      */
     private $mockAuthService;
     /**
@@ -143,7 +143,6 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
         );
     }
 
-
     /**
      * @dataProvider dataProviderTestMethodsPermissionsAndResults
      */
@@ -180,7 +179,7 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
     public function dataProviderTestMethodsPermissionsAndResults()
     {
         $authForAeEntity = XMock::of(AuthorisationForAuthorisedExaminer::class);
-        $this->mockMethod($authForAeEntity, 'getDesignatedManager', $this->any(), new Person);
+        $this->mockMethod($authForAeEntity, 'getDesignatedManager', $this->any(), new Person());
 
         $orgEntity = new Organisation();
         $orgEntity
@@ -191,9 +190,9 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
             ->setId(self::SITE_ID);
 
         $unauthException = [
-            'class'   => UnauthorisedException::class,
+            'class' => UnauthorisedException::class,
             'message' => 'You not have permissions',
-            'code'    => 0,
+            'code' => 0,
         ];
 
         $linkEntity = (new OrganisationSiteMap())
@@ -207,18 +206,18 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
             //  logical block :: getApprovedUnlinkedSite
             //  Success
             [
-                'method'      => 'getApprovedUnlinkedSite',
-                'params'      => [],
-                'repo'        => [
+                'method' => 'getApprovedUnlinkedSite',
+                'params' => [],
+                'repo' => [
                     [
-                        'class'  => 'mockSiteRepo',
+                        'class' => 'mockSiteRepo',
                         'method' => 'getApprovedUnlinkedSite',
                         'params' => [],
                         'result' => [['id' => self::SITE_ID]],
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'result' => [['id' => self::SITE_ID]],
                 ],
             ],
@@ -226,49 +225,49 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
             //  logical block :: get link data
             //  not found
             [
-                'method'      => 'get',
-                'params'      => [
+                'method' => 'get',
+                'params' => [
                     'id' => self::LINK_ID,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [],
                         'result' => new NotFoundException(OrganisationSiteMapRepository::ERR_ORG_SITE_LINK_NOT_FOUND),
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
-                        'message' => OrganisationSiteMapRepository::ERR_ORG_SITE_LINK_NOT_FOUND . ' not found',
-                        'code'    => NotFoundException::ERROR_CODE_NOT_FOUND,
+                        'class' => NotFoundException::class,
+                        'message' => OrganisationSiteMapRepository::ERR_ORG_SITE_LINK_NOT_FOUND.' not found',
+                        'code' => NotFoundException::ERROR_CODE_NOT_FOUND,
                     ],
                 ],
             ],
             //  success
             [
-                'method'      => 'get',
-                'params'      => [
+                'method' => 'get',
+                'params' => [
                     'id' => self::LINK_ID,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [],
-                        'result' => $linkEntity
+                        'result' => $linkEntity,
                     ],
                     [
-                        'class'  => 'mockOrgSiteLinkMapper',
+                        'class' => 'mockOrgSiteLinkMapper',
                         'method' => 'toDto',
                         'params' => [],
                         'result' => $orgSiteLinkDto,
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'result' => $orgSiteLinkDto,
                 ],
             ],
@@ -276,39 +275,39 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
             //  logical block :: siteLink
             //  Success
             [
-                'method'      => 'siteLink',
-                'params'      => [
-                    'orgId'      => self::ORG_ID,
+                'method' => 'siteLink',
+                'params' => [
+                    'orgId' => self::ORG_ID,
                     'siteNumber' => self::SITE_NUMBER,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgRepo',
+                        'class' => 'mockOrgRepo',
                         'method' => 'get',
                         'params' => [self::ORG_ID],
                         'result' => $this->getOrganisation(),
                     ],
                     [
-                        'class'  => 'mockSiteRepo',
+                        'class' => 'mockSiteRepo',
                         'method' => 'getBySiteNumber',
                         'params' => [self::SITE_NUMBER],
                         'result' => $this->getSite(),
                     ],
                     [
-                        'class'  => 'mockValidator',
+                        'class' => 'mockValidator',
                         'method' => 'validateLink',
                         'params' => [$this->getOrganisation(), $this->getSite(), self::ORG_ID, self::SITE_NUMBER],
                         'result' => true,
                     ],
                     [
-                        'class'  => 'mockOrgSiteStatusRepo',
+                        'class' => 'mockOrgSiteStatusRepo',
                         'method' => 'getByCode',
                         'params' => [OrganisationSiteStatusCode::ACTIVE],
                         'result' => new OrganisationSiteStatus(),
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'result' => ['id' => self::ORG_SITE_MAP_ID],
                 ],
             ],
@@ -316,238 +315,238 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
             //  logical block :: siteChangeStatus
             //  can not find link data
             [
-                'method'      => 'siteChangeStatus',
-                'params'      => [
-                    'linkId'     => self::LINK_ID,
+                'method' => 'siteChangeStatus',
+                'params' => [
+                    'linkId' => self::LINK_ID,
                     'statusCode' => self::STATUS,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [self::LINK_ID, OrganisationSiteStatusCode::ACTIVE],
                         'result' => new NotFoundException(OrganisationSiteMapRepository::ERR_ORG_SITE_LINK_NOT_FOUND),
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
-                        'message' => OrganisationSiteMapRepository::ERR_ORG_SITE_LINK_NOT_FOUND . ' not found',
-                        'code'    => NotFoundException::ERROR_CODE_NOT_FOUND,
+                        'class' => NotFoundException::class,
+                        'message' => OrganisationSiteMapRepository::ERR_ORG_SITE_LINK_NOT_FOUND.' not found',
+                        'code' => NotFoundException::ERROR_CODE_NOT_FOUND,
                     ],
                 ],
             ],
             //  not permission
             [
-                'method'      => 'siteChangeStatus',
-                'params'      => [
-                    'linkId'     => self::LINK_ID,
+                'method' => 'siteChangeStatus',
+                'params' => [
+                    'linkId' => self::LINK_ID,
                     'statusCode' => self::STATUS,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [self::LINK_ID, OrganisationSiteStatusCode::ACTIVE],
                         'result' => $linkEntity,
                     ],
                 ],
                 'permissions' => [self::ORG_ID => []],
-                'expect'      => [
+                'expect' => [
                     'exception' => $unauthException,
                 ],
             ],
             //  fail validation
             [
-                'method'      => 'siteChangeStatus',
-                'params'      => [
-                    'linkId'     => self::LINK_ID,
+                'method' => 'siteChangeStatus',
+                'params' => [
+                    'linkId' => self::LINK_ID,
                     'statusCode' => self::STATUS,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [self::LINK_ID, OrganisationSiteStatusCode::ACTIVE],
                         'result' => $linkEntity,
                     ],
                     [
-                        'class'  => 'mockValidator',
+                        'class' => 'mockValidator',
                         'method' => 'ValidateUnlink',
                         'params' => [self::STATUS],
                         'result' => new BadRequestException('error', BadRequestException::ERROR_CODE_INVALID_DATA),
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'exception' => [
-                        'class'   => BadRequestException::class,
+                        'class' => BadRequestException::class,
                         'message' => 'error',
-                        'code'    => BadRequestException::BAD_REQUEST_STATUS_CODE,
+                        'code' => BadRequestException::BAD_REQUEST_STATUS_CODE,
                     ],
                 ],
             ],
             //  has active mot test
             [
-                'method'      => 'siteChangeStatus',
-                'params'      => [
-                    'linkId'     => self::LINK_ID,
+                'method' => 'siteChangeStatus',
+                'params' => [
+                    'linkId' => self::LINK_ID,
                     'statusCode' => self::STATUS,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [self::LINK_ID, OrganisationSiteStatusCode::ACTIVE],
                         'result' => $linkEntity,
                     ],
                     [
-                        'class'  => 'mockValidator',
+                        'class' => 'mockValidator',
                         'method' => 'ValidateUnlink',
                         'params' => [self::STATUS],
                         'result' => null,
                     ],
                     [
-                        'class'  => 'mockMotTestInProgressSrv',
+                        'class' => 'mockMotTestInProgressSrv',
                         'method' => 'getCountForSite',
                         'params' => [self::SITE_ID],
                         'result' => 1,
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'exception' => [
-                        'class'   => ServiceException::class,
+                        'class' => ServiceException::class,
                         'message' => SiteLinkService::ERR_UNLINK_SITE_TEST_IN_PROGRESS,
-                        'code'    => ServiceException::DEFAULT_STATUS_CODE,
+                        'code' => ServiceException::DEFAULT_STATUS_CODE,
                     ],
                 ],
             ],
             //  success
             [
-                'method'      => 'siteChangeStatus',
-                'params'      => [
-                    'linkId'     => self::LINK_ID,
+                'method' => 'siteChangeStatus',
+                'params' => [
+                    'linkId' => self::LINK_ID,
                     'statusCode' => self::STATUS,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [self::LINK_ID, OrganisationSiteStatusCode::ACTIVE],
                         'result' => $linkEntity,
                     ],
                     [
-                        'class'  => 'mockValidator',
+                        'class' => 'mockValidator',
                         'method' => 'ValidateUnlink',
                         'params' => [self::STATUS],
                         'result' => null,
                     ],
                     [
-                        'class'  => 'mockMotTestInProgressSrv',
+                        'class' => 'mockMotTestInProgressSrv',
                         'method' => 'getCountForSite',
                         'params' => [self::SITE_ID],
                         'result' => 0,
                     ],
                     [
-                        'class'  => 'mockOrgSiteStatusRepo',
+                        'class' => 'mockOrgSiteStatusRepo',
                         'method' => 'getByCode',
                         'params' => [self::STATUS],
                         'result' => new OrganisationSiteStatus(),
                     ],
                     //  check event
                     [
-                        'class'  => 'mockEventService',
+                        'class' => 'mockEventService',
                         'method' => 'addEvent',
                         'params' => [$this->equalTo(EventTypeCode::UNLINK_AE_SITE)],
-                        'result' => new Event,
+                        'result' => new Event(),
                     ],
                     //  check store site event
                     [
-                        'class'  => 'mockEntityMngr',
+                        'class' => 'mockEntityMngr',
                         'method' => 'persist',
-                        'call'   => $this->at(1),
+                        'call' => $this->at(1),
                         'params' => [$this->isInstanceOf(EventSiteMap::class)],
                     ],
                     //  check store org event
                     [
-                        'class'  => 'mockEntityMngr',
+                        'class' => 'mockEntityMngr',
                         'method' => 'persist',
-                        'call'   => $this->at(2),
+                        'call' => $this->at(2),
                         'params' => [$this->isInstanceOf(EventOrganisationMap::class)],
                     ],
                     //  check store site changes to db
                     [
-                        'class'  => 'mockEntityMngr',
+                        'class' => 'mockEntityMngr',
                         'method' => 'persist',
-                        'call'   => $this->at(3),
+                        'call' => $this->at(3),
                         'params' => [$this->isInstanceOf(Site::class)],
                     ],
                     //  check store map to db
                     [
-                        'class'  => 'mockEntityMngr',
+                        'class' => 'mockEntityMngr',
                         'method' => 'persist',
-                        'call'   => $this->at(4),
+                        'call' => $this->at(4),
                         'params' => [$this->isInstanceOf(OrganisationSiteMap::class)],
                     ],
                     //  check create notification
                     [
-                        'class'  => 'mockNotificationSrv',
+                        'class' => 'mockNotificationSrv',
                         'method' => 'add',
                         'params' => [$this->isInstanceOf(NotificationDto::class)],
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'result' => true,
                 ],
             ],
             //  check rollback
             [
-                'method'      => 'siteChangeStatus',
-                'params'      => [
-                    'linkId'     => self::LINK_ID,
+                'method' => 'siteChangeStatus',
+                'params' => [
+                    'linkId' => self::LINK_ID,
                     'statusCode' => self::STATUS,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockOrgSiteMapRepo',
+                        'class' => 'mockOrgSiteMapRepo',
                         'method' => 'get',
                         'params' => [self::LINK_ID, OrganisationSiteStatusCode::ACTIVE],
                         'result' => $linkEntity,
                     ],
                     [
-                        'class'  => 'mockValidator',
+                        'class' => 'mockValidator',
                         'method' => 'ValidateUnlink',
                         'params' => [self::STATUS],
                         'result' => null,
                     ],
                     [
-                        'class'  => 'mockMotTestInProgressSrv',
+                        'class' => 'mockMotTestInProgressSrv',
                         'method' => 'getCountForSite',
                         'params' => [self::SITE_ID],
                         'result' => 0,
                     ],
                     [
-                        'class'  => 'mockOrgSiteStatusRepo',
+                        'class' => 'mockOrgSiteStatusRepo',
                         'method' => 'getByCode',
                         'params' => [self::STATUS],
                         'result' => new OrganisationSiteStatus(),
                     ],
                     [
-                        'class'  => 'mockEventService',
+                        'class' => 'mockEventService',
                         'method' => 'addEvent',
                         'params' => [$this->equalTo(EventTypeCode::UNLINK_AE_SITE)],
                         'result' => new ORMException('org error'),
                     ],
                 ],
                 'permissions' => null,
-                'expect'      => [
+                'expect' => [
                     'exception' => [
-                        'class'   => ORMException::class,
+                        'class' => ORMException::class,
                         'message' => 'org error',
-                        'code'    => 0,
+                        'code' => 0,
                     ],
                 ],
             ],

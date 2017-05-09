@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonAuthorisationControllerFactory
+ * Class PersonAuthorisationControllerFactory.
  *
  * Generates the PersonAuthorisationController, injecting dependencies
  */

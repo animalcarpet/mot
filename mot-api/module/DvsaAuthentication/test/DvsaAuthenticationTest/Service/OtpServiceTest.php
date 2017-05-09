@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaAuthenticationTest\Service;
 
 use DvsaAuthentication\Service\OtpFailedAttemptCounter;

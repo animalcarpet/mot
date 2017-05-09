@@ -7,16 +7,14 @@
 
 namespace Event\Step;
 
-
 use DvsaCommon\InputFilter\Event\OutcomeInputFilter;
-use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 
 class OutcomeStep extends AbstractEventStep
 {
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "OUTCOME";
+    const STEP_ID = 'OUTCOME';
 
     /**
      * @var
@@ -70,8 +68,8 @@ class OutcomeStep extends AbstractEventStep
     public function toArray()
     {
         return [
-            OutcomeInputFilter::FIELD_OUTCOME  => $this->getOutcomeCode(),
-            OutcomeInputFilter::FIELD_NOTES    => $this->getNotes(),
+            OutcomeInputFilter::FIELD_OUTCOME => $this->getOutcomeCode(),
+            OutcomeInputFilter::FIELD_NOTES => $this->getNotes(),
         ];
     }
 
@@ -81,7 +79,7 @@ class OutcomeStep extends AbstractEventStep
     protected function getCleanFilterWhiteList()
     {
         return [
-            OutcomeInputFilter::FIELD_NOTES
+            OutcomeInputFilter::FIELD_NOTES,
         ];
     }
 
@@ -106,7 +104,7 @@ class OutcomeStep extends AbstractEventStep
      */
     public function getProgress()
     {
-        return "Step 2 of 3";
+        return 'Step 2 of 3';
     }
 
     /**

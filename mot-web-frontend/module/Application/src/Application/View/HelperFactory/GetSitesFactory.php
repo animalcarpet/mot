@@ -3,7 +3,6 @@
 namespace Application\View\HelperFactory;
 
 use Application\View\Helper\GetSites;
-
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -11,7 +11,7 @@ class ChangeSecurityQuestionsPasswordForm extends Form
     const FIELD_PASSWORD = 'Password';
     const MSG_EMPTY_PASSWORD = 'Enter your password';
     const MSG_PROBLEM_WITH_PASSWORD = 'There was a problem with your password.  Please try again.';
-    const PASSWORD_LABEL = "Your password";
+    const PASSWORD_LABEL = 'Your password';
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class ChangeSecurityQuestionsPasswordForm extends Form
             ->setLabel('Your password')
             ->setAttribute('id', self::FIELD_PASSWORD)
             ->setAttribute('required', true)
-            ->setAttribute("type", "password")
+            ->setAttribute('type', 'password')
             ->setAttribute('group', true)
             ->setAttribute('divModifier', 'form-group')
         );
@@ -35,6 +35,7 @@ class ChangeSecurityQuestionsPasswordForm extends Form
         if (empty($passwordField->getValue())) {
             $this->setCustomError($passwordField, self::MSG_EMPTY_PASSWORD);
             $this->showLabelOnError(self::FIELD_PASSWORD, self::PASSWORD_LABEL);
+
             return false;
         }
 

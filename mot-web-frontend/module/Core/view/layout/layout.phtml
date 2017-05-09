@@ -1,14 +1,9 @@
 <?php
 
 use Application\Build\BuildConfig;
-use Dashboard\Controller\UserHomeController;
-use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
-use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\Role;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use Core\Presenter\MastheadPresenter;
 
-$mastheadPresenter = new MastheadPresenter;
+$mastheadPresenter = new MastheadPresenter();
 
 ?>
 <!DOCTYPE html>
@@ -44,11 +39,11 @@ $mastheadPresenter = new MastheadPresenter;
     // after our files. This guarantees all libraries to be enabled in all pages.
     $this->headScript()
         ->prependFile(
-            $this->basePath('js/' . BuildConfig::getJavaScriptLessThanIe9Filename()),
+            $this->basePath('js/'.BuildConfig::getJavaScriptLessThanIe9Filename()),
             'text/javascript',
             ['conditional' => 'lt IE 9']
         )
-        ->prependFile($this->basePath('js/' . BuildConfig::getJavaScriptLibrariesFilename()));
+        ->prependFile($this->basePath('js/'.BuildConfig::getJavaScriptLibrariesFilename()));
 
     echo $this->headScript();
     ?>
@@ -68,7 +63,7 @@ $mastheadPresenter = new MastheadPresenter;
     [
         'hideUserNav' => $this->hideUserNav,
         'isHomePage' => $this->isHomePage,
-        'isYourProfile' => $this->isYourProfile
+        'isYourProfile' => $this->isYourProfile,
     ]); ?>
 
 <div class="container">
@@ -135,14 +130,14 @@ $mastheadPresenter = new MastheadPresenter;
             <?php echo $this->partial('applicationSteps', ['applicationNavigator' => $applicationNavigator]); ?>
             <div class="col-sm-8  col-sm-offset-1" id="content">
                 <h1><?php echo $this->escapeHtml($title); ?></h1>
-                <?php echo $this->content; // should be escaped in controller ?>
+                <?php echo $this->content; // should be escaped in controller?>
             </div>
         </div>
 
     <?php else : ?>
         <div class="row contents">
             <div class="col-lg-12">
-                <?php echo $this->content; // should be escaped in controller  ?>
+                <?php echo $this->content; // should be escaped in controller?>
             </div>
         </div>
     <?php endif; ?>

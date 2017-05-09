@@ -7,9 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use UserApi\HelpDesk\Service\HelpDeskPersonService;
 
 /**
- * Class PersonProfileUnrestrictedController
- *
- * @package PersonApi\Controller
+ * Class PersonProfileUnrestrictedController.
  */
 class PersonProfileUnrestrictedController extends AbstractDvsaRestfulController
 {

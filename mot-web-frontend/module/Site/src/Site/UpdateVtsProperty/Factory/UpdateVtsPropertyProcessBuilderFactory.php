@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Site\UpdateVtsProperty\Factory;
 
 use DvsaClient\Mapper\SiteMapper;
@@ -19,9 +18,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class UpdateVtsPropertyProcessBuilderFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return UpdateVtsPropertyProcessBuilder
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

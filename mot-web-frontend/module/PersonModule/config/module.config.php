@@ -4,14 +4,13 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
 use Dvsa\Mot\Frontend\PersonModule\Factory\Service\QualificationDetailsServiceFactory;
 
 return [
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
         'strategies' => [
             'ViewJsonStrategy',

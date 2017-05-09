@@ -13,7 +13,8 @@ use Event\Service\EventSessionService;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Class OutcomeStepTest
+ * Class OutcomeStepTest.
+ *
  * @group event
  */
 class OutcomeStepTest extends \PHPUnit_Framework_TestCase
@@ -45,7 +46,6 @@ class OutcomeStepTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(OutcomeStep::STEP_ID, $step->getId());
     }
-
 
     /**
      * Test loading data returned from the session.
@@ -98,8 +98,8 @@ class OutcomeStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            OutcomeInputFilter::FIELD_OUTCOME   => __METHOD__ . '_outcomeCode',
-            OutcomeInputFilter::FIELD_NOTES   => __METHOD__ . '_notes',
+            OutcomeInputFilter::FIELD_OUTCOME => __METHOD__.'_outcomeCode',
+            OutcomeInputFilter::FIELD_NOTES => __METHOD__.'_notes',
         ];
 
         return $fixture;

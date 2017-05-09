@@ -16,15 +16,15 @@ use VehicleApi\Factory\Controller\VehicleSearchControllerFactory;
 $config = [
     'invokables' => [
         VehicleCertificateExpiryController::class => VehicleCertificateExpiryController::class,
-        VehicleHistoryController::class           => VehicleHistoryController::class,
-        VehicleDvlaController::class              => VehicleDvlaController::class,
-        MotTestController::class                  => MotTestController::class,
+        VehicleHistoryController::class => VehicleHistoryController::class,
+        VehicleDvlaController::class => VehicleDvlaController::class,
+        MotTestController::class => MotTestController::class,
     ],
-    'factories'  => [
-        MysteryShopperVehicleController::class    => MysteryShopperVehicleControllerFactory::class,
+    'factories' => [
+        MysteryShopperVehicleController::class => MysteryShopperVehicleControllerFactory::class,
         VehicleRetestEligibilityController::class => VehicleRetestEligibilityControllerFactory::class,
-        VehicleSearchController::class            => VehicleSearchControllerFactory::class,
-        VehicleController::class                  => VehicleControllerFactory::class,
+        VehicleSearchController::class => VehicleSearchControllerFactory::class,
+        VehicleController::class => VehicleControllerFactory::class,
     ],
 ];
 

@@ -1,8 +1,8 @@
 <?php
 use Report\Table\Table;
 
-/** @var Table $table */
-/** @var string $downloadCsvLink */
+/* @var Table $table */
+/* @var string $downloadCsvLink */
 ?>
 <header class="content-header">
     <h1>
@@ -20,7 +20,7 @@ use Report\Table\Table;
     <?php echo $table->renderTable($this); ?>
     <?php echo $table->renderFooter($this); ?>
 
-<?php if($table->getRowsTotalCount() > 0): ?>
+<?php if ($table->getRowsTotalCount() > 0): ?>
     <div class="result__actions">
         <p>Download Demo test requests as a
             <a href="<?php echo $downloadCsvLink; ?>" class="" rel="external">CSV (Excel)</a> file.

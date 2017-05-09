@@ -20,17 +20,15 @@ use DvsaMotApi\Helper\TesterQualificationStatusChangeEventHelper;
 use DvsaMotApi\Service\Validator\DemoTestAssessmentValidator;
 
 /**
- * Class DemoTestAssessmentService
+ * Class DemoTestAssessmentService.
  *
  * I am ashamed that I created such non objective code, but I'm "following BEST dvsa practices".
- *
- * @package DvsaMotApi\Service
  */
 class DemoTestAssessmentService
 {
     const ERROR_WRONG_NUMBER_OF_AUTHORISATION_RECORDS = "The amount of rows in database in table 'auth_for_testing_mot' for person with id '%s' for vehicle class group '%s' is invalid. The amount is '%s' while required is '%s'.";
 
-    const ERROR_NOT_DEMO_REQUIRED_STATUS = "The given person is not in demo test needed status for the given vehicle group";
+    const ERROR_NOT_DEMO_REQUIRED_STATUS = 'The given person is not in demo test needed status for the given vehicle group';
 
     private $testerQualificationStatusChangeEvent;
 
@@ -160,7 +158,7 @@ class DemoTestAssessmentService
             }
         )
         ) {
-            throw new \DomainException("Mismatch in statuses of mot testing authorisations.");
+            throw new \DomainException('Mismatch in statuses of mot testing authorisations.');
         }
     }
 

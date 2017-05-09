@@ -10,8 +10,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class OrganisationServiceFactory
- * @package OrganisationApi\Factory\Service
+ * Class OrganisationServiceFactory.
  */
 class OrganisationServiceFactory implements FactoryInterface
 {

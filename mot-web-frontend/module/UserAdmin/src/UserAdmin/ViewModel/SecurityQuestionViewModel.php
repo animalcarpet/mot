@@ -29,7 +29,7 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
         }
         $flashMessenger->clearCurrentMessagesFromNamespace(FlashMessenger::NAMESPACE_ERROR);
 
-        return UserAdminUrlBuilderWeb::userProfile($this->getUserId())->toString() . '?' . $this->getSearchParams();
+        return UserAdminUrlBuilderWeb::userProfile($this->getUserId())->toString().'?'.$this->getSearchParams();
     }
 
     /**

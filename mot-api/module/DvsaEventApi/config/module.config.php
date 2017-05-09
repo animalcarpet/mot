@@ -5,49 +5,49 @@ use DvsaEventApi\Controller\EventPersonCreationController;
 use DvsaEventApi\Factory\Controller\EventPersonCreationControllerFactory;
 
 return [
-    'controllers'     => [
-        'factories'  => [
+    'controllers' => [
+        'factories' => [
             EventPersonCreationController::class => EventPersonCreationControllerFactory::class,
         ],
         'invokables' => [
-            EventController::class       => EventController::class,
+            EventController::class => EventController::class,
         ],
     ],
-    'router'          => [
+    'router' => [
         'routes' => [
-            'event-list'     => [
-                'type'    => 'segment',
+            'event-list' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/event/list/:type/:id',
+                    'route' => '/event/list/:type/:id',
                     'constraints' => [
                         'type' => 'ae|site|person',
                         'id' => '[1-9]+[0-9]*',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => EventController::class,
                     ],
                 ],
             ],
-            'event'     => [
-                'type'    => 'segment',
+            'event' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/event/:id',
+                    'route' => '/event/:id',
                     'constraints' => [
                         'id' => '[1-9]+[0-9]*',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => EventController::class,
                     ],
                 ],
             ],
-            'event-add-person'     => [
-                'type'    => 'segment',
+            'event-add-person' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/event/add/person/:id',
+                    'route' => '/event/add/person/:id',
                     'constraints' => [
                         'id' => '[1-9]+[0-9]*',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => EventPersonCreationController::class,
                     ],
                 ],

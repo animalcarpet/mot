@@ -15,7 +15,7 @@ class BatchStatisticsServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var KeyValueStorageInterface $storage */
-        $storage = $serviceLocator->get("TqiStore");
+        $storage = $serviceLocator->get('TqiStore');
         /** @var DateTimeHolderInterface $dateTimeHolder */
         $dateTimeHolder = $serviceLocator->get(DateTimeHolderInterface::class);
         /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService $nationalStatisticsService */
@@ -30,5 +30,4 @@ class BatchStatisticsServiceFactory implements FactoryInterface
             $nationalComponentService
         );
     }
-
 }

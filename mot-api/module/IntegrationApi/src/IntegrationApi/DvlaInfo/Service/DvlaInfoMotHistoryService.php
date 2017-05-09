@@ -2,18 +2,14 @@
 
 namespace IntegrationApi\DvlaInfo\Service;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaEntities\Repository\MotTestRepository;
 use IntegrationApi\DvlaInfo\Mapper\DvlaInfoMotHistoryMapper;
-use ZendPdf\Exception\NotImplementedException;
 
 class DvlaInfoMotHistoryService
 {
-
     private $motTestRepository;
     private $mapper;
 
@@ -32,6 +28,7 @@ class DvlaInfoMotHistoryService
      * @param $v5cReference String
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getMotTests($vrm, $testNumber, $v5cReference)
@@ -48,7 +45,7 @@ class DvlaInfoMotHistoryService
         try {
             $motTest = $this->motTestRepository->findTestByVehicleRegistrationAndTestNumber($vrm, $testNumber);
         } catch (NoResultException $exception) {
-            throw new NotFoundException("MOT tests");
+            throw new NotFoundException('MOT tests');
         }
 
         $motTests = $this->motTestRepository->findTestsExcludingNonAuthoritativeTestsForVehicle($motTest->getVehicle()->getId(), null);
@@ -60,7 +57,7 @@ class DvlaInfoMotHistoryService
     {
         $exception = new ServiceException(null);
         $exception->addError(
-            "TODO(PT): To be implemented when a placement of v5c is known.", ServiceException::DEFAULT_STATUS_CODE
+            'TODO(PT): To be implemented when a placement of v5c is known.', ServiceException::DEFAULT_STATUS_CODE
         );
         throw $exception;
     }

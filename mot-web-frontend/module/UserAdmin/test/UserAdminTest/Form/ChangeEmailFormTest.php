@@ -8,7 +8,7 @@ use UserAdmin\Form\ChangeEmailForm;
 
 class ChangeEmailFormTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  EmailAddressValidator */
+    /** @var EmailAddressValidator */
     private $emailValidator;
 
     public function setUp()
@@ -54,7 +54,7 @@ class ChangeEmailFormTest extends \PHPUnit_Framework_TestCase
 
     public function testIsInvalid_emailAddressExceedsMaxLength_shouldDisplayErrors()
     {
-        $longEmail = str_repeat('dummy', 50) . '@email.com';
+        $longEmail = str_repeat('dummy', 50).'@email.com';
         $form = $this->buildController();
         $form->setData($this->setDataValues($longEmail, $longEmail));
         $this->assertFalse($form->isValid());
@@ -89,7 +89,7 @@ class ChangeEmailFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'email' => $emailOne,
-            'emailConfirm' => $emailTwo
+            'emailConfirm' => $emailTwo,
         ];
     }
 

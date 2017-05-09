@@ -33,7 +33,7 @@ use DvsaMotApi\Service\Validator\BrakeTestResultValidator;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 
 /**
- * Class BrakeTestResultService
+ * Class BrakeTestResultService.
  */
 class BrakeTestResultService extends AbstractService
 {
@@ -89,7 +89,7 @@ class BrakeTestResultService extends AbstractService
     private $brakesWithLockApplicable =
         [
             BrakeTestTypeCode::ROLLER,
-            BrakeTestTypeCode::PLATE
+            BrakeTestTypeCode::PLATE,
         ];
 
     public function __construct(
@@ -185,7 +185,6 @@ class BrakeTestResultService extends AbstractService
                 $this->entityManager->persist($tempDescription);
                 $this->entityManager->flush();
             }
-
         }
 
         $this->entityManager->persist($motTest);
@@ -230,14 +229,13 @@ class BrakeTestResultService extends AbstractService
 
     private function assertMotActive($motTest)
     {
-        /** Only allow active MOT test brake test results to be validated */
+        /* Only allow active MOT test brake test results to be validated */
         if ($motTest->getStatus() === MotTestStatusName::ABANDONED) {
             throw new BadRequestException(
                 InvalidTestStatus::getMessage(MotTestStatusName::ABANDONED),
                 BadRequestException::ERROR_CODE_INVALID_DATA
             );
-        }
-        elseif ($motTest->getStatus() !== MotTestStatusName::ACTIVE) {
+        } elseif ($motTest->getStatus() !== MotTestStatusName::ACTIVE) {
             throw new BadRequestException(
                 InvalidTestStatus::getMessage(MotTestStatusName::FAILED),
                 BadRequestException::ERROR_CODE_INVALID_DATA
@@ -283,7 +281,7 @@ class BrakeTestResultService extends AbstractService
         $serviceBrake1Data = $brakeTestResult->getServiceBrake1Data();
         $serviceBrake2Data = $brakeTestResult->getServiceBrake2Data();
 
-        for ($axleNumber = 1; $axleNumber <= self::MAX_NUMBER_AXLES; $axleNumber++) {
+        for ($axleNumber = 1; $axleNumber <= self::MAX_NUMBER_AXLES; ++$axleNumber) {
             $isBrake1ImbalancePass = null;
             $isBrake2ImbalancePass = null;
             if ($serviceBrake1Data !== null) {
@@ -451,6 +449,7 @@ class BrakeTestResultService extends AbstractService
             case BrakeTestTypeCode::GRADIENT:
                 return self::RFR_ID_BRAKE_EFFICIENCY_GRADIENT_BOTH_BELOW_SECONDARY_MIN_CLASS_1_2;
         }
+
         return null;
     }
 
@@ -468,6 +467,7 @@ class BrakeTestResultService extends AbstractService
             case BrakeTestTypeCode::GRADIENT:
                 return self::RFR_ID_BRAKE_EFFICIENCY_GRADIENT_ONE_BELOW_SECONDARY_MIN_CLASS_1_2;
         }
+
         return null;
     }
 
@@ -485,6 +485,7 @@ class BrakeTestResultService extends AbstractService
             case BrakeTestTypeCode::GRADIENT:
                 return self::RFR_ID_BRAKE_EFFICIENCY_GRADIENT_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2;
         }
+
         return null;
     }
 
@@ -498,6 +499,7 @@ class BrakeTestResultService extends AbstractService
             case BrakeTestTypeCode::DECELEROMETER:
                 return self::RFR_ID_SERVICE_BRAKE_DECELEROMETER_LOW_EFFICIENCY;
         }
+
         return null;
     }
 
@@ -513,6 +515,7 @@ class BrakeTestResultService extends AbstractService
             case BrakeTestTypeCode::GRADIENT:
                 return self::RFR_ID_PARKING_BRAKE_GRADIENT_LOW_EFFICIENCY;
         }
+
         return null;
     }
 
@@ -524,6 +527,7 @@ class BrakeTestResultService extends AbstractService
             case BrakeTestTypeCode::PLATE:
                 return self::RFR_ID_SERVICE_BRAKE_PLATE_IMBALANCE;
         }
+
         return null;
     }
 
@@ -535,6 +539,7 @@ class BrakeTestResultService extends AbstractService
             case BrakeTestTypeCode::PLATE:
                 return self::RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE;
         }
+
         return null;
     }
 }

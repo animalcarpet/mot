@@ -122,7 +122,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
 
         $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $isNonMotTest, $identifiedDefect->getDefectType());
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
-        $this->enableGdsLayout('Remove ' . $identifiedDefect->getDefectType(), '');
+        $this->enableGdsLayout('Remove '.$identifiedDefect->getDefectType(), '');
 
         return $this->createViewModel('defects/remove-defect.twig', [
             'motTestNumber' => $motTestNumber,
@@ -150,14 +150,14 @@ class RemoveDefectController extends AbstractDvsaMotTestController
      * Get a specified IdentifiedDefect. Also fetch the defect breadcrumb (which
      * is displayed above the defect name on the Remove Defect form).
      *
-     * @param int        $identifiedDefectId
+     * @param int     $identifiedDefectId
      * @param MotTest $motTest
      *
      * @return IdentifiedDefect
      */
     private function getIdentifiedDefect($identifiedDefectId, MotTest $motTest)
     {
-         return IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($identifiedDefectId);
+        return IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($identifiedDefectId);
     }
 
     /**
@@ -226,7 +226,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
                 self::CONTENT_HEADER_TYPE__SEARCH_RESULTS => $this->defectsJourneyUrlGenerator->goBack(),
             ];
         }
-        $breadcrumbs += ['Remove ' . $defectType => ''];
+        $breadcrumbs += ['Remove '.$defectType => ''];
 
         return $breadcrumbs;
     }

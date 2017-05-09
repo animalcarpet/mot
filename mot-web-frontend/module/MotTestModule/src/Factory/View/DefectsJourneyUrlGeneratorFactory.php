@@ -12,9 +12,10 @@ use Zend\Http\PhpEnvironment\Request;
 class DefectsJourneyUrlGeneratorFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

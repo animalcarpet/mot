@@ -2,7 +2,6 @@
 
 namespace ReportTest\Table;
 
-use DOMDocument;
 use DvsaCommon\Dto\Search\SearchParamsDto;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\TestCaseViewTrait;
@@ -10,21 +9,14 @@ use DvsaCommonTest\TestUtils\XMock;
 use Report\Table\ColumnOptions;
 use Report\Table\Table;
 use Report\Table\TableOptions;
-use Zend\EventManager\EventManager;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\View\Helper\Url;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver as Resolver;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 
 class TableTest extends \PHPUnit_Framework_TestCase
 {
     use TestCaseViewTrait;
 
     /**
-     * @var  Table
+     * @var Table
      */
     private $table;
 
@@ -50,12 +42,12 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->table->{'set' . $method}($value);
+        $result = $this->table->{'set'.$method}($value);
         $this->assertInstanceOf(Table::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->table->{$method}());
     }
 
@@ -64,7 +56,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'property' => 'rowsTotalCount',
-                'value'    => 9999,
+                'value' => 9999,
             ],
             ['data', ['row1Data', 'row2Data']],
             ['searchParams', new SearchParamsDto()],
@@ -97,7 +89,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         //  logical block: prepare
         $renderer = $this->getPhpRenderer(
             [
-                'table/table' => __DIR__ . '/../../../view/table/default.phtml',
+                'table/table' => __DIR__.'/../../../view/table/default.phtml',
             ]
         );
 
@@ -146,8 +138,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
         //  logical block: prepare
         $renderer = $this->getPhpRenderer(
             [
-                'table/footer'    => __DIR__ . '/../../../view/table/footer.phtml',
-                'table/paginator' => __DIR__ . '/../../../view/table/paginator.phtml',
+                'table/footer' => __DIR__.'/../../../view/table/footer.phtml',
+                'table/paginator' => __DIR__.'/../../../view/table/paginator.phtml',
             ]
         );
 

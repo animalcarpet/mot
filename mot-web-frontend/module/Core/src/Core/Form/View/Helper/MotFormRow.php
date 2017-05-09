@@ -11,9 +11,7 @@ use Zend\Form\Element\Button;
 use Zend\Form\Element\Captcha;
 use Zend\Form\Element\MonthSelect;
 use Zend\Form\ElementInterface;
-use Zend\Form\Exception;
 use Zend\Form\LabelAwareInterface;
-use Zend\Form\View\Helper\FormElement;
 use Zend\Form\View\Helper\FormRow;
 
 class MotFormRow extends FormRow
@@ -45,8 +43,8 @@ class MotFormRow extends FormRow
 
         // Does this element have errors ?
         if (count($element->getMessages()) > 0 && !empty($inputErrorClass)) {
-            $classAttributes = ($element->hasAttribute('class') ? $element->getAttribute('class') . ' ' : '');
-            $classAttributes = $classAttributes . $inputErrorClass;
+            $classAttributes = ($element->hasAttribute('class') ? $element->getAttribute('class').' ' : '');
+            $classAttributes = $classAttributes.$inputErrorClass;
 
             $element->setAttribute('class', $classAttributes);
         }
@@ -108,7 +106,6 @@ class MotFormRow extends FormRow
                     $labelClose = $labelHelper->closeTag();
                 }
 
-
                 // Button element is a special case, because label is always rendered inside it
                 if ($element instanceof Button) {
                     $labelOpen = $labelClose = $label = '';
@@ -120,29 +117,26 @@ class MotFormRow extends FormRow
 
                 switch ($labelPosition) {
                     case self::LABEL_PREPEND:
-                        $markup = $labelOpen . $label . $elementString . $labelClose;
+                        $markup = $labelOpen.$label.$elementString.$labelClose;
                         break;
                     case self::LABEL_APPEND:
                     default:
-                        $markup = $labelOpen . $elementString . $label . $labelClose;
+                        $markup = $labelOpen.$elementString.$label.$labelClose;
                         break;
                 }
             }
-
         } else {
             $markup = $elementString;
         }
 
         if ($this->renderErrors) {
-
         }
 
         $disableWrapper = $element->getOption(MotFormConstant::KEY_DISABLE_WRAPPER);
 
-        $disableWrapper = empty($disableWrapper) ? MotFormConstant::DEFAULT_DISABLE_WRAPPER: $disableWrapper;
+        $disableWrapper = empty($disableWrapper) ? MotFormConstant::DEFAULT_DISABLE_WRAPPER : $disableWrapper;
 
         if (!$disableWrapper && isset($label) && '' !== $label && $type !== 'hidden') {
-
             $wrapperClasses = [];
 
             $optionWrapperClass = $element->getOption(MotFormConstant::KEY_WRAPPER_CLASS);
@@ -155,7 +149,6 @@ class MotFormRow extends FormRow
 
             $errorMessages = $element->getMessages();
             if ($this->renderErrors && !empty($errorMessages)) {
-
                 $optionHasErrorClass = $element->getOption(MotFormConstant::KEY_HAS_ERROR_CLASS);
 
                 $hasErrorClass = empty($optionHasErrorClass) ?

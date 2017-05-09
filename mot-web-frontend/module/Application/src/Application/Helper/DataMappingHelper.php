@@ -3,12 +3,12 @@
 namespace Application\Helper;
 
 /**
- * Class DataMappingHelper
+ * Class DataMappingHelper.
+ *
  * @see \ApplicationTest\Helper\DataMappingHelperTest
  */
-
-class DataMappingHelper {
-
+class DataMappingHelper
+{
     /**
      * @var array
      */
@@ -30,9 +30,9 @@ class DataMappingHelper {
     private $returnKeys = [];
 
     /**
-     * @param array $haystack
+     * @param array  $haystack
      * @param string $needleKey
-     * @param mixed $needleValue
+     * @param mixed  $needleValue
      */
     public function __construct(array $haystack, $needleKey, $needleValue)
     {
@@ -43,18 +43,21 @@ class DataMappingHelper {
 
     /**
      * @param array $returnKeys The keys you want to return, default = return all keys
+     *
      * @return $this
      */
     public function setReturnKeys(array $returnKeys)
     {
         $this->returnKeys = $returnKeys;
+
         return $this;
     }
 
     /**
      * Given an array of arrays it searches and finds the first occurence of needleValue present in needleKey
-     * and optionally returns the keys you ask for
-     * @throws \Exception if needleValue is not found
+     * and optionally returns the keys you ask for.
+     *
+     * @throws \Exception              if needleValue is not found
      * @throws \BadMethodCallException if haystack is incorrect data structure
      */
     public function getValue()
@@ -62,13 +65,12 @@ class DataMappingHelper {
         $returnData = null;
 
         foreach ($this->haystack as $item) {
-
             if (!is_array($item)) {
                 throw new \BadMethodCallException('Input data must be an array of arrays');
             }
 
             if (!array_key_exists($this->needleKey, $item)) {
-                throw new \BadMethodCallException($this->needleKey . ' Key is missing');
+                throw new \BadMethodCallException($this->needleKey.' Key is missing');
             }
 
             // Data does not match, next...!
@@ -76,7 +78,7 @@ class DataMappingHelper {
                 continue;
             }
 
-            if(empty($this->returnKeys)) {
+            if (empty($this->returnKeys)) {
                 $returnData = $item;
             } else {
                 $returnData = $this->getReturnDataFromKeys($item);
@@ -88,7 +90,7 @@ class DataMappingHelper {
             }
         }
 
-        if(!isset($returnData)) {
+        if (!isset($returnData)) {
             throw new \Exception('Unable to find what you were looking for');
         }
 
@@ -97,13 +99,15 @@ class DataMappingHelper {
 
     /**
      * Returns the data requested using the keys provided.
+     *
      * @param array $item
+     *
      * @return array
      */
     private function getReturnDataFromKeys(array $item)
     {
         $keys = array_flip($this->returnKeys);
+
         return array_intersect_key($item, $keys);
     }
-
 }

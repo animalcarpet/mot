@@ -2,8 +2,6 @@
 
 namespace Application\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-
 /**
  * Class.
  */

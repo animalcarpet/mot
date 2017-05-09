@@ -8,9 +8,7 @@ use DvsaMotApi\Controller\EnforcementMotTestResultController;
 use DvsaMotApi\Service\EnforcementMotTestResultService;
 
 /**
- * Class EnforcementMotTestResultControllerTest
- *
- * @package DvsaMotApiTest\Controller
+ * Class EnforcementMotTestResultControllerTest.
  */
 class EnforcementMotTestResultControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -85,7 +83,7 @@ class EnforcementMotTestResultControllerTest extends AbstractMotApiControllerTes
         $this->controller->dispatch($this->request);
     }
 
-    private function getMockMotTestResultService(Array $methods = null)
+    private function getMockMotTestResultService(array $methods = null)
     {
         $mockService = $this->getMockServiceManagerClass(
             'EnforcementMotTestResultService', EnforcementMotTestResultService::class, $methods

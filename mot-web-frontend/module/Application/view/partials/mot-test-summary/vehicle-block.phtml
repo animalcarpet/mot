@@ -3,7 +3,7 @@
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
-/** @var DvsaVehicleViewModel $vehicle */
+/* @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
 ?>
@@ -17,11 +17,11 @@ $vehicle;
         <?php echo $this->partial(
             'dldtdd', [
                 'cssClass' => 'dl-standard',
-                'items'    => [
+                'items' => [
                     [
                         'label' => 'Registration number',
                         'value' => $vehicle->getRegistration(),
-                        'id'    => 'registrationNumber',
+                        'id' => 'registrationNumber',
                     ],
                     ['VIN/Chassis number', $vehicle->getVin(), 'id' => 'vinChassisNumber'],
                     ['Test class', $vehicle->getVehicleClass()->getName(), 'id' => 'testClass'],
@@ -30,7 +30,7 @@ $vehicle;
                         'value' => !empty($vehicle->getFirstUsedDate())
                             ? DateTimeDisplayFormat::textDate($vehicle->getFirstUsedDate())
                             : null,
-                        'id'    => 'aproxFirstUse',
+                        'id' => 'aproxFirstUse',
                     ],
                 ],
             ]
@@ -55,14 +55,14 @@ $vehicle;
         echo $this->partial(
             'dldtdd', [
                 'cssClass' => 'dl-standard',
-                'items'    => [
+                'items' => [
                     ['Make', $make ? $make : '', 'id' => 'make'],
                     ['Model', $model, 'id' => 'model'],
                     ['Colour', $colours, 'id' => 'colour'],
                     [
                         'label' => 'Fuel type',
                         'value' => $fuelType,
-                        'id'    => 'fuel-type',
+                        'id' => 'fuel-type',
                     ],
                 ],
             ]

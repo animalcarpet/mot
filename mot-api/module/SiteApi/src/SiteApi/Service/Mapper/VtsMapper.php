@@ -163,7 +163,6 @@ class VtsMapper extends SiteMapper
         return $dtos;
     }
 
-
     /**
      * @param Entity\Site $vts
      *

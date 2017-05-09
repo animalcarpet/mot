@@ -3,10 +3,9 @@
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * An abstract entity for every entity existing in MOT schema
+ * An abstract entity for every entity existing in MOT schema.
  *
  * @ORM\MappedSuperclass
  */
@@ -45,7 +44,7 @@ abstract class Entity
     protected $lastUpdatedOn;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Version @ORM\Column(type="integer", nullable=false)
      */
@@ -94,7 +93,7 @@ abstract class Entity
     }
 
     /**
-     * @return integer|Person
+     * @return int|Person
      */
     public function getLastUpdatedBy()
     {
@@ -134,7 +133,7 @@ abstract class Entity
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {
@@ -142,7 +141,7 @@ abstract class Entity
     }
 
     /**
-     * @param integer $version
+     * @param int $version
      *
      * @return $this
      */
@@ -155,11 +154,11 @@ abstract class Entity
     //endregion
 
     /**
-     * Return true if entity was last modified or just created by user of id
+     * Return true if entity was last modified or just created by user of id.
      *
-     * @param integer $userId
+     * @param int $userId
      *
-     * @return boolean
+     * @return bool
      */
     public function isLastModifiedBy($userId)
     {
@@ -169,22 +168,22 @@ abstract class Entity
     }
 
     /**
-     * Return date of last amend (created or modified)
+     * Return date of last amend (created or modified).
      *
      * @return \DateTime
      */
     public function getLastAmendedOn()
     {
-        return ($this->lastUpdatedOn ? : $this->createdOn);
+        return $this->lastUpdatedOn ?: $this->createdOn;
     }
 
     /**
-     * Return person whom last amend the record (created or modified)
+     * Return person whom last amend the record (created or modified).
      *
      * @return Person
      */
     public function getLastAmendedBy()
     {
-        return ($this->lastUpdatedBy ? : $this->createdBy);
+        return $this->lastUpdatedBy ?: $this->createdBy;
     }
 }

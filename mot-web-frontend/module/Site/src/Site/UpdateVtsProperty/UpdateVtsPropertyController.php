@@ -16,8 +16,7 @@ class UpdateVtsPropertyController extends AbstractAuthActionController implement
         UpdateVtsPropertyAction $updateAction,
         UpdateVtsPropertyReviewAction $reviewAction,
         UpdateVtsPropertyProcessBuilder $processBuilder
-    )
-    {
+    ) {
         $this->updateAction = $updateAction;
         $this->reviewAction = $reviewAction;
         $this->processBuilder = $processBuilder;

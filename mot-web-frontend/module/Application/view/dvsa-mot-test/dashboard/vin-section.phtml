@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var $vin
+ * @var
  */
 ?>
 
@@ -17,11 +17,11 @@
 <div class="clearfix">
     <div class="form-group">
         <?php echo $this->partial(
-            "inputElement", [
-                "id"        => "input-vin",
-                "name"      => "vin",
-                "value"     => $vin,
-                "maxLength" => 17
+            'inputElement', [
+                'id' => 'input-vin',
+                'name' => 'vin',
+                'value' => $vin,
+                'maxLength' => 17,
             ]
         ); ?>
     </div>
@@ -30,7 +30,7 @@
 <?php echo $this->partial(
     'dvsa-mot-test/dashboard/generic-section',
     [
-        'sectionId'    => 'vin',
-        'actionName'   => 'updateVin',
+        'sectionId' => 'vin',
+        'actionName' => 'updateVin',
     ]
 );

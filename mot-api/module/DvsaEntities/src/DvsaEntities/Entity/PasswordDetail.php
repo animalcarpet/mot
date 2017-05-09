@@ -1,12 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Notification
+ * Notification.
  *
  * @ORM\Table(name="password_detail")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\PasswordDetailRepository")
@@ -32,11 +32,13 @@ class PasswordDetail extends Entity
 
     /**
      * @param \Datetime $datetime
+     *
      * @return self
      */
     public function setPasswordNotificationSentDate(\Datetime $datetime)
     {
         $this->passwordNotificationSentDate = $datetime;
+
         return $this;
     }
 
@@ -58,11 +60,13 @@ class PasswordDetail extends Entity
 
     /**
      * @param Person $person
+     *
      * @return self
      */
     public function setPerson(Person $person)
     {
         $this->person = $person;
+
         return $this;
     }
 }

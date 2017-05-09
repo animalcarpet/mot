@@ -2,7 +2,7 @@
 
 use DvsaCommon\Date\DateTimeDisplayFormat;
 
-/**
+/*
  * @var \Event\ViewModel\Event\EventDetailViewModel     $viewModel
  */
 
@@ -26,9 +26,8 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
                     $notes = $this->escapeHtml($viewModel->getEvent()->getDescription());
                 ?>
                <?php
-                    if($outcome!= '') {
-                        echo'<strong>'.$outcome.'<strong>'. '<span class="key-value-list__meta">'.$notes.'</span>';
-
+                    if ($outcome != '') {
+                        echo'<strong>'.$outcome.'<strong>'.'<span class="key-value-list__meta">'.$notes.'</span>';
                     } else {
                         echo $notes;
                     }

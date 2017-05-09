@@ -45,7 +45,7 @@ class CsvFile implements FileInterface
                 if (count($row) != $this->getColumnCount()) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            "Tried to add row to CSV files with a different (%s) number of columns than the rest of the file (%s)",
+                            'Tried to add row to CSV files with a different (%s) number of columns than the rest of the file (%s)',
                             count($row),
                             $this->getColumnCount()
                         )
@@ -74,7 +74,7 @@ class CsvFile implements FileInterface
             if (count($headers) != $this->getColumnCount()) {
                 throw new \InvalidArgumentException(
                     sprintf(
-                        "Tried to set headers for CSV files with a different (%s) number of columns than the rest of the file (%s)",
+                        'Tried to set headers for CSV files with a different (%s) number of columns than the rest of the file (%s)',
                         count($headers),
                         $this->getColumnCount()
                     )
@@ -107,17 +107,18 @@ class CsvFile implements FileInterface
     public function setFileName($fileName)
     {
         $this->fileName = $fileName;
+
         return $this;
     }
 
     public function getValue($rowNumber, $columnNumber)
     {
         if ($rowNumber >= $this->getRowCount()) {
-            throw new \OutOfBoundsException("Unexisting cell in csv file");
-        };
+            throw new \OutOfBoundsException('Unexisting cell in csv file');
+        }
 
         if ($columnNumber >= $this->getColumnCount()) {
-            throw new \OutOfBoundsException("Unexisting cell in csv file");
+            throw new \OutOfBoundsException('Unexisting cell in csv file');
         }
 
         return $this->rows[$rowNumber][$columnNumber];
@@ -126,8 +127,9 @@ class CsvFile implements FileInterface
     public function getHeader($columnNumber)
     {
         if ($columnNumber >= $this->getColumnCount()) {
-            throw new \OutOfBoundsException("Header does not exits");
+            throw new \OutOfBoundsException('Header does not exits');
         }
+
         return $this->headers[$columnNumber];
     }
 
@@ -154,10 +156,10 @@ class CsvFile implements FileInterface
                 return $this->valueToString($rowValue);
             });
 
-            return join(",", $rowValuesAsStrings);
+            return implode(',', $rowValuesAsStrings);
         });
 
-        $content .= join(PHP_EOL, $rowsAsStrings);
+        $content .= implode(PHP_EOL, $rowsAsStrings);
 
         return $content;
     }
@@ -165,10 +167,11 @@ class CsvFile implements FileInterface
     private function valueToString($value)
     {
         if (is_string($value)) {
-            $value = str_replace("\"", "\"\"", $value);
-            return '"' . $value . '"';
+            $value = str_replace('"', '""', $value);
+
+            return '"'.$value.'"';
         } elseif (is_bool($value)) {
-            return $value ? "true" : "false";
+            return $value ? 'true' : 'false';
         } elseif (is_integer($value)) {
             return $value;
         } elseif (is_double($value)) {
@@ -177,7 +180,7 @@ class CsvFile implements FileInterface
             return '';
         }
 
-        throw new \InvalidArgumentException("Unsupported value encountered while generating CSV file: " . gettype($value));
+        throw new \InvalidArgumentException('Unsupported value encountered while generating CSV file: '.gettype($value));
     }
 
     public function getRowCount()

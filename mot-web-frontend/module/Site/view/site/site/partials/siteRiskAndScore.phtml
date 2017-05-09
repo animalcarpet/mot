@@ -4,7 +4,7 @@ use DvsaCommon\Utility\ArrayUtils;
 $score = ArrayUtils::tryGet($this->values, 'siteAssessmentScore', null);
 $color = ArrayUtils::tryGet($this->values, 'siteAssessmentColour', null);
 
-if ($score !== null && ((float)$score) >= 0): ?>
+if ($score !== null && ((float) $score) >= 0): ?>
     <div class="row module-present-data">
         <div class="col-sm-4">
             <h3>Site Risk and Score</h3>

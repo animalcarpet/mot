@@ -223,9 +223,8 @@ class TestItemSelectorService extends AbstractService
         do {
             $data = $this->getTestItemsByParentId($id, $vehicleClass, $role);
             $itemsCollection[] = $data;
-            $id = $data["testItemSelector"]["parentTestItemSelectorId"];
-
-        } while ($data["testItemSelector"]["id"] !== 0);
+            $id = $data['testItemSelector']['parentTestItemSelectorId'];
+        } while ($data['testItemSelector']['id'] !== 0);
 
         return $itemsCollection;
     }

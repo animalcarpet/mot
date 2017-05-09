@@ -1,7 +1,7 @@
 <?php
 
-$successMessages  = $this->layout()->flashMessenger->getSuccessMessages();
-$errorMessages    = $this->layout()->flashMessenger->getErrorMessages();
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
+$errorMessages = $this->layout()->flashMessenger->getErrorMessages();
 $messages = $successMessages ?: $errorMessages;
 $messageType = empty($successMessages) ? 'failure' : 'success';
 

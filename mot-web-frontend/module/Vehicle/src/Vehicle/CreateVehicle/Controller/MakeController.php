@@ -12,8 +12,7 @@ class MakeController extends BaseCreateVehicleController
 
     public function __construct(
         MakeAction $action
-    )
-    {
+    ) {
         $this->action = $action;
     }
 
@@ -22,6 +21,7 @@ class MakeController extends BaseCreateVehicleController
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
         $this->setLayout('What is the vehicle\'s make?', self::SUB_TITLE);
+
         return $this->applyActionResult($result);
     }
 }

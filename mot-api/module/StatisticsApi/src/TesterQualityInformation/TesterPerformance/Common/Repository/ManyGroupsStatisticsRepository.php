@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\Repository;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository\AbstractStatisticsRepository;
@@ -10,8 +11,8 @@ use DvsaCommon\Enum\OrganisationSiteStatusCode;
 
 class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
 {
-    const PARAM_YEAR = "year";
-    const PARAM_MONTH = "month";
+    const PARAM_YEAR = 'year';
+    const PARAM_MONTH = 'month';
 
     protected function getByParams(array $params)
     {
@@ -32,7 +33,7 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
             ->setParameter('irrelevantAssociationCodes',
                 [
                     OrganisationSiteStatusCode::APPLIED,
-                    OrganisationSiteStatusCode::UNKNOWN
+                    OrganisationSiteStatusCode::UNKNOWN,
                 ]
             );
 
@@ -49,7 +50,7 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
             ->setPersonId($row['person_id'])
             ->setUsername($row['username'])
             ->setTotalTime($row['totalTime'])
-            ->setAverageVehicleAgeInMonths((float)$row['averageVehicleAgeInMonths'])
+            ->setAverageVehicleAgeInMonths((float) $row['averageVehicleAgeInMonths'])
             ->setIsAverageVehicleAgeAvailable(!is_null($row['averageVehicleAgeInMonths']))
             ->setFailedCount($row['failedCount'])
             ->setTotalCount($row ['totalCount']);

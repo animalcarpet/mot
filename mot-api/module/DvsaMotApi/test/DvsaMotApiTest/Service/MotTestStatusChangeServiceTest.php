@@ -11,7 +11,6 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Time;
-use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
@@ -22,7 +21,6 @@ use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaCommonTest\Date\InvalidTestDateTimeHolder;
-use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\ModelDetail;
@@ -31,7 +29,6 @@ use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
-use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
@@ -46,7 +43,6 @@ use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestStatusChangeService;
 use DvsaMotApi\Service\MotTestStatusService;
 use DvsaAuthentication\Service\OtpService;
-use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
 use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
@@ -54,9 +50,7 @@ use DvsaMotApiTest\Traits\MockTestTypeTrait;
 use OrganisationApi\Service\OrganisationService;
 
 /**
- * Class MotTestStatusChangeServiceTest
- *
- * @package DvsaMotApiTest\Service
+ * Class MotTestStatusChangeServiceTest.
  */
 class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
 {
@@ -960,7 +954,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     {
         list($openingTime, $closingTime) = [Time::fromIso8601('08:00:00'), Time::fromIso8601('16:00:00')];
         $weekOpeningHours = [];
-        for ($i = 1; $i <= 7; $i++) {
+        for ($i = 1; $i <= 7; ++$i) {
             $dailySchedule = (new SiteTestingDailySchedule())
                 ->setOpenTime($openingTime)
                 ->setCloseTime($closingTime)

@@ -8,9 +8,7 @@ use DvsaEntities\Entity\MotTestType;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class EnforcementMotTestDifferenceTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class EnforcementMotTestDifferenceTest.
  */
 class EnforcementMotTestDifferenceTest extends PHPUnit_Framework_TestCase
 {

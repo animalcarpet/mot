@@ -7,18 +7,18 @@ $required = $this->withDefault(true)->getValue($required);
 $optional = $this->withDefault(true)->getValue($optional);
 /** @var \DateTime $value */
 $value = $this->withDefault(false)->getValue($value);
-$help  = $this->withDefault(false)->getValue($help);
+$help = $this->withDefault(false)->getValue($help);
 
 if (!$value instanceof DateTime) {
     $value = DateTime::createFromFormat('Y-m-d', $value);
 }
 if ($value instanceof DateTime) {
-    $day   = $value->format('d');
+    $day = $value->format('d');
     $month = $value->format('m');
-    $year  = $value->format('Y');
+    $year = $value->format('Y');
 }
 
-$cssClass = join(
+$cssClass = implode(
     ' ', array_filter(
         [
             (isset($this->errorMessage) ? 'has-error' : null),
@@ -32,7 +32,7 @@ $cssClass = join(
     <fieldset>
         <legend class="form-label">
             <?php echo $this->escapeHtml($label); ?>
-            <?php if($help): ?>
+            <?php if ($help): ?>
                 <span class="form-hint"><?php echo $this->escapeHtml($help) ?></span>
             <?php endif ?>
             <?php if (!empty($errorMessage)): ?>
@@ -44,42 +44,42 @@ $cssClass = join(
             <?php echo $this->partial(
                 'partial/forms/inputBox.phtml',
                 [
-                    'id'             => 'date1-day',
-                    'label'          => 'Day',
-                    'name'           => 'dobDay',
+                    'id' => 'date1-day',
+                    'label' => 'Day',
+                    'name' => 'dobDay',
                     'classFormGroup' => 'form-group-day',
-                    'value'          => $day,
-                    'required'       => $required,
-                    'optional'       => $optional,
-                    'maxLength'      => 2,
+                    'value' => $day,
+                    'required' => $required,
+                    'optional' => $optional,
+                    'maxLength' => 2,
                 ]
             );
             ?>
             <?php echo $this->partial(
                 'partial/forms/inputBox.phtml',
                 [
-                    'id'             => 'date1-month',
-                    'label'          => 'Month',
-                    'name'           => 'dobMonth',
+                    'id' => 'date1-month',
+                    'label' => 'Month',
+                    'name' => 'dobMonth',
                     'classFormGroup' => 'form-group-month',
-                    'value'          => $month,
-                    'required'       => $required,
-                    'optional'       => $optional,
-                    'maxLength'      => 2,
+                    'value' => $month,
+                    'required' => $required,
+                    'optional' => $optional,
+                    'maxLength' => 2,
                 ]
             );
             ?>
             <?php echo $this->partial(
                 'partial/forms/inputBox.phtml',
                 [
-                    'id'             => 'date1-year',
-                    'label'          => 'Year',
-                    'name'           => 'dobYear',
+                    'id' => 'date1-year',
+                    'label' => 'Year',
+                    'name' => 'dobYear',
                     'classFormGroup' => 'form-group-year',
-                    'value'          => $year,
-                    'required'       => $required,
-                    'optional'       => $optional,
-                    'maxLength'      => 4,
+                    'value' => $year,
+                    'required' => $required,
+                    'optional' => $optional,
+                    'maxLength' => 4,
                 ]
             );
             ?>

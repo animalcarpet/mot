@@ -18,13 +18,11 @@ use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\TransmissionType;
 
 /**
- * Class VehicleCatalogServiceTest
- *
- * @package DataCatalogApiTest\Service
+ * Class VehicleCatalogServiceTest.
  */
 class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  \DataCatalogApi\Service\VehicleCatalogService */
+    /** @var \DataCatalogApi\Service\VehicleCatalogService */
     private $vcs;
     private $em;
 
@@ -49,12 +47,12 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetModelById()
     {
-        $this->vcs->getModelById("id");
+        $this->vcs->getModelById('id');
     }
 
     public function testGetMake()
     {
-        $this->vcs->getMake("code");
+        $this->vcs->getMake('code');
     }
 
     public function testGetMakes()
@@ -64,7 +62,7 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFindMakeByName()
     {
-        $this->vcs->findMakeByName("name");
+        $this->vcs->findMakeByName('name');
     }
 
     public function testFindMakeById()
@@ -74,12 +72,12 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFindModelByName()
     {
-        $this->vcs->findModelByNameAndMakeId("name", "make");
+        $this->vcs->findModelByNameAndMakeId('name', 'make');
     }
 
     public function testGetModel()
     {
-        $this->vcs->getModel("make", "model");
+        $this->vcs->getModel('make', 'model');
     }
 
     public function testGetModelDetail()
@@ -99,7 +97,7 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFuelType()
     {
-        $this->vcs->getFuelType("PE");
+        $this->vcs->getFuelType('PE');
     }
 
     public function testFindFuelTypeByPropulsionCode()
@@ -109,53 +107,53 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCountryOfRegistration()
     {
-        $this->vcs->getCountryOfRegistration("12");
+        $this->vcs->getCountryOfRegistration('12');
     }
 
     public function testGetCountryOfRegistration_refOnly()
     {
-        $this->vcs->getCountryOfRegistration("12", true);
+        $this->vcs->getCountryOfRegistration('12', true);
     }
 
     public function testGetCountryOfRegistrationByCode()
     {
-        $this->vcs->getCountryOfRegistrationByCode("UK");
+        $this->vcs->getCountryOfRegistrationByCode('UK');
     }
 
     public function testGetColour()
     {
-        $this->vcs->getColour("12");
+        $this->vcs->getColour('12');
     }
 
     public function testGetColour_refOnly()
     {
-        $this->vcs->getColour("12", true);
+        $this->vcs->getColour('12', true);
     }
 
     public function testGetColourByCode()
     {
-        $this->vcs->getColourByCode("R");
+        $this->vcs->getColourByCode('R');
     }
 
     public function testFindColourByCode()
     {
-        $this->vcs->findColourByCode("R");
+        $this->vcs->findColourByCode('R');
     }
 
     public function testGetTransmissionType()
     {
-        $this->vcs->getTransmissionType("12");
+        $this->vcs->getTransmissionType('12');
     }
 
     public function testGetTranmissionType_refOnly()
     {
-        $this->vcs->getTransmissionType("12", true);
+        $this->vcs->getTransmissionType('12', true);
     }
 
     public function testGetMakeModelMapByDvlaCode()
     {
-        $make                   = $this->getMock(Make::class);
-        $model                  = $this->getMock(Model::class);
+        $make = $this->getMock(Make::class);
+        $model = $this->getMock(Model::class);
 
         $dvlaMakeModelMapEntity = $this->getMock(DvlaMakeModelMap::class);
         $dvlaMakeModelMapEntity
@@ -191,5 +189,4 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($make, $map->getMake());
         $this->assertEquals($model, $map->getModel());
     }
-
 }

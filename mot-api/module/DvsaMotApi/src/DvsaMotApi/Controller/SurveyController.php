@@ -75,7 +75,7 @@ class SurveyController extends AbstractDvsaRestfulController
     }
 
     /**
-     * @param array $data Contains token and survey rating.
+     * @param array $data Contains token and survey rating
      *
      * @return JsonModel|array
      */

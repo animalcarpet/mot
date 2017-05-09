@@ -22,8 +22,8 @@ class PersonRoleManagementServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $client = XMock::of(HttpRestJsonClient::class);
         $catalogService = new StubCatalogService();
 
-        $serviceManager->setService("MotIdentityProvider", $motIdentityProvider);
-        $serviceManager->setService("AuthorisationService", $authorisationService);
+        $serviceManager->setService('MotIdentityProvider', $motIdentityProvider);
+        $serviceManager->setService('AuthorisationService', $authorisationService);
         $serviceManager->setService(HttpRestJsonClient::class, $client);
         $serviceManager->setService('CatalogService', $catalogService);
 

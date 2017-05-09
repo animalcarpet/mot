@@ -1,4 +1,4 @@
-<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
+<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorsSummary]); ?>
 
 <form action="<?php echo $this->escapeHtmlAttr($this->url($routes['RECORD'], array('type' => $type, 'id' => $id))); ?>" method="POST" autocomplete="off" novalidate="">
     <?php echo $this->csrfToken(); ?>
@@ -8,7 +8,9 @@
     <fieldset>
         <legend class="form-title heading-large visuallyhidden">Event details</legend>
 
-        <div class="form-group<?php if ($eventTypeHasError) echo ' has-error' ?>">
+        <div class="form-group<?php if ($eventTypeHasError) {
+    echo ' has-error';
+} ?>">
             <label for="selectStandard" class="form-label">
                 Event
                 <?php
@@ -28,7 +30,9 @@
             </select>
         </div>
 
-        <div class="form-group<?php if ($dateHasError) echo ' has-error' ?>">
+        <div class="form-group<?php if ($dateHasError) {
+                    echo ' has-error';
+                } ?>">
             <fieldset>
                 <legend class="form-label">
                     Date of event
@@ -45,15 +49,15 @@
 
                     <div class="form-group form-group-day">
                         <label for="date1-day">Day</label>
-                        <input type="text" id="date1-day" name="day" class="form-control" value="<?php echo $this->escapeHtmlAttr($day);?>">
+                        <input type="text" id="date1-day" name="day" class="form-control" value="<?php echo $this->escapeHtmlAttr($day); ?>">
                     </div>
                     <div class="form-group form-group-month">
                         <label for="date1-month">Month</label>
-                        <input type="text" id="date1-month" name="month" class="form-control" value="<?php echo $this->escapeHtmlAttr($month);?>">
+                        <input type="text" id="date1-month" name="month" class="form-control" value="<?php echo $this->escapeHtmlAttr($month); ?>">
                     </div>
                     <div class="form-group form-group-year">
                         <label for="date1-year">Year</label>
-                        <input type="text" id="date1-year" name="year" class="form-control" value="<?php echo $this->escapeHtmlAttr($year);?>">
+                        <input type="text" id="date1-year" name="year" class="form-control" value="<?php echo $this->escapeHtmlAttr($year); ?>">
                     </div>
                 </div>
             </fieldset>

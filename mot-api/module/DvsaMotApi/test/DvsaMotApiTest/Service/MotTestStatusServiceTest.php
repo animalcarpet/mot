@@ -21,7 +21,7 @@ use DvsaEntities\Entity\ReasonForRejection;
 use DvsaMotApi\Service\MotTestStatusService;
 
 /**
- * Class MotTestStatusServiceTest
+ * Class MotTestStatusServiceTest.
  */
 class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServiceTestCase
 {
@@ -44,7 +44,7 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
         //given
         $motTest = $this->getMotTest(
             [
-                'odometerReading' => false
+                'odometerReading' => false,
             ]
         );
         $expectedResult = true;
@@ -61,8 +61,8 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
         //given
         $motTest = $this->getMotTest(
             [
-                'odometerReading'    => true,
-                'hasBrakeTestResult' => true
+                'odometerReading' => true,
+                'hasBrakeTestResult' => true,
             ]
         );
         $expectedResult = false;
@@ -93,8 +93,8 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
         //given
         $motTest = $this->getMotTest(
             [
-                'odometerReading'                 => true,
-                'hasUnrepairedBrakePerformanceNotTestedRfrNotMarkedAsRepaired' => true
+                'odometerReading' => true,
+                'hasUnrepairedBrakePerformanceNotTestedRfrNotMarkedAsRepaired' => true,
             ]
         );
         $expectedResult = false;
@@ -111,8 +111,8 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
         //given
         $motTest = $this->getMotTest(
             [
-                'odometerReading'                 => true,
-                'hasUnrepairedBrakePerformanceNotTestedRfrMarkedAsRepaired' => true
+                'odometerReading' => true,
+                'hasUnrepairedBrakePerformanceNotTestedRfrMarkedAsRepaired' => true,
             ]
         );
         $expectedResult = true;
@@ -129,8 +129,8 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
         //given
         $motTest = $this->getMotTest(
             [
-                'odometerReading'             => true,
-                'hasOriginalBrakeTestPassing' => true
+                'odometerReading' => true,
+                'hasOriginalBrakeTestPassing' => true,
             ]
         );
         $expectedResult = false;
@@ -206,7 +206,7 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
             $originalMotTest->setBrakeTestResultClass12($originalBrakeTest);
             $motTest->setMotTestIdOriginal($originalMotTest);
 
-            $motTest->setMotTestType((new MotTestType)->setCode(MotTestTypeCode::RE_TEST));
+            $motTest->setMotTestType((new MotTestType())->setCode(MotTestTypeCode::RE_TEST));
         }
 
         return $motTest;

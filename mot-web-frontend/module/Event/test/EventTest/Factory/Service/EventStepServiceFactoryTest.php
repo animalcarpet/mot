@@ -7,7 +7,6 @@
 
 namespace EventTest\Factory\Service;
 
-use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommonTest\TestUtils\XMock;
 use Event\Factory\Service\EventStepServiceFactory;
 use Event\Service\EventSessionService;
@@ -19,7 +18,8 @@ use Event\Step\SummaryStep;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class EventStepServiceFactoryTest
+ * Class EventStepServiceFactoryTest.
+ *
  * @group event
  */
 class EventStepServiceFactoryTest extends \PHPUnit_Framework_TestCase

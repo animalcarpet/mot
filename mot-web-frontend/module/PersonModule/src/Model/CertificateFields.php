@@ -6,7 +6,7 @@ use Core\ViewModel\Badge\Badge;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 
 /**
- * Data for Certificate Fields
+ * Data for Certificate Fields.
  */
 class CertificateFields
 {
@@ -34,7 +34,7 @@ class CertificateFields
             case AuthorisationForTestingMotStatusCode::SUSPENDED:
                 return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_NEEDED, self::CERTIFICATE_DATE_QUALIFIED, Badge::alert());
                 break;
-            default :
+            default:
                 return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_RECORDED, self::CERTIFICATE_DATE_NOT_RECORDED, Badge::normal());
         }
     }

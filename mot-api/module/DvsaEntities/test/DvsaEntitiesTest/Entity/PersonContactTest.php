@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\ContactDetail;
@@ -8,14 +9,14 @@ use DvsaEntities\Entity\PersonContactType;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class PersonContactTest
+ * Class PersonContactTest.
  */
 class PersonContactTest extends PHPUnit_Framework_TestCase
 {
     private $person;
     private $contactDetail;
     private $personContactType;
-    /** @var  PersonContact */
+    /** @var PersonContact */
     private $personContact;
 
     public function setUp()

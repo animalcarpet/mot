@@ -11,7 +11,7 @@ class MotTestOptionsPresenterTest extends \PHPUnit_Framework_TestCase
     public function testDisplayVehicleMakeAndModel()
     {
         $presenter = new MotTestOptionsPresenter(
-            (new MotTestOptionsDto)
+            (new MotTestOptionsDto())
                 ->setVehicleMake('make')
                 ->setVehicleModel('model')
         );
@@ -22,7 +22,7 @@ class MotTestOptionsPresenterTest extends \PHPUnit_Framework_TestCase
     public function testDisplayVehicleRegistrationNumber()
     {
         $presenter = new MotTestOptionsPresenter(
-            (new MotTestOptionsDto)
+            (new MotTestOptionsDto())
                 ->setVehicleRegistrationNumber('registration number')
         );
 
@@ -32,7 +32,7 @@ class MotTestOptionsPresenterTest extends \PHPUnit_Framework_TestCase
     public function testDisplayMotTestStartedDate()
     {
         $presenter = new MotTestOptionsPresenter(
-            (new MotTestOptionsDto)
+            (new MotTestOptionsDto())
                 ->setMotTestStartedDate('2014-12-09T16:50:59Z')
         );
 

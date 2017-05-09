@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Mapper;
 
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
@@ -8,7 +9,7 @@ use DvsaEntities\Repository\BrakeTestTypeRepository;
 use DvsaEntities\Repository\WeightSourceRepository;
 
 /**
- * Class BrakeTestResultClass3AndAboveMapper
+ * Class BrakeTestResultClass3AndAboveMapper.
  */
 class BrakeTestResultClass3AndAboveMapper
 {
@@ -95,6 +96,7 @@ class BrakeTestResultClass3AndAboveMapper
         if (!empty($data['serviceBrake2Data'])) {
             $brakeTestResult->setServiceBrake2Data($this->mapServiceBrakeDataToObject($data['serviceBrake2Data']));
         }
+
         return $brakeTestResult;
     }
 
@@ -122,6 +124,7 @@ class BrakeTestResultClass3AndAboveMapper
             ->setLockNearsideAxle3(ArrayUtils::tryGet($data, 'lockNearsideAxle3'))
             ->setLockOffsideAxle3(ArrayUtils::tryGet($data, 'lockOffsideAxle3'))
             ->setLockSingle(ArrayUtils::tryGet($data, 'lockSingle'));
+
         return $serviceBrakeData;
     }
 }

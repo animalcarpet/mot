@@ -30,11 +30,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $vtsName
+     *
      * @return CardOrderReviewViewModel
      */
     public function setVtsName($vtsName)
     {
         $this->vtsName = $vtsName;
+
         return $this;
     }
 
@@ -48,11 +50,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $addressLineOne
+     *
      * @return CardOrderAddressViewModel
      */
     public function setAddressLineOne($addressLineOne)
     {
         $this->addressLineOne = $addressLineOne;
+
         return $this;
     }
 
@@ -66,11 +70,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $addressLineTwo
+     *
      * @return CardOrderAddressViewModel
      */
     public function setAddressLineTwo($addressLineTwo)
     {
         $this->addressLineTwo = $addressLineTwo;
+
         return $this;
     }
 
@@ -84,11 +90,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $addressLineThree
+     *
      * @return CardOrderAddressViewModel
      */
     public function setAddressLineThree($addressLineThree)
     {
         $this->addressLineThree = $addressLineThree;
+
         return $this;
     }
 
@@ -102,11 +110,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $town
+     *
      * @return CardOrderAddressViewModel
      */
     public function setTown($town)
     {
         $this->town = $town;
+
         return $this;
     }
 
@@ -120,11 +130,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $postcode
+     *
      * @return CardOrderAddressViewModel
      */
     public function setPostcode($postcode)
     {
         $this->postcode = $postcode;
+
         return $this;
     }
 
@@ -138,11 +150,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $name
+     *
      * @return CardOrderAddressViewModel
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -156,11 +170,13 @@ class CardOrderReviewViewModel
 
     /**
      * @param mixed $userId
+     *
      * @return CardOrderReviewViewModel
      */
     public function setUserId($userId)
     {
         $this->userId = $userId;
+
         return $this;
     }
 }

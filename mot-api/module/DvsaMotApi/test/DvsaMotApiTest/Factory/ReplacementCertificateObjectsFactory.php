@@ -15,7 +15,7 @@ use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 
 /**
- * Class ReplacementCertificateObjectsFactory
+ * Class ReplacementCertificateObjectsFactory.
  */
 class ReplacementCertificateObjectsFactory
 {
@@ -27,18 +27,18 @@ class ReplacementCertificateObjectsFactory
         $motTest = MotTestObjectsFactory::motTest();
 
         return (new CertificateReplacementDraft())
-            ->setCountryOfRegistration(VehicleObjectsFactory::countryOfRegistration(1, "cor"))
-            ->setPrimaryColour(VehicleObjectsFactory::colour(1, "R", "Red"))
-            ->setSecondaryColour(VehicleObjectsFactory::colour(2, "G", "Green"))
-            ->setExpiryDate(DateUtils::toDate("2014-05-01"))
-            ->setMake(VehicleObjectsFactory::make(2, 'BMW', "BMW"))
-            ->setModel(VehicleObjectsFactory::model(3, "M3", "M3"))
+            ->setCountryOfRegistration(VehicleObjectsFactory::countryOfRegistration(1, 'cor'))
+            ->setPrimaryColour(VehicleObjectsFactory::colour(1, 'R', 'Red'))
+            ->setSecondaryColour(VehicleObjectsFactory::colour(2, 'G', 'Green'))
+            ->setExpiryDate(DateUtils::toDate('2014-05-01'))
+            ->setMake(VehicleObjectsFactory::make(2, 'BMW', 'BMW'))
+            ->setModel(VehicleObjectsFactory::model(3, 'M3', 'M3'))
             ->setOdometerValue(666)
             ->setOdometerUnit(OdometerUnit::MILES)
             ->setOdometerResultType(OdometerReadingResultType::OK)
-            ->setVin("vin")
+            ->setVin('vin')
             ->setMotTest($motTest)
-            ->setVrm("vrm")
+            ->setVrm('vrm')
             ->setVehicleTestingStation(MotTestObjectsFactory::vts(1))
             ->setId(123)
             ->setMotTestVersion($motTest->getVersion());
@@ -55,10 +55,10 @@ class ReplacementCertificateObjectsFactory
             ->setMake(999 + $idSeed)
             ->setModel(999 + $idSeed)
             ->setCountryOfRegistration(999 + $idSeed)
-            ->setVin("NEW_VIN")
-            ->setVrm("NEW_VRM")
-            ->setVtsSiteNumber("NEW_SITE_NUMBER")
-            ->setExpiryDate("2014-05-01");
+            ->setVin('NEW_VIN')
+            ->setVrm('NEW_VRM')
+            ->setVtsSiteNumber('NEW_SITE_NUMBER')
+            ->setExpiryDate('2014-05-01');
     }
 
     /**
@@ -70,8 +70,8 @@ class ReplacementCertificateObjectsFactory
     {
         return ReplacementCertificateDraftChangeDTO::create()
 
-            ->setPrimaryColour("C" + $idSeed)
-            ->setSecondaryColour("D" + $idSeed)
+            ->setPrimaryColour('C' + $idSeed)
+            ->setSecondaryColour('D' + $idSeed)
             ->setOdometerReading(
                     999 + $idSeed,
                     OdometerUnit::KILOMETERS,

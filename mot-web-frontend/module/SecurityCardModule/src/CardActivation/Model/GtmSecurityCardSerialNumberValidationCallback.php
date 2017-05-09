@@ -13,7 +13,7 @@ class GtmSecurityCardSerialNumberValidationCallback implements SecurityCardSeria
         $this->data[] = [
             'event' => 'activate-card-fail',
             'reason' => 'invalid-serial-number',
-            'title' => 'User - Activate Security Card'
+            'title' => 'User - Activate Security Card',
         ];
     }
 

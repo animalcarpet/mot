@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class AuthorisedExaminerControllerFactory
+ * Class AuthorisedExaminerControllerFactory.
  *
  * Generates the AuthorisedExaminerControllerFactory, injecting dependencies
  */

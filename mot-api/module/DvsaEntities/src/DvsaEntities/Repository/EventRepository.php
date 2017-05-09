@@ -2,7 +2,6 @@
 
 namespace DvsaEntities\Repository;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use DvsaCommon\Dto\Event\EventFormDto;
@@ -11,34 +10,33 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class EventRepository
- *
- * @package DvsaEntities\Repository
+ * Class EventRepository.
  */
 class EventRepository extends AbstractMutableRepository
 {
     /**
-     * This function build the common query builder for the event search
+     * This function build the common query builder for the event search.
      *
-     * @param int $id
+     * @param int    $id
      * @param string $type
+     *
      * @return QueryBuilder
      */
     private function getQueryBuilder($id = null, $type = null)
     {
         $qb = $this
-            ->createQueryBuilder("e")
-            ->addSelect("et")
-            ->innerJoin("e.eventType", "et");
+            ->createQueryBuilder('e')
+            ->addSelect('et')
+            ->innerJoin('e.eventType', 'et');
 
         switch (strtoupper($type)) {
-            case "AE":
+            case 'AE':
                 $qb = $this->joinEventOrganisationMap($qb, $id);
                 break;
-            case "SITE":
+            case 'SITE':
                 $qb = $this->joinEventSiteMap($qb, $id);
                 break;
-            case "PERSON":
+            case 'PERSON':
                 $qb = $this->joinEventPersonMap($qb, $id);
                 break;
         }
@@ -47,62 +45,65 @@ class EventRepository extends AbstractMutableRepository
     }
 
     /**
-     * This function join EventOrganisationMap
+     * This function join EventOrganisationMap.
      *
-     * @param QueryBuilder  $qb
-     * @param int           $organisationId
+     * @param QueryBuilder $qb
+     * @param int          $organisationId
      *
      * @return QueryBuilder
      */
     private function joinEventOrganisationMap(QueryBuilder $qb, $organisationId)
     {
         $qb
-            ->innerJoin("e.eventOrganisationMaps", 'eom')
-            ->where("eom.organisation = :ORGANISATION_ID")
+            ->innerJoin('e.eventOrganisationMaps', 'eom')
+            ->where('eom.organisation = :ORGANISATION_ID')
             ->setParameter('ORGANISATION_ID', $organisationId);
+
         return $qb;
     }
 
     /**
-     * This function join EventSiteMaps
+     * This function join EventSiteMaps.
      *
-     * @param QueryBuilder  $qb
-     * @param int           $siteId
+     * @param QueryBuilder $qb
+     * @param int          $siteId
      *
      * @return QueryBuilder
      */
     private function joinEventSiteMap(QueryBuilder $qb, $siteId)
     {
         $qb
-            ->innerJoin("e.eventSiteMaps", 'esm')
-            ->where("esm.site = :SITE_ID")
+            ->innerJoin('e.eventSiteMaps', 'esm')
+            ->where('esm.site = :SITE_ID')
             ->setParameter('SITE_ID', $siteId);
+
         return $qb;
     }
 
     /**
-     * This function join EventPersonMap
+     * This function join EventPersonMap.
 
-     * @param QueryBuilder  $qb
-     * @param int           $personId
+     * @param QueryBuilder $qb
+     * @param int          $personId
      *
      * @return QueryBuilder
      */
     private function joinEventPersonMap(QueryBuilder $qb, $personId)
     {
         $qb
-            ->innerJoin("e.eventPersonMaps", 'epm')
-            ->where("epm.person = :PERSON_ID")
+            ->innerJoin('e.eventPersonMaps', 'epm')
+            ->where('epm.person = :PERSON_ID')
             ->setParameter('PERSON_ID', $personId);
+
         return $qb;
     }
 
     /**
-     * This function allow us to get a list of the events related to an entity
+     * This function allow us to get a list of the events related to an entity.
      *
-     * @param int           $id
-     * @param EventFormDto  $dto
-     * @param string        $type
+     * @param int          $id
+     * @param EventFormDto $dto
+     * @param string       $type
      *
      * @return Event[]
      */
@@ -110,15 +111,16 @@ class EventRepository extends AbstractMutableRepository
     {
         $qb = $this->getQueryBuilder($id, $type);
         $qb = $this->filterResults($qb, $dto, false);
+
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * This function allow us to get the total count of the events related to an entity
+     * This function allow us to get the total count of the events related to an entity.
      *
-     * @param int           $id
-     * @param EventFormDto  $dto
-     * @param string        $type
+     * @param int          $id
+     * @param EventFormDto $dto
+     * @param string       $type
      *
      * @return int
      */
@@ -127,16 +129,17 @@ class EventRepository extends AbstractMutableRepository
         $qb = $this->getQueryBuilder($id, $type);
         $qb->select('DISTINCT COUNT(e)');
         $qb = $this->filterResults($qb, $dto, true);
+
         return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
      * Filter event results based on the params passed in
-     * via the DTO
+     * via the DTO.
      *
-     * @param QueryBuilder  $qb
-     * @param EventFormDto  $dto
-     * @param bool          $isCount
+     * @param QueryBuilder $qb
+     * @param EventFormDto $dto
+     * @param bool         $isCount
      *
      * @return QueryBuilder
      */
@@ -144,7 +147,7 @@ class EventRepository extends AbstractMutableRepository
     {
         if (!empty($dto->getSearch())) {
             $qb->andWhere('et.description LIKE :SEARCH_EVENT OR e.shortDescription LIKE :SEARCH_EVENT')
-                ->setParameter('SEARCH_EVENT', trim($dto->getSearch()) . '%');
+                ->setParameter('SEARCH_EVENT', trim($dto->getSearch()).'%');
         }
 
         if ($this->isDateRangeIsValid($dto)) {
@@ -160,13 +163,15 @@ class EventRepository extends AbstractMutableRepository
             $qb->setFirstResult($dto->getDisplayStart());
             $qb->setMaxResults($dto->getDisplayLength());
         }
+
         return $qb;
     }
 
     /**
-     * This function check if we attempt to search by date range and if the date are valid
+     * This function check if we attempt to search by date range and if the date are valid.
      *
      * @param EventFormDto $dto
+     *
      * @return bool
      */
     private function isDateRangeIsValid(EventFormDto $dto)
@@ -176,12 +181,15 @@ class EventRepository extends AbstractMutableRepository
             && $dto->getDateTo()->getDate() !== null) {
             return true;
         }
+
         return false;
     }
 
     /**
      * @param $eventId
+     *
      * @return Event
+     *
      * @throws NotFoundException
      */
     public function findEvent($eventId)
@@ -201,10 +209,11 @@ class EventRepository extends AbstractMutableRepository
     }
 
     /**
-     * This function test if the user have already an event register with a specific code
+     * This function test if the user have already an event register with a specific code.
      *
      * @param Person $person
      * @param string $code
+     *
      * @return bool
      */
     public function isEventCreatedBy(Person $person, $code)

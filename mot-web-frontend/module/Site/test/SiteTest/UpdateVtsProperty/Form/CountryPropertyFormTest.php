@@ -21,15 +21,15 @@ class CountryPropertyFormTest extends \PHPUnit_Framework_TestCase
         $countries = [];
 
         foreach (CountryOfVts::getPossibleCountryCodes() as $countryCode) {
-            $countries[$countryCode] = new Country($countryCode, "countryName");
+            $countries[$countryCode] = new Country($countryCode, 'countryName');
         }
 
         $catalog = XMock::of(CountryCatalog::class);
         $catalog
             ->expects($this->any())
-            ->method("getByCode")
-            ->willReturnCallback(function($code) use ($countries) {
-                 return ArrayUtils::tryGet($countries, $code);
+            ->method('getByCode')
+            ->willReturnCallback(function ($code) use ($countries) {
+                return ArrayUtils::tryGet($countries, $code);
             });
 
         $this->catalog = $catalog;
@@ -76,7 +76,7 @@ class CountryPropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[CountryPropertyForm::FIELD_COUNTRY => ""]],
+            [[CountryPropertyForm::FIELD_COUNTRY => '']],
             [[]],
         ];
     }

@@ -5,7 +5,6 @@ namespace DvsaCommonApiTest\Controller;
 use DvsaCommonTest\Bootstrap;
 use DvsaEntities\Entity\Person;
 use DvsaAuthentication\Identity;
-use PHPUnit_Framework_TestCase;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractRestfulController;
@@ -15,29 +14,28 @@ use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Common logic for all api controller unit tests
+ * Common logic for all api controller unit tests.
  *
  * Should be added to a class extending   \PHPUnit_Framework_TestCase
  * This class should also implement       ApiControllerUnitTestInterface
  */
 trait ApiControllerUnitTestTrait
 {
-
     private $methodsForActions
         = [
-            'create'      => 'post',
-            'delete'      => 'delete',
-            'deleteList'  => 'delete',
-            'get'         => 'get',
-            'getList'     => 'get',
-            'head'        => 'head',
-            'options'     => 'options',
+            'create' => 'post',
+            'delete' => 'delete',
+            'deleteList' => 'delete',
+            'get' => 'get',
+            'getList' => 'get',
+            'head' => 'head',
+            'options' => 'options',
             'replaceList' => 'put',
-            'update'      => 'put',
+            'update' => 'put',
         ];
 
     /**
-     * Used when authentication and authorization is mocked
+     * Used when authentication and authorization is mocked.
      */
     protected $MOCK_USER_ID = 5;
 
@@ -82,14 +80,11 @@ trait ApiControllerUnitTestTrait
         $this->controller->setServiceLocator($this->serviceManager);
     }
 
-
-
-
-
     /**
-     * @param array $requiredUserRoles
-     * @param array $requiredVtsRoles
+     * @param array  $requiredUserRoles
+     * @param array  $requiredVtsRoles
      * @param Person $person
+     *
      * @return Identity
      */
     protected function mockValidAuthorization(
@@ -108,12 +103,11 @@ trait ApiControllerUnitTestTrait
                 ->setUsername($userName);
         }
 
-
         $mockIdentityProvider = $this->getMockServiceManagerClass(
             'DvsaAuthenticationService', \Zend\Authentication\AuthenticationService::class
         );
 
-        $identity =  new Identity($person);
+        $identity = new Identity($person);
         $mockIdentityProvider->expects($this->any())
             ->method('getIdentity')
             ->will($this->returnValue($identity));
@@ -128,11 +122,8 @@ trait ApiControllerUnitTestTrait
         return $mock;
     }
 
-
-
-
     /**
-     * Iterates all REST methods passed argument and asserts if they are allowed or not in tested controller
+     * Iterates all REST methods passed argument and asserts if they are allowed or not in tested controller.
      *
      * @param array $methods
      */
@@ -154,7 +145,7 @@ trait ApiControllerUnitTestTrait
 
     private function setupAndAssertMethod($method, $code)
     {
-        $method = 'assert' . ucfirst($method);
+        $method = 'assert'.ucfirst($method);
         $this->$method($code);
         $this->setUpTestCase();
     }
@@ -162,7 +153,7 @@ trait ApiControllerUnitTestTrait
     private function throwRuntimeExceptionIfNotSupportedMethod($method)
     {
         if (false === isset($this->methodsForActions[$method])) {
-            throw new \RuntimeException('Method ' . $method . ' not supported');
+            throw new \RuntimeException('Method '.$method.' not supported');
         }
     }
 
@@ -171,14 +162,14 @@ trait ApiControllerUnitTestTrait
         $this->throwRuntimeExceptionIfNotSupportedMethod($method);
 
         $this->request->setMethod($this->methodsForActions[$method]);
-        /**
+        /*
          * ApiControllerUnitTestInterface::mockServices
          */
         $this->mockServices();
 
         $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
-        $this->assertEquals($code, $response->getStatusCode(), 'Method: ' . $method);
+        $this->assertEquals($code, $response->getStatusCode(), 'Method: '.$method);
     }
 
     public function assertCreate($code)

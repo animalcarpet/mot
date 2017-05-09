@@ -3,13 +3,12 @@
 use DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel;
 
 /**
- * @var \DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper $brakeTestConfiguration
- * @var \DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel $brakeTestResult
- * @var string $rowHeader
- * @var int $axleNumber
- * @var int $serviceBrakeNumber
+ * @var \DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper
+ * @var \DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel     $brakeTestResult
+ * @var string                                                        $rowHeader
+ * @var int                                                           $axleNumber
+ * @var int                                                           $serviceBrakeNumber
  */
-
 $idServiceBrakeEffortNearsideAxle = BrakeTestResultClass3AndAboveViewModel::ID_SERVICE_EFFORT_NEARSIDE_AXLE_1;
 $idServiceBrakeLockNearsideAxle = BrakeTestResultClass3AndAboveViewModel::ID_SERVICE_LOCK_NEARSIDE_AXLE_1;
 $idServiceBrakeEffortOffsideAxle = BrakeTestResultClass3AndAboveViewModel::ID_SERVICE_EFFORT_OFFSIDE_AXLE_1;
@@ -84,7 +83,7 @@ if ($serviceBrakeNumber === 1) {
             'brakeTestInput',
             [
                 'id' => $idServiceBrakeEffortNearsideAxle,
-                'label' => 'Nearside axle ' . $axleNumber,
+                'label' => 'Nearside axle '.$axleNumber,
                 'value' => $valueServiceBrakeEffortNearsideAxle,
                 'lockId' => $idServiceBrakeLockNearsideAxle,
                 'hideLock' => !$brakeTestConfiguration->locksApplicableToFirstServiceBrake(),
@@ -97,7 +96,7 @@ if ($serviceBrakeNumber === 1) {
             'brakeTestInput',
             [
                 'id' => $idServiceBrakeEffortOffsideAxle,
-                'label' => 'Offside axle ' . $axleNumber,
+                'label' => 'Offside axle '.$axleNumber,
                 'value' => $valueServiceBrakeEffortOffsideAxle,
                 'lockId' => $idServiceBrakeLockOffsideAxle,
                 'hideLock' => !$brakeTestConfiguration->locksApplicableToFirstServiceBrake(),

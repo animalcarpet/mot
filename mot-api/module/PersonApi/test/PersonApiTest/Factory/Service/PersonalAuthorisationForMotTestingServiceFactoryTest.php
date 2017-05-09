@@ -15,12 +15,9 @@ use PersonApi\Factory\Service\PersonalAuthorisationForMotTestingServiceFactory;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 use PersonApi\Service\PersonService;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonalAuthorisationForMotTestingServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class PersonalAuthorisationForMotTestingServiceFactoryTest.
  */
 class PersonalAuthorisationForMotTestingServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -14,9 +14,9 @@ use Zend\Http\Request;
 
 class ChangeSecurityQuestionsAction
 {
-    const CHANGE_SECURITY_QUESTIONS_START_PAGE_TITLE = "Change security questions";
-    const CHANGE_SECURITY_QUESTIONS_START_PAGE_SUBTITLE = "Your profile";
-    const CHANGE_SECURITY_QUESTIONS_START_TEMPLATE = "profile/change-security-questions/start";
+    const CHANGE_SECURITY_QUESTIONS_START_PAGE_TITLE = 'Change security questions';
+    const CHANGE_SECURITY_QUESTIONS_START_PAGE_SUBTITLE = 'Your profile';
+    const CHANGE_SECURITY_QUESTIONS_START_TEMPLATE = 'profile/change-security-questions/start';
 
     private $changeSecurityQuestionsStepService;
 
@@ -49,6 +49,7 @@ class ChangeSecurityQuestionsAction
             if ($form->isValid()) {
                 if ($this->passwordValidationService->isPasswordValid($form->getPassword()->getValue())) {
                     $this->setUpSession();
+
                     return new RedirectToRoute(ChangeSecurityQuestionOneController::ROUTE);
                 } else {
                     $form->setCustomError($form->getPassword(), $form::MSG_PROBLEM_WITH_PASSWORD);

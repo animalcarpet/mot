@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTestTest\Service;
 
 use DvsaCommon\Exception\UnauthorisedException;
@@ -11,7 +12,7 @@ class OverdueSpecialNoticeAssertionTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $overdueSpecialNotices
      * @param array $authorisationsForTestingMot
-     * @param bool $expectedResult
+     * @param bool  $expectedResult
      *
      * @dataProvider dataProvider
      */
@@ -24,7 +25,7 @@ class OverdueSpecialNoticeAssertionTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $overdueSpecialNotices
      * @param array $authorisationsForTestingMot
-     * @param bool $notThrowException
+     * @param bool  $notThrowException
      *
      * @dataProvider dataProvider
      */
@@ -34,7 +35,6 @@ class OverdueSpecialNoticeAssertionTest extends \PHPUnit_Framework_TestCase
             $this->setExpectedException(UnauthorisedException::class, OverdueSpecialNoticeAssertion::OVERDUE_SPECIAL_NOTICES_ERROR);
         }
 
-
         $overdueSpecialNotice = new OverdueSpecialNoticeAssertion($overdueSpecialNotices, $authorisationsForTestingMot);
         $overdueSpecialNotice->assertPerformTest();
     }
@@ -42,15 +42,15 @@ class OverdueSpecialNoticeAssertionTest extends \PHPUnit_Framework_TestCase
     public function dataProvider()
     {
         return [
-          [$this->getSpecialNotices([0,0,0,0,0,0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), true],
-          [$this->getSpecialNotices([1,1,1,1,1,1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), false],
-          [$this->getSpecialNotices([0,1,1,1,1,1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), true],
-          [$this->getSpecialNotices([1,0,0,0,0,0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), true],
-          [$this->getSpecialNotices([0,0,0,0,0,0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
-          [$this->getSpecialNotices([1,1,1,1,1,1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
-          [$this->getSpecialNotices([0,1,1,1,1,1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
-          [$this->getSpecialNotices([1,0,0,0,0,0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
-          [$this->getSpecialNotices([0,0,0,0,0,0]), [], false],
+          [$this->getSpecialNotices([0, 0, 0, 0, 0, 0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), true],
+          [$this->getSpecialNotices([1, 1, 1, 1, 1, 1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), false],
+          [$this->getSpecialNotices([0, 1, 1, 1, 1, 1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), true],
+          [$this->getSpecialNotices([1, 0, 0, 0, 0, 0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::QUALIFIED), true],
+          [$this->getSpecialNotices([0, 0, 0, 0, 0, 0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
+          [$this->getSpecialNotices([1, 1, 1, 1, 1, 1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
+          [$this->getSpecialNotices([0, 1, 1, 1, 1, 1]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
+          [$this->getSpecialNotices([1, 0, 0, 0, 0, 0]), $this->getAuthorisationsForTestingMot(AuthorisationForTestingMotStatusCode::SUSPENDED), false],
+          [$this->getSpecialNotices([0, 0, 0, 0, 0, 0]), [], false],
         ];
     }
 
@@ -64,8 +64,8 @@ class OverdueSpecialNoticeAssertionTest extends \PHPUnit_Framework_TestCase
         $authorisationsForTestingMot = [];
         foreach (VehicleClassCode::getAll() as $code) {
             $authorisationsForTestingMot[] = [
-                "vehicleClassCode" => $code,
-                "statusCode" => $statusCode
+                'vehicleClassCode' => $code,
+                'statusCode' => $statusCode,
             ];
         }
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NotificationApi\Service;
-
 
 use DvsaCommon\Enum\RoleCode;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
@@ -13,10 +11,10 @@ use NotificationApi\Dto\Notification;
 
 class UserOrganisationNotificationService
 {
-
     /**
      * If there is no person at site/organisation that can recieve the notification, here is the mapping of roles
-     * that can be used instead
+     * that can be used instead.
+     *
      * @var array
      */
     public static $notifyIfOriginalRecieverRoleIsNotPresent = [
@@ -35,36 +33,38 @@ class UserOrganisationNotificationService
 
     /**
      * UserOrganisationNotificationService constructor.
-     * @param NotificationService $notificationService
+     *
+     * @param NotificationService                $notificationService
      * @param PositionRemovalNotificationService $positionRemovalNotificationService
      */
     public function __construct(
         NotificationService $notificationService,
         PositionRemovalNotificationService $positionRemovalNotificationService
-    )
-    {
+    ) {
         $this->notificationService = $notificationService;
         $this->positionRemovalNotificationService = $positionRemovalNotificationService;
     }
 
     /**
-     * Sends a notification to the user, about removing one of his roles at organisation
+     * Sends a notification to the user, about removing one of his roles at organisation.
+     *
      * @param OrganisationBusinessRoleMap $map
      */
     public function sendNotificationToUserAboutOrganisationRoleRemoval(OrganisationBusinessRoleMap $map)
     {
         $removalNotification = (new Notification())->setTemplate(Notification::TEMPLATE_ORGANISATION_POSITION_REMOVED)
             ->setRecipient($map->getPerson()->getId())
-            ->addField("positionName", $map->getOrganisationBusinessRole()->getFullName())
-            ->addField("organisationName", $map->getOrganisation()->getName())
-            ->addField("siteOrOrganisationId", $map->getOrganisation()->getAuthorisedExaminer()->getNumber())
+            ->addField('positionName', $map->getOrganisationBusinessRole()->getFullName())
+            ->addField('organisationName', $map->getOrganisation()->getName())
+            ->addField('siteOrOrganisationId', $map->getOrganisation()->getAuthorisedExaminer()->getNumber())
             ->toArray();
 
         $this->notificationService->add($removalNotification);
     }
 
     /**
-     * Sends a notification to the user, about removing one of his roles at site
+     * Sends a notification to the user, about removing one of his roles at site.
+     *
      * @param SiteBusinessRoleMap $roleMap
      */
     public function sendNotificationToUserAboutSiteRoleRemoval(SiteBusinessRoleMap $roleMap)
@@ -74,10 +74,10 @@ class UserOrganisationNotificationService
 
         $removalNotification = (new Notification())->setTemplate(Notification::TEMPLATE_SITE_POSITION_REMOVED)
             ->setRecipient($roleMap->getPerson()->getId())
-            ->addField("positionName", $roleMap->getSiteBusinessRole()->getName())
-            ->addField("siteName", $roleMap->getSite()->getName())
-            ->addField("siteOrOrganisationId", $roleMap->getSite()->getSiteNumber())
-            ->addField("contactText", $contactText)
+            ->addField('positionName', $roleMap->getSiteBusinessRole()->getName())
+            ->addField('siteName', $roleMap->getSite()->getName())
+            ->addField('siteOrOrganisationId', $roleMap->getSite()->getSiteNumber())
+            ->addField('contactText', $contactText)
             ->toArray();
 
         $this->notificationService->add($removalNotification);
@@ -95,19 +95,20 @@ class UserOrganisationNotificationService
     {
         $removalNotification = (new Notification())->setTemplate(Notification::TEMPLATE_USER_REMOVED_OWN_ROLE)
             ->setRecipient($recipentId)
-            ->addField("userName", $userName)
-            ->addField("nameSurname", $displayName)
-            ->addField("role", $role)
-            ->addField("orgOrSiteName", $orgOrSiteName)
-            ->addField("orgOrSiteNumber", $orgOrSiteNumber)
+            ->addField('userName', $userName)
+            ->addField('nameSurname', $displayName)
+            ->addField('role', $role)
+            ->addField('orgOrSiteName', $orgOrSiteName)
+            ->addField('orgOrSiteNumber', $orgOrSiteNumber)
             ->toArray();
 
         $this->notificationService->add($removalNotification);
     }
 
     /**
-     * Sends a notification to users organisation, when user disassociates his own role
-     * @param Person $person
+     * Sends a notification to users organisation, when user disassociates his own role.
+     *
+     * @param Person                      $person
      * @param OrganisationBusinessRoleMap $organisationBusinessRoleMap
      */
     public function sendNotificationToOrganisationAboutRoleRemoval(Person $person, OrganisationBusinessRoleMap $organisationBusinessRoleMap)
@@ -119,12 +120,12 @@ class UserOrganisationNotificationService
             $organisationBusinessRoleMap->getPerson()->getDisplayName(),
             $organisationBusinessRoleMap->getOrganisationBusinessRole()->getRole()->getName(),
             $organisationBusinessRoleMap->getOrganisation()->getName(),
-            is_null($ae) ? "" : $ae->getNumber()
+            is_null($ae) ? '' : $ae->getNumber()
         );
     }
 
     /**
-     * @param Person $recipient
+     * @param Person              $recipient
      * @param SiteBusinessRoleMap $siteBusinessRoleMap
      */
     public function sendNotificationToSiteAboutRoleRemoval(Person $recipient, SiteBusinessRoleMap $siteBusinessRoleMap)
@@ -141,6 +142,7 @@ class UserOrganisationNotificationService
 
     /**
      * @param OrganisationBusinessRoleMap $position
+     *
      * @throws NotFoundException
      */
     public function notifyOrganisationAboutRoleRemoval(OrganisationBusinessRoleMap $position)
@@ -150,13 +152,14 @@ class UserOrganisationNotificationService
             $position->getOrganisationBusinessRole()->getRole()->getCode(),
             $position->getOrganisation()->getAuthorisedExaminer()
         );
-        if(!is_null($recipient)){
+        if (!is_null($recipient)) {
             $this->sendNotificationToOrganisationAboutRoleRemoval($recipient, $position);
         }
     }
 
     /**
      * @param SiteBusinessRoleMap $position
+     *
      * @throws NotFoundException
      */
     public function notifySiteAboutRoleRemoval(SiteBusinessRoleMap $position)
@@ -173,8 +176,9 @@ class UserOrganisationNotificationService
 
     /**
      * @param OrganisationBusinessRoleMap[]|SiteBusinessRoleMap[] $positions
-     * @param string $roleCode
-     * @param AuthorisationForAuthorisedExaminer $authorisedExaminer
+     * @param string                                              $roleCode
+     * @param AuthorisationForAuthorisedExaminer                  $authorisedExaminer
+     *
      * @return \DvsaEntities\Entity\Person[]
      */
     protected function getPersonToSendNotificationTo($positions, $roleCode, $authorisedExaminer)
@@ -183,54 +187,59 @@ class UserOrganisationNotificationService
         $person = $this->getPersonWithRole($positions, $personToNotifyRoleCode);
 
         $otherPersonToNotifyRoleCode = $this->checkIfWeCanNotifySomeoneElse($personToNotifyRoleCode);
-        if(is_null($person) && !empty($otherPersonToNotifyRoleCode)){
+        if (is_null($person) && !empty($otherPersonToNotifyRoleCode)) {
             $person = $this->getPersonWithRole($positions, $personToNotifyRoleCode);
         }
 
-        if(is_null($person)
+        if (is_null($person)
             && !is_null($authorisedExaminer)
             && ($this->isPersonToNotifyAuthorisedManager($personToNotifyRoleCode)
             || $this->isPersonToNotifyAuthorisedManager($otherPersonToNotifyRoleCode))
-        ){
+        ) {
             $aedm = $authorisedExaminer->getDesignatedManager();
             if (!is_null($aedm)) {
                 $person = $aedm;
             }
         }
+
         return $person;
     }
 
     /**
-     * Decides what role shoud recieve the notification
+     * Decides what role shoud recieve the notification.
+     *
      * @param $roleCode
+     *
      * @return array
      */
     protected function getPersonsRoleCodeToNotify($roleCode)
     {
         switch ($roleCode) {
-            case (RoleCode::AUTHORISED_EXAMINER_DELEGATE) :
-            case (RoleCode::AUTHORISED_EXAMINER_PRINCIPAL) :
-            case (RoleCode::AUTHORISED_EXAMINER) :
-            case (RoleCode::SITE_MANAGER) : {
+            case RoleCode::AUTHORISED_EXAMINER_DELEGATE:
+            case RoleCode::AUTHORISED_EXAMINER_PRINCIPAL:
+            case RoleCode::AUTHORISED_EXAMINER:
+            case RoleCode::SITE_MANAGER: {
                 return RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER;
             }
-            case (RoleCode::TESTER) :
-            case (RoleCode::SITE_ADMIN) : {
+            case RoleCode::TESTER:
+            case RoleCode::SITE_ADMIN: {
                 return RoleCode::SITE_MANAGER;
             }
         }
     }
 
     /**
-     * Iterates over positions in site/organisation returns persons with desired roles
+     * Iterates over positions in site/organisation returns persons with desired roles.
+     *
      * @param OrganisationBusinessRoleMap[]|SiteBusinessRoleMap[] $positions
      * @param $roleName
+     *
      * @return Person
      */
     protected function getPersonWithRole($positions, $roleName)
     {
         foreach ($positions as $position) {
-            if(($position instanceof OrganisationBusinessRoleMap
+            if (($position instanceof OrganisationBusinessRoleMap
                 && $position->getOrganisationBusinessRole()->getRole()->getCode() == $roleName)
                 || ($position instanceof SiteBusinessRoleMap
                 && $position->getSiteBusinessRole()->getCode() == $roleName)) {
@@ -241,26 +250,30 @@ class UserOrganisationNotificationService
 
     /**
      * If there are no persons with desired role in organisation/site that can recieve notification,
-     * we try to search for other role to forward the notification
+     * we try to search for other role to forward the notification.
+     *
      * @param $roleCode
+     *
      * @return string|bool
      */
     protected function checkIfWeCanNotifySomeoneElse($roleCode)
     {
-        if(isset(self::$notifyIfOriginalRecieverRoleIsNotPresent[$roleCode])){
+        if (isset(self::$notifyIfOriginalRecieverRoleIsNotPresent[$roleCode])) {
             return self::$notifyIfOriginalRecieverRoleIsNotPresent[$roleCode];
         }
+
         return false;
     }
 
     /**
-     * Checks if given role code is in fact AUTHORISED_EXAMINER_DESIGNATED_MANAGER
+     * Checks if given role code is in fact AUTHORISED_EXAMINER_DESIGNATED_MANAGER.
+     *
      * @param string $personToNotifyRoleCode
+     *
      * @return bool
      */
     protected function isPersonToNotifyAuthorisedManager($personToNotifyRoleCode)
     {
         return $personToNotifyRoleCode == RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER;
     }
-
 }

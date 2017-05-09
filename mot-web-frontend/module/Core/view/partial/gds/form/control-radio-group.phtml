@@ -1,6 +1,6 @@
 <div class="form-group <?php echo !empty($errorMessage) ? 'has-error' : ''; ?> <?php echo !empty($divModifier) ? $this->escapeHtmlAttr($divModifier) : ''; ?>">
-    <fieldset class="<?php echo (!empty($inputModifier) ? $this->escapeHtmlAttr($inputModifier) : ''); ?>">
-        <legend class="form-label<?php echo (!empty($labelModifier) ? $this->escapeHtmlAttr($labelModifier) : ''); ?>">
+    <fieldset class="<?php echo !empty($inputModifier) ? $this->escapeHtmlAttr($inputModifier) : ''; ?>">
+        <legend class="form-label<?php echo !empty($labelModifier) ? $this->escapeHtmlAttr($labelModifier) : ''; ?>">
             <?php echo $this->escapeHtml($label); ?>
             <?php if (!empty($errorMessage)): ?>
                 <span class="validation-message"><?php echo $this->escapeHtml($errorMessage); ?></span>

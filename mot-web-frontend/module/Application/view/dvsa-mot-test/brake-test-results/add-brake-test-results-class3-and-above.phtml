@@ -4,10 +4,10 @@ use DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
 /**
- * @var int $motTestNumber
- * @var \DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel $brakeTestResult
+ * @var int
+ * @var \DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel     $brakeTestResult
  * @var \DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper $brakeTestConfiguration
- * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle                 $vehicle
  */
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
@@ -16,7 +16,7 @@ $pageSubTitle = $motTestTitleViewModel->getTitle($motTest);
 $title = 'Add brake test results';
 $this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $pageSubTitle);
-$this->layout()->setVariable('pageTitle', "Add brake test results");
+$this->layout()->setVariable('pageTitle', 'Add brake test results');
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(
@@ -58,7 +58,7 @@ if ($vehicle) {
                         [
                             'id' => BrakeTestResultClass3AndAboveViewModel::ID_SERVICE_1_EFFICIENCY,
                             'value' => $brakeTestResult->getServiceBrake1Efficiency(),
-                            'label' => 'Service brake' . ($brakeTestConfiguration->hasTwoServiceBrakes(
+                            'label' => 'Service brake'.($brakeTestConfiguration->hasTwoServiceBrakes(
                                 ) ? ' control 1' : ''),
                         ]
                     ); ?>

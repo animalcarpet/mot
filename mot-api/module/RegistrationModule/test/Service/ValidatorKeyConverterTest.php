@@ -35,28 +35,28 @@ class ValidatorKeyConverterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'DvsaCommon\InputFilter\Registration\DetailsInputFilter' => [
-                'firstName'              => 'Joe',
-                'middleName'             => 'Light',
-                'lastName'               => 'Brown',
-                'emailAddress'           => 'validatorkeyconvertertest@' . EmailAddressValidator::TEST_DOMAIN,
-                'reTypeYourEmailAddress' => 'validatorkeyconvertertest@' . EmailAddressValidator::TEST_DOMAIN,
+                'firstName' => 'Joe',
+                'middleName' => 'Light',
+                'lastName' => 'Brown',
+                'emailAddress' => 'validatorkeyconvertertest@'.EmailAddressValidator::TEST_DOMAIN,
+                'reTypeYourEmailAddress' => 'validatorkeyconvertertest@'.EmailAddressValidator::TEST_DOMAIN,
             ],
             'DvsaCommon\InputFilter\Registration\AddressInputFilter' => [
                 'addressLine1' => 'Center',
-                'townOrCity'   => 'Bristol',
-                'postCode'     => 'BS1 1SB',
+                'townOrCity' => 'Bristol',
+                'postCode' => 'BS1 1SB',
             ],
             'DvsaCommon\InputFilter\Registration\PasswordInputFilter' => [
-                'createAPassword'    => 'Password1',
+                'createAPassword' => 'Password1',
                 'reTypeYourPassword' => 'Password1',
             ],
             'DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter' => [
                 'selectAQuestionToAnswerFirst' => 1,
-                'yourAnswerFirst'              => 'first question answer',
+                'yourAnswerFirst' => 'first question answer',
             ],
             'DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter' => [
                 'selectAQuestionToAnswerSecond' => 2,
-                'yourAnswerSecond'              => 'second question answer',
+                'yourAnswerSecond' => 'second question answer',
             ],
         ];
     }
@@ -65,28 +65,28 @@ class ValidatorKeyConverterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'stepDetails' => [
-                'firstName'              => 'Joe',
-                'middleName'             => 'Light',
-                'lastName'               => 'Brown',
-                'emailAddress'           => 'validatorkeyconvertertest@' . EmailAddressValidator::TEST_DOMAIN,
-                'reTypeYourEmailAddress' => 'validatorkeyconvertertest@' . EmailAddressValidator::TEST_DOMAIN,
+                'firstName' => 'Joe',
+                'middleName' => 'Light',
+                'lastName' => 'Brown',
+                'emailAddress' => 'validatorkeyconvertertest@'.EmailAddressValidator::TEST_DOMAIN,
+                'reTypeYourEmailAddress' => 'validatorkeyconvertertest@'.EmailAddressValidator::TEST_DOMAIN,
             ],
             'stepAddress' => [
                 'addressLine1' => 'Center',
-                'townOrCity'   => 'Bristol',
-                'postCode'     => 'BS1 1SB',
+                'townOrCity' => 'Bristol',
+                'postCode' => 'BS1 1SB',
             ],
             'stepPassword' => [
-                'createAPassword'    => 'Password1',
+                'createAPassword' => 'Password1',
                 'reTypeYourPassword' => 'Password1',
             ],
             'stepSecurityQuestionFirst' => [
                 'selectAQuestionToAnswerFirst' => 1,
-                'yourAnswerFirst'              => 'first question answer',
+                'yourAnswerFirst' => 'first question answer',
             ],
             'stepSecurityQuestionSecond' => [
                 'selectAQuestionToAnswerSecond' => 2,
-                'yourAnswerSecond'              => 'second question answer',
+                'yourAnswerSecond' => 'second question answer',
             ],
         ];
     }

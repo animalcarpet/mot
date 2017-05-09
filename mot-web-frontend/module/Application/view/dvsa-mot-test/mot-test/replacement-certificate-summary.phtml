@@ -4,20 +4,19 @@ use DvsaCommon\UrlBuilder\UrlBuilderWeb;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
 /**
- * @var MotTest $motTest
+ * @var MotTest
  * @var DvsaVehicleViewModel $vehicleViewModel
- * @var integer    $draftId
- * @var boolean    $isOriginalTester
- * @var boolean    $isAdmin
- * @var array      $differentTesterReasons
+ * @var int                  $draftId
+ * @var bool                 $isOriginalTester
+ * @var bool                 $isAdmin
+ * @var array                $differentTesterReasons
  */
-
 $motTest = $this->motTest;
 $vehicleViewModel = $this->vehicleViewModel;
 $siteDto = $this->siteDto;
 $draftId = $this->draftId;
-$isOriginalTester = (boolean)$this->isOriginalTester;
-$isAdmin = (boolean)$this->isAdmin;
+$isOriginalTester = (bool) $this->isOriginalTester;
+$isAdmin = (bool) $this->isAdmin;
 $differentTesterReasons = $this->differentTesterReasons ?: [];
 
 $title = 'Replacement certificate review';
@@ -50,11 +49,11 @@ if ($motTest instanceof MotTest) :
     echo $this->partial(
         'partials/mot-test-summary/test-summary',
         [
-            'motTest'         => $motTest,
-            'siteDto'         => $siteDto,
+            'motTest' => $motTest,
+            'siteDto' => $siteDto,
             'vehicle' => $vehicleViewModel,
             'odometerReading' => $odometerReading,
-            'expiryDate' => $expiryDate
+            'expiryDate' => $expiryDate,
         ]
     );
     ?>
@@ -76,8 +75,8 @@ if ($motTest instanceof MotTest) :
                     echo $this->partial(
                         'selectElement',
                         [
-                            'id'       => 'reasonForDifferentTester',
-                            'options'  => $differentTesterReasons,
+                            'id' => 'reasonForDifferentTester',
+                            'options' => $differentTesterReasons,
                             'required' => true,
                         ]
                     );
@@ -93,16 +92,15 @@ if ($motTest instanceof MotTest) :
                     [
                         'canTestWithoutOpt' => $this->canTestWithoutOtp(),
                         'errorMessage' => $this->otpErrorMessage,
-                        'shortErrorMessage' => $this->otpErrorShortMessage
+                        'shortErrorMessage' => $this->otpErrorShortMessage,
                     ]
                 );
 
-                if ($this->canTestWithoutOtp())
-                {
+                if ($this->canTestWithoutOtp()) {
                     echo $this->partial(
                         '2faDeclaration',
                         [
-                            'declarationMessage' => 'By saving this replacement certificate you confirm that the changes you have made are in line with DVSA conditions for MOT testing.'
+                            'declarationMessage' => 'By saving this replacement certificate you confirm that the changes you have made are in line with DVSA conditions for MOT testing.',
                         ]
                     );
                 }

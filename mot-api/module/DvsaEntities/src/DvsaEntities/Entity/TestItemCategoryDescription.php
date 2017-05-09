@@ -7,6 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
  * Translated test item category name and description.
+ *
  * @ORM\Table(name="ti_category_language_content_map")
  * @ORM\Entity(readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
@@ -59,6 +60,7 @@ class TestItemCategoryDescription extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -72,11 +74,13 @@ class TestItemCategoryDescription extends Entity
 
     /**
      * @param string $description
+     *
      * @return $this
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -96,6 +100,7 @@ class TestItemCategoryDescription extends Entity
     public function setLanguage($language)
     {
         $this->language = $language;
+
         return $this;
     }
 

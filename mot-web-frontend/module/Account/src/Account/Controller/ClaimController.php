@@ -10,12 +10,10 @@ use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
 use Account\ViewModel\ReviewViewModel;
 
 /**
- * Class ClaimController
- * @package Account\Controller
+ * Class ClaimController.
  */
 class ClaimController extends AbstractAuthActionController
 {
@@ -58,7 +56,7 @@ class ClaimController extends AbstractAuthActionController
         $this->claimValidator = $claimValidator;
         $this->motIdentityProvider = $motIdentityProvider;
     }
-    
+
     public function resetAction()
     {
         $this->claimAccountService->clearSession();
@@ -84,7 +82,7 @@ class ClaimController extends AbstractAuthActionController
         }
 
         $stepData = $this->getStepData(self::STEP_1_NAME);
-        
+
         $stepData['messages'] = $this->claimValidator->getMessages();
         $stepData['summaryMessages'] = $this->getSummaryMessages();
 
@@ -208,9 +206,10 @@ class ClaimController extends AbstractAuthActionController
     }
 
     /**
-     * To assemble required parameters mainly to be passed to the view model
+     * To assemble required parameters mainly to be passed to the view model.
      *
      * @param string $stepName e.g. self::STEP_1_NAME | self::STEP_2_NAME | self::STEP_3_NAME
+     *
      * @return array
      */
     private function getStepData($stepName)
@@ -235,7 +234,7 @@ class ClaimController extends AbstractAuthActionController
             self::STEP_1_NAME,
             self::STEP_2_NAME,
             self::STEP_3_NAME,
-            self::STEP_4_NAME
+            self::STEP_4_NAME,
         ];
 
         $step = null;
@@ -253,7 +252,7 @@ class ClaimController extends AbstractAuthActionController
     }
 
     /**
-     * To redirect to different steps
+     * To redirect to different steps.
      *
      * @param string $stepName the method name without "Action" e.g.
      *                         to get to generatePinAction we will pass generatePin
@@ -277,7 +276,7 @@ class ClaimController extends AbstractAuthActionController
 
     /**
      * A workaround for our inconsistent validation messages to keep the correct format in the main validator
-     * Claim account will be deprecated or we need to improve at least its validation summary messages
+     * Claim account will be deprecated or we need to improve at least its validation summary messages.
      *
      * @return array
      */
@@ -292,16 +291,16 @@ class ClaimController extends AbstractAuthActionController
             foreach ($messages as $validator => $message) {
                 switch ($fieldName) {
                     case self::PASSWORD_FIELD:
-                        $message = self::NEW_PASSWORD_ERROR_MESSAGE_FIELD_NAME . $message;
+                        $message = self::NEW_PASSWORD_ERROR_MESSAGE_FIELD_NAME.$message;
                         break;
                     case self::CONFIRM_PASSWORD_FIELD:
-                        $message = self::RETYPE_YOUR_NEW_PASSWORD_ERROR_MESSAGE__FIELD_NAME . $message;
+                        $message = self::RETYPE_YOUR_NEW_PASSWORD_ERROR_MESSAGE__FIELD_NAME.$message;
                         break;
                     case self::FIRST_MEMORABLE_ANSWER_FIELD:
-                        $message = self::FIRST_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME . $message;
+                        $message = self::FIRST_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME.$message;
                         break;
                     case self::SECOND_MEMORABLE_ANSWER_FIELD:
-                        $message = self::SECOND_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME . $message;
+                        $message = self::SECOND_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME.$message;
                         break;
                 }
                 $errorsSummary[$fieldName][$validator] = $message;
@@ -309,7 +308,6 @@ class ClaimController extends AbstractAuthActionController
         }
 
         return $errorsSummary;
-
     }
 
     /**
@@ -317,6 +315,7 @@ class ClaimController extends AbstractAuthActionController
      * append it to the $steData variable and return it.
      *
      * @param array $stepData
+     *
      * @return array
      */
     private function getReusedPasswordError(array $stepData)
@@ -326,6 +325,7 @@ class ClaimController extends AbstractAuthActionController
             $summaryMsgFromFlashMessenger = array_map('nl2br', $this->flashMessenger()->getErrorMessages());
             $stepData['messages']['password'] = array_merge($stepData['messages'], $msgFromFlashMessenger);
             $stepData['summaryMessages']['password'] = array_merge($stepData['summaryMessages'], $summaryMsgFromFlashMessenger);
+
             return $stepData;
         }
 

@@ -5,7 +5,7 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 
 /**
- * @var int                                         $motTestNumber
+ * @var int
  * @var int                                         $selectedReasonId
  * @var \DvsaCommon\Dto\Common\ReasonForCancelDto[] $reasonsForCancel
  * @var \DvsaCommon\Dto\Common\ReasonForCancelDto   $reasons
@@ -42,7 +42,7 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
     <input type="hidden" name="status" value="<?php echo MotTestStatusName::ABORTED; ?>">
     <?php
     echo $this->csrfToken();
-    echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
+    echo $this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '';
     ?>
     <fieldset>
         <legend>Please select a reason for cancelling this test</legend>
@@ -79,9 +79,9 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
                                 echo $this->partial(
                                     '2faDeclaration',
                                     [
-                                        'declarationMessage' => 'By cancelling this test you confirm that you ' .
-                                            'have carried the MOT test to the point of the cancellation in line ' .
-                                            'with DVSA conditions for MOT testing.'
+                                        'declarationMessage' => 'By cancelling this test you confirm that you '.
+                                            'have carried the MOT test to the point of the cancellation in line '.
+                                            'with DVSA conditions for MOT testing.',
                                     ]
                                 );
                             }
@@ -92,7 +92,7 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
                                 [
                                     'canTestWithoutOpt' => $this->canTestWithoutOtp(),
                                     'errorMessage' => $this->otpErrorMessage,
-                                    'shortErrorMessage' => $this->otpErrorShortMessage
+                                    'shortErrorMessage' => $this->otpErrorShortMessage,
                                 ]
                             );
                             ?>
@@ -131,4 +131,3 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
     toggleAbandonedInfo('[data-abandoned=1]');
 }());
 <?php $this->inlineScript()->captureEnd();
-

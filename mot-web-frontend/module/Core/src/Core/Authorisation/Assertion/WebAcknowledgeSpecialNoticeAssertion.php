@@ -34,5 +34,4 @@ class WebAcknowledgeSpecialNoticeAssertion
     {
         $this->assertion->assertGranted();
     }
-
 }

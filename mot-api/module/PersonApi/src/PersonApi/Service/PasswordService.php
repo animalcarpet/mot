@@ -12,11 +12,11 @@ use DvsaCommonApi\Service\Validator\ErrorSchema;
 
 class PasswordService
 {
-    const MSG_NOT_AUTHORISED = "You are not authorised to access this resource";
+    const MSG_NOT_AUTHORISED = 'You are not authorised to access this resource';
 
-    /** @var ChangePasswordValidator  */
+    /** @var ChangePasswordValidator */
     private $changePasswordValidator;
-    /** @var MotIdentityProviderInterface  */
+    /** @var MotIdentityProviderInterface */
     private $identityProvider;
     /** @var OpenAmIdentityService */
     private $openAmIdentityService;
@@ -25,8 +25,7 @@ class PasswordService
         ChangePasswordValidator $changePasswordValidator,
         MotIdentityProviderInterface $identityProvider,
         OpenAmIdentityService $openAmIdentityService
-    )
-    {
+    ) {
         $this->changePasswordValidator = $changePasswordValidator;
         $this->identityProvider = $identityProvider;
         $this->openAmIdentityService = $openAmIdentityService;

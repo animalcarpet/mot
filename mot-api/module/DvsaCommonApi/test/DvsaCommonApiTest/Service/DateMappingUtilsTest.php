@@ -1,22 +1,20 @@
 <?php
+
 namespace DvsaCommonApiTest\Service;
 
 use PHPUnit_Framework_TestCase;
-
-use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonApi\Service\DateMappingUtils;
 
 /**
- * Class DateMappingUtilsTest
+ * Class DateMappingUtilsTest.
  */
 class DateMappingUtilsTest extends PHPUnit_Framework_TestCase
 {
-
     public function testExtractDateTimeOrUnsetField_set()
     {
         $data = ['someOtherField' => 'whatevs', 'dateThatIsSet' => new \DateTime()];
 
-        DateMappingUtils::extractDateTimeOrUnsetField($data, "dateThatIsSet");
+        DateMappingUtils::extractDateTimeOrUnsetField($data, 'dateThatIsSet');
 
         $this->assertInternalType('string', $data['dateThatIsSet']);
     }
@@ -25,7 +23,7 @@ class DateMappingUtilsTest extends PHPUnit_Framework_TestCase
     {
         $data = ['someOtherField' => 'whatevs', 'emptyDate' => null];
 
-        DateMappingUtils::extractDateTimeOrUnsetField($data, "emptyDate");
+        DateMappingUtils::extractDateTimeOrUnsetField($data, 'emptyDate');
 
         $this->assertFalse(array_key_exists('emptyDate', $data));
     }
@@ -34,7 +32,7 @@ class DateMappingUtilsTest extends PHPUnit_Framework_TestCase
     {
         $data = ['someOtherField' => 'whatevs'];
 
-        DateMappingUtils::extractDateTimeOrUnsetField($data, "emptyDate");
+        DateMappingUtils::extractDateTimeOrUnsetField($data, 'emptyDate');
 
         $this->assertFalse(array_key_exists('emptyDate', $data));
     }
@@ -58,7 +56,7 @@ class DateMappingUtilsTest extends PHPUnit_Framework_TestCase
      */
     public function testExtractDateObject_string()
     {
-        $result = DateMappingUtils::extractDateObject("1999-09-09");
+        $result = DateMappingUtils::extractDateObject('1999-09-09');
     }
 
     public function testExtractDateObject_date()

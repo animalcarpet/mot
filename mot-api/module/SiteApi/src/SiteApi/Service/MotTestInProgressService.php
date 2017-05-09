@@ -11,9 +11,7 @@ use DvsaEntities\Repository\MotTestRepository;
 use SiteApi\Service\Mapper\MotTestInProgressMapper;
 
 /**
- * Class MotTestInProgressService
- *
- * @package SiteApi\Service
+ * Class MotTestInProgressService.
  */
 class MotTestInProgressService implements TransactionAwareInterface
 {

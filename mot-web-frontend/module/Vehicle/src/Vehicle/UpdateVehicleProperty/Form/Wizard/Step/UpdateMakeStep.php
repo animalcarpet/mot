@@ -1,13 +1,11 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form\Wizard\Step;
 
 use Core\Action\RedirectToRoute;
 use Core\FormWizard\LayoutData;
 use Core\FormWizard\WizardContextInterface;
 use Core\Routing\VehicleRouteList;
-use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\ApiClient\Vehicle\Dictionary\MakeApiResource;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
@@ -23,17 +21,17 @@ use Zend\View\Helper\Url;
 
 class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
 {
-    const NAME = "make";
-    const PAGE_TITLE = "Change make and model";
+    const NAME = 'make';
+    const PAGE_TITLE = 'Change make and model';
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's make?";
-    const PAGE_SUBTITLE_UPDATE_DURING_TEST = "Change vehicle record";
-    const PARTIAL_EDIT_MAKE = "partials/edit-make.phtml";
+    const PAGE_SUBTITLE_UPDATE_DURING_TEST = 'Change vehicle record';
+    const PARTIAL_EDIT_MAKE = 'partials/edit-make.phtml';
 
     private $makeApiResource;
     private $breadcrumbsBuilder;
     private $tertiaryTitleBuilder;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     /**
@@ -46,8 +44,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
         MakeApiResource $makeApiResource,
         VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder,
         StartTestChangeService $startTestChangeService
-    )
-    {
+    ) {
         parent::__construct($url);
 
         $this->makeApiResource = $makeApiResource;
@@ -64,6 +61,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
     public function setContext(WizardContextInterface $context)
     {
         TypeCheck::assertInstance($context, UpdateVehicleContext::class);
+
         return parent::setContext($context);
     }
 
@@ -74,13 +72,15 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
 
     /**
      * @param MakeForm $form
+     *
      * @return string
      */
     protected function saveData(Form $form, $formUuid)
     {
         TypeCheck::assertInstance($form, MakeForm::class);
 
-        $data = [$this->getName() => array_merge($form->getData(), ["name" => $form->getSelectedMakeName()])];
+        $data = [$this->getName() => array_merge($form->getData(), ['name' => $form->getSelectedMakeName()])];
+
         return $this->formContainer->store($this->getSessionStoreKey(), $data, $formUuid);
     }
 
@@ -97,14 +97,14 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
         if ($this->context->isUpdateVehicleDuringTest()) {
             return new RedirectToRoute(
                 VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_MAKE_AND_MODEL,
-                ["id" => $this->context->getObfuscatedVehicleId(), "property" => self::NAME],
+                ['id' => $this->context->getObfuscatedVehicleId(), 'property' => self::NAME],
                 $queryParams
             );
         }
 
         return new RedirectToRoute(
             VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,
-            ["id" => $this->context->getObfuscatedVehicleId(), "property" => self::NAME],
+            ['id' => $this->context->getObfuscatedVehicleId(), 'property' => self::NAME],
             $queryParams
         );
     }
@@ -117,7 +117,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
         $layoutData = new LayoutData();
         $layoutData->setBreadcrumbs($breadcrumbs);
         $layoutData->setPageTitle($isUpdateUnderTest ? self::PAGE_TITLE_UPDATE_DURING_TEST : self::PAGE_TITLE);
-        $layoutData->setPageSubTitle($isUpdateUnderTest ? self::PAGE_SUBTITLE_UPDATE_DURING_TEST : "Vehicle");
+        $layoutData->setPageSubTitle($isUpdateUnderTest ? self::PAGE_SUBTITLE_UPDATE_DURING_TEST : 'Vehicle');
 
         return $layoutData;
     }
@@ -125,7 +125,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
     protected function createViewModel(Form $form, $formUuid)
     {
         $isUpdateUnderTest = $this->context->isUpdateVehicleDuringTest();
-        $formActionUrl = $this->getRoute(["formUuid" => $formUuid])->toString($this->url);
+        $formActionUrl = $this->getRoute(['formUuid' => $formUuid])->toString($this->url);
         $veBackUrl = $this->getBackUrl($formUuid);
         $underTestBackUrl = $this->startTestChangeService->underTestReturnUrl($this->context->getObfuscatedVehicleId(), self::NAME);
 
@@ -133,7 +133,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
 
         return (new UpdateVehiclePropertyViewModel())
             ->setForm($form)
-            ->setSubmitButtonText("Continue")
+            ->setSubmitButtonText('Continue')
             ->setPartial(self::PARTIAL_EDIT_MAKE)
             ->setBackUrl($isUpdateUnderTest ? $underTestBackUrl : $veBackUrl)
             ->setBackLinkText($this->getBackButtonText())
@@ -154,6 +154,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
 
             if ($makeIdFromSession == 'other') {
                 $makeNameFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_MAKE)['makeName'];
+
                 return [MakeForm::FIELD_MAKE_NAME => $makeIdFromSession, MakeForm::FIELD_OTHER_MAKE_NAME => $makeNameFromSession];
             }
 
@@ -165,7 +166,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
 
     protected function getBackRoute($formUuid = null)
     {
-        return new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL, ["id" => $this->context->getObfuscatedVehicleId()]);
+        return new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL, ['id' => $this->context->getObfuscatedVehicleId()]);
     }
 
     /**
@@ -193,10 +194,10 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
     private function getBackButtonText()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return "Back";
+            return 'Back';
         }
 
-        return "Cancel and return to vehicle";
+        return 'Cancel and return to vehicle';
     }
 
     private function getMakeId()

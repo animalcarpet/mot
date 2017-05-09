@@ -2,7 +2,6 @@
 
 namespace PersonApi\Factory\Controller;
 
-use PersonApi\Controller\PersonProfileRestrictedController;
 use PersonApi\Controller\PersonProfileUnrestrictedController;
 use UserApi\HelpDesk\Service\HelpDeskPersonService;
 use Zend\ServiceManager\FactoryInterface;
@@ -10,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonProfileUnrestrictedControllerFactory
+ * Class PersonProfileUnrestrictedControllerFactory.
  *
  * Generates the PersonProfileUnrestrictedController, injecting dependencies
  */

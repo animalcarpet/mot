@@ -2,14 +2,11 @@
 
 namespace PersonApiTest\Controller;
 
-use DvsaCommonTest\Bootstrap;
-use DvsaCommonTest\TestUtils\XMock;
-use Faker\Provider\nl_NL\Person;
 use PersonApi\Controller\PersonCurrentMotTestController;
 use PersonApi\Service\PersonService;
 
 /**
- * Unit tests for PersonController
+ * Unit tests for PersonController.
  */
 class PersonCurrentMotTestControllerTest extends AbstractPersonControllerTestCase
 {
@@ -43,7 +40,7 @@ class PersonCurrentMotTestControllerTest extends AbstractPersonControllerTestCas
 
         $this->mockPersonService->expects($this->once())
             ->method('getCurrentMotTestIdByPersonId')
-            ->will($this->returnValue(["inProgressTestNumber" => $motNumber]));
+            ->will($this->returnValue(['inProgressTestNumber' => $motNumber]));
 
         $viewModel = $this->controller->get(1);
         $response = $this->controller->getResponse();
@@ -58,7 +55,7 @@ class PersonCurrentMotTestControllerTest extends AbstractPersonControllerTestCas
 
         $this->mockPersonService->expects($this->once())
             ->method('getCurrentMotTestIdByPersonId')
-            ->will($this->returnValue(["inProgressTestNumber" => $motNumber]));
+            ->will($this->returnValue(['inProgressTestNumber' => $motNumber]));
 
         $viewModel = $this->controller->get(1);
         $response = $this->controller->getResponse();

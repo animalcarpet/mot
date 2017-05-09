@@ -14,7 +14,7 @@ class ContactDetailsStep extends AbstractRegistrationStep
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "CONTACT_DETAILS";
+    const STEP_ID = 'CONTACT_DETAILS';
 
     /**
      * @var string
@@ -75,12 +75,12 @@ class ContactDetailsStep extends AbstractRegistrationStep
     public function toArray()
     {
         return [
-            ContactDetailsInputFilter::FIELD_ADDRESS_1    => $this->getAddress1(),
-            ContactDetailsInputFilter::FIELD_ADDRESS_2    => $this->getAddress2(),
-            ContactDetailsInputFilter::FIELD_ADDRESS_3    => $this->getAddress3(),
+            ContactDetailsInputFilter::FIELD_ADDRESS_1 => $this->getAddress1(),
+            ContactDetailsInputFilter::FIELD_ADDRESS_2 => $this->getAddress2(),
+            ContactDetailsInputFilter::FIELD_ADDRESS_3 => $this->getAddress3(),
             ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => $this->getTownOrCity(),
-            ContactDetailsInputFilter::FIELD_POSTCODE     => $this->getPostcode(),
-            ContactDetailsInputFilter::FIELD_PHONE        => $this->getPhone(),
+            ContactDetailsInputFilter::FIELD_POSTCODE => $this->getPostcode(),
+            ContactDetailsInputFilter::FIELD_PHONE => $this->getPhone(),
         ];
     }
 

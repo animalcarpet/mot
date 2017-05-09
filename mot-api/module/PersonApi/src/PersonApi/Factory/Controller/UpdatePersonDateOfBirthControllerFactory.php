@@ -11,14 +11,15 @@ use Zend\ServiceManager\ServiceManager;
 class UpdatePersonDateOfBirthControllerFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return UpdatePersonDateOfBirthController
      */
     public function createService(ServiceLocatorInterface $controllerManager)
     {
-        /** @var ServiceManager  $serviceLocator */
+        /** @var ServiceManager $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
         /** @var PersonDateOfBirthService $personDayOfBirthService */
         $personDayOfBirthService = $serviceLocator->get(PersonDateOfBirthService::class);

@@ -9,10 +9,9 @@ use DvsaCommonApi\Model\ApiResponse;
 
 /**
  * This controller allow us to create/validate a token to allow the user to reset his password.
- * For the moment only by mail so the user must have specified his email before
+ * For the moment only by mail so the user must have specified his email before.
  *
  * Class PasswordResetController
- * @package AccountApi\Controller
  */
 class PasswordResetController extends AbstractDvsaRestfulController
 {
@@ -32,7 +31,7 @@ class PasswordResetController extends AbstractDvsaRestfulController
     }
 
     /**
-     * This function is going to generate a token and send the link to reset his password to the user
+     * This function is going to generate a token and send the link to reset his password to the user.
      *
      * @param array $data
      *
@@ -47,11 +46,12 @@ class PasswordResetController extends AbstractDvsaRestfulController
     }
 
     /**
-     * This function validate if the token that the user use is valid
+     * This function validate if the token that the user use is valid.
      *
      * @param string $token
      *
      * @return \Zend\View\Model\JsonModel
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($token)

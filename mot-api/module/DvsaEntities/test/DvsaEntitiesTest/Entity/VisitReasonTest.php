@@ -6,13 +6,10 @@ use DvsaEntities\Entity\VisitReason;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class VisitReasonTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class VisitReasonTest.
  */
 class VisitReasonTest extends PHPUnit_Framework_TestCase
 {
-
     public function testInitialState()
     {
         $reasonForVisit = new VisitReason();

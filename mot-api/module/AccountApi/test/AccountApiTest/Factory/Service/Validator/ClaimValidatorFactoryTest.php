@@ -1,25 +1,17 @@
 <?php
+
 namespace AccountApiTest\Factory\Service\Validator;
 
-use AccountApi\Factory\Service\ClaimServiceFactory;
-use AccountApi\Factory\Service\TokenServiceFactory;
 use AccountApi\Factory\Service\Validator\ClaimValidatorFactory;
-use AccountApi\Service\ClaimService;
-use AccountApi\Service\OpenAmIdentityService;
 use AccountApi\Service\SecurityQuestionService;
 use AccountApi\Service\Validator\ClaimValidator;
 use Doctrine\ORM\EntityManager;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
-use DvsaEventApi\Service\EventService;
-use Zend\Log\LoggerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ClaimValidatorFactoryTest
- * @package AccountApiTest\Factory\Service\Validator
+ * Class ClaimValidatorFactoryTest.
  */
 class ClaimValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {

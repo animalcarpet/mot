@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\UpdateVehicleProperty\Form;
 
 use DvsaCommon\Dto\Vehicle\MakeDto;
@@ -32,7 +33,7 @@ class MakeFormTest extends \PHPUnit_Framework_TestCase
     {
         $formData = [
             MakeForm::FIELD_MAKE_NAME => 1,
-            MakeForm::FIELD_OTHER_MAKE_NAME => "other model"
+            MakeForm::FIELD_OTHER_MAKE_NAME => 'other model',
         ];
 
         $this->form->setData($formData);
@@ -46,14 +47,14 @@ class MakeFormTest extends \PHPUnit_Framework_TestCase
     {
         $formData = [
             MakeForm::FIELD_MAKE_NAME => 1,
-            MakeForm::FIELD_OTHER_MAKE_NAME => ""
+            MakeForm::FIELD_OTHER_MAKE_NAME => '',
         ];
 
         $this->form->setData($formData);
         $isValid = $this->form->isValid();
 
         $this->assertTrue($isValid);
-        $this->assertEquals("Audi", $this->form->getSelectedMakeName());
+        $this->assertEquals('Audi', $this->form->getSelectedMakeName());
     }
 
     public function validData()
@@ -62,20 +63,20 @@ class MakeFormTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     MakeForm::FIELD_MAKE_NAME => 1,
-                    MakeForm::FIELD_OTHER_MAKE_NAME => ""
-                ]
+                    MakeForm::FIELD_OTHER_MAKE_NAME => '',
+                ],
             ],
             [
                 [
                     MakeForm::FIELD_MAKE_NAME => MakeForm::OTHER_ID,
-                    MakeForm::FIELD_OTHER_MAKE_NAME => "other model"
-                ]
+                    MakeForm::FIELD_OTHER_MAKE_NAME => 'other model',
+                ],
             ],
             [
                 [
                     MakeForm::FIELD_MAKE_NAME => MakeForm::OTHER_ID,
-                    MakeForm::FIELD_OTHER_MAKE_NAME => $this->generateOtherModelName(MakeForm::MAX_OTHER_MAKE_LENGTH)
-                ]
+                    MakeForm::FIELD_OTHER_MAKE_NAME => $this->generateOtherModelName(MakeForm::MAX_OTHER_MAKE_LENGTH),
+                ],
             ],
         ];
     }
@@ -98,26 +99,26 @@ class MakeFormTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     MakeForm::FIELD_MAKE_NAME => 999,
-                    MakeForm::FIELD_OTHER_MAKE_NAME => ""
-                ]
+                    MakeForm::FIELD_OTHER_MAKE_NAME => '',
+                ],
             ],
             [
                 [
                     MakeForm::FIELD_MAKE_NAME => MakeForm::OTHER_ID,
-                    MakeForm::FIELD_OTHER_MAKE_NAME => ""
-                ]
+                    MakeForm::FIELD_OTHER_MAKE_NAME => '',
+                ],
             ],
             [
                 [
                     MakeForm::FIELD_MAKE_NAME => MakeForm::OTHER_ID,
-                    MakeForm::FIELD_OTHER_MAKE_NAME => $this->generateOtherModelName(MakeForm::MAX_OTHER_MAKE_LENGTH + 1)
-                ]
+                    MakeForm::FIELD_OTHER_MAKE_NAME => $this->generateOtherModelName(MakeForm::MAX_OTHER_MAKE_LENGTH + 1),
+                ],
             ],
             [
                 [
-                    MakeForm::FIELD_MAKE_NAME => "",
-                    MakeForm::FIELD_OTHER_MAKE_NAME => ""
-                ]
+                    MakeForm::FIELD_MAKE_NAME => '',
+                    MakeForm::FIELD_OTHER_MAKE_NAME => '',
+                ],
             ],
         ];
     }
@@ -125,16 +126,16 @@ class MakeFormTest extends \PHPUnit_Framework_TestCase
     private function getMakeList()
     {
         return [
-            (new MakeDto())->setId(1)->setName("Audi"),
-            (new MakeDto())->setId(2)->setName("BMW"),
-            (new MakeDto())->setId(3)->setName("Citroen"),
-            (new MakeDto())->setId(4)->setName("Daimler"),
+            (new MakeDto())->setId(1)->setName('Audi'),
+            (new MakeDto())->setId(2)->setName('BMW'),
+            (new MakeDto())->setId(3)->setName('Citroen'),
+            (new MakeDto())->setId(4)->setName('Daimler'),
             (new MakeDto())->setId(MakeForm::OTHER_ID)->setName(MakeForm::OTHER_NAME),
         ];
     }
 
     private function generateOtherModelName($length)
     {
-        return str_repeat("x", $length);
+        return str_repeat('x', $length);
     }
 }

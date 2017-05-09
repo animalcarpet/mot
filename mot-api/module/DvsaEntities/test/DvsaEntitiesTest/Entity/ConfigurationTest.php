@@ -1,13 +1,12 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Configuration;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ConfigurationTest
- *
- * @package DvsaEntitiesTest\Entity
+ * Class ConfigurationTest.
  */
 class ConfigurationTest extends PHPUnit_Framework_TestCase
 {
@@ -21,8 +20,8 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function testSetsPropertiesCorrectly()
     {
         $data = [
-            'key'  => 'thekey',
-            'value'  => 'thevalue',
+            'key' => 'thekey',
+            'value' => 'thevalue',
         ];
 
         $configuration = new Configuration();

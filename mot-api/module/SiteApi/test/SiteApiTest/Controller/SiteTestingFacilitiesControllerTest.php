@@ -13,7 +13,7 @@ use SiteApi\Service\SiteTestingFacilitiesService;
 
 class SiteTestingFacilitiesControllerTest extends AbstractRestfulControllerTestCase
 {
-    /** @var  SiteTestingFacilitiesService|MockObj */
+    /** @var SiteTestingFacilitiesService|MockObj */
     private $mockService;
 
     const SITE_ID = 1;
@@ -30,7 +30,7 @@ class SiteTestingFacilitiesControllerTest extends AbstractRestfulControllerTestC
     }
 
     /**
-     * Test if method is accessible for call with valid parameters
+     * Test if method is accessible for call with valid parameters.
      *
      * @param string $method        HTTP method
      * @param string $action        route action
@@ -52,8 +52,7 @@ class SiteTestingFacilitiesControllerTest extends AbstractRestfulControllerTestC
         $serviceReturn,
         $expectResult,
         $postParams = null
-    )
-    {
+    ) {
         $this->mockValidAuthorization(array(Role::DVSA_AREA_OFFICE_1));
         $this->setupMockForCalls($this->mockService, $serviceMethod, $serviceReturn);
 
@@ -82,8 +81,8 @@ class SiteTestingFacilitiesControllerTest extends AbstractRestfulControllerTestC
                     'id' => self::SITE_ID,
                     'data' => [
                         'test' => 'tmp',
-                        '_class' => 'DvsaCommon\\Dto\\Site\\VehicleTestingStationDto'
-                    ]
+                        '_class' => 'DvsaCommon\\Dto\\Site\\VehicleTestingStationDto',
+                    ],
                 ],
                 [],
                 'update',

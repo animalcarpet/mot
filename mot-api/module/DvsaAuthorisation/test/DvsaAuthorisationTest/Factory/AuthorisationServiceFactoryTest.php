@@ -8,12 +8,10 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\RbacRepository;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class AuthorisationServiceFactoryTest
- *
+ * Class AuthorisationServiceFactoryTest.
  */
 class AuthorisationServiceFactoryTest extends AbstractServiceTestCase
 {

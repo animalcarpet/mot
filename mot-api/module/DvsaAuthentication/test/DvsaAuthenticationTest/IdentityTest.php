@@ -4,8 +4,6 @@ namespace DvsaAuthenticationTest;
 
 use DvsaAuthentication\Identity;
 use DvsaCommon\Auth\MotIdentityInterface;
-use DvsaCommon\Enum\PersonAuthType;
-use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 
 class IdentityTest extends \PHPUnit_Framework_TestCase

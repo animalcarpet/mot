@@ -7,7 +7,6 @@ use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaEntities\Entity\PasswordDetail;
 use DvsaEntities\Repository\PasswordDetailRepository;
-use Dvsa\OpenAM\OpenAMClientInterface;
 use PersonApi\Service\PasswordExpiryNotificationService;
 use PersonApi\Service\PasswordExpiryService;
 use PersonApi\Factory\Service\PasswordExpiryServiceFactory;
@@ -23,7 +22,7 @@ class PasswordExpiryServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $entityManager = XMock::of(EntityManager::class);
         $entityManager
             ->expects($this->any())
-            ->method("getRepository")
+            ->method('getRepository')
             ->willReturnCallback(function ($entity) {
                 switch ($entity) {
                     case PasswordDetail::class:

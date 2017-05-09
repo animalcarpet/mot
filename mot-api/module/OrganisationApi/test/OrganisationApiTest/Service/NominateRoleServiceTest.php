@@ -3,7 +3,6 @@
 namespace OrganisationApiTest\Service;
 
 use Doctrine\ORM\EntityRepository;
-use DvsaAuthentication\Identity;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Database\Transaction;
 use DvsaCommon\Enum\RoleCode;
@@ -16,14 +15,9 @@ use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Role;
 use DvsaEntities\Repository\OrganisationBusinessRoleMapRepository;
-use DvsaEntities\Repository\OrganisationPositionHistoryRepository;
-use DvsaEntities\Repository\PersonRepository;
-use OrganisationApi\Model\Operation\DirectNominationOperation;
-use OrganisationApi\Model\Operation\ConditionalNominationOperation;
 use OrganisationApi\Model\Operation\NominateOperationInterface;
 use OrganisationApi\Service\NominateRoleService;
 use PHPUnit_Framework_TestCase;
-use Zend\Authentication\AuthenticationService;
 
 class NominateRoleServiceTest extends PHPUnit_Framework_TestCase
 {

@@ -4,12 +4,11 @@ namespace Application\View\Helper;
 
 use InvalidArgumentException;
 use OutOfBoundsException;
-use Zend\Http\PhpEnvironment\Request;
 use Zend\View\Helper\AbstractHtmlElement;
 
 /**
  * Controller to render a page with a list of links to Manuals, guides, special notices and standards.
- * accessible by this->manualsHelper() in any *.phtml file
+ * accessible by this->manualsHelper() in any *.phtml file.
  */
 class ManualsAndGuidesHelper extends AbstractHtmlElement
 {

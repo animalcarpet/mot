@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotEnforcementTest\Decorator;
 
 use DvsaCommon\Constants\OdometerReadingResultType;
@@ -8,9 +9,7 @@ use DvsaMotEnforcement\Decorator\ElapsedMileageFormatter;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class ReinspectionReportDecoratorTest
- *
- * @package DvsaMotEnforcementTest\Decorator
+ * Class ReinspectionReportDecoratorTest.
  */
 class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
 {
@@ -38,7 +37,7 @@ class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
          *   odometerFromTester,
          *   odometerFromExaminer,
          *   expected print
-         * ],
+         * ],.
          */
         $dataSet = [
             [
@@ -50,7 +49,7 @@ class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
                     ->setValue('125')
                     ->setUnit(OdometerUnit::MILES)
                     ->setResultType(OdometerReadingResultType::OK),
-                '5 mi (T:120 mi, VE:125 mi)'
+                '5 mi (T:120 mi, VE:125 mi)',
             ],
             [
                 OdometerReadingDto::create()
@@ -61,7 +60,7 @@ class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
                     ->setValue('120')
                     ->setUnit(OdometerUnit::MILES)
                     ->setResultType(OdometerReadingResultType::OK),
-                '5 mi (T:125 mi, VE:120 mi)'
+                '5 mi (T:125 mi, VE:120 mi)',
             ],
             [
                 OdometerReadingDto::create()
@@ -72,7 +71,7 @@ class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
                     ->setValue('123')
                     ->setUnit(OdometerUnit::MILES)
                     ->setResultType(OdometerReadingResultType::OK),
-                '0 mi (T:123 mi, VE:123 mi)'
+                '0 mi (T:123 mi, VE:123 mi)',
             ],
             [
                 OdometerReadingDto::create()
@@ -83,21 +82,21 @@ class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
                     ->setValue('123')
                     ->setUnit(OdometerUnit::KILOMETERS)
                     ->setResultType(OdometerReadingResultType::OK),
-                'Diff. units (T:123 mi, VE:123 km)'
+                'Diff. units (T:123 mi, VE:123 km)',
             ],
             [
                 OdometerReadingDto::create()
                     ->setResultType(OdometerReadingResultType::NO_ODOMETER),
                 OdometerReadingDto::create()
                     ->setResultType(OdometerReadingResultType::NO_ODOMETER),
-                'No odometer (T:No odometer, VE:No odometer)'
+                'No odometer (T:No odometer, VE:No odometer)',
             ],
             [
                 OdometerReadingDto::create()
                     ->setResultType(OdometerReadingResultType::NO_ODOMETER),
                 OdometerReadingDto::create()
                     ->setResultType(OdometerReadingResultType::NOT_READABLE),
-                'Diff. readings (T:No odometer, VE:Odometer not readable)'
+                'Diff. readings (T:No odometer, VE:Odometer not readable)',
             ],
             [
                 OdometerReadingDto::create()
@@ -106,7 +105,7 @@ class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
                     ->setResultType(OdometerReadingResultType::OK)
                     ->setUnit(OdometerUnit::MILES)
                     ->setValue('123'),
-                'Diff. readings (T:No odometer, VE:123 mi)'
+                'Diff. readings (T:No odometer, VE:123 mi)',
             ],
             [
                 OdometerReadingDto::create()
@@ -115,18 +114,17 @@ class ElapsedMileageFormatterTest extends PHPUnit_Framework_TestCase
                 OdometerReadingDto::create()
                     ->setResultType(OdometerReadingResultType::OK)
                     ->setUnit(OdometerUnit::MILES),
-                'Diff. units (T:n/a, VE:n/a)'
+                'Diff. units (T:n/a, VE:n/a)',
             ],
             [
                 OdometerReadingDto::create()
                     ->setValue('123'),
                 OdometerReadingDto::create()
                     ->setValue('123'),
-                'n/a (T:n/a, VE:n/a)'
+                'n/a (T:n/a, VE:n/a)',
             ],
         ];
 
         return $dataSet;
     }
-
 }

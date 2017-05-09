@@ -2,7 +2,6 @@
 
 namespace Core\ViewModel\Gds\Table;
 
-use DvsaCommon\Exception\NotImplementedException;
 use DvsaCommon\Utility\ArrayUtils;
 
 class GdsTable implements GdsTableFlowInterface
@@ -17,6 +16,7 @@ class GdsTable implements GdsTableFlowInterface
     {
         $row = new GdsRow($this, $htmlId, $htmlClass);
         $this->rows[] = $row;
+
         return $row;
     }
 
@@ -24,6 +24,7 @@ class GdsTable implements GdsTableFlowInterface
     {
         $this->headerText = $text;
         $this->headerCssClass = $cssClass;
+
         return $this;
     }
 
@@ -62,7 +63,7 @@ class GdsTable implements GdsTableFlowInterface
         $row = ArrayUtils::tryGet($this->rows, $index, null);
 
         if ($row === null) {
-            throw new \OutOfBoundsException('Index ' . $index . ' does not exist.');
+            throw new \OutOfBoundsException('Index '.$index.' does not exist.');
         }
 
         return $this->rows[$index];

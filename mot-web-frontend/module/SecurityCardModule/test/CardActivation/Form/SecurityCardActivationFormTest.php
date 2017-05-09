@@ -9,14 +9,13 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
 {
-
     public static function dataProvider_invalidPin()
     {
         return [
-            ['','Enter a PIN number'],
+            ['', 'Enter a PIN number'],
             ['ABCDEDF', 'Enter a valid PIN number'],
             ['1234', 'Enter a 6 digit number'],
-            ['1234567', 'Enter a 6 digit number']
+            ['1234567', 'Enter a 6 digit number'],
         ];
     }
 
@@ -39,7 +38,6 @@ class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
 
     public static function dataProvider_invalidSerialNumber()
     {
-
         return [['12345678901234567']];
     }
 

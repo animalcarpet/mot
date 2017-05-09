@@ -30,11 +30,13 @@ class EmptyVrmReason extends Entity
 
     /**
      * @param string $code
+     *
      * @return $this
      */
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -48,11 +50,13 @@ class EmptyVrmReason extends Entity
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * MotTestStatus
+ * MotTestStatus.
  *
  * @ORM\Table(name="mot_test_status")
  * @ORM\Entity(readOnly=true)
@@ -39,7 +39,7 @@ class MotTestStatus
     private $description;
 
     /**
-     * Get motTestStatus
+     * Get motTestStatus.
      *
      * @return string
      */
@@ -66,11 +66,13 @@ class MotTestStatus
 
     /**
      * @param string $name
+     *
      * @return MotTestStatus
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 }

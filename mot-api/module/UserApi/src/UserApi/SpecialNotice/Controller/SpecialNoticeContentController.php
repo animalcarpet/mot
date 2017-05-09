@@ -7,7 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 
 /**
- * Class SpecialNoticeContentController
+ * Class SpecialNoticeContentController.
  */
 class SpecialNoticeContentController extends AbstractDvsaRestfulController
 {
@@ -33,7 +33,7 @@ class SpecialNoticeContentController extends AbstractDvsaRestfulController
     {
         $this->getSpecialNoticeService()->removeSpecialNoticeContent($id);
 
-        return ApiResponse::jsonOk(["success" => true]);
+        return ApiResponse::jsonOk(['success' => true]);
     }
 
     public function create($data)

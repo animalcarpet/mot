@@ -2,7 +2,6 @@
 
 namespace OrganisationTest\Presenter;
 
-
 use DvsaCommon\Configuration\MotConfig;
 use Organisation\Presenter\StatusPresenter;
 use Site\Service\RiskAssessmentScoreRagClassifier;
@@ -15,6 +14,7 @@ class StatusPresenterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataProviderTestStatus
+     *
      * @param $rag
      * @param $cssColor
      * @param $value
@@ -81,16 +81,15 @@ class StatusPresenterTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     protected function mockConfig()
     {
         $this->config = $this->getMockBuilder(MotConfig::class)->disableOriginalConstructor()->getMock();
         $returnMap = [
-            ["site_assessment", "green", "start", 0.01],
-            ["site_assessment", "amber", "start", 324.11],
-            ["site_assessment", "red", "start", 459.21]
+            ['site_assessment', 'green', 'start', 0.01],
+            ['site_assessment', 'amber', 'start', 324.11],
+            ['site_assessment', 'red', 'start', 459.21],
         ];
 
-        $this->config->expects($this->any())->method("get")->will($this->returnValueMap($returnMap));
+        $this->config->expects($this->any())->method('get')->will($this->returnValueMap($returnMap));
     }
 }

@@ -19,7 +19,7 @@ class SiteServiceTest extends AbstractServiceTestCase
     const ORG_ID = 9999;
 
     /**
-     * @var  AuthorisationServiceInterface|MockObj
+     * @var AuthorisationServiceInterface|MockObj
      */
     private $mockAuthService;
     /**
@@ -83,67 +83,67 @@ class SiteServiceTest extends AbstractServiceTestCase
         $orgEntity = new Organisation();
 
         $unauthException = [
-            'class'   => UnauthorisedException::class,
+            'class' => UnauthorisedException::class,
             'message' => 'You not have permissions',
         ];
 
         return [
             //  getListForOrganisation :: no permission
             [
-                'method'      => 'getListForOrganisation',
-                'params'      => [
+                'method' => 'getListForOrganisation',
+                'params' => [
                     'orgId' => self::ORG_ID,
                 ],
-                'repo'        => null,
+                'repo' => null,
                 'permissions' => [],
-                'expect'      => [
+                'expect' => [
                     'exception' => $unauthException,
                 ],
             ],
             //  getListForOrganisation :: invalid org id
             [
-                'method'      => 'getListForOrganisation',
-                'params'      => [
+                'method' => 'getListForOrganisation',
+                'params' => [
                     'orgId' => self::ORG_ID,
                 ],
-                'repos'       => [
+                'repos' => [
                     [
-                        'class'  => 'mockOrgRepo',
+                        'class' => 'mockOrgRepo',
                         'method' => 'get',
                         'params' => [self::ORG_ID],
                         'result' => new NotFoundException('Organisation'),
                     ],
                 ],
                 'permissions' => [PermissionAtOrganisation::VEHICLE_TESTING_STATION_LIST_AT_AE],
-                'expect'      => [
+                'expect' => [
                     'exception' => [
-                        'class'   => NotFoundException::class,
+                        'class' => NotFoundException::class,
                         'message' => 'Organisation not found',
                     ],
                 ],
             ],
             //  getListForOrganisation :: success
             [
-                'method'      => 'getListForOrganisation',
-                'params'      => [
+                'method' => 'getListForOrganisation',
+                'params' => [
                     'orgId' => self::ORG_ID,
                 ],
-                'repos'       => [
+                'repos' => [
                     [
-                        'class'  => 'mockOrgRepo',
+                        'class' => 'mockOrgRepo',
                         'method' => 'get',
                         'params' => [self::ORG_ID],
                         'result' => $orgEntity,
                     ],
                     [
-                        'class'  => 'mockSiteMapper',
+                        'class' => 'mockSiteMapper',
                         'method' => 'manyToDto',
                         'params' => [$orgEntity->getSites()],
                         'result' => ['sitesDtos'],
                     ],
                 ],
                 'permissions' => [PermissionAtOrganisation::VEHICLE_TESTING_STATION_LIST_AT_AE],
-                'expect'      => [
+                'expect' => [
                     'result' => ['sitesDtos'],
                 ],
             ],

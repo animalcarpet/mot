@@ -62,7 +62,7 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
         $this->underTest->getPassMotTestForVehicleIssuedBefore(self::VRM);
 
         //then an exception is thrown
-        $this->fail("NotFoundException should be thrown!");
+        $this->fail('NotFoundException should be thrown!');
     }
 
     /**
@@ -84,7 +84,7 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
         $this->underTest->getPassMotTestForVehicleIssuedBefore(self::VRM);
 
         //then an exception is thrown
-        $this->assertTrue(false, "ServiceException(404) should be thrown!");
+        $this->assertTrue(false, 'ServiceException(404) should be thrown!');
     }
 
     public function test_givenPassMotTestFound_shouldReturnPassMotTest()
@@ -103,10 +103,10 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
 
     public function prepareMotTest()
     {
-        $number = "1234567";
+        $number = '1234567';
         $make = new Make();
         $model = new Model();
-        $primaryColour = (new Colour())->setName("Black");
+        $primaryColour = (new Colour())->setName('Black');
         $vts = new Site();
         $status = new MotTestStatus();
 
@@ -148,35 +148,34 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
         $this->assertEquals($this->expectedVehicleDetails(), $result);
     }
 
-
     private function getMockVehicle()
     {
         $make = new Make();
-        $make->setName("FORD");
+        $make->setName('FORD');
 
         $model = new Model();
-        $model->setName("MONDEO")
+        $model->setName('MONDEO')
             ->setMake($make);
 
         $modelDetail = new ModelDetail();
         $modelDetail->setModel($model);
 
-        return (new Vehicle)
+        return (new Vehicle())
             ->setId(1)
             ->setVersion(1)
-            ->setRegistration("GGG455")
+            ->setRegistration('GGG455')
             ->setModelDetail($modelDetail)
-            ->setColour((new Colour())->setCode("P")->setName("Black"))
-            ->setSecondaryColour((new Colour())->setCode("W")->setName("Not Stated"));
+            ->setColour((new Colour())->setCode('P')->setName('Black'))
+            ->setSecondaryColour((new Colour())->setCode('W')->setName('Not Stated'));
     }
 
     private function getMockDvlaVehicle()
     {
         return (new DvlaVehicle())
             ->setId(1)
-            ->setRegistration("GGG455")
-            ->setMake((new Make())->setName("FORD"))
-            ->setModel((new Model())->setName("MONDEO"))
+            ->setRegistration('GGG455')
+            ->setMake((new Make())->setName('FORD'))
+            ->setModel((new Model())->setName('MONDEO'))
             ->setPrimaryColour('P')
             ->setSecondaryColour('W')
             ->setMakeCode('FORD')
@@ -194,21 +193,21 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
     private function getMockMotTest()
     {
         $phone = new Phone();
-        $phone->setNumber("+768-45-4433630");
+        $phone->setNumber('+768-45-4433630');
         $phone->setIsPrimary(true);
 
         $contactDetail = new ContactDetail();
         $contactDetail->addPhone($phone);
 
         $siteContactType = new SiteContactType();
-        $siteContactType->setCode("BUS");
+        $siteContactType->setCode('BUS');
 
         $site = new Site();
-        $site->setSiteNumber("V1234");
+        $site->setSiteNumber('V1234');
         $site->setContact($contactDetail, $siteContactType);
 
         return (new MotTest())
-            ->setNumber("999999999014")
+            ->setNumber('999999999014')
             ->setIssuedDate((new \DateTime())->setDate(2015, 05, 04))
             ->setExpiryDate((new \DateTime())->setDate(2016, 05, 03))
             ->setOdometerValue(32000)
@@ -232,9 +231,9 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
             'odometerUnit' => 'M',
             'testNumber' => '196019601960',
             'testDate' => date('Y-01-01'),
-            'expiryDate' => (date('Y') + 1) . '-01-01',
+            'expiryDate' => (date('Y') + 1).'-01-01',
             'vtsNumber' => 'PRE1960',
-            'vtsTelNo' => 'PRE1960'
+            'vtsTelNo' => 'PRE1960',
         ];
     }
 
@@ -256,7 +255,7 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
             'testDate' => '2015-05-04',
             'expiryDate' => '2016-05-03',
             'vtsNumber' => 'V1234',
-            'vtsTelNo' => '+768-45-4433630'
+            'vtsTelNo' => '+768-45-4433630',
         ];
     }
 
@@ -278,5 +277,4 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
         return (new DvlaModel())
             ->setName('MONDEO');
     }
-
 }

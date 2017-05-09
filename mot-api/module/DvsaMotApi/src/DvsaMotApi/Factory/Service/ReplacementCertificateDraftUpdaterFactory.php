@@ -16,7 +16,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ReplacementCertificateDraftUpdaterFactory
+ * Class ReplacementCertificateDraftUpdaterFactory.
  */
 class ReplacementCertificateDraftUpdaterFactory implements FactoryInterface
 {
@@ -25,9 +25,9 @@ class ReplacementCertificateDraftUpdaterFactory implements FactoryInterface
         $entityManager = $serviceLocator->get(EntityManager::class);
 
         return new ReplacementCertificateDraftUpdater(
-            $serviceLocator->get("MotTestSecurityService"),
-            $serviceLocator->get("DvsaAuthorisationService"),
-            $serviceLocator->get("VehicleCatalogService"),
+            $serviceLocator->get('MotTestSecurityService'),
+            $serviceLocator->get('DvsaAuthorisationService'),
+            $serviceLocator->get('VehicleCatalogService'),
             $entityManager->getRepository(CertificateChangeDifferentTesterReason::class),
             $entityManager->getRepository(Site::class),
             $serviceLocator->get('DvsaAuthenticationService'),

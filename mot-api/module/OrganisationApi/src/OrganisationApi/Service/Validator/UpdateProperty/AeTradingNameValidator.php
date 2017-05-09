@@ -11,9 +11,9 @@ class AeTradingNameValidator extends AbstractValidator implements ValidatorInter
 {
     public function validate(array $data)
     {
-        if(empty($data[AuthorisedExaminerPatchModel::TRADING_NAME])) {
+        if (empty($data[AuthorisedExaminerPatchModel::TRADING_NAME])) {
             $errorSchema = new ErrorSchema();
-            $errorSchema->add("Trading name - must not be empty");
+            $errorSchema->add('Trading name - must not be empty');
             $errorSchema->throwIfAny();
         }
     }

@@ -127,7 +127,6 @@ class ContingencyTestValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testInfinityContingency($params)
     {
-
         $validator = new ContingencyTestValidator($this->emergencyService, $this->siteService, $params['isInfinityContingencyOn']);
 
         $dateTime = new DateTime('-3 months -1 minute');
@@ -140,7 +139,7 @@ class ContingencyTestValidatorTest extends PHPUnit_Framework_TestCase
             'performedAtAmPm' => $dateTime->format('a'),
             'performedAtYear' => $dateTime->format('Y'),
             'performedAtMonth' => $dateTime->format('m'),
-            'performedAtDay' => $dateTime->format('d')]);
+            'performedAtDay' => $dateTime->format('d'), ]);
         $messages = $result->getFlattenedMessages();
         if ($params['isInfinityContingencyOn']) {
             $this->assertArrayNotHasKey(ContingencyTestValidator::FIELDSET_DATE, $messages);
@@ -150,11 +149,8 @@ class ContingencyTestValidatorTest extends PHPUnit_Framework_TestCase
         }
     }
 
-
-
     public function dataProviderTestParams()
     {
-
         return [
             // 3 months timeframe in CommonContingency is OFF
             [

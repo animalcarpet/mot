@@ -63,8 +63,7 @@ class AuthorisedExaminerViewModel
         $visibleVtsViewModels = [];
         $visibleVtsDomainObjects = [];
         foreach ($authorisedExaminer->getSites() as $site) {
-            if ($dashboardGuard->canViewVehicleTestingStation($site->getId()))
-            {
+            if ($dashboardGuard->canViewVehicleTestingStation($site->getId())) {
                 $visibleVtsViewModels[] = new VehicleTestingStationViewModel(
                     $url->fromRoute('vehicle-testing-station', ['id' => $site->getId()]),
                     $site->getSiteNumber(),
@@ -80,7 +79,7 @@ class AuthorisedExaminerViewModel
 
         $slots = $authorisedExaminer->getSlots();
 
-        return new AuthorisedExaminerViewModel($authorisedExaminerUrl, $vtsCount, $name, $reference, $visibleVtsViewModels, $slots);
+        return new self($authorisedExaminerUrl, $vtsCount, $name, $reference, $visibleVtsViewModels, $slots);
     }
 
     /**

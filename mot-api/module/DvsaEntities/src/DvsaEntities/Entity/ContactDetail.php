@@ -8,7 +8,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ContactDetail
+ * ContactDetail.
  *
  * @ORM\Table(
  * name="contact_detail",

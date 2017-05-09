@@ -5,7 +5,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BrakeTestResultClass12
+ * BrakeTestResultClass12.
  *
  * @ORM\Table(name="brake_test_result_class_1_2")
  * @ORM\Entity
@@ -25,140 +25,140 @@ class BrakeTestResultClass12 extends BrakeTestResult
     private $brakeTestType;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_weight_front", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $vehicleWeightFront;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_weight_rear", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $vehicleWeightRear;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="rider_weight", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $riderWeight;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="sidecar_weight", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $sidecarWeight;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_1_effort_front", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control1EffortFront;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_1_effort_rear", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control1EffortRear;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_1_effort_sidecar", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control1EffortSidecar;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_2_effort_front", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control2EffortFront;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_2_effort_rear", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control2EffortRear;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_2_effort_sidecar", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control2EffortSidecar;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="control_1_lock_front", type="boolean", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control1LockFront;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="control_1_lock_rear", type="boolean", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control1LockRear;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="control_2_lock_front", type="boolean", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control2LockFront;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="control_2_lock_rear", type="boolean", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control2LockRear;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_1_brake_efficiency", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control1BrakeEfficiency;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="control_2_brake_efficiency", type="integer", precision=0, scale=0, nullable=true, unique=false)
      */
     private $control2BrakeEfficiency;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="control_1_efficiency_pass", type="boolean", precision=0, scale=0, nullable=false, unique=false)
      */
     private $control1EfficiencyPass;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="gradient_control_1_below_minimum", type="boolean", precision=0, scale=0, nullable=true, unique=false)
      */
     private $gradientControl1BelowMinimum;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="gradient_control_2_below_minimum", type="boolean", precision=0, scale=0, nullable=true, unique=false)
      */
     private $gradientControl2BelowMinimum;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="control_2_efficiency_pass", type="boolean", precision=0, scale=0, nullable=true, unique=false)
      */
@@ -175,12 +175,12 @@ class BrakeTestResultClass12 extends BrakeTestResult
     private $motTest;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $gradientControl1AboveUpperMinimum;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $gradientControl2AboveUpperMinimum;
 
@@ -205,9 +205,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set vehicleWeightFront
+     * Set vehicleWeightFront.
      *
-     * @param integer $vehicleWeightFront
+     * @param int $vehicleWeightFront
+     *
      * @return BrakeTestResultClass12
      */
     public function setVehicleWeightFront($vehicleWeightFront)
@@ -218,9 +219,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get vehicleWeightFront
+     * Get vehicleWeightFront.
      *
-     * @return integer
+     * @return int
      */
     public function getVehicleWeightFront()
     {
@@ -228,9 +229,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set vehicleWeightRear
+     * Set vehicleWeightRear.
      *
-     * @param integer $vehicleWeightRear
+     * @param int $vehicleWeightRear
+     *
      * @return BrakeTestResultClass12
      */
     public function setVehicleWeightRear($vehicleWeightRear)
@@ -241,9 +243,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get vehicleWeightRear
+     * Get vehicleWeightRear.
      *
-     * @return integer
+     * @return int
      */
     public function getVehicleWeightRear()
     {
@@ -251,9 +253,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set riderWeight
+     * Set riderWeight.
      *
-     * @param integer $riderWeight
+     * @param int $riderWeight
+     *
      * @return BrakeTestResultClass12
      */
     public function setRiderWeight($riderWeight)
@@ -264,9 +267,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get riderWeight
+     * Get riderWeight.
      *
-     * @return integer
+     * @return int
      */
     public function getRiderWeight()
     {
@@ -274,9 +277,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set sidecarWeight
+     * Set sidecarWeight.
      *
-     * @param integer $sidecarWeight
+     * @param int $sidecarWeight
+     *
      * @return BrakeTestResultClass12
      */
     public function setSidecarWeight($sidecarWeight)
@@ -287,9 +291,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get sidecarWeight
+     * Get sidecarWeight.
      *
-     * @return integer
+     * @return int
      */
     public function getSidecarWeight()
     {
@@ -297,9 +301,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control1EffortFront
+     * Set control1EffortFront.
      *
-     * @param integer $control1EffortFront
+     * @param int $control1EffortFront
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl1EffortFront($control1EffortFront)
@@ -310,9 +315,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control1EffortFront
+     * Get control1EffortFront.
      *
-     * @return integer
+     * @return int
      */
     public function getControl1EffortFront()
     {
@@ -320,9 +325,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control1EffortRear
+     * Set control1EffortRear.
      *
-     * @param integer $control1EffortRear
+     * @param int $control1EffortRear
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl1EffortRear($control1EffortRear)
@@ -333,9 +339,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control1EffortRear
+     * Get control1EffortRear.
      *
-     * @return integer
+     * @return int
      */
     public function getControl1EffortRear()
     {
@@ -343,9 +349,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control1EffortSidecar
+     * Set control1EffortSidecar.
      *
-     * @param integer $control1EffortSidecar
+     * @param int $control1EffortSidecar
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl1EffortSidecar($control1EffortSidecar)
@@ -356,9 +363,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control1EffortSidecar
+     * Get control1EffortSidecar.
      *
-     * @return integer
+     * @return int
      */
     public function getControl1EffortSidecar()
     {
@@ -366,9 +373,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control2EffortFront
+     * Set control2EffortFront.
      *
-     * @param integer $control2EffortFront
+     * @param int $control2EffortFront
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl2EffortFront($control2EffortFront)
@@ -379,9 +387,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control2EffortFront
+     * Get control2EffortFront.
      *
-     * @return integer
+     * @return int
      */
     public function getControl2EffortFront()
     {
@@ -389,9 +397,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control2EffortRear
+     * Set control2EffortRear.
      *
-     * @param integer $control2EffortRear
+     * @param int $control2EffortRear
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl2EffortRear($control2EffortRear)
@@ -402,9 +411,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control2EffortRear
+     * Get control2EffortRear.
      *
-     * @return integer
+     * @return int
      */
     public function getControl2EffortRear()
     {
@@ -412,9 +421,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control2EffortSidecar
+     * Set control2EffortSidecar.
      *
-     * @param integer $control2EffortSidecar
+     * @param int $control2EffortSidecar
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl2EffortSidecar($control2EffortSidecar)
@@ -425,9 +435,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control2EffortSidecar
+     * Get control2EffortSidecar.
      *
-     * @return integer
+     * @return int
      */
     public function getControl2EffortSidecar()
     {
@@ -435,9 +445,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control1LockFront
+     * Set control1LockFront.
      *
-     * @param boolean $control1LockFront
+     * @param bool $control1LockFront
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl1LockFront($control1LockFront)
@@ -448,9 +459,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control1LockFront
+     * Get control1LockFront.
      *
-     * @return boolean
+     * @return bool
      */
     public function getControl1LockFront()
     {
@@ -458,9 +469,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control1LockRear
+     * Set control1LockRear.
      *
-     * @param boolean $control1LockRear
+     * @param bool $control1LockRear
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl1LockRear($control1LockRear)
@@ -471,9 +483,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control1LockRear
+     * Get control1LockRear.
      *
-     * @return boolean
+     * @return bool
      */
     public function getControl1LockRear()
     {
@@ -481,9 +493,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control2LockFront
+     * Set control2LockFront.
      *
-     * @param boolean $control2LockFront
+     * @param bool $control2LockFront
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl2LockFront($control2LockFront)
@@ -494,9 +507,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control2LockFront
+     * Get control2LockFront.
      *
-     * @return boolean
+     * @return bool
      */
     public function getControl2LockFront()
     {
@@ -504,9 +517,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control2LockRear
+     * Set control2LockRear.
      *
-     * @param boolean $control2LockRear
+     * @param bool $control2LockRear
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl2LockRear($control2LockRear)
@@ -517,9 +531,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control2LockRear
+     * Get control2LockRear.
      *
-     * @return boolean
+     * @return bool
      */
     public function getControl2LockRear()
     {
@@ -527,9 +541,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control1BrakeEfficiency
+     * Set control1BrakeEfficiency.
      *
-     * @param integer $control1BrakeEfficiency
+     * @param int $control1BrakeEfficiency
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl1BrakeEfficiency($control1BrakeEfficiency)
@@ -540,9 +555,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control1BrakeEfficiency
+     * Get control1BrakeEfficiency.
      *
-     * @return integer
+     * @return int
      */
     public function getControl1BrakeEfficiency()
     {
@@ -550,9 +565,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control2BrakeEfficiency
+     * Set control2BrakeEfficiency.
      *
-     * @param integer $control2BrakeEfficiency
+     * @param int $control2BrakeEfficiency
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl2BrakeEfficiency($control2BrakeEfficiency)
@@ -563,9 +579,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control2BrakeEfficiency
+     * Get control2BrakeEfficiency.
      *
-     * @return integer
+     * @return int
      */
     public function getControl2BrakeEfficiency()
     {
@@ -573,7 +589,8 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * @param boolean $gradientControlsBelowMinimum
+     * @param bool $gradientControlsBelowMinimum
+     *
      * @return BrakeTestResultClass12
      */
     public function setGradientControl1BelowMinimum($gradientControlsBelowMinimum)
@@ -584,7 +601,7 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getGradientControl1BelowMinimum()
     {
@@ -592,7 +609,8 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * @param boolean $gradientControlsBelowMinimum
+     * @param bool $gradientControlsBelowMinimum
+     *
      * @return BrakeTestResultClass12
      */
     public function setGradientControl2BelowMinimum($gradientControlsBelowMinimum)
@@ -603,7 +621,7 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getGradientControl2BelowMinimum()
     {
@@ -611,9 +629,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control1EfficiencyPass
+     * Set control1EfficiencyPass.
      *
-     * @param boolean $control1EfficiencyPass
+     * @param bool $control1EfficiencyPass
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl1EfficiencyPass($control1EfficiencyPass)
@@ -624,9 +643,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control1EfficiencyPass
+     * Get control1EfficiencyPass.
      *
-     * @return boolean
+     * @return bool
      */
     public function getControl1EfficiencyPass()
     {
@@ -634,9 +653,10 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Set control2EfficiencyPass
+     * Set control2EfficiencyPass.
      *
-     * @param boolean $control2EfficiencyPass
+     * @param bool $control2EfficiencyPass
+     *
      * @return BrakeTestResultClass12
      */
     public function setControl2EfficiencyPass($control2EfficiencyPass)
@@ -647,9 +667,9 @@ class BrakeTestResultClass12 extends BrakeTestResult
     }
 
     /**
-     * Get control2EfficiencyPass
+     * Get control2EfficiencyPass.
      *
-     * @return boolean
+     * @return bool
      */
     public function getControl2EfficiencyPass()
     {
@@ -658,11 +678,13 @@ class BrakeTestResultClass12 extends BrakeTestResult
 
     /**
      * @param \DvsaEntities\Entity\MotTest $motTest
+     *
      * @return BrakeTestResultClass12
      */
     public function setMotTest($motTest)
     {
         $this->motTest = $motTest;
+
         return $this;
     }
 
@@ -676,11 +698,13 @@ class BrakeTestResultClass12 extends BrakeTestResult
 
     /**
      * @param mixed $gradientControl1AboveUpperMinimum
+     *
      * @return BrakeTestResultClass12
      */
     public function setGradientControl1AboveUpperMinimum($gradientControl1AboveUpperMinimum)
     {
         $this->gradientControl1AboveUpperMinimum = $gradientControl1AboveUpperMinimum;
+
         return $this;
     }
 
@@ -694,11 +718,13 @@ class BrakeTestResultClass12 extends BrakeTestResult
 
     /**
      * @param mixed $gradientControl2AboveUpperMinimum
+     *
      * @return BrakeTestResultClass12
      */
     public function setGradientControl2AboveUpperMinimum($gradientControl2AboveUpperMinimum)
     {
         $this->gradientControl2AboveUpperMinimum = $gradientControl2AboveUpperMinimum;
+
         return $this;
     }
 

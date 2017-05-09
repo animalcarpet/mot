@@ -5,7 +5,7 @@ namespace CoreTest\Service;
 use Application\Service\CatalogService;
 
 /**
- * Stub catalog service for use in test code
+ * Stub catalog service for use in test code.
  */
 class StubCatalogService extends CatalogService
 {

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Class AuthenticationMethod
+ * Class AuthenticationMethod.
  *
  * Used to store & retrieve the method of authentication for MOT testers to complete
  * MOT tests.
@@ -39,11 +39,11 @@ class AuthenticationMethod
 
     public function __construct()
     {
-
     }
 
     /**
      * @param string $name
+     *
      * @return AuthenticationMethod
      */
     public function setName($name)
@@ -63,6 +63,7 @@ class AuthenticationMethod
 
     /**
      * @param string $code
+     *
      * @return AuthenticationMethod
      */
     public function setCode($code)

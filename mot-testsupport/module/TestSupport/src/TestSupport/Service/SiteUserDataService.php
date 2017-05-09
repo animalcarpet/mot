@@ -2,9 +2,6 @@
 
 namespace TestSupport\Service;
 
-use Doctrine\ORM\EntityManager;
-use DvsaCommon\UrlBuilder\NotificationUrlBuilder;
-use DvsaCommon\UrlBuilder\SiteUrlBuilder;
 use TestSupport\FieldValidation;
 use TestSupport\Helper\DataGeneratorHelper;
 use TestSupport\Helper\NotificationsHelper;
@@ -15,7 +12,6 @@ use TestSupport\Model\Account;
 use TestSupport\Model\AccountPerson;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -25,7 +21,6 @@ use Zend\View\Model\JsonModel;
  */
 class SiteUserDataService implements ServiceLocatorAwareInterface
 {
-
     use ServiceLocatorAwareTrait;
     use RestClientGetterTrait;
 
@@ -85,21 +80,21 @@ class SiteUserDataService implements ServiceLocatorAwareInterface
 
         return TestDataResponseHelper::jsonOk(
             [
-                "message"  => $role . ' created',
-                "username" => $account->getUsername(),
-                "password" => $account->getPassword(),
-                "personId" => $account->getPersonId(),
-                "firstName"=> $account->getFirstName(),
-                "middleName" => $this->accountPerson->getMiddleName(),
-                "surname"  => $account->getSurname(),
-                "addressLine1" => $this->accountPerson->getAddressLine1(),
-                "addressLine2" => $this->accountPerson->getAddressLine2(),
-                "postcode" => $this->accountPerson->getPostcode(),
-                "phoneNumber" => $this->accountPerson->getPhoneNumber(),
-                "emailAddress" => $this->accountPerson->getEmailAddress(),
-                "multiSiteUser" => (isset($data['siteIds']) && count($data['siteIds']) > 1) ? true : false,
-                "dateOfBirth" => $this->accountPerson->getDateOfBirth(),
-                "drivingLicenceNumber" => $this->accountPerson->getDrivingLicenceNumber(),
+                'message' => $role.' created',
+                'username' => $account->getUsername(),
+                'password' => $account->getPassword(),
+                'personId' => $account->getPersonId(),
+                'firstName' => $account->getFirstName(),
+                'middleName' => $this->accountPerson->getMiddleName(),
+                'surname' => $account->getSurname(),
+                'addressLine1' => $this->accountPerson->getAddressLine1(),
+                'addressLine2' => $this->accountPerson->getAddressLine2(),
+                'postcode' => $this->accountPerson->getPostcode(),
+                'phoneNumber' => $this->accountPerson->getPhoneNumber(),
+                'emailAddress' => $this->accountPerson->getEmailAddress(),
+                'multiSiteUser' => (isset($data['siteIds']) && count($data['siteIds']) > 1) ? true : false,
+                'dateOfBirth' => $this->accountPerson->getDateOfBirth(),
+                'drivingLicenceNumber' => $this->accountPerson->getDrivingLicenceNumber(),
             ]
         );
     }

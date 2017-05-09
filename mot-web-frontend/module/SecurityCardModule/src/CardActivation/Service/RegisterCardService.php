@@ -6,7 +6,6 @@ use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Request\ActivateCardRequest;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use DvsaAuthentication\IdentityProvider;
-use DvsaFeature\FeatureToggles;
 
 class RegisterCardService
 {
@@ -25,7 +24,7 @@ class RegisterCardService
     }
 
     /**
-     * Uses the Authorisation Service in the API client to register the card in the Java service
+     * Uses the Authorisation Service in the API client to register the card in the Java service.
      *
      * @param $pinNumber
      * @param $serialNumber

@@ -8,7 +8,6 @@ use Application\Service\ReportBuilder\Service as ReportBuilderService;
 
 class ReportBuilderServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         //quick fix, allows running unit tests from the console

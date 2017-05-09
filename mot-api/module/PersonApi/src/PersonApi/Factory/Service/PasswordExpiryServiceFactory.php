@@ -5,7 +5,6 @@ namespace PersonApi\Factory\Service;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaEntities\Entity\PasswordDetail;
-use Dvsa\OpenAM\OpenAMClientInterface;
 use PersonApi\Service\PasswordExpiryNotificationService;
 use PersonApi\Service\PasswordExpiryService;
 use Zend\ServiceManager\FactoryInterface;

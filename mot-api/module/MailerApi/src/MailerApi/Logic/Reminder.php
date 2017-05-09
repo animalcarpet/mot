@@ -6,7 +6,6 @@ use DvsaCommon\Dto\Mailer\MailerDto;
 use MailerApi\Service\MailerService;
 use DvsaCommon\Utility\ArrayUtils;
 use PersonApi\Service\PersonalDetailsService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
@@ -31,13 +30,13 @@ class Reminder
     /** The underlying mail validation and transport service */
     protected $mailService;
 
-    /** @var  PersonalDetailsService */
+    /** @var PersonalDetailsService */
     protected $personalDetailsService;
 
-    /** @var  Array  */
+    /** @var array */
     protected $mailerConfig;
 
-    /** @var  Array  */
+    /** @var array */
     protected $helpdeskConfig;
 
     /**
@@ -49,8 +48,8 @@ class Reminder
      * @param $type int
      */
     public function __construct(
-        Array $mailerConfig,
-        Array $helpdeskConfig,
+        array $mailerConfig,
+        array $helpdeskConfig,
         MailerService $mailerService,
         $personalDetailsService,
         $dto,
@@ -68,7 +67,7 @@ class Reminder
     /**
      * Get the designated email recipient based on the DTO user-id.
      *
-     * @return String
+     * @return string
      */
     protected function getRecipient()
     {
@@ -89,13 +88,13 @@ class Reminder
      * content without touching the code. (Yes, I know the config file *is* code).
      *
      * @param MailerDto $dto
-     * @param string $type
-     * @param string $templateName
-     * @param Array $data contains extra template specific data.
-     *          ===================================================================
-     *          NOTE: DO NOT USE KEYS "type" "user" or "contactNumber" as they will
-     *          be overwritten.
-     *          ===================================================================
+     * @param string    $type
+     * @param string    $templateName
+     * @param array     $data         contains extra template specific data.
+     *                                ===================================================================
+     *                                NOTE: DO NOT USE KEYS "type" "user" or "contactNumber" as they will
+     *                                be overwritten.
+     *                                ===================================================================
      *
      * @return string
      */
@@ -126,7 +125,7 @@ class Reminder
         );
 
         $viewModel = new ViewModel($data);
-        $viewModel->setTemplate($type . '-' . $templateName);
+        $viewModel->setTemplate($type.'-'.$templateName);
 
         $renderer = new PhpRenderer();
         $resolver = new Resolver\AggregateResolver();
@@ -134,12 +133,12 @@ class Reminder
 
         $map = new Resolver\TemplateMapResolver(
             [
-                'username-reminder'         => __DIR__ . '/../../../view/email/username-reminder/message.phtml',
-                'username-reminder-subject' => __DIR__ . '/../../../view/email/username-reminder/subject.phtml',
-                'password-reminder'         => __DIR__ . '/../../../view/email/password-reminder/message.phtml',
-                'password-reminder-subject' => __DIR__ . '/../../../view/email/password-reminder/subject.phtml',
-                'claim-account-reset'         => __DIR__ . '/../../../view/email/claim-account-reset/message.phtml',
-                'claim-account-reset-subject' => __DIR__ . '/../../../view/email/claim-account-reset/subject.phtml',
+                'username-reminder' => __DIR__.'/../../../view/email/username-reminder/message.phtml',
+                'username-reminder-subject' => __DIR__.'/../../../view/email/username-reminder/subject.phtml',
+                'password-reminder' => __DIR__.'/../../../view/email/password-reminder/message.phtml',
+                'password-reminder-subject' => __DIR__.'/../../../view/email/password-reminder/subject.phtml',
+                'claim-account-reset' => __DIR__.'/../../../view/email/claim-account-reset/message.phtml',
+                'claim-account-reset-subject' => __DIR__.'/../../../view/email/claim-account-reset/subject.phtml',
             ]
         );
         $resolver->attach($map);

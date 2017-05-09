@@ -51,8 +51,8 @@ class StatusPropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[StatusPropertyForm::FIELD_STATUS => ""]],
-            [[StatusPropertyForm::FIELD_STATUS => " "]],
+            [[StatusPropertyForm::FIELD_STATUS => '']],
+            [[StatusPropertyForm::FIELD_STATUS => ' ']],
         ];
     }
 }

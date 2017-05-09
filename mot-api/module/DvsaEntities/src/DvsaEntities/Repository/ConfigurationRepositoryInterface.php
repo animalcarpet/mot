@@ -3,9 +3,7 @@
 namespace DvsaEntities\Repository;
 
 /**
- * Interface ConfigurationRepositoryInterface
- *
- * @package DvsaEntities\Repository
+ * Interface ConfigurationRepositoryInterface.
  */
 interface ConfigurationRepositoryInterface
 {

@@ -1,12 +1,11 @@
 <?php
+
 namespace DvsaMotTest\Model;
 
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class SlotDetailsTest
- *
- * @package DvsaMotTest\Model
+ * Class SlotDetailsTest.
  */
 class SlotDetailsTest extends PHPUnit_Framework_TestCase
 {

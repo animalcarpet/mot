@@ -1,8 +1,6 @@
 <?php
 
-
 namespace DashboardTest\Service;
-
 
 use Core\Catalog\BusinessRole\BusinessRole;
 use Core\Catalog\BusinessRole\BusinessRoleCatalog;
@@ -14,7 +12,7 @@ use DvsaCommon\Model\OrganisationBusinessRoleCode;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Role;
 
-class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
+class PersonTradeRoleSorterServiceTes extends \PHPUnit_Framework_TestCase
 {
     protected static $siteRoles = [
         SiteBusinessRoleCode::SITE_MANAGER,
@@ -24,6 +22,7 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getTradeRoles
+     *
      * @param $tradeRoles
      * @param $expectedRolesOrder
      */
@@ -35,17 +34,17 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
         if (empty($tradeRoles)) {
             $this->assertEquals(true, is_array($sortedRoles));
             $this->assertEmpty($sortedRoles);
+
             return;
         }
-
 
         foreach ($sortedRoles as $aeName => $siteAndOrganisationRoles) {
             foreach ($siteAndOrganisationRoles as $roleType => $roles) {
                 $i = 0;
                 foreach ($roles as $role) {
-                    /** @var PersonTradeRoleDto $role */
+                    /* @var PersonTradeRoleDto $role */
                     $this->assertEquals($role->getRoleCode(), $expectedRolesOrder[$aeName][$roleType][$i]);
-                    $i++;
+                    ++$i;
                 }
             }
         }
@@ -188,6 +187,7 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
         if (isset($data['workplaceId'])) {
             $roleDto->setWorkplaceId($data['workplaceId']);
         }
+
         return $roleDto;
     }
 }

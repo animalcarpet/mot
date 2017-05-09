@@ -9,9 +9,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class MotTest
- *
- * @package DvsaMotEnforcement\Model
+ * Class MotTest.
  */
 class MotTest
 {
@@ -50,7 +48,7 @@ class MotTest
             }
 
             $testDate = isset($motTest['testDate']) ? $motTest['testDate'] : null;
-            $motTest['test_date'] = $testDate ?: "";
+            $motTest['test_date'] = $testDate ?: '';
             $motTest['display_date'] = DateTimeDisplayFormat::textDateTimeShort($testDate);
             $motTest['display_test_type'] = $motTest['testType'];
             $motTest['popover'] = $this->preparePopover($motTest, $viewRender);
@@ -72,13 +70,13 @@ class MotTest
 
             $testDuration = DateUtils::getMinutesAndSecondsFromSeconds(
                 DateUtils::getDatesTimestampDelta($completedDate, $startedDate));
-            $durationTime = $testDuration['minutes'] . ' mins ' . $testDuration['seconds'] . ' sec';
+            $durationTime = $testDuration['minutes'].' mins '.$testDuration['seconds'].' sec';
         } else {
             $durationTime = 'N/A';
         }
 
         $layout = new ViewModel();
-        $layout->setTemplate("motTestPopover");
+        $layout->setTemplate('motTestPopover');
         $layout->setVariables(['motTest' => $motTest, 'durationTime' => $durationTime]);
 
         return $viewRender->render($layout);

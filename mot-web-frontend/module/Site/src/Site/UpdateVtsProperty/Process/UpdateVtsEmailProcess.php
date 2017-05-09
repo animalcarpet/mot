@@ -14,10 +14,10 @@ class UpdateVtsEmailProcess extends AbstractSingleStepVtsProcess implements Auto
 {
     private $propertyName = UpdateVtsPropertyAction::VTS_EMAIL_PROPERTY;
     private $permission = PermissionAtSite::VTS_UPDATE_EMAIL;
-    private $submitButtonText = "Change email address";
-    private $successfulEditMessage = "Email address has been successfully changed.";
-    private $formPageTitle = "Change email address";
-    private $formPartial = "site/update-vts-property/partials/edit-email";
+    private $submitButtonText = 'Change email address';
+    private $successfulEditMessage = 'Email address has been successfully changed.';
+    private $formPageTitle = 'Change email address';
+    private $formPartial = 'site/update-vts-property/partials/edit-email';
 
     public function getPropertyName()
     {

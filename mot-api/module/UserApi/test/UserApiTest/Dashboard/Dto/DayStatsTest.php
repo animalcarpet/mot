@@ -2,11 +2,10 @@
 
 namespace UserApiTest\Dashboard\Dto;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use UserApi\Dashboard\Dto\DayStats;
 
 /**
- * Unit tests for DayStats dto
+ * Unit tests for DayStats dto.
  */
 class DayStatsTest extends \PHPUnit_Framework_TestCase
 {

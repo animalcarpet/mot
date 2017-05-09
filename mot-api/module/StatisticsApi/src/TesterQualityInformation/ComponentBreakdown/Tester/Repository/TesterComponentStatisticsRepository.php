@@ -1,7 +1,7 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Repository;
 
-use Doctrine\ORM\AbstractQuery;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\QueryBuilder\TesterComponentBreakdownQueryBuilder;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -17,10 +17,10 @@ class TesterComponentStatisticsRepository extends ComponentStatisticsRepository 
         $this->setDaysConfiguration($year, $month);
 
         return $this->getResult($qb->getSql(), [
-            self::PARAM_TESTER_ID                           => $testerId,
-            ComponentStatisticsRepository::PARAM_GROUP      => $group,
+            self::PARAM_TESTER_ID => $testerId,
+            ComponentStatisticsRepository::PARAM_GROUP => $group,
             ComponentStatisticsRepository::PARAM_START_DATE => $this->startDate,
-            ComponentStatisticsRepository::PARAM_END_DATE   => $this->endDate,
+            ComponentStatisticsRepository::PARAM_END_DATE => $this->endDate,
         ]);
     }
 }

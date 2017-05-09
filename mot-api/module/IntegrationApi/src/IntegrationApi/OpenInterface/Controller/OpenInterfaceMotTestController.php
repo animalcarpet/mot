@@ -9,11 +9,10 @@ use IntegrationApi\OpenInterface\Service\OpenInterfaceMotTestService;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class OpenInterfaceMotTestController
+ * Class OpenInterfaceMotTestController.
  */
 class OpenInterfaceMotTestController extends AbstractDvsaRestfulController
 {
-
     /**
      * Returns data of a Passed test with latest in the future expiry date.
      * Test was issued before or on given day (today if no date specified).
@@ -23,13 +22,13 @@ class OpenInterfaceMotTestController extends AbstractDvsaRestfulController
     public function getList()
     {
         $request = $this->getRequest();
-        $vrm = $request->getQuery("vrm");
+        $vrm = $request->getQuery('vrm');
 
         if (strlen(trim($vrm)) == 0) {
             ErrorSchema::throwError("'vrm' query parameter is required");
         }
 
-        $date = $request->getQuery("date");
+        $date = $request->getQuery('date');
 
         $vehicleTestInfo = $this->getMotTestService()->getPassMotTestForVehicleIssuedBefore($vrm, $date);
 

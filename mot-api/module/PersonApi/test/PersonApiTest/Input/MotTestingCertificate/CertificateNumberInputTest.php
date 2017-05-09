@@ -14,11 +14,12 @@ class CertificateNumberInputTest extends BaseInput
 
     protected function setUp()
     {
-        $this->input = new CertificateNumberInput();;
+        $this->input = new CertificateNumberInput();
     }
 
     /**
      * @dataProvider getValidData
+     *
      * @param $value
      */
     public function testValidData($value)
@@ -31,13 +32,14 @@ class CertificateNumberInputTest extends BaseInput
     public function getValidData()
     {
         return [
-            ["numCert1223"],
-            [$this->createString(CertificateNumberInput::MAX_LENGTH)]
+            ['numCert1223'],
+            [$this->createString(CertificateNumberInput::MAX_LENGTH)],
         ];
     }
 
     /**
      * @dataProvider getInvalidData
+     *
      * @param $value
      * @param $expectedMessages
      */
@@ -56,27 +58,27 @@ class CertificateNumberInputTest extends BaseInput
     {
         return [
             [
-                "",
-                [ NotEmpty::IS_EMPTY => CertificateNumberInput::MSG_EMPTY ]
+                '',
+                [NotEmpty::IS_EMPTY => CertificateNumberInput::MSG_EMPTY],
             ],
             [
-                " ",
-                [ NotEmpty::IS_EMPTY => CertificateNumberInput::MSG_EMPTY ]
+                ' ',
+                [NotEmpty::IS_EMPTY => CertificateNumberInput::MSG_EMPTY],
             ],
             [
-                $this->createString(CertificateNumberInput::MAX_LENGTH, " "),
-                [ NotEmpty::IS_EMPTY => CertificateNumberInput::MSG_EMPTY ]
+                $this->createString(CertificateNumberInput::MAX_LENGTH, ' '),
+                [NotEmpty::IS_EMPTY => CertificateNumberInput::MSG_EMPTY],
             ],
             [
-                $this->createString(CertificateNumberInput::MAX_LENGTH + 1, " "),
+                $this->createString(CertificateNumberInput::MAX_LENGTH + 1, ' '),
                 [
                     NotEmpty::IS_EMPTY => CertificateNumberInput::MSG_EMPTY,
-                    StringLength::TOO_LONG => $this->tooLongMsg(CertificateNumberInput::MSG_TOO_LONG, CertificateNumberInput::MAX_LENGTH)
-                ]
+                    StringLength::TOO_LONG => $this->tooLongMsg(CertificateNumberInput::MSG_TOO_LONG, CertificateNumberInput::MAX_LENGTH),
+                ],
             ],
             [
                 $this->createString(CertificateNumberInput::MAX_LENGTH + 1),
-                [ StringLength::TOO_LONG => $this->tooLongMsg(CertificateNumberInput::MSG_TOO_LONG, CertificateNumberInput::MAX_LENGTH)]
+                [StringLength::TOO_LONG => $this->tooLongMsg(CertificateNumberInput::MSG_TOO_LONG, CertificateNumberInput::MAX_LENGTH)],
             ],
 
         ];

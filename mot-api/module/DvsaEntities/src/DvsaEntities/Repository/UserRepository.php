@@ -6,18 +6,17 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class UserRepository
+ * Class UserRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class UserRepository extends AbstractMutableRepository
 {
-
     /**
      * @param $id
      *
      * @return Person
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getById($id)
@@ -26,6 +25,7 @@ class UserRepository extends AbstractMutableRepository
         if ($user === null) {
             throw new NotFoundException('User not found');
         }
+
         return $user;
     }
 }

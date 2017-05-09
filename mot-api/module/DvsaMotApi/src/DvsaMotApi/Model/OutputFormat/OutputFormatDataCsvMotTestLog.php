@@ -6,18 +6,16 @@ use DvsaCommonApi\Model\OutputFormat;
 use DvsaEntities\Entity\MotTest;
 
 /**
- * Format output for CVS file
+ * Format output for CVS file.
  */
 class OutputFormatDataCsvMotTestLog extends OutputFormat
 {
     /**
-     * Responsible for extracting the current item into the required format
+     * Responsible for extracting the current item into the required format.
      *
      * @param array         $results
      * @param string        $key
      * @param MotTest|array $item
-     *
-     * @return void
      */
     public function extractItem(&$results, $key, $item)
     {
@@ -25,23 +23,23 @@ class OutputFormatDataCsvMotTestLog extends OutputFormat
             $testNr = $item['number'];
 
             $result = [
-                'siteNumber'    => $item['siteNumber'],
-                'clientIp'      => $item['client_ip'],
-                'testDateTime'  => $item['testDate'],
-                'testNumber'    => $item['number'],
-                'vehicleVRM'    => $item['registration'],
-                'vehicleVIN'    => $item['vin'],
-                'vehicleMake'   => $item['makeName'],
-                'vehicleModel'  => $item['modelName'],
-                'vehicleClass'  => $item['vehicle_class'],
-                'testUsername'  => $item['userName'],
-                'testType'      => $item['testTypeName'],
-                'status'        => $item['status'],
-                'testDuration'  => gmdate('H:i:s', $item['testDuration']),
-                'emRecTester'   => $item['emRecTester'],
+                'siteNumber' => $item['siteNumber'],
+                'clientIp' => $item['client_ip'],
+                'testDateTime' => $item['testDate'],
+                'testNumber' => $item['number'],
+                'vehicleVRM' => $item['registration'],
+                'vehicleVIN' => $item['vin'],
+                'vehicleMake' => $item['makeName'],
+                'vehicleModel' => $item['modelName'],
+                'vehicleClass' => $item['vehicle_class'],
+                'testUsername' => $item['userName'],
+                'testType' => $item['testTypeName'],
+                'status' => $item['status'],
+                'testDuration' => gmdate('H:i:s', $item['testDuration']),
+                'emRecTester' => $item['emRecTester'],
                 'emRecDateTime' => $item['emRecDateTime'],
-                'emReason'      => $item['emReason'],
-                'emCode'        => $item['emCode'],
+                'emReason' => $item['emReason'],
+                'emCode' => $item['emCode'],
             ];
 
             $results[$testNr] = $result;

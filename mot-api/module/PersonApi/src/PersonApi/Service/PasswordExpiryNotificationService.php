@@ -2,9 +2,7 @@
 
 namespace PersonApi\Service;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaEntities\Entity\PasswordDetail;
-use DvsaFeature\FeatureToggles;
 use NotificationApi\Service\NotificationService;
 use NotificationApi\Dto\Notification;
 use DvsaEntities\Repository\NotificationRepository;
@@ -14,8 +12,8 @@ use DvsaCommon\Database\Transaction;
 
 class PasswordExpiryNotificationService
 {
-    const EXPIRY_DAY_TOMORROW = "tomorrow";
-    const EXPIRY_IN_XX_DAYS = "in %d days";
+    const EXPIRY_DAY_TOMORROW = 'tomorrow';
+    const EXPIRY_IN_XX_DAYS = 'in %d days';
 
     private $notificationService;
     private $notificationRepository;
@@ -39,6 +37,7 @@ class PasswordExpiryNotificationService
     /**
      * @param int $personId
      * @param int $day
+     *
      * @return int
      */
     public function send($personId, $day)
@@ -47,8 +46,8 @@ class PasswordExpiryNotificationService
         $data = (new Notification())
             ->setRecipient($person->getId())
             ->setTemplate(Notification::TEMPLATE_PASSWORD_EXPIRY)
-            ->addField("expiryDay", $this->getExpiryDay($day))
-            ->addField("change_password_url", '/your-profile/change-password')
+            ->addField('expiryDay', $this->getExpiryDay($day))
+            ->addField('change_password_url', '/your-profile/change-password')
             ->toArray();
 
         $this->transaction->begin();
@@ -73,12 +72,12 @@ class PasswordExpiryNotificationService
             throw $e;
         }
 
-
         return $notificationId;
     }
 
     /**
      * @param int $day
+     *
      * @return string
      */
     private function getExpiryDay($day)

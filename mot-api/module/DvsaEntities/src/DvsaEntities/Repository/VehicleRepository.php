@@ -7,26 +7,27 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use DvsaEntities\Entity\Vehicle;
 
 /**
- * Class VehicleRepository
+ * Class VehicleRepository.
+ *
  * @method Vehicle get(int $id)
  * @method Vehicle|null find($id, $lockMode = LockMode::NONE, $lockVersion = null)
  * @codeCoverageIgnore
  */
 class VehicleRepository extends AbstractVehicleRepository
 {
-
     public function getAll()
     {
         return $this->findAll();
     }
 
     /**
-     * This function allow us to paginate all the database to avoid memory limit
+     * This function allow us to paginate all the database to avoid memory limit.
      *
-     * @param int $start
-     * @param int $offset
+     * @param int    $start
+     * @param int    $offset
      * @param string $orderBy
-     * @param int $hydrateMode
+     * @param int    $hydrateMode
+     *
      * @return array
      */
     public function getAllDataForEsIngestion($start, $offset, $orderBy = 'vehicle.id', $hydrateMode = \Doctrine\ORM\Query::HYDRATE_OBJECT)
@@ -46,9 +47,10 @@ class VehicleRepository extends AbstractVehicleRepository
     }
 
     /**
-     * Search used for 'vehicle information' list
-     * @param string $vin       VIN number
-     * @param string $reg       Registration number
+     * Search used for 'vehicle information' list.
+     *
+     * @param string $vin   VIN number
+     * @param string $reg   Registration number
      * @param int    $limit
      *
      * @return array
@@ -57,18 +59,20 @@ class VehicleRepository extends AbstractVehicleRepository
     {
         return $this->createExactMatchSearchQueryBuilder('vehicle', $vin, $reg, $limit, 'vin', 'registration')
             ->select([
-                'vehicle'
+                'vehicle',
             ])
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * Different conditions are used on 'vehicle information' search
+     * Different conditions are used on 'vehicle information' search.
+     *
      * @param $alias
      * @param $vin
      * @param $reg
      * @param $limit
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     protected function createExactMatchSearchQueryBuilder($alias, $vin, $reg, $limit, $vinColumn = 'vinCollapsed',
@@ -79,12 +83,12 @@ class VehicleRepository extends AbstractVehicleRepository
         if (!empty($vin)) {
             $preparedVin = $this->sanitize($vin);
             $queryBuilder->andWhere("vehicle.{$vinColumn} = :vin");
-            $queryBuilder->setParameter("vin", $preparedVin);
+            $queryBuilder->setParameter('vin', $preparedVin);
         }
 
         if (!empty($reg)) {
             $queryBuilder->andWhere("vehicle.{$registrationColumn} = :reg");
-            $queryBuilder->setParameter("reg", $this->sanitize($reg));
+            $queryBuilder->setParameter('reg', $this->sanitize($reg));
         }
 
         if (!empty($limit)) {

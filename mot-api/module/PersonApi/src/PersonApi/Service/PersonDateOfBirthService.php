@@ -43,6 +43,7 @@ class PersonDateOfBirthService extends AbstractService
     /**
      * @param $personId
      * @param $data
+     *
      * @throws BadRequestException
      * @throws UnauthorisedException
      * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
@@ -73,6 +74,7 @@ class PersonDateOfBirthService extends AbstractService
 
     /**
      * @param $personId
+     *
      * @throws UnauthorisedException
      */
     private function assertNotChangingOwnName($personId)

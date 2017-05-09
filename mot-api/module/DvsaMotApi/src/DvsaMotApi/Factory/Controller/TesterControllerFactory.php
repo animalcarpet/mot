@@ -20,7 +20,7 @@ class TesterControllerFactory implements FactoryInterface
     {
         /* @var ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
-        $testerService  = $serviceLocator->get('TesterService');
+        $testerService = $serviceLocator->get('TesterService');
 
         return new TesterController($testerService);
     }

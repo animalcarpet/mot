@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service\Validator;
 
 use DvsaCommonTest\TestUtils\XMock;
@@ -25,7 +26,6 @@ class ChangePasswordValidatorTest extends AbstractServiceTestCase
 
         $validator = $this->createValidator(XMock::of(OpenAMClientInterface::class));
         $validator->validate($data);
-
     }
 
     public function testValidateThrowsExceptionWhenOldPasswordIsInvalid()
@@ -33,16 +33,16 @@ class ChangePasswordValidatorTest extends AbstractServiceTestCase
         $this->setExpectedException(BadRequestException::class);
 
         $data = [
-            ChangePasswordInputFilter::FIELD_OLD_PASSWORD => "InvalidPassword",
-            ChangePasswordInputFilter::FIELD_PASSWORD => "Password1",
-            ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => "Password1"
+            ChangePasswordInputFilter::FIELD_OLD_PASSWORD => 'InvalidPassword',
+            ChangePasswordInputFilter::FIELD_PASSWORD => 'Password1',
+            ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'Password1',
         ];
 
         $openAMClient = XMock::of(OpenAMClientInterface::class);
         $openAMClient
             ->expects($this->any())
             ->method('validateCredentials')
-            ->willThrowException(new OpenAMClientException("Invalid password!!"));
+            ->willThrowException(new OpenAMClientException('Invalid password!!'));
 
         $validator = $this->createValidator($openAMClient);
         $validator->validate($data);
@@ -53,51 +53,51 @@ class ChangePasswordValidatorTest extends AbstractServiceTestCase
         return [
             [
                 [],
-                RequiredFieldException::class
+                RequiredFieldException::class,
             ],
 
             [
-                [ChangePasswordInputFilter::FIELD_PASSWORD => ""],
-                RequiredFieldException::class
+                [ChangePasswordInputFilter::FIELD_PASSWORD => ''],
+                RequiredFieldException::class,
             ],
             [
                 [
-                    ChangePasswordInputFilter::FIELD_PASSWORD => "Password1",
-                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => "Password1"
+                    ChangePasswordInputFilter::FIELD_PASSWORD => 'Password1',
+                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'Password1',
                 ],
-                RequiredFieldException::class
+                RequiredFieldException::class,
             ],
             [
                 [
-                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => "",
-                    ChangePasswordInputFilter::FIELD_PASSWORD => "Password1",
-                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => "pASSWORD1"
+                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => '',
+                    ChangePasswordInputFilter::FIELD_PASSWORD => 'Password1',
+                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'pASSWORD1',
                 ],
-                RequiredFieldException::class
+                RequiredFieldException::class,
             ],
             [
                 [
-                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => "OldPassword1",
-                    ChangePasswordInputFilter::FIELD_PASSWORD => "Password1",
-                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => ""
+                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => 'OldPassword1',
+                    ChangePasswordInputFilter::FIELD_PASSWORD => 'Password1',
+                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => '',
                 ],
-                RequiredFieldException::class
+                RequiredFieldException::class,
             ],
             [
                 [
-                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => "OldPassword1",
-                    ChangePasswordInputFilter::FIELD_PASSWORD => "",
-                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => "Password1"
+                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => 'OldPassword1',
+                    ChangePasswordInputFilter::FIELD_PASSWORD => '',
+                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'Password1',
                 ],
-                RequiredFieldException::class
+                RequiredFieldException::class,
             ],
             [
                 [
-                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => "OldPassword1",
-                    ChangePasswordInputFilter::FIELD_PASSWORD => "password",
-                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => "passwofrd"
+                    ChangePasswordInputFilter::FIELD_OLD_PASSWORD => 'OldPassword1',
+                    ChangePasswordInputFilter::FIELD_PASSWORD => 'password',
+                    ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'passwofrd',
                 ],
-                BadRequestException::class
+                BadRequestException::class,
             ],
         ];
     }
@@ -106,11 +106,12 @@ class ChangePasswordValidatorTest extends AbstractServiceTestCase
     {
         $inputFilter = new ChangePasswordInputFilter($this->createIdentityProvider());
         $inputFilter->init();
+
         return new ChangePasswordValidator(
             $this->createIdentityProvider(),
             $inputFilter,
             $openAmClient,
-            "mot"
+            'mot'
         );
     }
 
@@ -119,13 +120,13 @@ class ChangePasswordValidatorTest extends AbstractServiceTestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUsername")
+            ->method('getUsername')
             ->willReturn(self::USERNAME);
 
         $identityProvider = XMock::of(MotIdentityProviderInterface::class);
         $identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         return $identityProvider;

@@ -5,9 +5,7 @@ namespace DvsaClientTest\Entity;
 use DvsaClient\Entity\ContactDetail;
 
 /**
- * Class ContactDetailTest
- *
- * @package DvsaClientTest\Entity
+ * Class ContactDetailTest.
  */
 class ContactDetailTest extends BaseEntityTestCase
 {

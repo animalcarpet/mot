@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\FormWizard;
 
 class StepResult

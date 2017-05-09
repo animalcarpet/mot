@@ -5,48 +5,47 @@ use TestSupport\Controller\GdsSurveyController;
 use TestSupport\Controller\VehicleTestingAdviceController;
 
 return [
-    'controllers'  => [
+    'controllers' => [
         'invokables' => [
-            Controller\FeaturesController::class            => Controller\FeaturesController::class,
-            Controller\IndexController::class               => Controller\IndexController::class,
-            Controller\ResetController::class               => Controller\ResetController::class,
-            Controller\TesterDataController::class          => Controller\TesterDataController::class,
-            Controller\InactiveTesterDataController::class  => Controller\InactiveTesterDataController::class,
-            Controller\SchemeMgtUserDataController::class   => Controller\SchemeMgtUserDataController::class,
-            Controller\SchemeUserDataController::class      => Controller\SchemeUserDataController::class,
-            Controller\AeDataController::class              => Controller\AeDataController::class,
-            Controller\OrganisationRoleDataController::class             => Controller\OrganisationRoleDataController::class,
-            Controller\AedmDataController::class            => Controller\AedmDataController::class,
-            Controller\VtsDataController::class             => Controller\VtsDataController::class,
-            Controller\SiteManagerDataController::class     => Controller\SiteManagerDataController::class,
-            Controller\SiteAdminDataController::class       => Controller\SiteAdminDataController::class,
-            Controller\AreaOffice1DataController::class     => Controller\AreaOffice1DataController::class,
-            Controller\AreaOffice2DataController::class     => Controller\AreaOffice2DataController::class,
-            Controller\FinanceUserController::class         => Controller\FinanceUserController::class,
+            Controller\FeaturesController::class => Controller\FeaturesController::class,
+            Controller\IndexController::class => Controller\IndexController::class,
+            Controller\ResetController::class => Controller\ResetController::class,
+            Controller\TesterDataController::class => Controller\TesterDataController::class,
+            Controller\InactiveTesterDataController::class => Controller\InactiveTesterDataController::class,
+            Controller\SchemeMgtUserDataController::class => Controller\SchemeMgtUserDataController::class,
+            Controller\SchemeUserDataController::class => Controller\SchemeUserDataController::class,
+            Controller\AeDataController::class => Controller\AeDataController::class,
+            Controller\OrganisationRoleDataController::class => Controller\OrganisationRoleDataController::class,
+            Controller\AedmDataController::class => Controller\AedmDataController::class,
+            Controller\VtsDataController::class => Controller\VtsDataController::class,
+            Controller\SiteManagerDataController::class => Controller\SiteManagerDataController::class,
+            Controller\SiteAdminDataController::class => Controller\SiteAdminDataController::class,
+            Controller\AreaOffice1DataController::class => Controller\AreaOffice1DataController::class,
+            Controller\AreaOffice2DataController::class => Controller\AreaOffice2DataController::class,
+            Controller\FinanceUserController::class => Controller\FinanceUserController::class,
             Controller\VehicleExaminerDataController::class => Controller\VehicleExaminerDataController::class,
-            Controller\VM10519UserDataController::class     => Controller\VM10519UserDataController::class,
-            Controller\VM10619RoleManagementUpgradeController::class    => Controller\VM10619RoleManagementUpgradeController::class,
-            Controller\AssessorDataController::class        => Controller\AssessorDataController::class,
-            Controller\UserDataController::class            => Controller\UserDataController::class,
-            Controller\TestSupportMotTestController::class  => Controller\TestSupportMotTestController::class,
-            Controller\RouteDumpController::class           => Controller\RouteDumpController::class,
-            Controller\CacheController::class               => Controller\CacheController::class,
-            Controller\VehicleDataController::class         => Controller\VehicleDataController::class,
-            Controller\SpecialNoticeDataController::class   => Controller\SpecialNoticeDataController::class,
-            Controller\CustomerServiceCentreOperativeDataController::class
-                => Controller\CustomerServiceCentreOperativeDataController::class,
-            Controller\CustomerServiceManagerDataController::class     => Controller\CustomerServiceManagerDataController::class,
-            Controller\DvlaOperativeDataController::class   => Controller\DvlaOperativeDataController::class,
-            Controller\EventDataController::class           => Controller\EventDataController::class,
-            Controller\SecurityQuestionDataController::class=> Controller\SecurityQuestionDataController::class,
-            Controller\PasswordResetDataController::class   => Controller\PasswordResetDataController::class,
-            Controller\SlotTransactionController::class     =>   Controller\SlotTransactionController::class,
+            Controller\VM10519UserDataController::class => Controller\VM10519UserDataController::class,
+            Controller\VM10619RoleManagementUpgradeController::class => Controller\VM10619RoleManagementUpgradeController::class,
+            Controller\AssessorDataController::class => Controller\AssessorDataController::class,
+            Controller\UserDataController::class => Controller\UserDataController::class,
+            Controller\TestSupportMotTestController::class => Controller\TestSupportMotTestController::class,
+            Controller\RouteDumpController::class => Controller\RouteDumpController::class,
+            Controller\CacheController::class => Controller\CacheController::class,
+            Controller\VehicleDataController::class => Controller\VehicleDataController::class,
+            Controller\SpecialNoticeDataController::class => Controller\SpecialNoticeDataController::class,
+            Controller\CustomerServiceCentreOperativeDataController::class => Controller\CustomerServiceCentreOperativeDataController::class,
+            Controller\CustomerServiceManagerDataController::class => Controller\CustomerServiceManagerDataController::class,
+            Controller\DvlaOperativeDataController::class => Controller\DvlaOperativeDataController::class,
+            Controller\EventDataController::class => Controller\EventDataController::class,
+            Controller\SecurityQuestionDataController::class => Controller\SecurityQuestionDataController::class,
+            Controller\PasswordResetDataController::class => Controller\PasswordResetDataController::class,
+            Controller\SlotTransactionController::class => Controller\SlotTransactionController::class,
             Controller\DvlaVehicleDataController::class => Controller\DvlaVehicleDataController::class,
             Controller\TesterAuthorisationStatusController::class => Controller\TesterAuthorisationStatusController::class,
-            Controller\DocumentController::class            => Controller\DocumentController::class,
-            Controller\PersonRoleController::class          => Controller\PersonRoleController::class,
-            Controller\SiteRoleController::class            => Controller\SiteRoleController::class,
-            Controller\TwoFactorAuthCardController::class   => Controller\TwoFactorAuthCardController::class,
+            Controller\DocumentController::class => Controller\DocumentController::class,
+            Controller\PersonRoleController::class => Controller\PersonRoleController::class,
+            Controller\SiteRoleController::class => Controller\SiteRoleController::class,
+            Controller\TwoFactorAuthCardController::class => Controller\TwoFactorAuthCardController::class,
             Controller\QualificationDetailsController::class => Controller\QualificationDetailsController::class,
             Controller\StatisticsAmazonCacheController::class => Controller\StatisticsAmazonCacheController::class,
             Controller\ClaimAccountController::class => Controller\ClaimAccountController::class,
@@ -55,358 +54,358 @@ return [
             Controller\OrganisationRoleNominationController::class => Controller\OrganisationRoleNominationController::class,
             Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
             GdsSurveyController::class => GdsSurveyController::class,
-            VehicleTestingAdviceController::class => VehicleTestingAdviceController::class
+            VehicleTestingAdviceController::class => VehicleTestingAdviceController::class,
         ],
     ],
-    'router'       => [
+    'router' => [
         'routes' => [
-            'index'       => [
-                'type'    => 'Segment',
+            'index' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/',
+                    'route' => '/',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                     ],
                 ],
             ],
-            'reset'       => [
-                'type'    => 'Segment',
+            'reset' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/reset',
+                    'route' => '/reset',
                     'defaults' => [
                         'controller' => Controller\ResetController::class,
                     ],
                 ],
             ],
             'testsupport' => [
-                'type'         => 'Segment',
-                'options'      => [
+                'type' => 'Segment',
+                'options' => [
                     'route' => '/testsupport',
                 ],
                 'child_routes' => [
                     'claimAccountSub' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/claimaccount',
+                            'route' => '/claimaccount',
                             'defaults' => [
-                                'controller' => Controller\ClaimAccountController::class
+                                'controller' => Controller\ClaimAccountController::class,
                             ],
                         ],
                     ],
-                    'testerSub'          => [
-                        'type'    => 'Segment',
+                    'testerSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/tester',
+                            'route' => '/tester',
                             'defaults' => [
-                                'controller' => Controller\TesterDataController::class
+                                'controller' => Controller\TesterDataController::class,
                             ],
                         ],
                     ],
                     'generate-survey' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/survey/reports/generate',
+                            'route' => '/survey/reports/generate',
                             'defaults' => [
                                 'controller' => GdsSurveyController::class,
                             ],
                         ],
                     ],
-                    'inactiveTesterSub'          => [
-                        'type'    => 'Segment',
+                    'inactiveTesterSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/inactivetester',
+                            'route' => '/inactivetester',
                             'defaults' => [
-                                'controller' => Controller\InactiveTesterDataController::class
+                                'controller' => Controller\InactiveTesterDataController::class,
                             ],
                         ],
                     ],
-                    'catUserSub'          => [
-                        'type'    => 'Segment',
+                    'catUserSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/catuser',
+                            'route' => '/catuser',
                             'defaults' => [
-                                'controller' => Controller\CatUserController::class
+                                'controller' => Controller\CatUserController::class,
                             ],
                         ],
                     ],
-                    'featuresSub'          => [
-                        'type'    => 'Segment',
+                    'featuresSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/features/:featureName',
+                            'route' => '/features/:featureName',
                             'defaults' => [
-                                'controller' => Controller\FeaturesController::class
+                                'controller' => Controller\FeaturesController::class,
                             ],
                         ],
                     ],
-                    'schmSub'            => [
-                        'type'    => 'Segment',
+                    'schmSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/schm',
+                            'route' => '/schm',
                             'defaults' => [
-                                'controller' => Controller\SchemeMgtUserDataController::class
+                                'controller' => Controller\SchemeMgtUserDataController::class,
                             ],
                         ],
                     ],
-                    'schuserSub'            => [
-                        'type'    => 'Segment',
+                    'schuserSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/schemeuser',
+                            'route' => '/schemeuser',
                             'defaults' => [
-                                'controller' => Controller\SchemeUserDataController::class
+                                'controller' => Controller\SchemeUserDataController::class,
                             ],
                         ],
                     ],
-                    'aeSub'              => [
-                        'type'    => 'Segment',
+                    'aeSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/ae',
+                            'route' => '/ae',
                             'defaults' => [
-                                'controller' => Controller\AeDataController::class
+                                'controller' => Controller\AeDataController::class,
                             ],
                         ],
                     ],
-                    'aedSub'             => [
-                        'type'    => 'Segment',
+                    'aedSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/aed',
+                            'route' => '/aed',
                             'defaults' => [
-                                'controller' => Controller\OrganisationRoleDataController::class
+                                'controller' => Controller\OrganisationRoleDataController::class,
                             ],
                         ],
                     ],
-                    'aedmSub'            => [
-                        'type'    => 'Segment',
+                    'aedmSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/aedm',
+                            'route' => '/aedm',
                             'defaults' => [
-                                'controller' => Controller\AedmDataController::class
+                                'controller' => Controller\AedmDataController::class,
                             ],
                         ],
                     ],
-                    'financeSub'            => [
-                        'type'    => 'Segment',
+                    'financeSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/financeuser',
+                            'route' => '/financeuser',
                             'defaults' => [
-                                'controller' => Controller\FinanceUserController::class
+                                'controller' => Controller\FinanceUserController::class,
                             ],
                         ],
                     ],
-                    'motTestSub'         => [
-                        'type'    => 'Segment',
+                    'motTestSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/mottest',
+                            'route' => '/mottest',
                             'constraints' => [
                                 'id' => '[0-9]+',
                             ],
-                            'defaults'    => [
-                                'controller' => Controller\TestSupportMotTestController::class
+                            'defaults' => [
+                                'controller' => Controller\TestSupportMotTestController::class,
                             ],
                         ],
                     ],
-                    'siteSub'            => [
-                        'type'    => 'Segment',
+                    'siteSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/vts',
+                            'route' => '/vts',
                             'defaults' => [
-                                'controller' => Controller\VtsDataController::class
+                                'controller' => Controller\VtsDataController::class,
                             ],
                         ],
                     ],
-                    'siteManagerSub'     => [
-                        'type'    => 'Segment',
+                    'siteManagerSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/vts/sm',
+                            'route' => '/vts/sm',
                             'defaults' => [
-                                'controller' => Controller\SiteManagerDataController::class
+                                'controller' => Controller\SiteManagerDataController::class,
                             ],
                         ],
                     ],
-                    'siteAdminSub'       => [
-                        'type'    => 'Segment',
+                    'siteAdminSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/vts/sa',
+                            'route' => '/vts/sa',
                             'defaults' => [
-                                'controller' => Controller\SiteAdminDataController::class
+                                'controller' => Controller\SiteAdminDataController::class,
                             ],
                         ],
                     ],
-                    'areaAdminSub'       => [
-                        'type'    => 'Segment',
+                    'areaAdminSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/areaoffice1',
+                            'route' => '/areaoffice1',
                             'defaults' => [
-                                'controller' => Controller\AreaOffice1DataController::class
+                                'controller' => Controller\AreaOffice1DataController::class,
                             ],
                         ],
                     ],
-                    'areaOffice2Sub'       => [
-                        'type'    => 'Segment',
+                    'areaOffice2Sub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/areaoffice2',
+                            'route' => '/areaoffice2',
                             'defaults' => [
-                                'controller' => Controller\AreaOffice2DataController::class
+                                'controller' => Controller\AreaOffice2DataController::class,
                             ],
                         ],
                     ],
                     'vehicleExaminerSub' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/vehicleexaminer',
+                            'route' => '/vehicleexaminer',
                             'defaults' => [
-                                'controller' => Controller\VehicleExaminerDataController::class
+                                'controller' => Controller\VehicleExaminerDataController::class,
                             ],
                         ],
                     ],
                     'superVehicleExaminerSub' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/vm10519user',
+                            'route' => '/vm10519user',
                             'defaults' => [
-                                'controller' => Controller\VM10519UserDataController::class
+                                'controller' => Controller\VM10519UserDataController::class,
                             ],
                         ],
                     ],
                     'vm10619rolemanagementupgrade' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/vm10619rolemanagementupgrade',
+                            'route' => '/vm10619rolemanagementupgrade',
                             'defaults' => [
-                                'controller' => Controller\VM10619RoleManagementUpgradeController::class
+                                'controller' => Controller\VM10619RoleManagementUpgradeController::class,
                             ],
                         ],
                     ],
-                    'assessorSub'        => [
-                        'type'    => 'Segment',
+                    'assessorSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/assessor',
+                            'route' => '/assessor',
                             'defaults' => [
-                                'controller' => Controller\AssessorDataController::class
+                                'controller' => Controller\AssessorDataController::class,
                             ],
                         ],
                     ],
-                    'userSub'            => [
-                        'type'    => 'Segment',
+                    'userSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/user',
+                            'route' => '/user',
                             'defaults' => [
-                                'controller' => Controller\UserDataController::class
+                                'controller' => Controller\UserDataController::class,
                             ],
                         ],
                     ],
-                    'cscoSub'            => [
-                        'type'    => 'Segment',
+                    'cscoSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/csco',
+                            'route' => '/csco',
                             'defaults' => [
                                 'controller' => Controller\CustomerServiceCentreOperativeDataController::class,
                             ],
                         ],
                     ],
-                    'csmSub'             => [
-                        'type'    => 'Segment',
+                    'csmSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/csm',
+                            'route' => '/csm',
                             'defaults' => [
                                 'controller' => Controller\CustomerServiceManagerDataController::class,
                             ],
                         ],
                     ],
-                    'dvlaOperative'            => [
-                        'type'    => 'Segment',
+                    'dvlaOperative' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/dvlaoperative',
+                            'route' => '/dvlaoperative',
                             'defaults' => [
                                 'controller' => Controller\DvlaOperativeDataController::class,
                             ],
                         ],
                     ],
-                    'routesSub'          => [
-                        'type'    => 'Segment',
+                    'routesSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/routes',
+                            'route' => '/routes',
                             'defaults' => [
-                                'controller' => Controller\RouteDumpController::class
+                                'controller' => Controller\RouteDumpController::class,
                             ],
                         ],
                     ],
-                    'vehicleSub'         => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                    'vehicleSub' => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/vehicle',
                         ],
                         'child_routes' => [
                             'v5cSub' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/v5c-add',
+                                    'route' => '/v5c-add',
                                     'defaults' => [
                                         'controller' => Controller\VehicleDataController::class,
-                                        'action' => 'v5cAdd'
+                                        'action' => 'v5cAdd',
                                     ],
                                 ],
                             ],
                             'create-vehicle' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/create',
+                                    'route' => '/create',
                                     'defaults' => [
                                         'controller' => Controller\VehicleDataController::class,
-                                        'action' => 'create'
+                                        'action' => 'create',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'dvlaVehicle'         => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                    'dvlaVehicle' => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/dvla-vehicle',
                         ],
                         'child_routes' => [
                             'create-vehicle' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/create',
+                                    'route' => '/create',
                                     'defaults' => [
                                         'controller' => Controller\DvlaVehicleDataController::class,
-                                        'action' => 'create'
+                                        'action' => 'create',
                                     ],
                                 ],
                             ],
                         ],
                     ],
                     'specialNoticeSub' => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/special-notice',
                         ],
                         'child_routes' => [
                             'broadcastSub' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/broadcast',
+                                    'route' => '/broadcast',
                                     'defaults' => [
                                         'controller' => Controller\SpecialNoticeDataController::class,
-                                        'action' => 'broadcast'
+                                        'action' => 'broadcast',
                                     ],
                                 ],
                             ],
                             'createSub' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/create',
+                                    'route' => '/create',
                                     'defaults' => [
                                         'controller' => Controller\SpecialNoticeDataController::class,
-                                        'action' => 'create'
+                                        'action' => 'create',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'eventSub'         => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                    'eventSub' => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/event/create',
                             'defaults' => [
                                 'controller' => Controller\EventDataController::class,
@@ -414,18 +413,18 @@ return [
                         ],
                     ],
                     'clearStatisticsAmazonCache' => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/clear-statistics-amazon-cache',
                             'defaults' => [
                                 'controller' => Controller\StatisticsAmazonCacheController::class,
-                                'action' => 'removeAll'
+                                'action' => 'removeAll',
                             ],
                         ],
                     ],
                     'qualificationDetailsSub' => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/qualification-details',
                             'defaults' => [
                                 'controller' => Controller\QualificationDetailsController::class,
@@ -433,17 +432,17 @@ return [
                         ],
                     ],
                     'annualExamSub' => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/annual-assessment-certificate',
                             'defaults' => [
                                 'controller' => Controller\AnnualAssessmentCertificateController::class,
                             ],
                         ],
                     ],
-                    'securityQuestionSub'         => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                    'securityQuestionSub' => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/security-question/create',
                             'defaults' => [
                                 'controller' => Controller\SecurityQuestionDataController::class,
@@ -451,17 +450,17 @@ return [
                         ],
                     ],
                     'resetPasswordTokenSub' => [
-                        'type'         => 'Segment',
-                        'options'      => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/reset-password',
                             'defaults' => [
                                 'controller' => Controller\PasswordResetDataController::class,
                             ],
                         ],
                     ],
-                    'slotTransaction'=> [
-                        'type'         => 'Segment',
-                        'options'      => [
+                    'slotTransaction' => [
+                        'type' => 'Segment',
+                        'options' => [
                             'route' => '/slot-transaction',
                             'defaults' => [
                                 'controller' => Controller\SlotTransactionController::class,
@@ -469,153 +468,153 @@ return [
                         ],
                     ],
                     'testerAuthorisationStatus' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/tester-authorisation-status',
+                            'route' => '/tester-authorisation-status',
                             'defaults' => [
-                                'controller' => Controller\TesterAuthorisationStatusController::class
+                                'controller' => Controller\TesterAuthorisationStatusController::class,
                             ],
                         ],
                     ],
                     'document' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/document[/:id]',
+                            'route' => '/document[/:id]',
                             'defaults' => [
-                                'controller' => Controller\DocumentController::class
-                            ]
-                        ]
+                                'controller' => Controller\DocumentController::class,
+                            ],
+                        ],
                     ],
-                    'person'           => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'       => '/person/:id',
+                    'person' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/person/:id',
                             'constraints' => [
-                                'id' => '[0-9]+'
+                                'id' => '[0-9]+',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'add_role' => [
-                                'verb'    => 'put',
-                                'type'    => 'Segment',
+                                'verb' => 'put',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'       => '/role/:role',
-                                    'defaults'    => [
+                                    'route' => '/role/:role',
+                                    'defaults' => [
                                         'controller' => Controller\PersonRoleController::class,
                                     ],
-                                ]
+                                ],
                             ],
                             'add_site_role' => [
-                                'verb'    => 'put',
-                                'type'    => 'Segment',
+                                'verb' => 'put',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'       => '/site/:site/site-role/:role',
-                                    'defaults'    => [
-                                        'controller' => Controller\SiteRoleController::class
+                                    'route' => '/site/:site/site-role/:role',
+                                    'defaults' => [
+                                        'controller' => Controller\SiteRoleController::class,
                                     ],
-                                ]
+                                ],
                             ],
                             'delete_role' => [
-                                'verb'    => 'delete',
-                                'type'    => 'Segment',
+                                'verb' => 'delete',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'       => '/roles/:role',
+                                    'route' => '/roles/:role',
                                     'constraints' => [
                                         'role' => '[A-Z0-9-]+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => Controller\PersonRoleController::class,
                                     ],
-                                ]
+                                ],
                             ],
                         ],
                     ],
-                    'twoFactorAuthSub'          => [
-                        'type'    => 'Segment',
+                    'twoFactorAuthSub' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/two-factor-auth/card',
+                            'route' => '/two-factor-auth/card',
                             'defaults' => [
-                                'controller' => Controller\TwoFactorAuthCardController::class
+                                'controller' => Controller\TwoFactorAuthCardController::class,
                             ],
                         ],
                     ],
-                    'site-role-nomination'          => [
-                        'type'    => 'Segment',
+                    'site-role-nomination' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/site/role/nomination',
+                            'route' => '/site/role/nomination',
                             'defaults' => [
-                                'controller' => Controller\SiteRoleNominationController::class
+                                'controller' => Controller\SiteRoleNominationController::class,
                             ],
                         ],
                     ],
-                    'role-nomination'          => [
-                        'type'    => 'Segment',
+                    'role-nomination' => [
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/org/role/nomination',
+                            'route' => '/org/role/nomination',
                             'defaults' => [
-                                'controller' => Controller\OrganisationRoleNominationController::class
+                                'controller' => Controller\OrganisationRoleNominationController::class,
                             ],
                         ],
                     ],
                     'vehicleTestingAdvice' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/vehicle-testing-advice',
+                            'route' => '/vehicle-testing-advice',
                             'defaults' => [
-                                'controller' => VehicleTestingAdviceController::class
+                                'controller' => VehicleTestingAdviceController::class,
                             ],
                         ],
                     ],
                 ],
             ],
-            'cache'       => [
-                'type'          => 'Literal',
-                'options'       => [
-                    'route'    => '/cache',
+            'cache' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route' => '/cache',
                     'defaults' => [
                         'controller' => Controller\CacheController::class,
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'apc' => [
-                        'type'    => 'Literal',
+                        'type' => 'Literal',
                         'options' => [
-                            'route'    => '/apc',
-                            'verb'     => 'delete',
+                            'route' => '/apc',
+                            'verb' => 'delete',
                             'defaults' => [
-                                'action' => 'apc-cache-clear'
+                                'action' => 'apc-cache-clear',
                             ],
                         ],
                     ],
-                    'op'  => [
-                        'type'    => 'Literal',
+                    'op' => [
+                        'type' => 'Literal',
                         'options' => [
-                            'route'    => '/op',
-                            'verb'     => 'delete',
+                            'route' => '/op',
+                            'verb' => 'delete',
                             'defaults' => [
-                                'action' => 'op-cache-clear'
+                                'action' => 'op-cache-clear',
                             ],
                         ],
                     ],
-                    'mot-api'  => [
-                        'type'    => 'Literal',
+                    'mot-api' => [
+                        'type' => 'Literal',
                         'options' => [
-                            'route'    => '/mot-api',
-                            'verb'     => 'delete',
+                            'route' => '/mot-api',
+                            'verb' => 'delete',
                             'defaults' => [
-                                'action' => 'mot-api-cache-clear'
+                                'action' => 'mot-api-cache-clear',
                             ],
                         ],
                     ],
-                    'mot-web-frontend'  => [
-                        'type'    => 'Literal',
+                    'mot-web-frontend' => [
+                        'type' => 'Literal',
                         'options' => [
-                            'route'    => '/mot-web-frontend',
-                            'verb'     => 'delete',
+                            'route' => '/mot-web-frontend',
+                            'verb' => 'delete',
                             'defaults' => [
-                                'action' => 'mot-web-frontend-cache-clear'
+                                'action' => 'mot-web-frontend-cache-clear',
                             ],
                         ],
                     ],

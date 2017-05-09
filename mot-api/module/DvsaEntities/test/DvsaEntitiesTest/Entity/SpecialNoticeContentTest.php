@@ -1,11 +1,11 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
-use DvsaEntitiesTest\Entity\BaseEntityTestCase;
 use DvsaEntities\Entity\SpecialNoticeContent;
 
 /**
- * Class SpecialNoticeContentTest
+ * Class SpecialNoticeContentTest.
  */
 class SpecialNoticeContentTest extends BaseEntityTestCase
 {

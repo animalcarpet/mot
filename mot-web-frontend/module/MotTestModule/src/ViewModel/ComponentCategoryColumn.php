@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
-
 class ComponentCategoryColumn
 {
     /**

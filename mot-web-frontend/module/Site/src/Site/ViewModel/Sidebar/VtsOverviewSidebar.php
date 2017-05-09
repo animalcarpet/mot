@@ -42,8 +42,7 @@ class VtsOverviewSidebar extends GeneralSidebar
         RiskAssessmentScoreRagClassifier $ragClassifier,
         $activeMotTestCount,
         ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->featureToggles = $featureToggles;
         $this->vtsId = $vtsId;
@@ -136,7 +135,7 @@ class VtsOverviewSidebar extends GeneralSidebar
             $relatedLinks->addLink($this->createSiteAssessmentLink());
         }
 
-        if($this->canAccessTestQualityInformation()) {
+        if ($this->canAccessTestQualityInformation()) {
             $relatedLinks->addLink($this->createTestQualityInformationLink());
         }
 
@@ -147,7 +146,8 @@ class VtsOverviewSidebar extends GeneralSidebar
 
     private function createEventsHistoryLink()
     {
-        $eventsUrl = '/event/list/site/' . $this->vtsId;
+        $eventsUrl = '/event/list/site/'.$this->vtsId;
+
         return new GeneralSidebarLink('event-history', 'Events history', $eventsUrl);
     }
 
@@ -160,15 +160,14 @@ class VtsOverviewSidebar extends GeneralSidebar
 
     private function createSiteAssessmentLink()
     {
-        if($this->canChangeRiskAssessment() && $this->hasBeenAssessed) {
+        if ($this->canChangeRiskAssessment() && $this->hasBeenAssessed) {
             $siteAssessmentUrl = VehicleTestingStationUrlBuilderWeb::viewSiteRiskAssessment($this->vtsId);
             $linkValue = 'Site assessment';
-        }
-        elseif ($this->canViewRiskAssessment()){
+        } elseif ($this->canViewRiskAssessment()) {
             $siteAssessmentUrl = VehicleTestingStationUrlBuilderWeb::addSiteRiskAssessment($this->vtsId);
             $linkValue = 'Add site assessment';
         } else {
-            throw new \Exception("Cannot build url for person without permission to use it.");
+            throw new \Exception('Cannot build url for person without permission to use it.');
         }
 
         return new GeneralSidebarLink('site-assessment-action-link', $linkValue, $siteAssessmentUrl);
@@ -192,7 +191,6 @@ class VtsOverviewSidebar extends GeneralSidebar
             default:
                 return Badge::normal();
         }
-
     }
 
     private function canAccessTestQualityInformation()
@@ -202,7 +200,8 @@ class VtsOverviewSidebar extends GeneralSidebar
 
     private function createTestQualityInformationLink()
     {
-        $tqiLink = '/vehicle-testing-station/' . $this->vtsId . '/test-quality';
+        $tqiLink = '/vehicle-testing-station/'.$this->vtsId.'/test-quality';
+
         return new GeneralSidebarLink('site-test-quality', 'Test quality information', $tqiLink);
     }
 }

@@ -21,7 +21,7 @@ $submitElement = $form->get('submit');
                 <div id="location-select-validation-summary" class="validation-summary">
                     <?php echo $this->escapeHtml($errorMessage); ?>
                 </div>
-            <?php endif;?>
+            <?php endif; ?>
             <?php echo $this->partial('errorMessages', array('getFromFlash' => true)); ?>
             <fieldset class="vts-list">
                 <div id="change-vts-list">
@@ -30,15 +30,15 @@ $submitElement = $form->get('submit');
                     <label id="vts-radio-option-<?php echo $this->escapeHtml($vts['id']); ?>">
                         <input type="radio" required="" value="<?php echo $this->escapeHtml($vts['id']); ?>" name="vtsId">
                         <strong><?php echo $this->escapeHtml($vts['name']); ?></strong><br>
-                        <?php echo $this->escapeHtml($vts['siteNumber']) . ', ' . $this->escapeHtml($vts['address']); ?>
+                        <?php echo $this->escapeHtml($vts['siteNumber']).', '.$this->escapeHtml($vts['address']); ?>
                     </label>
                 </div>
-                <?php endforeach;?>
+                <?php endforeach; ?>
                 </div>
 
 
                 <?php
-                    $submitElement->setAttribute('class','btn btn-primary');
+                    $submitElement->setAttribute('class', 'btn btn-primary');
                     echo $this->formSubmit($submitElement);
                     echo $this->form()->closeTag();
                 ?>
@@ -46,7 +46,7 @@ $submitElement = $form->get('submit');
             <?php echo $this->form()->closeTag() ?>
         <?php else : ?>
         Hi <?php echo $this->escapeHtml($userDetails['user']->getDisplayName()); ?>, you don't have any VTS assigned to you at the moment.
-        <?php endif;?>
+        <?php endif; ?>
     </div>
 </div>
 

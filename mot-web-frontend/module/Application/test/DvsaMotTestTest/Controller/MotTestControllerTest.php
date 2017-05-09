@@ -23,7 +23,6 @@ use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\MotTestDuplicateCertificat
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -52,10 +51,10 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
     /** @var SurveyService|MockObj $surveyServiceMock */
     private $surveyServiceMock;
 
-    /** @var MotEventManager|MockObj $eventManagerMock*/
+    /** @var MotEventManager|MockObj $eventManagerMock */
     private $motEventManagerMock;
 
-    /** @var MotTestDuplicateCertificateApiResource|MockObj $motTestDuplicateCertificateApiResourceMock*/
+    /** @var MotTestDuplicateCertificateApiResource|MockObj $motTestDuplicateCertificateApiResourceMock */
     private $motTestDuplicateCertificateApiResourceMock;
     protected $mockMotTestServiceClient;
     protected $mockVehicleServiceClient;
@@ -114,6 +113,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -122,6 +122,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 
@@ -623,7 +624,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
         $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
 
-        if ($motTestStatus === MotTestStatusName::ABORTED){
+        if ($motTestStatus === MotTestStatusName::ABORTED) {
             $testMotTestData->status = MotTestStatusName::ABORTED;
         } else {
             $testMotTestData->status = MotTestStatusName::ABANDONED;
@@ -828,7 +829,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     public function testPrintMotTestCanBeAccessedAuthenticatedRequest()
     {
-
         $this->setupAuthorizationService();
 
         $motTestNr = 1;
@@ -906,7 +906,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             ->will($this->returnValue($motTest));
 
         $siteId = $motTestData->site->id;
-        $this->getRestClientMock('get', [ "data" => new SiteDto()], 'vehicle-testing-station/' . $siteId);
+        $this->getRestClientMock('get', ['data' => new SiteDto()], 'vehicle-testing-station/'.$siteId);
 
         $response = $this->getResultForAction('displayTestSummary', ['motTestNumber' => $motTestNr]);
 
@@ -927,7 +927,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         return [
             [$isNonMotShouldBeTrue, $userHasNonMotTestPermission, $testHasNonMotTestType],
             [$isNonMotShouldBeFalse, $userDoesNotHaveNonMotTestPermission, $testHasNonMotTestType],
-            [$isNonMotShouldBeFalse, $userHasNonMotTestPermission, $testDoesNotHaveNonMotTestType]
+            [$isNonMotShouldBeFalse, $userHasNonMotTestPermission, $testDoesNotHaveNonMotTestType],
         ];
     }
 
@@ -1021,7 +1021,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
         $permissions = [
             PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE,
-            PermissionInSystem::MOT_TEST_CONFIRM
+            PermissionInSystem::MOT_TEST_CONFIRM,
         ];
         if ($userHasNonMotTestPermission) {
             $permissions[] = PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM;

@@ -26,9 +26,10 @@ class TwoFactorNominationNotificationService
 
     /**
      * TwoFactorNominationNotificationService constructor.
-     * @param ApiPersonalDetails $personalDetailsRepository
+     *
+     * @param ApiPersonalDetails         $personalDetailsRepository
      * @param OrganisationPositionMapper $organisationPositionRepository
-     * @param SitePositionMapper $sitePositionRepository
+     * @param SitePositionMapper         $sitePositionRepository
      */
     public function __construct(
         ApiPersonalDetails $personalDetailsRepository,
@@ -42,6 +43,7 @@ class TwoFactorNominationNotificationService
 
     /**
      * @param int $nomineeId
+     *
      * @return RoleSummaryCollection
      */
     public function sendNotificationsForPendingNominations($nomineeId)
@@ -49,7 +51,6 @@ class TwoFactorNominationNotificationService
         $pendingNominations = $this->personalDetailsRepository->getPendingRolesForPerson($nomineeId);
 
         if ($this->containsPendingNominations($pendingNominations)) {
-
             foreach ($pendingNominations['organisations'] as $orgId => $organisation) {
                 foreach ($organisation['roles'] as $roleCode) {
                     $this->organisationPositionRepository->updatePosition($orgId, $nomineeId, $roleCode);
@@ -68,6 +69,7 @@ class TwoFactorNominationNotificationService
 
     /**
      * @param $nomineeId
+     *
      * @return bool
      */
     public function hasPendingNominations($nomineeId)
@@ -79,6 +81,7 @@ class TwoFactorNominationNotificationService
 
     /**
      * @param array $pendingNominations
+     *
      * @return bool
      */
     private function containsPendingNominations(array $pendingNominations)

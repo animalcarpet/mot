@@ -63,7 +63,7 @@ class ClaimServiceTest extends AbstractServiceTestCase
 
     protected $mockPersonContactTypeRepository;
 
-    /** @var  ParamObfuscator|MockObj */
+    /** @var ParamObfuscator|MockObj */
     private $mockParamObfuscator;
 
     public function setUp()
@@ -241,7 +241,7 @@ class ClaimServiceTest extends AbstractServiceTestCase
 
         $this->sut->save($data);
 
-        $this->assertFalse( $person->getPerson()->isPasswordChangeRequired() );
+        $this->assertFalse($person->getPerson()->isPasswordChangeRequired());
     }
 
     protected function getMockPerson()
@@ -259,15 +259,15 @@ class ClaimServiceTest extends AbstractServiceTestCase
     {
         return [
             'personId' => 5,
-            'email' => 'claimservicetest@' . EmailAddressValidator::TEST_DOMAIN,
-            'emailConfirmation' => 'claimservicetest@' . EmailAddressValidator::TEST_DOMAIN,
+            'email' => 'claimservicetest@'.EmailAddressValidator::TEST_DOMAIN,
+            'emailConfirmation' => 'claimservicetest@'.EmailAddressValidator::TEST_DOMAIN,
             'emailOptOut' => true,
             'password' => self::PASSWORD,
             'passwordConfirmation' => self::PASSWORD,
             'securityQuestionOneId' => '1',
             'securityAnswerOne' => '1',
             'securityQuestionTwoId' => '1',
-            'securityAnswerTwo' => '1'
+            'securityAnswerTwo' => '1',
         ];
     }
 
@@ -286,12 +286,12 @@ class ClaimServiceTest extends AbstractServiceTestCase
             new Person(),
             'test'
         );
+
         return $personSecurityAnswer;
     }
 
     public function testPrepareTestData()
     {
-        //
         $queryMock = $this
             ->getMockBuilder(AbstractQuery::class)
             ->setMethods(array('setParameters', 'execute'))

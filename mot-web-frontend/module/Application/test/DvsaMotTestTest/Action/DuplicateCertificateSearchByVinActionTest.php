@@ -7,7 +7,6 @@ use Core\Action\RedirectToRoute;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Action\DuplicateCertificateSearchByVinAction;
 use DvsaMotTest\Flash\VehicleCertificateSearchFlashMessage;
-use DvsaMotTest\Flash\VehicleCertificateSearchMessage;
 use DvsaMotTest\Form\VehicleSearch\DuplicateCertificateVinSearchForm;
 use DvsaMotTest\ViewModel\VehicleSearch\DuplicateCertificateSearchViewModel;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
@@ -18,7 +17,7 @@ class DuplicateCertificateSearchByVinActionTest extends \PHPUnit_Framework_TestC
      * @var DuplicateCertificateSearchByVinAction
      */
     private $action;
-    /** @var  FlashMessenger|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var FlashMessenger|\PHPUnit_Framework_MockObject_MockObject */
     private $flashMessengerMock;
 
     public function setUp()
@@ -73,7 +72,7 @@ class DuplicateCertificateSearchByVinActionTest extends \PHPUnit_Framework_TestC
     {
         $data = [];
         $this->flashMessengerMock->expects($this->once())->method('getMessages')->willReturn([
-            VehicleCertificateSearchFlashMessage::NOT_FOUND
+            VehicleCertificateSearchFlashMessage::NOT_FOUND,
         ]);
 
         $result = $this->action->execute($data);

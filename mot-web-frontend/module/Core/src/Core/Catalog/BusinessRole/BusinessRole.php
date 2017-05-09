@@ -13,7 +13,7 @@ class BusinessRole
     private $name;
     private $type;
 
-    function __construct($code, $name, $type)
+    public function __construct($code, $name, $type)
     {
         $this->code = $code;
         $this->name = $name;

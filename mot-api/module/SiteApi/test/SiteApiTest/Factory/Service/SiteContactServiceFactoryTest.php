@@ -2,10 +2,6 @@
 
 namespace SiteApiTest\Factory\Service;
 
-/**
- *
- */
-class SiteContactServiceFactoryTest 
+class SiteContactServiceFactoryTest
 {
-
 }

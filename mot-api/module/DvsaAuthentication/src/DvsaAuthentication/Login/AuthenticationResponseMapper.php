@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaAuthentication\Login;
 
 use DvsaAuthentication\Login\Response\AuthenticationResponse;
@@ -11,9 +12,8 @@ use Zend\Authentication\Result;
 
 class AuthenticationResponseMapper
 {
-
-    public function mapToDto(AuthenticationResponse $result,/* legacy */$username) {
-
+    public function mapToDto(AuthenticationResponse $result, /* legacy */$username)
+    {
         $isAuthenticationSuccessful = $result->getCode() === AuthenticationResultCode::SUCCESS;
 
         $authnDto = (new AuthenticationResponseDto())
@@ -40,6 +40,7 @@ class AuthenticationResponseMapper
 
             $authnDto->setUser($authnUserDto);
         }
+
         return $authnDto;
     }
 }

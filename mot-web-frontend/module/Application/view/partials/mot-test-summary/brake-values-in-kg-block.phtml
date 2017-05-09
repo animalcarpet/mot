@@ -15,20 +15,20 @@ $vehicleClasses3plus = [
     VehicleClassCode::CLASS_3,
     VehicleClassCode::CLASS_4,
     VehicleClassCode::CLASS_5,
-    VehicleClassCode::CLASS_7
+    VehicleClassCode::CLASS_7,
 ];
 
-/** @var MotTest $motTest*/
+/* @var MotTest $motTest*/
 $motTest;
 
 if (is_null($motTest->getBrakeTestResult())) {
     return;
 }
-/**  @var DvsaVehicleViewModel $vehicle */
+/*  @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
 // @todo: To be removed
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove | \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2 $brakeResult */
+/* @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove | \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2 $brakeResult */
 if ($vehicle->getVehicleClass()->getCode() >= 3) {
     $brakeResult = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
 } else {
@@ -51,7 +51,6 @@ if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_
     $serviceBrakeTestType = $brakeTestTypeCode2Name[$brakeResult->getBrakeTestTypeCode()];
 
     $vehicleClassGroup = VEHICLE_CLASS_GROUP_12;
-
 } elseif (in_array($vehicleClass, $vehicleClasses3plus)) {
     $brakeTestType = 'Service brake test type';
 
@@ -112,7 +111,7 @@ if (!$vehicleClassGroup) {
                 <div class="col-sm-12">
                     <p class="primary-item">
                         <?php echo $this->escapeHtml($brakeTestType); ?>:
-                        <strong><?php echo $this->escapeHtml(ucFirst($serviceBrakeTestType)); ?></strong>
+                        <strong><?php echo $this->escapeHtml(ucfirst($serviceBrakeTestType)); ?></strong>
                     </p>
                 </div>
                 <span class="divider"></span>
@@ -124,7 +123,7 @@ if (!$vehicleClassGroup) {
                 <div class="col-sm-12">
                     <p class="primary-item">
                         Parking brake test type:
-                        <strong><?php echo $this->escapeHtml(ucFirst($parkingBrakeTestType)); ?></strong>
+                        <strong><?php echo $this->escapeHtml(ucfirst($parkingBrakeTestType)); ?></strong>
                     </p>
                 </div>
             </div>

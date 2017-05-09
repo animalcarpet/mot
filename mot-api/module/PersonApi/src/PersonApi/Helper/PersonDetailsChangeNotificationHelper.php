@@ -20,6 +20,7 @@ class PersonDetailsChangeNotificationHelper
 
     /**
      * @param Person $person
+     *
      * @return int
      */
     public function sendChangedPersonalDetailsNotification(Person $person)
@@ -29,7 +30,8 @@ class PersonDetailsChangeNotificationHelper
 
     /**
      * @param Person $person
-     * @param int $template
+     * @param int    $template
+     *
      * @return int
      */
     private function send(Person $person, $template)

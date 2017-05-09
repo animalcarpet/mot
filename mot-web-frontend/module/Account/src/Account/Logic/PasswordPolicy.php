@@ -23,16 +23,16 @@ class PasswordPolicy
     const ERR_NOT_STRONG = 'The password you have entered is not strong enough';
     const ERR_NOT_USERNAME = 'Your password must not match your user ID';
 
-    /** @var  AbstractFormModel -> delegate error handler */
+    /** @var AbstractFormModel -> delegate error handler */
     protected $errorHandler;
 
-    /** @var  string the current username for this activation link */
+    /** @var string the current username for this activation link */
     protected $username;
 
-    /** @var  string the candidate new password value */
+    /** @var string the candidate new password value */
     protected $password;
 
-    /** @var  string the confirmation value */
+    /** @var string the confirmation value */
     protected $password2;
 
     /**
@@ -40,9 +40,9 @@ class PasswordPolicy
      * a potential new password value.
      *
      * @param AbstractFormModel $errorHandler
-     * @param string $username the associated username for this reset link sessin
-     * @param string $password the new password value
-     * @param string $confirm is the confirmation password value
+     * @param string            $username     the associated username for this reset link sessin
+     * @param string            $password     the new password value
+     * @param string            $confirm      is the confirmation password value
      */
     public function __construct(AbstractFormModel $errorHandler, $username, $password, $confirm)
     {
@@ -70,12 +70,14 @@ class PasswordPolicy
                     ChangePasswordFormModel::FIELD_PASS,
                     self::ERR_NOT_USERNAME
                 );
+
                 return false;
             } elseif ($this->password != $this->password2) {
                 $this->errorHandler->addError(
                     ChangePasswordFormModel::FIELD_PASS_CONFIRM,
                     self::ERR_NOT_SAME
                 );
+
                 return false;
             }
         } elseif (empty($this->password)) {
@@ -83,8 +85,10 @@ class PasswordPolicy
                 ChangePasswordFormModel::FIELD_PASS,
                 self::ERR_REQUIRED
             );
+
             return false;
         }
+
         return true;
     }
 
@@ -95,7 +99,7 @@ class PasswordPolicy
 
         $filter->setData([
             PasswordInputFilter::FIELD_PASSWORD => $this->password,
-            PasswordInputFilter::FIELD_PASSWORD_CONFIRM => $this->password2
+            PasswordInputFilter::FIELD_PASSWORD_CONFIRM => $this->password2,
         ]);
         if (!$filter->isValid()) {
             $messages = $filter->getMessages();
@@ -103,8 +107,12 @@ class PasswordPolicy
             // every field can have many errors, let's just select first error per field
             $messages = ArrayUtils::mapWithKeys(
                 $messages,
-                function ($key, $value) { return $key; },
-                function ($key, $value) { return ArrayUtils::firstOrNull($value); }
+                function ($key, $value) {
+                    return $key;
+                },
+                function ($key, $value) {
+                    return ArrayUtils::firstOrNull($value);
+                }
             );
 
             if (array_key_exists(PasswordInputFilter::FIELD_PASSWORD, $messages)) {

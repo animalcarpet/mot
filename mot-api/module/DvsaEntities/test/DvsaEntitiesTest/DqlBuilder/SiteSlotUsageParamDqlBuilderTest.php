@@ -44,17 +44,17 @@ class SiteSlotUsageParamDqlBuilderTest extends \PHPUnit_Framework_TestCase
     public function testGenerateWithDefaultSort()
     {
         $result = $this->dqlBuilder->generate();
-        $searchDql = "SELECT t from DvsaEntities\\Entity\\MotTest t "
-            . "LEFT JOIN DvsaEntities\\Entity\\Person p WITH t.tester = p.id "
-            . "LEFT JOIN DvsaEntities\\Entity\\Vehicle v WITH v.id = t.vehicle "
-            . "LEFT JOIN DvsaEntities\\Entity\\MotTestType tt WITH t.motTestType = tt.id "
-            . "LEFT JOIN DvsaEntities\\Entity\\MotTestStatus ts WITH t.status = ts.id "
-            . "WHERE (ts.name = '" . MotTestStatusName::PASSED . "') "
-            . "AND (tt.code IN (:TEST_TYPES)) "
-            . "AND (t.vehicleTestingStation = :SITE_ID) "
-            . "AND (t.completedDate >= :DATE_FROM) "
-            . "AND (t.completedDate <= :DATE_TO) "
-            . "ORDER BY t.completedDate ";
+        $searchDql = 'SELECT t from DvsaEntities\\Entity\\MotTest t '
+            .'LEFT JOIN DvsaEntities\\Entity\\Person p WITH t.tester = p.id '
+            .'LEFT JOIN DvsaEntities\\Entity\\Vehicle v WITH v.id = t.vehicle '
+            .'LEFT JOIN DvsaEntities\\Entity\\MotTestType tt WITH t.motTestType = tt.id '
+            .'LEFT JOIN DvsaEntities\\Entity\\MotTestStatus ts WITH t.status = ts.id '
+            ."WHERE (ts.name = '".MotTestStatusName::PASSED."') "
+            .'AND (tt.code IN (:TEST_TYPES)) '
+            .'AND (t.vehicleTestingStation = :SITE_ID) '
+            .'AND (t.completedDate >= :DATE_FROM) '
+            .'AND (t.completedDate <= :DATE_TO) '
+            .'ORDER BY t.completedDate ';
 
         $this->assertInstanceOf(\DvsaEntities\DqlBuilder\SiteSlotUsageParamDqlBuilder::class, $result);
         $this->assertEquals($searchDql, $this->dqlBuilder->getSearchDql());
@@ -68,17 +68,17 @@ class SiteSlotUsageParamDqlBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->dqlBuilder->generate();
 
-        $searchDql = "SELECT t from DvsaEntities\\Entity\\MotTest t "
-            . "LEFT JOIN DvsaEntities\\Entity\\Person p WITH t.tester = p.id "
-            . "LEFT JOIN DvsaEntities\\Entity\\Vehicle v WITH v.id = t.vehicle "
-            . "LEFT JOIN DvsaEntities\\Entity\\MotTestType tt WITH t.motTestType = tt.id "
-            . "LEFT JOIN DvsaEntities\\Entity\\MotTestStatus ts WITH t.status = ts.id "
-            . "WHERE (ts.name = '" . MotTestStatusName::PASSED . "') "
-            . "AND (tt.code IN (:TEST_TYPES)) "
-            . "AND (t.vehicleTestingStation = :SITE_ID) "
-            . "AND (t.completedDate >= :DATE_FROM) "
-            . "AND (t.completedDate <= :DATE_TO) "
-            . "ORDER BY p.firstName DESC, p.familyName";
+        $searchDql = 'SELECT t from DvsaEntities\\Entity\\MotTest t '
+            .'LEFT JOIN DvsaEntities\\Entity\\Person p WITH t.tester = p.id '
+            .'LEFT JOIN DvsaEntities\\Entity\\Vehicle v WITH v.id = t.vehicle '
+            .'LEFT JOIN DvsaEntities\\Entity\\MotTestType tt WITH t.motTestType = tt.id '
+            .'LEFT JOIN DvsaEntities\\Entity\\MotTestStatus ts WITH t.status = ts.id '
+            ."WHERE (ts.name = '".MotTestStatusName::PASSED."') "
+            .'AND (tt.code IN (:TEST_TYPES)) '
+            .'AND (t.vehicleTestingStation = :SITE_ID) '
+            .'AND (t.completedDate >= :DATE_FROM) '
+            .'AND (t.completedDate <= :DATE_TO) '
+            .'ORDER BY p.firstName DESC, p.familyName';
 
         $this->assertEquals($searchDql, $this->dqlBuilder->getSearchDql());
     }
@@ -89,17 +89,17 @@ class SiteSlotUsageParamDqlBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->dqlBuilder->generate();
 
-        $searchDql = "SELECT t from DvsaEntities\\Entity\\MotTest t "
-            . "LEFT JOIN DvsaEntities\\Entity\\Person p WITH t.tester = p.id "
-            . "LEFT JOIN DvsaEntities\\Entity\\Vehicle v WITH v.id = t.vehicle "
-            . "LEFT JOIN DvsaEntities\\Entity\\MotTestType tt WITH t.motTestType = tt.id "
-            . "LEFT JOIN DvsaEntities\\Entity\\MotTestStatus ts WITH t.status = ts.id "
-            . "WHERE (ts.name = '" . MotTestStatusName::PASSED . "') "
-            . "AND (tt.code IN (:TEST_TYPES)) "
-            . "AND (t.vehicleTestingStation = :SITE_ID) "
-            . "AND (t.completedDate >= :DATE_FROM) "
-            . "AND (t.completedDate <= :DATE_TO) "
-            . "ORDER BY v.registration ";
+        $searchDql = 'SELECT t from DvsaEntities\\Entity\\MotTest t '
+            .'LEFT JOIN DvsaEntities\\Entity\\Person p WITH t.tester = p.id '
+            .'LEFT JOIN DvsaEntities\\Entity\\Vehicle v WITH v.id = t.vehicle '
+            .'LEFT JOIN DvsaEntities\\Entity\\MotTestType tt WITH t.motTestType = tt.id '
+            .'LEFT JOIN DvsaEntities\\Entity\\MotTestStatus ts WITH t.status = ts.id '
+            ."WHERE (ts.name = '".MotTestStatusName::PASSED."') "
+            .'AND (tt.code IN (:TEST_TYPES)) '
+            .'AND (t.vehicleTestingStation = :SITE_ID) '
+            .'AND (t.completedDate >= :DATE_FROM) '
+            .'AND (t.completedDate <= :DATE_TO) '
+            .'ORDER BY v.registration ';
 
         $this->assertEquals($searchDql, $this->dqlBuilder->getSearchDql());
     }

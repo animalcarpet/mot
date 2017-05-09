@@ -7,7 +7,6 @@
 
 namespace DvsaMotApi\Service\Mapper;
 
-use Doctrine\ORM\EntityNotFoundException;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use OrganisationApi\Service\Mapper\OrganisationMapper;
 use DvsaCommon\Date\DateTimeApiFormat;
@@ -169,19 +168,19 @@ class MotTestMapper
         if (is_null($motTest->getEmergencyLog()) === false) {
             $result->setEmergencyLog(
                 [
-                    'id'          => $motTest->getEmergencyLog()->getId(),
-                    'number'      => $motTest->getEmergencyLog()->getNumber(),
+                    'id' => $motTest->getEmergencyLog()->getId(),
+                    'number' => $motTest->getEmergencyLog()->getNumber(),
                     'description' => $motTest->getEmergencyLog()->getDescription(),
                     'startedDate' => $motTest->getEmergencyLog()->getStartDate(),
-                    'endedDate'   => $motTest->getEmergencyLog()->getEndDate(),
+                    'endedDate' => $motTest->getEmergencyLog()->getEndDate(),
                 ]
             );
 
             $result->setEmergencyReasonLookup(
                 [
-                    'id'          => $motTest->getEmergencyReasonLookup()->getId(),
-                    'code'        => $motTest->getEmergencyReasonLookup()->getCode(),
-                    'name'        => $motTest->getEmergencyReasonLookup()->getName(),
+                    'id' => $motTest->getEmergencyReasonLookup()->getId(),
+                    'code' => $motTest->getEmergencyReasonLookup()->getCode(),
+                    'name' => $motTest->getEmergencyReasonLookup()->getName(),
                     'description' => $motTest->getEmergencyReasonLookup()->getDescription(),
                 ]
             );
@@ -189,7 +188,7 @@ class MotTestMapper
             if (is_null($motTest->getEmergencyReasonComment()) === false) {
                 $result->setEmergencyReasonComment(
                     [
-                        'id'      => $motTest->getEmergencyReasonComment()->getId(),
+                        'id' => $motTest->getEmergencyReasonComment()->getId(),
                         'comment' => $motTest->getEmergencyReasonComment()->getComment(),
                     ]
                 );
@@ -287,17 +286,17 @@ class MotTestMapper
 
             unset($siteJson['roles']);
 
-            $defaultBrakeTestClass1And2 =  $site->getDefaultBrakeTestClass1And2();
+            $defaultBrakeTestClass1And2 = $site->getDefaultBrakeTestClass1And2();
             if ($defaultBrakeTestClass1And2) {
                 $siteJson['defaultBrakeTestClass1And2'] = $defaultBrakeTestClass1And2->getCode();
             }
 
-            $defaultServiceBrakeTestClass3AndAbove =  $site->getDefaultServiceBrakeTestClass3AndAbove();
+            $defaultServiceBrakeTestClass3AndAbove = $site->getDefaultServiceBrakeTestClass3AndAbove();
             if ($defaultServiceBrakeTestClass3AndAbove) {
                 $siteJson['defaultServiceBrakeTestClass3AndAbove'] = $defaultServiceBrakeTestClass3AndAbove->getCode();
             }
 
-            $defaultParkingBrakeTestClass3AndAbove =  $site->getDefaultParkingBrakeTestClass3AndAbove();
+            $defaultParkingBrakeTestClass3AndAbove = $site->getDefaultParkingBrakeTestClass3AndAbove();
             if ($defaultParkingBrakeTestClass3AndAbove) {
                 $siteJson['defaultParkingBrakeTestClass3AndAbove'] = $defaultParkingBrakeTestClass3AndAbove->getCode();
             }
@@ -408,7 +407,7 @@ class MotTestMapper
         $rfrEntity = $motTestRfr->getReasonForRejection();
         if (is_null($rfrEntity)) {
             // TODO VM-3386 - resolve manual advisories problem
-            $hydratedTestRfr['name'] =  'Manual Advisory';
+            $hydratedTestRfr['name'] = 'Manual Advisory';
             $hydratedTestRfr['nameCy'] = 'Cynghori Llawlyfr';
             $hydratedTestRfr['failureText'] = '';
             $hydratedTestRfr['failureTextCy'] = '';

@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\Factory;
 
-
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Controller\SearchDefectsControllerFactory;
 use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;

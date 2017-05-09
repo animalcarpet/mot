@@ -14,7 +14,6 @@ use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\Auth\GrantAllAuthorisationServiceStub;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Log\Writer\Mock;
 
 class DashboardDataProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,7 +66,7 @@ class DashboardDataProviderTest extends \PHPUnit_Framework_TestCase
         // vts id 11 from the second ae (ae_id 4)
         $expectedVtsIds = [8, 9, 11];
 
-        foreach ($expectedVtsIds as $site_id){
+        foreach ($expectedVtsIds as $site_id) {
             $this->authServiceMock->grantedAtSite(PermissionAtSite::VEHICLE_TESTING_STATION_READ, $site_id);
         }
 
@@ -81,10 +80,9 @@ class DashboardDataProviderTest extends \PHPUnit_Framework_TestCase
         $site_ids = $this->fetchDashboardAllSites($dashboard);
         $this->assertCount(count($expectedVtsIds), $site_ids);
 
-        foreach ($expectedVtsIds as $site_id){
+        foreach ($expectedVtsIds as $site_id) {
             $this->assertContains($site_id, $site_ids);
         }
-
     }
 
     private function createRequiredMockObjects($grantedAll = true)
@@ -95,7 +93,7 @@ class DashboardDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->authServiceMock = $grantedAll ?
             new GrantAllAuthorisationServiceStub() :
-            new AuthorisationServiceMock();;
+            new AuthorisationServiceMock();
 
         $this->helper = new DashboardDataProvider(
             $this->identityProviderMock,
@@ -118,11 +116,11 @@ class DashboardDataProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Dashboard $dashboard
+     *
      * @return array
      */
     private function fetchDashboardAllSites($dashboard)
     {
-
         $sites = [];
 
         $authorisedExaminers = $dashboard->getAuthorisedExaminers();

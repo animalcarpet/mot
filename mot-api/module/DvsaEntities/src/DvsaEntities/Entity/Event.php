@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Event
+ * Event.
  *
  * @ORM\Table(
  *  name="event",
@@ -23,7 +23,6 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  */
 class Event extends Entity
 {
-
     use CommonIdentityTrait;
 
     /**
@@ -34,7 +33,7 @@ class Event extends Entity
     private $shortDescription;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_manual_event", type="boolean", nullable=false)
      */
@@ -129,7 +128,7 @@ class Event extends Entity
     }
 
     /**
-     * @param boolean $isManualEvent
+     * @param bool $isManualEvent
      *
      * @return Event
      */
@@ -223,6 +222,7 @@ class Event extends Entity
     public function addPersonMap(EventPersonMap $eventPersonMap)
     {
         $this->eventPersonMaps->add($eventPersonMap);
+
         return $this;
     }
 }

@@ -11,7 +11,6 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\TestUtils\XMock;
-use UnexpectedValueException;
 use Vehicle\Controller\VehicleController;
 use Vehicle\Helper\VehicleInformationTableBuilder;
 use Vehicle\Helper\VehiclePageTitleBuilder;
@@ -131,7 +130,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException UnexpectedValueException
+     * @expectedException \UnexpectedValueException
      */
     public function testGetViewModelBeforeSettingTheVehicleThrowsException()
     {
@@ -190,7 +189,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
                 'name' => 'Not Stated',
             ],
             'countryOfRegistration' => 'GB, UK, ENG, CYM, SCO (UK) - Great Britain',
-            'vehicleClass' => [ 'code' => VehicleClassCode::CLASS_4, 'name' => '4'],
+            'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name' => '4'],
             'fuelType' => [
                 'code' => 'PE',
                 'name' => 'Petrol',

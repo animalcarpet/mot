@@ -17,8 +17,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ClaimServiceFactory
- * @package AccountApi\Factory\Service
+ * Class ClaimServiceFactory.
  */
 class ClaimServiceFactory implements FactoryInterface
 {

@@ -16,9 +16,7 @@ class EventStepService extends StepService
 {
     /**
      * @param string $entityType ae|site|person
-     * @param int $entityId id of the entity
-     *
-     * @return null
+     * @param int    $entityId   id of the entity
      */
     public function injectParamsIntoSteps($entityType, $entityId)
     {

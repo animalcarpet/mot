@@ -11,10 +11,9 @@ use Zend\Log\LoggerInterface;
 use Zend\Mvc\MvcEvent;
 
 /**
- * User who has expired password has access to only reset password functionality
+ * User who has expired password has access to only reset password functionality.
  *
  * Class PasswordExpiredListener
- * @package Application\Listener
  */
 class ExpiredPasswordListener
 {
@@ -36,8 +35,7 @@ class ExpiredPasswordListener
         DateTimeHolder $timeHolder,
         LoggerInterface $logger,
         ExpiredPasswordService $expiredPasswordService
-    )
-    {
+    ) {
         $this->identityProvider = $identityProvider;
         $this->timeHolder = $timeHolder;
         $this->logger = $logger;
@@ -79,10 +77,9 @@ class ExpiredPasswordListener
         $personId = $this->identityProvider->getIdentity()->getUserId();
 
         $redirectUrl = $event->getRouter()->assemble(
-            ['id' => $personId], ['name' => ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/change-password']
+            ['id' => $personId], ['name' => ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/change-password']
         );
 
-        
         if ($redirectUrl) {
             $response = $event->getResponse();
             $response->getHeaders()->addHeaderLine('Location', $redirectUrl);
@@ -120,8 +117,8 @@ class ExpiredPasswordListener
             'account/claim/reset',
             'user-home/profile/change-password',
             'user-home/profile/change-password/confirmation',
-            ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/change-password',
-            ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/change-password/confirmation',
+            ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/change-password',
+            ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/change-password/confirmation',
             'survey',
             'cookies',
         ];

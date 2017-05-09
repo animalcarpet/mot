@@ -9,27 +9,26 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardS
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderNewViewModel;
 use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 
 class CardOrderNewAction
 {
     /**
-     * @var OrderNewSecurityCardSessionService $sessionService
+     * @var OrderNewSecurityCardSessionService
      */
     private $sessionService;
 
     /**
-     * @var OrderSecurityCardStepService $stepService
+     * @var OrderSecurityCardStepService
      */
     private $stepService;
 
     /**
-     * @var MotFrontendIdentityProvider $identityProvider
+     * @var MotFrontendIdentityProvider
      */
     private $identityProvider;
 
     /**
-     * @var CardOrderProtection $cardOrderProtection
+     * @var CardOrderProtection
      */
     private $cardOrderProtection;
 

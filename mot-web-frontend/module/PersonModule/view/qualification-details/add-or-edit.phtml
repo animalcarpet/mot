@@ -1,5 +1,6 @@
 <?php
 use Dvsa\Mot\Frontend\PersonModule\Form\QualificationDetailsForm;
+
 /** @var QualificationDetailsForm $form */
 $form = $this->viewModel->form;
 ?>
@@ -12,7 +13,7 @@ $form = $this->viewModel->form;
     <fieldset>
         <h3 class="form-title heading-medium">Certificate details</h3>
         <?php echo $this->partial('partial/gds/form/control', [
-            'element' => $form->get(QualificationDetailsForm::FIELD_CERT_NUMBER)
+            'element' => $form->get(QualificationDetailsForm::FIELD_CERT_NUMBER),
         ]);
         ?>
 

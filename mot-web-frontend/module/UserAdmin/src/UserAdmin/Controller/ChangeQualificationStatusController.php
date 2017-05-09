@@ -8,7 +8,6 @@ use DvsaClient\Mapper\PersonMapper;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
@@ -149,8 +148,8 @@ class ChangeQualificationStatusController extends AbstractDvsaMotTestController
                 $this->client->put($url, ['group' => $this->groupIdLookup[$vehicleClassGroup], 'result' => $status]);
 
                 $this->addSuccessMessage(
-                    'Group ' . $vehicleClassGroup .
-                    ' tester qualification status has been changed to ' .
+                    'Group '.$vehicleClassGroup.
+                    ' tester qualification status has been changed to '.
                     $this->authStatusLookup[$status]
                 );
 
@@ -203,7 +202,7 @@ class ChangeQualificationStatusController extends AbstractDvsaMotTestController
             return $url;
         }
 
-        return $url . '?' . http_build_query($params);
+        return $url.'?'.http_build_query($params);
     }
 
     /**

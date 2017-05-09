@@ -6,9 +6,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Listener\CardPinValidati
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use PHPUnit_Framework_TestCase;
-
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Zend\Http\PhpEnvironment\Response;
@@ -17,12 +15,11 @@ use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\RouteStackInterface;
 use Zend\Authentication\AuthenticationService;
 use Core\Service\LazyMotFrontendAuthorisationService;
-use Zend\Navigation\Page\Mvc;
 
 class CardPinValidationListenerTest extends PHPUnit_Framework_TestCase
 {
     const NOT_WHITELISTED_ROUTE = 'not-whitelisted';
-    const WHITELISTED_ROUTE     = 'login';
+    const WHITELISTED_ROUTE = 'login';
 
     private $authenticationService;
     private $motIdentityProviderInterface;
@@ -164,6 +161,7 @@ class CardPinValidationListenerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param bool $hasIdentity
+     *
      * @return Validate2FAPinListenerTest
      */
     private function withHasIdentity($hasIdentity)
@@ -178,6 +176,7 @@ class CardPinValidationListenerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param bool $isSecondFactorRequired
+     *
      * @return Validate2FAPinListenerTest
      */
     private function withIdentitySecondFactorRequired($isSecondFactorRequired)
@@ -192,6 +191,7 @@ class CardPinValidationListenerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param bool $isAuthenticatedWith2FA
+     *
      * @return Validate2FAPinListenerTest
      */
     private function withIdentityAuthenticatedWith2FA($isAuthenticatedWith2FA)
@@ -206,6 +206,7 @@ class CardPinValidationListenerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param bool $hasPermission
+     *
      * @return Validate2FAPinListenerTest
      */
     private function withIdentityHavingAuthenticateWith2faPermission($hasPermission)
@@ -231,6 +232,7 @@ class CardPinValidationListenerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param string $routeName
+     *
      * @return MvcEvent
      */
     private function buildMvcEvent($routeName)

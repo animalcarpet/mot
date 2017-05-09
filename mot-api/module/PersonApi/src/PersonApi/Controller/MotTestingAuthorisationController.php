@@ -7,7 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 
 /**
- * Personal authorisation for testing mot
+ * Personal authorisation for testing mot.
  */
 class MotTestingAuthorisationController extends AbstractDvsaRestfulController
 {

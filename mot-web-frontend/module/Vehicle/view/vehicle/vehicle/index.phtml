@@ -14,11 +14,11 @@
 
     echo $this->partial('partial/gds/general/system-message', [
         'messages' => $this->layout()->flashMessenger->getErrorMessages(),
-        'type' => 'failure'
+        'type' => 'failure',
     ]);
     echo $this->partial('partial/gds/general/system-message', [
         'messages' => $this->layout()->flashMessenger->getSuccessMessages(),
-        'type' => 'success'
+        'type' => 'success',
     ]);
 ?>
 

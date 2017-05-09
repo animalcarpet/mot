@@ -16,13 +16,13 @@ class NotificationActionTest extends PHPUnit_Framework_TestCase
 {
     const USER_ID = 1;
     const UNREAD_COUNT = 4;
-    /** @var  MotFrontendIdentityProviderInterface| \PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotFrontendIdentityProviderInterface| \PHPUnit_Framework_MockObject_MockObject */
     private $frontendIdentityProvider;
-    /** @var  ApiNotificationResource | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var ApiNotificationResource | \PHPUnit_Framework_MockObject_MockObject */
     private $notificationResource;
-    /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var Url | \PHPUnit_Framework_MockObject_MockObject */
     private $url;
-    /** @var  NotificationAction */
+    /** @var NotificationAction */
     private $action;
 
     public function setUp()
@@ -37,8 +37,9 @@ class NotificationActionTest extends PHPUnit_Framework_TestCase
         $this->notificationResource
             ->expects($this->once())
             ->method('getUnreadCount')
-            ->willReturnCallback(function($personId){
+            ->willReturnCallback(function ($personId) {
                 $this->assertEquals(self::USER_ID, $personId);
+
                 return self::UNREAD_COUNT;
             });
 
@@ -56,8 +57,9 @@ class NotificationActionTest extends PHPUnit_Framework_TestCase
         $this->notificationResource
             ->expects($this->once())
             ->method('getArchivedNotifications')
-            ->willReturnCallback(function($personId){
+            ->willReturnCallback(function ($personId) {
                 $this->assertEquals(self::USER_ID, $personId);
+
                 return $this->getNotifications();
             });
 
@@ -73,8 +75,9 @@ class NotificationActionTest extends PHPUnit_Framework_TestCase
         $this->notificationResource
             ->expects($this->once())
             ->method('getInboxNotifications')
-            ->willReturnCallback(function($personId){
+            ->willReturnCallback(function ($personId) {
                 $this->assertEquals(self::USER_ID, $personId);
+
                 return $this->getNotifications();
             });
 
@@ -98,24 +101,25 @@ class NotificationActionTest extends PHPUnit_Framework_TestCase
     private function getNotifications()
     {
         $data = [
-            "id" => 1,
-            "recipientId" => 1,
-            "templateId" => 20,
-            "subject" => "Qualified => Tester Status change",
-            "content" => "Your tester qualification status for group B has been changed from Qualified to Qualified.",
-            "readOn" => "2017-01-09",
-            "createdOn" => "2017-01-09",
-            "isArchived" => false,
-            "fields" => [
-                "group" => "B",
-                "previousStatus" => "Qualified",
-                "newStatus" => "Qualified"
+            'id' => 1,
+            'recipientId' => 1,
+            'templateId' => 20,
+            'subject' => 'Qualified => Tester Status change',
+            'content' => 'Your tester qualification status for group B has been changed from Qualified to Qualified.',
+            'readOn' => '2017-01-09',
+            'createdOn' => '2017-01-09',
+            'isArchived' => false,
+            'fields' => [
+                'group' => 'B',
+                'previousStatus' => 'Qualified',
+                'newStatus' => 'Qualified',
             ],
-            "updatedOn" => ""
+            'updatedOn' => '',
         ];
 
         return [
             $data,
             $data,
         ];
-    }}
+    }
+}

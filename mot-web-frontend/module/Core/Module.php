@@ -17,7 +17,10 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * Core Module.
  */
-class Module implements BootstrapListenerInterface, ConfigProviderInterface, DependencyIndicatorInterface,
+class Module implements
+BootstrapListenerInterface,
+ConfigProviderInterface,
+DependencyIndicatorInterface,
     ServiceProviderInterface
 {
     /**
@@ -25,7 +28,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface, Dep
      */
     public function getConfig()
     {
-        return require __DIR__ . '/config/module.config.php';
+        return require __DIR__.'/config/module.config.php';
     }
 
     /**
@@ -33,7 +36,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface, Dep
      */
     public function getServiceConfig()
     {
-        return require __DIR__ . '/config/services.config.php';
+        return require __DIR__.'/config/services.config.php';
     }
 
     /**
@@ -73,7 +76,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface, Dep
             return;
         }
 
-        $hashedUserId = hash('sha1', $identity->getUserId() . '.' . $identity->getUsername());
+        $hashedUserId = hash('sha1', $identity->getUserId().'.'.$identity->getUsername());
         $dataLayer = $serviceManager->get(DataLayer::class);
         $dataLayer->add(['userId' => $hashedUserId]);
 

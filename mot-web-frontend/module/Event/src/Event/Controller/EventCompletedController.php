@@ -65,9 +65,7 @@ class EventCompletedController extends EventBaseController
             }
 
             $this->sessionService->clear();
-
-        } catch (\OutOfBoundsException $e ) {
-            //
+        } catch (\OutOfBoundsException $e) {
         }
 
         return $this->redirect()->toRoute('event-list', ['type' => $this->getType(), 'id' => $this->getId()]);

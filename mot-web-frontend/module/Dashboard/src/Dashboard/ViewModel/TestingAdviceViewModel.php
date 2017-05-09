@@ -42,6 +42,6 @@ class TestingAdviceViewModel
         return ['query' => [
             'navigateFrom' => 'home-page',
             'motTestNumber' => $this->motTestNumber,
-        ], ];
+        ]];
     }
 }

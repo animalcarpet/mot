@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Application
+ * Application.
  *
  * @ORM\Table(name="application", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_application_1_idx", columns={"status_id"}), @ORM\Index(name="fk_application_2_idx", columns={"locked_by"}), @ORM\Index(name="fk_application_5_idx", columns={"person_id"})})
  * @ORM\Entity
@@ -67,7 +67,7 @@ class Application extends Entity
     private $person;
 
     /**
-     * Set applicationReference
+     * Set applicationReference.
      *
      * @param string $applicationReference
      *
@@ -81,7 +81,7 @@ class Application extends Entity
     }
 
     /**
-     * Get applicationReference
+     * Get applicationReference.
      *
      * @return string
      */
@@ -91,7 +91,7 @@ class Application extends Entity
     }
 
     /**
-     * Set lockedOn
+     * Set lockedOn.
      *
      * @param \DateTime $lockedOn
      *
@@ -105,7 +105,7 @@ class Application extends Entity
     }
 
     /**
-     * Get lockedOn
+     * Get lockedOn.
      *
      * @return \DateTime
      */
@@ -115,7 +115,7 @@ class Application extends Entity
     }
 
     /**
-     * Set submittedOn
+     * Set submittedOn.
      *
      * @param \DateTime $submittedOn
      *
@@ -129,7 +129,7 @@ class Application extends Entity
     }
 
     /**
-     * Get submittedOn
+     * Get submittedOn.
      *
      * @return \DateTime
      */
@@ -139,7 +139,7 @@ class Application extends Entity
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param \DvsaEntities\Entity\AuthForAeStatus $status
      *
@@ -153,7 +153,7 @@ class Application extends Entity
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return \DvsaEntities\Entity\AuthForAeStatus
      */
@@ -163,7 +163,7 @@ class Application extends Entity
     }
 
     /**
-     * Set lockedBy
+     * Set lockedBy.
      *
      * @param \DvsaEntities\Entity\Person $lockedBy
      *
@@ -177,7 +177,7 @@ class Application extends Entity
     }
 
     /**
-     * Get lockedBy
+     * Get lockedBy.
      *
      * @return \DvsaEntities\Entity\Person
      */
@@ -187,7 +187,7 @@ class Application extends Entity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
      *
@@ -201,7 +201,7 @@ class Application extends Entity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */

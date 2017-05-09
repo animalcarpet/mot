@@ -17,23 +17,22 @@ class ViewTradeRolesAssertion
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         MotFrontendIdentityProviderInterface $identityProvider
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->identityProvider = $identityProvider;
     }
 
     /**
-     * @param int $profilePersonId
+     * @param int   $profilePersonId
      * @param array $profileRoles
+     *
      * @return bool
      */
     public function shouldViewLink($profilePersonId, $hasInternalRoles, $hasTradeRoles)
     {
         TypeCheck::isPositiveInteger($profilePersonId);
 
-        if ($hasInternalRoles && !$hasTradeRoles)
-        {
+        if ($hasInternalRoles && !$hasTradeRoles) {
             return false;
         }
 
@@ -59,14 +58,14 @@ class ViewTradeRolesAssertion
     public function assertGratedViewProfileTradeRolesPage($profilePersonId)
     {
         if (!$this->isGratedViewProfileTradeRolesPage($profilePersonId)) {
-            throw new UnauthorisedException("Not authorised to view trade roles.");
+            throw new UnauthorisedException('Not authorised to view trade roles.');
         }
     }
 
     public function assertGrantedViewRemoveRolePage($profilePersonId)
     {
         if (!$this->isUserViewingHisOwnProfile($profilePersonId)) {
-            throw new UnauthorisedException("Not authorised to view trade roles.");
+            throw new UnauthorisedException('Not authorised to view trade roles.');
         }
     }
 }

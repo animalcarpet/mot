@@ -117,7 +117,7 @@ class SurveyPageController extends AbstractAuthActionController
 
         $headers = (new Headers())->addHeaders([
             'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . $reportYear . '-' . $reportMonth . '.csv"',
+            'Content-Disposition' => 'attachment; filename="'.$reportYear.'-'.$reportMonth.'.csv"',
             'Accept-Ranges' => 'bytes',
             'Cache-Control' => 'no-cache, no-store, max-age=0, must-revalidate',
             'Pragma' => 'no-cache',

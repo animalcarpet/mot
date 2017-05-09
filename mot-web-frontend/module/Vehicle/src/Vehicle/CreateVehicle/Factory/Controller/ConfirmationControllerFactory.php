@@ -13,6 +13,7 @@ class ConfirmationControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
         $action = $serviceLocator->get(ConfirmationAction::class);
+
         return new ConfirmationController($action);
     }
 }

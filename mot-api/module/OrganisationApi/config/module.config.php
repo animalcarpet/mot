@@ -20,33 +20,33 @@ return [
     'controllers' => [
         'invokables' => [
             AuthorisedExaminerPrincipalController::class => AuthorisedExaminerPrincipalController::class,
-            OrganisationPositionController::class        => OrganisationPositionController::class,
-            OrganisationRoleController::class            => OrganisationRoleController::class,
+            OrganisationPositionController::class => OrganisationPositionController::class,
+            OrganisationRoleController::class => OrganisationRoleController::class,
         ],
         'factories' => [
-            SiteController::class                      => SiteControllerFactory::class,
-            SiteLinkController::class                  => SiteLinkControllerFactory::class,
-            MotTestLogControllerFactory::class         => MotTestLogControllerFactory::class,
+            SiteController::class => SiteControllerFactory::class,
+            SiteLinkController::class => SiteLinkControllerFactory::class,
+            MotTestLogControllerFactory::class => MotTestLogControllerFactory::class,
             AuthorisedExaminerStatusControllerFactory::class => AuthorisedExaminerStatusControllerFactory::class,
-            OrganisationEventController::class               => OrganisationEventControllerFactory::class,
-            AuthorisedExaminerNameController::class           => AuthorisedExaminerNameControllerFactory::class
+            OrganisationEventController::class => OrganisationEventControllerFactory::class,
+            AuthorisedExaminerNameController::class => AuthorisedExaminerNameControllerFactory::class,
         ],
         'abstract_factories' => [
             AutoWireFactory::class,
         ],
     ],
-    'router'      => [
+    'router' => [
         'routes' => [
-            'slot-purchase'                        => [
-                'type'         => 'Literal',
-                'options'      => [
+            'slot-purchase' => [
+                'type' => 'Literal',
+                'options' => [
                     'route' => '/slot-purchase',
                 ],
                 'child_routes' => [
                     'dd-slot-increment' => [
-                        'type'    => 'Literal',
+                        'type' => 'Literal',
                         'options' => [
-                            'route'    => '/dd-slot-increment',
+                            'route' => '/dd-slot-increment',
                             'defaults' => [
                                 'controller' => 'OrganisationApi\Controller\DDSlotIncrement',
                             ],
@@ -54,16 +54,16 @@ return [
                     ],
                 ],
             ],
-            'organisation'                         => [
-                'type'    => 'Segment',
+            'organisation' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/organisation/:organisationId',
+                    'route' => '/organisation/:organisationId',
                     'constraints' => [
                         'organisationId' => '[0-9]+',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'manual-event' => [
                         'type' => 'segment',
                         'options' => [
@@ -86,89 +86,89 @@ return [
                     ],
                 ],
             ],
-            'authorised-examiner'        => [
-                'type'          => 'Segment',
-                'options'       => [
-                    'route'       => '/authorised-examiner[/:id]',
+            'authorised-examiner' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/authorised-examiner[/:id]',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => AuthorisedExaminerController::class,
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'area-offices' => [
-                        'type'    => 'Literal',
+                        'type' => 'Literal',
                         'options' => [
-                            'route'       => '/area-offices/list',
-                            'defaults'    => [
+                            'route' => '/area-offices/list',
+                            'defaults' => [
                                 'controller' => AuthorisedExaminerStatusControllerFactory::class,
-                                'action' => 'getAreaOffices'
+                                'action' => 'getAreaOffices',
                             ],
                         ],
                     ],
                     'status' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/status',
-                            'defaults'    => [
+                            'route' => '/status',
+                            'defaults' => [
                                 'controller' => AuthorisedExaminerStatusControllerFactory::class,
                             ],
                         ],
                     ],
                     'number' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'       => '/number[/:number]',
-                            'defaults'    => [
+                            'route' => '/number[/:number]',
+                            'defaults' => [
                                 'controller' => AuthorisedExaminerController::class,
-                                'action'     => 'getAuthorisedExaminerByNumber',
+                                'action' => 'getAuthorisedExaminerByNumber',
                             ],
                         ],
                     ],
                     'mot-test-log' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/mot-test-log',
+                            'route' => '/mot-test-log',
                             'defaults' => [
                                 'controller' => MotTestLogControllerFactory::class,
-                                'action'     => 'logData',
+                                'action' => 'logData',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'summary' => [
-                                'type'    => 'Literal',
+                                'type' => 'Literal',
                                 'options' => [
-                                    'route'    => '/summary',
+                                    'route' => '/summary',
                                     'defaults' => [
                                         'controller' => MotTestLogControllerFactory::class,
-                                        'action'     => 'summary',
+                                        'action' => 'summary',
                                     ],
                                 ],
                             ],
                         ],
                     ],
                     'site' => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'       => '/site',
-                            'defaults'    => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/site',
+                            'defaults' => [
                                 'controller' => SiteController::class,
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'link' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'       => '/link[/:linkId]',
+                                    'route' => '/link[/:linkId]',
                                     'constraints' => [
                                         'linkId' => '\d+',
                                     ],
-                                    'defaults'    => [
+                                    'defaults' => [
                                         'controller' => SiteLinkController::class,
                                     ],
                                 ],
@@ -177,41 +177,41 @@ return [
                     ],
                 ],
             ],
-            'authorised-examiner-principal'        => [
-                'type'    => 'Segment',
+            'authorised-examiner-principal' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/authorised-examiner/:authorisedExaminerId/authorised-examiner-principal[/:id]',
+                    'route' => '/authorised-examiner/:authorisedExaminerId/authorised-examiner-principal[/:id]',
                     'constraints' => [
                         'authorisedExaminerId' => '[0-9]+',
-                        'id'                   => '[0-9]+',
+                        'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => AuthorisedExaminerPrincipalController::class,
                     ],
                 ],
             ],
-            'organisation-position'                => [
-                'type'    => 'Segment',
+            'organisation-position' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/organisation/:organisationId/position[/:positionId]',
+                    'route' => '/organisation/:organisationId/position[/:positionId]',
                     'constraints' => [
                         'organisationId' => '[0-9]+',
-                        'positionId'     => '[0-9]+',
+                        'positionId' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => OrganisationPositionController::class,
-                    ]
+                    ],
                 ],
             ],
-            'organisation-role'                    => [
-                'type'    => 'Segment',
+            'organisation-role' => [
+                'type' => 'Segment',
                 'options' => [
-                    'route'       => '/organisation/:organisationId/person/:personId/role',
+                    'route' => '/organisation/:organisationId/person/:personId/role',
                     'constraints' => [
                         'organisationId' => '[0-9]+',
-                        'personId'       => '[0-9]+',
+                        'personId' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => OrganisationRoleController::class,
                     ],
                 ],

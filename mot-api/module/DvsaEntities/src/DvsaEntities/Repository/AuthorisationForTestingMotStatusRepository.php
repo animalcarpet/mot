@@ -5,9 +5,8 @@ namespace DvsaEntities\Repository;
 use DvsaEntities\Entity\AuthorisationForTestingMotStatus;
 
 /**
- * Class AuthorisationForTestingMotStatusRepository
+ * Class AuthorisationForTestingMotStatusRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class AuthorisationForTestingMotStatusRepository extends EnumType1Repository

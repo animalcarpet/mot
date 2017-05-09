@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * NonWorkingDay
+ * NonWorkingDay.
  *
  * @ORM\Table(name="non_working_day_lookup")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\NonWorkingDayRepository", readOnly=true)
@@ -18,6 +18,7 @@ class NonWorkingDay extends Entity
 
     /**
      * @ORM\Column(name="day", type="date", nullable=false)
+     *
      * @var \DateTime
      */
     private $day;
@@ -38,6 +39,7 @@ class NonWorkingDay extends Entity
 
     /**
      * @param \DateTime $day
+     *
      * @return NonWorkingDay;
      */
     public function setDay(\DateTime $day)
@@ -57,6 +59,7 @@ class NonWorkingDay extends Entity
 
     /**
      * @param NonWorkingDayCountry $country
+     *
      * @return NonWorkingDay;
      */
     public function setCountry(NonWorkingDayCountry $country)

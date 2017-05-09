@@ -2,11 +2,9 @@
 
 namespace TestSupport\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommon\Constants\Role;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use TestSupport\Service\AccountDataService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -27,8 +25,9 @@ class SchemeMgtUserDataController extends BaseTestSupportRestfulController
         TestSupportAccessTokenManager::addSchemeManagerAsRequestorIfNecessary($data);
         /** @var $accountHelper AccountDataService */
         $accountHelper = $this->getServiceLocator()->get(AccountDataService::class);
-        $resultJson =$accountHelper->create($data, Role::DVSA_SCHEME_MANAGEMENT);
+        $resultJson = $accountHelper->create($data, Role::DVSA_SCHEME_MANAGEMENT);
         $accountHelper->addRole($resultJson->data['personId'], Role::DVSA_SCHEME_MANAGEMENT);
+
         return $resultJson;
     }
 }

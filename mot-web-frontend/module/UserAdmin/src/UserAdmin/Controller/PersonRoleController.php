@@ -4,7 +4,6 @@ namespace UserAdmin\Controller;
 
 use Core\Controller\AbstractAuthActionController;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 use UserAdmin\Service\PersonRoleManagementService;
 use Zend\View\Model\ViewModel;
@@ -45,9 +44,9 @@ class PersonRoleController extends AbstractAuthActionController
             );
 
             if ($return === true) {
-                $this->addSuccessMessage(sprintf("%s role has been added", $roleName));
+                $this->addSuccessMessage(sprintf('%s role has been added', $roleName));
             } else {
-                $this->addErrorMessage(sprintf("There has been an error trying to add role %s", $roleName));
+                $this->addErrorMessage(sprintf('There has been an error trying to add role %s', $roleName));
             }
 
             $redirectUrl = $this->url()->fromRoute('newProfileUserAdmin/manage-user-internal-role', ['id' => $this->getPersonIdFromRoute()]);
@@ -90,7 +89,7 @@ class PersonRoleController extends AbstractAuthActionController
             $roleName = $this->getCatalogService()
                             ->getPersonSystemRoles()[$this->getPersonSystemRoleIdFromRoute()]['name'];
 
-            $this->addSuccessMessage(sprintf("%s has been removed", $roleName));
+            $this->addSuccessMessage(sprintf('%s has been removed', $roleName));
 
             $redirectUrl = $this->url()->fromRoute('newProfileUserAdmin/manage-user-internal-role', ['id' => $this->getPersonIdFromRoute()]);
 
@@ -155,7 +154,7 @@ class PersonRoleController extends AbstractAuthActionController
      */
     private function hasBeenConfirmed()
     {
-        return ($this->request->isPost() === true);
+        return $this->request->isPost() === true;
     }
 
     /**

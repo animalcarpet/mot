@@ -6,7 +6,6 @@ use DvsaCommon\Input\AuthorisedExaminerPrincipal\AddressLine1Input;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\DateOfBirthInput;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\FamilyNameInput;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\FirstNameInput;
-use DvsaCommon\Input\AuthorisedExaminerPrincipal\PostcodeInput;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\TownInput;
 use DvsaCommon\InputFilter\AuthorisedExaminerPrincipal\CreateAepInputFilter;
 use DvsaCommonApi\Service\Validator\AbstractValidator;

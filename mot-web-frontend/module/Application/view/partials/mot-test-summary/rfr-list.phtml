@@ -1,5 +1,4 @@
 <?php
-use \DvsaCommon\Utility\ArrayUtils;
 
 $items = is_array($this->items) && !empty($this->items) ? $this->items : false;
 ?>
@@ -10,19 +9,19 @@ $items = is_array($this->items) && !empty($this->items) ? $this->items : false;
             <li class="primary-item" id="rfr-<?php echo $this->escapeHtmlAttr($item->id); ?>">
                 <?php
                 echo $this->escapeHtml(
-                    join(
+                    implode(
                         ' ', [
                             $item->testItemSelectorDescription,
                             $item->failureText,
                             (
                             !empty($item->inspectionManualReference)
-                                ? '[' . $item->inspectionManualReference . ']'
+                                ? '['.$item->inspectionManualReference.']'
                                 : ''
                             ),
                             $item->locationLateral,
                             $item->locationLongitudinal,
                             $item->locationVertical,
-                            (!empty($item->comment) ? '(' . $item->comment . ')' : ''),
+                            (!empty($item->comment) ? '('.$item->comment.')' : ''),
                         ]
                     )
                 );

@@ -22,19 +22,21 @@ trait ServiceManager
         return $this->serviceManager;
     }
 
-    protected function setService($name, $handler) {
+    protected function setService($name, $handler)
+    {
         $this->serviceManager->setService($name, $handler);
     }
 
-    protected function setConfig($config) {
+    protected function setConfig($config)
+    {
         $this->setService('Config', ['mailer' => $config]);
     }
 
     /**
      * Create a mocked class and attach it as a named service.
      *
-     * @param string $classname   contains the class to be mocked
-     * @param Array $expectedFuns functions you want to set expectations on later
+     * @param string $classname    contains the class to be mocked
+     * @param array  $expectedFuns functions you want to set expectations on later
      *
      * @return mixed
      */

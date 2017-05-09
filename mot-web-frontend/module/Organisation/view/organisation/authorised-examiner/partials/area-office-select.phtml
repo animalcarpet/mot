@@ -3,10 +3,10 @@
 use Organisation\Form\AeCreateForm;
 
 // Sensible defaults for the Area Office selection drop-down menu
-$labelText = isset($this->label)     ? $this->label     : 'Area Office';
+$labelText = isset($this->label) ? $this->label : 'Area Office';
 $labelMenu = isset($this->labelMenu) ? $this->labelMenu : 'DVSA Area Office';
-$labelId   = isset($this->labelId)   ? $this->labelId   : 'legendAreaOfficeReference';
-$selectId  = isset($this->id)        ? $this->id        : AeCreateForm::FIELD_AO_NR;
+$labelId = isset($this->labelId) ? $this->labelId : 'legendAreaOfficeReference';
+$selectId = isset($this->id) ? $this->id : AeCreateForm::FIELD_AO_NR;
 $showTitle = isset($this->showTitle) ? $this->showTitle : true;
 ?>
 <fieldset>
@@ -17,7 +17,7 @@ $showTitle = isset($this->showTitle) ? $this->showTitle : true;
             'partial/gds/form/control-legend',
             [
                 'id' => $labelId,
-                'text' => $labelText
+                'text' => $labelText,
             ]
         );
     }
@@ -28,9 +28,9 @@ $showTitle = isset($this->showTitle) ? $this->showTitle : true;
             'id' => $selectId,
             'label' => $labelMenu,
             'errorMessage' => $this->errorMessage,
-            'value' => (string)$this->value,
+            'value' => (string) $this->value,
             'options' => $this->options,
-            'inputModifier'=> '1-4',
+            'inputModifier' => '1-4',
         ]
     );
     ?>

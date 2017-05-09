@@ -2,20 +2,18 @@
 
 namespace DvsaEntities\Repository;
 
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\Message;
 use DvsaEntities\Entity\MessageType;
 use DvsaEntities\Entity\Person;
-use Doctrine\ORM\Query\Expr;
 
 /**
- * Class MessageRepository
+ * Class MessageRepository.
  *
  * Custom Doctrine Repository for reusable DQL queries
+ *
  * @codeCoverageIgnore
  */
 class MessageRepository extends AbstractMutableRepository
@@ -31,17 +29,17 @@ class MessageRepository extends AbstractMutableRepository
     {
         $issueDate = DateTimeApiFormat::date($date);
 
-        $qb = $this->createQueryBuilder("m");
+        $qb = $this->createQueryBuilder('m');
         $qb
-            ->select("COUNT(m.id)")
-            ->where("m.person = :person")
-            ->andWhere("m.messageType = :messageType")
-            ->andWhere("m.issueDate >= :issueDateMin")
-            ->andWhere("m.issueDate <= :issueDateMax")
-            ->setParameter("person", $person)
-            ->setParameter("messageType", $messageType)
-            ->setParameter("issueDateMin", new \DateTime($issueDate . ' 00:00:00'))
-            ->setParameter("issueDateMax", new \DateTime($issueDate . ' 23:59:59'));
+            ->select('COUNT(m.id)')
+            ->where('m.person = :person')
+            ->andWhere('m.messageType = :messageType')
+            ->andWhere('m.issueDate >= :issueDateMin')
+            ->andWhere('m.issueDate <= :issueDateMax')
+            ->setParameter('person', $person)
+            ->setParameter('messageType', $messageType)
+            ->setParameter('issueDateMin', new \DateTime($issueDate.' 00:00:00'))
+            ->setParameter('issueDateMax', new \DateTime($issueDate.' 23:59:59'));
 
         $number = (int) $qb->getQuery()->getSingleScalarResult();
 
@@ -56,15 +54,16 @@ class MessageRepository extends AbstractMutableRepository
      * @param string $token
      *
      * @return Message
+     *
      * @throws NotFoundException
      */
     public function getHydratedMessageByToken($token, $isValid = false)
     {
-        $qb = $this->createQueryBuilder("m")
-            ->select("m, mt, p")
-            ->join("m.messageType", 'mt')
-            ->join("m.person", 'p')
-            ->where("m.token = :TOKEN")
+        $qb = $this->createQueryBuilder('m')
+            ->select('m, mt, p')
+            ->join('m.messageType', 'mt')
+            ->join('m.person', 'p')
+            ->where('m.token = :TOKEN')
             ->setParameter('TOKEN', $token)
             ->setMaxResults(1);
 
@@ -72,7 +71,7 @@ class MessageRepository extends AbstractMutableRepository
             $qb
                 ->andWhere('m.expiryDate > :EXPIRY_DATETIME ')
                 ->andWhere('m.isAcknowledged = FALSE')
-                ->setParameter('EXPIRY_DATETIME', (new DateTimeHolder)->getCurrent());
+                ->setParameter('EXPIRY_DATETIME', (new DateTimeHolder())->getCurrent());
         }
 
         $result = $qb->getQuery()->getResult();

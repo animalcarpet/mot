@@ -9,7 +9,7 @@ use Dashboard\Controller\UserStatsController;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 
 /**
- * Tests for UserStatsController
+ * Tests for UserStatsController.
  */
 class UserStatsControllerTest extends AbstractFrontendControllerTestCase
 {

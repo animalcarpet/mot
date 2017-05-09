@@ -2,7 +2,6 @@
 
 namespace SiteTest\ViewModel\MotTest;
 
-
 use DvsaCommon\Dto\MotTesting\MotTestInProgressDto;
 use Site\ViewModel\MotTest\MotTestInProgressViewModel;
 

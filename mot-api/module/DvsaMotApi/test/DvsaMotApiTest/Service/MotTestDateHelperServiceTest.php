@@ -25,9 +25,7 @@ use DvsaMotApiTest\Factory\VehicleObjectsFactory;
 use DvsaMotApiTest\Service\Fixtures\CsvFileIterator;
 
 /**
- * Class MotTestDateHelperServiceTest
- *
- * @package DvsaMotApiTest\Service
+ * Class MotTestDateHelperServiceTest.
  */
 class MotTestDateHelperServiceTest extends AbstractServiceTestCase
 {
@@ -51,11 +49,11 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param int|null $status MotTest status Passed or Pending Passed
-     * @param string $issuedDate MotTest issued date, if null take from MotTest
-     * @param int $testType MotTest type
-     * @param string $expectResult Expected Date
-     * @param boolean $emergency Emergency test
+     * @param int|null $status       MotTest status Passed or Pending Passed
+     * @param string   $issuedDate   MotTest issued date, if null take from MotTest
+     * @param int      $testType     MotTest type
+     * @param string   $expectResult Expected Date
+     * @param bool     $emergency    Emergency test
      *
      * @dataProvider dataProviderTestIssuedDate
      */
@@ -65,8 +63,7 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $testType,
         $expectResult,
         $emergency = false
-    )
-    {
+    ) {
         $issuedDate = $issuedDate ? DateUtils::toDate($issuedDate) : $issuedDate;
         $expectResult = $expectResult ? DateUtils::toDate($expectResult) : null;
 
@@ -127,21 +124,20 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         ];
     }
 
-
     /**
      * This test will show that, with no prior MOT test on record, that the expiry date
      * is a function of the set:
-     *     {vehicle class, registered as new, manufacturer date, registration date}
+     *     {vehicle class, registered as new, manufacturer date, registration date}.
      *
-     * @param string $vehicleClass the type of vehicle
-     * @param string $newAtFirstReg the word yes or no
-     * @param string $dateFirstUsed the date the vehicle was first used as YYYY-MM-DD, like all the CSV dates
-     * @param string $dateRegistered the date the vehicle was registered
-     * @param string $dateManufactured the date the vehicle made
-     * @param string $dateFirstMotDue when the first MOT is due with respect to vehicle class
-     * @param string $preservationDate the preservation date start period
-     * @param string $dateOfMotTest the date the test was performed for the test case
-     * @param string $expiryDate the expected expiry of the MOT test
+     * @param string $vehicleClass         the type of vehicle
+     * @param string $newAtFirstReg        the word yes or no
+     * @param string $dateFirstUsed        the date the vehicle was first used as YYYY-MM-DD, like all the CSV dates
+     * @param string $dateRegistered       the date the vehicle was registered
+     * @param string $dateManufactured     the date the vehicle made
+     * @param string $dateFirstMotDue      when the first MOT is due with respect to vehicle class
+     * @param string $preservationDate     the preservation date start period
+     * @param string $dateOfMotTest        the date the test was performed for the test case
+     * @param string $expiryDate           the expected expiry of the MOT test
      * @param string $testPreservationDate the expectec preservation of the NEXT mot test
      * @dataProvider dpTestExpiryDate
      *
@@ -158,8 +154,7 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $dateOfMotTest,
         $expiryDate,
         $testPreservationDate
-    )
-    {
+    ) {
         /** @var DateTimeHolder $now */
         $now = $this->createDateTimeHolder($dateOfMotTest);
         $motTest = $this->getMockMotTest(MotTestTypeCode::NORMAL_TEST, self::TEST_STATUS_PASS);
@@ -202,7 +197,7 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
 
     public function dpTestExpiryDate()
     {
-        return new CsvFileIterator(__DIR__ . '/Fixtures/10110.csv');
+        return new CsvFileIterator(__DIR__.'/Fixtures/10110.csv');
     }
 
     /**
@@ -234,8 +229,7 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $nowDate,
         $expectedExpiryDate,
         $testPreservationDate
-    )
-    {
+    ) {
         /** @var DateTimeHolder $now */
         $now = $this->createDateTimeHolder($nowDate);
 
@@ -280,13 +274,14 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
 
     public function dpTestExpiryDateWithPrevious()
     {
-        return new CsvFileIterator(__DIR__ . '/Fixtures/10110.csv');
+        return new CsvFileIterator(__DIR__.'/Fixtures/10110.csv');
     }
 
     /**
      * @param $id
      * @param $vehicleClass
      * @param bool $regAtNew
+     *
      * @return Vehicle
      */
     protected function createVehicle($id, $vehicleClass, $regAtNew = true)
@@ -326,8 +321,7 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
     private function getMockMotTest(
         $testTypeCode = MotTestTypeCode::NORMAL_TEST,
         $status = self::TEST_STATUS_PASS
-    )
-    {
+    ) {
         $testType = (new \DvsaEntities\Entity\MotTestType())->setCode($testTypeCode);
         $motTest = MotTestObjectsFactory::activeMotTest()
             ->setId(1)
@@ -368,7 +362,7 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;
@@ -379,7 +373,9 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
      * to "now" if no value is passed.
      *
      * @param mixed $when
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function createDateTimeHolder($when = null)
@@ -397,7 +393,6 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
 
         return $dateTimeHolder;
     }
-
 
     /**
      * @param $expiryDate

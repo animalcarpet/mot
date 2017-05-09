@@ -3,7 +3,7 @@
 namespace DvsaMotApi\Service\Validator\RetestEligibility;
 
 /**
- *  A list of possible codes returned by RetestEligibilityService
+ *  A list of possible codes returned by RetestEligibilityService.
  */
 class RetestEligibilityCheckCode
 {

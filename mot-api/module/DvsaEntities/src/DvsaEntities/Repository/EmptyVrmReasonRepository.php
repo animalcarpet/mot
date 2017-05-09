@@ -21,6 +21,7 @@ class EmptyVrmReasonRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return EmptyVrmReason
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
@@ -29,6 +30,7 @@ class EmptyVrmReasonRepository extends AbstractMutableRepository
         if (!$entity) {
             throw new NotFoundException($this->getEntityName(), $id);
         }
+
         return $entity;
     }
 }

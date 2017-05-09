@@ -8,13 +8,10 @@
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Model;
 
 /**
- * Class VehicleTestingStation
- *
- * @package Dvsa\Mot\Frontend\AuthenticationModule\Model
+ * Class VehicleTestingStation.
  */
 class VehicleTestingStation
 {
-
     /**
      * @var int
      */
@@ -98,6 +95,7 @@ class VehicleTestingStation
     public function setAddress($address)
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -117,6 +115,7 @@ class VehicleTestingStation
     public function setAuthorisedExaminerId($authorisedExaminerId)
     {
         $this->authorisedExaminerId = $authorisedExaminerId;
+
         return $this;
     }
 
@@ -136,6 +135,7 @@ class VehicleTestingStation
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -155,6 +155,7 @@ class VehicleTestingStation
     public function setSiteNumber($siteNumber)
     {
         $this->siteNumber = $siteNumber;
+
         return $this;
     }
 
@@ -174,6 +175,7 @@ class VehicleTestingStation
     public function setSlotsWarning($slotsWarning)
     {
         $this->slotsWarning = $slotsWarning;
+
         return $this;
     }
 
@@ -193,6 +195,7 @@ class VehicleTestingStation
     public function setSlots($slots)
     {
         $this->slots = $slots;
+
         return $this;
     }
 
@@ -212,6 +215,7 @@ class VehicleTestingStation
     public function setVtsId($vtsId)
     {
         $this->vtsId = $vtsId;
+
         return $this;
     }
 
@@ -231,6 +235,7 @@ class VehicleTestingStation
     public function setSlotsInUse($slotsInUse)
     {
         $this->slotsInUse = $slotsInUse;
+
         return $this;
     }
 

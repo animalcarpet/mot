@@ -4,7 +4,6 @@ namespace DvsaMotTest\ViewModel\TesterMotTestLog;
 
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
-use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\UrlBuilder\UrlBuilderWeb;
 use Organisation\ViewModel\MotTestLog\Formatter\VehicleModelSubRow;
 use Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel;
@@ -35,15 +34,15 @@ class TesterMotTestLogViewModel
     private $formModel;
 
     /**
-     * @var  Table
+     * @var Table
      */
     private $table;
 
     /**
-     * @var  FilterBuilder
+     * @var FilterBuilder
      */
     private $filterBuilder;
-    /** @var  string */
+    /** @var string */
     private $returnLink;
 
     public function __construct(
@@ -67,7 +66,7 @@ class TesterMotTestLogViewModel
                 // Monday last week
                 SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $lastWeek['from'],
                 // Sunday last week
-                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => $lastWeek['to'],
+                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $lastWeek['to'],
             ]
         );
 
@@ -87,10 +86,8 @@ class TesterMotTestLogViewModel
         return UrlBuilderWeb::motTestLogDownloadCsv()
             ->queryParams(
                 [
-                    SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM =>
-                        $this->formModel->getDateFrom()->getDate()->setTime(0, 0, 0)->getTimestamp(),
-                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   =>
-                        $this->formModel->getDateTo()->getDate()->setTime(23, 59, 59)->getTimestamp(),
+                    SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $this->formModel->getDateFrom()->getDate()->setTime(0, 0, 0)->getTimestamp(),
+                    SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $this->formModel->getDateTo()->getDate()->setTime(23, 59, 59)->getTimestamp(),
                 ]
             )->toString();
     }
@@ -101,50 +98,50 @@ class TesterMotTestLogViewModel
         $this->table->setColumns(
             [
                 [
-                    'title'   => 'Date/time',
-                    'sortBy'  => 'testDateTime',
-                    'sub'    => [
+                    'title' => 'Date/time',
+                    'sortBy' => 'testDateTime',
+                    'sub' => [
                         [
-                            'field'     => 'testDate',
+                            'field' => 'testDate',
                         ],
                         [
-                            'field'     => 'testTime',
+                            'field' => 'testTime',
                             'formatter' => SubRow::class,
                         ],
-                    ]
+                    ],
                 ],
                 [
-                    'field'  => 'vehicleVRM',
-                    'title'  => 'VRM',
+                    'field' => 'vehicleVRM',
+                    'title' => 'VRM',
                     'sortBy' => 'vehicleVRM',
                 ],
                 [
-                    'title'    => 'Vehicle',
+                    'title' => 'Vehicle',
                     'sortBy' => 'makeModel',
-                    'sub'    => [
+                    'sub' => [
                         [
-                            'field'     => 'vehicleMake',
+                            'field' => 'vehicleMake',
                         ],
                         [
-                            'field'     => 'vehicleModel',
+                            'field' => 'vehicleModel',
                             'formatter' => VehicleModelSubRow::class,
                         ],
                     ],
                 ],
                 [
-                    'title'    => 'Site Id',
+                    'title' => 'Site Id',
                     'sortBy' => 'siteNumber',
-                    'field' => 'siteNumber'
+                    'field' => 'siteNumber',
                 ],
                 [
-                    'title'    => 'Status/Type',
+                    'title' => 'Status/Type',
                     'sortBy' => 'statusType',
-                    'sub'    => [
+                    'sub' => [
                         [
-                            'field'     => 'status',
+                            'field' => 'status',
                         ],
                         [
-                            'field'     => 'testType',
+                            'field' => 'testType',
                             'formatter' => SubRow::class,
                         ],
                     ],
@@ -161,9 +158,9 @@ class TesterMotTestLogViewModel
         $this->filterBuilder
             ->setOptions(
                 [
-                    'today'     => $this->getDateRange(self::RANGE_TODAY),
-                    'lastWeek'  => $this->getDateRange(self::RANGE_LAST_WEEK),
-                    'lastMonth' => $this->getDateRange(self::RANGE_LAST_MONTH)
+                    'today' => $this->getDateRange(self::RANGE_TODAY),
+                    'lastWeek' => $this->getDateRange(self::RANGE_LAST_WEEK),
+                    'lastMonth' => $this->getDateRange(self::RANGE_LAST_MONTH),
                 ]
             );
 
@@ -174,7 +171,8 @@ class TesterMotTestLogViewModel
      * Answers an array with a label, from and to range for the specified range.
      *
      * @param $rangeName
-     * @return Array
+     *
+     * @return array
      */
     private function getDateRange($rangeName)
     {
@@ -182,21 +180,21 @@ class TesterMotTestLogViewModel
             case self::RANGE_LAST_WEEK:
                 return [
                     'label' => 'Last week (Mon-Sun)',
-                    'from'  => strtotime('monday last week 00:00:00'),
-                    'to'    => strtotime('sunday last week 23:59:59'),
+                    'from' => strtotime('monday last week 00:00:00'),
+                    'to' => strtotime('sunday last week 23:59:59'),
                 ];
             case self::RANGE_LAST_MONTH:
                 return [
-                    'label' => 'Last Month (' . date('M', strtotime('last month')) . ')',
-                    'from'  => strtotime('first day of last month midnight'),
-                    'to'    => strtotime('first day of this month midnight -1 second')
+                    'label' => 'Last Month ('.date('M', strtotime('last month')).')',
+                    'from' => strtotime('first day of last month midnight'),
+                    'to' => strtotime('first day of this month midnight -1 second'),
                 ];
             case self::RANGE_TODAY:
             default:
                 return [
                     'label' => 'Today',
-                    'from'  => strtotime('today'),
-                    'to'    => strtotime('tomorrow -1 second')
+                    'from' => strtotime('today'),
+                    'to' => strtotime('tomorrow -1 second'),
                 ];
         }
     }
@@ -243,6 +241,7 @@ class TesterMotTestLogViewModel
 
     /**
      * @param Table $table
+     *
      * @return $this
      */
     public function setTable(Table $table)
@@ -262,6 +261,7 @@ class TesterMotTestLogViewModel
 
     /**
      * @param FilterBuilder $filterBuilder
+     *
      * @return $this
      */
     public function setFilterBuilder(FilterBuilder $filterBuilder)

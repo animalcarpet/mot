@@ -161,7 +161,7 @@ class Module implements
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function getAutoloaderConfig()
@@ -174,47 +174,47 @@ class Module implements
     public function getServiceConfig()
     {
         return [
-            'factories'  => [
-                self::APPLICATION_SESSION                 => ApplicationSessionFactory::class,
-                'CatalogService'                          => CatalogServiceFactory::class,
-                CatalogService::class                     => CatalogServiceFactory::class,
-                'AuthAdapter'                             => AuthAdapterFactory::class,
-                'ZendAuthenticationService'               => ZendAuthenticationServiceFactory::class,
-                'ApplicationWideCache'                    => ApplicationWideCacheFactory::class,
-                'MotSession'                              => MotSessionFactory::class,
-                'FileTemplate'                            => FileTemplateFactory::class,
-                'LoggedInUserManager'                     => LoggedInUserManagerFactory::class,
-                ApiPersonalDetails::class                 => ApiPersonalDetailsFactory::class,
-                ApiCurrentMotTest::class                  => ApiCurrentMotTestFactory::class,
-                ApiUserSiteCount::class                   => ApiUserSiteCountFactory::class,
-                'Logger'                                  => \DvsaApplicationLogger\Factory\LoggerFactory::class,
+            'factories' => [
+                self::APPLICATION_SESSION => ApplicationSessionFactory::class,
+                'CatalogService' => CatalogServiceFactory::class,
+                CatalogService::class => CatalogServiceFactory::class,
+                'AuthAdapter' => AuthAdapterFactory::class,
+                'ZendAuthenticationService' => ZendAuthenticationServiceFactory::class,
+                'ApplicationWideCache' => ApplicationWideCacheFactory::class,
+                'MotSession' => MotSessionFactory::class,
+                'FileTemplate' => FileTemplateFactory::class,
+                'LoggedInUserManager' => LoggedInUserManagerFactory::class,
+                ApiPersonalDetails::class => ApiPersonalDetailsFactory::class,
+                ApiCurrentMotTest::class => ApiCurrentMotTestFactory::class,
+                ApiUserSiteCount::class => ApiUserSiteCountFactory::class,
+                'Logger' => \DvsaApplicationLogger\Factory\LoggerFactory::class,
                 TesterInProgressTestNumberResource::class => TesterInProgressTestNumberResourceFactory::class,
-                BrakeTestResultsResource::class           => BrakeTestResultsResourceFactory::class,
-                ContingencySessionManager::class          => ContingencySessionManagerFactory::class,
-                ClaimAccountListener::class               => ClaimAccountListenerFactory::class,
-                ExpiredPasswordListener::class            => ExpiredPasswordListenerFactory::class,
-                ChangeTempPasswordListener::class         => ChangeTempPasswordListenerFactory::class,
-                'BrakeTestConfigurationContainerHelper'   => BrakeTestConfigurationContainerFactory::class,
-                'LocationSelectContainerHelper'           => LocationSelectContainerFactory::class,
-                AuthorisedClassesService::class           => AuthorisedClassesServiceFactory::class,
-                VehicleSearchResult::class                => VehicleSearchResultFactory::class,
-                VehicleSearchService::class               => VehicleSearchServiceFactory::class,
-                'MotTestCertificatesService'              => MotTestCertificatesServiceFactory::class,
-                CertificatePrintingService::class         => CertificatePrintingServiceFactory::class,
-                BreadcrumbsBuilder::class                 => BreadcrumbsBuilderFactory::class,
-                SimpleResolver::class                     => SimpleResolverFactory::class,
-                SiteNameResolver::class                   => SiteNameResolverFactory::class,
-                OrganisationNameBySiteResolver::class     => OrganisationNameBySiteResolverFactory::class,
-                'AuthorisationHelper'                     => AuthorisationHelperFactory::class,
-                OrganisationNameBySiteResolver::class     => OrganisationNameBySiteResolverFactory::class,
+                BrakeTestResultsResource::class => BrakeTestResultsResourceFactory::class,
+                ContingencySessionManager::class => ContingencySessionManagerFactory::class,
+                ClaimAccountListener::class => ClaimAccountListenerFactory::class,
+                ExpiredPasswordListener::class => ExpiredPasswordListenerFactory::class,
+                ChangeTempPasswordListener::class => ChangeTempPasswordListenerFactory::class,
+                'BrakeTestConfigurationContainerHelper' => BrakeTestConfigurationContainerFactory::class,
+                'LocationSelectContainerHelper' => LocationSelectContainerFactory::class,
+                AuthorisedClassesService::class => AuthorisedClassesServiceFactory::class,
+                VehicleSearchResult::class => VehicleSearchResultFactory::class,
+                VehicleSearchService::class => VehicleSearchServiceFactory::class,
+                'MotTestCertificatesService' => MotTestCertificatesServiceFactory::class,
+                CertificatePrintingService::class => CertificatePrintingServiceFactory::class,
+                BreadcrumbsBuilder::class => BreadcrumbsBuilderFactory::class,
+                SimpleResolver::class => SimpleResolverFactory::class,
+                SiteNameResolver::class => SiteNameResolverFactory::class,
+                OrganisationNameBySiteResolver::class => OrganisationNameBySiteResolverFactory::class,
+                'AuthorisationHelper' => AuthorisationHelperFactory::class,
+                OrganisationNameBySiteResolver::class => OrganisationNameBySiteResolverFactory::class,
             ],
-            'aliases'    => [
+            'aliases' => [
                 AuthenticationService::class => 'ZendAuthenticationService',
             ],
             'invokables' => [
-                BrakeTestConfigurationClass1And2Helper::class     => BrakeTestConfigurationClass1And2Helper::class,
+                BrakeTestConfigurationClass1And2Helper::class => BrakeTestConfigurationClass1And2Helper::class,
                 BrakeTestConfigurationClass3AndAboveHelper::class => BrakeTestConfigurationClass3AndAboveHelper::class,
-                BrakeTestConfigurationClass1And2Mapper::class     => BrakeTestConfigurationClass1And2Mapper::class,
+                BrakeTestConfigurationClass1And2Mapper::class => BrakeTestConfigurationClass1And2Mapper::class,
                 BrakeTestConfigurationClass3AndAboveMapper::class => BrakeTestConfigurationClass3AndAboveMapper::class,
             ],
         ];
@@ -230,7 +230,7 @@ class Module implements
 
         $serviceManager = $e->getApplication()->getServiceManager();
 
-        /** @var  $viewManager \Zend\Mvc\View\Console\ViewManager */
+        /** @var $viewManager \Zend\Mvc\View\Console\ViewManager */
         $viewManager = $serviceManager->get('viewManager');
 
         $eid = false;
@@ -239,13 +239,13 @@ class Module implements
         $logger = $serviceManager->get('Application/Logger');
         if ($exception) {
             $eid = uniqid();
-            $logger->err('error id: ' . $eid);
-            $logger->err('error: ' . $error);
-            $logger->err('class: ' . get_class($exception));
-            $logger->err('file: ' . $exception->getFile());
-            $logger->err('line: ' . $exception->getLine());
-            $logger->err('message: ' . $exception->getMessage());
-            $logger->err('stacktrace: ' . $exception->getTraceAsString());
+            $logger->err('error id: '.$eid);
+            $logger->err('error: '.$error);
+            $logger->err('class: '.get_class($exception));
+            $logger->err('file: '.$exception->getFile());
+            $logger->err('line: '.$exception->getLine());
+            $logger->err('message: '.$exception->getMessage());
+            $logger->err('stacktrace: '.$exception->getTraceAsString());
         }
 
         $config = $serviceManager->get('config');
@@ -279,7 +279,7 @@ class Module implements
     {
         $error = $e->getError();
         if (!$error) {
-            throw new \LogicException("This listener is only meant to be called on errors");
+            throw new \LogicException('This listener is only meant to be called on errors');
         }
     }
 }

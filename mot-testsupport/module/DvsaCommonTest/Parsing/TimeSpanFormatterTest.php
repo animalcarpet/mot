@@ -49,7 +49,7 @@ class TimeSpanFormatterTest extends PHPUnit_Framework_TestCase
      */
     public function testToJsonTooManyColons()
     {
-        $this->parser->fromJsonString("1:2:3:4");
+        $this->parser->fromJsonString('1:2:3:4');
     }
 
     /**
@@ -57,7 +57,7 @@ class TimeSpanFormatterTest extends PHPUnit_Framework_TestCase
      */
     public function testToJsonTooManyDots()
     {
-        $this->parser->fromJsonString("10.5.16:12:13");
+        $this->parser->fromJsonString('10.5.16:12:13');
     }
 
     /**
@@ -65,7 +65,7 @@ class TimeSpanFormatterTest extends PHPUnit_Framework_TestCase
      */
     public function testToJsonTooFewColons()
     {
-        $this->parser->fromJsonString("1:3.10:10");
+        $this->parser->fromJsonString('1:3.10:10');
     }
 
     /**
@@ -73,6 +73,6 @@ class TimeSpanFormatterTest extends PHPUnit_Framework_TestCase
      */
     public function testToJsonColonBeforeDot()
     {
-        $this->parser->fromJsonString("1.3:10");
+        $this->parser->fromJsonString('1.3:10');
     }
 }

@@ -54,12 +54,12 @@ class MotTestResultsController extends AbstractDvsaMotTestController
     private $odometerViewObject;
 
     /**
-     * @var MotTestService $motTestServiceClient
+     * @var MotTestService
      */
     public $motTestServiceClient;
 
     /**
-     * @var VehicleService $vehicleServiceClient
+     * @var VehicleService
      */
     public $vehicleServiceClient;
 
@@ -87,13 +87,12 @@ class MotTestResultsController extends AbstractDvsaMotTestController
      * MotTestResultsController constructor.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param OdometerReadingViewObject $odometerViewObject
+     * @param OdometerReadingViewObject        $odometerViewObject
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         OdometerReadingViewObject $odometerViewObject
-    )
-    {
+    ) {
         $this->authorisationService = $authorisationService;
         $this->odometerViewObject = $odometerViewObject;
     }
@@ -103,7 +102,7 @@ class MotTestResultsController extends AbstractDvsaMotTestController
      */
     public function indexAction()
     {
-        $motTestNumber = (int)$this->params('motTestNumber', 0);
+        $motTestNumber = (int) $this->params('motTestNumber', 0);
 
         /** @var MotTest $motTest */
         $motTest = null;
@@ -112,7 +111,7 @@ class MotTestResultsController extends AbstractDvsaMotTestController
         $isNonMotTest = false;
         /** @var DvsaVehicle $vehicle */
         $vehicle = null;
-        /** @var DvsaVehicleViewModel $vehicleViewModel*/
+        /** @var DvsaVehicleViewModel $vehicleViewModel */
         $vehicleViewModel = null;
 
         try {
@@ -129,7 +128,7 @@ class MotTestResultsController extends AbstractDvsaMotTestController
 
             if (!$isDemo && $isTester && !$currentVts) {
                 return $this->redirectToSelectLocation($motTestNumber);
-            };
+            }
 
             $apiUrl = MotTestUrlBuilder::odometerReadingNotices($motTestNumber)->toString();
             $readingNotices = $this->getRestClient()->get($apiUrl);
@@ -161,7 +160,7 @@ class MotTestResultsController extends AbstractDvsaMotTestController
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => [$breadcrumb => '']]);
-        if($isNonMotTest){
+        if ($isNonMotTest) {
             $this->layout()->setVariable('pageTitle', 'Non-MOT test');
         } else {
             $this->layout()->setVariable('pageTitle', 'MOT test results');
@@ -173,7 +172,7 @@ class MotTestResultsController extends AbstractDvsaMotTestController
 
         /** @var MotTest $originalMotTest */
         $originalMotTest = null;
-        if(!empty($motTest->getMotTestOriginalNumber())){
+        if (!empty($motTest->getMotTestOriginalNumber())) {
             $originalMotTest = $this->getMotTestFromApi($motTest->getMotTestOriginalNumber());
         }
 
@@ -182,7 +181,6 @@ class MotTestResultsController extends AbstractDvsaMotTestController
 
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
         $isRetest = $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST;
-
 
         $hasTestingAdvice = false;
         $testingAdviceUrl = null;
@@ -232,7 +230,7 @@ class MotTestResultsController extends AbstractDvsaMotTestController
 
     /**
      * @param string $template
-     * @param array $variables
+     * @param array  $variables
      *
      * @return ViewModel
      */
@@ -271,8 +269,8 @@ class MotTestResultsController extends AbstractDvsaMotTestController
 
     /**
      * @param string $motTestNumber
-     * @param int $testTypeId
-     * @param boolean $hasTestingAdvice
+     * @param int    $testTypeId
+     * @param bool   $hasTestingAdvice
      */
     private function addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testTypeId, $hasTestingAdvice)
     {

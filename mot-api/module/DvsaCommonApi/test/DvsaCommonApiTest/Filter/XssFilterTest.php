@@ -26,10 +26,10 @@ class XssFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testScriptTagsAreStripped()
     {
-        $filter         = $this->filter;
+        $filter = $this->filter;
         $valuesExpected = [
-            '<script>alert(document.cookie)</script>'               => '',
-            'Hello<script>alert(document.cookie)</script> World!'   => 'Hello World!',
+            '<script>alert(document.cookie)</script>' => '',
+            'Hello<script>alert(document.cookie)</script> World!' => 'Hello World!',
         ];
 
         // Test using filter()
@@ -62,10 +62,10 @@ class XssFilterTest extends \PHPUnit_Framework_TestCase
             ->setAddress($addressDto)
             ->setPhones(
                 [
-                    (new PhoneDto)->setNumber('b1 Hello World!'),
-                    (new PhoneDto)->setNumber('b2 & <> "'),
-                    (new PhoneDto)->setNumber('b3 '),
-                    (new PhoneDto)->setNumber('b4 &amp; &lt; &gt; &quot;  &#34;'),
+                    (new PhoneDto())->setNumber('b1 Hello World!'),
+                    (new PhoneDto())->setNumber('b2 & <> "'),
+                    (new PhoneDto())->setNumber('b3 '),
+                    (new PhoneDto())->setNumber('b4 &amp; &lt; &gt; &quot;  &#34;'),
                 ]
             );
 
@@ -85,10 +85,10 @@ class XssFilterTest extends \PHPUnit_Framework_TestCase
             ->setAddress($addressDto)
             ->setPhones(
                 [
-                    (new PhoneDto)->setNumber('b1 Hello<script>alert(document.cookie)</script> World!'),
-                    (new PhoneDto)->setNumber('b2 & <> "<SCRIPT a=">\'>" SRC="http://ha.ckers.org/xss.js"></SCRIPT>'),
-                    (new PhoneDto)->setNumber('b3 <SCRIPT a=`>` SRC="http://ha.ckers.org/xss.js"></SCRIPT>'),
-                    (new PhoneDto)->setNumber('b4 &amp; &lt; &gt; &quot;  &#34;'),
+                    (new PhoneDto())->setNumber('b1 Hello<script>alert(document.cookie)</script> World!'),
+                    (new PhoneDto())->setNumber('b2 & <> "<SCRIPT a=">\'>" SRC="http://ha.ckers.org/xss.js"></SCRIPT>'),
+                    (new PhoneDto())->setNumber('b3 <SCRIPT a=`>` SRC="http://ha.ckers.org/xss.js"></SCRIPT>'),
+                    (new PhoneDto())->setNumber('b4 &amp; &lt; &gt; &quot;  &#34;'),
                 ]
             );
 

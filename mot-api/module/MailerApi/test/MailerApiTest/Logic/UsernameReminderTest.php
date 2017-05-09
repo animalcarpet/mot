@@ -1,4 +1,5 @@
 <?php
+
 namespace MailerApiTest\Logic;
 
 use DvsaCommon\Dto\Mailer\MailerDto;
@@ -10,7 +11,6 @@ use MailerApi\Service\MailerService;
 use MailerApi\Validator\MailerValidator;
 use PersonApi\Service\PersonalDetailsService;
 use PHPUnit_Framework_TestCase;
-use Zend\Log\Logger;
 
 class UsernameReminderTest extends PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,6 @@ class UsernameReminderTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->mockUserService = XMock::of(UserService::class, ['findPerson']);
         $this->validator = new MailerValidator($this->mockUserService);
 

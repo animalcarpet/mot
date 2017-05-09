@@ -14,13 +14,11 @@ use DvsaCommonApi\Service\Exception\InvalidFieldValueException;
 use DvsaCommonApi\Service\Exception\MethodNotAllowedException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use Zend\Http\Request;
-use Zend\Http\Response;
 use Zend\Json\Json;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class SecurityQuestionController
- * @package AccountApi\Controller
+ * Class SecurityQuestionController.
  */
 class SecurityQuestionController extends AbstractDvsaRestfulController
 {
@@ -33,7 +31,7 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
     }
 
     /**
-     * This endpoint is used to retrieve all the question
+     * This endpoint is used to retrieve all the question.
      *
      * @return JsonModel
      */
@@ -43,8 +41,9 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
     }
 
     /**
-     * @param int $userId
+     * @param int   $userId
      * @param array $data
+     *
      * @return JsonModel
      */
     public function update($userId, $data)
@@ -64,13 +63,12 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
      */
     public function verifyAnswerAction()
     {
-        $questionId = (int)$this->params()->fromRoute('qid', 0);
-        $userId = (int)$this->params()->fromRoute('uid', 0);
+        $questionId = (int) $this->params()->fromRoute('qid', 0);
+        $userId = (int) $this->params()->fromRoute('uid', 0);
         $answer = $this->getRequest()->getQuery('answer', '');
 
         return ApiResponse::jsonOk($this->securityQuestionService->isAnswerCorrect($questionId, $userId, $answer));
     }
-
 
     /**
      * This endpoint is used to obtain a question for a specific user
@@ -80,14 +78,15 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
      */
     public function getQuestionForPersonAction()
     {
-        $questionId = (int)$this->params()->fromRoute('qid', 0);
-        $userId = (int)$this->params()->fromRoute('uid', 0);
+        $questionId = (int) $this->params()->fromRoute('qid', 0);
+        $userId = (int) $this->params()->fromRoute('uid', 0);
 
         return ApiResponse::jsonOk($this->securityQuestionService->findQuestionByQuestionNumber($questionId, $userId));
     }
 
     /**
      * @return JsonModel
+     *
      * @throws MethodNotAllowedException
      */
     public function getQuestionsForPersonAction()
@@ -103,6 +102,7 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
 
     /**
      * @return JsonModel
+     *
      * @throws InvalidFieldValueException
      * @throws MethodNotAllowedException
      * @throws RequiredFieldException

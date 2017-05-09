@@ -2,7 +2,6 @@
 
 namespace UserApi\HelpDesk\Service;
 
-use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaAuthorisation\Service\UserRoleService;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -16,7 +15,7 @@ use DvsaCommonApi\Service\Exception\TooFewResultsException;
 use DvsaCommonApi\Service\Exception\TooManyResultsException;
 
 /**
- * Searching person account and showing profile
+ * Searching person account and showing profile.
  */
 class HelpDeskPersonService
 {
@@ -56,7 +55,9 @@ class HelpDeskPersonService
 
     /**
      * @param SearchPersonModel $searchPersonModel
+     *
      * @return \DvsaCommon\Dto\Person\SearchPersonResultDto[]
+     *
      * @throws TooFewResultsException
      * @throws TooManyResultsException
      */
@@ -94,7 +95,9 @@ class HelpDeskPersonService
     /**
      * @param $personId
      * @param bool|true $restricted
+     *
      * @return PersonHelpDeskProfileDto
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getPersonProfile($personId, $restricted = true)

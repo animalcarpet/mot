@@ -10,7 +10,6 @@ use Zend\Form\Annotation;
  */
 class OdometerUpdate
 {
-
     /**
      * @Annotation\Type("Zend\Form\Element\Number")
      * @Annotation\AllowEmpty({"true"})

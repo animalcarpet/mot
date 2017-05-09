@@ -2,13 +2,13 @@
 
 namespace EventTest\Service;
 
-use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommonTest\TestUtils\XMock;
 use Event\Service\EventStepService;
 use Event\Step\RecordStep;
 
 /**
- * Class EventStepServiceTest
+ * Class EventStepServiceTest.
+ *
  * @group event
  */
 class EventStepServiceTest extends \PHPUnit_Framework_TestCase
@@ -28,7 +28,5 @@ class EventStepServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(__METHOD__, $step->getEntityType());
         $this->assertEquals(101, $step->getEntityId());
-
     }
-
 }

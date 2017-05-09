@@ -3,10 +3,9 @@
 namespace DvsaEntities\Repository;
 
 use DvsaEntities\DqlBuilder\TransactionSearchParamDqlBuilder;
-use DvsaEntities\Repository\SearchRepositoryTrait;
 
 /**
- * Repository for the TestSlotTransaction entity
+ * Repository for the TestSlotTransaction entity.
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  * @codeCoverageIgnore
@@ -26,7 +25,7 @@ class TestSlotTransactionRepository extends AbstractMutableRepository
     }
 
     /**
-     * Build the correct SQL Builder object for searching Transactions
+     * Build the correct SQL Builder object for searching Transactions.
      *
      * @param $params
      *

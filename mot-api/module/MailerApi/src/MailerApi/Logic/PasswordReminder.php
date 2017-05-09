@@ -5,13 +5,9 @@ namespace MailerApi\Logic;
 use MailerApi\Service\MailerService;
 use DvsaCommon\Dto\Mailer\MailerDto;
 use MailerApi\Validator\MailerValidator;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * All business logic for sending a password reminder is inside here.
- *
- * @package MailerApi\Logic
  */
 class PasswordReminder extends Reminder
 {
@@ -23,15 +19,15 @@ class PasswordReminder extends Reminder
      * of the request (in the parent) and then do what is required to cause an email
      * to be sent to the requesting user.
      *
-     * @param Array $mailerConfig
-     * @param Array $helpdeskConfig
+     * @param array         $mailerConfig
+     * @param array         $helpdeskConfig
      * @param MailerService $mailerService
-     * @param MailerDto $dto
-     * @param string $emailAddress to send the reminder to
+     * @param MailerDto     $dto
+     * @param string        $emailAddress   to send the reminder to
      */
     public function __construct(
-        Array $mailerConfig,
-        Array $helpdeskConfig,
+        array $mailerConfig,
+        array $helpdeskConfig,
         MailerService $mailerService,
         MailerDto $dto,
         $emailAddress
@@ -53,9 +49,9 @@ class PasswordReminder extends Reminder
      * @param $data
      *
      * @return bool TRUE of the message was accepted by the mail sub-system.
-     *              This does NOT mean the message has been delivered yet.
+     *              This does NOT mean the message has been delivered yet
      */
-    public function send(Array $data = [])
+    public function send(array $data = [])
     {
         $subject = $this->renderTemplate(
             $this->dto,

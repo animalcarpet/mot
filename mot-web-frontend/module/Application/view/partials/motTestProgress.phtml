@@ -1,11 +1,11 @@
 <?php
-$steps = [" Search", " Confirmation", " Results entry", " Review"];
+$steps = [' Search', ' Confirmation', ' Results entry', ' Review'];
 $showTitle = $this->title ?: false;
 $currentStep = $this->currentStep ?: 0;
 
 if ($isMotContingency === true) {
-    array_unshift($steps, " Contingency Test ");
-    $currentStep++;
+    array_unshift($steps, ' Contingency Test ');
+    ++$currentStep;
 }
 ?>
 

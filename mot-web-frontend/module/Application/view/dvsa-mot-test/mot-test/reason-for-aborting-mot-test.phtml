@@ -5,7 +5,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\MotTestController;
 
 /**
- * @var \DvsaCommon\Dto\Common\ReasonForCancelDto[] $reasons
+ * @var \DvsaCommon\Dto\Common\ReasonForCancelDto[]
  * @var \DvsaCommon\Dto\Common\ReasonForCancelDto   $reason
  * @var int                                         $selectedReasonId
  */
@@ -50,18 +50,18 @@ $this->layout()->setVariable('pageTitle', 'Abort MOT test');
             echo $this->partial(
                 'dldtdd', [
                     'dlCssClass' => 'vertical is-secondary',
-                    'items'      => [
+                    'items' => [
                         [
                             'Mot Test Status',
-                            'Test <span id="sln-test-status">' . $this->escapeHtml($testStatusName) . '</span>',
+                            'Test <span id="sln-test-status">'.$this->escapeHtml($testStatusName).'</span>',
                             'dtCssClass' => 'visually-hidden',
-                            'cssClass'   => 'font-bold24',
-                            'escape'     => false,
+                            'cssClass' => 'font-bold24',
+                            'escape' => false,
                         ],
                         ['MOT Test Number', $motTestNumber],
                         ['Test started', $testStarted],
                         ['Tester', $testerName],
-                    ]
+                    ],
                 ]
             );
             ?>
@@ -77,7 +77,7 @@ $this->layout()->setVariable('pageTitle', 'Abort MOT test');
                         <?php
                         foreach ($reasons as $reason) :
                             $rfcId = $this->escapeHtmlAttr($reason->getId());
-                            $id = 'reasonForCancel-' . $rfcId;
+                            $id = 'reasonForCancel-'.$rfcId;
                             $selected = ($id === $selectedReasonId ? ' checked="checked"' : '');
                             ?>
                             <label for="<?php echo $this->escapeHtmlAttr($id); ?>" class="block-label label-clear">

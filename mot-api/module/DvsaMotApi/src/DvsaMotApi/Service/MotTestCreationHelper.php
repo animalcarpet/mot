@@ -103,8 +103,7 @@ class MotTestCreationHelper
         RetestEligibilityValidator $retestEligibilityValidator,
         MotIdentityProviderInterface $identityProvider,
         VehicleService $vehicleService
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
         $this->testerService = $testerService;
@@ -116,19 +115,20 @@ class MotTestCreationHelper
     }
 
     /**
-     * @param Person $tester
-     * @param int $vehicleId
-     * @param int $vtsId
-     * @param string $vehicleClassCode
-     * @param boolean $hasRegistration
-     * @param string $motTestTypeCode
-     * @param string $motTestNumberOriginal
-     * @param string $clientIp
-     * @param int $contingencyId
-     * @param ContingencyTestDto|null $contingencyDto
+     * @param Person                   $tester
+     * @param int                      $vehicleId
+     * @param int                      $vtsId
+     * @param string                   $vehicleClassCode
+     * @param bool                     $hasRegistration
+     * @param string                   $motTestTypeCode
+     * @param string                   $motTestNumberOriginal
+     * @param string                   $clientIp
+     * @param int                      $contingencyId
+     * @param ContingencyTestDto|null  $contingencyDto
      * @param MotTestComplaintRef|null $complaintRef
      *
      * @return MotTest
+     *
      * @throws NotFoundException
      * @throws \Exception
      */
@@ -144,8 +144,7 @@ class MotTestCreationHelper
         $contingencyId,
         ContingencyTestDto $contingencyDto = null,
         MotTestComplaintRef $complaintRef = null
-    )
-    {
+    ) {
         $isVehicleExaminer = $this->authService->personHasRole($tester, Role::VEHICLE_EXAMINER);
         $motTestType = $this->getMotTestType($motTestTypeCode);
 
@@ -536,7 +535,6 @@ class MotTestCreationHelper
         return $this->isSame($original, $changedValue);
     }
 
-
     public function saveRfrsForRetest(MotTest $motTestOriginal, MotTest $newMotTest)
     {
         $rfrArrayOriginal = $motTestOriginal->getMotTestReasonForRejections();
@@ -566,7 +564,6 @@ class MotTestCreationHelper
                 $this->entityManager->flush();
 
                 if ($originalComment instanceof MotTestReasonForRejectionComment) {
-
                     $newComment = new MotTestReasonForRejectionComment();
                     $newComment->setComment($originalComment->getComment())
                         ->setId($rfr->getId());
@@ -576,7 +573,6 @@ class MotTestCreationHelper
                 }
 
                 if ($originalDescription instanceof MotTestReasonForRejectionDescription) {
-
                     $newDescription = new MotTestReasonForRejectionDescription();
 
                     $newDescription->setCustomDescription($originalDescription->getCustomDescription())
@@ -607,9 +603,9 @@ class MotTestCreationHelper
      */
     private function shouldUpdateModelOther($vehicleModel)
     {
-        return ($vehicleModel['modelId'] == 'other'
+        return $vehicleModel['modelId'] == 'other'
             || $vehicleModel['modelId'] == 'otherModel'
-        );
+        ;
     }
 
     /**
@@ -628,7 +624,7 @@ class MotTestCreationHelper
         $motTestType = $this->entityManager->getRepository(MotTestType::class)->findOneByCode($motTestTypeCode);
 
         if (!$motTestType) {
-            throw new Exception('MOT Test Type not found by code: ' . $motTestTypeCode);
+            throw new Exception('MOT Test Type not found by code: '.$motTestTypeCode);
         }
 
         return $motTestType;

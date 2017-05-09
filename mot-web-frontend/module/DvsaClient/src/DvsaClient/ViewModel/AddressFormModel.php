@@ -72,9 +72,9 @@ class AddressFormModel extends AbstractFormModel
     public function isValid($type = null)
     {
         $this->resetErrors();
-        $fieldAddress = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_LINE1) :  self::FIELD_LINE1;
-        $fieldTown = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_TOWN) :  self::FIELD_TOWN;
-        $fieldPostcode = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_POSTCODE) :  self::FIELD_POSTCODE;
+        $fieldAddress = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_LINE1) : self::FIELD_LINE1;
+        $fieldTown = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_TOWN) : self::FIELD_TOWN;
+        $fieldPostcode = $type ? sprintf(self::FIELD_CONTACT, $type, self::FIELD_POSTCODE) : self::FIELD_POSTCODE;
 
         if (empty($this->getAddressLine1())
             && empty($this->getAddressLine2())
@@ -116,6 +116,7 @@ class AddressFormModel extends AbstractFormModel
     public function setAddressLine1($addressLine1)
     {
         $this->addressLine1 = trim($addressLine1);
+
         return $this;
     }
 
@@ -133,6 +134,7 @@ class AddressFormModel extends AbstractFormModel
     public function setAddressLine2($addressLine2)
     {
         $this->addressLine2 = trim($addressLine2);
+
         return $this;
     }
 
@@ -147,6 +149,7 @@ class AddressFormModel extends AbstractFormModel
     public function setAddressLine3($addressLine3)
     {
         $this->addressLine3 = trim($addressLine3);
+
         return $this;
     }
 
@@ -161,6 +164,7 @@ class AddressFormModel extends AbstractFormModel
     public function setTown($town)
     {
         $this->town = $town;
+
         return $this;
     }
 
@@ -175,6 +179,7 @@ class AddressFormModel extends AbstractFormModel
     public function setPostCode($postCode)
     {
         $this->postCode = $postCode;
+
         return $this;
     }
 
@@ -189,6 +194,7 @@ class AddressFormModel extends AbstractFormModel
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 }

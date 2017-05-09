@@ -53,7 +53,7 @@ use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 
 /**
- * Class MotTestService
+ * Class MotTestService.
  *
  * Service with logic for MOT test
  */
@@ -66,7 +66,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     const ODOMETER_NO_ODOMETER_UNIT = 'noOdometer';
     const ODOMETER_MILES_UNIT = 'mi';
     const ODOMETER_KILOMETERS_UNIT = 'km';
-    const CONFIG_PARAM_MAX_VISIBLE_VEHICLE_TEST_HISTORY_IN_MONTHS = "maxVisibleVehicleTestHistoryInMonths";
+    const CONFIG_PARAM_MAX_VISIBLE_VEHICLE_TEST_HISTORY_IN_MONTHS = 'maxVisibleVehicleTestHistoryInMonths';
     const OFFSITE_INSPECTION_SITE_NAME = 'DVSA INSPECTION';
 
     /** @var MotTestRepository */
@@ -92,14 +92,15 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
     /**
      * MotTestService constructor.
-     * @param EntityManager $entityManager
-     * @param MotTestValidator $motTestValidator
-     * @param AuthorisationServiceInterface $authService
-     * @param ConfigurationRepository $configurationRepository
-     * @param MotTestMapper $motTestMapper
-     * @param ReadMotTestAssertion $readMotTestAssertion
-     * @param CreateMotTestService $createMotTestService
-     * @param MotTestRepository $motTestRepository
+     *
+     * @param EntityManager                                 $entityManager
+     * @param MotTestValidator                              $motTestValidator
+     * @param AuthorisationServiceInterface                 $authService
+     * @param ConfigurationRepository                       $configurationRepository
+     * @param MotTestMapper                                 $motTestMapper
+     * @param ReadMotTestAssertion                          $readMotTestAssertion
+     * @param CreateMotTestService                          $createMotTestService
+     * @param MotTestRepository                             $motTestRepository
      * @param TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
      */
     public function __construct(
@@ -115,21 +116,23 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     ) {
         parent::__construct($entityManager);
 
-        $this->motTestRepository          = $motTestRepository;
-        $this->motTestValidator           = $motTestValidator;
-        $this->authService                = $authService;
-        $this->dateTimeHolder             = new DateTimeHolder();
-        $this->configurationRepository    = $configurationRepository;
-        $this->motTestMapper              = $motTestMapper;
-        $this->readMotTestAssertion       = $readMotTestAssertion;
-        $this->createMotTestService       = $createMotTestService;
+        $this->motTestRepository = $motTestRepository;
+        $this->motTestValidator = $motTestValidator;
+        $this->authService = $authService;
+        $this->dateTimeHolder = new DateTimeHolder();
+        $this->configurationRepository = $configurationRepository;
+        $this->motTestMapper = $motTestMapper;
+        $this->readMotTestAssertion = $readMotTestAssertion;
+        $this->createMotTestService = $createMotTestService;
         $this->outsideHoursNotificationService = $outsideHoursNotificationService;
     }
 
     /**
      * @param $motTestNumber
      * @param bool $clearIdentityMap
+     *
      * @return MotTest
+     *
      * @throws ForbiddenException
      * @throws NotFoundException
      */
@@ -144,8 +147,8 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
     /**
      * @param string $motTestNumber
-     * @param bool $minimal optional returns minimal MOT
-     * @param bool $clearIdentityMap
+     * @param bool   $minimal          optional returns minimal MOT
+     * @param bool   $clearIdentityMap
      *
      * @throws ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
@@ -161,7 +164,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
     /**
      * @param string $motTestNumber
-     * @param bool $minimal optional returns minimal MOT
+     * @param bool   $minimal       optional returns minimal MOT
      *
      * @throws ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
@@ -213,16 +216,15 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
             $additionalSnapShotData['TestStationAddress'] = $vts->getAddress();
         }
 
-        if($motTest->getStatus() !== MotTestStatusName::ABORTED
-            && $motTest->getStatus() !== MotTestStatusName::ABANDONED){
+        if ($motTest->getStatus() !== MotTestStatusName::ABORTED
+            && $motTest->getStatus() !== MotTestStatusName::ABANDONED) {
             $isMysteryShopper = $motTest->getMotTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER;
             if (!$isMysteryShopper) {
                 $odometerHistoryForVehicle = $this->motTestRepository->getOdometerHistoryForVehicleId(
                     $motTest->getVehicle()->getId(),
                     $motTest->getStartedDate()
                 );
-            }
-            else {
+            } else {
                 $odometerHistoryForVehicle = $this->motTestRepository->getOdometerHistoryForVehicleId(
                     $motTest->getVehicle()->getId(),
                     $motTest->getStartedDate(),
@@ -240,6 +242,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
     /**
      * @param array $data
+     *
      * @return MotTest
      */
     public function createMotTest(array $data)
@@ -249,7 +252,6 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
         return $motTest;
     }
-
 
     /**
      * notify only when performed by a qualifier tester (excl. VE, demo tests, and so on).
@@ -307,7 +309,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * @param $username          String the username making the request
      * @param $motTestId         Int the row of the database to be updated
      * @param $siteid            String contains the existing site id
-     * @param $locationSiteText  String contains the free format text for an offsite reinspection.
+     * @param $locationSiteText  String contains the free format text for an offsite reinspection
      *
      * @return true if the update was successful
      */
@@ -324,7 +326,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
             /** @var Site $vts */
             $vts = $this->entityManager->find(Site::class, $siteid);
             $motTest->setVehicleTestingStation($vts);
-            if($vts->getOrganisation()) {
+            if ($vts->getOrganisation()) {
                 $motTest->setOrganisation($vts->getOrganisation());
             }
             $this->entityManager->persist($motTest);
@@ -341,7 +343,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * at a non-VTS site location.
      *
      * @param string $locationSiteText contains user entered ad-hoc text
-     * @param string $username the username making the request
+     * @param string $username         the username making the request
      * @param string $type
      *
      * @return int|null
@@ -391,11 +393,12 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
             return $riSite->getId();
         } catch (\Exception $e) {
             error_log(
-                "MotTestService::createOffsiteComment: failed: [" .
-                print_r($e->getMessage(), true) .
-                "]"
+                'MotTestService::createOffsiteComment: failed: ['.
+                print_r($e->getMessage(), true).
+                ']'
             );
         }
+
         return null;
     }
 
@@ -447,7 +450,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     /**
      * Return a replacement certificate record for an MOT ID.
      *
-     * @param integer $motTestId Test ID of MOT to fetch certificate
+     * @param int $motTestId Test ID of MOT to fetch certificate
      *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      *
@@ -474,7 +477,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * Get an MotTest entity from the test number. Result will be cached.
      *
      * @param string $motTestNumber
-     * @param bool $clearIdentityMap
+     * @param bool   $clearIdentityMap
      *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      *
@@ -483,7 +486,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     public function getMotTest($motTestNumber, $clearIdentityMap = false)
     {
         if ($this->motTest instanceof MotTest
-            && $this->motTest->getNumber() === (string)$motTestNumber
+            && $this->motTest->getNumber() === (string) $motTestNumber
         ) {
             return $this->motTest;
         }
@@ -511,7 +514,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * Get Mot Tests by Vehicle Registration Mark (vrm or registration).
      *
      * @param string $vrm
-     * @param int $maxResults
+     * @param int    $maxResults
      *
      * @return array|null
      */
@@ -571,7 +574,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     /**
      * Performs the actual search using the repository.
      *
-     * @param SearchParam $params
+     * @param SearchParam  $params
      * @param OutputFormat $format
      *
      * @return mixed|void
@@ -605,7 +608,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      *
      * @param MotTestDto $motTest
      *
-     * @return boolean
+     * @return bool
      */
     public function canPrintCertificateForMotTest(MotTestDto $motTest)
     {

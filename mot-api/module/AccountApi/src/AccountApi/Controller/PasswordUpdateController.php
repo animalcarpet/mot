@@ -13,7 +13,7 @@ use DvsaCommonApi\Service\Validator\ErrorSchema;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class PasswordUpdateController
+ * Class PasswordUpdateController.
  */
 class PasswordUpdateController extends AbstractDvsaRestfulController
 {
@@ -31,14 +31,14 @@ class PasswordUpdateController extends AbstractDvsaRestfulController
     }
 
     /**
-     * update password for the user without a token
+     * update password for the user without a token.
      *
      * @param array $data
+     *
      * @throws NotFoundException
      * @throws \Exception
      *
      * @return JsonModel
-     *
      */
     public function update($userId, $data)
     {
@@ -53,6 +53,7 @@ class PasswordUpdateController extends AbstractDvsaRestfulController
             );
 
             $this->entityManager->flush();
+
             return ApiResponse::jsonOk($response);
         } catch (OpenAmChangePasswordException $ex) {
             ErrorSchema::throwError(ChangePasswordInputFilter::MSG_PASSWORD_HISTORY, 'newPassword');

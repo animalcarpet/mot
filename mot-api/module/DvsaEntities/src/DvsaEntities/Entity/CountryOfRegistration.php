@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * CountryOfRegistration
+ * CountryOfRegistration.
  *
  * @ORM\Table(name="country_of_registration_lookup")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\CountryOfRegistrationRepository", readOnly=true)
@@ -45,6 +45,7 @@ class CountryOfRegistration extends Entity
 
     /**
      * @param Country $country
+     *
      * @return CountryOfRegistration;
      */
     public function setCountry(Country $country)
@@ -64,11 +65,13 @@ class CountryOfRegistration extends Entity
 
     /**
      * @param string $code
+     *
      * @return CountryOfRegistration
      */
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -82,11 +85,13 @@ class CountryOfRegistration extends Entity
 
     /**
      * @param string $name
+     *
      * @return CountryOfRegistration
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -98,7 +103,6 @@ class CountryOfRegistration extends Entity
         return $this->name;
     }
 
-
     /**
      * @param $licensingCopy
      *
@@ -107,6 +111,7 @@ class CountryOfRegistration extends Entity
     public function setLicensingCopy($licensingCopy)
     {
         $this->licensingCopy = $licensingCopy;
+
         return $this;
     }
 

@@ -19,7 +19,6 @@ use Zend\ServiceManager\ServiceManager;
 
 class ChangeTelephoneControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFactory()
     {
         $serviceManager = new ServiceManager();

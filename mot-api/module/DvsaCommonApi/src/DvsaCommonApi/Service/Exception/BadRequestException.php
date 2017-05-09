@@ -4,9 +4,7 @@ namespace DvsaCommonApi\Service\Exception;
 
 /**
  * Exception that should be thrown in case request input is syntactically incorrect
- * Class BadRequestException
- *
- * @package DvsaCommonApi\Service\Exception
+ * Class BadRequestException.
  */
 class BadRequestException extends ServiceException
 {
@@ -16,12 +14,12 @@ class BadRequestException extends ServiceException
     const ERROR_CODE_BUSINESS_FAILURE = 120;
     const ERROR_CODE_INVALID_SURVEY_TOKEN = 140;
 
-    /**
-     * @param string $message
-     * @param int    $errorCode
-     * @param null   $displayMessage
-     * @param null   $fieldDataStructure
-     */
+/**
+ * @param string $message
+ * @param int    $errorCode
+ * @param null   $displayMessage
+ * @param null   $fieldDataStructure
+ */
     //TODO change constructor to be less dependant on dat
     public function __construct(
         $message,
@@ -39,10 +37,11 @@ class BadRequestException extends ServiceException
      *
      * @return BadRequestException
      */
-    public static function create($message = "")
+    public static function create($message = '')
     {
-        $ex = new BadRequestException($message, self::BAD_REQUEST_STATUS_CODE);
+        $ex = new self($message, self::BAD_REQUEST_STATUS_CODE);
         $ex->clearErrors();
+
         return $ex;
     }
 }

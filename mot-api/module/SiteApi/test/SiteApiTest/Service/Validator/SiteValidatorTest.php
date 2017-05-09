@@ -65,8 +65,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -89,8 +89,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -114,8 +114,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setType(SiteTypeCode::VEHICLE_TESTING_STATION)
@@ -139,7 +139,7 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsSupplied(false)->setIsPrimary(true)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -161,8 +161,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -184,8 +184,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -203,8 +203,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                         [
                             (new SiteContactDto())
                                 ->setAddress(new AddressDto())
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -227,7 +227,7 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -251,7 +251,7 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsSupplied(true)->setIsPrimary(true)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -275,7 +275,7 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest')->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -298,8 +298,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest1@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest1@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -321,8 +321,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setType(SiteTypeCode::VEHICLE_TESTING_STATION)
@@ -344,8 +344,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)
@@ -368,8 +368,8 @@ class SiteValidatorTest extends AbstractServiceTestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setEmailConfirm('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)->setIsSupplied(true)->setIsPrimary(true)->setEmail('sitevalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setStatus(SiteStatusCode::APPROVED)

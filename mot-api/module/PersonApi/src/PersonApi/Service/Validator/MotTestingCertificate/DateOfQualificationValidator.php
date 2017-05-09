@@ -9,20 +9,20 @@ use Zend\Validator\AbstractValidator;
 
 class DateOfQualificationValidator extends AbstractValidator
 {
-    const MSG_IS_FUTURE_DATE = "msgIsFutureDate";
-    const MSG_INVALID_DATE_FORMAT = "msgInvalidDateFormat";
-    const MSG_IS_EMPTY = "msgIsEmpty";
+    const MSG_IS_FUTURE_DATE = 'msgIsFutureDate';
+    const MSG_INVALID_DATE_FORMAT = 'msgInvalidDateFormat';
+    const MSG_IS_EMPTY = 'msgIsEmpty';
 
-    const ERROR_IS_FUTURE_DATE = "must not be in the future";
-    const ERROR_INVALID_DATE_FORMAT = "must be a valid date";
-    const ERROR_IS_EMPTY = "you must enter a date awarded";
+    const ERROR_IS_FUTURE_DATE = 'must not be in the future';
+    const ERROR_INVALID_DATE_FORMAT = 'must be a valid date';
+    const ERROR_IS_EMPTY = 'you must enter a date awarded';
 
     private $dateTimeHolder;
 
     protected $messageTemplates = [
         self::MSG_IS_FUTURE_DATE => self::ERROR_IS_FUTURE_DATE,
         self::MSG_INVALID_DATE_FORMAT => self::ERROR_INVALID_DATE_FORMAT,
-        self::MSG_IS_EMPTY => self::ERROR_IS_EMPTY
+        self::MSG_IS_EMPTY => self::ERROR_IS_EMPTY,
     ];
 
     public function __construct(DateTimeHolder $dateTimeHolder, $options = null)
@@ -38,6 +38,7 @@ class DateOfQualificationValidator extends AbstractValidator
 
         if (empty($value)) {
             $this->error(self::MSG_IS_EMPTY);
+
             return false;
         }
 
@@ -52,12 +53,14 @@ class DateOfQualificationValidator extends AbstractValidator
 
         if (!$isValidFormat) {
             $this->error(self::MSG_INVALID_DATE_FORMAT);
+
             return false;
         }
 
         $date = new \DateTime($value);
         if ($date > $this->dateTimeHolder->getCurrentDate()) {
             $this->error(self::MSG_IS_FUTURE_DATE);
+
             return false;
         }
 

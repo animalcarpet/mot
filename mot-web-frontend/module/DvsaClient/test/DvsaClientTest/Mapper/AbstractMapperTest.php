@@ -25,7 +25,7 @@ abstract class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param AbstractUrlBuilder|String $url
+     * @param AbstractUrlBuilder|string $url
      * @param mixed                     $return
      */
     protected function setupClientMockGet($url, $return)
@@ -34,9 +34,9 @@ abstract class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param AbstractUrlBuilder|String $url
-     * @param mixed $data
-     * @param mixed $return
+     * @param AbstractUrlBuilder|string $url
+     * @param mixed                     $data
+     * @param mixed                     $return
      */
     protected function setupClientMockPost($url, $data, $return)
     {
@@ -44,19 +44,18 @@ abstract class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param AbstractUrlBuilder|String $url
-     * @param mixed $data
-     * @param mixed $return
+     * @param AbstractUrlBuilder|string $url
+     * @param mixed                     $data
+     * @param mixed                     $return
      */
     protected function setupClientMockPut($url, $data, $return)
     {
         $this->mockMethod($this->client, 'put', $this->once(), $return, [$this->getUrlAsString($url), $data]);
     }
 
-
     /**
-     * @param AbstractUrlBuilder|String $url
-     * @param mixed $return
+     * @param AbstractUrlBuilder|string $url
+     * @param mixed                     $return
      */
     protected function setupClientMockDelete($url, $return)
     {
@@ -64,12 +63,12 @@ abstract class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param AbstractUrlBuilder|String $url
+     * @param AbstractUrlBuilder|string $url
      *
      * @return string
      */
     private function getUrlAsString($url)
     {
-        return (is_object($url) ? $url->toString() : $url);
+        return is_object($url) ? $url->toString() : $url;
     }
 }

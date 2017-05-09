@@ -15,18 +15,14 @@ use DvsaCommonApi\Service\Exception\BadRequestExceptionWithMultipleErrors;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaMotApi\Model\SiteAssessmentValidator;
-use DvsaMotApi\Service\RfrValidator;
 use OrganisationApi\Service\AuthorisedExaminerService;
 use SiteApi\Service\SiteService;
 
 /**
- * Class EnforcementMotTestResultService
- *
- * @package DvsaMotApi\Service
+ * Class EnforcementMotTestResultService.
  */
 class EnforcementSiteAssessmentService extends AbstractService
 {
-
     const DATE_FORMAT = 'Y-m-d H:i:s';
     const ENFORCEMENT_VISIT_OUTCOME_ABANDONED = 3;
 
@@ -61,14 +57,14 @@ class EnforcementSiteAssessmentService extends AbstractService
     protected $userService;
 
     /**
-     * @param EntityManager                    $entityManager
-     * @param DoctrineObject                   $objectHydrator
-     * @param AuthorisationServiceInterface             $authService
-     * @param TesterService                    $testerService
-     * @param SiteService                      $vehicleTestingStationService
-     * @param AuthorisedExaminerService        $authorisedExaminerService
-     * @param DataCatalogService               $catalogService
-     * @param UserService                      $user
+     * @param EntityManager                 $entityManager
+     * @param DoctrineObject                $objectHydrator
+     * @param AuthorisationServiceInterface $authService
+     * @param TesterService                 $testerService
+     * @param SiteService                   $vehicleTestingStationService
+     * @param AuthorisedExaminerService     $authorisedExaminerService
+     * @param DataCatalogService            $catalogService
+     * @param UserService                   $user
      */
     public function __construct(
         EntityManager $entityManager,
@@ -92,7 +88,7 @@ class EnforcementSiteAssessmentService extends AbstractService
     }
 
     /**
-     * Return an array
+     * Return an array.
      *
      * @param int $id id
      *
@@ -115,9 +111,9 @@ class EnforcementSiteAssessmentService extends AbstractService
     }
 
     /**
-     * Create db records
+     * Create db records.
      *
-     * @param array $data data
+     * @param array  $data     data
      * @param string $username username
      *
      * @return array
@@ -169,8 +165,8 @@ class EnforcementSiteAssessmentService extends AbstractService
             $ae = $dql->getFirstResult();
 
             $visitDate = $data[SiteAssessmentValidator::F_YEAR]
-                . "-" . str_pad($data[SiteAssessmentValidator::F_MONTH], 2, '0', STR_PAD_LEFT)
-                . "-" . str_pad($data[SiteAssessmentValidator::F_DAY], 2, '0', STR_PAD_LEFT);
+                .'-'.str_pad($data[SiteAssessmentValidator::F_MONTH], 2, '0', STR_PAD_LEFT)
+                .'-'.str_pad($data[SiteAssessmentValidator::F_DAY], 2, '0', STR_PAD_LEFT);
 
             $visitOutcome = $this->entityManager
                 ->getRepository(\DvsaEntities\Entity\EnforcementVisitOutcome::class)
@@ -190,7 +186,7 @@ class EnforcementSiteAssessmentService extends AbstractService
             $this->entityManager->persist($result);
             $this->entityManager->flush();
 
-            if ((int)$visitOutcome->getId() != EnfSiteVisitOutcomeId::ABANDONED) {
+            if ((int) $visitOutcome->getId() != EnfSiteVisitOutcomeId::ABANDONED) {
                 if ($this->compareLastAssessmentDate($vts, $result)) {
                     $vts->setLastSiteAssessment($result);
                     $this->entityManager->persist($vts);
@@ -206,10 +202,11 @@ class EnforcementSiteAssessmentService extends AbstractService
 
     /**
      * Test the last assessment date of visit to know if we update the lastassessment id in the site table.
-     * (The last assessment should always be the more recent one)
+     * (The last assessment should always be the more recent one).
      *
      * @param $vts
      * @param $assessment
+     *
      * @return bool
      */
     protected function compareLastAssessmentDate($vts, $assessment)
@@ -229,7 +226,7 @@ class EnforcementSiteAssessmentService extends AbstractService
     }
 
     /**
-     * Extract
+     * Extract.
      *
      * @param EnforcementSiteAssessment $siteAssessment
      *

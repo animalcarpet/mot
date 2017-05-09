@@ -3,12 +3,9 @@
 namespace DvsaMotTest\Controller;
 
 use Core\Controller\AbstractAuthActionController;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class VehicleDictionaryController
- *
- * @package DvsaMotTest\Controller
+ * Class VehicleDictionaryController.
  */
 class VehicleDictionaryController extends AbstractAuthActionController
 {
@@ -19,10 +16,11 @@ class VehicleDictionaryController extends AbstractAuthActionController
      */
     public function findMakeAction()
     {
-        $query = $this->params()->fromQuery("query");
+        $query = $this->params()->fromQuery('query');
 
         $params = ['searchType' => 'make', 'searchTerm' => $query];
         $makes = $this->getRestClient()->getWithParams(self::BASE_VEH_DICTIONARY_URL, $params)['data'];
+
         return $this->ajaxResponse()->ok($makes);
     }
 
@@ -31,11 +29,12 @@ class VehicleDictionaryController extends AbstractAuthActionController
      */
     public function findModelAction()
     {
-        $query = $this->params()->fromQuery("query");
+        $query = $this->params()->fromQuery('query');
 
-        $make = $this->params()->fromQuery("make");
+        $make = $this->params()->fromQuery('make');
         $params = ['searchType' => 'model', 'searchTerm' => $query, 'make' => $make];
         $makeModels = $this->getRestClient()->getWithParams(self::BASE_VEH_DICTIONARY_URL, $params)['data'];
+
         return $this->ajaxResponse()->ok($makeModels);
     }
 }

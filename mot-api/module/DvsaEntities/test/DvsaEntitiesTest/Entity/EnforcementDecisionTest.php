@@ -6,7 +6,7 @@ use DvsaEntities\Entity\EnforcementDecision;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class EnforcementDecisionTest
+ * Class EnforcementDecisionTest.
  */
 class EnforcementDecisionTest extends PHPUnit_Framework_TestCase
 {

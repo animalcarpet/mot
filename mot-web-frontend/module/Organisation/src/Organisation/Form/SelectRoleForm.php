@@ -2,20 +2,16 @@
 
 namespace Organisation\Form;
 
-use Zend\Captcha;
 use Zend\Form\Element;
 use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
-use Zend\Stdlib\Hydrator\ObjectProperty as ObjectPropertyHydrator;
 
 /**
- * Generates radio buttons and submit button for roles
+ * Generates radio buttons and submit button for roles.
  */
 class SelectRoleForm extends Form implements InputFilterAwareInterface
 {
-    public function __construct($name = null, $roles)
+    public function __construct($name, $roles)
     {
         parent::__construct($name);
 
@@ -23,12 +19,12 @@ class SelectRoleForm extends Form implements InputFilterAwareInterface
 
         $this->add(
             [
-                'name'    => 'roleId',
-                'type'    => 'radio',
+                'name' => 'roleId',
+                'type' => 'radio',
                 'options' => [
-                    'value_options'    => $roles,
+                    'value_options' => $roles,
                     'label_attributes' => [
-                        'class' => 'block-label label-clear'
+                        'class' => 'block-label label-clear',
                     ],
                 ],
             ]
@@ -37,21 +33,21 @@ class SelectRoleForm extends Form implements InputFilterAwareInterface
         $this->add(
             [
                 'type' => 'Zend\Form\Element\Csrf',
-                'name' => 'csrf'
+                'name' => 'csrf',
             ]
         );
 
         $this->add(
             [
-                'name'       => 'submit',
-                'options'    => [
+                'name' => 'submit',
+                'options' => [
 
                 ],
                 'attributes' => [
-                    'type'  => 'submit',
+                    'type' => 'submit',
                     'value' => 'Choose role',
                     'class' => 'btn btn-primary button',
-                    'id'    => 'assign-role-button',
+                    'id' => 'assign-role-button',
                 ],
             ]
         );
@@ -69,13 +65,13 @@ class SelectRoleForm extends Form implements InputFilterAwareInterface
     {
         return [
             [
-                'name'     => 'roleId',
-                'options'  => [
+                'name' => 'roleId',
+                'options' => [
                     'messages' => [
-                        \Zend\Validator\NotEmpty::IS_EMPTY => 'Please choose a role'
+                        \Zend\Validator\NotEmpty::IS_EMPTY => 'Please choose a role',
                     ],
                 ],
-            ]
+            ],
         ];
     }
 }

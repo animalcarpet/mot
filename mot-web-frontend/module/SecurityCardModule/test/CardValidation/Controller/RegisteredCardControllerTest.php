@@ -14,16 +14,12 @@ use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrFo
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use DvsaCommon\Configuration\MotConfig;
-use Zend\View\Model\ViewModel;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use Zend\Authentication\AuthenticationService;
-use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 use Zend\View\Helper\HeadTitle;
 
@@ -182,7 +178,7 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this->assertContains(self::INVALID_PIN_ERROR_MESSAGE, $form->getPinField()->getMessages());
         $this->assertEquals(self::LOGIN_WITH_2FA_TEMPLATE, $vm->getTemplate());
 
-        $gtmData = $vm->getVariable("gtmData");
+        $gtmData = $vm->getVariable('gtmData');
         $this->assertEquals(self::GTM_USER_LOGIN_FAILED, $gtmData['event']);
         $this->assertEquals(self::WRONG_PIN, $gtmData['reason']);
     }
@@ -194,13 +190,13 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this
             ->withIs2FALoginApplicableToCurrentUser(true)
             ->withHasFeatureToggle(true)
-            ->withInvalidFormSubmission("0");
+            ->withInvalidFormSubmission('0');
 
         $vm = $this->buildController()->login2FAAction();
 
         $this->assertEquals($expectedTemplate, $vm->getTemplate());
         $this->assertPinInputIsCleared($vm->getVariable('form'));
-        $this->assertNotNull($vm->getVariable("gtmData"));
+        $this->assertNotNull($vm->getVariable('gtmData'));
     }
 
     private function withIs2FALoginApplicableToCurrentUser($isApplicable)
@@ -215,7 +211,8 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
     }
 
     /**
-     * @param boolean $alreadyUsedLostForgotten
+     * @param bool $alreadyUsedLostForgotten
+     *
      * @return $this
      */
     private function withAlreadyLoggedInTodayViaLostForgotten($alreadyUsedLostForgotten)
@@ -253,7 +250,7 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this->withPostSubmission();
 
         $this->request->setPost(new Parameters([
-            SecurityCardValidationForm::PIN => self::PIN
+            SecurityCardValidationForm::PIN => self::PIN,
         ]));
 
         return $this;
@@ -264,14 +261,15 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this->withPostSubmission();
 
         $this->request->setPost(new Parameters([
-            SecurityCardValidationForm::PIN => $pin
+            SecurityCardValidationForm::PIN => $pin,
         ]));
 
         return $this;
     }
 
     /**
-     * @param boolean $isFeatureToggleEnabled
+     * @param bool $isFeatureToggleEnabled
+     *
      * @return $this
      */
     private function withHasFeatureToggle($isFeatureToggleEnabled)
@@ -323,7 +321,7 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
             $this->config
         );
 
-        $serviceLocator = new ServiceManager;
+        $serviceLocator = new ServiceManager();
         $serviceLocator->setAllowOverride(true);
         $serviceLocator->setService('Feature\FeatureToggles', $this->featureToggle);
 
@@ -339,6 +337,7 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getHelperPluginManager()
@@ -349,6 +348,7 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
             ->method('get')
             ->with('headTitle')
             ->willReturn(XMock::of(HeadTitle::class));
+
         return $helperPluginManager;
     }
 }

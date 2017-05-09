@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @var OdometerReadingViewObject  $odometerReading
- * @var  $actionUrl
+ * @var OdometerReadingViewObject
+ * @var $actionUrl
  */
 use DvsaMotTest\Model\OdometerReadingViewObject;
 
@@ -25,7 +25,9 @@ use DvsaMotTest\Model\OdometerReadingViewObject;
                     <div class="radio">
                         <label class="form-group" for="odometerValue">
                             <input id="odometerValue" type="radio" name="odometerResultType" class="radio"
-                                   value="OK" <?php if ($odometerReading->getResultType() === 'OK') echo "checked" ?>
+                                   value="OK" <?php if ($odometerReading->getResultType() === 'OK') {
+    echo 'checked';
+} ?>
                                    required="">
                         </label>
 
@@ -41,13 +43,13 @@ use DvsaMotTest\Model\OdometerReadingViewObject;
                                 <option value="mi" <?php if ($odometerReading->getUnit() === 'mi'
                                     || !$odometerReading->getUnit()
                                 ) {
-                                    echo 'selected="selected"';
-                                } ?>>Miles
+    echo 'selected="selected"';
+} ?>>Miles
                                 </option>
                                 <option value="km" <?php if ($odometerReading->getUnit() === 'km'
                                 ) {
-                                    echo 'selected="selected"';
-                                } ?>>Kilometres
+    echo 'selected="selected"';
+} ?>>Kilometres
                                 </option>
                             </select>
                         </div>
@@ -58,7 +60,9 @@ use DvsaMotTest\Model\OdometerReadingViewObject;
                 <div class="radio form-group">
                     <label for="notReadable">
                         <input id="notReadable" type="radio" name="odometerResultType" class="radio"
-                               value="NOT_READ" <?php if ($odometerReading->getResultType() === 'NOT_READ') echo "checked" ?>
+                               value="NOT_READ" <?php if ($odometerReading->getResultType() === 'NOT_READ') {
+    echo 'checked';
+} ?>
                                required="">
                         Odometer is not readable
                     </label>
@@ -68,7 +72,9 @@ use DvsaMotTest\Model\OdometerReadingViewObject;
                 <div class="radio form-group">
                     <label for="noOdometer">
                         <input id="noOdometer" type="radio" name="odometerResultType" class="radio"
-                            <?php if ($odometerReading->getResultType() === 'NO_METER') echo "checked" ?>
+                            <?php if ($odometerReading->getResultType() === 'NO_METER') {
+    echo 'checked';
+} ?>
                                value="NO_METER" required="">
                         There is no odometer
                     </label>
@@ -82,8 +88,8 @@ use DvsaMotTest\Model\OdometerReadingViewObject;
     <?php echo $this->partial(
     'dvsa-mot-test/dashboard/generic-section',
     [
-        'sectionId'    => 'odometer',
-        'actionName'   => 'updateOdometer',
-        'bodyVisible'  => $odometerReading->isModifiable()
+        'sectionId' => 'odometer',
+        'actionName' => 'updateOdometer',
+        'bodyVisible' => $odometerReading->isModifiable(),
     ]
 );

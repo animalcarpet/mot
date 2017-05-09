@@ -21,7 +21,7 @@ class ColoursContainer
      *
      * @param array $colours
      * @param bool  $prepareForZendForm creates list in an array format desirable by Zend_Form
-     * @param bool $useIds to indicate to use colour code or colour ids for both primary and secondary colours
+     * @param bool  $useIds             to indicate to use colour code or colour ids for both primary and secondary colours
      */
     public function __construct(array $colours, $prepareForZendForm = false, $useIds = false)
     {

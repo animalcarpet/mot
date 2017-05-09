@@ -2,8 +2,6 @@
 
 namespace ApplicationTest\Navigation\Breadcrumbs\Handler;
 
-
-use Application\Navigation\Breadcrumbs\Handler\SimpleResolver;
 use Application\Navigation\Breadcrumbs\Handler\SiteNameResolver;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommonTest\TestUtils\XMock;
@@ -11,7 +9,6 @@ use Zend\View\Helper\Url;
 
 class SiteNameResolverTest extends \PHPUnit_Framework_TestCase
 {
-
     private $urlHelper;
     private $resolver;
     private $client;

@@ -1,16 +1,13 @@
 <?php
 use DvsaCommon\Utility\ArrayUtils;
-use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 
-/** @var \UserAdmin\Presenter\UserProfilePresenter $presenter */
-/** @var string $searchResultsUrl */
-/** @var string $emailAddressUrl */
-/** @var string $emailValue */
-/** @var string $emailConfirmValue */
-/** @var string $previousProfileUrl */
-/** @var bool $isViewingOwnProfile */
-/**
- */
+/* @var \UserAdmin\Presenter\UserProfilePresenter $presenter */
+/* @var string $searchResultsUrl */
+/* @var string $emailAddressUrl */
+/* @var string $emailValue */
+/* @var string $emailConfirmValue */
+/* @var string $previousProfileUrl */
+/* @var bool $isViewingOwnProfile */
 
 $this->layout('layout/layout-govuk.phtml');
 
@@ -22,13 +19,13 @@ foreach ($this->layout()->flashMessenger->getErrorMessages() as $key => $value) 
     $errorMessages += $value;
 }
 
-echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $this->layout()->flashMessenger->getErrorMessages()]);
+echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $this->layout()->flashMessenger->getErrorMessages()]);
 
 ?>
 <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
 <form id="emailAddressForm" method="POST">
     <?php echo $this->csrfToken(); ?>
-    <div class="form-group <?php echo (ArrayUtils::tryGet($errorMessages, 'duplicateEmailValidation')) ? "has-error" : "" ?>">
+    <div class="form-group <?php echo (ArrayUtils::tryGet($errorMessages, 'duplicateEmailValidation')) ? 'has-error' : '' ?>">
         <?php
 
         echo $this->partial(
@@ -51,13 +48,13 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
     <?php echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'            => 'submitEmailAddress',
-            'value'         => 'Change email address',
-            'linkMessage'   =>  $this->serverUrl(true),
-            'navigation'    => [
+            'id' => 'submitEmailAddress',
+            'value' => 'Change email address',
+            'linkMessage' => $this->serverUrl(true),
+            'navigation' => [
                 $viewModel->getIsViewingOwnProfile() ? 'Cancel and return to your profile'
                     : 'Cancel and return to user profile' => $this->personProfileUrl()->toPersonProfile(),
-            ]
+            ],
         ]
     ); ?>
 </form>

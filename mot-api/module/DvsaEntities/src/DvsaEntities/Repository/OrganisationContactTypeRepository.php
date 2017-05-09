@@ -3,7 +3,8 @@
 namespace DvsaEntities\Repository;
 
 /**
- * Repository for
+ * Repository for.
+ *
  * @see \DvsaEntities\Entity\OrganisationContactType
  */
 class OrganisationContactTypeRepository extends AbstractMutableRepository

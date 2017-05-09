@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Enum\SiteBusinessRoleCode;
@@ -8,10 +9,9 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaMotApi\Controller\RetestController;
 use Zend\Http\Request;
-use Zend\Http\Response;
 
 /**
- * Class RetestControllerTest
+ * Class RetestControllerTest.
  */
 class RetestControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -43,7 +43,7 @@ class RetestControllerTest extends AbstractMotApiControllerTestCase
                            ->method('createMotTest')
                            ->will($this->throwException(new ForbiddenException($forbiddenMessage)));
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertResponseStatusAndResultHasError(
@@ -106,7 +106,7 @@ class RetestControllerTest extends AbstractMotApiControllerTestCase
         $this->request->getPost()->set('hasRegistration', true);
         $this->request->getPost()->set('contingencyId', 3);
         $this->request->getPost()->set('contingencyDto', [
-            "_class" => "DvsaCommon\\Dto\\MotTesting\\ContingencyTestDto"
+            '_class' => 'DvsaCommon\\Dto\\MotTesting\\ContingencyTestDto',
         ]);
 
         $motTest = new MotTest();

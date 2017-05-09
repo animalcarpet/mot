@@ -3,9 +3,7 @@
 namespace Organisation\ViewModel\View\Role;
 
 /**
- * Class RemoveRoleConfirmationViewModel
- *
- * @package Organisation\ViewModel\View\Role
+ * Class RemoveRoleConfirmationViewModel.
  */
 class RemoveRoleConfirmationViewModel
 {
@@ -35,6 +33,7 @@ class RemoveRoleConfirmationViewModel
     public function setEmployeeName($employeeName)
     {
         $this->employeeName = $employeeName;
+
         return $this;
     }
 
@@ -54,6 +53,7 @@ class RemoveRoleConfirmationViewModel
     public function setOrganisationId($organisationId)
     {
         $this->organisationId = $organisationId;
+
         return $this;
     }
 
@@ -73,6 +73,7 @@ class RemoveRoleConfirmationViewModel
     public function setOrganisationName($organisationName)
     {
         $this->organisationName = $organisationName;
+
         return $this;
     }
 
@@ -92,6 +93,7 @@ class RemoveRoleConfirmationViewModel
     public function setRoleId($roleId)
     {
         $this->roleId = $roleId;
+
         return $this;
     }
 
@@ -111,6 +113,7 @@ class RemoveRoleConfirmationViewModel
     public function setRoleName($roleName)
     {
         $this->roleName = $roleName;
+
         return $this;
     }
 
@@ -130,6 +133,7 @@ class RemoveRoleConfirmationViewModel
     public function setEmployeeId($employeeId)
     {
         $this->employeeId = $employeeId;
+
         return $this;
     }
 

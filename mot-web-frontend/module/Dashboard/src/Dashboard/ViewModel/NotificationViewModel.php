@@ -10,22 +10,22 @@ use Zend\Mvc\Controller\Plugin\Url;
 class NotificationViewModel
 {
     /**
-     * @var LinkViewModel $linkViewModel
+     * @var LinkViewModel
      */
     private $linkViewModel;
 
     /**
-     * @var string $createdOn
+     * @var string
      */
     private $createdOn;
 
     /**
-     * @var bool $isUnread
+     * @var bool
      */
     private $isUnread;
 
     /**
-     * @var bool $isActionRequired
+     * @var bool
      */
     private $isActionRequired;
 
@@ -58,11 +58,11 @@ class NotificationViewModel
             $url->fromRoute(
                 NotificationController::ROUTE_NOTIFICATION,
                 ['notificationId' => $notification->getId()],
-                ["query" => ["backTo" => NotificationController::BACK_TO_HOME_PARAM]]
+                ['query' => ['backTo' => NotificationController::BACK_TO_HOME_PARAM]]
             )
         );
 
-        return new NotificationViewModel(
+        return new self(
             $linkViewModel,
             DateTimeDisplayFormat::textDateTime($notification->getCreatedOn()),
             $notification->getReadOn() === null,
@@ -71,7 +71,7 @@ class NotificationViewModel
     }
 
     /**
-     * Return appropriate CSS class for current notification
+     * Return appropriate CSS class for current notification.
      *
      * @return string
      */

@@ -2,7 +2,6 @@
 
 namespace MailerApi\Model;
 
-
 class Attachment
 {
     protected $content;
@@ -11,6 +10,7 @@ class Attachment
 
     /**
      * Attachment constructor.
+     *
      * @param $content
      * @param $type
      * @param $filename
@@ -21,7 +21,6 @@ class Attachment
         $this->type = $type;
         $this->filename = $filename;
     }
-
 
     /**
      * @return mixed
@@ -70,6 +69,4 @@ class Attachment
     {
         $this->filename = $filename;
     }
-
-
 }

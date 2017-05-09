@@ -14,7 +14,7 @@ use Zend\InputFilter\InputFilter;
  */
 class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
 {
-    const STEP_FIELD = "test";
+    const STEP_FIELD = 'test';
 
     /**
      * Make sure that save to session is not called when the validator fails.
@@ -65,18 +65,18 @@ class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
     /**
      * test the validation pattern.
      *
-     * @covers AccountSummaryStep::validate
-     * @covers AddressStep::validate
-     * @covers CompleteStep::validate
-     * @covers CreateAccountStep::validate
-     * @covers DetailsStep::validate
-     * @covers PasswordStep::validate
-     * @covers SecurityQuestionsStep::validate
+     * @covers \AccountSummaryStep::validate
+     * @covers \AddressStep::validate
+     * @covers \CompleteStep::validate
+     * @covers \CreateAccountStep::validate
+     * @covers \DetailsStep::validate
+     * @covers \PasswordStep::validate
+     * @covers \SecurityQuestionsStep::validate
      */
     public function testValidate()
     {
         $filter = XMock::of(InputFilter::class);
-        $step   = $this->getMockBuilder(AbstractRegistrationStep::class)
+        $step = $this->getMockBuilder(AbstractRegistrationStep::class)
             ->setConstructorArgs([
                 XMock::of(RegistrationSessionService::class),
                 $filter,
@@ -126,11 +126,11 @@ class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
     public function dataToClean()
     {
         return [
-            [[self::STEP_FIELD => '   testword   '], [self::STEP_FIELD => 'testword' ], [self::STEP_FIELD]],
-            [[self::STEP_FIELD => 'testword   '], [self::STEP_FIELD => 'testword' ], [self::STEP_FIELD]],
-            [[self::STEP_FIELD => '  testword'], [self::STEP_FIELD => 'testword' ], [self::STEP_FIELD]],
-            [['password'       => '  testword'], ['password' => '  testword' ], [self::STEP_FIELD]], // shouldn't change as password isn't in getCleanFilterWhitelist
-            [['password'       => '  testword'], ['password' => '  testword' ], []],
+            [[self::STEP_FIELD => '   testword   '], [self::STEP_FIELD => 'testword'], [self::STEP_FIELD]],
+            [[self::STEP_FIELD => 'testword   '], [self::STEP_FIELD => 'testword'], [self::STEP_FIELD]],
+            [[self::STEP_FIELD => '  testword'], [self::STEP_FIELD => 'testword'], [self::STEP_FIELD]],
+            [['password' => '  testword'], ['password' => '  testword'], [self::STEP_FIELD]], // shouldn't change as password isn't in getCleanFilterWhitelist
+            [['password' => '  testword'], ['password' => '  testword'], []],
         ];
     }
 }

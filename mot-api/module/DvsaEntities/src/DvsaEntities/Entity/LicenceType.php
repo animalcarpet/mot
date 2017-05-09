@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * LicenceType
+ * LicenceType.
  *
  * @ORM\Table(name="licence_type")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\LicenceTypeRepository", readOnly=true)

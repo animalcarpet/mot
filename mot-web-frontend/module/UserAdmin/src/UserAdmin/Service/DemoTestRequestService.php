@@ -1,8 +1,6 @@
 <?php
 
-
 namespace UserAdmin\Service;
-
 
 use DateTime;
 use DvsaCommon\Constants\SearchParamConst;
@@ -56,7 +54,8 @@ class DemoTestRequestService implements AutoWireableInterface
 
     /**
      * @param DemoTestRequestsListDto $requestsListDto
-     * @param SearchParamsDto $searchParams
+     * @param SearchParamsDto         $searchParams
+     *
      * @return Table
      */
     public function getGdsTable(DemoTestRequestsListDto $requestsListDto, SearchParamsDto $searchParams)
@@ -72,23 +71,27 @@ class DemoTestRequestService implements AutoWireableInterface
             ->setItemsText('requests')
             ->setItemsPerPageOptions([static::DEFAULT_ROW_COUNT])
             ->setFooterViewScript(self::TABLE_FOOTER);
+
         return $table;
     }
 
     /**
      * @param DemoTestRequestsListDto $requestsListDto
      * @param $response
+     *
      * @return string
      */
     public function getCsvResponse(DemoTestRequestsListDto $requestsListDto, $response)
     {
         $this->csvService->setResponse($response);
         $this->csvService->setData($this->prepareRequests($requestsListDto));
+
         return $this->csvService->generateDocument('Demo-test-requests.csv');
     }
 
     /**
      * @param Parameters $requestData
+     *
      * @return SearchParamsDto
      */
     public function getSortParams(Parameters $requestData)
@@ -98,6 +101,7 @@ class DemoTestRequestService implements AutoWireableInterface
 
     /**
      * @param Parameters $requestData
+     *
      * @return SearchParamsDto
      */
     public function getSortParamsForCsv(Parameters $requestData)
@@ -107,11 +111,12 @@ class DemoTestRequestService implements AutoWireableInterface
 
     /**
      * @param Parameters $requestData
+     *
      * @return SearchParamsDto
      */
     protected function getSearchParamsDto(Parameters $requestData)
     {
-        $pageNumber = (int)$requestData->get(SearchParamConst::PAGE_NR);
+        $pageNumber = (int) $requestData->get(SearchParamConst::PAGE_NR);
         $sortBy = $requestData->get(SearchParamConst::SORT_BY, static::DEFAULT_SORT_BY);
         $sortDirection = $requestData->get(SearchParamConst::SORT_DIRECTION, static::DEFAULT_SORT_DIRECTION);
 
@@ -124,6 +129,7 @@ class DemoTestRequestService implements AutoWireableInterface
 
     /**
      * @param DemoTestRequestsListDto $requestsListDto
+     *
      * @return array
      */
     private function prepareRequests(DemoTestRequestsListDto $requestsListDto)
@@ -141,12 +147,14 @@ class DemoTestRequestService implements AutoWireableInterface
                 self::FIELD_DATE_ADDED => DateTimeDisplayFormat::dateShort(new DateTime($demoTestRequestDto->getCertificateDateAdded())),
             ];
         }
+
         return $result;
     }
 
     /**
      * @param string $string
      * @param string $default
+     *
      * @return string
      */
     protected function getStringOrDefault($string, $default = self::EMPTY_TEXT)
@@ -206,7 +214,7 @@ class DemoTestRequestService implements AutoWireableInterface
                         'field' => self::FIELD_VTS_ID,
                         'formatter' => SubRow::class,
                     ],
-                ]
+                ],
             ],
             [
                 'title' => 'Date added',

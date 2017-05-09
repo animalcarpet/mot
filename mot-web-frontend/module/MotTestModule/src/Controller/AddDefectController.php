@@ -19,7 +19,6 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectSentenceCaseConverter;
 
 class AddDefectController extends AbstractDvsaMotTestController
 {

@@ -23,10 +23,10 @@ class ClaimValidatorTest extends AbstractServiceTestCase
     /** @var ClaimValidator */
     protected $validator;
     protected $mockSecurityRepository;
-    /** @var  SecurityQuestionService|MockObj */
+    /** @var SecurityQuestionService|MockObj */
     protected $mockSecurityQuestionService;
     protected $mockEntityManager;
-    /** @var  ParamObfuscator|MockObj */
+    /** @var ParamObfuscator|MockObj */
     private $mockParamObfuscator;
 
     public function setUp()
@@ -190,8 +190,6 @@ class ClaimValidatorTest extends AbstractServiceTestCase
         $validator->validateSecurityQuestions($params);
     }
 
-
-
     /**
      * @param int $id
      *
@@ -208,16 +206,16 @@ class ClaimValidatorTest extends AbstractServiceTestCase
     protected function params()
     {
         return [
-            'personId'              => 5,
-            'email'                 => 'claimvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-            'emailConfirmation'     => 'claimvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-            'emailOptOut'           => false,
-            'password'              => 'Password1',
-            'passwordConfirmation'  => 'Password1',
+            'personId' => 5,
+            'email' => 'claimvalidatortest@'.EmailAddressValidator::TEST_DOMAIN,
+            'emailConfirmation' => 'claimvalidatortest@'.EmailAddressValidator::TEST_DOMAIN,
+            'emailOptOut' => false,
+            'password' => 'Password1',
+            'passwordConfirmation' => 'Password1',
             'securityQuestionOneId' => '1',
-            'securityAnswerOne'     => 'I got the answer',
+            'securityAnswerOne' => 'I got the answer',
             'securityQuestionTwoId' => '1',
-            'securityAnswerTwo'     => 'I got the answer as well'
+            'securityAnswerTwo' => 'I got the answer as well',
         ];
     }
 }

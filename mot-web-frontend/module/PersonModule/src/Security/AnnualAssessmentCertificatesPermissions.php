@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Security;
 
 use Application\Data\ApiPersonalDetails;
@@ -11,7 +12,7 @@ use DvsaCommon\Model\DvsaRole;
 
 class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
 {
-    /** @var  ApiPersonalDetails */
+    /** @var ApiPersonalDetails */
     private $personalDetailsService;
 
     /** @var MotAuthorisationServiceInterface */
@@ -40,6 +41,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
     /**
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @return bool
      */
     public function isGrantedView($targetPersonId, $loggedInPersonId)
@@ -56,6 +58,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
     /**
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @throws UnauthorisedException
      */
     public function assertGrantedCreate($targetPersonId, $loggedInPersonId)
@@ -70,6 +73,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
     /**
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @return bool
      */
     public function isGrantedCreate($targetPersonId, $loggedInPersonId)
@@ -86,6 +90,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
     /**
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @throws UnauthorisedException
      */
     public function assertGrantedUpdate($targetPersonId, $loggedInPersonId)
@@ -100,6 +105,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
     /**
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @return bool
      */
     public function isGrantedUpdate($targetPersonId, $loggedInPersonId)
@@ -116,6 +122,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
     /**
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @throws UnauthorisedException
      */
     public function assertGrantedRemove($targetPersonId, $loggedInPersonId)
@@ -130,6 +137,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
     /**
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @return bool
      */
     public function isGrantedRemove($targetPersonId, $loggedInPersonId)
@@ -145,6 +153,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
 
     /**
      * @param array $personSystemRoles
+     *
      * @return bool
      */
     private function hasDvsaRole(array $personSystemRoles)
@@ -162,6 +171,7 @@ class AnnualAssessmentCertificatesPermissions implements AutoWireableInterface
      * @param $permission
      * @param $targetPersonId
      * @param $loggedInPersonId
+     *
      * @throws UnauthorisedException
      */
     private function assertGranted($permission, $targetPersonId, $loggedInPersonId)

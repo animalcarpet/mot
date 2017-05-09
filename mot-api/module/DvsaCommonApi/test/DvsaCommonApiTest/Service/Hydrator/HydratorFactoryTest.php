@@ -1,13 +1,13 @@
 <?php
+
 namespace DvsaCommonApiTest\Service\Hydrator;
 
 use Doctrine\ORM\EntityManager;
 use DvsaCommonApi\Service\Hydrator\HydratorFactory;
 use PHPUnit_Framework_TestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class HydratorFactoryTest
+ * Class HydratorFactoryTest.
  */
 class HydratorFactoryTest extends PHPUnit_Framework_TestCase
 {

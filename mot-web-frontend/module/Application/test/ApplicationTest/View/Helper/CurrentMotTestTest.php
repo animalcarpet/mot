@@ -8,16 +8,13 @@ use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class CurrentMotTestTest
- *
- * @package ApplicationTest\View\Helper
+ * Class CurrentMotTestTest.
  */
 class CurrentMotTestTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  CurrentMotTest */
+    /** @var CurrentMotTest */
     protected $service;
     protected $activeTestUserId = 1;
     protected $noTestUserId = 2;
@@ -26,13 +23,12 @@ class CurrentMotTestTest extends \PHPUnit_Framework_TestCase
     /** @var MotIdentityInterface|MockObj */
     protected $identityMock;
     protected $motIdentityProviderMock;
-    /** @var  ApiCurrentMotTest|MockObj */
+    /** @var ApiCurrentMotTest|MockObj */
     protected $apiCurrentMotTestMock;
     protected $serviceLocatorMock;
     protected $viewHelperServiceLocatorMock;
 
     /**
-     *
      * Creates the necessary mocks which the view helper consumes.
      *
      * @throws \Exception

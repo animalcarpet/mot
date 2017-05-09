@@ -5,7 +5,7 @@ namespace DvsaClient\ViewModel;
 use Zend\Stdlib\Parameters;
 
 /**
- * Contains common functionality for FORM in view
+ * Contains common functionality for FORM in view.
  */
 abstract class AbstractFormModel
 {
@@ -22,7 +22,7 @@ abstract class AbstractFormModel
     public function addError($fieldName, $message = null)
     {
         $this->errors[] = [
-            'field'          => $fieldName,
+            'field' => $fieldName,
             'displayMessage' => (string) $message,
         ];
     }
@@ -39,6 +39,7 @@ abstract class AbstractFormModel
                 return $error['displayMessage'];
             }
         }
+
         return null;
     }
 

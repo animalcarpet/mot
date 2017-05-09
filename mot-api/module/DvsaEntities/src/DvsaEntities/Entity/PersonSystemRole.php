@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * PersonSystemRole
+ * PersonSystemRole.
  *
  * @ORM\Table(
  *  name="person_system_role",
@@ -55,9 +55,10 @@ class PersonSystemRole extends Entity
     private $role;
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return PersonSystemRole
      */
     public function setName($name)
@@ -68,7 +69,7 @@ class PersonSystemRole extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -78,9 +79,10 @@ class PersonSystemRole extends Entity
     }
 
     /**
-     * Set fullName
+     * Set fullName.
      *
      * @param string $fullName
+     *
      * @return PersonSystemRole
      */
     public function setFullName($fullName)
@@ -91,7 +93,7 @@ class PersonSystemRole extends Entity
     }
 
     /**
-     * Get fullName
+     * Get fullName.
      *
      * @return string
      */
@@ -101,9 +103,10 @@ class PersonSystemRole extends Entity
     }
 
     /**
-     * Set shortName
+     * Set shortName.
      *
      * @param string $shortName
+     *
      * @return PersonSystemRole
      */
     public function setShortName($shortName)
@@ -114,7 +117,7 @@ class PersonSystemRole extends Entity
     }
 
     /**
-     * Get shortName
+     * Get shortName.
      *
      * @return string
      */
@@ -124,9 +127,10 @@ class PersonSystemRole extends Entity
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param \DvsaEntities\Entity\Role $role
+     *
      * @return PersonSystemRole
      */
     public function setRole(\DvsaEntities\Entity\Role $role = null)
@@ -137,7 +141,7 @@ class PersonSystemRole extends Entity
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return \DvsaEntities\Entity\Role
      */

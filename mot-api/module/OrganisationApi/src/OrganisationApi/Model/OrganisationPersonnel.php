@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApi\Model;
 
 use DvsaCommon\Utility\ArrayUtils;
@@ -8,9 +9,7 @@ use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class OrganisationPersonnel
- *
- * @package OrganisationApi\Model
+ * Class OrganisationPersonnel.
  */
 class OrganisationPersonnel
 {
@@ -26,7 +25,7 @@ class OrganisationPersonnel
     public function __construct(Organisation $organisation)
     {
         $this->organisation = $organisation;
-        $this->positions    = $organisation->getPositions()->toArray();
+        $this->positions = $organisation->getPositions()->toArray();
     }
 
     public function getPositions()
@@ -64,7 +63,7 @@ class OrganisationPersonnel
     public function findPosition(Person $person, OrganisationBusinessRole $role)
     {
         $personRoles = $this->getPositionsForPerson($person);
-        $predicate   = function (OrganisationBusinessRoleMap $existingPosition) use ($role) {
+        $predicate = function (OrganisationBusinessRoleMap $existingPosition) use ($role) {
             return $existingPosition->getOrganisationBusinessRole()->getName() === $role->getName();
         };
 

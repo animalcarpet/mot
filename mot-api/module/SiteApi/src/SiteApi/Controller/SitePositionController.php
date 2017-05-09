@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
@@ -10,9 +11,7 @@ use SiteApi\Service\SitePositionService;
 use SiteApi\Service\Validator\NominateRoleValidator;
 
 /**
- * Class SitePositionController
- *
- * @package SiteApi\Controller
+ * Class SitePositionController.
  */
 class SitePositionController extends AbstractDvsaRestfulController implements TransactionAwareInterface
 {
@@ -20,7 +19,7 @@ class SitePositionController extends AbstractDvsaRestfulController implements Tr
 
     public function __construct()
     {
-        $this->setIdentifierName("siteId");
+        $this->setIdentifierName('siteId');
     }
 
     public function create($data)
@@ -45,11 +44,12 @@ class SitePositionController extends AbstractDvsaRestfulController implements Tr
         $siteId = intval($this->params()->fromRoute('siteId'));
 
         $position = $this->getNominateRoleService()->updateRoleNominationNotification($siteId, $nomineeId, $roleCode);
+
         return ApiResponse::jsonOk(['id' => $position->getId()]);
     }
 
     /**
-     * Removes site position of a person
+     * Removes site position of a person.
      *
      * @param string $siteId
      *
@@ -59,8 +59,8 @@ class SitePositionController extends AbstractDvsaRestfulController implements Tr
     {
         $this->inTransaction(
             function () use ($siteId) {
-                $sitePositionId = $this->params()->fromRoute("positionId");
-                $this->getSitePositionService()->remove((int)$siteId, (int)$sitePositionId);
+                $sitePositionId = $this->params()->fromRoute('positionId');
+                $this->getSitePositionService()->remove((int) $siteId, (int) $sitePositionId);
             }
         );
 
@@ -68,7 +68,6 @@ class SitePositionController extends AbstractDvsaRestfulController implements Tr
     }
 
     /**
-     *
      * @return SitePositionService
      */
     private function getSitePositionService()
@@ -77,7 +76,6 @@ class SitePositionController extends AbstractDvsaRestfulController implements Tr
     }
 
     /**
-     *
      * @return NominateRoleService
      */
     private function getNominateRoleService()

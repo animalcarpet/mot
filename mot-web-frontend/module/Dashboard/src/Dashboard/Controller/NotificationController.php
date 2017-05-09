@@ -1,4 +1,5 @@
 <?php
+
 namespace Dashboard\Controller;
 
 use Core\Controller\AbstractAuthActionController;
@@ -18,9 +19,9 @@ class NotificationController extends AbstractAuthActionController implements Aut
     const ROUTE_NOTIFICATION_ACTION = 'user-home/notification/action';
     const ROUTE_NOTIFICATION_ACTION_ARCHIVE = 'user-home/notification/archive';
     const ROUTE_USER_HOME = 'user-home';
-    const MESSAGE_NOTIFICATION_ARCHIVED = "Notification has been archived";
-    const BACK_TO_ARCHIVE_PARAM = "archive";
-    const BACK_TO_HOME_PARAM = "home";
+    const MESSAGE_NOTIFICATION_ARCHIVED = 'Notification has been archived';
+    const BACK_TO_ARCHIVE_PARAM = 'archive';
+    const BACK_TO_HOME_PARAM = 'home';
 
     const SHORT_LIST_LIMIT = 5;
 
@@ -30,8 +31,7 @@ class NotificationController extends AbstractAuthActionController implements Aut
     public function __construct(
         ApiNotificationResource $apiNotificationResource,
         NotificationAction $notificationAction
-    )
-    {
+    ) {
         $this->apiNotificationResource = $apiNotificationResource;
         $this->notificationAction = $notificationAction;
     }
@@ -57,12 +57,12 @@ class NotificationController extends AbstractAuthActionController implements Aut
             $this->layout('layout/layout-govuk.phtml');
             $this->layout()->setVariable('pageTitle', $notification->getSubject());
             $this->layout()->setVariable('pageTertiaryTitle', DateTimeDisplayFormat::textDate($notification->getCreatedOn()));
-            $this->layout()->setVariable("breadcrumbs", ["breadcrumbs" => ["Notifications" => ""]]);
+            $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => ['Notifications' => '']]);
 
             $viewModel = new ViewModel();
             $viewModel->setVariable('notification', $notification);
-            $viewModel->setVariable("backLinkUrl", $this->getBackLinkUrl());
-            $viewModel->setVariable("backLinkLabel", $this->getBackLinkLabel());
+            $viewModel->setVariable('backLinkUrl', $this->getBackLinkUrl());
+            $viewModel->setVariable('backLinkLabel', $this->getBackLinkLabel());
 
             if ($notification->isActionRequired()) {
                 $viewModel->setTemplate('dashboard/notification/notification_action.phtml');
@@ -78,7 +78,7 @@ class NotificationController extends AbstractAuthActionController implements Aut
 
     private function getBackLinkUrl()
     {
-        $backTo = $this->getRequest()->getQuery("backTo");
+        $backTo = $this->getRequest()->getQuery('backTo');
         switch ($backTo) {
             case self::BACK_TO_HOME_PARAM:
                 $url = self::ROUTE_USER_HOME;
@@ -95,16 +95,15 @@ class NotificationController extends AbstractAuthActionController implements Aut
 
     private function getBackLinkLabel()
     {
-        $backTo = $this->getRequest()->getQuery("backTo");
+        $backTo = $this->getRequest()->getQuery('backTo');
         if ($backTo === self::BACK_TO_HOME_PARAM) {
-            $label = "Back to home";
+            $label = 'Back to home';
         } else {
-            $label = "Back to notifications";
+            $label = 'Back to notifications';
         }
 
         return $label;
     }
-
 
     public function archiveNotificationAction()
     {

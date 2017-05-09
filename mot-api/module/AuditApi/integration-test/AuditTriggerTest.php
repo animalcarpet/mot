@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\AuditApiIntegrationTest;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineModuleTest\Service\Authentication\AuthenticationServiceFactoryTest;
 use DvsaAuthentication\Identity;
 use DvsaAuthentication\IdentityProvider;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -24,7 +23,7 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\AuthenticationServiceInterface;
 
 /**
- * Integration test to assert KDD069-related triggers are effective
+ * Integration test to assert KDD069-related triggers are effective.
  */
 class AuditTriggerTest extends AbstractServiceTestCase
 {
@@ -33,8 +32,8 @@ class AuditTriggerTest extends AbstractServiceTestCase
     const TESTER2_USERNAME = 'tester2';
     const TESTER2_ID = 118;
     const VEHICLE_ID = 1;
-    const SITE_1_ID  = 1;
-    const SITE_2_ID  = 2;
+    const SITE_1_ID = 1;
+    const SITE_2_ID = 2;
 
     /** @var MotIdentityProviderInterface */
     private $identityProviderMock;
@@ -72,7 +71,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
     }
 
     /**
-     * Ensures auditable columns are affected solely by KDD069 strategy
+     * Ensures auditable columns are affected solely by KDD069 strategy.
      */
     public function testSessionVarsEffective()
     {
@@ -81,7 +80,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
     }
 
     /**
-     * Ensures trigger-based auditable columns are correct when an MOT record is inserted
+     * Ensures trigger-based auditable columns are correct when an MOT record is inserted.
      */
     public function testMotTestTableInsert()
     {
@@ -94,7 +93,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
     }
 
     /**
-     * Ensures trigger-based auditable columns are updated when an MOT record is updated
+     * Ensures trigger-based auditable columns are updated when an MOT record is updated.
      */
     public function testMotTestTableUpdate()
     {
@@ -126,6 +125,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
             if ($hardReload) {
                 $this->getEntityManager()->refresh($motTest);
             }
+
             return $motTest;
         }
 
@@ -134,9 +134,6 @@ class AuditTriggerTest extends AbstractServiceTestCase
         return $this->getEntityManager()->getRepository(MotTest::class)->find($mot->getId());
     }
 
-    /**
-     * @return void
-     */
     protected function clearExistingMots()
     {
         /** @var MotTestRepository $motTestRepository */
@@ -151,7 +148,6 @@ class AuditTriggerTest extends AbstractServiceTestCase
 
     /**
      * @param Person $tester
-     * @return void
      */
     protected function setKDD069DbSessionVars(Person $tester = null)
     {
@@ -172,6 +168,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
     {
         $authorizationServiceMock = XMock::of(AuthorisationServiceInterface::class);
         $authorizationServiceMock->expects($this->any())->method('isGranted')->willReturn(true);
+
         return $authorizationServiceMock;
     }
 
@@ -183,6 +180,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
         $identity = $this->getIdentity();
         $identityProviderMock = XMock::of(IdentityProvider::class);
         $identityProviderMock->expects($this->any())->method('getIdentity')->willReturn($identity);
+
         return $identityProviderMock;
     }
 
@@ -194,6 +192,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
         $identity = $this->getIdentity();
         $identityProviderMock = XMock::of(AuthenticationService::class);
         $identityProviderMock->expects($this->any())->method('getIdentity')->willReturn($identity);
+
         return $identityProviderMock;
     }
 
@@ -207,6 +206,7 @@ class AuditTriggerTest extends AbstractServiceTestCase
         }
 
         $this->motTestService = $this->getServiceManager()->get('MotTestService');
+
         return $this->motTestService;
     }
 
@@ -228,7 +228,6 @@ class AuditTriggerTest extends AbstractServiceTestCase
         return $this->identity;
     }
 
-
     /**
      * @return EntityManager
      */
@@ -243,14 +242,14 @@ class AuditTriggerTest extends AbstractServiceTestCase
     protected function getTestData()
     {
         return [
-            "vehicleId" => self::VEHICLE_ID,
-            "vehicleTestingStationId" => self::SITE_1_ID,
-            "primaryColour" => ColourCode::GREY,
-            "secondaryColour" => ColourCode::NOT_STATED,
-            "fuelTypeId" => FuelTypeCode::PETROL,
-            "vehicleClassCode" => VehicleClassCode::CLASS_4,
-            "hasRegistration" => true,
-            "oneTimePassword" => null
+            'vehicleId' => self::VEHICLE_ID,
+            'vehicleTestingStationId' => self::SITE_1_ID,
+            'primaryColour' => ColourCode::GREY,
+            'secondaryColour' => ColourCode::NOT_STATED,
+            'fuelTypeId' => FuelTypeCode::PETROL,
+            'vehicleClassCode' => VehicleClassCode::CLASS_4,
+            'hasRegistration' => true,
+            'oneTimePassword' => null,
         ];
     }
 }

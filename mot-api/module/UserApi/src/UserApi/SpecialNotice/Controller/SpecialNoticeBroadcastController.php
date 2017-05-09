@@ -1,4 +1,5 @@
 <?php
+
 namespace UserApi\SpecialNotice\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
@@ -6,9 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 
 /**
- * Class SpecialNoticeBroadcastController
- *
- * @package DvsaMotApi\Controller
+ * Class SpecialNoticeBroadcastController.
  */
 class SpecialNoticeBroadcastController extends AbstractDvsaRestfulController
 {

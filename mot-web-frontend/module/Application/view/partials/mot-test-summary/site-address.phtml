@@ -3,7 +3,7 @@
 use Core\Formatting\AddressFormatter;
 use Dvsa\Mot\ApiClient\Resource\Item\Site;
 
-/** @var Site $siteData */
+/* @var Site $siteData */
 $siteData;
 
 if (empty($siteData->getId())) {
@@ -25,12 +25,12 @@ if ($siteData instanceof \Dvsa\Mot\ApiClient\Resource\Item\Site) {
             $address->getPostcode()
         );
     }
-} else if ($siteData instanceof \DvsaCommon\Dto\Site\VehicleTestingStationDto) {
+} elseif ($siteData instanceof \DvsaCommon\Dto\Site\VehicleTestingStationDto) {
     $siteNr = $siteData->getSiteNumber();
     $siteName = $siteData->getName();
     $tempContact = null;
 
-    foreach($siteData->getContacts() as $contactDto){
+    foreach ($siteData->getContacts() as $contactDto) {
         $tempContact = $contactDto;
     }
 
@@ -43,7 +43,7 @@ if ($siteData instanceof \Dvsa\Mot\ApiClient\Resource\Item\Site) {
 
 $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
 
-$siteNameAndNumber = [] ;
+$siteNameAndNumber = [];
 if (!empty($siteNr)) {
     $siteNameAndNumber[] = $siteNr;
 }

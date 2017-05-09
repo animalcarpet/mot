@@ -20,7 +20,7 @@
         </fieldset>
         <div class="actions-container">
             <input type="hidden" name="route" value="<?php echo $this->escapeHtmlAttr($route); ?>" />
-            <?php foreach ($routeParameters AS $name => $value) : ?>
+            <?php foreach ($routeParameters as $name => $value) : ?>
             <input type="hidden" name="routeParameters[<?php echo $this->escapeHtmlAttr($name); ?>]" value="<?php echo $this->escapeHtmlAttr($value); ?>" />
             <?php endforeach; ?>
             <?php echo $this->csrfToken(); ?>

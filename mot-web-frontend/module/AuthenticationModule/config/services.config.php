@@ -28,26 +28,26 @@ use Zend\Log\LoggerAbstractServiceFactory;
 
 return [
     'factories' => [
-        'AuthAdapter'                      => AuthAdapterFactory::class,
-        AuthenticationAccountLockoutViewModelBuilder::class    => AuthenticationAccountLockoutViewModelBuilderFactory::class,
-        'ZendAuthenticationService'        => ZendAuthenticationServiceFactory::class,
-        'tokenService'                     => WebAuthenticationCookieServiceFactory::class,
-        WebAuthenticationListener::class   => WebAuthenticationListenerFactory::class,
-        WebLogoutService::class            => WebLogoutServiceFactory::class,
-        GotoUrlService::class              => GotoUrlServiceFactory::class,
-        GotoUrlValidatorService::class     => GotoUrlValidatorServiceFactory::class,
+        'AuthAdapter' => AuthAdapterFactory::class,
+        AuthenticationAccountLockoutViewModelBuilder::class => AuthenticationAccountLockoutViewModelBuilderFactory::class,
+        'ZendAuthenticationService' => ZendAuthenticationServiceFactory::class,
+        'tokenService' => WebAuthenticationCookieServiceFactory::class,
+        WebAuthenticationListener::class => WebAuthenticationListenerFactory::class,
+        WebLogoutService::class => WebLogoutServiceFactory::class,
+        GotoUrlService::class => GotoUrlServiceFactory::class,
+        GotoUrlValidatorService::class => GotoUrlValidatorServiceFactory::class,
         IdentitySessionStateService::class => IdentitySessionStateServiceFactory::class,
-        LoginCsrfCookieService::class      => LoginCsrfCookieServiceFactory::class,
-        WebLoginService::class                => WebLoginServiceFactory::class,
-        SuccessLoginResultRoutingService::class => SuccessLoginResultRoutingServiceFactory::class
+        LoginCsrfCookieService::class => LoginCsrfCookieServiceFactory::class,
+        WebLoginService::class => WebLoginServiceFactory::class,
+        SuccessLoginResultRoutingService::class => SuccessLoginResultRoutingServiceFactory::class,
     ],
     'abstract_factories' => [
         StorageCacheAbstractServiceFactory::class,
         LoggerAbstractServiceFactory::class,
     ],
     'aliases' => [
-        'translator'                     => 'MvcTranslator',
+        'translator' => 'MvcTranslator',
         ZendAuthenticationService::class => 'ZendAuthenticationService',
-        FeatureToggles::class            =>'Feature\FeatureToggles'
+        FeatureToggles::class => 'Feature\FeatureToggles',
     ],
 ];

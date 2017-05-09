@@ -18,7 +18,6 @@ use DvsaCommon\Model\TesterGroupAuthorisationStatus;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Mvc\Controller\Plugin\Url;
 
-
 class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
 {
     const PERSON_ID = 1;
@@ -26,10 +25,10 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     const TEST_LOG_URL = 'test-log-url';
     const TEST_QUALITY_URL = 'test-quality-information/%s';
 
-    /** @var  PersonProfileSidebar */
+    /** @var PersonProfileSidebar */
     private $sut;
 
-    /** @var  TesterAuthorisation | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var TesterAuthorisation | \PHPUnit_Framework_MockObject_MockObject */
     private $testerAuthorisationMock;
 
     /** @var bool */
@@ -38,13 +37,13 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     /** @var bool */
     private $canOrderSecurityCard;
 
-    /** @var  PersonProfileRoutes | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var PersonProfileRoutes | \PHPUnit_Framework_MockObject_MockObject */
     private $personProfileRoutesMock;
 
-    /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var Url | \PHPUnit_Framework_MockObject_MockObject */
     private $urlPluginMock;
 
-    /** @var  PersonProfileGuard | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var PersonProfileGuard | \PHPUnit_Framework_MockObject_MockObject */
     private $personProfileGuardMock;
 
     /** @var TesterAuthorisation */
@@ -95,7 +94,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
             self::TEST_QUALITY_URL,
                 DateUtils::subtractCalendarMonths(
                     DateUtils::toUserTz(DateUtils::firstOfThisMonth()), 1)
-                    ->format("m/Y")
+                    ->format('m/Y')
             );
 
         $this->personProfileGuardMock->expects($this->any())
@@ -111,7 +110,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         /** @var GeneralSidebarLinkList $relatedLinks */
         $relatedLinks = $sut->getSidebarItems()[2];
 
-        $this->assertSame($relatedLinks->getLinks()[0]->getUrl(), self::CURRENT_URL . '/' . $expectedLink);
+        $this->assertSame($relatedLinks->getLinks()[0]->getUrl(), self::CURRENT_URL.'/'.$expectedLink);
     }
 
     public function testTestQualityLinkIsNotDisplayedWhenUserIsNotAllowed()
@@ -380,6 +379,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param bool $isExpected
+     *
      * @return $this
      */
     private function withIsExpectedToRegisterForTwoFactorAuth($isExpected)
@@ -394,6 +394,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param bool $isTwoFactorAuthEnabled
+     *
      * @return $this
      */
     private function withTwoFactorAuthEnabled($isTwoFactorAuthEnabled)
@@ -406,34 +407,39 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     private function withUserThatCanOrderASecurityCard($canOrderSecurityCard)
     {
         $this->canOrderSecurityCard = $canOrderSecurityCard;
+
         return $this;
     }
 
     private function withFullyAuthorisedTester()
     {
-        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, "name");
+        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, 'name');
         $this->testerAuthorisation = new TesterAuthorisation($status, $status);
+
         return $this;
     }
 
     private function withGroupADemoTestNeeded()
     {
-        $demoTestStatus = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, "name");
-        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, "name");
+        $demoTestStatus = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, 'name');
+        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, 'name');
         $this->testerAuthorisation = new TesterAuthorisation($demoTestStatus, $status);
+
         return $this;
     }
 
     private function withGroupBDemoTestNeeded()
     {
-        $demoTestStatus = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, "name");
-        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, "name");
+        $demoTestStatus = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, 'name');
+        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, 'name');
         $this->testerAuthorisation = new TesterAuthorisation($status, $demoTestStatus);
+
         return $this;
     }
 
     /**
      * @param $canDisplayResetAccountLink
+     *
      * @return PersonProfileSidebar
      */
     private function createPersonProfileSidebar($canDisplayResetAccountLink = true)

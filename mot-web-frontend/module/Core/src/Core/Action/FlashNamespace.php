@@ -74,11 +74,11 @@ class FlashNamespace
     private static function initializeIfNeeded()
     {
         if (self::$default === null) {
-            self::$error = new FlashNamespace('error');
-            self::$info = new FlashNamespace('info');
-            self::$success = new FlashNamespace('success');
-            self::$warning = new FlashNamespace('warning');
-            self::$default = new FlashNamespace('default');
+            self::$error = new self('error');
+            self::$info = new self('info');
+            self::$success = new self('success');
+            self::$warning = new self('warning');
+            self::$default = new self('default');
         }
     }
 }

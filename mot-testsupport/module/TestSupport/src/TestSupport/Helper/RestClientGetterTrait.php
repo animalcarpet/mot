@@ -5,12 +5,12 @@ namespace TestSupport\Helper;
 use DvsaCommon\HttpRestJson\Client as JsonClient;
 
 /**
- * Creates DvsaCommon\HttpRestJson\Client service with token
+ * Creates DvsaCommon\HttpRestJson\Client service with token.
  */
 trait RestClientGetterTrait
 {
     /**
-     * Creates DvsaCommon\HttpRestJson\Client service with token
+     * Creates DvsaCommon\HttpRestJson\Client service with token.
      *
      * @param array $data
      *
@@ -21,7 +21,7 @@ trait RestClientGetterTrait
         list($schmUsername, $schmPassword) = RequestorParserHelper::parse($data);
 
         /**
-         * @var JsonClient $restClient
+         * @var JsonClient
          * @var TestSupportAccessTokenManager $accessTokenManager
          */
         $restClient = $this->getServiceLocator()->get(JsonClient::class);

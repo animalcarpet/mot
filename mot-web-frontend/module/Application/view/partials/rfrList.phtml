@@ -1,5 +1,6 @@
 <?php
 use DvsaCommon\Utility\ArrayUtils;
+
 ?>
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-9">
@@ -45,16 +46,15 @@ use DvsaCommon\Utility\ArrayUtils;
                                         $code = (intval($vehicleClassCode) > 2) ? 4 : 1;
 
                                         if (strlen($imr)) {
-
                                             $imrParts = explode('.', $imr);
 
-                                            if (count($imrParts) >= 2 ) {
+                                            if (count($imrParts) >= 2) {
 
                                                 // reference is at least A.B[.C] so we can make a link
-                                                $imrUrl = $this->basePath(sprintf('documents/manuals/m%ds0%s000%s01.htm', $code, $imrParts[0], $imrParts[1]));
-                                                ?><a href="<?php echo $this->escapeHtmlAttr($imrUrl); ?>" target="manual" id="manual-btn-<?php echo $escRfrId; ?>"
+                                                $imrUrl = $this->basePath(sprintf('documents/manuals/m%ds0%s000%s01.htm', $code, $imrParts[0], $imrParts[1])); ?><a href="<?php echo $this->escapeHtmlAttr($imrUrl); ?>" target="manual" id="manual-btn-<?php echo $escRfrId; ?>"
                                                 >View manual reference for <?php echo $this->escapeHtml($rfr['inspectionManualReference']); ?></a>
                                                 <?php
+
                                             }
                                         }
                                         ?>
@@ -94,10 +94,10 @@ use DvsaCommon\Utility\ArrayUtils;
                         <?php
                         echo $this->partial(
                             'rfrLocationModal', [
-                                'escRfrId'     => $escRfrId,
-                                'rfr'          => $rfr,
-                                'motTestNumber'    => $motTestNumber,
-                                'searchString' => isset($searchString) ? $searchString : ''
+                                'escRfrId' => $escRfrId,
+                                'rfr' => $rfr,
+                                'motTestNumber' => $motTestNumber,
+                                'searchString' => isset($searchString) ? $searchString : '',
 
                             ]
                         );

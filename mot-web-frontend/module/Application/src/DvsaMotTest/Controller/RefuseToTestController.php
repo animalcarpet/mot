@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Controller;
 
 use Dvsa\Mot\ApiClient\Service\VehicleService;
@@ -13,19 +14,18 @@ use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\ReportUrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Constants\VehicleSearchSource;
-use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
 class RefuseToTestController extends AbstractDvsaMotTestController
 {
-    const ROUTE_REFUSE_TO_TEST_REASON  = 'refuse-to-test/reason';
-    const ROUTE_REFUSE_TO_TEST_PRINT   = 'refuse-to-test/print';
+    const ROUTE_REFUSE_TO_TEST_REASON = 'refuse-to-test/reason';
+    const ROUTE_REFUSE_TO_TEST_PRINT = 'refuse-to-test/print';
 
-    const PAGE_TITLE    = 'Refuse to test';
+    const PAGE_TITLE = 'Refuse to test';
     const PAGE_SUBTITLE = 'MOT testing';
 
-    /** @var ParamObfuscator  $paramObfuscator */
+    /** @var ParamObfuscator $paramObfuscator */
     private $paramObfuscator;
 
     /**
@@ -40,8 +40,8 @@ class RefuseToTestController extends AbstractDvsaMotTestController
     {
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
-        $source  = $request->getQuery('source');
-        $noReg   = $request->getQuery('no-reg', true);
+        $source = $request->getQuery('source');
+        $noReg = $request->getQuery('no-reg', true);
 
         $obfuscatedVehicleId = (string) $this->params()->fromRoute('id', 0);
         $vehicleId = $this->paramObfuscator->deobfuscateEntry(
@@ -66,8 +66,8 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
             $data = [
                 'vehicleId' => $vehicleId,
-                'rfrId'     => $selectedReason,
-                'siteId'    => $currentVts ? $currentVts->getVtsId() : '',
+                'rfrId' => $selectedReason,
+                'siteId' => $currentVts ? $currentVts->getVtsId() : '',
             ];
 
             $this->assertRefuseToTest($data['siteId']);
@@ -76,7 +76,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
                 $apiUrl = MotTestUrlBuilder::refusal();
                 $result = $this->getRestClient()->post($apiUrl, $data);
 
-                $this->getSession()->offsetSet('mot-test-refusal-' . $obfuscatedVehicleId, $result);
+                $this->getSession()->offsetSet('mot-test-refusal-'.$obfuscatedVehicleId, $result);
 
                 $this->redirect()->toUrl(MotTestUrlBuilderWeb::refuseSummary($testTypeCode, $obfuscatedVehicleId));
             } catch (RestApplicationException $e) {
@@ -93,13 +93,13 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
         $testTypeCode = $this->params()->fromRoute('testTypeCode', MotTestTypeCode::NORMAL_TEST);
 
-        $result = $this->getSession()->offsetGet('mot-test-refusal-' . $obfuscatedVehicleId);
+        $result = $this->getSession()->offsetGet('mot-test-refusal-'.$obfuscatedVehicleId);
 
         if (empty($result)) {
             return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
         }
 
-        $title = AbstractDvsaMotTestController::getTestName($testTypeCode) . ' refused';
+        $title = AbstractDvsaMotTestController::getTestName($testTypeCode).' refused';
 
         $viewVariables = [
             'title' => $title,
@@ -110,8 +110,8 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
     public function refuseToTestPrintAction()
     {
-        $vehicleId  = (string) $this->params()->fromRoute('id', 0);
-        $result     = $this->getSession()->offsetGet('mot-test-refusal-' . $vehicleId);
+        $vehicleId = (string) $this->params()->fromRoute('id', 0);
+        $result = $this->getSession()->offsetGet('mot-test-refusal-'.$vehicleId);
         $reportData = ArrayUtils::tryGet($result, 'data');
 
         if (empty($reportData)) {
@@ -196,7 +196,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
     private function createFormAction($source, $noReg)
     {
         return $this->url()->fromRoute(
-            RefuseToTestController::ROUTE_REFUSE_TO_TEST_REASON,
+            self::ROUTE_REFUSE_TO_TEST_REASON,
             [],
             [
                 'query' => [
@@ -217,13 +217,13 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
         return new ViewModel(
             [
-                'reasonForRefusal'      => $this->getReasonsForRefusal(),
-                'backToSearchLink'      => $this->createBackToConfirmationLink(
+                'reasonForRefusal' => $this->getReasonsForRefusal(),
+                'backToSearchLink' => $this->createBackToConfirmationLink(
                     $obfuscatedVehicleId, $noReg, $source
                 ),
                 'isDisplayRegistration' => $noReg ? false : true,
-                'vehicle'               => $this->getVehicle((int) $vehicleId, $source),
-                'formAction'            => $this->createFormAction($source, $noReg),
+                'vehicle' => $this->getVehicle((int) $vehicleId, $source),
+                'formAction' => $this->createFormAction($source, $noReg),
             ]
         );
     }

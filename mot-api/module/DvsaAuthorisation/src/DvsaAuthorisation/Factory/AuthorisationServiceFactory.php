@@ -8,9 +8,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class AuthorisationServiceFactory
- *
- * @package DvsaAuthorisation\Factory
+ * Class AuthorisationServiceFactory.
  */
 class AuthorisationServiceFactory implements FactoryInterface
 {

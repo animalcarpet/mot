@@ -7,7 +7,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for DefectSentenceCaseConverterFactory
+ * Factory for DefectSentenceCaseConverterFactory.
  */
 class DefectSentenceCaseConverterFactory implements FactoryInterface
 {

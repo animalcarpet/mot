@@ -5,9 +5,7 @@ namespace Report\Table;
 use Zend\Stdlib\AbstractOptions;
 
 /**
- * Contains table settings
- *
- * @package Report\Table
+ * Contains table settings.
  */
 class TableOptions extends AbstractOptions
 {
@@ -33,7 +31,8 @@ class TableOptions extends AbstractOptions
     private $footerViewScript = 'table/footer';
     /**
      * the text that will replace the "[...]", in:
-     * Showing 1 – 20 of 40 [...]
+     * Showing 1 – 20 of 40 [...].
+     *
      * @var string
      */
     private $itemsText = 'items';
@@ -52,6 +51,7 @@ class TableOptions extends AbstractOptions
     public function setItemsPerPage($itemsPerPage)
     {
         $this->itemsPerPage = $itemsPerPage;
+
         return $this;
     }
 
@@ -69,6 +69,7 @@ class TableOptions extends AbstractOptions
     public function setItemsPerPageOptions(array $itemsPerPageOptions)
     {
         $this->itemsPerPageOptions = $itemsPerPageOptions;
+
         return $this;
     }
 
@@ -86,6 +87,7 @@ class TableOptions extends AbstractOptions
     public function setTableViewScript($tableViewScript)
     {
         $this->tableViewScript = $tableViewScript;
+
         return $this;
     }
 
@@ -103,6 +105,7 @@ class TableOptions extends AbstractOptions
     public function setFooterViewScript($footerViewScript)
     {
         $this->footerViewScript = $footerViewScript;
+
         return $this;
     }
 
@@ -116,11 +119,13 @@ class TableOptions extends AbstractOptions
 
     /**
      * @param string $itemsText
+     *
      * @return $this
      */
     public function setItemsText($itemsText)
     {
         $this->itemsText = $itemsText;
+
         return $this;
     }
 
@@ -134,12 +139,13 @@ class TableOptions extends AbstractOptions
 
     /**
      * @param string $tableId
+     *
      * @return TableOptions
      */
     public function setTableId($tableId)
     {
         $this->tableId = $tableId;
+
         return $this;
     }
-
 }

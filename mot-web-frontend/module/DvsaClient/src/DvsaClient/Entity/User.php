@@ -3,14 +3,12 @@
 namespace DvsaClient\Entity;
 
 /**
- * Class User
- * @deprecated Use DvsaClient\Entity\Person instead
+ * Class User.
  *
- * @package DvsaClient\Entity
+ * @deprecated Use DvsaClient\Entity\Person instead
  */
 class User extends Person
 {
-
     private $id;
     private $username;
 
@@ -23,6 +21,7 @@ class User extends Person
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -44,6 +43,7 @@ class User extends Person
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 

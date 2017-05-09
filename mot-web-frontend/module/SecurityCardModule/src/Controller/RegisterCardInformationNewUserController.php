@@ -14,7 +14,7 @@ use Zend\Http\Response;
 class RegisterCardInformationNewUserController extends AbstractDvsaActionController
 {
     const REGISTER_CARD_NEW_USER_INFORMATION_ROUTE = 'security-card-information-new-user';
-    const PAGE_TITLE = "Activate your security card";
+    const PAGE_TITLE = 'Activate your security card';
 
     /** @var Request */
     protected $request;
@@ -28,7 +28,7 @@ class RegisterCardInformationNewUserController extends AbstractDvsaActionControl
     /** @var LazyMotFrontendAuthorisationService $authorisationService */
     private $authorisationService;
 
-    /** @var  TwoFaFeatureToggle */
+    /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
     public function __construct(
@@ -37,8 +37,7 @@ class RegisterCardInformationNewUserController extends AbstractDvsaActionControl
         MotIdentityProviderInterface $motIdentityProvider,
         LazyMotFrontendAuthorisationService $authorisationService,
         TwoFaFeatureToggle $twoFaFeatureToggle
-    )
-    {
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->motIdentityProvider = $motIdentityProvider;
@@ -56,14 +55,15 @@ class RegisterCardInformationNewUserController extends AbstractDvsaActionControl
             || $userId != $this->motIdentityProvider->getIdentity()->getUserId()
             || $isDvsa
             || $userHasActivatedA2FaCard) {
-
             $this->response->setStatusCode(HttpStatus::HTTP_NOT_FOUND);
+
             return new ViewModel(array('content' => 'Page not found'));
         }
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('pageTitle', self::PAGE_TITLE);
         $viewModel = new ViewModel();
+
         return $viewModel->setTemplate('2fa/register-card/register-card-information-new-user');
     }
 }

@@ -11,9 +11,7 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 
 /**
- * Class AccountMapperTest
- *
- * @package DvsaClientTest\Mapper
+ * Class AccountMapperTest.
  */
 class AccountMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +23,7 @@ class AccountMapperTest extends \PHPUnit_Framework_TestCase
     const TOKEN = '9999999';
 
     /**
-     * @var $mapper AccountMapper
+     * @var AccountMapper
      */
     private $mapper;
 

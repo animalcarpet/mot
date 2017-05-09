@@ -47,8 +47,7 @@ $this->layout()->setVariable('pageSubTitle', $this->escapeHtml($organisation->ge
     if ($this->isPdf) {
         $escMainColumnClass = 'col-lg-12';
     } else {
-        $escMainColumnClass = 'col-md-9';
-        ?>
+        $escMainColumnClass = 'col-md-9'; ?>
         <div class="col-md-3">
             <?php
             echo $this->partial(
@@ -59,18 +58,18 @@ $this->layout()->setVariable('pageSubTitle', $this->escapeHtml($organisation->ge
                     'currentParams' => $params,
                     'legendFrom' => 'Start date',
                     'legendTo' => 'End date',
-                    'dateRanges' => $dateRanges
+                    'dateRanges' => $dateRanges,
                 )
-            );
-            ?>
+            ); ?>
             <a href="<?php echo $this->url('report', [], ['query' => ['route' => $route, 'routeParameters' => $routeParameters, 'returnTo' => $returnTo]]); ?>" id="download" class="btn btn-primary">Download report</a>
         </div>
         <?php
+
     }
     ?>
     <div class="<?php echo $escMainColumnClass; ?> slot-usage-table">
         <span>
-            <?php if($searchText): ?><strong>"<?php echo $this->escapeHtml($searchText); ?>"</strong> <?php endif; ?>
+            <?php if ($searchText): ?><strong>"<?php echo $this->escapeHtml($searchText); ?>"</strong> <?php endif; ?>
             <strong><?php echo $this->escapeHtml($slotUsageForCurrentQuery); ?></strong> slots used <strong><?php echo $this->escapeHtml($dateRangeLabel); ?></strong>
         </span>
         <?php echo $this->table->render($this); ?>

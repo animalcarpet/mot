@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApiTest\Mock;
 
 use DvsaCommonApi\Service\Validator\ErrorSchema;
@@ -7,11 +8,9 @@ use OrganisationApi\Model\OrganisationPersonnel;
 use OrganisationApi\Model\RoleRestrictionInterface;
 
 /**
- * Creating a mock as a separate class was faster and easier the using phpunit mocks
+ * Creating a mock as a separate class was faster and easier the using phpunit mocks.
  *
  * Class MockRoleRestriction
- *
- * @package OrganisationApiTest\Mock
  */
 class MockRoleRestriction implements RoleRestrictionInterface
 {

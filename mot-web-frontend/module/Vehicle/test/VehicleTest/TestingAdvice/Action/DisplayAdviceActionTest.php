@@ -11,15 +11,14 @@ use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\TestingAdvice\Action\DisplayAdviceAction;
 use Vehicle\TestingAdvice\ViewModel\DisplayAdviseViewModel;
-use DvsaCommon\Obfuscate\ParamObfuscator;
 use Core\Action\ViewActionResult;
 use DvsaCommon\Configuration\MotConfig;
 
 class DisplayAdviceActionTest extends \PHPUnit_Framework_TestCase
 {
-    const BACK_LINK_URL = "www.back-link.com";
-    const BACK_LINK_LABEL = "Back to home";
-    const FEEDBACK_LINK = "www.survey.com";
+    const BACK_LINK_URL = 'www.back-link.com';
+    const BACK_LINK_LABEL = 'Back to home';
+    const FEEDBACK_LINK = 'www.survey.com';
 
     /* @var DisplayAdviceAction */
     private $displayAction;
@@ -34,16 +33,16 @@ class DisplayAdviceActionTest extends \PHPUnit_Framework_TestCase
         $vehicleStd->vehicleClass = new \stdClass();
 
         $category = new TestingAdviceCategory();
-        $category->setName("The Automotive Engine");
-        $category->setContents(["Most common engines have 4, 6, or 8 pistons", "The crankshaft is connected to the pistons"]);
+        $category->setName('The Automotive Engine');
+        $category->setContents(['Most common engines have 4, 6, or 8 pistons', 'The crankshaft is connected to the pistons']);
 
         $advice = new TestingAdvice();
         $advice->setCategories([$category]);
         $this->testingAdvice = $advice;
 
         $vehicleService = XMock::of(VehicleService::class);
-        $vehicleService->method("getDvsaVehicleById")->willReturn(new DvsaVehicle($vehicleStd));
-        $vehicleService->method("getTestingAdvice")->willReturn($advice);
+        $vehicleService->method('getDvsaVehicleById')->willReturn(new DvsaVehicle($vehicleStd));
+        $vehicleService->method('getTestingAdvice')->willReturn($advice);
 
         $motConfig = new MotConfig(['testing_advice_survey_link' => self::FEEDBACK_LINK]);
 
@@ -56,7 +55,7 @@ class DisplayAdviceActionTest extends \PHPUnit_Framework_TestCase
 
     public function test_execute_returnsActionResult()
     {
-        $breadcrumbs = ["bread" => "", "crumbs" => ""];
+        $breadcrumbs = ['bread' => '', 'crumbs' => ''];
 
         $actionResult = $this->displayAction->execute(1, self::BACK_LINK_URL, self::BACK_LINK_LABEL, $breadcrumbs);
 

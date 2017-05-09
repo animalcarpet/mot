@@ -11,7 +11,6 @@ use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaEventApi\Service\EventService;
 use DvsaEntities\Entity\EventPersonMap;
-use Doctrine\ORM\EntityManager;
 
 class RoleEventHelper
 {
@@ -37,9 +36,9 @@ class RoleEventHelper
 
     /**
      * @param MotIdentityProviderInterface $identityProvider
-     * @param EventService $eventService
-     * @param EventPersonMapRepository $eventPersonMapRepository
-     * @param DateTimeHolder $dateTimeHolder
+     * @param EventService                 $eventService
+     * @param EventPersonMapRepository     $eventPersonMapRepository
+     * @param DateTimeHolder               $dateTimeHolder
      */
     public function __construct(
         MotIdentityProviderInterface $identityProvider,
@@ -54,30 +53,35 @@ class RoleEventHelper
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $role
+     *
      * @return EventPersonMap
      */
     public function createRemoveRoleEvent(Person $person, PersonSystemRole $role)
     {
         $description = $this->getDescription($role, EventDescription::DVSA_ROLE_ASSOCIATION_REMOVE);
+
         return $this->create($person, $description);
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $role
+     *
      * @return EventPersonMap
      */
     public function createAssignRoleEvent(Person $person, PersonSystemRole $role)
     {
         $description = $this->getDescription($role, EventDescription::DVSA_ROLE_ASSOCIATION_ASSIGN);
+
         return $this->create($person, $description);
     }
 
     /**
      * @param PersonSystemRole $role
-     * @param string $eventDescription
+     * @param string           $eventDescription
+     *
      * @return string
      */
     private function getDescription(PersonSystemRole $role, $eventDescription)
@@ -88,7 +92,9 @@ class RoleEventHelper
     /**
      * @param Person $person
      * @param string $description
+     *
      * @return EventPersonMap
+     *
      * @throws \Exception
      */
     private function create(Person $person, $description)

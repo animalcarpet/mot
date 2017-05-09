@@ -7,12 +7,12 @@ use DvsaClient\ViewModel\AbstractFormModel;
 class AeFormViewModel
 {
     /**
-     * @var  AbstractFormModel
+     * @var AbstractFormModel
      */
     private $form;
 
     private $cancelUrl;
-    
+
     /**
      * @return AbstractFormModel
      */
@@ -29,6 +29,7 @@ class AeFormViewModel
     public function setForm(AbstractFormModel $form = null)
     {
         $this->form = $form;
+
         return $this;
     }
 
@@ -42,11 +43,13 @@ class AeFormViewModel
 
     /**
      * @param string $url
+     *
      * @return $this
      */
     public function setCancelUrl($url)
     {
         $this->cancelUrl = $url;
+
         return $this;
     }
 }

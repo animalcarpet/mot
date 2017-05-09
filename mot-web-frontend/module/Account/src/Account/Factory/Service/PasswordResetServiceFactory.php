@@ -8,13 +8,13 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class PasswordResetServiceFactory
- * @package Account\Factory\Service
+ * Class PasswordResetServiceFactory.
  */
 class PasswordResetServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return PasswordResetService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

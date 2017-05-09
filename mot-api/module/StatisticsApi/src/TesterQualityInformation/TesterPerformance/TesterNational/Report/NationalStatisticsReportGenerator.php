@@ -26,8 +26,7 @@ class NationalStatisticsReportGenerator extends AbstractReportGenerator
         TimeSpan $timeoutPeriod,
         $year,
         $month
-    )
-    {
+    ) {
         parent::__construct($dateTimeHolder, $timeoutPeriod);
         $this->repository = $nationalStatisticsRepository;
         $this->storage = $storage;
@@ -60,7 +59,7 @@ class NationalStatisticsReportGenerator extends AbstractReportGenerator
     /**
      * @return ReportDtoInterface
      */
-    function createEmptyReport()
+    public function createEmptyReport()
     {
         return new NationalPerformanceReportDto();
     }
@@ -121,8 +120,7 @@ class NationalStatisticsReportGenerator extends AbstractReportGenerator
         $cumulativeTestTime,
         $averageVehicleAge,
         $isAverageAgeAvailable
-    )
-    {
+    ) {
         $totalAverage = $this->calculateAverageCount($totalTests, $numberOfTesters);
         $averageTime = $this->getAverageTime($cumulativeTestTime, $totalTests);
         $failedPercentage = $this->calculatePercentage($failedTests, $totalTests);

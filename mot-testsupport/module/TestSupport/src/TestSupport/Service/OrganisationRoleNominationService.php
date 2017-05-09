@@ -10,12 +10,12 @@ use TestSupport\Helper\TestSupportRestClientHelper;
 class OrganisationRoleNominationService
 {
     /**
-     * @var TestSupportRestClientHelper $testSupportRestClientHelper
+     * @var TestSupportRestClientHelper
      */
     private $testSupportRestClientHelper;
 
     /**
-     * @var EntityManager $entityManager
+     * @var EntityManager
      */
     private $entityManager;
 
@@ -37,11 +37,11 @@ class OrganisationRoleNominationService
 
         $return = $restClient->post($positionPath, [
             'nomineeId' => $userId,
-            'roleId'  => $roleId,
+            'roleId' => $roleId,
         ]);
 
-        if (! isset($return['data'])) {
-                throw new \Exception('Failed to add permission to organisation id '.$orgId);
+        if (!isset($return['data'])) {
+            throw new \Exception('Failed to add permission to organisation id '.$orgId);
         }
 
         return $return['data'];
@@ -50,8 +50,8 @@ class OrganisationRoleNominationService
     private function getRoleIdFromCode($roleCode)
     {
         $result = $this->entityManager->getConnection()->executeQuery(
-            "SELECT id FROM organisation_business_role WHERE code = :role_code",
-            ['role_code' =>$roleCode]
+            'SELECT id FROM organisation_business_role WHERE code = :role_code',
+            ['role_code' => $roleCode]
         )->fetch();
 
         return $result['id'];

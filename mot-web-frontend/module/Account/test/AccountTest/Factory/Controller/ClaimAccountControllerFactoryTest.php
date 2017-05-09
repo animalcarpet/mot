@@ -7,7 +7,6 @@ use Account\Factory\Controller\ClaimAccountControllerFactory;
 use Account\Service\ClaimAccountService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use Zend\Mvc\Controller\ControllerManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\ServiceManager\ServiceManager;
 
@@ -26,7 +25,7 @@ class ClaimAccountControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($serviceManager));
 
         $serviceManager->setService('MotIdentityProvider', XMock::of(MotIdentityProviderInterface::class));
-        
+
         $factory = new ClaimAccountControllerFactory();
         $factoryResult = $factory->createService($plugins);
 

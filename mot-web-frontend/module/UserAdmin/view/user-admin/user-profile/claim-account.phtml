@@ -23,7 +23,7 @@ $this->headTitle('Reset account security');
     <?php echo $this->partial('partial/gds/general/system-message',
         [
             'messages' => [$reclaimSystemMessage],
-            'type' => 'important'
+            'type' => 'important',
         ]
     ); ?>
 
@@ -36,12 +36,12 @@ $this->headTitle('Reset account security');
         <?php echo $this->partial(
             'partial/gds/form/control-navigation',
             [
-                'id'            => 'reclaim-account-submit',
-                'class'         => 'button-warning',
-                'value'         => 'Reset account security',
-                'navigation'    => [
+                'id' => 'reclaim-account-submit',
+                'class' => 'button-warning',
+                'value' => 'Reset account security',
+                'navigation' => [
                     'Cancel and return to user profile' => $userProfileUrl,
-                ]
+                ],
             ]
         ); ?>
     </nav>

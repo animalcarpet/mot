@@ -1,17 +1,15 @@
 <?php
+
 namespace NotificationApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 
 /**
- * Class PersonReadNotificationController
- *
- * @package NotificationApi\Controller
+ * Class PersonReadNotificationController.
  */
 class PersonReadNotificationController extends AbstractDvsaRestfulController
 {
-
     public function getList()
     {
         return ApiResponse::jsonOk('personal notification -> get list of read notifications');

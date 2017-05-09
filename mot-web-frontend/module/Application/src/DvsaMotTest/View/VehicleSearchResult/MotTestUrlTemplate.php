@@ -29,6 +29,7 @@ class MotTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
 
     /**
      * @param array $vehicle
+     *
      * @return string
      */
     public function getUrl(array $vehicle)
@@ -55,15 +56,16 @@ class MotTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
                     'vin' => $vin,
                     'registration' => $registration,
                     'searchVrm' => $searchVrm,
-                    'searchVin' => $searchVin
-                ]
+                    'searchVin' => $searchVin,
+                ],
             ]
         );
     }
 
     /**
      * @param VehicleSearchResult $vehicle
-     * @param array $searchParams
+     * @param array               $searchParams
+     *
      * @return string
      */
     public function getStartMotTestUrl(VehicleSearchResult $vehicle, array $searchParams)
@@ -97,10 +99,9 @@ class MotTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
                     'registration' => $registration,
                     'searchVrm' => $searchVrm,
                     'searchVin' => $searchVin,
-                    'retest' => $retest
-                ]
+                    'retest' => $retest,
+                ],
             ]
         );
     }
-
 }

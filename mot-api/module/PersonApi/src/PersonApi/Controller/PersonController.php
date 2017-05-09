@@ -5,7 +5,6 @@ namespace PersonApi\Controller;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\PersonService;
-use Zend\View\Model\JsonModel;
 
 /**
  * Class PersonController.

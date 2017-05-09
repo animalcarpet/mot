@@ -1,17 +1,16 @@
 <?php
+
 namespace Vehicle\UpdateVehicleProperty\Form\InputFilter;
 
 use Vehicle\UpdateVehicleProperty\Form\UpdateColourForm;
 use Zend\InputFilter\Input;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
 use Zend\Validator\InArray;
 use Zend\Validator\NotEmpty;
 
 class UpdateColourInputFilter extends InputFilter
 {
-    const COLOUR_EMPTY_MSG = "select a colour";
+    const COLOUR_EMPTY_MSG = 'select a colour';
     private $colourOptions;
     private $secondaryColourOptions;
 
@@ -47,7 +46,7 @@ class UpdateColourInputFilter extends InputFilter
         $input->getValidatorChain()
             ->attach($inArrayValidator);
 
-        if($required) {
+        if ($required) {
             $notEmptyValidator = (new NotEmpty())
                 ->setMessage(self::COLOUR_EMPTY_MSG, NotEmpty::IS_EMPTY);
 

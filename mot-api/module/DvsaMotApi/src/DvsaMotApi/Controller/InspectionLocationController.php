@@ -11,9 +11,7 @@ use Zend\View\Model\JsonModel;
 use DvsaCommonApi\Model\ApiResponse;
 
 /**
- * Class InspectionLocationController
- *
- * @package DvsaMotApi\Controller
+ * Class InspectionLocationController.
  */
 class InspectionLocationController extends AbstractDvsaRestfulController
 {
@@ -22,7 +20,7 @@ class InspectionLocationController extends AbstractDvsaRestfulController
     const ERROR_MSG_SITE_NUMBER_REQUIRED = 'The site number is required';
 
     /**
-     * This will validate the request and make sure that
+     * This will validate the request and make sure that.
      *
      *  - siteid OR location has been specified
      *  - that siteid, if given, is a real site record
@@ -30,6 +28,7 @@ class InspectionLocationController extends AbstractDvsaRestfulController
      * @param $data Array is the request data
      *
      * @throws BadRequestException
+     *
      * @return JsonModel
      */
     public function create($data)
@@ -40,7 +39,7 @@ class InspectionLocationController extends AbstractDvsaRestfulController
 
         if (!empty($locationText)) {
 
-            /** @var  $motTestService \DvsaMotApi\Service\MotTestService */
+            /** @var $motTestService \DvsaMotApi\Service\MotTestService */
             $motTestService = $this->getServiceLocator()->get('MotTestService');
 
             $id = $motTestService->createOffsiteComment(
@@ -61,7 +60,7 @@ class InspectionLocationController extends AbstractDvsaRestfulController
     /**
      * New validation handler for VALIDATE action verb.
      *
-     * @param array $data POST data for validation.
+     * @param array $data POST data for validation
      *
      * @return JsonModel
      */
@@ -75,8 +74,8 @@ class InspectionLocationController extends AbstractDvsaRestfulController
         return ApiResponse::jsonOk(
             [
                 'sitename' => $ilValidator->getSiteName(),
-                'siteid'   => $ilValidator->getSiteId(),
-                'location' => $ilValidator->getLocation()
+                'siteid' => $ilValidator->getSiteId(),
+                'location' => $ilValidator->getLocation(),
             ]
         );
     }

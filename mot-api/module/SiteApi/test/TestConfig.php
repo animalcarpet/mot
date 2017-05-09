@@ -1,6 +1,7 @@
 <?php
+
 return [
-    'modules'         => [
+    'modules' => [
         'DvsaFeature',
         'DoctrineModule',
         'DoctrineORMModule',
@@ -11,10 +12,10 @@ return [
         'OrganisationApi',
         'DvsaMotApi',
         'DvsaAuthentication',
-        'DvsaAuthorisation'
+        'DvsaAuthorisation',
     ],
     'test_namespaces' => [
-        'SiteApiTest'            => __DIR__ . '/' . 'SiteApiTest',
-        'DvsaCommonApiTest'      => __DIR__ . '/../../DvsaCommonApi/test/DvsaCommonApiTest',
-    ]
+        'SiteApiTest' => __DIR__.'/'.'SiteApiTest',
+        'DvsaCommonApiTest' => __DIR__.'/../../DvsaCommonApi/test/DvsaCommonApiTest',
+    ],
 ];

@@ -22,7 +22,7 @@ class AuthorisedExaminerControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
-        $serviceLocator    = $controllerManager->getServiceLocator();
+        $serviceLocator = $controllerManager->getServiceLocator();
 
         return new AuthorisedExaminerController(
             $serviceLocator->get('AuthorisationService'),

@@ -12,7 +12,7 @@ use DvsaEntities\Entity\Person;
 
 class ReadMotTestingCertificateAssertion implements AutoWireableInterface
 {
-    const ERROR_DVSA_USER = "Can not create mot testing certificate for DVSA user";
+    const ERROR_DVSA_USER = 'Can not create mot testing certificate for DVSA user';
 
     /**
      * @var MotAuthorisationServiceInterface

@@ -9,9 +9,7 @@ use DvsaEntitiesTest\EntityTrait\EntityTestTrait;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class PaymentTest
- *
- * @package DvsaEntityTest\Entity
+ * Class PaymentTest.
  */
 class PaymentTest extends PHPUnit_Framework_TestCase
 {
@@ -23,7 +21,7 @@ class PaymentTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test data for entity
+     * Test data for entity.
      *
      * @return array
      */
@@ -33,13 +31,13 @@ class PaymentTest extends PHPUnit_Framework_TestCase
             [
                 [
                     [
-                        'amount'           => 12.00,
+                        'amount' => 12.00,
                         'receiptReference' => 'test',
-                        'details'          => [],
-                        'status'           => new PaymentStatus(),
-                        'type'             => new PaymentType()
-                    ]
-                ]
+                        'details' => [],
+                        'status' => new PaymentStatus(),
+                        'type' => new PaymentType(),
+                    ],
+                ],
             ];
     }
 }

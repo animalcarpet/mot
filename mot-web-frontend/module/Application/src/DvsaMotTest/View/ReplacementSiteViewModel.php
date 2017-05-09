@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\View;
 
 use DvsaCommon\Utility\AddressUtils;
@@ -6,7 +7,6 @@ use DvsaCommon\Utility\ArrayUtils;
 
 class ReplacementSiteViewModel
 {
-
     private $name;
     private $postcode;
     private $siteNumber;
@@ -19,7 +19,7 @@ class ReplacementSiteViewModel
         $this->name = ArrayUtils::tryGet($vts, 'name');
         $this->siteNumber = ArrayUtils::tryGet($vts, 'siteNumber');
         $this->postcode = ArrayUtils::tryGet($address, 'postcode');
-        $this->siteLabel = $this->siteNumber . ', ' . AddressUtils::stringify($address);
+        $this->siteLabel = $this->siteNumber.', '.AddressUtils::stringify($address);
     }
 
     /**

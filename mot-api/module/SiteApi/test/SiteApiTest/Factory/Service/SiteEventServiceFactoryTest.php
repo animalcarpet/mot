@@ -9,7 +9,6 @@ use DvsaEntities\Repository\SiteRepository;
 use DvsaEventApi\Service\EventService;
 use SiteApi\Factory\Service\SiteEventServiceFactory;
 use SiteApi\Service\SiteEventService;
-use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 
@@ -17,7 +16,6 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
  * @throws \Exception
  * @group event
  */
-
 class SiteEventServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()

@@ -3,10 +3,8 @@
 namespace DvsaCommonApi\Filter;
 
 use DvsaCommon\Dto\AbstractDataTransferObject;
-use HTMLPurifier;
 use ReflectionClass;
 use ReflectionProperty;
-use Zend\Filter\Exception\RuntimeException;
 
 /**
  * Class XssFilter.
@@ -31,7 +29,7 @@ class XssFilter implements FilterInterface
         } elseif (is_array($value)) {
             return $this->filterMultiple($value);
         } elseif (!empty($value) && is_string($value)) {
-            $value = preg_replace('/(<('.join('|', self::$REMOVE_TAGS).')\b[^>]*>).*?(<\/\2>)/is', "", $value);
+            $value = preg_replace('/(<('.implode('|', self::$REMOVE_TAGS).')\b[^>]*>).*?(<\/\2>)/is', '', $value);
         }
 
         return $value;
@@ -66,7 +64,7 @@ class XssFilter implements FilterInterface
     }
 
     /**
-     * This function read the property of each element of a class (PRIVATE/PROTECTED/PUBLIC)
+     * This function read the property of each element of a class (PRIVATE/PROTECTED/PUBLIC).
      *
      * @return ReflectionProperty[]
      */

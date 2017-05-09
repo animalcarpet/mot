@@ -7,8 +7,6 @@ use DvsaEntities\Entity\MotTestReasonForCancel;
 
 /**
  * Class map data of entity ReasonForCancel to dto ReasonForCancel.
- *
- * @package DvsaCommonApi\Service\Mapper
  */
 class ReasonForCancelMapper extends AbstractApiMapper
 {

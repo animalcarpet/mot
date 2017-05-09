@@ -7,7 +7,7 @@ $canReceiveSpecialNotice = isset($canReceiveSpecialNotice) ? $canReceiveSpecialN
 
 $escViewLink = $canRead ? $this->url('special-notices/all') : $this->url('special-notices');
 
-if($canReceiveSpecialNotice):
+if ($canReceiveSpecialNotice):
 ?>
 
 <section class="module-pivot-panel" id="special-notice-list">
@@ -21,7 +21,7 @@ if($canReceiveSpecialNotice):
             <strong class="number"><?php echo intval($unreadCount); ?></strong>
             <span class="super-text">
                 unread 
-                <?php if($unreadCount && $overdueCount === 0 && $canAcknowledge) : ?>
+                <?php if ($unreadCount && $overdueCount === 0 && $canAcknowledge) : ?>
                     <span class="meta"><?php echo $this->escapeHtml($daysLeftToView); ?> days left to view</span>
                 <?php endif; ?>
             </span>
@@ -38,4 +38,4 @@ if($canReceiveSpecialNotice):
     </a>
     <?php endif; ?>
 </section>
-<?php endif;?>
+<?php endif; ?>

@@ -7,7 +7,7 @@ use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurity
 
 class ChangeSecurityQuestionTwoController extends AbstractDvsaActionController
 {
-    const ROUTE = "newProfile/change-security-questions/question-two";
+    const ROUTE = 'newProfile/change-security-questions/question-two';
 
     private $action;
 
@@ -21,6 +21,7 @@ class ChangeSecurityQuestionTwoController extends AbstractDvsaActionController
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
         $this->setHeadTitle('Second security question');
+
         return $this->applyActionResult($result);
     }
 

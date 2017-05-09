@@ -59,11 +59,11 @@ class PersonService
     private $authenticationService;
 
     /**
-     * @param \DvsaEntities\Repository\PersonRepository $personRepository
+     * @param \DvsaEntities\Repository\PersonRepository    $personRepository
      * @param \OrganisationApi\Service\Mapper\PersonMapper $personMapper
-     * @param \Dvsa\OpenAM\OpenAMClientInterface $openamClient
+     * @param \Dvsa\OpenAM\OpenAMClientInterface           $openamClient
      * @param $realm
-     * @param \DvsaMotApi\Service\TesterService $testerService
+     * @param \DvsaMotApi\Service\TesterService               $testerService
      * @param \DvsaAuthorisation\Service\AuthorisationService $authorisationService
      * @param \Zend\Authentication\AuthenticationService
      */
@@ -116,11 +116,11 @@ class PersonService
     }
 
     /**
-     * Force Person by identifier to return as an Array
+     * Force Person by identifier to return as an Array.
      *
      * @param $identifier
      *
-     * @return Array
+     * @return array
      */
     public function getPersonByIdentifierArray($identifier)
     {
@@ -150,6 +150,7 @@ class PersonService
     /**
      * @param $personId
      * @param $password
+     *
      * @return bool
      */
     public function validateCredentials($personId, $password)
@@ -157,6 +158,7 @@ class PersonService
         $person = $this->getPersonById($personId);
         try {
             $wrapper = new OpenAMLoginDetails($person->getUsername(), $password, $this->realm);
+
             return $this->openamClient->validateCredentials($wrapper);
         } catch (OpenAMUnauthorisedException $e) {
             return false;
@@ -166,14 +168,14 @@ class PersonService
     /**
      * @param int $personId
      *
-     * @return Array
+     * @return array
      */
     public function getCurrentMotTestIdByPersonId($personId)
     {
         $inProgressTestId = $this->testerService->findInProgressTestIdForTester($personId);
 
         return [
-            "inProgressTestNumber" => $inProgressTestId
+            'inProgressTestNumber' => $inProgressTestId,
         ];
     }
 
@@ -181,11 +183,13 @@ class PersonService
     {
         $pin = $this->createPin();
         $this->updatePin($personId, $pin);
+
         return $pin;
     }
 
     /**
      * Gets the site count for person as a tester.
+     *
      * @param int $personId
      *
      * @return array
@@ -197,6 +201,7 @@ class PersonService
             SiteBusinessRoleCode::TESTER,
             BusinessRoleStatusCode::ACTIVE
         );
+
         return ['siteCount' => $siteCount];
     }
 
@@ -206,7 +211,9 @@ class PersonService
      * FIXME: We shouldn't rely on an assert*() methods to return any value.
      *
      * @param string $username
+     *
      * @return bool|int
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function assertUsernameIsValidAndHasAnEmail($username)
@@ -257,12 +264,13 @@ class PersonService
      *
      * @return bool|string
      *
-     * Hashes the supplied pin.
+     * Hashes the supplied pin
      */
     private function hashPin($pin)
     {
         /** @var HashFunctionInterface $hashFunction */
         $hashFunction = new BCryptHashFunction();
+
         return $hashFunction->hash($pin);
     }
 }

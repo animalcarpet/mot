@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApiTest\Model\Operation;
 
 use Doctrine\ORM\EntityManager;

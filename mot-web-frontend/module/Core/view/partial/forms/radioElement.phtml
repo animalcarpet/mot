@@ -14,7 +14,7 @@ $label = isset($label) ? $label : $option;
 $escapeLabel = isset($escapeLabel) ? $escapeLabel : true;
 ?>
 
-<label for="<?php echo $this->escapeHtmlAttr($id); ?>" class="<?php echo $this->escapeHtmlAttr($labelCssClass);?>" id="<?php echo $this->escapeHtmlAttr($labelId); ?>">
+<label for="<?php echo $this->escapeHtmlAttr($id); ?>" class="<?php echo $this->escapeHtmlAttr($labelCssClass); ?>" id="<?php echo $this->escapeHtmlAttr($labelId); ?>">
     <input
         type="radio"
         id="<?php echo $this->escapeHtmlAttr($id); ?>"
@@ -24,7 +24,7 @@ $escapeLabel = isset($escapeLabel) ? $escapeLabel : true;
         name="<?php echo $this->escapeHtmlAttr($name); ?>"
         value="<?php echo $this->escapeHtmlAttr($value); ?>"
         <?php if ($required) : ?>required<?php endif; ?>/>
-    <?php if($escapeLabel): ?>
+    <?php if ($escapeLabel): ?>
         <?php echo $this->escapeHtml($label) ?>
     <?php else: ?>
         <?php echo $label ?>

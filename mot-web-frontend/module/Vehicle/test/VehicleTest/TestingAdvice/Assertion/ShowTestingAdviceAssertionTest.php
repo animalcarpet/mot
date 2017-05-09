@@ -2,8 +2,6 @@
 
 namespace VehicleTest\TestingAdvice\Assertion;
 
-use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\VehicleTestingData\TestingAdvice;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Domain\MotTestType;
@@ -23,7 +21,7 @@ class ShowTestingAdviceAssertionTest extends \PHPUnit_Framework_TestCase
     public function test_isGranted_returnsTrue_forStandardMotTestTypeCode($motTestTypeCode)
     {
         $vehicleService = XMock::of(VehicleService::class);
-        $vehicleService->method("getTestingAdvice")->willReturn(new TestingAdvice());
+        $vehicleService->method('getTestingAdvice')->willReturn(new TestingAdvice());
 
         $assertion = new ShowTestingAdviceAssertion($vehicleService);
         $this->assertTrue($assertion->isGranted(1, $motTestTypeCode));
@@ -32,9 +30,9 @@ class ShowTestingAdviceAssertionTest extends \PHPUnit_Framework_TestCase
     public function standardMotTestTypeCode()
     {
         return [
-            [ MotTestTypeCode::NORMAL_TEST ],
-            [ MotTestTypeCode::RE_TEST ],
-            [ MotTestTypeCode::MYSTERY_SHOPPER ],
+            [MotTestTypeCode::NORMAL_TEST],
+            [MotTestTypeCode::RE_TEST],
+            [MotTestTypeCode::MYSTERY_SHOPPER],
         ];
     }
 
@@ -44,7 +42,7 @@ class ShowTestingAdviceAssertionTest extends \PHPUnit_Framework_TestCase
     public function test_isGranted_returnFalse_whenTestingAdviceNotFound($motTestTypeCode)
     {
         $vehicleService = XMock::of(VehicleService::class);
-        $vehicleService->method("getTestingAdvice")->willThrowException($this->getClientException(Response::STATUS_CODE_404));
+        $vehicleService->method('getTestingAdvice')->willThrowException($this->getClientException(Response::STATUS_CODE_404));
 
         $assertion = new ShowTestingAdviceAssertion($vehicleService);
         $this->assertFalse($assertion->isGranted(1, $motTestTypeCode));
@@ -55,7 +53,7 @@ class ShowTestingAdviceAssertionTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(ClientException::class);
 
         $vehicleService = XMock::of(VehicleService::class);
-        $vehicleService->method("getTestingAdvice")->willThrowException($this->getClientException(Response::STATUS_CODE_500));
+        $vehicleService->method('getTestingAdvice')->willThrowException($this->getClientException(Response::STATUS_CODE_500));
 
         $assertion = new ShowTestingAdviceAssertion($vehicleService);
         $this->assertFalse($assertion->isGranted(1, MotTestTypeCode::NORMAL_TEST));
@@ -67,7 +65,7 @@ class ShowTestingAdviceAssertionTest extends \PHPUnit_Framework_TestCase
     public function test_isGranted_returnFalse_forNonStandardMotTestTypeCode($motTestTypeCode)
     {
         $vehicleService = XMock::of(VehicleService::class);
-        $vehicleService->expects($this->exactly(0))->method("getTestingAdvice");
+        $vehicleService->expects($this->exactly(0))->method('getTestingAdvice');
 
         $assertion = new ShowTestingAdviceAssertion($vehicleService);
         $this->assertFalse($assertion->isGranted(1, $motTestTypeCode));
@@ -88,8 +86,8 @@ class ShowTestingAdviceAssertionTest extends \PHPUnit_Framework_TestCase
     private function getClientException($statusCode)
     {
         $response = XMock::of(ResponseInterface::class);
-        $response->method("getStatusCode")->willReturn($statusCode);
+        $response->method('getStatusCode')->willReturn($statusCode);
 
-        return new ClientException("SWW", XMock::of(RequestInterface::class), $response);
+        return new ClientException('SWW', XMock::of(RequestInterface::class), $response);
     }
 }

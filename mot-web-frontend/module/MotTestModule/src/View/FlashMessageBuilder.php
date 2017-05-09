@@ -4,13 +4,14 @@ namespace Dvsa\Mot\Frontend\MotTestModule\View;
 
 /**
  * Helper class for building flash messages that contains html tags and part of the data needs to be escaped before
- * adding it to the flashManager and displaying in the view
+ * adding it to the flashManager and displaying in the view.
  */
 class FlashMessageBuilder
 {
     /**
      * @param $defectType
      * @param $defectDetail
+     *
      * @return string
      */
     public static function defectAddedSuccessfully($defectType, $defectDetail)
@@ -20,6 +21,7 @@ class FlashMessageBuilder
 
     /**
      * @param $defectDetail
+     *
      * @return string
      */
     public static function manualAdvisoryAddedSuccessfully($defectDetail)
@@ -30,6 +32,7 @@ class FlashMessageBuilder
     /**
      * @param $type
      * @param $defectDetail
+     *
      * @return string
      */
     public static function defectEditedSuccessfully($type, $defectDetail)
@@ -40,6 +43,7 @@ class FlashMessageBuilder
     /**
      * @param $defectType
      * @param $defectDescription
+     *
      * @return string
      */
     public static function defectRemovedSuccessfully($defectType, $defectDescription)
@@ -50,6 +54,7 @@ class FlashMessageBuilder
     /**
      * @param $defectType
      * @param $defectDescription
+     *
      * @return string
      */
     public static function defectRepairedSuccessfully($defectType, $defectDescription)
@@ -60,6 +65,7 @@ class FlashMessageBuilder
     /**
      * @param $defectType
      * @param $defectDescription
+     *
      * @return string
      */
     public static function defectRepairedUnsuccessfully($defectType, $defectDescription)
@@ -70,6 +76,7 @@ class FlashMessageBuilder
     /**
      * @param $defectType
      * @param $defectDescription
+     *
      * @return string
      */
     public static function undoDefectRepairSuccessfully($defectType, $defectDescription)
@@ -80,6 +87,7 @@ class FlashMessageBuilder
     /**
      * @param $defectType
      * @param $defectDescription
+     *
      * @return string
      */
     public static function undoDefectRepairUnsuccessfully($defectType, $defectDescription)

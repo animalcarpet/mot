@@ -1,13 +1,12 @@
 <?php
 
 namespace DvsaAuthenticationTest\IdentityFactory;
+
 use Doctrine\Common\Cache\Cache;
 use DvsaAuthentication\CacheableIdentity;
 use DvsaAuthentication\Identity;
 use DvsaAuthentication\IdentityFactory;
 use DvsaAuthentication\IdentityFactory\CacheableIdentityFactory;
-use DvsaCommon\Enum\PersonAuthType;
-use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
 
@@ -233,6 +232,6 @@ class CacheableIdentityFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private function getCacheKey()
     {
-        return sha1(self::EXAMPLE_TOKEN) . '_identity';
+        return sha1(self::EXAMPLE_TOKEN).'_identity';
     }
 }

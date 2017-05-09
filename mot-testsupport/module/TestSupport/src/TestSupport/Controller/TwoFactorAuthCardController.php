@@ -3,7 +3,6 @@
 namespace TestSupport\Controller;
 
 use TestSupport\Service\TwoFactorAuthCardService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 
 class TwoFactorAuthCardController extends BaseTestSupportRestfulController
 {

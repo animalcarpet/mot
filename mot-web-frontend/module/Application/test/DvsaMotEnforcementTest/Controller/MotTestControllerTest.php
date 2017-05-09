@@ -30,9 +30,7 @@ use DvsaMotTestTest\Controller\AbstractDvsaMotTestTestCase;
 use DvsaMotTestTest\TestHelper\Fixture;
 
 /**
- * Class MotTestControllerTest
- *
- * @package DvsaMotEnforcementTest\Controller
+ * Class MotTestControllerTest.
  */
 class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 {
@@ -74,6 +72,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -85,6 +84,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                 ->method('getDvsaVehicleByIdAndVersion')
                 ->willReturn(new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true)));
         }
+
         return $this->mockVehicleServiceClient;
     }
 
@@ -106,7 +106,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test startInspection action, happy path
+     * Test startInspection action, happy path.
      */
     public function testStartInspectionAction()
     {
@@ -117,19 +117,18 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Throw an Exception from the first API call to fetch the mot data
+     * Throw an Exception from the first API call to fetch the mot data.
      */
     public function testStartInspectionActionMotFetchException()
     {
         $this->setupAuthorizationService([PermissionInSystem::MOT_TEST_REINSPECTION_PERFORM]);
-
 
         $this->getResponseForAction('startInspection', ['motTestNumber' => 1]);
         $this->assertRedirectLocation2('/mot-test/1');
     }
 
     /**
-     * Throw an Exception on the second API request: posting the new mot data
+     * Throw an Exception on the second API request: posting the new mot data.
      */
     public function testStartInspectionActionExceptionOnPost()
     {
@@ -140,7 +139,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Happy path for differencesFoundBetweenTestsAction GET
+     * Happy path for differencesFoundBetweenTestsAction GET.
      */
     public function testDifferencesFoundBetweenTestsAction()
     {
@@ -225,8 +224,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $reasonForAbort = 'Aborted by VE for unit test';
 
         $expectedResultData = [
-            "status" => $status,
-            "reasonForTerminationComment" => $reasonForAbort,
+            'status' => $status,
+            'reasonForTerminationComment' => $reasonForAbort,
         ];
 
         $restClientMock = $this->getRestClientMockForServiceManager();
@@ -247,7 +246,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Prove that when a RestApplicationException occurs we get a flash message
+     * Prove that when a RestApplicationException occurs we get a flash message.
      */
     public function testRequestMotTestDataWithError()
     {
@@ -260,7 +259,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Prove that currently known routes map correctly to a test type
+     * Prove that currently known routes map correctly to a test type.
      */
     public function testGetRouteForMotTestTypeMustPass()
     {
@@ -293,7 +292,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Prove that unknown types get an exception
+     * Prove that unknown types get an exception.
      *
      * @return array
      */
@@ -316,14 +315,14 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
             } catch (\Exception $e) {
                 $this->assertEquals(
                     $e->getMessage(),
-                    'Unknown inspection report type: ' . $type
+                    'Unknown inspection report type: '.$type
                 );
             }
         }
     }
 
     /**
-     * Test the display of the comparison screen after a reinspection test
+     * Test the display of the comparison screen after a reinspection test.
      */
     public function testDifferencesFoundBetweenTests()
     {
@@ -335,7 +334,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test the display of the comparison screen after a reinspection test when the id is wrong
+     * Test the display of the comparison screen after a reinspection test when the id is wrong.
      */
     public function testDifferencesFoundBetweenTestsWrongMotTestNumber()
     {
@@ -351,7 +350,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test the Post of the comparison screen after a reinspection test
+     * Test the Post of the comparison screen after a reinspection test.
      */
     public function testDifferencesFoundBetweenTestsPostData()
     {
@@ -366,7 +365,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test the Post of the comparison screen after a reinspection test with error
+     * Test the Post of the comparison screen after a reinspection test with error.
      */
     public function testDifferencesFoundBetweenTestsPostDataThrowError()
     {
@@ -380,8 +379,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                         'score' => 3,
                         'decision' => 0,
                         'category' => 0,
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
         $restController->expects($this->at(0))
@@ -397,7 +396,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test the display of the comparison screen from the compare of two test
+     * Test the display of the comparison screen from the compare of two test.
      */
     public function testMotTestStartCompare()
     {
@@ -415,7 +414,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test the display of the comparison screen from the compare of two test when the id is wrong
+     * Test the display of the comparison screen from the compare of two test when the id is wrong.
      */
     public function testMotTestStartCompareWrongMotTestNumber()
     {
@@ -438,7 +437,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test the Post of the comparaison screen from the compare of two test
+     * Test the Post of the comparaison screen from the compare of two test.
      */
     public function testMotTestStartComparePostData()
     {
@@ -454,7 +453,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * Test the Post of the comparison screen from the compare of two test with error
+     * Test the Post of the comparison screen from the compare of two test with error.
      */
     public function testMotTestStartComparePostDataThrowError()
     {
@@ -468,8 +467,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                         'score' => 3,
                         'decision' => 0,
                         'category' => 0,
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
         $restController->expects($this->at(0))
@@ -493,13 +492,13 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                 'motTests' => [
                     '1' => [
                         'testType' => 'EN',
-                    ]
+                    ],
                 ],
                 'enforcementResult' => [
                     'id' => 1,
-                    'motTestInspection' => 1
-                ]
-            ]
+                    'motTestInspection' => 1,
+                ],
+            ],
         ];
     }
 
@@ -507,7 +506,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     {
         return [
             'data' => [
-            ]
+            ],
         ];
     }
 
@@ -516,9 +515,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $motTest = $this->getTestMotData();
 
         return [
-            "data" =>
-                [
-                    0 => $motTest
+            'data' => [
+                    0 => $motTest,
                 ],
         ];
     }
@@ -526,7 +524,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     protected function getTestMotRestData()
     {
         $motTest = $this->getTestMotData();
-        return ["data" => $motTest];
+
+        return ['data' => $motTest];
     }
 
     protected function getTestMotData()
@@ -564,21 +563,21 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $tester = (new PersonDto())->setUsername('tester1');
 
         $motTest = [
-            "motTestNumber" => 1,
-            "vehicle" => $vehicle, // $vehicleData,
-            "vehicleTestingStation" => $vehicleTestStation,
-            "tester" => $tester,
-            "odometerReading" => 1045,
-            "fuelType" => $fuelType,
-            "startedDate" => '2014-02-05T10:28:00Z',
-            "completedDate" => "",
-            "odometerValue" => '1234',
-            "odometerUnit" => 'Km',
-            "reasons_for_rejection" => [['rfr-id' => 1], ['rfr-id' => 2]],
-            "break_test_results" => [['break-result-id' => 1]],
-            "hasRegistration" => true,
-            "testType" => MotTestTypeCode::NORMAL_TEST,
-            "document" => 1
+            'motTestNumber' => 1,
+            'vehicle' => $vehicle, // $vehicleData,
+            'vehicleTestingStation' => $vehicleTestStation,
+            'tester' => $tester,
+            'odometerReading' => 1045,
+            'fuelType' => $fuelType,
+            'startedDate' => '2014-02-05T10:28:00Z',
+            'completedDate' => '',
+            'odometerValue' => '1234',
+            'odometerUnit' => 'Km',
+            'reasons_for_rejection' => [['rfr-id' => 1], ['rfr-id' => 2]],
+            'break_test_results' => [['break-result-id' => 1]],
+            'hasRegistration' => true,
+            'testType' => MotTestTypeCode::NORMAL_TEST,
+            'document' => 1,
         ];
 
         return $motTest;
@@ -603,8 +602,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     {
         $errors = [
             [
-                'displayMessage' => $displayMessage
-            ]
+                'displayMessage' => $displayMessage,
+            ],
         ];
         $restException = new RestApplicationException('', 'null', new \Exception('REST ERROR'), 0, $errors);
 

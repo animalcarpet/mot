@@ -7,7 +7,7 @@ use Organisation\Factory\Controller\RoleControllerFactory;
 
 return [
     'factories' => [
-        RoleController::class                        => RoleControllerFactory::class,
-        MotTestLogController::class                  => MotTestLogControllerFactory::class
+        RoleController::class => RoleControllerFactory::class,
+        MotTestLogController::class => MotTestLogControllerFactory::class,
     ],
 ];

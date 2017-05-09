@@ -2,8 +2,6 @@
 
 namespace Organisation;
 
-use Zend\Loader\ClassMapAutoloader;
-use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
@@ -21,7 +19,7 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     /**
@@ -36,6 +34,6 @@ class Module implements
      */
     public function getControllerConfig()
     {
-        return include __DIR__ . '/config/controllers.config.php';
+        return include __DIR__.'/config/controllers.config.php';
     }
 }

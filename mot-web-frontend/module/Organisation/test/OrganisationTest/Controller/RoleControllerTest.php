@@ -16,7 +16,6 @@ use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Validator\UsernameValidator;
 use DvsaCommonTest\Bootstrap;
 use Organisation\Controller\RoleController;
-use SebastianBergmann\Exporter\Exception;
 
 /**
  * Testing frontend controller for assigning a role to a person at organisation (Authorised Examiner) level.
@@ -24,7 +23,7 @@ use SebastianBergmann\Exporter\Exception;
 class RoleControllerTest extends AbstractFrontendControllerTestCase
 {
     const VIEW_MODEL_CLASS_PATH = 'Zend\View\Model\ViewModel';
-    const MAX_USERNAME_LENGTH   = 50;
+    const MAX_USERNAME_LENGTH = 50;
 
     private $mapperFactoryMock;
     private $roleMapperMock;
@@ -32,8 +31,8 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
     private $authorisedExaminerMapperMock;
     private $organisationPositionMapperMock;
     private $organisationId = 1;
-    private $personId       = 1;
-    private $roleId         = 2;
+    private $personId = 1;
+    private $roleId = 2;
 
     public function setUp()
     {
@@ -42,15 +41,15 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
         $serviceManager->setAllowOverride(true);
 
         $usernameValidatorMock = $this->createUsernameValidatorMock(true);
-        $htmlPurifier          = $this->getMock('HTMLPurifier');
-        $this->controller      = new RoleController($usernameValidatorMock, $htmlPurifier);
+        $htmlPurifier = $this->getMock('HTMLPurifier');
+        $this->controller = new RoleController($usernameValidatorMock, $htmlPurifier);
         $this->controller->setServiceLocator($serviceManager);
 
         parent::setUp();
 
-        $this->roleMapperMock                 = $this->getRoleMapperMock();
-        $this->personMapperMock               = $this->getPersonMapperMock();
-        $this->authorisedExaminerMapperMock   = $this->getAuthorisedExaminerMapperMock();
+        $this->roleMapperMock = $this->getRoleMapperMock();
+        $this->personMapperMock = $this->getPersonMapperMock();
+        $this->authorisedExaminerMapperMock = $this->getAuthorisedExaminerMapperMock();
         $this->organisationPositionMapperMock = $this->getOrganisationPositionMapperMock();
 
         $this->mapperFactoryMock = $this->getMapperFactoryMock(
@@ -94,14 +93,14 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
     public function testListUserRolesActionCanBeAccessed()
     {
         $response = $this->getResponseForAction('listUserRoles', [
-            'id'       => $this->organisationId,
+            'id' => $this->organisationId,
             'personId' => $this->personId,
         ]);
         $this->assertEquals(self::HTTP_OK_CODE, $response->getStatusCode());
     }
 
     /**
-     * Test the structure of the view model returned in the list-user-roles action
+     * Test the structure of the view model returned in the list-user-roles action.
      */
     public function testListUserRolesActionReturnsViewModel()
     {
@@ -125,11 +124,11 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
         $response = $this->getResponseForAction(
             'confirmNomination',
             [
-                'id'        => $this->organisationId,
+                'id' => $this->organisationId,
                 'nomineeId' => $this->personId,
-                'roleId'    => $this->roleId,
+                'roleId' => $this->roleId,
                 'displayNotification' => true,
-                'twoFactorEnabled'    => true
+                'twoFactorEnabled' => true,
             ]
         );
 
@@ -141,9 +140,9 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
         $response = $this->getResponseForAction(
             'remove',
             [
-                'id'       => $this->organisationId,
+                'id' => $this->organisationId,
                 'personId' => $this->personId,
-                'roleId'   => $this->roleId,
+                'roleId' => $this->roleId,
             ]
         );
         $this->assertEquals(self::HTTP_OK_CODE, $response->getStatusCode());
@@ -166,7 +165,7 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
             ->willReturn($isValid);
 
         if (!$isValid) {
-            $messages = ['stringLengthTooLong' => sprintf("Username must be less than %s characters long.",
+            $messages = ['stringLengthTooLong' => sprintf('Username must be less than %s characters long.',
                 self::MAX_USERNAME_LENGTH)];
 
             $usernameValidatorMock
@@ -299,9 +298,9 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
     private function getViewModelForIndexAction()
     {
         return [
-            'form'         => [],
-            'id'           => null,
-            'personId'     => '',
+            'form' => [],
+            'id' => null,
+            'personId' => '',
             'userNotFound' => false,
         ];
     }

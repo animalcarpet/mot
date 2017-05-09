@@ -6,15 +6,15 @@ $name = isset($name) ? $name : '';
 $required = isset($required) ? $required : false;
 $option1 = isset($option1) ? $option1 : '';
 $option2 = isset($option2) ? $option2 : '';
-$labelId1 = isset($labelId1) ? $labelId1 : ('radioOption' . ucfirst($name) . $option1);
-$labelId2 = isset($labelId2) ? $labelId2 : ('radioOption' . ucfirst($name) . $option2);
-$id1 = $this->withDefault($name . $option1)->getValue($id1);
-$id2 = $this->withDefault($name . $option2)->getValue($id2);
+$labelId1 = isset($labelId1) ? $labelId1 : ('radioOption'.ucfirst($name).$option1);
+$labelId2 = isset($labelId2) ? $labelId2 : ('radioOption'.ucfirst($name).$option2);
+$id1 = $this->withDefault($name.$option1)->getValue($id1);
+$id2 = $this->withDefault($name.$option2)->getValue($id2);
 $option1Value = isset($option1Value) ? $option1Value : $option1;
 $option2Value = isset($option2Value) ? $option2Value : $option2;
 $label1CssClass = isset($label1CssClass) ? $label1CssClass : null;
 $label2CssClass = isset($label2CssClass) ? $label2CssClass : null;
-$escFieldsetCssClassString = isset($fieldsetCssClass) ? "class='" . $this->escapeHtmlAttr($fieldsetCssClass) . "'" : '';
+$escFieldsetCssClassString = isset($fieldsetCssClass) ? "class='".$this->escapeHtmlAttr($fieldsetCssClass)."'" : '';
 
 ?>
 
@@ -24,13 +24,13 @@ $escFieldsetCssClassString = isset($fieldsetCssClass) ? "class='" . $this->escap
         <?php echo $this->partial(
             'partial/forms/radioElement.phtml',
             [
-                'id'        => $id1,
-                'name'      => $name,
-                'value'     => $option1Value,
+                'id' => $id1,
+                'name' => $name,
+                'value' => $option1Value,
                 'isChecked' => $option1Value === $value,
-                'label'     => $option1,
-                'labelId'   => $labelId1,
-                'required'  => $required,
+                'label' => $option1,
+                'labelId' => $labelId1,
+                'required' => $required,
                 'labelCssClass' => $label1CssClass,
             ]
         );
@@ -38,13 +38,13 @@ $escFieldsetCssClassString = isset($fieldsetCssClass) ? "class='" . $this->escap
         echo $this->partial(
             'partial/forms/radioElement.phtml',
             [
-                'id'        => $id2,
-                'name'      => $name,
-                'value'     => $option2Value,
+                'id' => $id2,
+                'name' => $name,
+                'value' => $option2Value,
                 'isChecked' => $option2Value === $value,
-                'label'     => $option2,
-                'labelId'   => $labelId2,
-                'required'  => $required,
+                'label' => $option2,
+                'labelId' => $labelId2,
+                'required' => $required,
                 'labelCssClass' => $label2CssClass,
             ]
         );

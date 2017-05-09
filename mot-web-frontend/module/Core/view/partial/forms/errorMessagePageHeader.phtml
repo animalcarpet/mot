@@ -11,11 +11,11 @@ if (!empty($messages)) :
 
                         <?php if ($listAll): ?>
                             <?php foreach ($messageGroup as $escMessage) : ?>
-                                <li><?php echo $escMessage; // should be escaped in controller  ?></li>
+                                <li><?php echo $escMessage; // should be escaped in controller?></li>
                             <?php endforeach; ?>
                         <?php
                         else:
-                            echo '<li>' . array_shift($messageGroup) . '</li>';
+                            echo '<li>'.array_shift($messageGroup).'</li>';
                         endif; ?>
                     <?php endforeach; ?>
 

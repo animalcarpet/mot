@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\TestQualityInformation\ViewModel;
 
 use Core\Formatting\ComponentFailRateFormatter;
@@ -24,15 +25,14 @@ class ComponentStatisticsTable
     private $groupDescription;
     private $groupCode;
     private $averageVehicleAge;
-    /** @var boolean */
+    /** @var bool */
     private $isNationalAverageAvailable;
 
     public function __construct(
         ComponentBreakdownDto $breakdownDto,
         NationalComponentStatisticsDto $nationalComponentStatisticsDto,
         $groupDescription, $groupCode
-    )
-    {
+    ) {
         $this->isNationalAverageAvailable = $nationalComponentStatisticsDto->getReportStatus()->getIsCompleted();
         $motTestingPerformanceDto = $breakdownDto->getGroupPerformance();
         $this->setTestCount($motTestingPerformanceDto->getTotal());
@@ -104,6 +104,7 @@ class ComponentStatisticsTable
     /**
      * @param ComponentDto[] $userComponents
      * @param ComponentDto[] $nationalComponents
+     *
      * @return ComponentStatisticsRow[]
      */
     private function createComponentRows($userComponents, $nationalComponents)
@@ -130,13 +131,12 @@ class ComponentStatisticsTable
         return $rows;
     }
 
-
     /**
      * @return string
      */
     public function getGroupName()
     {
-        return 'Group ' . $this->groupCode;
+        return 'Group '.$this->groupCode;
     }
 
     /**
@@ -149,11 +149,13 @@ class ComponentStatisticsTable
 
     /**
      * @param mixed $averageVehicleAge
+     *
      * @return ComponentStatisticsTable
      */
     public function setAverageVehicleAge($averageVehicleAge)
     {
         $this->averageVehicleAge = $averageVehicleAge;
+
         return $this;
     }
 
@@ -190,8 +192,9 @@ class ComponentStatisticsTable
     }
 
     /**
-     * @param int $componentId
+     * @param int            $componentId
      * @param ComponentDto[] $userComponents
+     *
      * @return ComponentDto
      */
     private function getTesterDataByComponentId($componentId, $userComponents)
@@ -209,12 +212,13 @@ class ComponentStatisticsTable
      * @param string $value
      * @param string $defaultValue
      * @param string $appendIfNotEmpty
+     *
      * @return string
      */
     protected function getNotEmptyText($value, $defaultValue = self::TEXT_EMPTY, $appendIfNotEmpty = '')
     {
         if (!is_null($value)) {
-            return $value . $appendIfNotEmpty;
+            return $value.$appendIfNotEmpty;
         } else {
             return $defaultValue;
         }
@@ -222,6 +226,7 @@ class ComponentStatisticsTable
 
     /**
      * @param MotTestingPerformanceDto $motTestingPerformanceDto
+     *
      * @return int|string
      */
     protected function determineVehicleAge($motTestingPerformanceDto)
@@ -230,7 +235,7 @@ class ComponentStatisticsTable
 
         if ($motTestingPerformanceDto->getIsAverageVehicleAgeAvailable()) {
             $age = VehicleAgeFormatter::calculateVehicleAge($motTestingPerformanceDto->getAverageVehicleAgeInMonths());
-            $age = $age . ' ' . VehicleAgeFormatter::getYearSuffix($age);
+            $age = $age.' '.VehicleAgeFormatter::getYearSuffix($age);
         }
 
         return $age;
@@ -238,6 +243,7 @@ class ComponentStatisticsTable
 
     /**
      * @param float $number
+     *
      * @return int|string
      */
     protected function numberFormat($number)

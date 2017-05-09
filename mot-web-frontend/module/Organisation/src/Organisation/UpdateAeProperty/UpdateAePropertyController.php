@@ -16,8 +16,7 @@ class UpdateAePropertyController extends AbstractAuthActionController implements
         UpdateAePropertyAction $updateAction,
         UpdateAePropertyReviewAction $reviewAction,
         UpdateAePropertyProcessBuilder $processBuilder
-    )
-    {
+    ) {
         $this->updateAction = $updateAction;
         $this->reviewAction = $reviewAction;
         $this->processBuilder = $processBuilder;

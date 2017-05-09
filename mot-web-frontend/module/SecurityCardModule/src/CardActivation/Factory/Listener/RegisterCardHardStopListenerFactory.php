@@ -2,12 +2,9 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Factory\Listener;
 
-
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Listener\RegisterCardHardStopListener;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaFeature\FeatureToggles;
-use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

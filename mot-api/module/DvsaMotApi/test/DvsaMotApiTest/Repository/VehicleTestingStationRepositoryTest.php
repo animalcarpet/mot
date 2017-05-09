@@ -7,12 +7,12 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class SiteRepositoryTest
+ * Class SiteRepositoryTest.
  */
-class SiteRepositoryTest extends AbstractServiceTestCase
+class VehicleTestingStationRepositoryTest extends AbstractServiceTestCase
 {
     /**
-     * Test the populated Vehicle Classes (not from the search)
+     * Test the populated Vehicle Classes (not from the search).
      */
     public function testGetVehicleClasses()
     {
@@ -36,7 +36,7 @@ class SiteRepositoryTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test the populated Types array is exactly as expected
+     * Test the populated Types array is exactly as expected.
      */
     public function testGetTypes()
     {
@@ -66,7 +66,7 @@ class SiteRepositoryTest extends AbstractServiceTestCase
     }
 
     /**
-     * Test the populated Vehicle Classes (not from the search)
+     * Test the populated Vehicle Classes (not from the search).
      */
     public function testStatuses()
     {
@@ -96,10 +96,8 @@ class SiteRepositoryTest extends AbstractServiceTestCase
 
         if ($name == 'types') {
             return $vtsRepository->getTypes();
-
         } elseif ($name == 'statuses') {
             return $vtsRepository->getStatuses();
-
         } elseif ($name == 'classes') {
             return $vtsRepository->getVehicleClasses();
         }

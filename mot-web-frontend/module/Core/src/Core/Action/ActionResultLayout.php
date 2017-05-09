@@ -24,6 +24,7 @@ class ActionResultLayout
     public function setPageLede($pageLede)
     {
         $this->pageLede = $pageLede;
+
         return $this;
     }
 
@@ -35,6 +36,7 @@ class ActionResultLayout
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $pageTitle;
+
         return $this;
     }
 
@@ -46,6 +48,7 @@ class ActionResultLayout
     public function setPageSubTitle($pageSubTitle)
     {
         $this->pageSubTitle = $pageSubTitle;
+
         return $this;
     }
 
@@ -57,12 +60,14 @@ class ActionResultLayout
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 
     public function setBreadcrumbs(array $breadcrumbs)
     {
         $this->breadcrumbs = $breadcrumbs;
+
         return $this;
     }
 
@@ -79,6 +84,7 @@ class ActionResultLayout
     public function setPageTertiaryTitle($pageTertiaryTitle)
     {
         $this->pageTertiaryTitle = $pageTertiaryTitle;
+
         return $this;
     }
 }

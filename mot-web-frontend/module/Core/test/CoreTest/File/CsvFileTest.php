@@ -26,7 +26,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
     {
         // GIVEN I have a CVS file with two headers
         $csv = new CsvFile();
-        $csv->setHeaders(["Header1", "Header2"]);
+        $csv->setHeaders(['Header1', 'Header2']);
 
         // WHEN I ask for number of columns
         $count = $csv->getColumnCount();
@@ -39,7 +39,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
     {
         // GIVEN I have a CVS file with a row with two columns
         $csv = new CsvFile();
-        $csv->addRow(["Value1", "Value2"]);
+        $csv->addRow(['Value1', 'Value2']);
 
         // WHEN I ask for number of columns
         $count = $csv->getColumnCount();
@@ -114,8 +114,8 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
         // GIVEN I have a CVS file with only values (no headers)
         $csv = new CsvFile();
 
-        $csv->addRow(["Value1", "Value2"]);
-        $csv->addRow(["Value3", "Value4"]);
+        $csv->addRow(['Value1', 'Value2']);
+        $csv->addRow(['Value3', 'Value4']);
         // WHEN I generate it's content
         $content = $csv->getContent();
 
@@ -127,20 +127,20 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
     {
         // GIVEN I have a CVS file with headers
         $csv = new CsvFile();
-        $csv->setHeaders(["Header1", "Header2"]);
+        $csv->setHeaders(['Header1', 'Header2']);
 
         // WHEN I generate it's content
         $content = $csv->getContent();
 
         // THEN I get headers first
-        $this->assertEquals("\"Header1\",\"Header2\"", $content);
+        $this->assertEquals('"Header1","Header2"', $content);
     }
 
     public function test_getContent_surroundsStringsWithQuotationMarks()
     {
         // GIVEN I have a CVS file with a string value
         $csv = new CsvFile();
-        $csv->addRow(["Lorem ipsum"]);
+        $csv->addRow(['Lorem ipsum']);
 
         // WHEN I transform it into content
         $content = $csv->getContent();
@@ -153,13 +153,13 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
     {
         // GIVEN I have a CVS file with a string value with quotation marks inside
         $csv = new CsvFile();
-        $csv->addRow(["The \"Game of Thrones\" is a comedy TV series."]);
+        $csv->addRow(['The "Game of Thrones" is a comedy TV series.']);
 
         // WHEN I transform it into content
         $content = $csv->getContent();
 
         // THEN the quotation marks are preceded with quotation marks
-        $this->assertEquals("\"The \"\"Game of Thrones\"\" is a comedy TV series.\"", $content);
+        $this->assertEquals('"The ""Game of Thrones"" is a comedy TV series."', $content);
     }
 
     public function test_getContent_printsBooleanCorrectly()
@@ -172,7 +172,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
         $content = $csv->getContent();
 
         // THEN the values are printed as plain unquoted text
-        $this->assertEquals("false,true", $content);
+        $this->assertEquals('false,true', $content);
     }
 
     public function test_getContent_printsIntegersCorrectly()
@@ -185,7 +185,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
         $content = $csv->getContent();
 
         // THEN the values are printed as plain unquoted text
-        $this->assertEquals("1,5", $content);
+        $this->assertEquals('1,5', $content);
     }
 
     public function test_getContent_printsDoubleCorrectly()
@@ -198,7 +198,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
         $content = $csv->getContent();
 
         // THEN the values are printed as plain unquoted text
-        $this->assertEquals("10.05,5.663", $content);
+        $this->assertEquals('10.05,5.663', $content);
     }
 
     public function test_getContent_printsNullAsAnEmptyCell()
@@ -211,21 +211,21 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
         $content = $csv->getContent();
 
         // THEN the values are printed as empty text
-        $this->assertEquals(",", $content);
+        $this->assertEquals(',', $content);
     }
 
     public function test_getSizeInBytes_calculatesFileSize()
     {
         // GIVEN I have a CVS file with some values
         $csv = new CsvFile();
-        $csv->setHeaders(["Header1"]);
-        $csv->addRow(["Value1"]);
+        $csv->setHeaders(['Header1']);
+        $csv->addRow(['Value1']);
 
         // WHEN I get it's file size
         $fileSize = $csv->getSizeInBytes();
 
         // THEN the values are printed as plain unquoted text
-        $this->assertEquals(strlen("\"Header1\",\"Value1\""), $fileSize);
+        $this->assertEquals(strlen('"Header1","Value1"'), $fileSize);
     }
 
     /**
@@ -252,7 +252,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
         $csv = new CsvFile();
 
         // WHEN I try to set an invalid value (e.g. object) as a header
-        $csv->setHeaders(["string", 1, 0.9, new Guid()]);
+        $csv->setHeaders(['string', 1, 0.9, new Guid()]);
 
         // THEN an exception is thrown
     }
@@ -296,7 +296,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
         $csv = new CsvFile();
 
         // WHEN I try to add row with invalid value (e.g. object)
-        $csv->addRow(["string", 1, 0.9, new Guid()]);
+        $csv->addRow(['string', 1, 0.9, new Guid()]);
 
         // THEN an exception is thrown
     }
@@ -305,13 +305,13 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
     {
         // GIVEN I have a CSV file with headers
         $csv = new CsvFile();
-        $csv->setHeaders(["A", "B", "C"]);
+        $csv->setHeaders(['A', 'B', 'C']);
 
         // WHEN I request a header
         $header = $csv->getHeader(1);
 
         // THEN I am given it
-        $this->assertEquals("B", $header);
+        $this->assertEquals('B', $header);
     }
 
     /**
@@ -335,7 +335,7 @@ class CsvFileTest extends \PHPUnit_Framework_TestCase
     {
         // GIVEN I have a CSV file with headers
         $csv = new CsvFile();
-        $csv->setHeaders(["A", "B", "C"]);
+        $csv->setHeaders(['A', 'B', 'C']);
 
         // WHEN I request a header that doesn't exists
         $csv->getHeader(4);

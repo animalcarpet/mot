@@ -7,7 +7,7 @@ use OrganisationApi\Service\AuthorisedExaminerService;
 use PersonApi\Controller\AuthorisedExaminerController;
 
 /**
- * Unit tests for AuthorisedExaminerController
+ * Unit tests for AuthorisedExaminerController.
  */
 class AuthorisedExaminerControllerTest extends AbstractPersonControllerTestCase
 {

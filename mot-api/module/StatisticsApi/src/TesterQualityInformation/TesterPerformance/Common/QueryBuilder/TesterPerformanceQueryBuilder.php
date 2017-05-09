@@ -1,6 +1,6 @@
 <?php
-namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryBuilder;
 
+namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryBuilder;
 
 class TesterPerformanceQueryBuilder
 {

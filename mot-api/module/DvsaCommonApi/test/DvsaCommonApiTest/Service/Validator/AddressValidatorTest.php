@@ -6,7 +6,7 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonApi\Service\Validator\AddressValidator;
 
 /**
- * I'm building my professional career on comments
+ * I'm building my professional career on comments.
  */
 class AddressValidatorTest extends AbstractServiceTestCase
 {

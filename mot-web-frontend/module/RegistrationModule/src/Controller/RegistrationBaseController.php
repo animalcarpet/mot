@@ -13,5 +13,4 @@ class RegistrationBaseController extends AbstractStepController
 {
     /** Registration journey's default subtitle */
     const DEFAULT_SUB_TITLE = 'Create an account';
-
 }

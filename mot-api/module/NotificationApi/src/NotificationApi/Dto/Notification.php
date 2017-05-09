@@ -1,14 +1,15 @@
 <?php
+
 namespace NotificationApi\Dto;
 
 /**
- * Data transfer object for Notification
+ * Data transfer object for Notification.
  */
 class Notification
 {
     /**
      * values from database `notification_template`
-     * These should be replaced with enums generated from codes _not_ use hardcoded ids
+     * These should be replaced with enums generated from codes _not_ use hardcoded ids.
      */
     const TEMPLATE_TESTER_APPLICATION_APPROVED = 1;
     const TEMPLATE_TESTER_APPLICATION_REJECTED = 2;
@@ -61,9 +62,9 @@ class Notification
     public function toArray()
     {
         return [
-            'template'  => $this->getTemplate(),
+            'template' => $this->getTemplate(),
             'recipient' => $this->getRecipient(),
-            'fields'    => $this->getFields()
+            'fields' => $this->getFields(),
         ];
     }
 
@@ -76,6 +77,7 @@ class Notification
     public function addField($key, $value)
     {
         $this->fields[$key] = $value;
+
         return $this;
     }
 
@@ -87,6 +89,7 @@ class Notification
     public function setFields($fields)
     {
         $this->fields = $fields;
+
         return $this;
     }
 
@@ -106,6 +109,7 @@ class Notification
     public function setRecipient($recipient)
     {
         $this->recipient = $recipient;
+
         return $this;
     }
 
@@ -125,6 +129,7 @@ class Notification
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 

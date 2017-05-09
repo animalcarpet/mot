@@ -50,10 +50,10 @@ return [
                     'history' => [
                         'type' => 'segment',
                         'options' => [
-                            'route'    => '/history',
+                            'route' => '/history',
                             'defaults' => [
                                 'controller' => EnforcementMotTestSearchController::class,
-                                'action'     => 'motTestSearchByVehicle',
+                                'action' => 'motTestSearchByVehicle',
                             ],
                         ],
                     ],
@@ -113,7 +113,7 @@ return [
                                         'action' => 'editMakeAndModel',
                                     ],
                                     'constraints' => [
-                                        "property" => implode("|", [UpdateMakeStep::NAME, UpdateModelStep::NAME, ReviewMakeAndModelStep::NAME]),
+                                        'property' => implode('|', [UpdateMakeStep::NAME, UpdateModelStep::NAME, ReviewMakeAndModelStep::NAME]),
                                     ],
                                 ],
                             ],
@@ -185,7 +185,7 @@ return [
                                         'action' => 'editMakeAndModel',
                                     ],
                                     'constraints' => [
-                                        "property" => implode("|", [UpdateMakeStep::NAME, UpdateModelStep::NAME, ReviewMakeAndModelStep::NAME]),
+                                        'property' => implode('|', [UpdateMakeStep::NAME, UpdateModelStep::NAME, ReviewMakeAndModelStep::NAME]),
                                     ],
                                 ],
                             ],
@@ -204,50 +204,50 @@ return [
                     'testing-advice' => [
                         'type' => 'segment',
                         'options' => [
-                            'route'    => '/testing-advice',
+                            'route' => '/testing-advice',
                             'defaults' => [
                                 'controller' => TestingAdviceController::class,
-                                'action'     => 'display',
+                                'action' => 'display',
                             ],
                         ],
                     ],
                     'mask' => [
                         'type' => 'segment',
                         'options' => [
-                            'route'    => '/enforcement/mask',
+                            'route' => '/enforcement/mask',
                             'defaults' => [
                                 'controller' => MaskVehicleController::class,
-                                'action'     => 'mask',
+                                'action' => 'mask',
                             ],
                         ],
                     ],
                     'masked-successfully' => [
                         'type' => 'segment',
                         'options' => [
-                            'route'    => '/enforcement/masked-successfully',
+                            'route' => '/enforcement/masked-successfully',
                             'defaults' => [
                                 'controller' => MaskVehicleController::class,
-                                'action'     => 'maskedSuccessfully',
+                                'action' => 'maskedSuccessfully',
                             ],
                         ],
                     ],
                     'unmask' => [
                         'type' => 'segment',
                         'options' => [
-                            'route'    => '/enforcement/unmask',
+                            'route' => '/enforcement/unmask',
                             'defaults' => [
                                 'controller' => UnmaskVehicleController::class,
-                                'action'     => 'unmask',
+                                'action' => 'unmask',
                             ],
                         ],
                     ],
                     'unmasked-successfully' => [
                         'type' => 'segment',
                         'options' => [
-                            'route'    => '/enforcement/unmasked-successfully',
+                            'route' => '/enforcement/unmasked-successfully',
                             'defaults' => [
                                 'controller' => UnmaskVehicleController::class,
-                                'action'     => 'unmaskedSuccessfully',
+                                'action' => 'unmaskedSuccessfully',
                             ],
                         ],
                     ],
@@ -297,27 +297,27 @@ return [
             'new-vehicle-make' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'    => '/make',
+                    'route' => '/make',
                     'defaults' => [
                         'controller' => MakeController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
             'new-vehicle-model' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'     => '/model',
+                    'route' => '/model',
                     'defaults' => [
                         'controller' => ModelController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
             'new-vehicle-engine' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'     => '/engine',
+                    'route' => '/engine',
                     'defaults' => [
                         'controller' => EngineController::class,
                         'action' => 'index',
@@ -327,7 +327,7 @@ return [
             'new-vehicle-class' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'    => '/class',
+                    'route' => '/class',
                     'defaults' => [
                         'controller' => ClassController::class,
                         'action' => 'index',
@@ -337,7 +337,7 @@ return [
             'new-vehicle-colour' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'    => '/colour',
+                    'route' => '/colour',
                     'defaults' => [
                         'controller' => ColourController::class,
                         'action' => 'index',
@@ -347,7 +347,7 @@ return [
             'new-vehicle-country-of-reg' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'    => '/country-of-registration',
+                    'route' => '/country-of-registration',
                     'defaults' => [
                         'controller' => CountryOfRegistrationController::class,
                         'action' => 'index',
@@ -357,7 +357,7 @@ return [
             'new-vehicle-first-use-date' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'    => '/first-use-date',
+                    'route' => '/first-use-date',
                     'defaults' => [
                         'controller' => DateOfFirstUseController::class,
                         'action' => 'index',
@@ -367,7 +367,7 @@ return [
             'new-vehicle-review' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'    => '/review',
+                    'route' => '/review',
                     'defaults' => [
                         'controller' => ReviewController::class,
                         'action' => 'index',
@@ -377,7 +377,7 @@ return [
             'new-vehicle-created-and-started' => [
                 'type' => 'segment',
                 'options' => [
-                    'route'    => '/created-and-started',
+                    'route' => '/created-and-started',
                     'defaults' => [
                         'controller' => ConfirmationController::class,
                         'action' => 'index',

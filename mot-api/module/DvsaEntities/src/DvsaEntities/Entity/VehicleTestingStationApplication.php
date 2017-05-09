@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\UUIDIdentityTrait;
 
 /**
- * VehicleTestingStationApplication
+ * VehicleTestingStationApplication.
  *
  * @ORM\Table(
  * name="application_site",
@@ -106,6 +106,7 @@ class VehicleTestingStationApplication
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -125,6 +126,7 @@ class VehicleTestingStationApplication
     public function setVehicleTestingStationDetails($vehicleTestStationDetails)
     {
         $this->vehicleTestingStationDetails = $vehicleTestStationDetails;
+
         return $this;
     }
 
@@ -144,6 +146,7 @@ class VehicleTestingStationApplication
     public function setDesignatedManager($designatedManager)
     {
         $this->designatedManager = $designatedManager;
+
         return $this;
     }
 

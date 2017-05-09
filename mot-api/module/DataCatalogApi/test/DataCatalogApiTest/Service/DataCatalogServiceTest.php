@@ -1,4 +1,5 @@
 <?php
+
 namespace DataCatalogApiTest\Service;
 
 use DvsaCommonTest\TestUtils\MockHandler;
@@ -10,14 +11,12 @@ use DvsaEntities\Entity\EnforcementDecisionScore;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class DataCatalogServiceTest
- *
- * @package DataCatalogApiTest\Service
+ * Class DataCatalogServiceTest.
  */
 class DataCatalogServiceTest extends AbstractServiceTestCase
 {
     /**
-     * Test DataCatalogService->getEnforcementDecisionData
+     * Test DataCatalogService->getEnforcementDecisionData.
      */
     public function testGetEnforcementDecisionData()
     {
@@ -76,34 +75,35 @@ class DataCatalogServiceTest extends AbstractServiceTestCase
     public function getExpectedEnforcementDecisionData()
     {
         $expectedData = [
-            "decisions"  => [
+            'decisions' => [
                 new EnforcementDecision(),
                 new EnforcementDecision(),
-                new EnforcementDecision()
+                new EnforcementDecision(),
             ],
-            "categories" => [
+            'categories' => [
                 new EnforcementDecisionCategory(),
                 new EnforcementDecisionCategory(),
                 new EnforcementDecisionCategory(),
-                new EnforcementDecisionCategory()
+                new EnforcementDecisionCategory(),
             ],
-            "outcomes"   => [
+            'outcomes' => [
                 new EnforcementDecisionOutcome(),
                 new EnforcementDecisionOutcome(),
                 new EnforcementDecisionOutcome(),
-                new EnforcementDecisionOutcome()
+                new EnforcementDecisionOutcome(),
             ],
-            "scores"     => [
+            'scores' => [
                 new EnforcementDecisionScore(),
                 new EnforcementDecisionScore(),
                 new EnforcementDecisionScore(),
-                new EnforcementDecisionScore()
-            ]
+                new EnforcementDecisionScore(),
+            ],
         ];
-        $expectedData["decisions"][0]->setId(1)->setDecision('Not applicable')->setPosition(1);
-        $expectedData["decisions"][1]->setId(2)->setDecision('Defect missed')->setPosition(2);
-        $expectedData["decisions"][2]->setId(3)->setDecision('Incorrect decision')->setPosition(3);
-        $expectedData["categories"][0]->setId(1)->setCategory('Not applicable')->setPosition(1);
+        $expectedData['decisions'][0]->setId(1)->setDecision('Not applicable')->setPosition(1);
+        $expectedData['decisions'][1]->setId(2)->setDecision('Defect missed')->setPosition(2);
+        $expectedData['decisions'][2]->setId(3)->setDecision('Incorrect decision')->setPosition(3);
+        $expectedData['categories'][0]->setId(1)->setCategory('Not applicable')->setPosition(1);
+
         return $expectedData;
     }
 
@@ -143,6 +143,6 @@ class DataCatalogServiceTest extends AbstractServiceTestCase
     {
         $mock->expects($this->once())
             ->method('assertGranted')
-            ->will($this->throwException(new \Exception("Auth not granted")));
+            ->will($this->throwException(new \Exception('Auth not granted')));
     }
 }

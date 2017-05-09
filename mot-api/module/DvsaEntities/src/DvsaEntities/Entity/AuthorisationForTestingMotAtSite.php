@@ -7,7 +7,7 @@ use DvsaCommon\Enum\AuthorisationForTestingMotAtSiteStatusCode;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * AuthorisationForTestingMotAtSite
+ * AuthorisationForTestingMotAtSite.
  *
  * @ORM\Table(name="auth_for_testing_mot_at_site")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\AuthorisationForTestingMotAtSiteRepository")
@@ -61,7 +61,7 @@ class AuthorisationForTestingMotAtSite extends Entity
     private $site;
 
     /**
-     * Set validFrom
+     * Set validFrom.
      *
      * @param \DateTime $validFrom
      *
@@ -75,7 +75,7 @@ class AuthorisationForTestingMotAtSite extends Entity
     }
 
     /**
-     * Get validFrom
+     * Get validFrom.
      *
      * @return \DateTime
      */
@@ -85,7 +85,7 @@ class AuthorisationForTestingMotAtSite extends Entity
     }
 
     /**
-     * Set expiryDate
+     * Set expiryDate.
      *
      * @param \DateTime $expiryDate
      *
@@ -99,7 +99,7 @@ class AuthorisationForTestingMotAtSite extends Entity
     }
 
     /**
-     * Get expiryDate
+     * Get expiryDate.
      *
      * @return \DateTime
      */
@@ -109,7 +109,7 @@ class AuthorisationForTestingMotAtSite extends Entity
     }
 
     /**
-     * Set vehicleClass
+     * Set vehicleClass.
      *
      * @param \DvsaEntities\Entity\VehicleClass $vehicleClass
      *
@@ -123,7 +123,7 @@ class AuthorisationForTestingMotAtSite extends Entity
     }
 
     /**
-     * Get vehicleClass
+     * Get vehicleClass.
      *
      * @return \DvsaEntities\Entity\VehicleClass
      */
@@ -133,7 +133,8 @@ class AuthorisationForTestingMotAtSite extends Entity
     }
 
     /**
-     * Set status
+     * Set status.
+     *
      * @param AuthorisationForTestingMotAtSiteStatus $status
      *
      * @return $this
@@ -146,7 +147,7 @@ class AuthorisationForTestingMotAtSite extends Entity
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return AuthorisationForTestingMotAtSiteStatus
      */

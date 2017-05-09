@@ -10,7 +10,7 @@ $days = [
     4 => 'Thursday',
     5 => 'Friday',
     6 => 'Saturday',
-    7 => 'Sunday'
+    7 => 'Sunday',
 ];
 
 $errorData = isset($errorData) ? $errorData : '';
@@ -31,57 +31,57 @@ $openHours = $this->siteOpeningHours;
         <form method="POST">
             <?php echo $this->csrfToken() ?>
 
-            <?php for($i = 0; $i < 7; $i++) :
-                $dayName = strtolower($days[$i+1]);
+            <?php for ($i = 0; $i < 7; ++$i) :
+                $dayName = strtolower($days[$i + 1]);
 
                 $isOpenTimeAm = (ArrayUtils::tryGet($openHours, $dayName.'OpenTimePeriod') === 'am');
                 $isOpenTimePm = (ArrayUtils::tryGet($openHours, $dayName.'OpenTimePeriod') === 'pm');
                 $isCloseTimeAm = (ArrayUtils::tryGet($openHours, $dayName.'CloseTimePeriod') === 'am');
                 $isCloseTimePm = (ArrayUtils::tryGet($openHours, $dayName.'CloseTimePeriod') === 'pm');
 
-                $isClosedVal = ArrayUtils::tryGet($openHours, $dayName . 'IsClosed');
+                $isClosedVal = ArrayUtils::tryGet($openHours, $dayName.'IsClosed');
                 $isClosed = (bool) ($isClosedVal === null || $isClosedVal === 'true' ? true : $isClosedVal);
 
                 $openTime = ArrayUtils::tryGet($openHours, $dayName.'OpenTime');
                 $closeTime = ArrayUtils::tryGet($openHours, $dayName.'CloseTime');
 
                 //  errors
-                $errOpenTime = ArrayUtils::tryGet($errorData, $dayName."OpenTime");
+                $errOpenTime = ArrayUtils::tryGet($errorData, $dayName.'OpenTime');
                 $isErrOpenTime = !empty($errOpenTime);
 
-                $errCloseTime = ArrayUtils::tryGet($errorData, $dayName."CloseTime");
+                $errCloseTime = ArrayUtils::tryGet($errorData, $dayName.'CloseTime');
                 $isErrCloseTime = !empty($errCloseTime);
                 ?>
 
                 <fieldset>
-                    <legend><?php echo $this->escapeHtml($days[$i+1]);?></legend>
+                    <legend><?php echo $this->escapeHtml($days[$i + 1]); ?></legend>
 
         <div class="row">
             <div class="col-sm-2">
                 <!--<div class="form-group has-error">-->
-                <div class="form-group <?php echo ($isErrOpenTime ? 'has-error" id="error-'. $errOpenTime['ref'] : '') ?>">
-                    <label class="control-label" for="<?php echo $this->escapeHtml($dayName);?>-time-text-open">Opening Time</label>
+                <div class="form-group <?php echo $isErrOpenTime ? 'has-error" id="error-'.$errOpenTime['ref'] : '' ?>">
+                    <label class="control-label" for="<?php echo $this->escapeHtml($dayName); ?>-time-text-open">Opening Time</label>
                     <input type="text"
                        class="form-control form-control-xs"
-                       id="<?php echo $this->escapeHtml($dayName);?>-time-text-open"
-                       name="<?php echo $this->escapeHtml($dayName);?>OpenTime"
-                       value="<?php echo $this->escapeHtml($openTime);?>">
+                       id="<?php echo $this->escapeHtml($dayName); ?>-time-text-open"
+                       name="<?php echo $this->escapeHtml($dayName); ?>OpenTime"
+                       value="<?php echo $this->escapeHtml($openTime); ?>">
 			   </div>
 		    </div>
 
 		    <div class="col-sm-4">
                 <div class="form-group">
-                    <label class="block-label" for="<?php echo $this->escapeHtml($dayName);?>-am-radio-open">
+                    <label class="block-label" for="<?php echo $this->escapeHtml($dayName); ?>-am-radio-open">
                         <input type="radio" value="am"
-                           name="<?php echo $this->escapeHtml($dayName);?>OpenTimePeriod"
-                           id="<?php echo $this->escapeHtml($dayName);?>-am-radio-open"
+                           name="<?php echo $this->escapeHtml($dayName); ?>OpenTimePeriod"
+                           id="<?php echo $this->escapeHtml($dayName); ?>-am-radio-open"
                            <?php echo $isOpenTimeAm ? 'checked' : '' ?>>
                         am
                     </label>
-                    <label class="block-label" for="<?php echo $this->escapeHtml($dayName);?>-pm-radio-open">
+                    <label class="block-label" for="<?php echo $this->escapeHtml($dayName); ?>-pm-radio-open">
                         <input type="radio" value="pm"
-                           name="<?php echo $this->escapeHtml($dayName);?>OpenTimePeriod"
-                           id="<?php echo $this->escapeHtml($dayName);?>-pm-radio-open"
+                           name="<?php echo $this->escapeHtml($dayName); ?>OpenTimePeriod"
+                           id="<?php echo $this->escapeHtml($dayName); ?>-pm-radio-open"
                            <?php echo $isOpenTimePm ? 'checked' : '' ?>>
                         pm
                     </label>
@@ -92,28 +92,28 @@ $openHours = $this->siteOpeningHours;
 		<div class="row">
 		    <div class="col-sm-2">
 			    <!--<div class="form-group has-error">-->
-			    <div class="form-group <?php echo ($isErrCloseTime ? 'has-error" id="error-'. $errCloseTime['ref'] : '') ?>">
-				<label class="control-label" for="<?php echo $this->escapeHtml($dayName);?>-time-text-close">Closing time</label>
+			    <div class="form-group <?php echo $isErrCloseTime ? 'has-error" id="error-'.$errCloseTime['ref'] : '' ?>">
+				<label class="control-label" for="<?php echo $this->escapeHtml($dayName); ?>-time-text-close">Closing time</label>
 				    <input type="text"
 					   class="form-control form-control-xs"
-					   id="<?php echo $this->escapeHtml($dayName);?>-time-text-close"
-					   name="<?php echo $this->escapeHtml($dayName);?>CloseTime"
+					   id="<?php echo $this->escapeHtml($dayName); ?>-time-text-close"
+					   name="<?php echo $this->escapeHtml($dayName); ?>CloseTime"
 					   value="<?php echo $this->escapeHtml($closeTime)?>">
 			    </div>
 		    </div>
 		    <div class="col-sm-4">
 			<div class="form-group">
-				<label class="block-label" for="<?php echo $this->escapeHtml($dayName);?>-am-radio-close">
+				<label class="block-label" for="<?php echo $this->escapeHtml($dayName); ?>-am-radio-close">
 				    <input type="radio" value="am"
-					   name="<?php echo $this->escapeHtml($dayName);?>CloseTimePeriod"
-					   id="<?php echo $this->escapeHtml($dayName);?>-am-radio-close"
+					   name="<?php echo $this->escapeHtml($dayName); ?>CloseTimePeriod"
+					   id="<?php echo $this->escapeHtml($dayName); ?>-am-radio-close"
 					   <?php echo $isCloseTimeAm ? 'checked' : '' ?>>
 				    am
 				</label>
-				<label class="block-label" for="<?php echo $this->escapeHtml($dayName);?>-pm-radio-close">
+				<label class="block-label" for="<?php echo $this->escapeHtml($dayName); ?>-pm-radio-close">
 				    <input type="radio" value="pm"
-					   name="<?php echo $this->escapeHtml($dayName);?>CloseTimePeriod"
-					   id="<?php echo $this->escapeHtml($dayName);?>-pm-radio-close"
+					   name="<?php echo $this->escapeHtml($dayName); ?>CloseTimePeriod"
+					   id="<?php echo $this->escapeHtml($dayName); ?>-pm-radio-close"
 					    <?php echo $isCloseTimePm ? 'checked' : '' ?>>
 				    pm
 				</label>
@@ -121,13 +121,13 @@ $openHours = $this->siteOpeningHours;
                     </div>
 	        </div>
 
-            <?php if($isErrOpenTime) : ?>
+            <?php if ($isErrOpenTime) : ?>
                 <div class="row">
                     <div class="col-sm-12"><?php echo $this->escapeHtml($errOpenTime['error']['displayMessage']) ?></div>
                 </div>
             <?php endif; ?>
 
-            <?php if($isErrCloseTime) : ?>
+            <?php if ($isErrCloseTime) : ?>
                 <div class="row">
                     <div class="col-sm-12"><?php echo $this->escapeHtml($errCloseTime['error']['displayMessage']) ?></div>
                 </div>
@@ -139,16 +139,16 @@ $openHours = $this->siteOpeningHours;
 			    <div class="form-group">
 			    <p>
 			    <?php echo $this->partial(
-				'checkboxElement',
-				[
-				    'id'        => $dayName . 'isClosed',
-				    'labelId'   => $dayName . 'isClosedLabel',
-				    'value'     => 'true',
-				    'name'      => $this->escapeHtml($dayName).'IsClosed',
+                'checkboxElement',
+                [
+                    'id' => $dayName.'isClosed',
+                    'labelId' => $dayName.'isClosedLabel',
+                    'value' => 'true',
+                    'name' => $this->escapeHtml($dayName).'IsClosed',
                     'isChecked' => $isClosed,
-				    'label'     => 'Closed all day ' . $dayName,
-				]
-				); ?>
+                    'label' => 'Closed all day '.$dayName,
+                ]
+                ); ?>
 			    </p>
 			    </div>
 			</div>

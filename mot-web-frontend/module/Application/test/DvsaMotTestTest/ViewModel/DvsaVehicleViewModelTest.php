@@ -28,19 +28,20 @@ class DvsaVehicleViewModelTest extends \PHPUnit_Framework_TestCase
             [
                 'primary' => $this->getColour('ABC', 'CBA'),
                 'secondary' => $this->getColour('DEF', 'FED'),
-                'expected' => 'ABC and DEF'
+                'expected' => 'ABC and DEF',
             ],
             [
                 'primary' => $this->getColour('ABC', 'CBA'),
                 'secondary' => null,
-                'expected' => 'ABC'
-            ]
+                'expected' => 'ABC',
+            ],
         ];
     }
 
     /**
      * @param Colour|null $colour
      * @param Colour|null $secondaryColour
+     *
      * @return DvsaVehicle
      */
     private function getVehicleWithColoursSetTo(Colour $colour = null, Colour $secondaryColour = null)
@@ -60,6 +61,7 @@ class DvsaVehicleViewModelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Colour $colour
+     *
      * @return \stdClass
      */
     private function initColourStandardClass(Colour $colour)
@@ -74,6 +76,7 @@ class DvsaVehicleViewModelTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $name
      * @param string $code
+     *
      * @return Colour
      */
     private function getColour($name, $code)
@@ -81,6 +84,7 @@ class DvsaVehicleViewModelTest extends \PHPUnit_Framework_TestCase
         $colourDetail = new \stdClass();
         $colourDetail->name = $name;
         $colourDetail->code = $code;
+
         return new Colour($colourDetail);
     }
 }

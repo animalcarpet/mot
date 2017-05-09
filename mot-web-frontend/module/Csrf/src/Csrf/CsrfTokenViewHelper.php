@@ -1,12 +1,11 @@
 <?php
+
 namespace Csrf;
 
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * Class CsrfTokenViewHelper
- *
- * @package Csrf
+ * Class CsrfTokenViewHelper.
  */
 class CsrfTokenViewHelper extends AbstractHelper
 {
@@ -26,6 +25,7 @@ class CsrfTokenViewHelper extends AbstractHelper
     public function __invoke($html = true)
     {
         $token = $this->csrfSupport->getCsrfToken();
-        return $html ? '<input type="hidden" name="' . CsrfConstants::REQ_TOKEN . '" value="' . $token . '">' : $token;
+
+        return $html ? '<input type="hidden" name="'.CsrfConstants::REQ_TOKEN.'" value="'.$token.'">' : $token;
     }
 }

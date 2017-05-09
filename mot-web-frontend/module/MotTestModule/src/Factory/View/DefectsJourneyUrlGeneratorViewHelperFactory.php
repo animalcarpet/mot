@@ -8,12 +8,13 @@ use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGeneratorViewHelper;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DefectsJourneyUrlGeneratorViewHelperFactory  implements FactoryInterface
+class DefectsJourneyUrlGeneratorViewHelperFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return DefectsJourneyUrlGeneratorViewHelper
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

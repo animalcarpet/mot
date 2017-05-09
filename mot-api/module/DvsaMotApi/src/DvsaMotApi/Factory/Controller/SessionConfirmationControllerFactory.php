@@ -12,6 +12,7 @@ class SessionConfirmationControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return SessionConfirmationController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

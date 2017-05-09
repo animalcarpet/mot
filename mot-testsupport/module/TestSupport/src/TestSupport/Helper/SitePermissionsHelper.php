@@ -18,7 +18,7 @@ class SitePermissionsHelper
     private $role;
 
     /**
-     * @var  EntityManager
+     * @var EntityManager
      */
     private $entityManager;
 
@@ -31,11 +31,12 @@ class SitePermissionsHelper
     }
 
     /**
-     * Adds the relevant role to the list of siteId's provided
+     * Adds the relevant role to the list of siteId's provided.
+     *
      * @param Account $account
-     * @param string $role
-     * @param array $siteIds
-     * @return void
+     * @param string  $role
+     * @param array   $siteIds
+     *
      * @throws \Exception if the rest client responds in an unexpected fashion
      */
     public function addPermissionToSites(Account $account, $role, array $siteIds)

@@ -18,16 +18,11 @@ use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\Network;
 use DvsaCommon\Date\DateTimeHolder;
-use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Date\Time;
 use DvsaCommon\Domain\MotTestType as MotTestTypeConst;
 use DvsaCommon\Enum\EnfRetestModeId;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
-use DvsaCommon\Enum\RoleCode;
-use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Exception\UnauthorisedException;
@@ -46,9 +41,6 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OrganisationBusinessRoleMap;
-use DvsaEntities\Entity\SiteBusinessRoleMap;
-use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Repository\EnforcementFullPartialRetestRepository;
 use DvsaEntities\Repository\MotTestReasonForCancelRepository;
 use DvsaEntities\Repository\MotTestRepository;
@@ -58,7 +50,6 @@ use DvsaMotApi\Service\Helper\MotTestCloneHelper;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use DvsaMotApi\Service\Validator\MotTestValidator;
-use NotificationApi\Service\UserOrganisationNotificationService;
 use OrganisationApi\Service\OrganisationService;
 
 /**
@@ -224,20 +215,20 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     private $rfrDescriptions = [];
 
     /**
-     * @param AuthorisationServiceInterface                 $authService
-     * @param MotTestValidator                              $motTestValidator
-     * @param MotTestStatusChangeValidator                  $motTestStatusChangeValidator
-     * @param OtpService                                    $otpService
-     * @param OrganisationService                           $organisationService
-     * @param MotTestMapper                                 $motTestMapper
-     * @param MotTestRepository                             $motTestRepository
-     * @param MotTestReasonForCancelRepository              $reasonForCancelRepository
-     * @param EnforcementFullPartialRetestRepository        $fullPartialRetestRepository
-     * @param MotTestDateHelperService                      $motTestDateHelper
-     * @param EntityManager                                 $entityManager
-     * @param MotIdentityProviderInterface                  $motIdentityProvider
-     * @param ApiPerformMotTestAssertion                    $performMotTestAssertion
-     * @param XssFilter                                     $xssFilter
+     * @param AuthorisationServiceInterface          $authService
+     * @param MotTestValidator                       $motTestValidator
+     * @param MotTestStatusChangeValidator           $motTestStatusChangeValidator
+     * @param OtpService                             $otpService
+     * @param OrganisationService                    $organisationService
+     * @param MotTestMapper                          $motTestMapper
+     * @param MotTestRepository                      $motTestRepository
+     * @param MotTestReasonForCancelRepository       $reasonForCancelRepository
+     * @param EnforcementFullPartialRetestRepository $fullPartialRetestRepository
+     * @param MotTestDateHelperService               $motTestDateHelper
+     * @param EntityManager                          $entityManager
+     * @param MotIdentityProviderInterface           $motIdentityProvider
+     * @param ApiPerformMotTestAssertion             $performMotTestAssertion
+     * @param XssFilter                              $xssFilter
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
@@ -334,7 +325,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         // Checking for Site ID is mandatory only for Non-MOT inspection.
         if ($motTest->getMotTestType()->getCode() == MotTestTypeCode::NON_MOT_TEST && !in_array($newStatus, self::$MOT_TEST_ABORTED_STATUSES)) {
             $this->motTestStatusChangeValidator->hasSiteIdBeenEntered($motTest);
-            if($motTest->getOrganisation() === null) {
+            if ($motTest->getOrganisation() === null) {
                 $motTest->setOrganisation($motTest->getVehicleTestingStation()->getOrganisation());
             }
         }
@@ -530,14 +521,14 @@ class MotTestStatusChangeService implements TransactionAwareInterface
             $this->updateExpiryDateIfMysteryShopper($passedMotTest);
 
             if ($passedMotTest->getMotTestEmergencyReason()) {
-                try{
+                try {
                     $clonedMotTestEmergencyReason = clone $passedMotTest->getMotTestEmergencyReason();
                     $clonedMotTestEmergencyReason->setId(null);
                     $passedMotTest->setMotTestEmergencyReason(null);
-                }catch(EntityNotFoundException $e) {
+                } catch (EntityNotFoundException $e) {
                     $clonedMotTestEmergencyReason = false;
                     $passedMotTest->setMotTestEmergencyReason(null);
-                }catch(\Exception $e){
+                } catch (\Exception $e) {
                     throw $e;
                 }
             }
@@ -570,7 +561,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     private function createPassedMotTestWithoutPrs(MotTest $motTest)
     {
-
         $passedMotTest = MotTestCloneHelper::motTestDeepCloneNoCollections($motTest);
         $passedMotTest->setStatus($this->getMotTestStatus(MotTestStatusName::PASSED));
         $this->copyAdvisoryRfrItems($motTest, $passedMotTest);

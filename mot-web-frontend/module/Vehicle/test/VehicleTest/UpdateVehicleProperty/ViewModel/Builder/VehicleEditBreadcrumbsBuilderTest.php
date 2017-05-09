@@ -14,11 +14,11 @@ class VehicleEditBreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testBreadcrumbsGeneration()
     {
         $urlHelperPlugin = XMock::of(Url::class);
-        $urlHelperPlugin->expects($this->at(0))->method('__invoke')->willReturnCallback(function($route, $params, $queryParams){
+        $urlHelperPlugin->expects($this->at(0))->method('__invoke')->willReturnCallback(function ($route, $params, $queryParams) {
             $this->assertEquals('vehicle/search', $route);
         });
 
-        $urlHelperPlugin->expects($this->at(1))->method('__invoke')->willReturnCallback(function($route, $params, $queryParams){
+        $urlHelperPlugin->expects($this->at(1))->method('__invoke')->willReturnCallback(function ($route, $params, $queryParams) {
             $this->assertEquals($params['id'], self::VEHICLE_ID);
             $this->assertEquals('vehicle/detail', $route);
         });

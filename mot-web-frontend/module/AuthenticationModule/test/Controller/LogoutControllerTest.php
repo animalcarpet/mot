@@ -11,17 +11,12 @@ use Core\Service\SessionService;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLogoutService;
-use DvsaCommon\Constants\FeatureToggle;
 use Zend\EventManager\EventManager;
-use Zend\Mvc\Controller\Plugin\Redirect;
-use Zend\Session\Container;
 use DvsaCommonTest\Bootstrap;
-use Zend\Http\Response;
 use PHPUnit_Framework_MockObject_MockObject;
 
 /**
- * Class LogoutControllerTest
- * @package Dvsa\Mot\Frontend\AuthenticationModuleTest\Controller
+ * Class LogoutControllerTest.
  */
 class LogoutControllerTest extends AbstractFrontendControllerTestCase
 {

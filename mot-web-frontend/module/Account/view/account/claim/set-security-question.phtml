@@ -9,7 +9,7 @@
     </h1>
 </header>
 
-<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $summaryMessages]); ?>
+<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $summaryMessages]); ?>
 
 <div class="text">
     <p class="lede">These are used to identify you if you need to reset your password.</p>
@@ -18,10 +18,12 @@
 <form method="post" autocomplete="off" novalidate>
     <fieldset>
         <legend class="form-title heading-large">First security question</legend>
-        <div class="form-group<?php if (array_key_exists('question_a',$messages)) echo ' has-error' ?>">
+        <div class="form-group<?php if (array_key_exists('question_a', $messages)) {
+    echo ' has-error';
+} ?>">
             <label for="question_a" class="form-label">Choose a question
-                <?php if (array_key_exists('question_a',$messages)) : ?>
-                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml',['messages' => $messages['question_a']]) ?>
+                <?php if (array_key_exists('question_a', $messages)) : ?>
+                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml', ['messages' => $messages['question_a']]) ?>
                 <?php endif ?>
             </label>
             <select name="question_a" id="question_a" class="form-control-select form-control-1-2">
@@ -35,23 +37,29 @@
             </select>
         </div>
 
-        <div class="form-group<?php if (array_key_exists('answer_a',$messages)) echo ' has-error' ?>">
+        <div class="form-group<?php if (array_key_exists('answer_a', $messages)) {
+                        echo ' has-error';
+                    } ?>">
             <label for="answer_a" class="form-label">Memorable answer
-                <?php if (array_key_exists('answer_a',$messages)) : ?>
-                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml',['messages' => $messages['answer_a']]) ?>
+                <?php if (array_key_exists('answer_a', $messages)) : ?>
+                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml', ['messages' => $messages['answer_a']]) ?>
                 <?php endif ?>
             </label>
             <input type="text" class="form-control form-control-1-4" name="answer_a" id="answer_a"
-                   value="<?php if (isset($answer_a)) echo $this->escapeHtmlAttr($answer_a) ; ?>">
+                   value="<?php if (isset($answer_a)) {
+                        echo $this->escapeHtmlAttr($answer_a);
+                    } ?>">
         </div>
     </fieldset>
 
     <fieldset>
         <legend class="form-title heading-large">Second security question</legend>
-        <div class="form-group<?php if (array_key_exists('question_b',$messages)) echo ' has-error' ?>">
+        <div class="form-group<?php if (array_key_exists('question_b', $messages)) {
+                        echo ' has-error';
+                    } ?>">
             <label for="question_b" class="form-label">Choose a question
-                <?php if (array_key_exists('question_b',$messages)) : ?>
-                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml',['messages' => $messages['question_b']]) ?>
+                <?php if (array_key_exists('question_b', $messages)) : ?>
+                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml', ['messages' => $messages['question_b']]) ?>
                 <?php endif ?>
             </label>
             <select name="question_b" id="question_b" class="form-control-select form-control-1-2">
@@ -65,19 +73,23 @@
             </select>
         </div>
 
-        <div class="form-group<?php if (array_key_exists('answer_b',$messages)) echo ' has-error' ?>">
+        <div class="form-group<?php if (array_key_exists('answer_b', $messages)) {
+                        echo ' has-error';
+                    } ?>">
             <label for="answer_b" class="form-label">Memorable answer
-                <?php if (array_key_exists('answer_b',$messages)) : ?>
-                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml',['messages' => $messages['answer_b']]) ?>
+                <?php if (array_key_exists('answer_b', $messages)) : ?>
+                    <?php echo $this->partial('partial/forms/errorMessageInline.phtml', ['messages' => $messages['answer_b']]) ?>
                 <?php endif ?>
             </label>
             <input type="text" name="answer_b" id="answer_b" class="form-control form-control-1-4"
-                   value="<?php if (isset($answer_b)) echo $this->escapeHtmlAttr($answer_b) ; ?>">
+                   value="<?php if (isset($answer_b)) {
+                        echo $this->escapeHtmlAttr($answer_b);
+                    } ?>">
         </div>
     </fieldset>
 
     <nav class="content-navigation">
-        <?php echo $this->partial('submitElement', ['id'=>'btSubmitForm','label'=>'Continue', 'cssClass'=>'button']); ?>
+        <?php echo $this->partial('submitElement', ['id' => 'btSubmitForm', 'label' => 'Continue', 'cssClass' => 'button']); ?>
         <ul class="content-navigation__secondary">
             <li>
                 <a href="<?php echo $this->url('account/claim/confirmPassword'); ?>" id="go-to-previous-page" >Back</a>

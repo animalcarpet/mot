@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Controller;
 
 use Application\Service\LoggedInUserManager;
@@ -6,11 +7,10 @@ use DvsaMotTest\Data\TesterInProgressTestNumberResource;
 use Dashboard\Controller\UserHomeController;
 use Zend\Http\Request;
 use Zend\View\Model\ViewModel;
-
 use DvsaMotTest\Model\LocationSelect;
 
 /**
- * Class LocationSelectController
+ * Class LocationSelectController.
  */
 class LocationSelectController extends AbstractDvsaMotTestController
 {
@@ -26,7 +26,7 @@ class LocationSelectController extends AbstractDvsaMotTestController
         $currentUserVts = $this->getIdentity()->getCurrentVts();
         $testInProgressId = $this->getInProgressTestNumber();
         if (!empty($testInProgressId) && !empty($currentUserVts)) {
-            throw new \Exception("Test location can not be changed during MOT test");
+            throw new \Exception('Test location can not be changed during MOT test');
         }
 
         /** @var LoggedInUserManager $loggedInUserManager */
@@ -36,8 +36,9 @@ class LocationSelectController extends AbstractDvsaMotTestController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $vtsId = (int)$request->getPost('vtsId');
+                $vtsId = (int) $request->getPost('vtsId');
                 $loggedInUserManager->changeCurrentLocation($vtsId);
+
                 return $this->redirectBack();
             } else {
                 $loggedInUserManager->clearCurrentLocation();
@@ -50,17 +51,19 @@ class LocationSelectController extends AbstractDvsaMotTestController
         if ($request->isGet() && count($tester['vtsSites']) == 1) {
             $vtsId = $tester['vtsSites'][0]['id'];
             $loggedInUserManager->changeCurrentLocation($vtsId);
+
             return $this->redirectBack();
         }
 
         $form->setData($request->getQuery());
         $userDetails = $this->getUserDisplayDetails();
+
         return new ViewModel(
             [
-                'form'              => $form,
-                'userDetails'       => $userDetails,
-                'vtsSites'          => $tester['vtsSites'],
-                'backRoute'         => $this->params('back'),
+                'form' => $form,
+                'userDetails' => $userDetails,
+                'vtsSites' => $tester['vtsSites'],
+                'backRoute' => $this->params('back'),
             ]
         );
     }
@@ -87,6 +90,7 @@ class LocationSelectController extends AbstractDvsaMotTestController
         $testerInProgressTestNumberResource = $this->getServiceLocator()->get(
             TesterInProgressTestNumberResource::class
         );
+
         return $testerInProgressTestNumberResource->get($this->getIdentity()->getUserId());
     }
 }

@@ -18,7 +18,6 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTestTest\Controller\AbstractDvsaMotTestTestCase;
 use Vehicle\Controller\VehicleController;
 use Vehicle\Helper\VehicleViewModelBuilder;
-use Zend\View\Model\ViewModel;
 
 /**
  * Class VehicleControllerTest.
@@ -29,15 +28,14 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
      * @var array
      */
     protected static $obfuscationMap = [
-        1    => 'unit_obfuscate_id_1',
-        2    => 'unit_obfuscate_id_2',
-        999  => 'unit_obfuscate_id_999',
+        1 => 'unit_obfuscate_id_1',
+        2 => 'unit_obfuscate_id_2',
+        999 => 'unit_obfuscate_id_999',
         1234 => 'unit_obfuscate_id_1234',
     ];
 
     protected function setUp()
     {
-
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
 
@@ -65,11 +63,11 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
     /**
      * Test has user access to page or not with/out auth and permission.
      *
-     * @param string  $method          Http method
-     * @param string  $action          Request action
-     * @param array   $params          Action parameters
-     * @param array   $permissions     User has permissions
-     * @param string  $expectedUrl     Expect location
+     * @param string $method      Http method
+     * @param string $action      Request action
+     * @param array  $params      Action parameters
+     * @param array  $permissions User has permissions
+     * @param string $expectedUrl Expect location
      *
      * @dataProvider dataProviderTestCanAccessHasRight
      */
@@ -100,15 +98,15 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function dataProviderTestCanAccessHasRight()
     {
-        $homeUrl   = '/';
+        $homeUrl = '/';
         $urlSearch = VehicleUrlBuilderWeb::vehicle()->search();
 
         return [
-            ['get', 'index', [], [],$homeUrl],
+            ['get', 'index', [], [], $homeUrl],
             [
                 'get',
                 'index',
-                ['id' => self::$obfuscationMap[999], ],
+                ['id' => self::$obfuscationMap[999]],
                 [PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW],
             ],
             ['get', 'search', [], [], $homeUrl],
@@ -128,7 +126,7 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
 
         $config = ['security' => ['obfuscate' => ['key' => 'ggg', 'entries' => ['vehicleId' => true]]]];
         $paramEncrypter = new ParamEncrypter(new EncryptionKey($config['security']['obfuscate']['key']));
-        $paramEncoder   = new ParamEncoder();
+        $paramEncoder = new ParamEncoder();
 
         $mockParamObfuscator = $this->getMockBuilder(ParamObfuscator::class)
             ->setConstructorArgs([$paramEncrypter, $paramEncoder, $config])

@@ -16,14 +16,10 @@ use PersonApi\Service\DashboardService;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 use SiteApi\Service\SiteService;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class DashboardServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class DashboardServiceFactoryTest.
  */
 class DashboardServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

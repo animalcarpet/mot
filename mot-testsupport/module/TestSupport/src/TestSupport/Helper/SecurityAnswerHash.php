@@ -6,12 +6,10 @@ use DvsaCommon\Crypt\Hash\BCryptHashFunction;
 use DvsaCommon\Crypt\Hash\HashFunctionInterface;
 
 /**
- *
  * Designed to hash answers to security questions. The answer can be
  * no longer than 72 characters.
  *
  * Class SecurityAnswerHash
- * @package TestSupport\Helper
  */
 class SecurityAnswerHash implements HashFunctionInterface
 {
@@ -41,6 +39,7 @@ class SecurityAnswerHash implements HashFunctionInterface
     public function verify($secret, $hash)
     {
         $canonicalized = $this->canonicalizeAnswer($secret);
+
         return $this->baseFunction->verify($canonicalized, $hash);
     }
 
@@ -52,7 +51,7 @@ class SecurityAnswerHash implements HashFunctionInterface
     public function setBaseFunction(HashFunctionInterface $hashFunction)
     {
         $this->baseFunction = $hashFunction;
+
         return $this;
     }
-
 }

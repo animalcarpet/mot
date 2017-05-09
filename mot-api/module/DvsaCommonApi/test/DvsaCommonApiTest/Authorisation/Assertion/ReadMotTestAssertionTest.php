@@ -33,7 +33,7 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsMotTestOwner_givenUserIsOwner_shouldReturnTrue()
     {
-        $tester =  (new Person())->setId(12);
+        $tester = (new Person())->setId(12);
         $motTest = (new MotTest())->setTester($tester);
 
         $this->setupMockIdentity($this->identityProvider);
@@ -43,7 +43,7 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsMotTestOwner_givenUserIsNotOwner_shouldReturnFalse()
     {
-        $tester =  (new Person())->setId(230232);
+        $tester = (new Person())->setId(230232);
         $motTest = (new MotTest())->setTester($tester);
 
         $this->setupMockIdentity($this->identityProvider);
@@ -53,7 +53,7 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsMotTestOwnerForDto_givenUserIsOwner_shouldReturnTrue()
     {
-        $tester =  (new PersonDto())->setId(12);
+        $tester = (new PersonDto())->setId(12);
         $motTest = (new MotTestDto())->setTester($tester);
 
         $this->setupMockIdentity($this->identityProvider);
@@ -63,7 +63,7 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsMotTestOwnerForDto_givenUserIsNotOwner_shouldReturnFalse()
     {
-        $tester =  (new PersonDto())->setId(230232);
+        $tester = (new PersonDto())->setId(230232);
         $motTest = (new MotTestDto())->setTester($tester);
 
         $this->setupMockIdentity($this->identityProvider);
@@ -73,9 +73,9 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
 
     public function testAssertGrantedForDemoTest_givenUserIsOwner()
     {
-        $tester =  (new Person())->setId(12);
+        $tester = (new Person())->setId(12);
         $motTest = (new MotTest())->setTester($tester);
-        $type =    (new MotTestType())->setIsDemo(true);
+        $type = (new MotTestType())->setIsDemo(true);
         $motTest->setMotTestType($type);
 
         $this->setupMockIdentity($this->identityProvider);
@@ -84,9 +84,9 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
 
     public function testAssertGrantedForDemoTest_givenUserHasPermission()
     {
-        $tester =  (new Person())->setId(12);
+        $tester = (new Person())->setId(12);
         $motTest = (new MotTest())->setTester($tester);
-        $type =    (new MotTestType())->setIsDemo(true);
+        $type = (new MotTestType())->setIsDemo(true);
         $motTest->setMotTestType($type);
 
         $this->setupMockIdentity($this->identityProvider, 2100, 'ft-enf-tester');
@@ -102,9 +102,9 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAssertGrantedForDemoTest_givenUserDoesNotHavePermission()
     {
-        $tester =  (new Person())->setId(12);
+        $tester = (new Person())->setId(12);
         $motTest = (new MotTest())->setTester($tester);
-        $type =    (new MotTestType())->setIsDemo(true);
+        $type = (new MotTestType())->setIsDemo(true);
         $motTest->setMotTestType($type);
 
         $this->setupMockIdentity($this->identityProvider, 230232);
@@ -115,9 +115,10 @@ class ReadMotTestAssertionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Fake an identity
+     * Fake an identity.
+     *
      * @param object $identityProvider
-     * @param int $id The ID of the user
+     * @param int    $id               The ID of the user
      * @param string $username
      */
     private function setupMockIdentity($identityProvider, $id = 12, $username = 'tester')

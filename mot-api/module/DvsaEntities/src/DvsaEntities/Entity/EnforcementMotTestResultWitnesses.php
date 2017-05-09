@@ -1,7 +1,7 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EnforcementMotTestResultWitnesses
 {
-
     /**
      * @var int
      *
@@ -50,7 +49,6 @@ class EnforcementMotTestResultWitnesses
     protected $type;
 
     /**
-     *
      * @return the int
      */
     public function getId()
@@ -59,18 +57,17 @@ class EnforcementMotTestResultWitnesses
     }
 
     /**
-     *
      * @param
      *            $id
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     *
      * @return the EnforcementMotTestResult
      */
     public function getEnforcementMotTestResult()
@@ -92,7 +89,6 @@ class EnforcementMotTestResultWitnesses
     }
 
     /**
-     *
      * @return the string
      */
     public function getName()
@@ -134,6 +130,7 @@ class EnforcementMotTestResultWitnesses
 
     /**
      * @param string $type
+     *
      * @return $this
      */
     public function setType($type)

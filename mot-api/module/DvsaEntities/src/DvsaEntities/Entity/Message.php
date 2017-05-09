@@ -48,7 +48,7 @@ class Message extends Entity
     private $expiryDate;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_acknowledged", type="boolean")
      */
@@ -121,7 +121,6 @@ class Message extends Entity
         return $this->issueDate;
     }
 
-
     /**
      * @param \DateTime $expiryDate
      *
@@ -141,7 +140,6 @@ class Message extends Entity
     {
         return $this->expiryDate;
     }
-
 
     /**
      * @param string $token
@@ -164,11 +162,11 @@ class Message extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAcknowledged()
     {
-        return (bool)$this->isAcknowledged;
+        return (bool) $this->isAcknowledged;
     }
 
     /**
@@ -179,6 +177,7 @@ class Message extends Entity
     public function setIsAcknowledged($isAcknowledged)
     {
         $this->isAcknowledged = $isAcknowledged;
+
         return $this;
     }
 }

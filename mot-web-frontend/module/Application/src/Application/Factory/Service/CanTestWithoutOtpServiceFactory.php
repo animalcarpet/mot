@@ -7,11 +7,11 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-
 class CanTestWithoutOtpServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return CanTestWithoutOtpService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

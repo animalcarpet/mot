@@ -16,10 +16,10 @@ use Zend\ServiceManager\ServiceManager;
  */
 class CsrfValidatingListener
 {
-
     private function isEnabled(ServiceManager $sm)
     {
-        $isEnabled = $sm->get("config")['csrf']['enabled'];
+        $isEnabled = $sm->get('config')['csrf']['enabled'];
+
         return $isEnabled;
     }
 

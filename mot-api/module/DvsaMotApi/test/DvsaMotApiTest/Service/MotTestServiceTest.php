@@ -7,9 +7,7 @@
 
 namespace DvsaMotApiTest\Service;
 
-use DateTime;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaClient\Entity\SitePosition;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\Role;
@@ -28,19 +26,15 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Utility\ArrayUtils;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
 use DvsaCommonTest\TestUtils\ArgCapture;
-use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
-use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\EmergencyLog;
-use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\ModelDetail;
@@ -68,7 +62,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use DvsaEntities\Entity\CertificateReplacement;
 
 /**
- * Unit test for MotTestService
+ * Unit test for MotTestService.
  */
 class MotTestServiceTest extends AbstractMotTestServiceTest
 {
@@ -83,7 +77,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     const SLOTS_COUNT_START = 32;
 
     // 12 digits number
-    const MOT_TEST_NUMBER = "123456789012";
+    const MOT_TEST_NUMBER = '123456789012';
 
     const SITE_ID = 1;
     const VEHICLE_ID = 9999;
@@ -263,7 +257,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * This is the data provided for the test
+     * This is the data provided for the test.
      *
      * @dataProvider pendingStatusIncompleteTestRolesData
      */
@@ -275,8 +269,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $rfrIds = [],
         $motTestType = MotTestTypeCode::NORMAL_TEST,
         $originalMotTest = null
-    )
-    {
+    ) {
         $tester = $this->getTestTester($roleText);
 
         $motTest = new MotTest();
@@ -347,20 +340,20 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 Role::VEHICLE_EXAMINER,
                 999,
                 null,
-                [45, 23,]
+                [45, 23],
             ],
             [
                 MotTestService::PENDING_INCOMPLETE_STATUS,
                 SiteBusinessRoleCode::TESTER,
                 2312,
                 null,
-                [23,]
+                [23],
             ],
             [
                 MotTestStatusName::PASSED,
                 SiteBusinessRoleCode::TESTER,
                 2312,
-                new BrakeTestResultClass3AndAbove()
+                new BrakeTestResultClass3AndAbove(),
             ],
             [
                 MotTestStatusName::FAILED,
@@ -376,7 +369,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 null,
                 [],
                 MotTestTypeCode::RE_TEST,
-                self::getTestMotRetestWithBrakeTestResults(self::BRAKE_TEST_PASSED)
+                self::getTestMotRetestWithBrakeTestResults(self::BRAKE_TEST_PASSED),
             ],
             [
                 MotTestService::PENDING_INCOMPLETE_STATUS,
@@ -385,13 +378,13 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 null,
                 [],
                 MotTestTypeCode::RE_TEST,
-                self::getTestMotRetestWithBrakeTestResults(self::BRAKE_TEST_FAILED)
+                self::getTestMotRetestWithBrakeTestResults(self::BRAKE_TEST_FAILED),
             ],
         ];
     }
 
     /**
-     * This is the data provided for the test
+     * This is the data provided for the test.
      *
      * @dataProvider pendingMotTestStatusVehicleClassData
      */
@@ -485,7 +478,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $vehicle = (new Vehicle())->setId(1);
         $repositories = [
             MotTest::class => $this->mockMotTestRepository,
-            Vehicle::class => $this->mockVehicleLookup($vehicle, 'registration', $vrm)
+            Vehicle::class => $this->mockVehicleLookup($vehicle, 'registration', $vrm),
         ];
 
         $this->mockEntityManager($repositories);
@@ -515,7 +508,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     protected function addOrg($vehicleTestingStation)
     {
         $org = new Organisation();
-        $org->setSlotBalance(MotTestServiceTest::SLOTS_COUNT_START);
+        $org->setSlotBalance(self::SLOTS_COUNT_START);
         $org->setId(9);
         $vehicleTestingStation->setOrganisation($org);
     }
@@ -523,7 +516,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     protected function getMotTestEntityCollection($size)
     {
         $collection = [];
-        for ($i = 1; $i <= $size; $i++) {
+        for ($i = 1; $i <= $size; ++$i) {
             $collection[] = $this->getMotTestEntity($i);
         }
 
@@ -538,7 +531,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
             'vehicleTestingStation' => '',
             'reasonsForRejection' => '',
             'pendingDetails' => [
-                'currentSubmissionStatus' => ''
+                'currentSubmissionStatus' => '',
             ],
         ];
 
@@ -568,7 +561,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $contactDetail = (new ContactDetail())
             ->setAddress(
                 (new Address())
-                    ->setAddressLine1("Johns Garage")
+                    ->setAddressLine1('Johns Garage')
             );
 
         $site->setContact($contactDetail, (new SiteContactType()));
@@ -578,7 +571,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $brakeTestResultClass12 = new BrakeTestResultClass12();
         $motRfrAdvisory = MotTestReasonForRejectionTest::getTestMotTestReasonForRejection('ADVISORY');
         $motTest = new MotTest();
-        $startedDate = new \DateTime;
+        $startedDate = new \DateTime();
 
         $motTest
             ->setId($id)
@@ -623,7 +616,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Test Get Additional Snapshot Data (Without test station)
+     * Test Get Additional Snapshot Data (Without test station).
      */
     public function testGetAdditionalSnapshotDataWithoutTestStation()
     {
@@ -637,8 +630,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 'issuedDate' => '2014-01-01',
                 'value' => '10000',
                 'unit' => 'mi',
-                'resultType' => 'OK'
-            ]
+                'resultType' => 'OK',
+            ],
         ];
         $expected = [
             'OdometerReadings' => (new OdometerReadingMapper())->manyToDtoFromArray($readings),
@@ -666,7 +659,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Test Get Additional Snapshot Data (Without test station)
+     * Test Get Additional Snapshot Data (Without test station).
      */
     public function testGetAdditionalSnapshotDataForMysteryShopperVehicle()
     {
@@ -680,8 +673,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 'issuedDate' => '2014-01-01',
                 'value' => '10000',
                 'unit' => 'mi',
-                'resultType' => 'OK'
-            ]
+                'resultType' => 'OK',
+            ],
         ];
 
         $expected = [
@@ -710,7 +703,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Test Get Additional Snapshot Data (With test station)
+     * Test Get Additional Snapshot Data (With test station).
      */
     public function testGetAdditionalSnapshotDataWithTestStation()
     {
@@ -721,8 +714,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 'issuedDate' => '2014-01-01',
                 'value' => '10000',
                 'unit' => 'mi',
-                'resultType' => 'OK'
-            ]
+                'resultType' => 'OK',
+            ],
         ];
         $expected = [
             'TestStationAddress' => null,
@@ -733,7 +726,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest = self::getTestMotTestEntity();
         $motTest->getVehicle()->setId($vehicleId);
         $motTestStatus = new MotTestStatus();
-        $motTestStatus->setName("PASSED");
+        $motTestStatus->setName('PASSED');
         $motTest->setStatus($motTestStatus);
 
         $this->mockMethod(
@@ -762,7 +755,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest = self::getTestMotTestEntity();
         $motTest->getVehicle()->setId($vehicleId);
         $motTestStatus = new MotTestStatus();
-        $motTestStatus->setName("ABORTED");
+        $motTestStatus->setName('ABORTED');
         $motTest->setStatus($motTestStatus);
 
         $this->mockMethod(
@@ -776,7 +769,6 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $result = $motTestService->getAdditionalSnapshotData(self::MOT_TEST_NUMBER);
 
         $this->assertEquals($expected, $result);
-
     }
 
     public function testGetAdditionalSnapshotData_givenMotTestStatusAsAbandoned_ShouldNotRetrievePreviousOdometerReading()
@@ -791,7 +783,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest = self::getTestMotTestEntity();
         $motTest->getVehicle()->setId($vehicleId);
         $motTestStatus = new MotTestStatus();
-        $motTestStatus->setName("ABANDONED");
+        $motTestStatus->setName('ABANDONED');
         $motTest->setStatus($motTestStatus);
 
         $this->mockMethod(
@@ -895,8 +887,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         PHPUnit_Framework_MockObject_MockObject $mockTestRepository,
         $expectedResult,
         $motTestNumber = self::MOT_TEST_NUMBER
-    )
-    {
+    ) {
         $mockTestRepository->expects($this->any())
             ->method('getMotTestByNumber')
             ->with($motTestNumber)
@@ -930,7 +921,6 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         //  --  call & check    --
         $this->assertEquals($isMotTestOwner, $service->canPrintCertificateForMotTest($motTestDto));
     }
-
 
     public function dataProviderTestPrintCertCheckIfUserHasPermissionAtSite()
     {
@@ -1058,11 +1048,9 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $this
             ->mockEntityManager
             ->expects($this->any())
-            ->method("getRepository")
+            ->method('getRepository')
             ->willReturnCallback($callback);
     }
-
-
 
     private function notificationOnTestOutsideOpeningHoursExpectedExactlyTimes($notificationCount = 1)
     {
@@ -1073,14 +1061,13 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         return [$site, $person, $startedDate];
     }
 
-
     private function setStartedTestOutsideOpeningHours(MotTest $motTest, $testStartedHour)
     {
-        $year = "2016";
-        $month = "09";
-        $day = "05";
+        $year = '2016';
+        $month = '09';
+        $day = '05';
 
-            $startedDate = DateUtils::toDateTimeFromParts($year,$month,$day,$testStartedHour);
+        $startedDate = DateUtils::toDateTimeFromParts($year, $month, $day, $testStartedHour);
 
         $motTest->setStartedDate($startedDate);
 
@@ -1091,7 +1078,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     {
         list($openingTime, $closingTime) = [Time::fromIso8601('08:00:00'), Time::fromIso8601('16:00:00')];
         $weekOpeningHours = [];
-        for ($i = 1; $i <= 7; $i++) {
+        for ($i = 1; $i <= 7; ++$i) {
             $dailySchedule = (new SiteTestingDailySchedule())
                 ->setOpenTime($openingTime)
                 ->setCloseTime($closingTime)
@@ -1132,14 +1119,14 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function dataProviderGivenTestOutsideSiteOpeningHoursShouldNotifyOrNot()
     {
         return [
-            ["02", 1, true, 1],
-            ["05", 2, true, 2],
-            ["11", 1, true, 0],
-            ["13", 1, false, 0],
-            ["19", 1, true, 1],
-            ["21", 5, false, 5],
-            ["22", 0, true, 1],
-            ["01", 0, false, 0],
+            ['02', 1, true, 1],
+            ['05', 2, true, 2],
+            ['11', 1, true, 0],
+            ['13', 1, false, 0],
+            ['19', 1, true, 1],
+            ['21', 5, false, 5],
+            ['22', 0, true, 1],
+            ['01', 0, false, 0],
         ];
     }
 
@@ -1175,26 +1162,29 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $service->createMotTest($this->getTestData());
     }
 
-    private function getSiteBusinessRoleMap($SMCount = 1) {
+    private function getSiteBusinessRoleMap($SMCount = 1)
+    {
         $siteBusinessRoleMap = [];
-        for ($i = 1; $i <= $SMCount; $i++) {
+        for ($i = 1; $i <= $SMCount; ++$i) {
             $siteBusinessRole = new SiteBusinessRole();
             $siteBusinessRole->setCode(RoleCode::SITE_MANAGER);
             $siteManager = new Person();
             $siteBusinessRoleMap[] = (new SiteBusinessRoleMap())->setPerson($siteManager)->setSiteBusinessRole($siteBusinessRole);
         }
+
         return $siteBusinessRoleMap;
     }
 
-    private function getOrganisationBusinessRoleMap() {
+    private function getOrganisationBusinessRoleMap()
+    {
         $organisationBusinessRole = new OrganisationBusinessRole();
         $role = new \DvsaEntities\Entity\Role();
         $role->setCode(RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER);
         $organisationBusinessRole->setRole($role);
         $siteManager = new Person();
+
         return  (new OrganisationBusinessRoleMap())->setPerson($siteManager)->setOrganisationBusinessRole($organisationBusinessRole);
     }
-
 
     public function testForTestOutsideSiteOpeningHoursWithManySiteManagers()
     {
@@ -1205,7 +1195,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
             $this->getTestData(),
             $this->getSiteBusinessRoleMap(),
             null,
-            "19"
+            '19'
         );
 
         $this->notificationOnTestOutsideOpeningHoursExpectedExactlyTimes(1);
@@ -1218,8 +1208,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $siteBusinessRoleMap,
         $organisationBusinessRoleMap,
         $testStartedHour
-    )
-    {
+    ) {
         $mockCreateTestRepository
             ->expects($this->any())
             ->method('create')
@@ -1240,14 +1229,14 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     protected function getTestData()
     {
         return [
-            "vehicleId" => self::VEHICLE_ID,
-            "vehicleTestingStationId" => self::SITE_ID,
-            "primaryColour" => ColourCode::GREY,
-            "secondaryColour" => ColourCode::NOT_STATED,
-            "fuelTypeId" => FuelTypeCode::PETROL,
-            "vehicleClassCode" => VehicleClassCode::CLASS_4,
-            "hasRegistration" => true,
-            "oneTimePassword" => null
+            'vehicleId' => self::VEHICLE_ID,
+            'vehicleTestingStationId' => self::SITE_ID,
+            'primaryColour' => ColourCode::GREY,
+            'secondaryColour' => ColourCode::NOT_STATED,
+            'fuelTypeId' => FuelTypeCode::PETROL,
+            'vehicleClassCode' => VehicleClassCode::CLASS_4,
+            'hasRegistration' => true,
+            'oneTimePassword' => null,
         ];
     }
 }

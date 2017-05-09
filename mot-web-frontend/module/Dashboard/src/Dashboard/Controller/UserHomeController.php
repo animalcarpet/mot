@@ -32,7 +32,6 @@ use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use UserAdmin\Service\UserAdminSessionManager;
-use Zend\Mvc\Controller\Plugin\Identity;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -455,7 +454,7 @@ class UserHomeController extends AbstractAuthActionController
     }
 
     /**
-     * @param int $role
+     * @param int    $role
      * @param string $nicename
      * @param string $roletype
      * @param string $id
@@ -485,7 +484,7 @@ class UserHomeController extends AbstractAuthActionController
     {
         $tester = $this->loggedInUserManager->getTesterData();
         $authorisationsForTestingMot = $this->getAuthorisationsForTestingMot($tester);
-        
+
         $overdueSpecialNotices = $dashboard->getOverdueSpecialNotices();
 
         return new OverdueSpecialNoticeAssertion($overdueSpecialNotices, $authorisationsForTestingMot);
@@ -501,7 +500,7 @@ class UserHomeController extends AbstractAuthActionController
         $authorisationsForTestingMot = [];
 
         if (isset($tester['authorisationsForTestingMot']) && !is_null($tester['authorisationsForTestingMot'])) {
-           return $authorisationsForTestingMot = $tester['authorisationsForTestingMot'];
+            return $authorisationsForTestingMot = $tester['authorisationsForTestingMot'];
         }
 
         return $authorisationsForTestingMot;

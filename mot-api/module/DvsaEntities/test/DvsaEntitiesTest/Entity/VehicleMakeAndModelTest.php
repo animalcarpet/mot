@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Make;
@@ -27,13 +28,13 @@ class VehicleMakeAndModelTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->make = new Make();
-        $this->make->setName("NameFromMake");
+        $this->make->setName('NameFromMake');
 
         $this->model = new Model();
-        $this->model->setName("NameFromModel");
+        $this->model->setName('NameFromModel');
         $this->model->setMake($this->make);
 
-        $this->freeTextName = "Any text";
+        $this->freeTextName = 'Any text';
 
         $this->modelDetail = new ModelDetail();
 
@@ -57,6 +58,5 @@ class VehicleMakeAndModelTest extends PHPUnit_Framework_TestCase
 
         // GIVEN I have a vehicle with model set and free text name for make
         $this->vehicle->getModelDetail()->setModel($this->model);
-
     }
 }

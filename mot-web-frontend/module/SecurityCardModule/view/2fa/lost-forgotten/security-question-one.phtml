@@ -1,12 +1,13 @@
 <?php
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Form\LostOrForgottenSecurityQuestionForm;
-/** @var LostOrForgottenSecurityQuestionForm $form */
+
+/* @var LostOrForgottenSecurityQuestionForm $form */
 
 $this->layout('layout/layout-govuk.phtml');
 $this->layout()->setVariables([
     'pageTitle' => 'First security question',
     'pageSubTitle' => 'Sign in without your security card',
-    'hideUserNav' => true
+    'hideUserNav' => true,
 ]);
 $this->headTitle('First security question');
 ?>

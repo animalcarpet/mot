@@ -8,14 +8,13 @@
 namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Model;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
-use \PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_TestCase;
 
 /**
- * Class IdentityTest
+ * Class IdentityTest.
  */
 class IdentityTest extends PHPUnit_Framework_TestCase
 {
-
     public function testFluentInterface()
     {
         $data = $this->getIdentityData();
@@ -34,11 +33,11 @@ class IdentityTest extends PHPUnit_Framework_TestCase
     protected function getIdentityData()
     {
         return [
-            'username'      => 'test-name-1',
-            'displayName'   => 'displayNameTest',
-            'displayRole'   => 'Test Role',
+            'username' => 'test-name-1',
+            'displayName' => 'displayNameTest',
+            'displayRole' => 'Test Role',
             'testerIsActive' => true,
-            'accessToken'   => 'abcd1234',
+            'accessToken' => 'abcd1234',
         ];
     }
 }

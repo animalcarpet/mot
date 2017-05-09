@@ -5,7 +5,6 @@ namespace DvsaMotTest\Action;
 use Core\Action\ActionResult;
 use Core\Action\ActionResultLayout;
 use Core\Action\RedirectToRoute;
-use Core\Routing\MotTestRouteList;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaMotTest\Flash\VehicleCertificateSearchFlashMessage;
 use DvsaMotTest\Form\VehicleSearch\AbstractDuplicateCertificateSearchForm;
@@ -37,6 +36,7 @@ abstract class AbstractDuplicateCertificateSearchAction implements AutoWireableI
 
     /**
      * @param $form
+     *
      * @return ActionResult
      */
     private function createActionResult($form)
@@ -63,7 +63,8 @@ abstract class AbstractDuplicateCertificateSearchAction implements AutoWireableI
 
     /**
      * @param AbstractDuplicateCertificateSearchForm $form
-     * @param array $data
+     * @param array                                  $data
+     *
      * @return RedirectToRoute
      */
     protected function tryRedirectingToResults(AbstractDuplicateCertificateSearchForm $form, $data)
@@ -104,6 +105,7 @@ abstract class AbstractDuplicateCertificateSearchAction implements AutoWireableI
 
     /**
      * @param ActionResultLayout $layout
+     *
      * @return ActionResultLayout
      */
     abstract protected function setAdditionalLayoutProperties(ActionResultLayout $layout);

@@ -10,8 +10,7 @@ use Event\Service\EventStepService;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Controller\ControllerManager;
 
-
-class EventOutcomeControllerFactoryTest  extends \PHPUnit_Framework_TestCase
+class EventOutcomeControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @throws \Exception
@@ -23,7 +22,7 @@ class EventOutcomeControllerFactoryTest  extends \PHPUnit_Framework_TestCase
         $session = XMock::of(SessionService::class);
         $serviceManager->setService(SessionService::class, $session);
 
-        $service  =  XMock::of(EventStepService::class);
+        $service = XMock::of(EventStepService::class);
         $serviceManager->setService(EventStepService::class, $service);
 
         $plugins = $this->getMock(ControllerManager::class);

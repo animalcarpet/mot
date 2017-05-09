@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Class MotTestReasonForRejectionLocation
+ * Class MotTestReasonForRejectionLocation.
  *
  * @ORM\Entity(
  *     repositoryClass="\DvsaEntities\Repository\MotTestReasonForRejectionLocationRepository"
@@ -53,11 +53,13 @@ class MotTestReasonForRejectionLocation extends Entity
 
     /**
      * @param string $lateral
+     *
      * @return MotTestReasonForRejectionLocation
      */
     public function setLateral($lateral)
     {
         $this->lateral = $lateral;
+
         return $this;
     }
 
@@ -71,11 +73,13 @@ class MotTestReasonForRejectionLocation extends Entity
 
     /**
      * @param string $longitudinal
+     *
      * @return MotTestReasonForRejectionLocation
      */
     public function setLongitudinal($longitudinal)
     {
         $this->longitudinal = $longitudinal;
+
         return $this;
     }
 
@@ -89,11 +93,13 @@ class MotTestReasonForRejectionLocation extends Entity
 
     /**
      * @param string $vertical
+     *
      * @return MotTestReasonForRejectionLocation
      */
     public function setVertical($vertical)
     {
         $this->vertical = $vertical;
+
         return $this;
     }
 }

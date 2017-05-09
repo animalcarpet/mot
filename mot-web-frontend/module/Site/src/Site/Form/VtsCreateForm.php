@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\Form;
 
 use DvsaClient\ViewModel\AbstractFormModel;
@@ -71,7 +72,7 @@ class VtsCreateForm extends AbstractFormModel
 
         //  logical block :: fill facilities
         $facilities = [];
-        for ($i = 0, $len = $this->getTestingFacilityOptl(); $i < $len; $i++) {
+        for ($i = 0, $len = $this->getTestingFacilityOptl(); $i < $len; ++$i) {
             $facilities[] = (new FacilityDto())
                 ->setType(
                     (new FacilityTypeDto())
@@ -79,7 +80,7 @@ class VtsCreateForm extends AbstractFormModel
                 );
         }
 
-        for ($i = 0, $len = $this->getTestingFacilityTptl(); $i < $len; $i++) {
+        for ($i = 0, $len = $this->getTestingFacilityTptl(); $i < $len; ++$i) {
             $facilities[] = (new FacilityDto())
                 ->setType((new FacilityTypeDto())->setCode(FacilityTypeCode::TWO_PERSON_TEST_LANE));
         }
@@ -121,11 +122,13 @@ class VtsCreateForm extends AbstractFormModel
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -139,11 +142,13 @@ class VtsCreateForm extends AbstractFormModel
 
     /**
      * @param string $type
+     *
      * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -157,11 +162,13 @@ class VtsCreateForm extends AbstractFormModel
 
     /**
      * @param int $testingFacilityOptl
+     *
      * @return $this
      */
     public function setTestingFacilityOptl($testingFacilityOptl)
     {
         $this->testingFacilityOptl = $testingFacilityOptl;
+
         return $this;
     }
 
@@ -175,11 +182,13 @@ class VtsCreateForm extends AbstractFormModel
 
     /**
      * @param int $testingFacilityTptl
+     *
      * @return $this
      */
     public function setTestingFacilityTptl($testingFacilityTptl)
     {
         $this->testingFacilityTptl = $testingFacilityTptl;
+
         return $this;
     }
 
@@ -193,11 +202,13 @@ class VtsCreateForm extends AbstractFormModel
 
     /**
      * @param string $country
+     *
      * @return $this
      */
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -211,16 +222,19 @@ class VtsCreateForm extends AbstractFormModel
 
     /**
      * @param array $classes
+     *
      * @return $this
      */
     public function setClasses($classes)
     {
         $this->classes = $classes;
+
         return $this;
     }
 
     /**
      * @param int $class
+     *
      * @return bool
      */
     public function isClassChecked($class)
@@ -228,6 +242,7 @@ class VtsCreateForm extends AbstractFormModel
         if (!empty($this->classes)) {
             return in_array($class, $this->classes);
         }
+
         return false;
     }
 
@@ -241,18 +256,18 @@ class VtsCreateForm extends AbstractFormModel
     public function getSiteTypes()
     {
         return [
-            SiteTypeCode::VEHICLE_TESTING_STATION    => SiteTypeName::VEHICLE_TESTING_STATION,
-            SiteTypeCode::AREA_OFFICE                => SiteTypeName::AREA_OFFICE,
-            SiteTypeCode::TRAINING_CENTRE            => SiteTypeName::TRAINING_CENTRE,
+            SiteTypeCode::VEHICLE_TESTING_STATION => SiteTypeName::VEHICLE_TESTING_STATION,
+            SiteTypeCode::AREA_OFFICE => SiteTypeName::AREA_OFFICE,
+            SiteTypeCode::TRAINING_CENTRE => SiteTypeName::TRAINING_CENTRE,
         ];
     }
 
     public function getCountries()
     {
         return [
-            CountryCode::ENGLAND  => 'England',
+            CountryCode::ENGLAND => 'England',
             CountryCode::SCOTLAND => 'Scotland',
-            CountryCode::WALES    => 'Wales',
+            CountryCode::WALES => 'Wales',
         ];
     }
 
@@ -274,11 +289,13 @@ class VtsCreateForm extends AbstractFormModel
 
     /**
      * @param string $formUrl
+     *
      * @return $this
      */
     public function setFormUrl($formUrl)
     {
         $this->formUrl = $formUrl;
+
         return $this;
     }
 }

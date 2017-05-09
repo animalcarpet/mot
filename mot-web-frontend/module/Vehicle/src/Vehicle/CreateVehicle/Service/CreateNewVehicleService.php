@@ -12,22 +12,21 @@ use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
-use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotTest\Service\AuthorisedClassesService;
 use Vehicle\CreateVehicle\Form\MakeForm;
 use Vehicle\CreateVehicle\Form\ModelForm;
 
 class CreateNewVehicleService
 {
-    /** @var  CreateVehicleStepService */
+    /** @var CreateVehicleStepService */
     private $createVehicleStepService;
-    /** @var  VehicleService */
+    /** @var VehicleService */
     private $vehicleService;
-    /** @var  MotFrontendIdentityProviderInterface */
+    /** @var MotFrontendIdentityProviderInterface */
     private $identityProvider;
-    /** @var  ContingencySessionManager */
+    /** @var ContingencySessionManager */
     private $contingencySessionManager;
-    /** @var  Client */
+    /** @var Client */
     private $client;
     /** @var AuthorisedClassesService */
     private $authorisedClassesService;
@@ -39,8 +38,7 @@ class CreateNewVehicleService
         ContingencySessionManager $contingencySessionManager,
         Client $client,
         AuthorisedClassesService $authorisedClassesService
-    )
-    {
+    ) {
         $this->createVehicleStepService = $createVehicleStepService;
         $this->vehicleService = $vehicleService;
         $this->identityProvider = $identityProvider;
@@ -56,7 +54,7 @@ class CreateNewVehicleService
         $currentVts = $identity->getCurrentVts();
 
         if (!$currentVts) {
-            throw new \Exception("VTS not found");
+            throw new \Exception('VTS not found');
         }
 
         $siteId = $currentVts->getVtsId();
@@ -124,7 +122,7 @@ class CreateNewVehicleService
         $createVehicleRequest
             ->setColourCode($stepsData['primaryColour'])
             ->setCountryOfRegistrationId($countryID)
-            ->setFirstUsedDate(new \DateTime(vsprintf('%04d-%02d-%02d',array_reverse($dateOfFirstUse))))
+            ->setFirstUsedDate(new \DateTime(vsprintf('%04d-%02d-%02d', array_reverse($dateOfFirstUse))))
             ->setFuelTypeCode($stepsData['fuel-type'])
             ->setMakeId($makeId)
             ->setModelId($modelId)
@@ -206,8 +204,8 @@ class CreateNewVehicleService
         if ($this->contingencySessionManager->isMotContingency()) {
             $contingencySession = $this->contingencySessionManager->getContingencySession();
             $data += [
-                'contingencyId'     => $contingencySession['contingencyId'],
-                'contingencyDto'    => DtoHydrator::dtoToJson($contingencySession['dto']),
+                'contingencyId' => $contingencySession['contingencyId'],
+                'contingencyDto' => DtoHydrator::dtoToJson($contingencySession['dto']),
             ];
         }
 
@@ -218,7 +216,7 @@ class CreateNewVehicleService
     {
         return [
             'makeId' => $vehicle->getMake()->getId(),
-            'makeName' => $vehicle->getMakeName()
+            'makeName' => $vehicle->getMakeName(),
         ];
     }
 
@@ -226,7 +224,7 @@ class CreateNewVehicleService
     {
         return [
             'modelId' => $vehicle->getModel()->getId(),
-            'modelName' => $vehicle->getModelName()
+            'modelName' => $vehicle->getModelName(),
         ];
     }
 

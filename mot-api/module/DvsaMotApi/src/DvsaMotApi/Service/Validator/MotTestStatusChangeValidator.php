@@ -12,7 +12,7 @@ use DvsaMotApi\Service\MotTestStatusChangeService;
 use DvsaMotApi\Service\MotTestStatusService;
 
 /**
- * Validates the data when changing the status of an mot test
+ * Validates the data when changing the status of an mot test.
  */
 class MotTestStatusChangeValidator extends AbstractValidator
 {
@@ -44,6 +44,7 @@ class MotTestStatusChangeValidator extends AbstractValidator
         }
 
         $this->errors->throwIfAny();
+
         return true;
     }
 
@@ -56,6 +57,7 @@ class MotTestStatusChangeValidator extends AbstractValidator
         );
 
         $this->errors->throwIfAny();
+
         return true;
     }
 
@@ -64,6 +66,7 @@ class MotTestStatusChangeValidator extends AbstractValidator
         $this->checkMotTestStatusHasChanged($motTest, $newStatus);
         $this->checkMotTestStatusIsValid($newStatus);
         $this->checkStatusTransitionIsValid($motTest, $newStatus);
+
         return true;
     }
 
@@ -113,7 +116,7 @@ class MotTestStatusChangeValidator extends AbstractValidator
 
         if ($newStatus === $currentStatus) {
             throw new BadRequestException(
-                'The MOT Test status has not changed from ' . (string)$currentStatus . ', updates are not being saved.',
+                'The MOT Test status has not changed from '.(string) $currentStatus.', updates are not being saved.',
                 BadRequestException::ERROR_CODE_INVALID_DATA
             );
         }
@@ -144,10 +147,9 @@ class MotTestStatusChangeValidator extends AbstractValidator
         $abortedOrAbandonedDemo = MotTestType::isDemo($motTest->getMotTestType()->getCode())
             && in_array($newStatus, [MotTestStatusName::ABANDONED, MotTestStatusName::ABORTED]);
 
-
         if ($abortedOrAbandonedDemo) {
             throw new BadRequestException(
-                "A demo test cannot be aborted/abandoned",
+                'A demo test cannot be aborted/abandoned',
                 BadRequestException::ERROR_CODE_INVALID_DATA
             );
         }
@@ -173,14 +175,14 @@ class MotTestStatusChangeValidator extends AbstractValidator
 
             if ($newStatus === MotTestStatusName::PASSED && $testHasFailures) {
                 throw new BadRequestException(
-                    "The MOT Test contains failures and can not be passed",
+                    'The MOT Test contains failures and can not be passed',
                     BadRequestException::ERROR_CODE_INVALID_DATA
                 );
             }
 
             if ($newStatus === MotTestStatusName::FAILED && !$testHasFailures) {
                 throw new BadRequestException(
-                    "The MOT Test does not contain failures and can not be failed",
+                    'The MOT Test does not contain failures and can not be failed',
                     BadRequestException::ERROR_CODE_INVALID_DATA
                 );
             }

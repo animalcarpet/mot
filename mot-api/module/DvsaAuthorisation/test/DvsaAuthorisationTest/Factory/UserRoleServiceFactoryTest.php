@@ -8,12 +8,10 @@ use DvsaAuthorisation\Factory\UserRoleServiceFactory;
 use DvsaAuthorisation\Service\UserRoleService;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class UserRoleServiceFactoryTest
- *
+ * Class UserRoleServiceFactoryTest.
  */
 class UserRoleServiceFactoryTest extends AbstractServiceTestCase
 {

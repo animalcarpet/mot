@@ -5,14 +5,14 @@ namespace DvsaEntities\DqlBuilder;
 use DvsaEntities\DqlBuilder\SearchParam\TransactionSearchParam;
 
 /**
- * Class TransactionSearchParamDqlBuilder
+ * Class TransactionSearchParamDqlBuilder.
+ *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
 class TransactionSearchParamDqlBuilder extends SearchParamDqlBuilder
 {
-
     /**
-     * Provides an opportunity to initialize and values before processing
+     * Provides an opportunity to initialize and values before processing.
      *
      * @return $this
      */
@@ -22,7 +22,7 @@ class TransactionSearchParamDqlBuilder extends SearchParamDqlBuilder
     }
 
     /**
-     * Build the Dql from the params
+     * Build the Dql from the params.
      *
      * @param bool $totalCount
      *
@@ -30,8 +30,8 @@ class TransactionSearchParamDqlBuilder extends SearchParamDqlBuilder
      */
     protected function buildDql($totalCount = false)
     {
-        $dql         = [];
-        $filters     = [];
+        $dql = [];
+        $filters = [];
 
         $dql[] = $this->generateDqlHeader($totalCount);
 
@@ -60,13 +60,13 @@ class TransactionSearchParamDqlBuilder extends SearchParamDqlBuilder
             );
         }
 
-        $dql[] = count($filters) ? join(' AND ', $filters): '1';
+        $dql[] = count($filters) ? implode(' AND ', $filters) : '1';
 
         $this->generateDqlFooter($totalCount, $dql);
     }
 
     /**
-     * Build the Query and add any parameters
+     * Build the Query and add any parameters.
      *
      * @param bool $totalCount
      *
@@ -103,11 +103,11 @@ class TransactionSearchParamDqlBuilder extends SearchParamDqlBuilder
     {
         $select = $totalCount ? 'count(transaction)' : 'transaction';
 
-        return 'SELECT ' . $select . ' from DvsaEntities\Entity\TestSlotTransaction transaction ' .
-                'LEFT JOIN DvsaEntities\Entity\Payment p ' .
-                'WITH transaction.payment = p.id ' .
-                'LEFT JOIN DvsaEntities\Entity\Organisation o ' .
-                'WITH transaction.organisation = o.id ' .
+        return 'SELECT '.$select.' from DvsaEntities\Entity\TestSlotTransaction transaction '.
+                'LEFT JOIN DvsaEntities\Entity\Payment p '.
+                'WITH transaction.payment = p.id '.
+                'LEFT JOIN DvsaEntities\Entity\Organisation o '.
+                'WITH transaction.organisation = o.id '.
                 'WHERE';
     }
 
@@ -120,11 +120,11 @@ class TransactionSearchParamDqlBuilder extends SearchParamDqlBuilder
     protected function generateDqlFooter($totalCount, $dql)
     {
         if ($totalCount) {
-            $this->searchCountDql = join(" ", $dql);
+            $this->searchCountDql = implode(' ', $dql);
         } else {
-            $dql[] = "ORDER BY {$this->getOrderForDql()} " .
+            $dql[] = "ORDER BY {$this->getOrderForDql()} ".
                 $this->params->getSortDirection();
-            $this->searchDql = join(" ", $dql);
+            $this->searchDql = implode(' ', $dql);
         }
     }
 
@@ -137,12 +137,12 @@ class TransactionSearchParamDqlBuilder extends SearchParamDqlBuilder
         if (in_array(
             $name,
             [
-                TransactionSearchParam::SORT_COL_AMOUNT
+                TransactionSearchParam::SORT_COL_AMOUNT,
             ]
         ) !== false) {
             $entityAliasPart = 'p.';
         }
 
-        return $entityAliasPart . $name;
+        return $entityAliasPart.$name;
     }
 }

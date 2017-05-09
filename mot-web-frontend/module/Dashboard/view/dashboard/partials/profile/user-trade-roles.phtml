@@ -1,10 +1,7 @@
 <?php
 use Dashboard\ViewModel\UserTradeRolesViewModel;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
-use DvsaCommon\Constants\FeatureToggle;
-use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
-/** @var $userTradeRolesViewModel UserTradeRolesViewModel */
 
+/** @var $userTradeRolesViewModel UserTradeRolesViewModel */
 $i = 0;
 $j = 0;
 foreach ($userTradeRolesViewModel->getTradeRoles() as $tradeRoles) : ?>
@@ -17,7 +14,7 @@ foreach ($userTradeRolesViewModel->getTradeRoles() as $tradeRoles) : ?>
                     : 'Authorised Examiner' ?>
             </span>
             <span class="entity-header__title">
-                <?php if($userTradeRolesViewModel->shouldDisplayLink($personTradeRole)): ?>
+                <?php if ($userTradeRolesViewModel->shouldDisplayLink($personTradeRole)): ?>
                     <a href="<?php echo $userTradeRolesViewModel->getUrlForRole($personTradeRole) ?>">
                         <?php echo $this->escapeHtml($personTradeRole->getWorkplaceName()); ?>
                     </a>
@@ -26,7 +23,7 @@ foreach ($userTradeRolesViewModel->getTradeRoles() as $tradeRoles) : ?>
                 <?php endif ?>
             </span>
             <span class="entity-header__tertiary">
-                <strong><?php echo $personTradeRole->getNumber() ?></strong><?php echo (!empty($personTradeRole->getAddress()) ? ', ' : ''); ?>
+                <strong><?php echo $personTradeRole->getNumber() ?></strong><?php echo !empty($personTradeRole->getAddress()) ? ', ' : ''; ?>
                 <?php if ($personTradeRole->getAddress()) : ?>
                     <?php echo $this->escapeHtml($personTradeRole->getAddress()); ?>
                 <?php endif ?>
@@ -45,7 +42,7 @@ foreach ($userTradeRolesViewModel->getTradeRoles() as $tradeRoles) : ?>
                     <td class="matched-records__value">
                         <?php echo $this->escapeHtml($userTradeRolesViewModel->getTradeRoleNameByCode($personTradeRole->getRoleCode())); ?>
                     </td>
-                    <?php $roleCode = $this->escapeHtml($personTradeRole->getRoleCode()) . '-' . $this->escapeHtml($personTradeRole->getWorkplaceId()); ?>
+                    <?php $roleCode = $this->escapeHtml($personTradeRole->getRoleCode()).'-'.$this->escapeHtml($personTradeRole->getWorkplaceId()); ?>
                     <td class="matched-records__value--right" <?php echo sprintf('id="role-%s"', $roleCode); ?>>
                         <?php if ($userTradeRolesViewModel->canBeRemoved($personTradeRole)): ?>
                             <a href="<?php echo $userTradeRolesViewModel->getUrlForRemoveRole($personTradeRole); ?>" id="remove-role-link-<?php echo $i++ ?>">Remove role</a>

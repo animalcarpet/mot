@@ -1,18 +1,15 @@
 <?php
 
-/** @var $contingencyReasonCode  array */
-/** @var $params                 \Dvsa\Mot\Frontend\MotTestModule\Parameters\ContingencyTestParameters */
-/** @var $sites                  array */
+/** @var $contingencyReasonCode array */
+/** @var $params \Dvsa\Mot\Frontend\MotTestModule\Parameters\ContingencyTestParameters */
+/** @var $sites array */
 /** @var $contingencyReasonCodes array */
-/** @var $validationSummary      array|null */
-/** @var $inlineMessages         array|null */
-
-
-
+/** @var $validationSummary array|null */
+/** @var $inlineMessages array|null */
 echo $this->partial(
     'motTestProgress', [
-        'currentStep'      => -1,
-        'title'            => $this->pageTitle,
+        'currentStep' => -1,
+        'title' => $this->pageTitle,
         'isMotContingency' => true,
     ]
 );
@@ -45,7 +42,7 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
                     </legend>
 
                     <?php foreach ($sites as $site): ?>
-                        <label class="block-label" for="site-<?php echo($site['id'])?>">
+                        <label class="block-label" for="site-<?php echo $site['id']?>">
                             <input type="radio" value="<?php echo $this->escapeHtmlAttr($site['id']); ?>" name="site_id"
                                    id="site-<?php echo $this->escapeHtmlAttr($site['id']); ?>"
                                    <?php if ($params->get('site_id') == $site['id']): ?>checked="checked"<?php endif; ?>>

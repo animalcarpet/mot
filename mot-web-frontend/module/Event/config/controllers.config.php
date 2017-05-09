@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Event\Controller\EventController;
 use Event\Controller\EventCompletedController;
 use Event\Controller\EventOutcomeController;
@@ -22,6 +21,6 @@ return [
         EventCompletedController::class => EventCompletedControllerFactory::class,
         EventOutcomeController::class => EventOutcomeControllerFactory::class,
         EventSummaryController::class => EventSummaryControllerFactory::class,
-        EventRecordController::class => EventRecordControllerFactory::class
+        EventRecordController::class => EventRecordControllerFactory::class,
     ],
 ];

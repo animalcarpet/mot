@@ -23,20 +23,20 @@ use DvsaMotApi\Service\OdometerReadingQueryService;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingDeltaAnomalyChecker;
 
 /**
- * Class OdometerReadingQueryServiceTest
+ * Class OdometerReadingQueryServiceTest.
  */
 class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
 {
     /** @var OdometerReadingQueryService $queryService */
     private $queryService;
 
-    /** @var  OdometerReadingDeltaAnomalyChecker $anomalyChecker */
+    /** @var OdometerReadingDeltaAnomalyChecker $anomalyChecker */
     private $anomalyChecker;
 
     /** @var AuthorisationServiceInterface $authService */
     private $authorizationService;
 
-    /**  @var AuthenticationServiceInterface */
+    /** @var AuthenticationServiceInterface */
     private $identityProvider;
 
     /** @var MotTestRepository */
@@ -81,7 +81,7 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
         $result = $this->queryService->getNotices($motTestNumber);
 
         // then
-        $this->assertEquals([], $result, "An empty array should be returned");
+        $this->assertEquals([], $result, 'An empty array should be returned');
     }
 
     public function testGetNoticesGivenCurrentAndPreviousReadingsFoundShouldReturnArrayOfStringsOffAnomalyCheckResult()
@@ -105,7 +105,7 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
         $result = $this->queryService->getNotices($motTestNumber);
 
         // then
-        $this->assertEquals([$anomalyText], $result, "Returned array does not match check result message");
+        $this->assertEquals([$anomalyText], $result, 'Returned array does not match check result message');
     }
 
     private function currentReadingOf($result)
@@ -135,11 +135,13 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
         $person->setId(3);
         $person->setUsername('user');
         $identity = new Identity($person);
+
         return $identity;
     }
 
     /**
      * @param $testNumber
+     *
      * @return MotTest
      */
     private function getMotTest($testNumber)

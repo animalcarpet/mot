@@ -35,8 +35,8 @@ class RemoveAnnualAssessmentCertificatesController extends AbstractAuthActionCon
         $formContext = new AnnualAssessmentCertificatesFormContext(
             $this->getViewedUserId(),
             $this->getIdentity()->getUserId(),
-            $this->params()->fromRoute("group"),
-            $this->params()->fromRoute("certificateId"),
+            $this->params()->fromRoute('group'),
+            $this->params()->fromRoute('certificateId'),
             $this
         );
 
@@ -56,13 +56,13 @@ class RemoveAnnualAssessmentCertificatesController extends AbstractAuthActionCon
 
     private function getViewedUserId()
     {
-        switch($this->contextProvider->getContext()) {
+        switch ($this->contextProvider->getContext()) {
             case ContextProvider::YOUR_PROFILE_CONTEXT:
                 return $this->getIdentity()->getUserId();
             case ContextProvider::AE_CONTEXT:
             case ContextProvider::VTS_CONTEXT:
             case ContextProvider::USER_SEARCH_CONTEXT:
-                return $this->params()->fromRoute("id");
+                return $this->params()->fromRoute('id');
         }
     }
 }

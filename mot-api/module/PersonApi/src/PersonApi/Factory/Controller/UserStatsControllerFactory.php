@@ -2,16 +2,14 @@
 
 namespace PersonApi\Factory\Controller;
 
-use PersonApi\Controller\ResetPinController;
 use PersonApi\Controller\UserStatsController;
-use PersonApi\Service\PersonService;
 use PersonApi\Service\UserStatsService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class UserStatsControllerFactory
+ * Class UserStatsControllerFactory.
  *
  * Generates the UserStatsController, injecting dependencies
  */

@@ -1,11 +1,11 @@
 <?php
 
 namespace OrganisationTest\Form;
+
 use Organisation\Form\SelectRoleForm;
 
 /**
- * Class SelectRoleFormTest
- * @package OrganisationTest\Form
+ * Class SelectRoleFormTest.
  */
 class SelectRoleFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,13 +21,13 @@ class SelectRoleFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'name'     => 'roleId',
-                'options'  => [
+                'name' => 'roleId',
+                'options' => [
                     'messages' => [
-                        \Zend\Validator\NotEmpty::IS_EMPTY => 'Please choose a role'
+                        \Zend\Validator\NotEmpty::IS_EMPTY => 'Please choose a role',
                     ],
                 ],
-            ]
+            ],
         ];
     }
 }

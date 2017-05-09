@@ -5,13 +5,10 @@ namespace DvsaClient\Mapper;
 use DvsaClient\Entity\Phone;
 
 /**
- * Class PhoneMapper
- *
- * @package DvsaClient\Mapper
+ * Class PhoneMapper.
  */
 class PhoneMapper extends AutoMapper
 {
-
     protected $entityClass = Phone::class;
 
     /**

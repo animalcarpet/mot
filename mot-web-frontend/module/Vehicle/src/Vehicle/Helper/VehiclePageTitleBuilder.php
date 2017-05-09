@@ -15,11 +15,13 @@ class VehiclePageTitleBuilder implements AutoWireableInterface
 
     /**
      * @param DvsaVehicle $vehicle
+     *
      * @return VehiclePageTitleBuilder
      */
     public function setVehicle($vehicle)
     {
         $this->vehicle = $vehicle;
+
         return $this;
     }
 
@@ -39,7 +41,7 @@ class VehiclePageTitleBuilder implements AutoWireableInterface
     private function getMakeAndModel()
     {
         return $this->vehicle->getModel()->getName()
-            ? $this->vehicle->getMake()->getName() . ', ' . $this->vehicle->getModel()->getName()
+            ? $this->vehicle->getMake()->getName().', '.$this->vehicle->getModel()->getName()
             : $this->vehicle->getMake()->getName();
     }
 

@@ -2,7 +2,6 @@
 
 namespace DvsaMotApiTest\Factory\Service;
 
-use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -12,14 +11,12 @@ use DvsaMotApi\Factory\Service\ReplacementCertificateUpdaterFactory;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ReplacementCertificateUpdaterFactoryTest
- *
+ * Class ReplacementCertificateUpdaterFactoryTest.
  */
-class ReplacementCertificateUpdatersFactoryTest extends AbstractServiceTestCase
+class ReplacementCertificateUpdaterFactoryTest extends AbstractServiceTestCase
 {
     private $serviceLocator;
 

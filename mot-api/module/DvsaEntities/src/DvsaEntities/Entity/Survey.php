@@ -51,7 +51,7 @@ class Survey
      */
     public function __toString()
     {
-        return sprintf("Survey[id: %s] rating: %d", $this->getId() ?: 'null', $this->rating);
+        return sprintf('Survey[id: %s] rating: %d', $this->getId() ?: 'null', $this->rating);
     }
 
     /**

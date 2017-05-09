@@ -9,20 +9,17 @@ use Application\Data\ApiPersonalDetails;
 use Dashboard\Model\PersonalDetails;
 use Zend\View\Helper\Url;
 
-
 class TesterTqiBreadcrumbs implements AutoWireableInterface
 {
     private $apiPersonalDetails;
     private $contextProvider;
     private $url;
 
-
     public function __construct(
         ApiPersonalDetails $apiPersonalDetails,
         ContextProvider $contextProvider,
         Url $url
-    )
-    {
+    ) {
         $this->apiPersonalDetails = $apiPersonalDetails;
         $this->contextProvider = $contextProvider;
         $this->url = $url;
@@ -32,7 +29,7 @@ class TesterTqiBreadcrumbs implements AutoWireableInterface
     {
         $breadcrumbs = [];
         if ($this->contextProvider->isYourProfileContext()) {
-            $breadcrumbs["Your profile"] = ProfileRoutes::of($this->url)->yourProfile();
+            $breadcrumbs['Your profile'] = ProfileRoutes::of($this->url)->yourProfile();
         } else {
             $personalDetails = new PersonalDetails($this
                 ->apiPersonalDetails
@@ -41,7 +38,7 @@ class TesterTqiBreadcrumbs implements AutoWireableInterface
             $breadcrumbs[$personalDetails->getFullName()] = ProfileRoutes::of($this->url)->userSearch($testerId);
         }
 
-        $breadcrumbs["Test quality information"] = null;
+        $breadcrumbs['Test quality information'] = null;
 
         return $breadcrumbs;
     }

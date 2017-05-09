@@ -5,15 +5,12 @@ namespace DvsaCatalogApiTest\Factory\Service;
 use DataCatalogApi\Factory\Service\VehicleCatalogServiceFactory;
 use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use DataCatalogApi\Service\VehicleCatalogService;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
- * Class VehicleCatalogServiceFactoryTest
- *
+ * Class VehicleCatalogServiceFactoryTest.
  */
 class VehicleCatalogServiceFactoryTest extends AbstractServiceTestCase
 {

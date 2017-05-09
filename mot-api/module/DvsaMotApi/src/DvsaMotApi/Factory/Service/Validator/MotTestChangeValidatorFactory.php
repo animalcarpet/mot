@@ -8,7 +8,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MotTestChangeValidatorFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new MotTestStatusChangeValidator(

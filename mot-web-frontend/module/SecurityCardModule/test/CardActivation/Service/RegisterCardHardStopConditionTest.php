@@ -9,15 +9,6 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
-use Zend\Di\ServiceLocator;
-use Zend\EventManager\Exception\DomainException;
-use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\Parameters;
-use Zend\View\Model\ViewModel;
 
 class RegisterCardHardStopConditionTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,7 +32,7 @@ class RegisterCardHardStopConditionTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap(
                 [
                     [FeatureToggle::TWO_FA, $twoFa],
-                    [FeatureToggle::TWO_FA_HARD_STOP, $twoFaHardStop]
+                    [FeatureToggle::TWO_FA_HARD_STOP, $twoFaHardStop],
                 ]
             ));
     }

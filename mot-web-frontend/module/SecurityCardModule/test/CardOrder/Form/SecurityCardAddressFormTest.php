@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardOrder\Form;
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Form\SecurityCardAddressForm;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Step\AddressStep;
 
 class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +30,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => 'NG1 6LP',
-            'addressChoice' => '1'
+            'addressChoice' => '1',
         ];
 
         $form->setData($addressData);
@@ -49,7 +48,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => self::INVALID_HOME_POSTCODE,
-            'addressChoice' => '0'
+            'addressChoice' => '0',
         ];
 
         $form->setData($addressData);
@@ -68,7 +67,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => self::VALID_HOME_POSTCODE,
-            'addressChoice' => '0'
+            'addressChoice' => '0',
         ];
 
         $form->setData($addressData);
@@ -85,7 +84,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => 'NG1 6LP',
-            'addressChoice' => ''
+            'addressChoice' => '',
         ];
 
         $form->setData($addressData);
@@ -102,7 +101,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => 'NG1 6LP',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
@@ -119,13 +118,12 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => '',
             'postcode' => 'NG1 6LP',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
         $this->assertFalse($form->isValid());
     }
-
 
     public function test_emptyPostcode_shouldProduceErrorMessage()
     {
@@ -137,7 +135,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => '',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
@@ -154,7 +152,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => 'ehjgefieij',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
@@ -171,7 +169,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => 'NG1 1PL',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
@@ -188,7 +186,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Town',
             'postcode' => 'NG1 1PL',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
@@ -205,7 +203,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => 'Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1',
             'townOrCity' => 'Town',
             'postcode' => 'NG1 1PL',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
@@ -222,7 +220,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
             'address3' => '',
             'townOrCity' => 'Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1Address 1',
             'postcode' => 'NG1 1PL',
-            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
+            'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
         ];
 
         $form->setData($addressData);
@@ -257,8 +255,8 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
                     'address3' => 'address 3',
                     'townOrCity' => 'Northolt',
                     'postcode' => 'NG1 6LP',
-                    'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE
-                ]
+                    'addressChoice' => SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE,
+                ],
             ],
         ];
     }
@@ -267,31 +265,31 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'name' => "Home",
-                'addressLine1' => "Home Address Line 1",
-                'addressLine2' => "Home Address Line 2",
-                'addressLine3' => "Home Address Line 3",
-                'town' => "Home Town",
+                'name' => 'Home',
+                'addressLine1' => 'Home Address Line 1',
+                'addressLine2' => 'Home Address Line 2',
+                'addressLine3' => 'Home Address Line 3',
+                'town' => 'Home Town',
                 'postcode' => $homeAddressPostcode,
                 'addressString' => 'Home Address Line 1, Home Address Line 2, Home Address Line 3, Home Town, BT9 6FT',
             ],
             [
-                'name' => "Popular Garages",
+                'name' => 'Popular Garages',
                 'addressString' => '67 Main Road, Bristol, BS8 2NT',
-                "addressLine1" => "67 Main Road",
-                "addressLine2" => null,
-                "addressLine3" => null,
-                "town" => "Bristol",
-                "postcode" => "BS8 2NT",
+                'addressLine1' => '67 Main Road',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'town' => 'Bristol',
+                'postcode' => 'BS8 2NT',
             ],
             [
-                'name' => "Test VTS",
+                'name' => 'Test VTS',
                 'addressString' => '68 Main Road, Bristol, BS8 2NT',
-                "addressLine1" => "68 Main Road",
-                "addressLine2" => null,
-                "addressLine3" => null,
-                "town" => "Bristol",
-                "postcode" => "BS8 2NT",
+                'addressLine1' => '68 Main Road',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'town' => 'Bristol',
+                'postcode' => 'BS8 2NT',
             ],
         ];
     }

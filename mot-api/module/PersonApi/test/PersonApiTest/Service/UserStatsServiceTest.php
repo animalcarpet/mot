@@ -19,12 +19,12 @@ use UserApi\Dashboard\Dto\MonthStats;
 use PersonApi\Service\UserStatsService;
 
 /**
- * Tests for UserStatsService
+ * Tests for UserStatsService.
  */
 class UserStatsServiceTest extends AbstractServiceTestCase
 {
     /**
-     * @var UserStatsService $statsService
+     * @var UserStatsService
      */
     public $statsService;
 
@@ -66,9 +66,9 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $this->assertEquals(
             $result->toArray(),
             [
-                'total'           => 3,
-                'numberOfPasses'  => 1,
-                'numberOfFails'   => 2,
+                'total' => 3,
+                'numberOfPasses' => 1,
+                'numberOfFails' => 2,
             ]
         );
     }
@@ -92,13 +92,14 @@ class UserStatsServiceTest extends AbstractServiceTestCase
             $result->toArray(),
             [
                 'averageTime' => 4800,
-                'failRate'    => (double) 100*2/3,
+                'failRate' => (float) 100 * 2 / 3,
             ]
         );
     }
 
     /**
-     * @param String $motTestTypeCode
+     * @param string $motTestTypeCode
+     *
      * @return array
      */
     private function getArrayOfMotTests($motTestTypeCode)
@@ -132,7 +133,6 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $motTestPrs1->setPrsMotTest($motTestPrs2);
         $motTestPrs2->setPrsMotTest($motTestPrs1);
 
-
         return [$motTestPassed, $motTestFailed, $motTestPrs1, $motTestPrs2];
     }
 
@@ -149,12 +149,12 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $mockQueryBuilder = $this->getMock(QueryBuilder::class, [], [], '', false);
         $this->setupMockForCalls($mockQueryBuilder, 'getQuery', $mockQuery);
 
-        /** @var MotTestRepository $mockRepository */
+        /* @var MotTestRepository $mockRepository */
         $this->mockRepository = $this->getMockRepository(MotTestRepository::class);
         $this->setupMockForCalls($this->mockRepository, 'matching', $motTests);
         $this->setupMockForCalls($this->mockRepository, 'createQueryBuilder', $mockQueryBuilder, 't');
 
-        /** @var EntityManager $mockEntityManager */
+        /* @var EntityManager $mockEntityManager */
         $this->mockEntityManager = $this->getMockEntityManager();
         $this->setupMockForCalls($this->mockEntityManager, 'find', $person, Person::class);
         $this->setupMockForCalls($this->mockEntityManager, 'getRepository', $this->mockRepository, MotTest::class);
@@ -164,6 +164,7 @@ class UserStatsServiceTest extends AbstractServiceTestCase
      * @param $name
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|MotTestStatus
+     *
      * @throws \Exception
      */
     private function createMotTestStatus($name)
@@ -171,7 +172,7 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;

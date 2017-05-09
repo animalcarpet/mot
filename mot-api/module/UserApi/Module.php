@@ -14,25 +14,21 @@ use MailerApi\Service\MailerService;
 use UserApi\Application\Service\AccountService;
 use UserApi\Application\Service\ApplicationService;
 use UserApi\Application\Service\Validator\AccountValidator;
-use UserApi\Factory as Factory;
 use UserApi\HelpDesk\Factory\Service\ResetClaimAccountServiceFactory;
 use UserApi\HelpDesk\Service\HelpDeskPersonService;
 use UserApi\HelpDesk\Service\ResetClaimAccountService;
 use UserApi\Message\Service\MessageService;
 use UserApi\Person\Service\PersonRoleService;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class Module
- *
- * @package UserApi
+ * Class Module.
  */
 class Module
 {
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     public function getAutoloaderConfig()
@@ -43,15 +39,15 @@ class Module
     {
         return [
             'factories' => [
-                AccountService::class               => Factory\AccountServiceFactory::class,
-                AccountValidator::class             => Factory\AccountValidatorFactory::class,
-                ApplicationService::class           => Factory\ApplicationServiceFactory::class,
-                HelpDeskPersonService::class        => Factory\HelpDeskPersonServiceFactory::class,
-                MessageService::class               => Factory\MessageServiceFactory::class,
-                SpecialNoticeService::class         => Factory\SpecialNoticeServiceFactory::class,
-                MailerService::class                => MailerServiceFactory::class,
-                ResetClaimAccountService::class     => ResetClaimAccountServiceFactory::class,
-                PersonRoleService::class            => Factory\PersonRoleServiceFactory::class,
+                AccountService::class => Factory\AccountServiceFactory::class,
+                AccountValidator::class => Factory\AccountValidatorFactory::class,
+                ApplicationService::class => Factory\ApplicationServiceFactory::class,
+                HelpDeskPersonService::class => Factory\HelpDeskPersonServiceFactory::class,
+                MessageService::class => Factory\MessageServiceFactory::class,
+                SpecialNoticeService::class => Factory\SpecialNoticeServiceFactory::class,
+                MailerService::class => MailerServiceFactory::class,
+                ResetClaimAccountService::class => ResetClaimAccountServiceFactory::class,
+                PersonRoleService::class => Factory\PersonRoleServiceFactory::class,
             ],
         ];
     }

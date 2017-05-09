@@ -45,7 +45,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use VehicleApi\Service\VehicleService;
 
 /**
- * Base for unit tests for classes inherited from AbstractMotTestService
+ * Base for unit tests for classes inherited from AbstractMotTestService.
  */
 abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
 {
@@ -54,61 +54,61 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
     const MOCK_MOTTEST_DATE_HELPER = 'mockMotTestDateHelper';
     const MOCK_DATETIME_HOLDER = 'mockDateTimeHolder';
 
-    /** @var EntityManager|MockObj  */
+    /** @var EntityManager|MockObj */
     protected $mockEntityManager;
 
-    /** @var MotTestValidator|MockObj  */
+    /** @var MotTestValidator|MockObj */
     protected $mockMotTestValidator;
 
-    /** @var  TesterService|MockObj */
+    /** @var TesterService|MockObj */
     protected $mockTesterService;
 
-    /** @var  \DvsaAuthorisation\Service\AuthorisationServiceInterface|MockObj */
+    /** @var \DvsaAuthorisation\Service\AuthorisationServiceInterface|MockObj */
     protected $mockAuthService;
 
-    /** @var  MotTestRepository|MockObj */
+    /** @var MotTestRepository|MockObj */
     protected $mockMotTestRepository;
 
-    /** @var  PersonRepository|MockObj */
+    /** @var PersonRepository|MockObj */
     protected $mockPersonRepository;
 
-    /** @var  MotTestMapper|MockObj */
+    /** @var MotTestMapper|MockObj */
     protected $mockMotTestMapper;
 
-    /** @var  RetestEligibilityValidator|MockObj */
+    /** @var RetestEligibilityValidator|MockObj */
     protected $mockRetestEligibilityValidator;
 
-    /** @var  ConfigurationRepository|MockObj */
+    /** @var ConfigurationRepository|MockObj */
     protected $mockConfigurationRepository;
 
-    /** @var  ReadMotTestAssertion|MockObj */
+    /** @var ReadMotTestAssertion|MockObj */
     protected $mockReadMotTestAssertion;
 
-    /** @var  OtpService|MockObj */
+    /** @var OtpService|MockObj */
     protected $mockOtpService;
 
-    /** @var  OrganisationService|MockObj */
+    /** @var OrganisationService|MockObj */
     protected $mockOrganisationService;
 
-    /** @var  VehicleService|MockObj */
+    /** @var VehicleService|MockObj */
     protected $mockVehicleService;
 
-    /** @var  CertificateCreationService|MockObj */
+    /** @var CertificateCreationService|MockObj */
     protected $mockCertificateCreationService;
 
-    /** @var  MotTestTypeRepository|MockObj */
+    /** @var MotTestTypeRepository|MockObj */
     protected $mockMotTestTypeRepository;
 
-    /** @var  TestDateTimeHolder */
+    /** @var TestDateTimeHolder */
     protected $dateTimeHolder;
 
-    /** @var CreateMotTestService|MockObj  */
+    /** @var CreateMotTestService|MockObj */
     protected $mockCreateMotTestService;
 
     /** @var NewVehicleService */
     protected $mockNewVehicleService;
 
-    /** @var  TestingOutsideOpeningHoursNotificationService|MockObj */
+    /** @var TestingOutsideOpeningHoursNotificationService|MockObj */
     protected $mockTestingOutsideOpeningHoursNotificationService;
 
     public function setUp()
@@ -177,6 +177,7 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
      * @param \DateTime $currentDateTime
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function getMocksForMotTestService(\DateTime $currentDateTime = null, $isAuthorised = true)
@@ -218,7 +219,7 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
         $this->mockAuthService = $this->getMockAuthorizationService($isAuthorised);
         $this->mockMotTestMapper = $this->getMockMotTestMapper();
 
-        $this->mockReadMotTestAssertion = XMock::of(ReadMotTestAssertion::Class);
+        $this->mockReadMotTestAssertion = XMock::of(ReadMotTestAssertion::class);
         $this->mockCreateMotTestService = XMock::of(CreateMotTestService::class);
 
         $this->mockNewVehicleService = XMock::of(NewVehicleService::class);
@@ -242,7 +243,7 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             'mockReadMotTestAssertion' => $this->mockReadMotTestAssertion,
             'mockCreateMotTestService' => $this->mockCreateMotTestService,
             'mockNewVehicleService' => $this->mockNewVehicleService,
-            'mockTestingOutsideOpeningHoursNotificationService' => $this->mockTestingOutsideOpeningHoursNotificationService
+            'mockTestingOutsideOpeningHoursNotificationService' => $this->mockTestingOutsideOpeningHoursNotificationService,
         ];
     }
 

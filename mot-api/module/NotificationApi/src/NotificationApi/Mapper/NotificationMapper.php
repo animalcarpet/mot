@@ -7,7 +7,7 @@ use DvsaEntities\Entity\Notification;
 use DvsaEntities\Entity\NotificationTemplateAction;
 
 /**
- * Class NotificationMapper
+ * Class NotificationMapper.
  */
 class NotificationMapper
 {
@@ -32,15 +32,15 @@ class NotificationMapper
         }
 
         $result = [
-            'id'        => $notification->getId(),
+            'id' => $notification->getId(),
             'recipientId' => $notification->getRecipient(),
             'templateId' => $notification->getNotificationTemplate()->getId(),
-            'subject'   => $this->parseTemplate($notification->getNotificationTemplate()->getSubject(), $fields),
-            'content'   => $this->parseTemplate($notification->getNotificationTemplate()->getContent(), $fields),
-            'readOn'    => $this->extractDate($notification->getReadOn()),
+            'subject' => $this->parseTemplate($notification->getNotificationTemplate()->getSubject(), $fields),
+            'content' => $this->parseTemplate($notification->getNotificationTemplate()->getContent(), $fields),
+            'readOn' => $this->extractDate($notification->getReadOn()),
             'createdOn' => $this->extractDate($notification->getCreatedOn()),
             'isArchived' => $notification->getIsArchived(),
-            'fields' => $fields
+            'fields' => $fields,
         ];
 
         /** @var \DvsaEntities\Entity\NotificationAction $notificationAction */
@@ -71,7 +71,7 @@ class NotificationMapper
     private function parseTemplate($content, $fields)
     {
         foreach ($fields as $key => $value) {
-            $content = str_replace('${' . $key . '}', $value, $content);
+            $content = str_replace('${'.$key.'}', $value, $content);
         }
 
         return $content;

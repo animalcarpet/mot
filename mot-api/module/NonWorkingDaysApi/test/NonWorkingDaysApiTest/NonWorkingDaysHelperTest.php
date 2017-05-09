@@ -13,7 +13,7 @@ use NonWorkingDaysApi\NonWorkingDaysHelper;
 use NonWorkingDaysApi\NonWorkingDaysLookupManager;
 
 /**
- * Class NonWorkingDaysHelperTest
+ * Class NonWorkingDaysHelperTest.
  */
 class NonWorkingDaysHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -92,7 +92,7 @@ class NonWorkingDaysHelperTest extends \PHPUnit_Framework_TestCase
     {
         $date2013 = [
             new \DateTime('2013/12/25'),
-            new \DateTime('2013/12/26')
+            new \DateTime('2013/12/26'),
         ];
 
         $date2014 = [
@@ -102,7 +102,7 @@ class NonWorkingDaysHelperTest extends \PHPUnit_Framework_TestCase
             new \DateTime('2014/05/26'),
             new \DateTime('2014/08/04'),
             new \DateTime('2014/12/25'),
-            new \DateTime('2014/12/26')
+            new \DateTime('2014/12/26'),
         ];
 
         $date2014Sct = $date2014;
@@ -111,13 +111,13 @@ class NonWorkingDaysHelperTest extends \PHPUnit_Framework_TestCase
         $fixedTable2013 = [
             CountryCode::SCOTLAND => $date2013,
             CountryCode::ENGLAND => $date2013,
-            CountryCode::WALES => $date2013
+            CountryCode::WALES => $date2013,
         ];
 
         $fixedTable2014 = [
             CountryCode::SCOTLAND => $date2014Sct,
             CountryCode::ENGLAND => $date2014,
-            CountryCode::WALES => $date2014
+            CountryCode::WALES => $date2014,
         ];
 
         return [2013 => $fixedTable2013, 2014 => $fixedTable2014];
@@ -128,15 +128,16 @@ class NonWorkingDaysHelperTest extends \PHPUnit_Framework_TestCase
      */
     private function mockNonWorkingDayCountryLookupRepository()
     {
-        $nonWorkingDayCountryLookupRepository = XMock::of(NonWorkingDayCountryRepository::class, ["getOneByCode"]);
+        $nonWorkingDayCountryLookupRepository = XMock::of(NonWorkingDayCountryRepository::class, ['getOneByCode']);
         $nonWorkingDayCountryLookupRepository
             ->expects($this->any())
-            ->method("getOneByCode")
+            ->method('getOneByCode')
             ->willReturnCallback(function ($code) {
                 $country = new Country();
                 $country->setCode($code);
                 $nonWorkingDayCountryLookup = new NonWorkingDayCountry();
                 $nonWorkingDayCountryLookup->setCountry($country);
+
                 return $nonWorkingDayCountryLookup;
             });
 
@@ -149,10 +150,10 @@ class NonWorkingDaysHelperTest extends \PHPUnit_Framework_TestCase
     private function mockNonWorkingDayLookupRepository()
     {
         $holidays = $this->getHolidays();
-        $nonWorkingDayLookupRepository = XMock::of(NonWorkingDayRepository::class, ["findDaysByCountryAndYear"]);
+        $nonWorkingDayLookupRepository = XMock::of(NonWorkingDayRepository::class, ['findDaysByCountryAndYear']);
         $nonWorkingDayLookupRepository
             ->expects($this->any())
-            ->method("findDaysByCountryAndYear")
+            ->method('findDaysByCountryAndYear')
             ->willReturnCallback(function ($countryCode, $year) use ($holidays) {
                 return $holidays[$year][$countryCode];
             });

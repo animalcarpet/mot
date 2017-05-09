@@ -15,9 +15,10 @@ class TestingFacilitiesValidator extends AbstractValidator
     const ERR_TESTING_FACILITY_REQUIRE = 'A number for either OPTL or TPTL must be selected';
 
     /**
-     * Validate testing facilities on site DTO
+     * Validate testing facilities on site DTO.
      *
      * @param VehicleTestingStationDto $siteDto
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function validate(VehicleTestingStationDto $siteDto)

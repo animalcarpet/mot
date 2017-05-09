@@ -23,9 +23,7 @@ use Zend\Http\PhpEnvironment\Response;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class MotTestLogController
- *
- * @package Organisation\Controller
+ * Class MotTestLogController.
  */
 class MotTestLogController extends AbstractAuthActionController
 {
@@ -69,7 +67,7 @@ class MotTestLogController extends AbstractAuthActionController
 
     /**
      * @param MotFrontendAuthorisationServiceInterface $authService
-     * @param MapperFactory $mapperFactory
+     * @param MapperFactory                            $mapperFactory
      */
     public function __construct(
         MotFrontendAuthorisationServiceInterface $authService,
@@ -143,7 +141,8 @@ class MotTestLogController extends AbstractAuthActionController
     }
 
     /**
-     * Generate a CSV containing test log entries and stream it to the browser
+     * Generate a CSV containing test log entries and stream it to the browser.
+     *
      * @return void|Response
      */
     public function downloadCsvAction()
@@ -169,20 +168,20 @@ class MotTestLogController extends AbstractAuthActionController
         // Now we want to fetch the data from the API, and not the total count
         $searchParams->setIsApiGetTotalCount(false)->setIsApiGetData(true);
 
-        $fileName = 'test-log-' .
-            (new \DateTime('@' . $searchParams->getDateFromTs()))->format('dmY') . '-' .
-            (new \DateTime('@' . $searchParams->getDateToTs()))->format('dmY') . '.csv';
+        $fileName = 'test-log-'.
+            (new \DateTime('@'.$searchParams->getDateFromTs()))->format('dmY').'-'.
+            (new \DateTime('@'.$searchParams->getDateToTs()))->format('dmY').'.csv';
 
         // Prepare the headers and send them
-        $headers = (new Headers)->addHeaders([
+        $headers = (new Headers())->addHeaders([
             'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
             'Accept-Ranges' => 'bytes',
             'Cache-Control' => 'no-cache, no-store, max-age=0, must-revalidate',
             'Pragma' => 'no-cache',
         ]);
 
-        $this->response = new Response;
+        $this->response = new Response();
         $this->response->setHeaders($headers);
         $this->response->sendHeaders();
 
@@ -196,7 +195,7 @@ class MotTestLogController extends AbstractAuthActionController
         }
 
         // Grab each page of results and output them
-        for ($i = 1; $i < $lastPageNumber + 1; $i++) {
+        for ($i = 1; $i < $lastPageNumber + 1; ++$i) {
             $searchParams->setPageNr($i);
             $apiResult = $this->getLogDataBySearchCriteria($organisationId, $searchParams);
             $this->prepareCsvBody($apiResult->getData());
@@ -210,9 +209,9 @@ class MotTestLogController extends AbstractAuthActionController
     }
 
     /**
-     * Open a handle on php://output, iterate the rows and write each to the CSV
+     * Open a handle on php://output, iterate the rows and write each to the CSV.
+     *
      * @param array $rows
-     * @return void
      */
     protected function prepareCsvBody(array $rows)
     {
@@ -231,16 +230,16 @@ class MotTestLogController extends AbstractAuthActionController
 
             // Only print primary IP address
             if (isset($row['clientIp'])) {
-                $ips = explode(", ", $row['clientIp']);
+                $ips = explode(', ', $row['clientIp']);
                 $row['clientIp'] = $ips[0];
             }
 
             //="formula" hack preventing Excel from converting columns to Date or Number
-            $row['vehicleModel'] = '="' . $row['vehicleModel'] . '"';
-            $row['testNumber'] = '="' . $row['testNumber'] . '"';
+            $row['vehicleModel'] = '="'.$row['vehicleModel'].'"';
+            $row['testNumber'] = '="'.$row['testNumber'].'"';
 
             // VIN must use ="<vin>" to prevent Excel truncating numeric VIN longer than 15 digits
-            $row['vehicleVIN'] = '="' . $row['vehicleVIN'] . '"';
+            $row['vehicleVIN'] = '="'.$row['vehicleVIN'].'"';
 
             fputcsv($this->csvHandle, $row);
         }
@@ -275,7 +274,7 @@ class MotTestLogController extends AbstractAuthActionController
     }
 
     /**
-     * Get mot tests log summary information from api (year, prev month, prev week, today)
+     * Get mot tests log summary information from api (year, prev month, prev week, today).
      *
      * @param int $organisationId
      *
@@ -294,6 +293,7 @@ class MotTestLogController extends AbstractAuthActionController
 
     /**
      * @param MotTestLogFormViewModel $formModel
+     *
      * @return MotTestSearchParamsDto
      */
     protected function prepareSearchParams(MotTestLogFormViewModel $formModel = null)

@@ -10,7 +10,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class MotTestReasonForRejectionDescription
+ * Class MotTestReasonForRejectionDescription.
  *
  * @ORM\Entity
  * @ORM\Table(
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 class MotTestReasonForRejectionDescription extends Entity
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -45,11 +45,13 @@ class MotTestReasonForRejectionDescription extends Entity
 
     /**
      * @param int $id
+     *
      * @return MotTestReasonForRejectionComment
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -63,12 +65,13 @@ class MotTestReasonForRejectionDescription extends Entity
 
     /**
      * @param string $customDescription
+     *
      * @return MotTestReasonForRejectionDescription
      */
     public function setCustomDescription($customDescription)
     {
         $this->customDescription = $customDescription;
+
         return $this;
     }
 }
-

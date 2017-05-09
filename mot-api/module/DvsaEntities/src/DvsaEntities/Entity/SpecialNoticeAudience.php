@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Special Notice Audience
+ * Special Notice Audience.
  *
  * @ORM\Table(
  *  name="special_notice_audience",
@@ -28,14 +29,14 @@ class SpecialNoticeAudience extends Entity
     private $content;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="special_notice_audience_type_id", type="integer", nullable=false)
      */
     private $audienceId;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_class_id", type="integer", nullable=false)
      */

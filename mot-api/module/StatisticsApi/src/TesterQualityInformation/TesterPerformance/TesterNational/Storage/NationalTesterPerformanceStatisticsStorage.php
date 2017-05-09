@@ -14,8 +14,7 @@ class NationalTesterPerformanceStatisticsStorage
 
     public function __construct(
         KeyValueStorageInterface $statisticsStorage
-    )
-    {
+    ) {
         $this->storage = $statisticsStorage;
         $this->keyGenerator = new S3KeyGenerator();
     }
@@ -23,6 +22,7 @@ class NationalTesterPerformanceStatisticsStorage
     /**
      * @param $year
      * @param $month
+     *
      * @return ReportDtoInterface
      */
     public function get($year, $month)

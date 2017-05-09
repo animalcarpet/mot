@@ -1,10 +1,9 @@
 <?php
 /**
- * @var Site\ViewModel\VehicleTestingStation\VtsFormViewModel $model
+ * @var Site\ViewModel\VehicleTestingStation\VtsFormViewModel
  * @var \Site\Form\VtsCreateForm                              $form
  * @var \Zend\Mvc\Controller\Plugin\FlashMessenger            $flashMessenger
  */
-
 use DvsaCommon\Enum\VehicleClassCode;
 use Site\Form\VtsCreateForm;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -33,24 +32,24 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'           => VtsCreateForm::FIELD_NAME,
-                'label'        => 'Site name',
-                'title'        => 'Enter Site name',
-                'value'        => $form->getName(),
+                'id' => VtsCreateForm::FIELD_NAME,
+                'label' => 'Site name',
+                'title' => 'Enter Site name',
+                'value' => $form->getName(),
                 'errorMessage' => $form->getError(VtsCreateForm::FIELD_NAME),
-                'maxLength'    => 100,
-                'autofocus'    => true,
+                'maxLength' => 100,
+                'autofocus' => true,
             ]
         );
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
-                'id'           => VtsCreateForm::FIELD_SITE_TYPE,
-                'label'        => 'Site type',
-                'inputModifier'=> '1-4',
+                'id' => VtsCreateForm::FIELD_SITE_TYPE,
+                'label' => 'Site type',
+                'inputModifier' => '1-4',
                 'errorMessage' => $form->getError(VtsCreateForm::FIELD_SITE_TYPE),
-                'value'        => $form->getType(),
-                'options'      => $form->getSiteTypes(),
+                'value' => $form->getType(),
+                'options' => $form->getSiteTypes(),
             ]
         );
         ?>
@@ -63,9 +62,9 @@ echo $this->partial(
         foreach ($form->getCountries() as $code => $name) {
             $countryOptions[] = [
                 'inputName' => VtsCreateForm::FIELD_COUNTRY,
-                'key'       => $name,
-                'value'     => $code,
-                'checked'   => ($form->getCountry() === $code),
+                'key' => $name,
+                'value' => $code,
+                'checked' => ($form->getCountry() === $code),
             ];
         }
 
@@ -77,10 +76,10 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-address-group',
             [
-                'id'            => 'address',
-                'group'         => SiteContactTypeCode::BUSINESS,
-                'form'          => $form->getContactModel()->getAddressModel(),
-                'countryRadio'  => $countryOptions,
+                'id' => 'address',
+                'group' => SiteContactTypeCode::BUSINESS,
+                'form' => $form->getContactModel()->getAddressModel(),
+                'countryRadio' => $countryOptions,
             ],
             'Core'
         );
@@ -99,10 +98,10 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-email-conf-group',
             [
-                'id'    => 'email',
-                'key'   => 'Email address not provided',
+                'id' => 'email',
+                'key' => 'Email address not provided',
                 'group' => SiteContactTypeCode::BUSINESS,
-                'form'  => $form->getContactModel()->getEmailModel(),
+                'form' => $form->getContactModel()->getEmailModel(),
                 'maxLength' => 255,
             ],
             'Core'
@@ -118,13 +117,13 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => SiteContactTypeCode::BUSINESS . PhoneFormModel::FIELD_NUMBER,
-                'name'          => SiteContactTypeCode::BUSINESS . '[' . PhoneFormModel::FIELD_NUMBER . ']',
-                'errorMessage'  => $form->getContactModel()->getPhoneModel()->getError(SiteContactTypeCode::BUSINESS . '[' . PhoneFormModel::FIELD_NUMBER . ']'),
+                'id' => SiteContactTypeCode::BUSINESS.PhoneFormModel::FIELD_NUMBER,
+                'name' => SiteContactTypeCode::BUSINESS.'['.PhoneFormModel::FIELD_NUMBER.']',
+                'errorMessage' => $form->getContactModel()->getPhoneModel()->getError(SiteContactTypeCode::BUSINESS.'['.PhoneFormModel::FIELD_NUMBER.']'),
                 'inputModifier' => '1-4',
-                'label'         => 'Telephone number',
-                'value'         => $form->getContactModel()->getPhoneModel()->getNumber(),
-                'maxLength'     => 24,
+                'label' => 'Telephone number',
+                'value' => $form->getContactModel()->getPhoneModel()->getNumber(),
+                'maxLength' => 24,
             ]
         );
         ?>
@@ -139,23 +138,23 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
-                'id'           => VtsCreateForm::FIELD_TESTING_FACILITY_TPTL,
-                'label'        => 'How many two-person test lanes (TPTL) does the site have?',
+                'id' => VtsCreateForm::FIELD_TESTING_FACILITY_TPTL,
+                'label' => 'How many two-person test lanes (TPTL) does the site have?',
                 'errorMessage' => $form->getError(VtsCreateForm::FIELD_TESTING_FACILITY_TPTL),
-                'value'        => $form->getTestingFacilityTptl(),
-                'options'      => $form->getTestingFacilities(),
-                'inputModifier'=> '1-4',
+                'value' => $form->getTestingFacilityTptl(),
+                'options' => $form->getTestingFacilities(),
+                'inputModifier' => '1-4',
             ]
         );
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
-                'id'           => VtsCreateForm::FIELD_TESTING_FACILITY_OPTL,
-                'label'        => 'How many one-person test lanes (OPTL) does the site have?',
+                'id' => VtsCreateForm::FIELD_TESTING_FACILITY_OPTL,
+                'label' => 'How many one-person test lanes (OPTL) does the site have?',
                 'errorMessage' => $form->getError(VtsCreateForm::FIELD_TESTING_FACILITY_OPTL),
-                'value'        => $form->getTestingFacilityOptl(),
-                'options'      => $form->getTestingFacilities(),
-                'inputModifier'=> '1-4',
+                'value' => $form->getTestingFacilityOptl(),
+                'options' => $form->getTestingFacilities(),
+                'inputModifier' => '1-4',
             ]
         );
 
@@ -163,19 +162,19 @@ echo $this->partial(
         $classesOptions = [];
         foreach (VehicleClassCode::getAll() as $class) {
             $classesOptions[] = [
-                'value'     => $class,
-                'inputName' => VtsCreateForm::FIELD_VEHICLE_CLASS . '[]',
-                'key'       => 'Class ' . $class,
-                'checked'   => $form->isClassChecked($class),
+                'value' => $class,
+                'inputName' => VtsCreateForm::FIELD_VEHICLE_CLASS.'[]',
+                'key' => 'Class '.$class,
+                'checked' => $form->isClassChecked($class),
             ];
         }
 
         echo $this->partial(
             'partial/gds/form/control-checkbox-group',
             [
-                'label'        => 'Classes of vehicles tested at site',
+                'label' => 'Classes of vehicles tested at site',
                 'errorMessage' => $form->getError(VtsCreateForm::FIELD_VEHICLE_CLASS),
-                'options'      => $classesOptions,
+                'options' => $classesOptions,
             ]
         );
         ?>
@@ -185,9 +184,9 @@ echo $this->partial(
     echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'submitSiteCreate',
-            'name'       => 'submitSiteCreate',
-            'value'      => 'Continue',
+            'id' => 'submitSiteCreate',
+            'name' => 'submitSiteCreate',
+            'value' => 'Continue',
             'navigation' => [
                 'Cancel and return home' => $model->getCancelUrl(),
             ],

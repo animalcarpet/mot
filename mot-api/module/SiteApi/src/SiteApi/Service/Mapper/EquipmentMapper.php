@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApi\Service\Mapper;
 
 use DvsaCommon\Dto\Equipment\EquipmentDto;
@@ -7,9 +8,7 @@ use DvsaEntities\Entity\Equipment;
 use EquipmentApi\Mapper\EquipmentModelMapper;
 
 /**
- * Class EquipmentMapper
- *
- * @package SiteApi\Service\Mapper
+ * Class EquipmentMapper.
  */
 class EquipmentMapper
 {

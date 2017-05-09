@@ -16,9 +16,9 @@ use Zend\Http\Request;
 
 class ChangeSecurityQuestionOneAction
 {
-    const CHANGE_SECURITY_QUESTIONS_QUESTION_ONE_PAGE_TITLE = "First security question";
-    const CHANGE_SECURITY_QUESTIONS_QUESTION_ONE_PAGE_SUBTITLE = "Your profile";
-    const CHANGE_SECURITY_QUESTIONS_QUESTION_ONE_TEMPLATE = "profile/change-security-questions/question-one";
+    const CHANGE_SECURITY_QUESTIONS_QUESTION_ONE_PAGE_TITLE = 'First security question';
+    const CHANGE_SECURITY_QUESTIONS_QUESTION_ONE_PAGE_SUBTITLE = 'Your profile';
+    const CHANGE_SECURITY_QUESTIONS_QUESTION_ONE_TEMPLATE = 'profile/change-security-questions/question-one';
 
     private $changeSecurityQuestionsService;
 
@@ -53,10 +53,12 @@ class ChangeSecurityQuestionOneAction
             if ($form->isValid()) {
                 $this->saveToSession($form);
                 $this->changeSecurityQuestionsStepService->updateStepStatus(ChangeSecurityQuestionsStepService::QUESTION_ONE_STEP, true);
+
                 return new RedirectToRoute(ChangeSecurityQuestionTwoController::ROUTE);
             } else {
                 $viewModel->setForm($form);
                 $result->setViewModel($viewModel);
+
                 return $result;
             }
         }
@@ -86,6 +88,7 @@ class ChangeSecurityQuestionOneAction
         $stepData = $sessionData[ChangeSecurityQuestionsSessionService::SUBMITTED_VALUES];
         $viewModel->setAnswer($stepData['questionOneAnswer']);
         $viewModel->setQuestion($stepData['questionOneId']);
+
         return $viewModel;
     }
 

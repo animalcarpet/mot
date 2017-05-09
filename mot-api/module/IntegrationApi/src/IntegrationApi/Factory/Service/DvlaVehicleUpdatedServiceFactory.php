@@ -18,7 +18,7 @@ class DvlaVehicleUpdatedServiceFactory implements FactoryInterface
 
         return new DvlaVehicleUpdatedService(
             $em->getRepository(MotTest::class),
-            $serviceLocator->get("ReplacementCertificateService"),
+            $serviceLocator->get('ReplacementCertificateService'),
             $serviceLocator->get(VehicleService::class)
         );
     }

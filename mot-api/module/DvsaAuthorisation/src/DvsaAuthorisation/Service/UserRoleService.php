@@ -26,8 +26,8 @@ class UserRoleService
 
     /**
      * @param OrganisationBusinessRoleMapRepository $organisationRoleMapRepository
-     * @param SiteBusinessRoleMapRepository $siteRoleMapRepository
-     * @param PersonSystemRoleMapRepository $personSystemRoleMapRepository
+     * @param SiteBusinessRoleMapRepository         $siteRoleMapRepository
+     * @param PersonSystemRoleMapRepository         $personSystemRoleMapRepository
      */
     public function __construct(
         $organisationRoleMapRepository,
@@ -41,14 +41,15 @@ class UserRoleService
 
     /**
      * @param Person $person
+     *
      * @return array [
-     *  'system' => string[]
-     *   'organisations' => [
-     *      'name' => string,
-     *      'address' => string,
-     *      'roles' => string[],
-     *   'sites' => ...
-     * ]
+     *               'system' => string[]
+     *               'organisations' => [
+     *               'name' => string,
+     *               'address' => string,
+     *               'roles' => string[],
+     *               'sites' => ...
+     *               ]
      */
     public function getDetailedRolesForPerson(Person $person)
     {
@@ -84,6 +85,7 @@ class UserRoleService
 
     /**
      * @param PersonSystemRoleMap[] $roles
+     *
      * @return array
      */
     private function getSystemRoles($roles)
@@ -114,6 +116,7 @@ class UserRoleService
 
     /**
      * @param OrganisationBusinessRoleMap[] $roles
+     *
      * @return array
      */
     private function getOrganisationRoles($roles)
@@ -140,6 +143,7 @@ class UserRoleService
 
     /**
      * @param $organisationContacts OrganisationContact[]
+     *
      * @return string
      */
     private function mapOrganisationContactsToAddress($organisationContacts)
@@ -149,16 +153,18 @@ class UserRoleService
                 return $this->getAddressAsString($contact->getDetails()->getAddress());
             }
         }
-        return "";
+
+        return '';
     }
 
     /**
      * @param Address $address
+     *
      * @return string
      */
     private function getAddressAsString($address)
     {
-        return join(
+        return implode(
             ', ',
             array_filter(
                 [
@@ -214,6 +220,7 @@ class UserRoleService
 
     /**
      * @param SiteContact[] $siteContacts
+     *
      * @return \DvsaCommon\Dto\Contact\AddressDto|null
      */
     private function mapSiteContactsToAddress($siteContacts)
@@ -223,11 +230,13 @@ class UserRoleService
                 return $this->getAddressAsString($contact->getDetails()->getAddress());
             }
         }
-        return "";
+
+        return '';
     }
 
     /**
      * @param SiteContact[] $siteContacts
+     *
      * @return \DvsaCommon\Dto\Contact\AddressDto|null
      */
     private function mapSiteContactsToAddressParts($siteContacts)
@@ -235,6 +244,7 @@ class UserRoleService
         foreach ($siteContacts as $contact) {
             if ($contact->getType()->getCode() === SiteContactTypeCode::BUSINESS) {
                 $address = $contact->getDetails()->getAddress();
+
                 return [
                     'addressLine1' => $address->getAddressLine1(),
                     'addressLine2' => $address->getAddressLine2(),
@@ -245,6 +255,7 @@ class UserRoleService
                 ];
             }
         }
+
         return [];
     }
 }

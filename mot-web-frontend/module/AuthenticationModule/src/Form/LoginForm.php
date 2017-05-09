@@ -46,11 +46,11 @@ class LoginForm extends Form
             'required' => true,
             'validators' => [
                 [
-                    'name' => UsernameValidator::class
-                ]
+                    'name' => UsernameValidator::class,
+                ],
             ],
             'continue_if_empty' => true,
-            'allow_empty' => true
+            'allow_empty' => true,
         ]);
 
         $filter->add([
@@ -58,13 +58,12 @@ class LoginForm extends Form
             'required' => false,
             'validators' => [
                 [
-                    'name' => PasswordValidator::class
-                ]
+                    'name' => PasswordValidator::class,
+                ],
             ],
             'continue_if_empty' => true,
-            'allow_empty' => true
+            'allow_empty' => true,
         ]);
-
 
         $this->setInputFilter($filter);
     }

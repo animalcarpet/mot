@@ -1,14 +1,15 @@
 <?php
+
 namespace Core\ViewModel\Equipment;
 
 use DvsaCommon\Dto\Equipment\EquipmentDto;
 
 class EquipmentViewModel
 {
-    /** @var EquipmentModelViewModel  */
+    /** @var EquipmentModelViewModel */
     private $model;
 
-    /** @var EquipmentDto  */
+    /** @var EquipmentDto */
     private $equipment;
 
     public function __construct(EquipmentDto $equipmentDto, $modelStatus)

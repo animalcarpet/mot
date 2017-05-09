@@ -1,6 +1,7 @@
 <?php
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionTwoController;
+
 $form = $viewModel->getForm();
 $this->layout('layout/layout-govuk.phtml');
 ?>
@@ -16,23 +17,27 @@ $this->layout('layout/layout-govuk.phtml');
             <select class="form-control form-control-1-2" id="questions" name="questions">
                 <?php
                 foreach ($questions as $key => $value) {
-                    $select = $questions == $key ? 'selected' : '';
-                    ?>
-                    <option <?php echo $select; ?> value="<?php echo $key; ?>" <?php if($key == $viewModel->getQuestion()){echo " selected=\"selected\"";} ?>>
+                    $select = $questions == $key ? 'selected' : ''; ?>
+                    <option <?php echo $select; ?> value="<?php echo $key; ?>" <?php if ($key == $viewModel->getQuestion()) {
+                        echo ' selected="selected"';
+                    } ?>>
                         <?php echo $value; ?></option>
                     <?php
+
                 } ?>
             </select>
         </div>
 
-        <div class="form-group<?php if ($form->getSecurityQuestionAnswer()->getMessages()) echo ' has-error' ?>">
+        <div class="form-group<?php if ($form->getSecurityQuestionAnswer()->getMessages()) {
+                    echo ' has-error';
+                } ?>">
             <label class="form-label" for="question-answer">Enter your answer
                 <span class="form-label validation-message">
                 <?php
                 if ($form->getSecurityQuestionAnswer()->getMessages()) {
                     foreach ($form->getSecurityQuestionAnswer()->getMessages() as $message) {
                         echo $message;
-                    };
+                    }
                 }
                 ?>
                 </span>

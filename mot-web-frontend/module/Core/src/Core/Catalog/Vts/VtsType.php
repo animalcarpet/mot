@@ -1,15 +1,13 @@
 <?php
 
-
 namespace Core\Catalog\Vts;
-
 
 class VtsType
 {
     private $code;
     private $name;
 
-    function __construct($code, $name)
+    public function __construct($code, $name)
     {
         $this->code = $code;
         $this->name = $name;

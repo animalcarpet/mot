@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManager;
 
 class SiteNominationEventHelperFactoryTest extends AbstractServiceTestCase
 {
-    /** @var  ServiceManager */
+    /** @var ServiceManager */
     private $serviceLocator;
 
     public function setUp()
@@ -30,11 +30,11 @@ class SiteNominationEventHelperFactoryTest extends AbstractServiceTestCase
             ->method('getRepository')
             ->willReturnCallback(function ($entity) {
                 switch ($entity) {
-                    case EventSiteMap::class :
+                    case EventSiteMap::class:
                         return XMock::of(EventSiteMapRepository::class);
-                    case Site::class :
+                    case Site::class:
                         return XMock::of(SiteRepository::class);
-                    default :
+                    default:
                         return null;
                 }
             });

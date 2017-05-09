@@ -9,7 +9,7 @@ use DvsaEntities\Entity\Email;
 use DvsaEntities\Entity\Phone;
 
 /**
- * Unit test for ContactDetail entity
+ * Unit test for ContactDetail entity.
  */
 class ContactDetailTest extends \PHPUnit_Framework_TestCase
 {

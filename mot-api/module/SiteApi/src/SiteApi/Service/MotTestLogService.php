@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SiteApi\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -9,16 +8,15 @@ use DvsaEntities\Repository\MotTestRepository;
 use SiteApi\Service\Mapper\MotTestLogSummaryMapper;
 
 /**
- * Class MotTestLogService
- * @package SiteApi\Service
+ * Class MotTestLogService.
  */
 class MotTestLogService
 {
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     protected $authSrv;
-    /** @var  MotTestRepository */
+    /** @var MotTestRepository */
     private $motTestRepository;
-    /** @var  MotTestLogSummaryMapper */
+    /** @var MotTestLogSummaryMapper */
     private $mapper;
 
     public function __construct(
@@ -38,9 +36,10 @@ class MotTestLogService
      *   - Site manager
      *   - DVSA Area Office 1
      *   - DVSA Area Office 2
-     *   - Vehicle examiners
+     *   - Vehicle examiners.
      *
      * @param int $siteId
+     *
      * @return \DvsaCommon\Dto\Site\MotTestLogSummaryDto
      */
     public function getMotTestLogSummaryForSite($siteId)

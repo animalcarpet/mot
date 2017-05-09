@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\DqlBuilder\SearchParam;
 
 use DvsaCommon\Dto\Search\DemoTestRequestsSearchParamsDto;
@@ -6,13 +7,10 @@ use DvsaCommon\Dto\Search\SearchParamsDto;
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * Class DemoTestRequestsSearchParam
- *
- * @package DvsaEntities\DqlBuilder\SearchParam
+ * Class DemoTestRequestsSearchParam.
  */
 class DemoTestRequestsSearchParam extends SearchParam
 {
-
     const DEFAULT_SORT_COLUMN = 'person.username';
 
     private static $sortCriteria = [
@@ -46,7 +44,7 @@ class DemoTestRequestsSearchParam extends SearchParam
     {
         if (!$dto instanceof DemoTestRequestsSearchParamsDto) {
             throw new \InvalidArgumentException(
-                __METHOD__ . ' Expects instance of SearchParamsDto, you passed ' . get_class($dto)
+                __METHOD__.' Expects instance of SearchParamsDto, you passed '.get_class($dto)
             );
         }
 
@@ -56,9 +54,10 @@ class DemoTestRequestsSearchParam extends SearchParam
     }
 
     /**
-     * Check if at least one of the searches have been filled
+     * Check if at least one of the searches have been filled.
      *
      * @throws \UnexpectedValueException
+     *
      * @return $this
      */
     public function process()

@@ -7,13 +7,10 @@ use DvsaCommon\Utility\Hydrator;
 use DvsaEntities\Entity\CertificateReplacementDraft;
 
 /**
- * Class ReplacementCertificateMappingHelper
- *
- * @package DvsaMotApi\Helper\ReplacementCertificate
+ * Class ReplacementCertificateMappingHelper.
  */
 class ReplacementCertificateDraftMappingHelper
 {
-
     const MODEL_UNKNOWN = 'Unknown';
 
     /**
@@ -27,28 +24,27 @@ class ReplacementCertificateDraftMappingHelper
         $vts = $draft->getVehicleTestingStation();
 
         $json = [
-            'primaryColour'   => [
-                "code"   => $draft->getPrimaryColour()->getCode(),
-                "name" => $draft->getPrimaryColour()->getName()
+            'primaryColour' => [
+                'code' => $draft->getPrimaryColour()->getCode(),
+                'name' => $draft->getPrimaryColour()->getName(),
             ],
-            'motTestNumber'       => $draft->getMotTest()->getNumber(),
+            'motTestNumber' => $draft->getMotTest()->getNumber(),
         ];
 
         $json['isLatestPassedMotTest'] = $isLatestPassedMotTest;
 
         $json['odometerReading'] = [
-                'value'      => $draft->getOdometerValue(),
-                'unit'       => $draft->getOdometerUnit(),
+                'value' => $draft->getOdometerValue(),
+                'unit' => $draft->getOdometerUnit(),
                 'resultType' => $draft->getOdometerResultType(),
             ];
 
-
         $json['secondaryColour'] = $draft->getSecondaryColour()
             ? [
-                "code" => $draft->getSecondaryColour()->getCode(),
-                "name" => $draft->getSecondaryColour()->getName(),
+                'code' => $draft->getSecondaryColour()->getCode(),
+                'name' => $draft->getSecondaryColour()->getName(),
             ]
-            : NULL;
+            : null;
 
         $json['expiryDate'] = DateTimeApiFormat::date($draft->getExpiryDate());
 
@@ -58,34 +54,34 @@ class ReplacementCertificateDraftMappingHelper
 
             $json = array_merge(
                 $json, [
-                    'make'                  => [
-                    "id"   => $draft->getMake() ? $draft->getMake()->getId() : "",
-                    "code" => $draft->getMake() ? $draft->getMake()->getCode() : "",
-                    "name" => self::getMakeName($draft),
+                    'make' => [
+                    'id' => $draft->getMake() ? $draft->getMake()->getId() : '',
+                    'code' => $draft->getMake() ? $draft->getMake()->getCode() : '',
+                    'name' => self::getMakeName($draft),
                     ],
-                    'model'                 => [
-                        "id"   => $draft->getModel() ? $draft->getModel()->getId() : "",
-                        "code" => $draft->getModel() ? $draft->getModel()->getCode() : "",
-                        "name" => self::getModelName($draft),
+                    'model' => [
+                        'id' => $draft->getModel() ? $draft->getModel()->getId() : '',
+                        'code' => $draft->getModel() ? $draft->getModel()->getCode() : '',
+                        'name' => self::getModelName($draft),
                     ],
                     'customMake' => $draft->getMakeName(),
                     'customModel' => $draft->getModelName(),
                     'countryOfRegistration' => [
-                        "id"   => $draft->getCountryOfRegistration()->getId(),
-                        "name" => $draft->getCountryOfRegistration()->getName()
+                        'id' => $draft->getCountryOfRegistration()->getId(),
+                        'name' => $draft->getCountryOfRegistration()->getName(),
                     ],
-                    'reasonForReplacement'  => $draft->getReasonForReplacement(),
-                    'vin'                   => $draft->getVin(),
-                    'vrm'                   => $draft->getVrm(),
-                    'vts'                   => [
-                        "id"         => $vts->getId(),
-                        "siteNumber" => $vts->getSiteNumber(),
-                        "name"       => $vts->getName(),
-                        "address"    => $address,
+                    'reasonForReplacement' => $draft->getReasonForReplacement(),
+                    'vin' => $draft->getVin(),
+                    'vrm' => $draft->getVrm(),
+                    'vts' => [
+                        'id' => $vts->getId(),
+                        'siteNumber' => $vts->getSiteNumber(),
+                        'name' => $vts->getName(),
+                        'address' => $address,
                     ],
                     'isVinVrmExpiryChanged' => $draft->isVinVrmExpiryChanged(),
                     'includeInMismatchFile' => $draft->isIncludeInMismatchFile(),
-                    'includeInPassFile'     => $draft->isIncludeInPassFile()
+                    'includeInPassFile' => $draft->isIncludeInPassFile(),
                 ]
             );
         }
@@ -144,5 +140,4 @@ class ReplacementCertificateDraftMappingHelper
 
         return $draft->getMotTest()->getVehicle()->getModelName();
     }
-
 }

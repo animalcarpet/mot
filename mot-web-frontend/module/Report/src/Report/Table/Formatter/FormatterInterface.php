@@ -6,16 +6,14 @@ use Report\Table\ColumnOptions;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Data formatter
+ * Data formatter.
  *
  * Interface FormatterInterface
- *
- * @package Report\Table\Formatter
  */
 interface FormatterInterface
 {
     /**
-     * Format an cell
+     * Format an cell.
      *
      * @param array         $data
      * @param ColumnOptions $column

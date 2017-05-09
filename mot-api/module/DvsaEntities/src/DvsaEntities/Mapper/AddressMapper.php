@@ -7,7 +7,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\Address;
 
 /**
- * Address details mapper
+ * Address details mapper.
  */
 class AddressMapper
 {

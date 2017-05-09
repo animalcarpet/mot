@@ -3,7 +3,7 @@ use Site\Service\RiskAssessmentScoreRagClassifier;
 use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 
-/**
+/*
  * @var int $siteId
  * @var string $vtsViewUrl
  * @var EnforcementSiteAssessmentDto $assessmentDto
@@ -12,12 +12,13 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
  */
 ?>
 
-<?php if($permissions->canChangeRiskAssessment()): ?>
+<?php if ($permissions->canChangeRiskAssessment()): ?>
     <a id="site-assessment-action-link" href="<?php echo $this->url('vehicle-testing-station-add-rag-status', ['id' => $siteId])?>" class="key-value-list__action">Enter site assessment</a>
 <?php endif; ?>
 
 <?php
-function createFieldWithMetadata($mainValue, $metaValue){
+function createFieldWithMetadata($mainValue, $metaValue)
+{
     return sprintf(
         '%s<span class="key-value-list__meta">%s</span>',
         $mainValue,
@@ -33,8 +34,8 @@ $riskScoreField = sprintf(
 );
 
 $aeRepUserId = (empty($assessmentDto->getAeRepresentativesUserId())) ?
-    "" :
-    'User ID: '. $this->escapeHtml($assessmentDto->getAeRepresentativesUserId())
+    '' :
+    'User ID: '.$this->escapeHtml($assessmentDto->getAeRepresentativesUserId())
 ;
 
 echo $this->partial(
@@ -46,39 +47,39 @@ echo $this->partial(
                 $riskScoreField,
                 'id' => 'risk-assessment-score',
                 'class' => 'key-value-list__value',
-                'escape' => false
+                'escape' => false,
             ],
             [
                 'DVSA examiner',
                 createFieldWithMetadata(
                     $this->escapeHtml($assessmentDto->getDvsaExaminersFullName()),
-                    'User ID: '. $this->escapeHtml($assessmentDto->getDvsaExaminersUserId())
+                    'User ID: '.$this->escapeHtml($assessmentDto->getDvsaExaminersUserId())
                 ),
                 'id' => 'dvsa-examiner',
                 'class' => 'key-value-list__value',
-                'escape' => false
+                'escape' => false,
             ],
             [
                 'AE representative',
                 createFieldWithMetadata(
                     $this->escapeHtml(
-                        join(', ',[$assessmentDto->getAeRepresentativesFullName(), $assessmentDto->getAeRepresentativesRole()])
+                        implode(', ', [$assessmentDto->getAeRepresentativesFullName(), $assessmentDto->getAeRepresentativesRole()])
                     ),
                     $aeRepUserId
                 ),
                 'id' => 'ae-representative',
                 'class' => 'key-value-list__value',
-                'escape' => false
+                'escape' => false,
             ],
             [
                 'Tester',
                 createFieldWithMetadata(
                     $this->escapeHtml($assessmentDto->getTesterFullName()),
-                    'User ID: '. $this->escapeHtml($assessmentDto->getTesterUserId())
+                    'User ID: '.$this->escapeHtml($assessmentDto->getTesterUserId())
                 ),
                 'id' => 'tester',
                 'class' => 'key-value-list__value',
-                'escape' => false
+                'escape' => false,
             ],
             [
                 'Date of assessment',
@@ -94,7 +95,7 @@ echo $this->partial(
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
         <li>
-            <a href="<?php echo $this->url('vehicle-testing-station', ['id'=>$siteId]); ?>"
+            <a href="<?php echo $this->url('vehicle-testing-station', ['id' => $siteId]); ?>"
                id="returnDashboard" class="btn btn-primary">
                 Return to VTS overview
             </a>

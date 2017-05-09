@@ -1,13 +1,9 @@
 <?php
 
 use Application\Build\BuildConfig;
-use Application\Controller\IndexController;
-use Dashboard\Controller\UserHomeController;
-use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use Core\Presenter\MastheadPresenter;
 
-$mastheadPresenter = new MastheadPresenter;
+$mastheadPresenter = new MastheadPresenter();
 
 if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
     /** @var $dashboard \Dashboard\Model\Dashboard */
@@ -75,7 +71,7 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
     [
         'hideUserNav' => $this->hideUserNav,
         'isHomePage' => $this->isHomePage,
-        'isYourProfile' => $this->isYourProfile
+        'isYourProfile' => $this->isYourProfile,
     ]); ?>
 
 <div class="container">
@@ -91,7 +87,7 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
 </div>
 <?php
     if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER) && isset($this->home)) {
-        echo $this->partial('primaryAction/' . $dashboard->getHero(), ['dashboard' => $dashboard]);
+        echo $this->partial('primaryAction/'.$dashboard->getHero(), ['dashboard' => $dashboard]);
     }
 ?>
 <div class="container page-content">
@@ -133,7 +129,7 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
             <?php echo $this->partial('applicationSteps', ['applicationNavigator' => $applicationNavigator]); ?>
             <div class="col-sm-8  col-sm-offset-1" id="content">
                 <h1><?php echo $this->escapeHtml($title); ?></h1>
-                <?php echo $this->content; //this is HTML page content! ?>
+                <?php echo $this->content; //this is HTML page content!?>
             </div>
         </div>
 

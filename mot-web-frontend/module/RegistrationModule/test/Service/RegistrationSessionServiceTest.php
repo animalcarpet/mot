@@ -6,8 +6,6 @@ use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use DvsaClient\MapperFactory;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Session\Container;
-use Zend\Session\SessionManager;
-use Zend\Session\Storage\SessionStorage;
 
 /**
  * Class RegistrationSessionServiceTest.

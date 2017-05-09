@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Service;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Mapper\ComponentBreakdownDtoMapper;
@@ -45,7 +46,7 @@ class TesterAtSiteComponentStatisticsService implements AutoWireableInterface
 
         $validator = new GroupStatisticsParameterCheck();
         if (!$validator->isValid($year, $month, $group)) {
-            throw new NotFoundException("Tester Component Statistics");
+            throw new NotFoundException('Tester Component Statistics');
         }
 
         $components = $this->componentStatisticsRepository->get($testerId, $siteId, $group, $year, $month);

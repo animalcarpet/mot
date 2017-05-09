@@ -14,7 +14,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create instance of controller VehicleRetestEligibilityController
- * Class VehicleRetestEligibilityControllerFactory
+ * Class VehicleRetestEligibilityControllerFactory.
  */
 class VehicleRetestEligibilityControllerFactory implements FactoryInterface
 {

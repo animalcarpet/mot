@@ -18,9 +18,7 @@ use DvsaMotApiTest\Service\AbstractMotTestServiceTest;
 use SebastianBergmann\Exporter\Exception;
 
 /**
- * Class EnforcementMotTestResultServiceTest
- *
- * @package DvsaMotApi\Service
+ * Class EnforcementMotTestResultServiceTest.
  */
 class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
 {
@@ -31,23 +29,23 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
     protected function getTestCreateData()
     {
         $data = [
-            'mappedRfrs'                => [
+            'mappedRfrs' => [
                 2055 => [
-                    'score'         => 1,
-                    'decision'      => 1,
-                    'category'      => 1,
-                    'justification' => 'test'
+                    'score' => 1,
+                    'decision' => 1,
+                    'category' => 1,
+                    'justification' => 'test',
                 ],
                 2056 => [
-                    'score'         => 2,
-                    'decision'      => 2,
-                    'category'      => 2,
-                    'justification' => 'test 2'
+                    'score' => 2,
+                    'decision' => 2,
+                    'category' => 2,
+                    'justification' => 'test 2',
                 ],
             ],
-            'caseOutcome'               => 1,
-            'finalJustification'        => 'Final Justification Comment',
-            'reinspectionMotTestNumber' => 42
+            'caseOutcome' => 1,
+            'finalJustification' => 'Final Justification Comment',
+            'reinspectionMotTestNumber' => 42,
         ];
 
         return $data;
@@ -56,28 +54,28 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
     protected function getExpectedData()
     {
         $expectedData = [
-            "decisions"  => [
+            'decisions' => [
                 new EnforcementDecision(),
                 new EnforcementDecision(),
-                new EnforcementDecision()
+                new EnforcementDecision(),
             ],
-            "categories" => [
+            'categories' => [
                 new EnforcementDecisionCategory(),
                 new EnforcementDecisionCategory(),
                 new EnforcementDecisionCategory(),
-                new EnforcementDecisionCategory()
+                new EnforcementDecisionCategory(),
             ],
-            "outcomes"   => [
+            'outcomes' => [
                 new EnforcementDecisionOutcome(),
                 new EnforcementDecisionOutcome(),
                 new EnforcementDecisionOutcome(),
-                new EnforcementDecisionOutcome()
+                new EnforcementDecisionOutcome(),
             ],
-            "scores"     => [
+            'scores' => [
                 new EnforcementDecisionScore(),
                 new EnforcementDecisionScore(),
                 new EnforcementDecisionScore(),
-                new EnforcementDecisionScore()
+                new EnforcementDecisionScore(),
             ],
             'mappedRfrs' => [
                 new MotTestReasonForRejection(),
@@ -85,11 +83,11 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
             ],
         ];
         $motTestType = (new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST);
-        $expectedData["decisions"][0]->setId(1)->setDecision('Not applicable')->setPosition(1);
-        $expectedData["decisions"][1]->setId(2)->setDecision('Defect missed')->setPosition(2);
-        $expectedData["decisions"][2]->setId(3)->setDecision('Incorrect decision')->setPosition(3);
-        $expectedData["categories"][0]->setId(1)->setCategory('Not applicable')->setPosition(1);
-        $expectedData["categories"][1]->setId(2)->setCategory('Immediate')->setPosition(2);
+        $expectedData['decisions'][0]->setId(1)->setDecision('Not applicable')->setPosition(1);
+        $expectedData['decisions'][1]->setId(2)->setDecision('Defect missed')->setPosition(2);
+        $expectedData['decisions'][2]->setId(3)->setDecision('Incorrect decision')->setPosition(3);
+        $expectedData['categories'][0]->setId(1)->setCategory('Not applicable')->setPosition(1);
+        $expectedData['categories'][1]->setId(2)->setCategory('Immediate')->setPosition(2);
         $expectedData['mappedRfrs'][0]->setId(2055)->setReasonForRejection((new ReasonForRejection())->setRfrId(42));
         $expectedData['mappedRfrs'][1]->setId(2056)->setReasonForRejection((new ReasonForRejection())->setRfrId(42));
         $expectedData['scores'][0]->setId(1);
@@ -160,7 +158,7 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Test we throw an exception when the GET result is not found
+     * Test we throw an exception when the GET result is not found.
      *
      * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
      */
@@ -232,7 +230,7 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Make sure that we get the correct number of validators
+     * Make sure that we get the correct number of validators.
      */
     public function testGetValidatorsCount()
     {
@@ -251,7 +249,7 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Make sure that we get the correct type of validators
+     * Make sure that we get the correct type of validators.
      */
     public function testGetValidatorsType()
     {
@@ -298,7 +296,7 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Make sure that we get the correct number of validators
+     * Make sure that we get the correct number of validators.
      */
     public function testGetResultValidatorsCount()
     {
@@ -317,7 +315,7 @@ class EnforcementMotTestResultServiceTest extends AbstractMotTestServiceTest
     }
 
     /**
-     * Make sure that we get the correct type of validators
+     * Make sure that we get the correct type of validators.
      */
     public function testGetResultValidatorsType()
     {

@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * AuthForAeStatus
+ * AuthForAeStatus.
  *
  * @ORM\Table(name="site_contact_type")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\SiteContactTypeRepository", readOnly=true)

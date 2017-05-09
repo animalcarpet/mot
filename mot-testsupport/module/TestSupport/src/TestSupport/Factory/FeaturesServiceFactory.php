@@ -19,7 +19,7 @@ class FeaturesServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('config');
-        $legacyPath = __DIR__ . '/../../../../../../mot-web-frontend/config/autoload/features.local.php';
+        $legacyPath = __DIR__.'/../../../../../../mot-web-frontend/config/autoload/features.local.php';
 
         $path = isset($config['featureToggleConfigPath']) ? $config['featureToggleConfigPath'] : $legacyPath;
 

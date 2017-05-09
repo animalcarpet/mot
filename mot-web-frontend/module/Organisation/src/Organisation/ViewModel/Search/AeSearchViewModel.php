@@ -5,8 +5,7 @@ namespace Organisation\ViewModel\Search;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 
 /**
- * Class AeSearchViewModel
- * @package Organisation\ViewModel\Search
+ * Class AeSearchViewModel.
  */
 class AeSearchViewModel
 {
@@ -27,7 +26,6 @@ class AeSearchViewModel
      */
     private $errorMessage;
 
-
     /**
      * @return string
      */
@@ -46,6 +44,7 @@ class AeSearchViewModel
     public function setErrorMessage($errorMessage)
     {
         $this->errorMessage = $errorMessage;
+
         return $this;
     }
 
@@ -66,7 +65,7 @@ class AeSearchViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAeFound()
     {
@@ -74,19 +73,20 @@ class AeSearchViewModel
     }
 
     /**
-     * @param boolean $aeFound
+     * @param bool $aeFound
+     *
      * @return $this
      */
     public function setIsAeFound($aeFound)
     {
         $this->aeFound = $aeFound;
+
         return $this;
     }
 
-
-
     /**
      * @param int $id
+     *
      * @return string
      */
     public function getDetailPage($id)
@@ -104,11 +104,13 @@ class AeSearchViewModel
 
     /**
      * @param string $search
+     *
      * @return $this
      */
     public function setSearch($search)
     {
         $this->search = $search;
+
         return $this;
     }
 }

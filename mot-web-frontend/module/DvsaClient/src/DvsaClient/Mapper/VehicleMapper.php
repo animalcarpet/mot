@@ -5,9 +5,7 @@ namespace DvsaClient\Mapper;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 
 /**
- * Class VehicleMapper
- *
- * @package DvsaClient\Mapper
+ * Class VehicleMapper.
  */
 class VehicleMapper extends DtoMapper
 {
@@ -19,6 +17,7 @@ class VehicleMapper extends DtoMapper
     public function getById($id)
     {
         $url = VehicleUrlBuilder::vehicle($id);
+
         return $this->get($url);
     }
 
@@ -30,6 +29,7 @@ class VehicleMapper extends DtoMapper
     public function getDvlaById($id)
     {
         $url = VehicleUrlBuilder::dvlaVehicle($id);
+
         return $this->get($url);
     }
 }

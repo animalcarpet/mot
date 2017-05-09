@@ -29,7 +29,7 @@ use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 
 /**
- * Class MotTestObjectsFactory
+ * Class MotTestObjectsFactory.
  */
 class MotTestObjectsFactory
 {
@@ -41,6 +41,7 @@ class MotTestObjectsFactory
         /** @var MotTest $motTest */
         $motTest = self::motTest(MotTestStatusName::ACTIVE);
         $motTest->setIssuedDate(null)->setCompletedDate(null)->setExpiryDate(null);
+
         return $motTest;
     }
 
@@ -53,6 +54,7 @@ class MotTestObjectsFactory
         $motTest = self::motTest(MotTestStatusName::ACTIVE);
         $motTest->setIssuedDate(null)->setCompletedDate(null)->setExpiryDate(null)
             ->setMotTestType((new MotTestType())->setCode(MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST));
+
         return $motTest;
     }
 
@@ -76,6 +78,7 @@ class MotTestObjectsFactory
     ) {
         $person = $motTest->getTester();
         self::addPersonAuthorisationForClass($person, $vehicleClassCode, $status);
+
         return $motTest;
     }
 
@@ -105,7 +108,7 @@ class MotTestObjectsFactory
         $motTestStatus = $testCase->getMockBuilder(MotTestStatus::class)->getMock();
         $motTestStatus
             ->expects($testCase->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($status);
 
         $motTestType = (new MotTestType())->setCode($testTypeCode);
@@ -130,7 +133,7 @@ class MotTestObjectsFactory
         $motTest->addMotTestReasonForRejection($reasonForRejectionType);
     }
 
-    public static function tester($id = 1, $username = "username")
+    public static function tester($id = 1, $username = 'username')
     {
         return (new Person())->setId($id)
             ->setUsername($username)
@@ -144,22 +147,23 @@ class MotTestObjectsFactory
         $contactDetail = (new ContactDetail())
             ->setAddress(
                 (new Address())
-                    ->setAddressLine1("exampleLine1")
-                    ->setAddressLine2("exampleLine2")
-                    ->setAddressLine3("exampleLine3")
-                    ->setAddressLine4("exampleLine4")
-                    ->setTown("exampleTown")
-                    ->setCountry("exampleCountry")
-                    ->setPostcode("BS41GG")
+                    ->setAddressLine1('exampleLine1')
+                    ->setAddressLine2('exampleLine2')
+                    ->setAddressLine3('exampleLine3')
+                    ->setAddressLine4('exampleLine4')
+                    ->setTown('exampleTown')
+                    ->setCountry('exampleCountry')
+                    ->setPostcode('BS41GG')
             );
         $contactType = (new SiteContactType())
             ->setCode(SiteContactTypeCode::BUSINESS)
             ->setId(2);
 
         $org = new Organisation();
+
         return $site
             ->setId($id)
-            ->setName("exampleName")
+            ->setName('exampleName')
             ->setSiteNumber($siteNumber)
             ->setContact($contactDetail, $contactType)
             ->setOrganisation($org);
@@ -168,14 +172,14 @@ class MotTestObjectsFactory
     private static function setTestData(MotTest $motTest)
     {
         $motTest
-            ->setStartedDate(DateUtils::toDate("2014-05-01"))
-            ->setExpiryDate(DateUtils::toDate("2015-05-01"))
-            ->setIssuedDate(DateUtils::toDate("2014-05-01"))
-            ->setCompletedDate(DateUtils::toDate("2014-05-01"))
+            ->setStartedDate(DateUtils::toDate('2014-05-01'))
+            ->setExpiryDate(DateUtils::toDate('2015-05-01'))
+            ->setIssuedDate(DateUtils::toDate('2014-05-01'))
+            ->setCompletedDate(DateUtils::toDate('2014-05-01'))
             ->setOdometerValue(1000)
             ->setHasRegistration(true)
             ->setVehicleTestingStation(self::vts(1))
-            ->setNumber("ABC1234XYZ")
+            ->setNumber('ABC1234XYZ')
             ->setId(12345)
             ->setTester(self::tester())
             ->setVehicle(VehicleObjectsFactory::vehicle());

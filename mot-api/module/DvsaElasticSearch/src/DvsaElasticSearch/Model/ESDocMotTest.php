@@ -16,16 +16,14 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesMotTest;
 
 /**
- * Class ESDocMotTest
+ * Class ESDocMotTest.
  *
  * I manage the data for an MOT test and can return it in various formats.
- *
- * @package DvsaElasticSearch\Model
  */
 class ESDocMotTest extends ESDocType
 {
     /**
-     * Return the internal state for ES consumption
+     * Return the internal state for ES consumption.
      *
      * @param \DvsaEntities\Entity\MotTest $entity
      *
@@ -35,59 +33,54 @@ class ESDocMotTest extends ESDocType
     {
         $mappedRfrs = $this->getMotReasonsForRejectionStringsGroupedByType($entity->getMotTestReasonForRejections());
         $testDate = $entity->getCompletedDate() !== null ? $entity->getCompletedDate() :
-            ($entity->getStartedDate() !== null ? $entity->getStartedDate() : null );
+            ($entity->getStartedDate() !== null ? $entity->getStartedDate() : null);
 
         $testDateTz = DateTimeApiFormat::dateTime($testDate);
         $testDateDisplay = !is_null($testDate) ? DateTimeDisplayFormat::dateTimeShort($testDate) : null;
+
         return [
-            'motTestNumber'                 => $entity->getNumber(),
-            'status'                        => $entity->getStatus(),
-            'status_display'                => $this->translateMotTestStatusForDisplay($entity->getStatus()),
-            'number'                        => $entity->getNumber(),
-            'primaryColour'                 => $entity->getPrimaryColour()->getName(),
-            'hasRegistration'               => $entity->getHasRegistration(),
-            'odometerValue'                 => $entity->getOdometerValue(),
-            'odometerUnit'                  => $entity->getOdometerUnit(),
-            'vehicleId'                     => $entity->getVehicle()->getId(),
-            'vin'                           => $entity->getVin(),
-            'registration'                  => $entity->getRegistration(),
-            'make'                          => $entity->getMakeName(),
-            'model'                         => $entity->getModelName(),
-            'testType'                      => $entity->getMotTestType()->getDescription(),
-            'siteNumber'                    =>
-                $entity->getVehicleTestingStation() !== null ?
+            'motTestNumber' => $entity->getNumber(),
+            'status' => $entity->getStatus(),
+            'status_display' => $this->translateMotTestStatusForDisplay($entity->getStatus()),
+            'number' => $entity->getNumber(),
+            'primaryColour' => $entity->getPrimaryColour()->getName(),
+            'hasRegistration' => $entity->getHasRegistration(),
+            'odometerValue' => $entity->getOdometerValue(),
+            'odometerUnit' => $entity->getOdometerUnit(),
+            'vehicleId' => $entity->getVehicle()->getId(),
+            'vin' => $entity->getVin(),
+            'registration' => $entity->getRegistration(),
+            'make' => $entity->getMakeName(),
+            'model' => $entity->getModelName(),
+            'testType' => $entity->getMotTestType()->getDescription(),
+            'siteNumber' => $entity->getVehicleTestingStation() !== null ?
                     $entity->getVehicleTestingStation()->getSiteNumber() :
                     null,
-            'testDate'                      => $testDateTz,
-            'testDate_display'              => $testDateDisplay,
-            'startedDate'                   =>
-                $entity->getStartedDate() !== null ?
+            'testDate' => $testDateTz,
+            'testDate_display' => $testDateDisplay,
+            'startedDate' => $entity->getStartedDate() !== null ?
                     DateTimeApiFormat::dateTime($entity->getStartedDate()) :
                     null,
-            'completedDate'                 =>
-                $entity->getCompletedDate() !== null ?
+            'completedDate' => $entity->getCompletedDate() !== null ?
                     DateTimeApiFormat::dateTime($entity->getCompletedDate()) :
                     null,
-            'startedDate_display'           =>
-                $entity->getStartedDate() !== null ?
+            'startedDate_display' => $entity->getStartedDate() !== null ?
                     DateTimeDisplayFormat::dateTimeShort($entity->getStartedDate()) :
                     null,
-            'completedDate_display'         =>
-                $entity->getCompletedDate() !== null ?
-                    DateTimeDisplayFormat::dateTimeShort($entity->getCompletedDate()):
+            'completedDate_display' => $entity->getCompletedDate() !== null ?
+                    DateTimeDisplayFormat::dateTimeShort($entity->getCompletedDate()) :
                     null,
-            'startedDate_timestamp'=>$entity->getStartedDate() !== null ?
+            'startedDate_timestamp' => $entity->getStartedDate() !== null ?
                 strtotime($entity->getStartedDate()->format('d M Y h:i'))
-                + DateUtils::toUserTz($entity->getStartedDate())->getOffset():
+                + DateUtils::toUserTz($entity->getStartedDate())->getOffset() :
                 null,
-            'completedDate_timestamp'         =>
-                $entity->getCompletedDate() !== null ?
+            'completedDate_timestamp' => $entity->getCompletedDate() !== null ?
                     strtotime($entity->getCompletedDate()->format('d M Y h:i'))
-                    + DateUtils::toUserTz($entity->getCompletedDate())->getOffset():
+                    + DateUtils::toUserTz($entity->getCompletedDate())->getOffset() :
                     null,
-            'testerId'                      => $entity->getTester()->getId(),
-            'testerUsername'                => $entity->getTester()->getUsername(),
-            'reasonsForRejection'           => $mappedRfrs,
+            'testerId' => $entity->getTester()->getId(),
+            'testerUsername' => $entity->getTester()->getUsername(),
+            'reasonsForRejection' => $mappedRfrs,
         ];
     }
 
@@ -96,7 +89,7 @@ class ESDocMotTest extends ESDocType
         $motRfrsGroupedByTypes = [];
 
         /**
-         * @var \DvsaEntities\Entity\MotTestReasonForRejection $motRfr
+         * @var \DvsaEntities\Entity\MotTestReasonForRejection
          */
         foreach ($motRfrs as $motRfr) {
             if (!array_key_exists($motRfr->getType()->getId(), $motRfrsGroupedByTypes)) {
@@ -118,6 +111,7 @@ class ESDocMotTest extends ESDocType
      * @param SearchResultDto|array $results
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function asJson($results)
@@ -135,7 +129,7 @@ class ESDocMotTest extends ESDocType
         }
 
         throw new BadRequestException(
-            'Unknown search format: ' . $format,
+            'Unknown search format: '.$format,
             BadRequestException::ERROR_CODE_INVALID_DATA
         );
     }

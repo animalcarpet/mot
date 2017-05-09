@@ -11,7 +11,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Organisation
+ * Organisation.
  *
  * @ORM\Table(
  *  name="organisation",
@@ -106,14 +106,14 @@ class Organisation extends Entity
     private $slotBalance = self::SLOT_BALANCE;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="slots_warning", type="integer", length=11, nullable=false)
      */
     private $slotsWarning = self::SLOT_WARNING;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="data_may_be_disclosed", type="integer", length=4, nullable=false)
      */
@@ -157,7 +157,7 @@ class Organisation extends Entity
     }
 
     /**
-     * @param ContactDetail $contactDetails
+     * @param ContactDetail           $contactDetails
      * @param OrganisationContactType $type
      *
      * @return $this
@@ -188,7 +188,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Set registeredCompanyNumber
+     * Set registeredCompanyNumber.
      *
      * @param string $registeredCompanyNumber
      *
@@ -202,7 +202,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Get registeredCompanyNumber
+     * Get registeredCompanyNumber.
      *
      * @return string
      */
@@ -212,7 +212,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -226,7 +226,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -236,7 +236,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Set tradingAs
+     * Set tradingAs.
      *
      * @param string $tradingAs
      *
@@ -250,7 +250,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Get tradingAs
+     * Get tradingAs.
      *
      * @return string
      */
@@ -260,7 +260,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Set organisationType
+     * Set organisationType.
      *
      * @param OrganisationType $organisationType
      *
@@ -274,7 +274,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Get organisationType
+     * Get organisationType.
      *
      * @return OrganisationType
      */
@@ -284,7 +284,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Set companyType
+     * Set companyType.
      *
      * @param CompanyType $companyType
      *
@@ -379,7 +379,7 @@ class Organisation extends Entity
     }
 
     /**
-     * @param integer $slotBalance
+     * @param int $slotBalance
      *
      * @return Organisation
      */
@@ -391,7 +391,7 @@ class Organisation extends Entity
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSlotBalance()
     {
@@ -399,9 +399,9 @@ class Organisation extends Entity
     }
 
     /**
-     * Get slotsWarning
+     * Get slotsWarning.
      *
-     * @return integer
+     * @return int
      */
     public function getSlotsWarning()
     {
@@ -409,9 +409,9 @@ class Organisation extends Entity
     }
 
     /**
-     * Set slotsWarning
+     * Set slotsWarning.
      *
-     * @param integer $slotsWarning
+     * @param int $slotsWarning
      *
      * @return Organisation
      */
@@ -423,7 +423,7 @@ class Organisation extends Entity
     }
 
     /**
-     * Get dataMayBeDisclosed
+     * Get dataMayBeDisclosed.
      *
      * @return int
      */
@@ -433,9 +433,10 @@ class Organisation extends Entity
     }
 
     /**
-     * Set dataMayBeDisclosed
+     * Set dataMayBeDisclosed.
      *
      * @param int $dataMayBeDisclosed
+     *
      * @return $this
      */
     public function setDataMayBeDisclosed($dataMayBeDisclosed)

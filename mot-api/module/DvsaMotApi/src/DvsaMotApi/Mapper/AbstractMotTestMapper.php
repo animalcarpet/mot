@@ -19,7 +19,7 @@ use DvsaDocument\Mapper\AbstractMapper;
 use DvsaEntities\Entity\Person;
 
 /**
- * Abstract Mot Test Mapper
+ * Abstract Mot Test Mapper.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -51,13 +51,13 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     const TEXT_NOT_RECORDED = 'Not recorded';
     const TEXT_NOT_RECORDED_CY = 'Heb gofnodi';
 
-    /** @var array      Holds the template map */
+    /** @var array Holds the template map */
     protected $mapTemplate = [];
 
     /** Does this certificate need to be dual language? */
     protected $isDualLanguage = false;
 
-    /** @var boolean    Is this certificate for a retest? */
+    /** @var bool Is this certificate for a retest? */
     protected $isNormalTest = false;
 
     /** @var int $rfrNr */
@@ -77,7 +77,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     }
 
     /**
-     * Get a key's value
+     * Get a key's value.
      *
      * @param string $key
      *
@@ -89,11 +89,12 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         if (isset($mappedData[$key])) {
             return $mappedData[$key];
         }
+
         return null;
     }
 
     /**
-     * Map generic data
+     * Map generic data.
      */
     protected function mapGenericMotTestData()
     {
@@ -132,6 +133,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     /**
      * @param null|string $draftVin
      * @param null|string $draftReasonForEmptyVin
+     *
      * @return string
      */
     private function mapVin($draftVin = null, $draftReasonForEmptyVin = null)
@@ -139,12 +141,14 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         if (is_null($draftVin)) {
             return $this->getEmptyVinReasonName($draftReasonForEmptyVin);
         }
+
         return $draftVin;
     }
 
     /**
      * @param null|string $draftVrm
-     * @param null|string  $draftReasonForEmptyVrm
+     * @param null|string $draftReasonForEmptyVrm
+     *
      * @return string
      */
     private function mapVrm($draftVrm = null, $draftReasonForEmptyVrm = null)
@@ -152,11 +156,13 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         if (is_null($draftVrm)) {
             return $this->getEmptyVrmReasonName($draftReasonForEmptyVrm);
         }
+
         return $draftVrm;
     }
 
     /**
      * @param string $draftReasonForEmptyVin
+     *
      * @return string
      */
     private function getEmptyVinReasonName($draftReasonForEmptyVin)
@@ -166,6 +172,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
 
     /**
      * @param string $draftReasonForEmptyVrm
+     *
      * @return string
      */
     private function getEmptyVrmReasonName($draftReasonForEmptyVrm)
@@ -176,6 +183,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     /**
      * @param string $draftReasonForEmptyVinOrVrmCode
      * @param string $VinOrVrm
+     *
      * @return string
      */
     private function getEmptyVinOrVrmReasonNameByCode($draftReasonForEmptyVinOrVrmCode, $VinOrVrm)
@@ -186,8 +194,8 @@ abstract class AbstractMotTestMapper extends AbstractMapper
                 return $reason['code'] === $draftReasonForEmptyVinOrVrmCode;
             }
         );
-        return $reasonData['name'];
 
+        return $reasonData['name'];
     }
 
     protected function mapAdvisories()
@@ -207,15 +215,15 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         $this->setValue(
             self::REP_VAR_FAILURES,
             $result
-            . (!empty($result) ? PHP_EOL . ($this->isDualLanguage() ? PHP_EOL : '') : '')
-            . $failures
+            .(!empty($result) ? PHP_EOL.($this->isDualLanguage() ? PHP_EOL : '') : '')
+            .$failures
         );
     }
 
     private function mapColour()
     {
-        $primaryColour =  ArrayUtils::tryGet($this->getData(), 'primaryColour');
-        $secondaryColour =  ArrayUtils::tryGet($this->getData(), 'secondaryColour');
+        $primaryColour = ArrayUtils::tryGet($this->getData(), 'primaryColour');
+        $secondaryColour = ArrayUtils::tryGet($this->getData(), 'secondaryColour');
 
         $colours = [$primaryColour->getName()];
 
@@ -232,7 +240,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     }
 
     /**
-     * Map address data
+     * Map address data.
      */
     protected function mapAddress()
     {
@@ -268,17 +276,16 @@ abstract class AbstractMotTestMapper extends AbstractMapper
             : '';
 
         $result = $this->data['vehicleTestingStation']['name']
-            . PHP_EOL
-            . AddressUtils::stringify($address, PHP_EOL)
-            . "\t\t" . $primaryTelephone
-            . PHP_EOL;
+            .PHP_EOL
+            .AddressUtils::stringify($address, PHP_EOL)
+            ."\t\t".$primaryTelephone
+            .PHP_EOL;
 
         $this->setValue('InspectionAuthority', $result);
     }
 
     /**
-     *
-     * Map the failures
+     * Map the failures.
      *
      * @param string $type
      *
@@ -311,18 +318,18 @@ abstract class AbstractMotTestMapper extends AbstractMapper
                 }
             }
 
-            $this->rfrNr++;
+            ++$this->rfrNr;
         }
 
-        return join(PHP_EOL, $result);
+        return implode(PHP_EOL, $result);
     }
 
     /**
-     * Format advisory
+     * Format advisory.
      *
      * @param array $rejection
-     * @param int $i
-     * @param bool $preferCy
+     * @param int   $i
+     * @param bool  $preferCy
      *
      * @return string
      */
@@ -337,8 +344,8 @@ abstract class AbstractMotTestMapper extends AbstractMapper
             ArrayUtils::tryGet($rejection, 'locationLateral'),
             ArrayUtils::tryGet($rejection, 'locationLongitudinal'),
             ArrayUtils::tryGet($rejection, 'locationVertical'),
-            ($comment ? '(' . $comment . ')' : null),
-            ($manualRef ? '[' . $manualRef . ']' : null),
+            ($comment ? '('.$comment.')' : null),
+            ($manualRef ? '['.$manualRef.']' : null),
         ];
 
         if (!empty($rejection['failureDangerous'])) {
@@ -346,22 +353,22 @@ abstract class AbstractMotTestMapper extends AbstractMapper
             $parts[] = $preferCy ? '* PERYGLUS *' : '* DANGEROUS *';
         }
 
-        return str_pad((string)$i, 3, '0', STR_PAD_LEFT)
-        . ' ' . join(' ', array_filter($parts));
+        return str_pad((string) $i, 3, '0', STR_PAD_LEFT)
+        .' '.implode(' ', array_filter($parts));
     }
 
     /**
-     * Get the best available translation for a key
+     * Get the best available translation for a key.
      *
-     * @param array $rejection
+     * @param array  $rejection
      * @param string $key
-     * @param bool $preferCy
+     * @param bool   $preferCy
      *
      * @return string
      */
     protected function getBestFit($rejection, $key, $preferCy)
     {
-        $textCy = trim(ArrayUtils::tryGet($rejection, $key . 'Cy'));
+        $textCy = trim(ArrayUtils::tryGet($rejection, $key.'Cy'));
         if ($preferCy && $textCy !== '') {
             return $textCy;
         }
@@ -370,7 +377,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     }
 
     /**
-     * Format the odometer reading
+     * Format the odometer reading.
      *
      * @param OdometerReadingDto $odometerReading
      *
@@ -379,27 +386,27 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     protected function formatOdometer($value, $unit, $resultType)
     {
         switch ($resultType) {
-            case OdometerReadingResultType::OK :
+            case OdometerReadingResultType::OK:
                 $result = sprintf('%d %s', $value, $unit);
                 break;
-            case OdometerReadingResultType::NOT_READABLE :
+            case OdometerReadingResultType::NOT_READABLE:
                 $result = sprintf('%s%s', self::TEXT_NOT_READABLE,
-                    $this->isDualLanguage() ? '/' . self::TEXT_NOT_READABLE_CY : '');
+                    $this->isDualLanguage() ? '/'.self::TEXT_NOT_READABLE_CY : '');
                 break;
-            case OdometerReadingResultType::NO_ODOMETER :
+            case OdometerReadingResultType::NO_ODOMETER:
                 $result = sprintf('%s%s', self::TEXT_NO_ODOMETER,
-                    $this->isDualLanguage() ? '/' . self::TEXT_NO_ODOMETER_CY : '');
+                    $this->isDualLanguage() ? '/'.self::TEXT_NO_ODOMETER_CY : '');
                 break;
             default:
                 $result = sprintf('%s%s', self::TEXT_NOT_RECORDED,
-                    $this->isDualLanguage() ? '/' . self::TEXT_NOT_RECORDED_CY : '');
+                    $this->isDualLanguage() ? '/'.self::TEXT_NOT_RECORDED_CY : '');
         }
 
         return $result;
     }
 
     /**
-     * Map odometer
+     * Map odometer.
      *
      * @param array $data
      */
@@ -413,9 +420,10 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     }
 
     /**
-     * Convert year to words
+     * Convert year to words.
      *
      * @param int $year
+     *
      * @return string
      */
     protected function convertYearToWords($year)
@@ -426,7 +434,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         if ($this->isDualLanguage()) {
             $formatter = new \NumberFormatter('cy_GB', \NumberFormatter::SPELLOUT);
 
-            $result .= ' / ' . $formatter->format($year);
+            $result .= ' / '.$formatter->format($year);
         }
 
         return strtoupper($result);
@@ -463,7 +471,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
 
         $reason = $rfc->getReason();
         if ($this->isDualLanguage()) {
-            $reason .= ' / ' . $rfc->getReasonCy();
+            $reason .= ' / '.$rfc->getReasonCy();
         }
 
         $this->setValue(self::REP_VAR_RFC, $reason);
@@ -482,15 +490,15 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         if ($this->isNormalTest() && $rejections !== null
             && $status !== self::MOT_TEST_ABORTED && $status !== self::MOT_TEST_ABANDONED
         ) {
-            $rejections .= PHP_EOL . PHP_EOL .
-                'For retest procedures and details of free retest items please refer to the MOT fees and appeals ' .
-                'poster at the testing station or alternatively the details can be found at ' .
-                'www.gov.uk/getting-an-mot/retests' . PHP_EOL;
+            $rejections .= PHP_EOL.PHP_EOL.
+                'For retest procedures and details of free retest items please refer to the MOT fees and appeals '.
+                'poster at the testing station or alternatively the details can be found at '.
+                'www.gov.uk/getting-an-mot/retests'.PHP_EOL;
 
             if ($this->isDualLanguage()) {
-                $rejections .= PHP_EOL .
-                    'Ar gyfer rheolau ailbrofi ac manylion o eitemau ailbrofi am ddim, gwelwch y poster ffioedd ac ' .
-                    'apelau MOT yn y gorsaf brofi neu darganfyddwch y manylion ar www.gov.uk/getting-an-mot/retests' .
+                $rejections .= PHP_EOL.
+                    'Ar gyfer rheolau ailbrofi ac manylion o eitemau ailbrofi am ddim, gwelwch y poster ffioedd ac '.
+                    'apelau MOT yn y gorsaf brofi neu darganfyddwch y manylion ar www.gov.uk/getting-an-mot/retests'.
                     PHP_EOL;
             }
 
@@ -499,19 +507,20 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     }
 
     /**
-     * Format date in PDF report and add welsh translation of month
+     * Format date in PDF report and add welsh translation of month.
      *
      * @param int|string|\DateTime $date
-     * @param array|string $format
+     * @param array|string         $format
      *
      * @return string
+     *
      * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
      * @throws \DvsaCommon\Date\Exception\NonexistentDateTimeException
      */
     protected function formatDate($date, $format = self::FORMAT_DATE)
     {
         if (is_numeric($date)) {
-            $date = new \DateTime('@' . (string)$date);
+            $date = new \DateTime('@'.(string) $date);
         } elseif (is_string($date)) {
             $date = DateUtils::toDateTime($date, false);
         }
@@ -531,7 +540,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
 
                     $format = str_replace(
                         $formatChar,
-                        $formatChar . '/' . preg_replace('/./', '\\\\\0', $monthInWls),
+                        $formatChar.'/'.preg_replace('/./', '\\\\\0', $monthInWls),
                         $format
                     );
                 }

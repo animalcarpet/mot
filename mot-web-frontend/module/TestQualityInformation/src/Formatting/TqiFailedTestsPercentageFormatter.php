@@ -8,6 +8,6 @@ class TqiFailedTestsPercentageFormatter
     {
         $rounded = round($value, 0, PHP_ROUND_HALF_UP);
 
-        return $rounded . '%';
+        return $rounded.'%';
     }
 }

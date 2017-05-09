@@ -7,9 +7,9 @@ use Aws\Result;
 interface FileStorageInterface
 {
     /**
-     * @param array    $columns
-     * @param array    $values
-     * @param string   $key
+     * @param array  $columns
+     * @param array  $values
+     * @param string $key
      *
      * @returns Result
      */

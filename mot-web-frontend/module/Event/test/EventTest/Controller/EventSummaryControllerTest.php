@@ -15,10 +15,7 @@ use Event\Step\RecordStep;
 use Event\Step\SummaryStep;
 use Zend\View\Model\ViewModel;
 use PHPUnit_Framework_MockObject_MockObject;
-use Zend\Mvc\Service\ViewHelperManagerFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 use Zend\View\Helper\HeadTitle;
 
@@ -37,7 +34,7 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
         $step->expects($this->any())->method('load')->willReturn($step);
         $step->expects($this->any())->method('getEventType')->willReturn('ae');
 
-        $service  =  XMock::of(EventStepService::class);
+        $service = XMock::of(EventStepService::class);
         $service->expects($this->once())->method('injectParamsIntoSteps');
 
         $controller = $this->getMockBuilder(EventSummaryController::class)
@@ -76,7 +73,7 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
         $step->expects($this->any())->method('load')->willReturn($step);
         $step->expects($this->any())->method('getEventType')->willReturn('ae');
 
-        $service  =  XMock::of(EventStepService::class);
+        $service = XMock::of(EventStepService::class);
         $service->expects($this->any())->method('getById')->willReturn($step);
         $service->expects($this->once())->method('injectParamsIntoSteps');
 
@@ -114,6 +111,7 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     *
      * @throws \Exception
      */
     private function getServiceLocatorMock()
@@ -125,13 +123,14 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
             ->with('headTitle')
             ->willReturn(XMock::of(HeadTitle::class));
 
-        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        /** @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
         $serviceLocator = XMock::of(ServiceLocatorInterface::class);
         $serviceLocator
             ->expects($this->any())
             ->method('get')
             ->with('ViewHelperManager')
             ->willReturn($helperPluginManager);
+
         return $serviceLocator;
     }
 }

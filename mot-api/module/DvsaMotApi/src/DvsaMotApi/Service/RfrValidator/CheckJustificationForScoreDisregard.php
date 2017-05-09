@@ -2,14 +2,12 @@
 
 namespace DvsaMotApi\Service\RfrValidator;
 
-use \DvsaMotApi\Service\RfrValidator\BaseValidator;
+use DvsaMotApi\Service\RfrValidator\BaseValidator;
 use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
- * Class CheckJustificationForScoreDisregard
- *
- * @package DvsaMotApi\Service\RfrValidator
+ * Class CheckJustificationForScoreDisregard.
  */
 class CheckJustificationForScoreDisregard extends BaseValidator
 {
@@ -17,7 +15,7 @@ class CheckJustificationForScoreDisregard extends BaseValidator
      * Pattern for validation of an RFR.
      * - Do the relevant check,
      * - set the error if required
-     * - return true if passed
+     * - return true if passed.
      *
      * @return bool|ErrorMessage
      */
@@ -52,7 +50,7 @@ class CheckJustificationForScoreDisregard extends BaseValidator
     }
 
     /**
-     * Should fail when
+     * Should fail when.
      *
      * Score is disregard
      * And justification is empty

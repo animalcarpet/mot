@@ -119,7 +119,7 @@ class AccountService extends BasePersonService
                 throw $e;
             }
         } catch (UserExistsException $ue) {
-            throw new DuplicatedUserException('Person ' . $data['username'] . ' already registered');
+            throw new DuplicatedUserException('Person '.$data['username'].' already registered');
         }
 
         return $person->getId();
@@ -169,7 +169,9 @@ class AccountService extends BasePersonService
 
     /**
      * @param array $data
+     *
      * @return AuthenticationMethod
+     *
      * @throws NotFoundException
      */
     private function getAuthenticationMethod($data)
@@ -229,7 +231,7 @@ class AccountService extends BasePersonService
         // Check for an existing user with username
         $user = $this->entityManager->getRepository(Person::class)->findOneBy(['username' => $username]);
 
-        return (null !== $user);
+        return null !== $user;
     }
 
     /**
@@ -247,8 +249,8 @@ class AccountService extends BasePersonService
                     $this->realm
                 ),
                 [
-                    'sn'          => $data['surname'],
-                    'cn'          => $data['firstName'] . ' ' . $data['surname'],
+                    'sn' => $data['surname'],
+                    'cn' => $data['firstName'].' '.$data['surname'],
                     'objectclass' => 'motUser',
                 ]
             )
@@ -281,5 +283,4 @@ class AccountService extends BasePersonService
 
         return $person;
     }
-
 }

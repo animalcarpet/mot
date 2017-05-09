@@ -37,8 +37,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $hasMotTestStartPermission,
         $hasNoOverdueSpecialNotices,
         $userShouldHavePermissionToPerformMotTest
-    )
-    {
+    ) {
         $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::MOT_TEST_START, $hasMotTestStartPermission);
         $this->mockOverdueSpecialNoticeAssertion
             ->method('canPerformTest')
@@ -64,8 +63,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $permission,
         $hasPermission,
         $expectedResult
-    )
-    {
+    ) {
         $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
         $this->addMethodToMockAuthorisationService('isGranted', $permission, $hasPermission);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
@@ -117,8 +115,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $permission,
         $hasPermission,
         $expectedResult
-    )
-    {
+    ) {
         $this->addMethodToMockAuthorisationService('isGranted', $permission, $hasPermission);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
 
@@ -136,8 +133,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $testMethod,
         $userRoles,
         $expectedResult
-    )
-    {
+    ) {
         $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
 
@@ -159,8 +155,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $permission,
         $hasPermission,
         $expectedResult
-    )
-    {
+    ) {
         $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
         $this->addMethodToMockAuthorisationService('isGranted', $permission, $hasPermission);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);

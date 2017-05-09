@@ -8,7 +8,7 @@ abstract class AbstractBatchTask
 {
     private $month;
 
-    function __construct(Month $month)
+    public function __construct(Month $month)
     {
         $this->month = $month;
     }

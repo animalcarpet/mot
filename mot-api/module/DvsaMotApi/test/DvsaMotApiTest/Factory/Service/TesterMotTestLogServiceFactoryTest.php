@@ -2,7 +2,6 @@
 
 namespace DvsaMotApiTest\Factory\Service;
 
-
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\MotTestRepository;
@@ -13,11 +12,11 @@ use Zend\ServiceManager\ServiceManager;
 class TesterMotTestLogServiceFactoryTest extends AbstractServiceTestCase
 {
     /**
-     * @var  TesterMotTestLogService
+     * @var TesterMotTestLogService
      */
     private $factory;
 
-    /** @var  ServiceManager */
+    /** @var ServiceManager */
     private $serviceLocator;
 
     public function setUp()
@@ -41,5 +40,4 @@ class TesterMotTestLogServiceFactoryTest extends AbstractServiceTestCase
             $this->factory->createService($this->serviceLocator)
         );
     }
-
 }

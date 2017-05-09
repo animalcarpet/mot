@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\Mapper;
 
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -10,6 +11,7 @@ class MotTestingAnnualCertificateMapper extends AbstractApiMapper implements Aut
 {
     /**
      * @param QualificationAnnualCertificate $entity
+     *
      * @return MotTestingAnnualCertificateDto
      */
     public function toDto($entity)

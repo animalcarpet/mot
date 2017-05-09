@@ -1,13 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * AuthorisationForAuthorisedExaminer
+ * AuthorisationForAuthorisedExaminer.
  *
  * @ORM\Table(name="auth_for_ae")
  * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\AuthorisationForAuthorisedExaminerRepository")
@@ -188,6 +187,7 @@ class AuthorisationForAuthorisedExaminer extends Entity
     public function setExpiryDate($value)
     {
         $this->expiryDate = $value;
+
         return $this;
     }
 

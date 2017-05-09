@@ -2,29 +2,21 @@
 
 namespace DvsaAuthenticationTest\Authentication\Adapter\OpenAM;
 
-use Dvsa\OpenAM\Exception\OpenAMClientException;
-use Dvsa\OpenAM\Exception\OpenAMUnauthorisedException;
-use Dvsa\OpenAM\OpenAMClientInterface;
 use DvsaAuthentication\Authentication\Adapter\OpenAM\OpenAMApiTokenBasedAdapter;
 use DvsaAuthentication\Identity;
-use DvsaAuthentication\IdentityFactory;
 use DvsaAuthentication\Service\ApiTokenService;
-use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use Zend\Authentication\Result;
 use Zend\Log\LoggerInterface;
 
 class OpenAMApiTokenBasedAdapterTest extends \PHPUnit_Framework_TestCase
 {
-
     private $tokenService;
 
     private $identityByTokenResolver;
 
     private $logger;
-
 
     public function setUp()
     {
@@ -32,7 +24,6 @@ class OpenAMApiTokenBasedAdapterTest extends \PHPUnit_Framework_TestCase
         $this->identityByTokenResolver = XMock::of(Identity\OpenAM\OpenAMIdentityByTokenResolver::class);
         $this->logger = XMock::of(LoggerInterface::class);
     }
-
 
     public function testAuthenticate_parseTokenFailed_shouldReceiveFailureCredentialsInvalidResult()
     {
@@ -69,7 +60,6 @@ class OpenAMApiTokenBasedAdapterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(Result::SUCCESS, $result->getCode());
     }
-
 
     private function createAdapter()
     {

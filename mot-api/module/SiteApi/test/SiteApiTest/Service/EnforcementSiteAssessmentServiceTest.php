@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -9,7 +10,6 @@ use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonApi\Filter\XssFilter;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
@@ -21,7 +21,6 @@ use DvsaEntities\Repository\PersonRepository;
 use DvsaEventApi\Service\EventService;
 use SiteApi\Service\EnforcementSiteAssessmentService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
-use Zend\Authentication\AuthenticationService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -46,7 +45,7 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
 
     /** @var EntityManager|MockObj */
     private $entityManager;
-    /** @var EnforcementSiteAssessmentValidator|MockObj*/
+    /** @var EnforcementSiteAssessmentValidator|MockObj */
     private $validator;
     /** @var |MockObj */
     private $config;
@@ -145,7 +144,6 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
         $this->service->getRiskAssessment(self::SITE_ID);
     }
 
-
     public function testGetRiskAssessmentForAuthorisedUser()
     {
         $this->mockAssertGrantedAtSite(
@@ -173,13 +171,12 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
             [Site::class, self::SITE_ID]
         );
 
-
         $this->service = $this->createService();
         $result = $this->service->getRiskAssessment(self::SITE_ID);
         $expectedResult = $this->createDto();
 
         $this->assertInstanceOf(EnforcementSiteAssessmentDto::class, $result);
-        $this->assertEquals($expectedResult,$result);
+        $this->assertEquals($expectedResult, $result);
     }
 
     public function testValidateRiskAssessmentForUnauthorisedUser()
@@ -254,7 +251,6 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
 
         $this->service = $this->createService();
         $this->service->createRiskAssessment($dto);
-
     }
 
     /**
@@ -323,6 +319,7 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
 
     /**
      * @return MockObj
+     *
      * @throws \Exception
      */
     private function createAssessmentEntity($score = 0)
@@ -366,7 +363,7 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
      */
     private function createAeRepresentativePersonEntity()
     {
-        return (new Person)
+        return (new Person())
             ->setId(self::AE_REPRESENTATIVE_ID)
             ->setFirstName(self::AE_REPRESENTATIVE_NAME)
             ->setUsername(self::AE_REPRESENTATIVE_USERNAME);
@@ -436,5 +433,4 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
             [Site::class, self::SITE_ID]
         );
     }
-
 }

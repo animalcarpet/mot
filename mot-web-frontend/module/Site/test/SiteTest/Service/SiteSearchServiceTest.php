@@ -8,8 +8,7 @@ use Report\Table\Table;
 use Site\Service\SiteSearchService;
 
 /**
- * Class SiteSearchServiceTest
- * @package SiteTest\Service
+ * Class SiteSearchServiceTest.
  */
 class SiteSearchServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +17,7 @@ class SiteSearchServiceTest extends \PHPUnit_Framework_TestCase
         $service = new SiteSearchService();
 
         /**
-         * @var Table $table
+         * @var Table
          */
         $table = $service->initTable($this->getDto());
         $this->assertInstanceOf(Table::class, $table);

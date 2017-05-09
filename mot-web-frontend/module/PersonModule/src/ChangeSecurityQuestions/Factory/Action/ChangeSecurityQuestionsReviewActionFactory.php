@@ -10,7 +10,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ChangeSecurityQuestionsReviewActionFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $changeSecurityQuestionsStepService = $serviceLocator->get(ChangeSecurityQuestionsStepService::class);

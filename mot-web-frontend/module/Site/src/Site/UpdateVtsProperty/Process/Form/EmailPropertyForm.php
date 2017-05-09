@@ -15,8 +15,8 @@ class EmailPropertyForm extends Form
     const FIELD_EMAIL = UpdateVtsPropertyAction::VTS_EMAIL_PROPERTY;
     const FIELD_EMAIL_MAX_LENGTH = 255;
 
-    const EMAIL_ADDRESS_INVALID_MSG = "you must enter a valid email address";
-    const EMAIL_ADDRESS_TOO_LONG_MSG = "must be %max% characters or less";
+    const EMAIL_ADDRESS_INVALID_MSG = 'you must enter a valid email address';
+    const EMAIL_ADDRESS_TOO_LONG_MSG = 'must be %max% characters or less';
 
     private $emailElement;
 
@@ -58,4 +58,3 @@ class EmailPropertyForm extends Form
         return $this->emailElement;
     }
 }
-

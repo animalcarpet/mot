@@ -1,14 +1,13 @@
 <?php
 
-namespace CoreTest\View\Partial\Forms;
+namespace CoreTest\View\partial\forms;
 
 use Zend\View\View;
-use Zend\View\ViewEvent;
 
-class ValidationSummaryTest extends \PHPUnit_Framework_TestCase
+class validationSummaryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Target Partial Path
+     * Target Partial Path.
      */
     const TPP = '/forms/validationSummary.twig';
 
@@ -16,20 +15,20 @@ class ValidationSummaryTest extends \PHPUnit_Framework_TestCase
 
     const MSG_FORM_VALIDATION = [
         'second_question' => [
-            'isEmpty' => 'enter your memorable answer'
-        ]
+            'isEmpty' => 'enter your memorable answer',
+        ],
     ];
 
     const MSG_FORM_VERIFICATION = [
         'first_question' => [
-            'your answer wasn’t right'
-        ]
+            'your answer wasn’t right',
+        ],
     ];
 
     const MSG_ORPHAN = [
         [
-            'you have 7 more tries'
-        ]
+            'you have 7 more tries',
+        ],
     ];
 
     /**
@@ -43,11 +42,11 @@ class ValidationSummaryTest extends \PHPUnit_Framework_TestCase
     private $domdoc;
 
     /**
-     * This setup can be abstracted to facilitate testing more of our partials
+     * This setup can be abstracted to facilitate testing more of our partials.
      */
     public function setUp()
     {
-        $partialsBaseFolder = __DIR__ . str_repeat('/..', 5) . '/view/partial/';
+        $partialsBaseFolder = __DIR__.str_repeat('/..', 5).'/view/partial/';
         $loader = new \Twig_Loader_Filesystem($partialsBaseFolder);
         $this->twig = new \Twig_Environment($loader);
         $this->domdoc = new \DOMDocument();
@@ -112,7 +111,7 @@ class ValidationSummaryTest extends \PHPUnit_Framework_TestCase
 
         $expectedNameSegment = ucfirst(strtolower(
             str_replace('_', ' ', $identifier)
-        )) . ' -';
+        )).' -';
 
         $this->assertEquals($expectedNameSegment, $renderedNameSegment);
     }
@@ -141,7 +140,6 @@ class ValidationSummaryTest extends \PHPUnit_Framework_TestCase
      */
     private function getMessagesZendFormCompatible()
     {
-
         $validationMessages =
             self::MSG_FORM_VALIDATION +
             self::MSG_FORM_VERIFICATION +
@@ -152,6 +150,7 @@ class ValidationSummaryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param bool $asDomElement
+     *
      * @return \DOMElement|string
      */
     private function getExpectedValidationSummaryPodWithoutTitle($asDomElement = true)
@@ -171,7 +170,7 @@ class ValidationSummaryTest extends \PHPUnit_Framework_TestCase
 
     private function getExpectedValidationSummaryPod($asDomElement = true)
     {
-        $markUp = <<<EOT
+        $markUp = <<<'EOT'
 <div class="validation-summary">
     <h2 class="heading-medium">There was a problem with the information</h2>
     <ol>
@@ -190,8 +189,9 @@ EOT;
     }
 
     /**
-     * @param string $path partial relative path to mot-web-frontend/module/Core/view/partial
-     * @param array $params
+     * @param string $path   partial relative path to mot-web-frontend/module/Core/view/partial
+     * @param array  $params
+     *
      * @return string
      */
     private function renderPartial($path, array $params = [])
@@ -201,11 +201,13 @@ EOT;
 
     /**
      * @param string $markUp
+     *
      * @return \DOMElement
      */
     private function convertToDomElement($markUp)
     {
         $this->domdoc->loadHTML($markUp);
+
         return $this->domdoc->getElementsByTagName('div')->item(0);
     }
 }

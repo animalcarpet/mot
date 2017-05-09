@@ -2,12 +2,11 @@
 
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * OrganisationSiteMap
+ * OrganisationSiteMap.
  *
  * @ORM\Table(
  *  name="organisation_site_map",
@@ -102,6 +101,7 @@ class OrganisationSiteMap extends Entity
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
+
         return $this;
     }
 
@@ -121,6 +121,7 @@ class OrganisationSiteMap extends Entity
     public function setSite($site)
     {
         $this->site = $site;
+
         return $this;
     }
 
@@ -140,6 +141,7 @@ class OrganisationSiteMap extends Entity
     public function setTradingName($tradingName)
     {
         $this->tradingName = $tradingName;
+
         return $this;
     }
 
@@ -159,6 +161,7 @@ class OrganisationSiteMap extends Entity
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -178,6 +181,7 @@ class OrganisationSiteMap extends Entity
     public function setStatusChangedOn($statusChangedOn)
     {
         $this->statusChangedOn = $statusChangedOn;
+
         return $this;
     }
 
@@ -197,6 +201,7 @@ class OrganisationSiteMap extends Entity
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
+
         return $this;
     }
 
@@ -216,6 +221,7 @@ class OrganisationSiteMap extends Entity
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
+
         return $this;
     }
 }

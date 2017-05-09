@@ -2,7 +2,6 @@
 
 namespace SiteApi\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use SiteApi\Controller\MotTestInProgressController;
 use SiteApi\Controller\SiteController;
 use SiteApi\Service\MotTestInProgressService;
@@ -14,6 +13,7 @@ class MotTestInProgressControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return SiteController
      */
     public function createService(ServiceLocatorInterface $controllerManager)

@@ -51,8 +51,8 @@ class ManualsAndGuidesFactoryTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 [
-                    'manuals' => 'In physics, string theory is a theoretical framework in which the point-like particles' .
-                    ' of particle physics are replaced by one-dimensional objects called strings. String theory' .
+                    'manuals' => 'In physics, string theory is a theoretical framework in which the point-like particles'.
+                    ' of particle physics are replaced by one-dimensional objects called strings. String theory'.
                     ' describes how these strings propagate through space and interact with each other.',
                 ],
                 'InvalidArgumentException',
@@ -72,20 +72,20 @@ class ManualsAndGuidesFactoryTest extends \PHPUnit_Framework_TestCase
         return [
             'manuals' => [
                 [
-                    'name'      => 'MOT inspection manual for class 1 and 2 vehicles',
-                    'url'       => '/documents/manuals/m1i00000001.htm',
+                    'name' => 'MOT inspection manual for class 1 and 2 vehicles',
+                    'url' => '/documents/manuals/m1i00000001.htm',
                 ],
                 [
-                    'name'      => 'MOT inspection manual for class 3, 4, 5, and 7 vehicles',
-                    'url'       => '/documents/manuals/m4i00000001.htm',
+                    'name' => 'MOT inspection manual for class 3, 4, 5, and 7 vehicles',
+                    'url' => '/documents/manuals/m4i00000001.htm',
                 ],
                 [
-                    'name'      => 'MOT testing guide',
-                    'url'       => '/documents/manuals/tgi00000001.htm',
+                    'name' => 'MOT testing guide',
+                    'url' => '/documents/manuals/tgi00000001.htm',
                 ],
                 [
-                    'name'      => 'In service exhaust emission standards for road vehicles: 18th edition',
-                    'url'       => 'https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/348035/18th-edition-emissions-book-complete.pdf',
+                    'name' => 'In service exhaust emission standards for road vehicles: 18th edition',
+                    'url' => 'https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/348035/18th-edition-emissions-book-complete.pdf',
                 ],
             ],
         ];

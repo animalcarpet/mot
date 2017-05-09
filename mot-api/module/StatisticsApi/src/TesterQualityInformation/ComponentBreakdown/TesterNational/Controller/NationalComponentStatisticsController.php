@@ -1,11 +1,10 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Controller;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Service\NationalComponentStatisticsService;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaCommonApi\Model\ApiResponse;
 
 class NationalComponentStatisticsController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
@@ -18,8 +17,8 @@ class NationalComponentStatisticsController extends AbstractDvsaRestfulControlle
 
     public function get($group)
     {
-        $year = (int)$this->params()->fromRoute("year");
-        $month = (int)$this->params()->fromRoute("month");
+        $year = (int) $this->params()->fromRoute('year');
+        $month = (int) $this->params()->fromRoute('month');
 
         $dto = $this->service->get($year, $month, strtoupper($group));
 

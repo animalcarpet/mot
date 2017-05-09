@@ -2,7 +2,6 @@
 
 namespace DvsaAuthentication;
 
-use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use Zend\Authentication\AuthenticationService;
 

@@ -83,7 +83,7 @@ class StepService implements \Countable, \IteratorAggregate
     public function current()
     {
         if (!$this->exists()) {
-            throw new \Exception("Current step not set");
+            throw new \Exception('Current step not set');
         }
 
         return $this->steps[$this->position];
@@ -189,19 +189,19 @@ class StepService implements \Countable, \IteratorAggregate
     /**
      * Checks to see if the current step is the last step.
      *
-     * @return boolean
+     * @return bool
      */
     public function isLast()
     {
         $maxIndex = count($this->steps) - 1;
 
-        return ($this->position === $maxIndex);
+        return $this->position === $maxIndex;
     }
 
     /**
      * Sets the current active step by Id.
      *
-     * @param String $id
+     * @param string $id
      *
      * @throws \Exception if the step does not exist
      *
@@ -287,12 +287,12 @@ class StepService implements \Countable, \IteratorAggregate
     private function assertHasSteps()
     {
         if (empty($this->steps)) {
-            throw new \Exception("Contains no steps");
+            throw new \Exception('Contains no steps');
         }
     }
 
     /**
-     * @param String $id
+     * @param string $id
      *
      * @throws \Exception
      */

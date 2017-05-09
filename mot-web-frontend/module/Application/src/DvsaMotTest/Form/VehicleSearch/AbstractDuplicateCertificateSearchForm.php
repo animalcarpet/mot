@@ -63,8 +63,8 @@ abstract class AbstractDuplicateCertificateSearchForm extends Form
                     'name' => NotEmpty::class,
                     'options' => [
                         'messages' => [
-                            NotEmpty::IS_EMPTY => $this->messageEmpty
-                        ]
+                            NotEmpty::IS_EMPTY => $this->messageEmpty,
+                        ],
                     ],
                 ],
                 [
@@ -72,19 +72,18 @@ abstract class AbstractDuplicateCertificateSearchForm extends Form
                     'options' => [
                         'max' => $this->searchFieldMaxLength,
                         'messages' => [
-                            StringLength::TOO_LONG => sprintf($this->messageTooLong, $this->searchFieldMaxLength)
-                        ]
+                            StringLength::TOO_LONG => sprintf($this->messageTooLong, $this->searchFieldMaxLength),
+                        ],
                     ],
                 ],
             ],
             'filters' => [
                 [
                     'name' => StringTrim::class,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         return $inputFilter;
     }
-
 }

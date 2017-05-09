@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\View\VehicleSearchResult;
 
 use DvsaMotTest\Controller\StartTestConfirmationController;
@@ -7,7 +8,6 @@ use Zend\Mvc\Controller\Plugin\Url;
 
 class TrainingTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
 {
-
     const TRAINING_TEST_CONFIRMATION_ROUTE = 'start-training-test-confirmation';
 
     /** @var int */
@@ -28,6 +28,7 @@ class TrainingTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
 
     /**
      * @param array $vehicle
+     *
      * @return string
      */
     public function getUrl(array $vehicle)
@@ -53,15 +54,16 @@ class TrainingTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
                     'vin' => $vin,
                     'registration' => $registration,
                     'searchVrm' => $searchVrm,
-                    'searchVin' => $searchVin
-                ]
+                    'searchVin' => $searchVin,
+                ],
             ]
         );
     }
 
     /**
      * @param VehicleSearchResult $vehicle
-     * @param array $searchParams
+     * @param array               $searchParams
+     *
      * @return string
      */
     public function getStartMotTestUrl(VehicleSearchResult $vehicle, array $searchParams)
@@ -92,8 +94,8 @@ class TrainingTestUrlTemplate implements VehicleSearchResultUrlTemplateInterface
                     'vin' => $vin,
                     'registration' => $registration,
                     'searchVrm' => $searchVrm,
-                    'searchVin' => $searchVin
-                ]
+                    'searchVin' => $searchVin,
+                ],
             ]
         );
     }

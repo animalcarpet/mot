@@ -7,17 +7,14 @@ use DvsaCommonApi\Model\OutputFormat;
 use DvsaCommonApi\Error\Message as ErrorMessage;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\BadRequestExceptionWithMultipleErrors;
-use DvsaCommonApi\Service\AbstractService;
 
 /**
- * Class AbstractSearchService
- *
- * @package DvsaCommonApi\Service
+ * Class AbstractSearchService.
  */
 abstract class AbstractSearchService extends AbstractService
 {
     /**
-     * Perform the search
+     * Perform the search.
      *
      * @param SearchParam $params
      * @param             $format
@@ -34,7 +31,7 @@ abstract class AbstractSearchService extends AbstractService
     }
 
     /**
-     * Provides an entry to get the search params for a service
+     * Provides an entry to get the search params for a service.
      *
      * @SuppressWarnings(unused)
      *
@@ -60,16 +57,17 @@ abstract class AbstractSearchService extends AbstractService
     }
 
     /**
-     * Provides the ability to check the users access to the current search
+     * Provides the ability to check the users access to the current search.
      */
     abstract protected function checkPermissions();
 
     /**
-     * Provides the service with the opportunity to validate the param settings
+     * Provides the service with the opportunity to validate the param settings.
      *
      * @param $params
      *
      * @return mixed
+     *
      * @throws BadRequestExceptionWithMultipleErrors
      */
     public function checkParams($params)
@@ -91,7 +89,7 @@ abstract class AbstractSearchService extends AbstractService
     }
 
     /**
-     * Performs the actual search using the repository
+     * Performs the actual search using the repository.
      *
      * @param SearchParam  $params
      * @param OutputFormat $format

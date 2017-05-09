@@ -13,6 +13,7 @@ class DvlaVehicleUpdatedFactory implements FactoryInterface
     {
         $serviceLocator = $controllerManager->getServiceLocator();
         $dvlaVehicleUpdatedService = $serviceLocator->get(DvlaVehicleUpdatedService::class);
+
         return new DvlaVehicleUpdatedController($dvlaVehicleUpdatedService);
     }
 }

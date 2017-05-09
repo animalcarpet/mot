@@ -27,9 +27,7 @@ use Zend\View\Helper\Url;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class PasswordResetControllerTest
- *
- * @package AccountTest\Controller
+ * Class PasswordResetControllerTest.
  */
 class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -55,7 +53,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
     /** @var array $config */
     private $config;
 
-    /** @var  Url */
+    /** @var Url */
     private $urlPlugin;
 
     protected function setUp()
@@ -70,15 +68,15 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         $this->mockPasswordResetSrv = XMock::of(PasswordResetService::class);
         $this->mockObfuscator = XMock::of(ParamObfuscator::class);
 
-        $moduleConfig = include __DIR__ . '/../../../config/module.config.php';
+        $moduleConfig = include __DIR__.'/../../../config/module.config.php';
 
         $this->config = [
             PasswordResetController::CFG_PASSWORD_RESET => [
                 PasswordResetController::CFG_PASSWORD_RESET_EXPIRE_TIME => 5400,
             ],
-            'helpdesk'=> [
+            'helpdesk' => [
                 'name' => 'DVSA Helpdesk',
-                'phoneNumber' => '0330 123 5654'
+                'phoneNumber' => '0330 123 5654',
             ],
             'router' => $moduleConfig['router'],
         ];
@@ -146,11 +144,10 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         if (!empty($expect['viewModel'])) {
             $this->assertInstanceOf(ViewModel::class, $result);
             $this->assertResponseStatus(self::HTTP_OK_CODE);
-
         }
 
         if (!empty($expect['errors'])) {
-            /** @var  PasswordResetFormModel $form */
+            /** @var PasswordResetFormModel $form */
             $form = $result->getVariable('viewModel');
 
             foreach ($expect['errors'] as $field => $error) {
@@ -182,7 +179,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
      * @dataProvider testGetEmailFromApiResponseDataProvider
      *
      * @param messageDto[] $apiResponse
-     * @param string $expectedEmailAddress
+     * @param string       $expectedEmailAddress
      */
     public function testGetEmailFromApiResponse($apiResponse, $expectedEmailAddress)
     {
@@ -199,7 +196,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         return [
             [
                 'apiResponse' => [
-                    new messageDto()
+                    new messageDto(),
                 ],
                 'expectedEmailAddress' => '',
             ],
@@ -207,7 +204,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 'apiResponse' => [
                     (new messageDto())->setPerson(
                         new PersonDto()
-                    )
+                    ),
                 ],
                 'expectedEmailAddress' => '',
             ],
@@ -219,7 +216,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                                 new ContactDto(),
                             ]
                         )
-                    )
+                    ),
                 ],
                 'expectedEmailAddress' => '',
             ],
@@ -235,7 +232,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                                 ),
                             ]
                         )
-                    )
+                    ),
                 ],
                 'expectedEmailAddress' => '',
             ],
@@ -251,7 +248,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                                 ),
                             ]
                         )
-                    )
+                    ),
                 ],
                 'expectedEmailAddress' => '',
             ],
@@ -267,7 +264,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                                 ),
                             ]
                         )
-                    )
+                    ),
                 ],
                 'expectedEmailAddress' => 'myemail@domaim.com',
             ],
@@ -284,7 +281,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => [],
                 ],
-                'mocks'  => [],
+                'mocks' => [],
                 'expect' => [
                     'viewModel' => true,
                 ],
@@ -296,10 +293,10 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'post' => [],
                 ],
-                'mocks'  => [],
+                'mocks' => [],
                 'expect' => [
                     'viewModel' => true,
-                    'errors'    => [
+                    'errors' => [
                         PasswordResetFormModel::FIELD_USERNAME => PasswordResetFormModel::USER_REQUIRED,
                     ],
                 ],
@@ -313,9 +310,9 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         PasswordResetFormModel::FIELD_USERNAME => 'NOT_EXIST',
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'validateUsername',
                         'params' => 'NOT_EXIST',
                         'result' => new NotFoundException('/', 'post', [], 10, 'Person not found'),
@@ -323,7 +320,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 ],
                 'expect' => [
                     'viewModel' => true,
-                    'errors'    => [
+                    'errors' => [
                         PasswordResetFormModel::FIELD_USERNAME => PasswordResetFormModel::USER_NOT_FOUND,
                     ],
                 ],
@@ -337,9 +334,9 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         PasswordResetFormModel::FIELD_USERNAME => self::USER_NAME,
                     ],
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'validateUsername',
                         'params' => self::USER_NAME,
                         'result' => self::PERSON_ID,
@@ -355,80 +352,80 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
             ],
             // Username: post success but no email
             [
-                'method'   => 'post',
-                'action'   => 'username',
+                'method' => 'post',
+                'action' => 'username',
                 'params' => [
                     'post' => [
                         PasswordResetFormModel::FIELD_USERNAME => self::USER_NAME,
-                    ]
+                    ],
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'validateUsername',
                         'params' => self::USER_NAME,
                         'result' => false,
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'route' => AccountUrlBuilderWeb::forgottenPasswordEmailNotFound(),
                 ],
             ],
             // Authenticate: not authenticated
             [
-                'method'   => 'get',
-                'action'   => 'authenticated',
+                'method' => 'get',
+                'action' => 'authenticated',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => false,
                     ],
                 ],
                 'expect' => [
-                    'route' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated(),
                 ],
             ],
             // Authenticate: get email sent
             [
-                'method'   => 'get',
-                'action'   => 'authenticated',
+                'method' => 'get',
+                'action' => 'authenticated',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
                     ],
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'getElementOfUserAdminSession',
-                        'call'   => $this->any(),
+                        'call' => $this->any(),
                         'params' => [],
                         'result' => true,
                     ],
                 ],
                 'expect' => [
-                    'route' => AccountUrlBuilderWeb::forgottenPasswordConfirmation()
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordConfirmation(),
                 ],
             ],
             // Authenticate: get is authenticated, service return exception
             [
-                'method'   => 'get',
-                'action'   => 'authenticated',
+                'method' => 'get',
+                'action' => 'authenticated',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
                     ],
                     [
-                        'class'  => 'mockAccountMapper',
+                        'class' => 'mockAccountMapper',
                         'method' => 'resetPassword',
                         'params' => [],
                         'result' => new NotFoundException('/', 'post', [], 10, 'Token not found'),
@@ -436,28 +433,28 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
 
                 ],
                 'expect' => [
-                    'route' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated(),
                 ],
             ],
             // Authenticate: get is authenticated, service return success
             [
-                'method'   => 'get',
-                'action'   => 'authenticated',
+                'method' => 'get',
+                'action' => 'authenticated',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
                     ],
                     [
-                        'class'  => 'mockAccountMapper',
+                        'class' => 'mockAccountMapper',
                         'method' => 'resetPassword',
                         'params' => [],
                         'result' => (new MessageDto())
                             ->setToken(self::TOKEN)
-                            ->setPerson(new PersonDto())
+                            ->setPerson(new PersonDto()),
                     ],
 
                 ],
@@ -467,79 +464,79 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
             ],
             // Confirmation: get is authenticated, service return exception
             [
-                'method'   => 'get',
-                'action'   => 'confirmation',
+                'method' => 'get',
+                'action' => 'confirmation',
                 'params' => [],
-                'mocks'    => [],
-                'expect'   => [
+                'mocks' => [],
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
             // Not authenticated
             [
-                'method'   => 'get',
-                'action'   => 'notAuthenticated',
+                'method' => 'get',
+                'action' => 'notAuthenticated',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => false,
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
             // Not authenticated: but authenticate in fact
             [
-                'method'   => 'get',
-                'action'   => 'notAuthenticated',
+                'method' => 'get',
+                'action' => 'notAuthenticated',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'route' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
                 ],
             ],
             // Email not found
             [
-                'method'   => 'get',
-                'action'   => 'emailNotFound',
+                'method' => 'get',
+                'action' => 'emailNotFound',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => false,
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
              // Email not found: but authenticate in fact
             [
-                'method'   => 'get',
-                'action'   => 'emailNotFound',
+                'method' => 'get',
+                'action' => 'emailNotFound',
                 'params' => [],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'mockSessionManager',
+                        'class' => 'mockSessionManager',
                         'method' => 'isUserAuthenticated',
                         'params' => [],
                         'result' => true,
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'route' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
                 ],
             ],
@@ -550,7 +547,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [
                     'route' => [],
                 ],
-                'mocks'  => [],
+                'mocks' => [],
                 'expect' => [
                     'exception' => [
                         'class' => 'DvsaCommon\HttpRestJson\Exception\NotFoundException',
@@ -567,16 +564,16 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         'resetToken' => self::TOKEN,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'getToken',
                         'params' => [self::TOKEN],
                         'result' => null,
                     ],
                 ],
                 'expect' => [
-                    'viewModel'  => true,
+                    'viewModel' => true,
                     'flashError' => PasswordResetController::ERR_CHANGE_PASS_TOKEN_NOT_FOUND,
                 ],
             ],
@@ -590,16 +587,16 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         'resetToken' => self::TOKEN,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'getToken',
                         'params' => [self::TOKEN],
                         'result' => (new MessageDto())->setIsAcknowledged(true)->setExpiryDate('2011-04-23T12:26:19Z'),
                     ],
                 ],
                 'expect' => [
-                    'viewModel'  => true,
+                    'viewModel' => true,
                     'flashError' => sprintf(
                         PasswordResetController::ERR_CHANGE_PASS_TOKEN_BEEN_USED, 'DVSA Helpdesk', '0330 123 5654'
                     ),
@@ -615,16 +612,16 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         'resetToken' => self::TOKEN,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'getToken',
                         'params' => [self::TOKEN],
                         'result' => (new MessageDto())->setPerson(null)->setExpiryDate('2020-04-23T12:26:19Z'),
                     ],
                 ],
                 'expect' => [
-                    'viewModel'  => true,
+                    'viewModel' => true,
                     'flashError' => PasswordResetController::ERR_CHANGE_PASS_USER_DISABLED,
                 ],
             ],
@@ -638,12 +635,12 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         'resetToken' => self::TOKEN,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'getToken',
                         'params' => [self::TOKEN],
-                        'result' => (new MessageDto())->setPerson(new PersonDto)->setExpiryDate('2020-04-23T12:26:19Z'),
+                        'result' => (new MessageDto())->setPerson(new PersonDto())->setExpiryDate('2020-04-23T12:26:19Z'),
                     ],
                 ],
                 'expect' => [
@@ -660,17 +657,17 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         'resetToken' => self::TOKEN,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'getToken',
                         'params' => [self::TOKEN],
-                        'result' => (new MessageDto())->setPerson(new PersonDto)->setExpiryDate('2020-04-23T12:26:19Z'),
+                        'result' => (new MessageDto())->setPerson(new PersonDto())->setExpiryDate('2020-04-23T12:26:19Z'),
                     ],
                 ],
                 'expect' => [
                     'viewModel' => true,
-                    'errors'    => [
+                    'errors' => [
                         ChangePasswordFormModel::FIELD_PASS => ChangePasswordFormModel::ERR_REQUIRED,
                     ],
                 ],
@@ -683,14 +680,14 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'route' => [
                         'resetToken' => self::TOKEN,
                     ],
-                    'post'  => [
-                        ChangePasswordFormModel::FIELD_PASS         => 'Aa345678',
+                    'post' => [
+                        ChangePasswordFormModel::FIELD_PASS => 'Aa345678',
                         ChangePasswordFormModel::FIELD_PASS_CONFIRM => 'Aa345678',
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockPasswordResetSrv',
+                        'class' => 'mockPasswordResetSrv',
                         'method' => 'getToken',
                         'params' => [self::TOKEN],
                         'result' => (new MessageDto())

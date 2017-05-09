@@ -29,7 +29,6 @@ use DvsaEntities\Entity\Event;
 use DvsaEntities\Entity\EventCategory;
 use DvsaEntities\Entity\EventOrganisationMap;
 use DvsaEntities\Entity\EventOutcome;
-use DvsaEntities\Entity\EventPersonMap;
 use DvsaEntities\Entity\EventType;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
@@ -46,11 +45,11 @@ use Zend\Log\LoggerInterface;
  */
 class EventService extends AbstractService
 {
-    const EVENT_CATEGORY_CODE = "eventCategoryCode";
-    const EVENT_TYPE_CODE     = "eventTypeCode";
-    const EVENT_OUTCOME_CODE  = "eventOutcomeCode";
-    const EVENT_DESCRIPTION   = "eventDescription";
-    const EVENT_DATE          = "eventDate";
+    const EVENT_CATEGORY_CODE = 'eventCategoryCode';
+    const EVENT_TYPE_CODE = 'eventTypeCode';
+    const EVENT_OUTCOME_CODE = 'eventOutcomeCode';
+    const EVENT_DESCRIPTION = 'eventDescription';
+    const EVENT_DATE = 'eventDate';
     /**
      * @var AuthorisationServiceInterface
      */
@@ -148,7 +147,7 @@ class EventService extends AbstractService
     /**
      * Writes a single event into the event history log.
      *
-     * @param $eventType   string a value from the \DvsaCommon\Enum\EventTypeCode event types list.
+     * @param $eventType   string a value from the \DvsaCommon\Enum\EventTypeCode event types list
      * @param $description string a mandatory short description of the event
      * @param $eventDate   \DateTime the recorded event date
      *
@@ -164,7 +163,7 @@ class EventService extends AbstractService
         try {
             $eventTypeObj = $this->validateEventType($eventType);
 
-            /** @var  Event $event */
+            /** @var Event $event */
             $event = new Event();
             $event
                 ->setEventType($eventTypeObj)
@@ -179,7 +178,7 @@ class EventService extends AbstractService
             if ($this->logger) {
                 $this->logger->log(
                     Logger::ERR,
-                    'EventService::addEvent failed: ' . $e->getMessage()
+                    'EventService::addEvent failed: '.$e->getMessage()
                 );
             }
             throw $e;
@@ -189,10 +188,10 @@ class EventService extends AbstractService
     /**
      * Writes a single event into the event history log.
      *
-     * @param Organisation  $organisation   Organisation of organisation
-     * @param string        $eventType             a value from the \DvsaCommon\Enum\EventTypeCode event types list.
-     * @param string        $description            a mandatory short description of the event
-     * @param \DateTime     $eventDate  the recorded event date
+     * @param Organisation $organisation Organisation of organisation
+     * @param string       $eventType    a value from the \DvsaCommon\Enum\EventTypeCode event types list
+     * @param string       $description  a mandatory short description of the event
+     * @param \DateTime    $eventDate    the recorded event date
      *
      * @throws \Exception
      *
@@ -225,7 +224,7 @@ class EventService extends AbstractService
         $eventData = $this->loadEntities($data);
 
         try {
-            /** @var  Event $event */
+            /** @var Event $event */
             $event = new Event();
             $event
                 ->setEventType($eventData[self::EVENT_TYPE_CODE])
@@ -236,10 +235,9 @@ class EventService extends AbstractService
 
             $this->entityManager->persist($event);
             $this->entityManager->flush();
-
         } catch (\Exception $e) {
             if ($this->logger) {
-                $this->logger->err('EventService::addEvent failed: ' . $e->getMessage());
+                $this->logger->err('EventService::addEvent failed: '.$e->getMessage());
             }
 
             $event = null;
@@ -249,14 +247,16 @@ class EventService extends AbstractService
     }
 
     /**
-     * Uses the custom validator to ensure the date is correct
+     * Uses the custom validator to ensure the date is correct.
+     *
      * @param array $date
+     *
      * @throws \InvalidArgumentException
      */
     private function assertEventDate(array $date)
     {
         $validator = new RecordEventDateValidator();
-        if(!$validator->isValid($date)) {
+        if (!$validator->isValid($date)) {
             throw new \InvalidArgumentException(self::EVENT_DATE.' '.implode(', ', $validator->getMessages()));
         }
     }
@@ -289,8 +289,8 @@ class EventService extends AbstractService
     public function getList($id, $type, $dto)
     {
         $this->authService->assertGranted(PermissionInSystem::LIST_EVENT_HISTORY);
-        if (method_exists($this, 'getListFor' . ucfirst($type))) {
-            return $this->{'getListFor' . ucfirst($type)}($id, $dto, $type);
+        if (method_exists($this, 'getListFor'.ucfirst($type))) {
+            return $this->{'getListFor'.ucfirst($type)}($id, $dto, $type);
         }
         throw new \UnexpectedValueException(
             'Invalid type passed, the type of event list must be ae/site/person'
@@ -313,10 +313,10 @@ class EventService extends AbstractService
         if ($this->outcomeExists($eventCategoryID, $eventTypeID, $eventOutcomeID)) {
             return [
                 self::EVENT_CATEGORY_CODE => $this->getEventCategoryCode($data),
-                self::EVENT_TYPE_CODE     => $this->getEventTypeCode($data),
-                self::EVENT_OUTCOME_CODE  => $this->getEventOutcomeCode($data),
-                self::EVENT_DESCRIPTION   => $this->getEventDescription($data),
-                self::EVENT_DATE          => $this->getEventDate($data),
+                self::EVENT_TYPE_CODE => $this->getEventTypeCode($data),
+                self::EVENT_OUTCOME_CODE => $this->getEventOutcomeCode($data),
+                self::EVENT_DESCRIPTION => $this->getEventDescription($data),
+                self::EVENT_DATE => $this->getEventDate($data),
             ];
         }
     }
@@ -391,7 +391,7 @@ class EventService extends AbstractService
             $eventCategoryCodeObj = $this->eventCategoryCodeRepository->findOneBy(['code' => $eventCategoryCode]);
 
             if (is_null($eventCategoryCodeObj)) {
-                throw new \InvalidArgumentException("Failed to get event category code from database");
+                throw new \InvalidArgumentException('Failed to get event category code from database');
             }
 
             return $eventCategoryCodeObj;
@@ -436,7 +436,7 @@ class EventService extends AbstractService
             $eventTypeObj = $this->eventTypeRepository->findOneBy(['code' => $eventType]);
 
             if (is_null($eventTypeObj)) {
-                throw new \InvalidArgumentException("Failed to get event type from database");
+                throw new \InvalidArgumentException('Failed to get event type from database');
             }
 
             return $eventTypeObj;
@@ -481,7 +481,7 @@ class EventService extends AbstractService
             $eventOutcomeCodeObj = $this->eventOutcomeCodeRepository->findOneBy(['code' => $eventOutcomeCode]);
 
             if (is_null($eventOutcomeCodeObj)) {
-                throw new \InvalidArgumentException("Failed to get event outcome code from database");
+                throw new \InvalidArgumentException('Failed to get event outcome code from database');
             }
 
             return $eventOutcomeCodeObj;
@@ -527,7 +527,7 @@ class EventService extends AbstractService
         $eventTypeCategory = $this->eventTypeOutcomeCategoryMapRepository
             ->isOutcomeAssociatedWithCategoryAndType($eventCategoryID, $eventTypeID, $eventOutcomeID);
         if (null === $eventTypeCategory) {
-            throw new \InvalidArgumentException("Event Outcome and Category do not match");
+            throw new \InvalidArgumentException('Event Outcome and Category do not match');
         }
 
         return $eventTypeCategory;

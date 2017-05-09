@@ -2,10 +2,8 @@
 
 namespace DvsaCommonApi\Service\Exception;
 
-use DvsaCommonApi\Service\Exception\BadRequestException;
-
 /**
- * Class BadRequestExceptionWithMultipleErrors
+ * Class BadRequestExceptionWithMultipleErrors.
  */
 class BadRequestExceptionWithMultipleErrors extends BadRequestException
 {

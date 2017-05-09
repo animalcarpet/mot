@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Dvsa\Mot\Frontend\PersonModule\Factory\Security\PersonProfileGuardBuilderFactory;
 use Dvsa\Mot\Frontend\PersonModule\Factory\View\ContextProviderFactory;
 use Dvsa\Mot\Frontend\PersonModule\Factory\View\PersonProfileUrlGeneratorFactory;

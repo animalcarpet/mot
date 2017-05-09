@@ -100,10 +100,10 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
                         'month' => '2016-04',
                         'size' => 10,
                         'csv' => 'data,for,2016,04',
-                    ]
+                    ],
                 ],
                 'year' => '2016',
-                'month' => '04'
+                'month' => '04',
             ],
             [
                 'data' => [
@@ -114,7 +114,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
                 'year' => '2016',
-                'month' => '03'
+                'month' => '03',
             ],
             [
                 'data' => [
@@ -122,10 +122,10 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
                         'month' => '2016-02',
                         'size' => 420,
                         'csv' => 'data,for,2016,02',
-                    ]
+                    ],
                 ],
                 'year' => '2016',
-                'month' => '02'
+                'month' => '02',
             ],
         ];
     }
@@ -151,7 +151,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DownloadableSurveyReports::class, $result);
         $this->assertInstanceOf(DownloadableSurveyReport::class, $result->getReport($year, $month));
 
-        $this->assertSame($result->getReport($year, $month)->getCsvData(), $data[$year . '-' . $month]['csv']);
+        $this->assertSame($result->getReport($year, $month)->getCsvData(), $data[$year.'-'.$month]['csv']);
     }
 
     public function testTokenValidityTestInvalid()

@@ -2,20 +2,19 @@
 
 namespace DvsaMotApi\Service;
 
-
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaEntities\Repository\MotTestRepository;
 use OrganisationApi\Service\Mapper\MotTestLogSummaryMapper;
 
 class TesterMotTestLogService
 {
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     protected $authSrv;
 
-    /** @var  MotTestRepository */
+    /** @var MotTestRepository */
     private $motTestRepository;
 
-    /** @var  MotTestLogSummaryMapper */
+    /** @var MotTestLogSummaryMapper */
     private $mapper;
 
     public function __construct(
@@ -23,14 +22,14 @@ class TesterMotTestLogService
         MotTestRepository $motTestRepository,
         MotTestLogSummaryMapper $mapper
     ) {
-        $this->authSrv           = $authSrv;
+        $this->authSrv = $authSrv;
         $this->motTestRepository = $motTestRepository;
-        $this->mapper            = $mapper;
+        $this->mapper = $mapper;
     }
 
     /**
      * This function is responsible to get the mot tests logs for
-     * an tester
+     * an tester.
      *
      * @return \DvsaCommon\Dto\Organisation\MotTestLogSummaryDto
      */

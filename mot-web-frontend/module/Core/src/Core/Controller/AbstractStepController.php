@@ -36,7 +36,7 @@ abstract class AbstractStepController extends AbstractDvsaActionController
 
     /**
      * @param string      $title
-     * @param string|null $subtitle Do not set a default, some pages must not have a subtitle.
+     * @param string|null $subtitle Do not set a default, some pages must not have a subtitle
      * @param string|null $progress
      */
     protected function setLayout($title, $subtitle = null, $progress = null)

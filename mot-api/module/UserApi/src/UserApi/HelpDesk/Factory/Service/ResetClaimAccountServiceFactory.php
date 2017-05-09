@@ -11,16 +11,15 @@ use MailerApi\Service\MailerService;
 use UserApi\HelpDesk\Service\ResetClaimAccountService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Authentication\AuthenticationService;
 
 /**
- * Class ResetClaimAccountServiceFactory
- * @package UserApi\HelpDesk\Factory\Service
+ * Class ResetClaimAccountServiceFactory.
  */
 class ResetClaimAccountServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return ResetClaimAccountService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

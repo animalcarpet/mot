@@ -1,13 +1,12 @@
 <?php
 /**
- * Required params:
+ * Required params:.
  *
- * @var $name
+ * @var
  * @var $radioOptions array of radioLabel => radioValue pairs or
- * array of just radioValues which will be also used as the radioLabels
+ *                    array of just radioValues which will be also used as the radioLabels
  *
  * Optional params:
- *
  * @var $label
  * @var $checkedValue
  * @var $labelId
@@ -20,8 +19,8 @@ $label = $this->withDefault('')->getValue($label);
 $checkedValue = $this->withDefault('')->getValue($checkedValue);
 $required = $this->withDefault(false)->getValue($required);
 
-$escFieldsetCssClassString = isset($fieldsetCssClass) ? "class='" . $this->escapeHtmlAttr($fieldsetCssClass) . "'" : '';
-$escLabelIdString = isset($labelId) ? "id='". $this->escapeHtmlAttr($labelId). "'" : '';
+$escFieldsetCssClassString = isset($fieldsetCssClass) ? "class='".$this->escapeHtmlAttr($fieldsetCssClass)."'" : '';
+$escLabelIdString = isset($labelId) ? "id='".$this->escapeHtmlAttr($labelId)."'" : '';
 $labelCssClass = isset($labelCssClass) ? $labelCssClass : (isset($isInline) && $isInline ? 'block-label' : 'block-label label-clear');
 $escapeLabel = isset($escapeLabel) ? $escapeLabel : true;
 ?>
@@ -31,20 +30,20 @@ $escapeLabel = isset($escapeLabel) ? $escapeLabel : true;
         <legend class="form-label" <?php echo $escLabelIdString; ?>><?php echo $this->escapeHtml($label); ?></legend>
 
         <?php foreach ($radioOptions as $radioLabel => $radioValue) {
-            echo $this->partial(
+    echo $this->partial(
                 'partial/forms/radioElement.phtml',
                 [
-                    'id'            => $name . $radioValue,
-                    'name'          => $name,
-                    'value'         => $radioValue,
-                    'isChecked'     => $radioValue === $checkedValue,
-                    'label'         => is_string($radioLabel) ? $radioLabel : $radioValue,
-                    'labelId'       => 'radioOption' . ucfirst($name) . $radioValue,
-                    'required'      => $required,
+                    'id' => $name.$radioValue,
+                    'name' => $name,
+                    'value' => $radioValue,
+                    'isChecked' => $radioValue === $checkedValue,
+                    'label' => is_string($radioLabel) ? $radioLabel : $radioValue,
+                    'labelId' => 'radioOption'.ucfirst($name).$radioValue,
+                    'required' => $required,
                     'labelCssClass' => $labelCssClass,
-                    'escapeLabel'   => $escapeLabel
+                    'escapeLabel' => $escapeLabel,
                 ]
             );
-        } ?>
+} ?>
     </fieldset>
 </div>

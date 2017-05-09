@@ -39,7 +39,7 @@ class DateOfFirstUseActionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::MOT_TEST_START)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $this->createVehicleStepService
             ->expects($this->never())
@@ -67,7 +67,7 @@ class DateOfFirstUseActionTest extends \PHPUnit_Framework_TestCase
     {
         $this->isAllowedOnCurrentStep(true);
         $this->isAllowedOnReviewStep(false);
-        $this->mockIsPost(true, $this->mockPostData('12','12','2015'));
+        $this->mockIsPost(true, $this->mockPostData('12', '12', '2015'));
         $actual = $this->buildAction()->execute($this->request);
         $this->assertInstanceOf(RedirectToRoute::class, $actual);
         $this->assertSame('create-vehicle/new-vehicle-review', $actual->getRouteName());
@@ -88,7 +88,7 @@ class DateOfFirstUseActionTest extends \PHPUnit_Framework_TestCase
         return [
             DateOfFirstUseForm::FIELD_DAY => $day,
             DateOfFirstUseForm::FIELD_MONTH => $month,
-            DateOfFirstUseForm::FIELD_YEAR => $year
+            DateOfFirstUseForm::FIELD_YEAR => $year,
         ];
     }
 
@@ -127,7 +127,6 @@ class DateOfFirstUseActionTest extends \PHPUnit_Framework_TestCase
 
     private function withPermission()
     {
-
         $this->authorisationService
             ->expects($this->once())
             ->method('assertGranted')

@@ -8,14 +8,14 @@ use SiteApi\Factory\Controller\EnforcementSiteAssessmentControllerFactory;
 use SiteApi\Service\EnforcementSiteAssessmentService;
 use Zend\ServiceManager\ServiceManager;
 
-class EnforcementSiteAssessmentControllerFactoryTest  extends \PHPUnit_Framework_TestCase
+class EnforcementSiteAssessmentControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
 
         $enforcementSiteAssessmentService = XMock::of(EnforcementSiteAssessmentService::class);
-        $serviceManager->setService(EnforcementSiteAssessmentService::class,$enforcementSiteAssessmentService);
+        $serviceManager->setService(EnforcementSiteAssessmentService::class, $enforcementSiteAssessmentService);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

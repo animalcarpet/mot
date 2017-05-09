@@ -10,8 +10,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class GetSiteCountFactory
- *
+ * Class GetSiteCountFactory.
  */
 class GetSiteCountFactory implements FactoryInterface
 {
@@ -19,6 +18,7 @@ class GetSiteCountFactory implements FactoryInterface
      * @param ServiceLocatorInterface $viewHelperServiceLocator
      *
      * @return GetSiteCount
+     *
      * @throws UnauthorisedException
      */
     public function createService(ServiceLocatorInterface $viewHelperServiceLocator)

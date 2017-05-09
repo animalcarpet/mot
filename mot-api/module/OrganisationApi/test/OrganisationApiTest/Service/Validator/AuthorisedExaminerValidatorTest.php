@@ -2,23 +2,19 @@
 
 namespace OrganisationApiTest\Service\Validator;
 
-use DvsaCommon\Dto\Common\AuthForAeStatusDto;
 use DvsaCommon\Dto\Contact\AddressDto;
 use DvsaCommon\Dto\Contact\EmailDto;
 use DvsaCommon\Dto\Contact\PhoneDto;
 use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationContactDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
-use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
 use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommon\Validator\EmailAddressValidator;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use OrganisationApi\Service\Validator\AuthorisedExaminerValidator;
 
 /**
- * Class AuthorisedExaminerValidatorTest
- *
- * @package OrganisationApiTest\Service\Validator
+ * Class AuthorisedExaminerValidatorTest.
  */
 class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,17 +44,17 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                "id" => "3000",
-                "name" => "Area Office 01",
-                "siteNumber" => "01FOO",
-                "areaOfficeNumber" => "01"
+                'id' => '3000',
+                'name' => 'Area Office 01',
+                'siteNumber' => '01FOO',
+                'areaOfficeNumber' => '01',
             ],
             [
-                "id" => "3001",
-                "name" => "Area Office 02",
-                "siteNumber" => "02BAR",
-                "areaOfficeNumber" => "02"
-            ]
+                'id' => '3001',
+                'name' => 'Area Office 02',
+                'siteNumber' => '02BAR',
+                'areaOfficeNumber' => '02',
+            ],
         ];
     }
 
@@ -84,8 +80,8 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('authorisedexaminervalidatortest@' . EmailAddressValidator::TEST_DOMAIN)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('authorisedexaminervalidatortest@'.EmailAddressValidator::TEST_DOMAIN)])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -105,7 +101,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsSupplied(false)->setIsPrimary(true)])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -125,7 +121,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('dummy@dummy.com')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setCompanyType(CompanyTypeCode::SOLE_TRADER),
@@ -145,7 +141,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('dummy@dummy.com')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME),
@@ -160,7 +156,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                             (new OrganisationContactDto())
                                 ->setAddress((new AddressDto()))
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('dummy@dummy.com')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -180,7 +176,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setTown('Town')
                                         ->setPostcode('Postcode')
                                 )
-                                ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('dummy@dummy.com')])
+                                ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('dummy@dummy.com')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -201,7 +197,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setIsSupplied(true)->setEmail('invalidEmail')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -222,7 +218,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('invalidEmail')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -244,7 +240,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('invalidEmail')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -266,7 +262,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('invalidEmail')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -287,7 +283,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('invalidEmail')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -309,7 +305,7 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
                                         ->setPostcode('Postcode')
                                 )
                                 ->setEmails([(new EmailDto())->setIsPrimary(true)->setEmail('invalidEmail')])
-                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')])
+                                ->setPhones([(new PhoneDto())->setIsPrimary(true)->setNumber('0123456789')]),
                         ]
                     )
                     ->setName(self::AE_NAME)
@@ -319,5 +315,4 @@ class AuthorisedExaminerValidatorTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
-
 }

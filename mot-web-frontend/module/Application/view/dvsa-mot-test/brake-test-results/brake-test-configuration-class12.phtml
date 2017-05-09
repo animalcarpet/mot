@@ -1,11 +1,10 @@
 <?php
 
 use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
-/**
+/*
  * @var BrakeTestConfigurationClass1And2Helper        $configHelper
  * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest     $motTest
  * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
@@ -46,10 +45,10 @@ $this->placeholder('progressBar')->captureEnd();
                 <?php echo $this->partial(
                     'partial/forms/selectBox.phtml',
                     [
-                        'id'       => 'brakeTestType',
-                        'label'    => 'Brake test type',
-                        'options'  => $brakeTestTypes,
-                        'value'    => $brakeTestType,
+                        'id' => 'brakeTestType',
+                        'label' => 'Brake test type',
+                        'options' => $brakeTestTypes,
+                        'value' => $brakeTestType,
                         'required' => true,
                     ]
                 ); ?>
@@ -60,9 +59,9 @@ $this->placeholder('progressBar')->captureEnd();
                     <?php echo $this->partial(
                         'inputElement',
                         [
-                            'id'       => 'vehicleWeightFront',
-                            'name'     => 'vehicleWeightFront',
-                            'value'    =>  $vehicleWeightFront,
+                            'id' => 'vehicleWeightFront',
+                            'name' => 'vehicleWeightFront',
+                            'value' => $vehicleWeightFront,
                             ]
                         ); ?>
 
@@ -70,9 +69,9 @@ $this->placeholder('progressBar')->captureEnd();
                     <?php echo $this->partial(
                         'inputElement',
                         [
-                            'id'       => 'vehicleWeightRear',
-                            'name'     => 'vehicleWeightRear',
-                            'value'    => $vehicleWeightRear,
+                            'id' => 'vehicleWeightRear',
+                            'name' => 'vehicleWeightRear',
+                            'value' => $vehicleWeightRear,
                         ]
                     ); ?>
 
@@ -80,9 +79,9 @@ $this->placeholder('progressBar')->captureEnd();
                     <?php echo $this->partial(
                         'inputElement',
                         [
-                            'id'       => 'riderWeight',
-                            'name'     => 'riderWeight',
-                            'value'    => $riderWeight,
+                            'id' => 'riderWeight',
+                            'name' => 'riderWeight',
+                            'value' => $riderWeight,
                         ]
                     ); ?>
 
@@ -93,22 +92,22 @@ $this->placeholder('progressBar')->captureEnd();
                                 <?php echo $this->partial(
                                     'partial/forms/radioElement.phtml',
                                     [
-                                        'id'        => 'isSidecarAttachedNo',
-                                        'name'      => 'isSidecarAttached',
-                                        'value'     => '0',
+                                        'id' => 'isSidecarAttachedNo',
+                                        'name' => 'isSidecarAttached',
+                                        'value' => '0',
                                         'isChecked' => !($isSidecarAttached),
-                                        'label'     => 'No',
+                                        'label' => 'No',
                                     ]
                                 );
 
                                 echo $this->partial(
                                     'partial/forms/radioElement.phtml',
                                     [
-                                        'id'        => 'isSidecarAttachedYes',
-                                        'name'      => 'isSidecarAttached',
-                                        'value'     => '1',
+                                        'id' => 'isSidecarAttachedYes',
+                                        'name' => 'isSidecarAttached',
+                                        'value' => '1',
                                         'isChecked' => ($isSidecarAttached),
-                                        'label'     => 'Yes',
+                                        'label' => 'Yes',
                                     ]
                                 );
                                 ?>
@@ -119,9 +118,9 @@ $this->placeholder('progressBar')->captureEnd();
                                 <?php echo $this->partial(
                                     'inputElement',
                                     [
-                                        'id'       => 'sidecarWeight',
-                                        'name'     => 'sidecarWeight',
-                                        'value'    => $sidecarWeight,
+                                        'id' => 'sidecarWeight',
+                                        'name' => 'sidecarWeight',
+                                        'value' => $sidecarWeight,
                                     ]
                                 ); ?>
                             </div>

@@ -2,7 +2,6 @@
 
 use Dashboard\Controller\NotificationController;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Auth\PermissionAtSite;
 
 if (!$this->canPerformTest & $this->authorisationHelper()->isGranted(PermissionInSystem::MOT_TEST_START)):
     $this->placeholder('banner')
@@ -10,7 +9,7 @@ if (!$this->canPerformTest & $this->authorisationHelper()->isGranted(PermissionI
 endif;
 
     $this->placeholder('hero')
-        ->set($this->partial('primaryAction/' . $dashboard->getHero(), ['dashboard' => $dashboard, 'canPerformTest' => $canPerformTest]));
+        ->set($this->partial('primaryAction/'.$dashboard->getHero(), ['dashboard' => $dashboard, 'canPerformTest' => $canPerformTest]));
 ?>
 
 <?php echo $this->partial('errorMessages', ['getFromFlash' => true]); ?>
@@ -22,8 +21,8 @@ endif;
             'notification/list',
             [
                 'notifications' => $dashboard->getNotifications(),
-                'limit'         => NotificationController::SHORT_LIST_LIMIT,
-                'unread'        => $dashboard->getUnreadNotificationsCount(),
+                'limit' => NotificationController::SHORT_LIST_LIMIT,
+                'unread' => $dashboard->getUnreadNotificationsCount(),
             ]
         );
         ?>
@@ -55,19 +54,21 @@ endif;
             <?php echo $this->partial('dashboard/trainingTestBox',
                 [
                     'hasInProgressTrainingTest' => $dashboard->hasDemoTestInProgress(),
-                    'inProgressTrainingTestNumber' => $dashboard->getInProgressDemoTestNumber()
+                    'inProgressTrainingTestNumber' => $dashboard->getInProgressDemoTestNumber(),
                 ]
             ); ?>
         <?php endif; ?>
 
-        <?php if ($this->canPerformNonMotTest) { ?>
+        <?php if ($this->canPerformNonMotTest) {
+                ?>
             <?php echo $this->partial('dashboard/nonMotTestBox',
                 [
                     'hasInProgressNonMotTest' => $dashboard->hasNonMotTestInProgress(),
-                    'inProgressNonMotTestNumber' => $dashboard->getInProgressNonMotTestNumber()
+                    'inProgressNonMotTestNumber' => $dashboard->getInProgressNonMotTestNumber(),
                 ]
             ); ?>
-        <?php } ?>
+        <?php 
+            } ?>
 
         <?php if ($this->authorisationHelper()->isGranted(PermissionInSystem::DISPLAY_TESTER_CONTINGENCY_BOX)) : ?>
             <?php echo $this->partial('dashboard/testerContingencyBox'); ?>

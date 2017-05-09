@@ -7,7 +7,7 @@ use DvsaCommon\Date\Time;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * SiteTestingDailySchedule
+ * SiteTestingDailySchedule.
  *
  * @ORM\Table(name="site_testing_daily_schedule")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SiteTestingDailyScheduleRepository")
@@ -21,26 +21,25 @@ class SiteTestingDailySchedule extends Entity
      *
      * @ORM\ManyToOne(targetEntity="Site", fetch="LAZY", inversedBy="siteTestingSchedule")
      * @ORM\JoinColumn(name="site_id", referencedColumnName="id", nullable=false)
-     *
      */
     private $site;
 
     /**
-     * @var Time $openTime
+     * @var Time
      *
      * @ORM\Column(name="open_time", type="Time", nullable=true)
      */
     private $openTime;
 
     /**
-     * @var Time $closeTime
+     * @var Time
      *
      * @ORM\Column(name="close_time", type="Time", nullable=true)
      */
     private $closeTime;
 
     /**
-     * @var int $weekday
+     * @var int
      *
      * @ORM\Column(name="weekday", type="integer", length=1, nullable=false)
      */
@@ -49,6 +48,7 @@ class SiteTestingDailySchedule extends Entity
     public function setCloseTime(Time $closeTime = null)
     {
         $this->closeTime = $closeTime;
+
         return $this;
     }
 
@@ -60,6 +60,7 @@ class SiteTestingDailySchedule extends Entity
     public function setOpenTime(Time $openTime = null)
     {
         $this->openTime = $openTime;
+
         return $this;
     }
 
@@ -71,6 +72,7 @@ class SiteTestingDailySchedule extends Entity
     public function setSite(Site $site)
     {
         $this->site = $site;
+
         return $this;
     }
 
@@ -87,6 +89,7 @@ class SiteTestingDailySchedule extends Entity
     public function setWeekday($weekday)
     {
         $this->weekday = $weekday;
+
         return $this;
     }
 
@@ -116,21 +119,22 @@ class SiteTestingDailySchedule extends Entity
                 return $dailySchedule;
             }
         }
+
         return null;
     }
 
     /**
-     * @param Time                      $referenceTime
+     * @param Time                            $referenceTime
      * @param SiteTestingDailySchedule[]|null $schedule
      *
-     * @return boolean
+     * @return bool
      */
     public static function isOutsideSchedule(Time $referenceTime, $schedule = null)
     {
         // no hours defined - everything closed - temporary
         $isOutsideHours = $schedule === null || count($schedule) === 0;
         if (!$isOutsideHours) {
-            $dayOfWeek = (int)$referenceTime->format('N');
+            $dayOfWeek = (int) $referenceTime->format('N');
             foreach ($schedule as $dayHours) {
                 if ($dayHours->getWeekday() === $dayOfWeek) {
                     /* closing time of 00:00:00 must be treated as 24:00:00 to run calculation correctly */
@@ -141,6 +145,7 @@ class SiteTestingDailySchedule extends Entity
                 }
             }
         }
+
         return $isOutsideHours;
     }
 }

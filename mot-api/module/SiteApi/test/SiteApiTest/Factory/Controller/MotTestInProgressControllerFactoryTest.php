@@ -6,7 +6,6 @@ use DvsaCommonTest\TestUtils\XMock;
 use SiteApi\Controller\MotTestInProgressController;
 use SiteApi\Factory\Controller\MotTestInProgressControllerFactory;
 use SiteApi\Service\MotTestInProgressService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class MotTestInProgressControllerFactoryTest extends \PHPUnit_Framework_TestCase

@@ -1,10 +1,9 @@
 <?php
 
 /**
- * @var \Organisation\ViewModel\AuthorisedExaminer\AeRemovePrincipalViewModel $viewModel
- * @var \Zend\Mvc\Controller\Plugin\FlashMessenger                   $flashMessenger
+ * @var \Organisation\ViewModel\AuthorisedExaminer\AeRemovePrincipalViewModel
+ * @var \Zend\Mvc\Controller\Plugin\FlashMessenger                            $flashMessenger
  */
-
 $viewModel = $this->viewModel;
 
 //  show api errors
@@ -31,9 +30,9 @@ echo $this->partial(
     echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'confirm-button',
-            'value'      => 'Remove Principal',
-            'class'      => 'button',
+            'id' => 'confirm-button',
+            'value' => 'Remove Principal',
+            'class' => 'button',
             'navigation' => [
                 'Cancel and return to Authorised Examiner' => $viewModel->getCancelUrl(),
             ],

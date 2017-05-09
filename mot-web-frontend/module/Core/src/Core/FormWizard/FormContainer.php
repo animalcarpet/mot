@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\FormWizard;
 
 use Core\TwoStepForm\TwoStepFormContainer;
@@ -31,6 +32,7 @@ class FormContainer extends TwoStepFormContainer implements AutoWireableInterfac
         }
 
         $offset = $this->toOffset($sessionKey, $formUuid);
+
         return $this->container->offsetExists($offset);
     }
 
@@ -38,6 +40,7 @@ class FormContainer extends TwoStepFormContainer implements AutoWireableInterfac
     {
         $offset = $this->toOffset($sessionKey, $formUuid);
         $this->container->offsetUnset($offset);
+
         return $this;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates;
 
 use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
@@ -17,16 +18,16 @@ class AnnualAssessmentCertificatesGroupViewModel
     const CERTIFICATE_NUMBER = 'Certificate number';
     const DATE_AWARDED = 'Date awarded';
     const SCORE_ACHIEVED = 'Score achieved';
-    const ACTION_LINKS = "actions";
+    const ACTION_LINKS = 'actions';
 
-    /** @var  MotTestingAnnualCertificateDto[] $annualAssessmentCertificates */
+    /** @var MotTestingAnnualCertificateDto[] $annualAssessmentCertificates */
     private $annualAssessmentCertificates;
     /** @var FormContext */
     private $context;
     /** @var AnnualAssessmentCertificatesRoutes */
     private $routes;
     private $group;
-    /** @var  AnnualAssessmentCertificatesPermissions */
+    /** @var AnnualAssessmentCertificatesPermissions */
     private $certificatesPermissions;
 
     /**
@@ -65,21 +66,21 @@ class AnnualAssessmentCertificatesGroupViewModel
         $table = new Table();
         $rows = [];
 
-        foreach ($this->annualAssessmentCertificates AS $annualAssessmentCertificate) {
+        foreach ($this->annualAssessmentCertificates as $annualAssessmentCertificate) {
             $actionLinks = [];
 
             $params = $this->context->getController()->params()->fromRoute() + [
                     'group' => $this->group,
-                    'certificateId' => $annualAssessmentCertificate->getId()
+                    'certificateId' => $annualAssessmentCertificate->getId(),
                 ];
 
             if ($canUpdate) {
                 $url = new UrlPresenterData(
-                    "Change",
+                    'Change',
                     $this->routes->getEditRoute(),
                     $params,
                     [],
-                    "change-" . $annualAssessmentCertificate->getId()
+                    'change-'.$annualAssessmentCertificate->getId()
                 );
 
                 $actionLinks[] = $url;
@@ -87,11 +88,11 @@ class AnnualAssessmentCertificatesGroupViewModel
 
             if ($canRemove) {
                 $url = new UrlPresenterData(
-                    "Remove",
+                    'Remove',
                     $this->routes->getRemove(),
                     $params,
                     [],
-                    "remove-" . $annualAssessmentCertificate->getId()
+                    'remove-'.$annualAssessmentCertificate->getId()
                 );
 
                 $actionLinks[] = $url;
@@ -101,11 +102,11 @@ class AnnualAssessmentCertificatesGroupViewModel
                 [
                     self::CERTIFICATE_NUMBER => $annualAssessmentCertificate->getCertificateNumber(),
                     self::DATE_AWARDED => DateTimeDisplayFormat::date($annualAssessmentCertificate->getExamDate()),
-                    self::SCORE_ACHIEVED => $annualAssessmentCertificate->getScore() . '%',
+                    self::SCORE_ACHIEVED => $annualAssessmentCertificate->getScore().'%',
                     self::ACTION_LINKS => $actionLinks,
                     self::DATE_AWARDED => DateTimeDisplayFormat::date($annualAssessmentCertificate->getExamDate()),
-                    self::SCORE_ACHIEVED => $annualAssessmentCertificate->getScore() . '%',
-                    self::ACTION_LINKS => $actionLinks
+                    self::SCORE_ACHIEVED => $annualAssessmentCertificate->getScore().'%',
+                    self::ACTION_LINKS => $actionLinks,
                 ];
         }
 
@@ -113,7 +114,7 @@ class AnnualAssessmentCertificatesGroupViewModel
             ->setColumns($this->getTableColumns())
             ->setSearchParams(new SearchParamsDto());
 
-        $table->getTableOptions()->setTableId('certificate-table-group-' . $this->group);
+        $table->getTableOptions()->setTableId('certificate-table-group-'.$this->group);
 
         return $table;
     }

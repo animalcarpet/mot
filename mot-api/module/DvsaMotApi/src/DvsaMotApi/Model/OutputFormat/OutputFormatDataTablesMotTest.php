@@ -12,12 +12,9 @@ use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApi\Model\OutputFormat;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\MotTestCancelled;
 
 /**
- * Class OutputFormatDataTablesMotTest
- *
- * @package DvsaMotApi\Model\OutputFormat
+ * Class OutputFormatDataTablesMotTest.
  */
 class OutputFormatDataTablesMotTest extends OutputFormat
 {
@@ -29,13 +26,11 @@ class OutputFormatDataTablesMotTest extends OutputFormat
     const TEXT_NOT_RECORDED = 'Not recorded';
 
     /**
-     * Responsible for extracting the current item into the required format
+     * Responsible for extracting the current item into the required format.
      *
      * @param array         $results
      * @param string        $key
      * @param MotTest|array $item
-     *
-     * @return void
      */
     public function extractItem(&$results, $key, $item)
     {
@@ -50,33 +45,33 @@ class OutputFormatDataTablesMotTest extends OutputFormat
             $isDemoTest = ($motTestType->getCode() === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
 
             $result = [
-                'status'                => $item->getStatus(),
-                'motTestNumber'         => $testNr,
-                'primaryColour'         => $item->getPrimaryColour()->getName(),
-                'hasRegistration'       => $item->getHasRegistration(),
-                'odometer'              => $this->getOdometer(
+                'status' => $item->getStatus(),
+                'motTestNumber' => $testNr,
+                'primaryColour' => $item->getPrimaryColour()->getName(),
+                'hasRegistration' => $item->getHasRegistration(),
+                'odometer' => $this->getOdometer(
                     $item->getOdometerValue(),
                     $item->getOdometerUnit(),
                     $item->getOdometerResultType()
                 ),
-                'vin'                   => $item->getVin(),
-                'registration'          => $item->getRegistration(),
-                'make'                  => $item->getMakeName(),
-                'model'                 => $item->getModelName(),
-                'testType'              => $item->getMotTestType()->getDescription(),
-                'siteId'                => $this->getSiteId($item, $isDemoTest),
-                'siteNumber'            => $this->getSiteNumber($item, $isDemoTest),
-                'startedDate'           => $item->getStartedDate() !== null ?
+                'vin' => $item->getVin(),
+                'registration' => $item->getRegistration(),
+                'make' => $item->getMakeName(),
+                'model' => $item->getModelName(),
+                'testType' => $item->getMotTestType()->getDescription(),
+                'siteId' => $this->getSiteId($item, $isDemoTest),
+                'siteNumber' => $this->getSiteNumber($item, $isDemoTest),
+                'startedDate' => $item->getStartedDate() !== null ?
                     DateTimeApiFormat::dateTime($item->getStartedDate()) :
                     null,
-                'completedDate'         => DateTimeApiFormat::dateTime(
+                'completedDate' => DateTimeApiFormat::dateTime(
                     $item->getCompletedDate() !== null
                         ? $item->getCompletedDate()
                         : $item->getStartedDate()
                 ),
-                'testerUsername'        => $item->getTester()->getUsername(),
-                'reasonsForRejection'   => $item->getMotTestReasonForCancel(),
-                'testDate'              => DateTimeApiFormat::dateTime($testDate),
+                'testerUsername' => $item->getTester()->getUsername(),
+                'reasonsForRejection' => $item->getMotTestReasonForCancel(),
+                'testDate' => DateTimeApiFormat::dateTime($testDate),
             ];
         } else {
             $src = $item['_source'];
@@ -84,27 +79,27 @@ class OutputFormatDataTablesMotTest extends OutputFormat
             $testNr = $src['number'];
 
             $result = [
-                'status'              => $src['status'],
-                'motTestNumber'       => $testNr,
-                'primaryColour'       => $src['primaryColour'],
-                'hasRegistration'     => $src['hasRegistration'],
-                'odometer'            => $this->getOdometer(
+                'status' => $src['status'],
+                'motTestNumber' => $testNr,
+                'primaryColour' => $src['primaryColour'],
+                'hasRegistration' => $src['hasRegistration'],
+                'odometer' => $this->getOdometer(
                     $src['odometerValue'],
                     $src['odometerUnit'],
                     $src['odometerType']
                 ),
-                'vin'                 => $src['vin'],
-                'registration'        => $src['registration'],
-                'make'                => $src['make'],
-                'model'               => $src['model'],
-                'testType'            => $src['testType'],
-                'siteId'              => $src['siteId'],
-                'siteNumber'          => $src['siteNumber'],
-                'startedDate'         => $src['startedDate'],
-                'completedDate'       => $src['completedDate'] ?: $src['startedDate'],
-                'testerUsername'      => $src['testerUsername'],
+                'vin' => $src['vin'],
+                'registration' => $src['registration'],
+                'make' => $src['make'],
+                'model' => $src['model'],
+                'testType' => $src['testType'],
+                'siteId' => $src['siteId'],
+                'siteNumber' => $src['siteNumber'],
+                'startedDate' => $src['startedDate'],
+                'completedDate' => $src['completedDate'] ?: $src['startedDate'],
+                'testerUsername' => $src['testerUsername'],
                 'reasonsForRejection' => $src['reasonsForRejection'],
-                'testDate'            => $src['testDate'],
+                'testDate' => $src['testDate'],
             ];
         }
 
@@ -114,7 +109,7 @@ class OutputFormatDataTablesMotTest extends OutputFormat
     private function getOdometer($value, $unit, $type)
     {
         if ($type == OdometerReadingResultType::OK) {
-            $result = $value . ' ' . $unit;
+            $result = $value.' '.$unit;
         } elseif ($type == OdometerReadingResultType::NOT_READABLE) {
             $result = self::TEXT_NOT_READABLE;
         } elseif ($type == OdometerReadingResultType::NO_ODOMETER) {
@@ -128,12 +123,13 @@ class OutputFormatDataTablesMotTest extends OutputFormat
 
     /**
      * @param MotTest $item
-     * @param boolean $isDemoTest
+     * @param bool    $isDemoTest
+     *
      * @return int|null
      */
     private function getSiteId(MotTest $item, $isDemoTest)
     {
-        if($isDemoTest || !is_object($item->getVehicleTestingStation())){
+        if ($isDemoTest || !is_object($item->getVehicleTestingStation())) {
             return null;
         }
 
@@ -142,12 +138,13 @@ class OutputFormatDataTablesMotTest extends OutputFormat
 
     /**
      * @param MotTest $item
-     * @param boolean $isDemoTest
+     * @param bool    $isDemoTest
+     *
      * @return null|string
      */
     private function getSiteNumber(MotTest $item, $isDemoTest)
     {
-        if($isDemoTest || !is_object($item->getVehicleTestingStation())){
+        if ($isDemoTest || !is_object($item->getVehicleTestingStation())) {
             return null;
         }
 

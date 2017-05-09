@@ -9,12 +9,10 @@ use SiteApi\Service\SiteTestingFacilitiesService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SiteTestingFacilitiesControllerFactoryTest
- * @package SiteApiTest\Factory\Controller
+ * Class SiteTestingFacilitiesControllerFactoryTest.
  */
 class SiteTestingFacilitiesControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFactory()
     {
         //Given

@@ -5,13 +5,10 @@ namespace DvsaClient\Entity;
 use DvsaCommon\Date\Time;
 
 /**
- * Class SiteDailyOpeningHours
- *
- * @package DvsaClient\Entity
+ * Class SiteDailyOpeningHours.
  */
 class SiteDailyOpeningHours
 {
-
     public static $DAY_NAMES
         = [
             1 => 'Monday',
@@ -20,7 +17,7 @@ class SiteDailyOpeningHours
             4 => 'Thursday',
             5 => 'Friday',
             6 => 'Saturday',
-            7 => 'Sunday'
+            7 => 'Sunday',
         ];
 
     private $weekday;
@@ -32,6 +29,7 @@ class SiteDailyOpeningHours
     public function setWeekday($weekday)
     {
         $this->weekday = $weekday;
+
         return $this;
     }
 
@@ -43,12 +41,14 @@ class SiteDailyOpeningHours
     public function setOpenTime(Time $openTime = null)
     {
         $this->openTime = $openTime;
+
         return $this;
     }
 
     public function setCloseTime(Time $closeTime = null)
     {
         $this->closeTime = $closeTime;
+
         return $this;
     }
 

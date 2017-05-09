@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\Service;
 
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
@@ -10,7 +11,6 @@ use Vehicle\Service\VehicleCatalogService;
  */
 class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     private $mockRestClient;
 
     public function setUp()
@@ -100,14 +100,14 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
                 [
                     'id' => '1',
                     'name' => 'Ford',
-                    'code' => 'F1'
+                    'code' => 'F1',
                 ],
                 [
                     'id' => '2',
                     'name' => 'Mercedes',
-                    'code' => 'M1'
-                ]
-            ]
+                    'code' => 'M1',
+                ],
+            ],
         ];
     }
 
@@ -118,15 +118,14 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
                 [
                     'id' => '1',
                     'name' => 'Focus',
-                    'code' => 'F2'
+                    'code' => 'F2',
                 ],
                 [
                     'id' => '2',
                     'name' => 'C 180',
-                    'code' => 'M2'
-                ]
-            ]
+                    'code' => 'M2',
+                ],
+            ],
         ];
     }
-
 }

@@ -2,19 +2,15 @@
 
 namespace DvsaElasticSearchTest\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Search\SearchParamsDto;
 use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaElasticSearch\Model\ESDocMotTestLog;
-use PHPUnit_Framework_TestCase;
 
 /**
- * Class ESDocMotTestLogTest
- *
- * @package DvsaElasticSearchTest\Connection
+ * Class ESDocMotTestLogTest.
  */
 class ESDocMotTestLogTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,7 +60,7 @@ class ESDocMotTestLogTest extends \PHPUnit_Framework_TestCase
             [
                 'searchParams' => (new SearchParamsDto())
                     ->setFormat(SearchParamConst::FORMAT_DATA_CSV),
-                'isES'  => false,
+                'isES' => false,
                 'expect' => [
                     'isResult' => true,
                 ],
@@ -72,7 +68,7 @@ class ESDocMotTestLogTest extends \PHPUnit_Framework_TestCase
             [
                 'searchParams' => (new SearchParamsDto())
                     ->setFormat(SearchParamConst::FORMAT_DATA_TABLES),
-                'isES'  => true,
+                'isES' => true,
                 'expect' => [
                     'isResult' => true,
                 ],
@@ -80,7 +76,7 @@ class ESDocMotTestLogTest extends \PHPUnit_Framework_TestCase
             [
                 'searchParams' => (new SearchParamsDto())
                     ->setFormat(self::INVALID_FORMAT),
-                'isES'  => false,
+                'isES' => false,
                 'expect' => [
                     'exception' => [
                         'message' => 'Unknown search format: '.self::INVALID_FORMAT,

@@ -5,9 +5,7 @@ namespace DashboardTest\Model;
 use Dashboard\Model\AuthorisedExaminer;
 
 /**
- * Class AuthorisedExaminerTest
- *
- * @package DashboardTest\Model
+ * Class AuthorisedExaminerTest.
  */
 class AuthorisedExaminerTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,17 +36,17 @@ class AuthorisedExaminerTest extends \PHPUnit_Framework_TestCase
     public static function getData()
     {
         return [
-            'id'            => self::ID,
-            'managerId'     => self::MANAGER_ID,
-            'reference'     => self::REFERENCE,
-            'name'          => self::NAME,
-            'tradingAs'     => self::TRADING_AS,
-            'slots'         => self::SLOTS,
+            'id' => self::ID,
+            'managerId' => self::MANAGER_ID,
+            'reference' => self::REFERENCE,
+            'name' => self::NAME,
+            'tradingAs' => self::TRADING_AS,
+            'slots' => self::SLOTS,
             'slotsWarnings' => self::WARNINGS_SLOTS,
-            'position'      => self::POSITION,
-            'sites'         => [
-                SiteTest::getData()
-            ]
+            'position' => self::POSITION,
+            'sites' => [
+                SiteTest::getData(),
+            ],
         ];
     }
 }

@@ -3,9 +3,7 @@
 namespace DvsaCommonApi\Service\Exception;
 
 /**
- * Class ForbiddenException
- *
- * @package DvsaCommonApi\Service\Exception
+ * Class ForbiddenException.
  */
 class ForbiddenException extends ServiceException
 {
@@ -22,15 +20,17 @@ class ForbiddenException extends ServiceException
     }
 
     /**
-     * Creates a new exception without any errors attached
+     * Creates a new exception without any errors attached.
+     *
      * @param $message
      *
      * @return ForbiddenException
      */
     public static function createEmpty($message)
     {
-        $exception = new ForbiddenException($message);
+        $exception = new self($message);
         $exception->clearErrors();
+
         return $exception;
     }
 }

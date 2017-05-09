@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\Model;
 
 use Core\Action\AbstractRedirectActionResult;
@@ -13,22 +14,23 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
 {
     /**
      * Gets the values that the form should be pre-populated with.
-     * (e.g. old values)
+     * (e.g. old values).
+     *
      * @return array
      */
     public function getPrePopulatedData()
     {
-        if($this->context->getTargetPersonId() && $this->context->getGroup()) {
+        if ($this->context->getTargetPersonId() && $this->context->getGroup()) {
             try {
                 $qualificationDetails = $this->qualificationDetailsMapper->getQualificationDetails(
                     $this->context->getTargetPersonId(), $this->context->getGroup()
                 );
 
                 return QualificationDetailsMapper::mapDtoToFormData($qualificationDetails);
-            } catch(NotFoundException $e) {
-
+            } catch (NotFoundException $e) {
             }
         }
+
         return [];
     }
 
@@ -42,11 +44,13 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
                 self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             ];
+
         return new RedirectToRoute($route, $params);
     }
 
     /**
      * @param $formUuid
+     *
      * @return AbstractRedirectActionResult $authorisationService
      */
     public function redirectToReviewPage($formUuid)
@@ -57,6 +61,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
                 self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
                 self::ROUTE_PARAM_FORM_UUID => $formUuid,
             ];
+
         return new RedirectToRoute($route, $params);
     }
 
@@ -67,6 +72,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
                 self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             ];
+
         return $this->context->getController()->url()->fromRoute($route, $params).'?formUuid='.$formUuid;
     }
 
@@ -81,7 +87,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     }
 
     /**
-     * Will make a call to API to update the data from the form
+     * Will make a call to API to update the data from the form.
      *
      * @param $formData
      */
@@ -94,9 +100,10 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     }
 
     /**
-     * Says if the users is authorised to reach the page
+     * Says if the users is authorised to reach the page.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     *
      * @return bool
      */
     public function isAuthorised(
@@ -131,6 +138,5 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
 
     public function populateConfirmationPageVariables()
     {
-
     }
 }

@@ -6,13 +6,12 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\DvlaMake;
 
 /**
- * Class DvlaMakeRepository
- * @package DvsaEntities\Repository
+ * Class DvlaMakeRepository.
+ *
  * @codeCoverageIgnore
  */
 class DvlaMakeRepository extends AbstractMutableRepository
 {
-
     public function getAll()
     {
         return $this->findAll();
@@ -22,29 +21,33 @@ class DvlaMakeRepository extends AbstractMutableRepository
      * @param int $id
      *
      * @return DvlaMake
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
     {
         $result = $this->find($id);
         if (empty($result)) {
-            throw new NotFoundException("DvlaMake", $id);
+            throw new NotFoundException('DvlaMake', $id);
         }
+
         return $result;
     }
 
     /**
      * @param string $code
+     *
      * @return DvlaMake
+     *
      * @throws NotFoundException
      */
     public function getByCode($code)
     {
         $result = $this->findOneBy(['code' => $code]);
         if (is_null($result)) {
-            throw new NotFoundException("DvlaMake", $code);
+            throw new NotFoundException('DvlaMake', $code);
         }
+
         return $result;
     }
-
 }

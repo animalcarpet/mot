@@ -2,10 +2,6 @@
 
 namespace Vehicle\Service;
 
-use Doctrine\Entity;
-use DvsaCommon\UrlBuilder\UrlBuilder;
-use Zend\Cache\Storage\StorageInterface;
-
 /**
  * Class VehicleCatalogService.
  *
@@ -13,7 +9,6 @@ use Zend\Cache\Storage\StorageInterface;
  */
 class VehicleCatalogService
 {
-
     const URL_VEHICLE_DICTIONARY = 'vehicle-dictionary';
 
     /**
@@ -31,6 +26,7 @@ class VehicleCatalogService
 
     /**
      * @param bool $query
+     *
      * @return array
      */
     public function findMake($query = false)
@@ -48,6 +44,7 @@ class VehicleCatalogService
     /**
      * @param bool $query
      * @param bool $make
+     *
      * @return array
      */
     public function findModel($query = false, $make = false)
@@ -67,6 +64,7 @@ class VehicleCatalogService
 
     /**
      * @param $response
+     *
      * @return array
      */
     private function getResponse($response)
@@ -81,5 +79,4 @@ class VehicleCatalogService
 
         return $response;
     }
-
 }

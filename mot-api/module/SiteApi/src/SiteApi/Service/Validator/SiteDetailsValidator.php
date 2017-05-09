@@ -2,7 +2,6 @@
 
 namespace SiteApi\Service\Validator;
 
-
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\CountryCode;
 use DvsaCommon\Enum\SiteTypeCode;
@@ -24,21 +23,23 @@ class SiteDetailsValidator extends AbstractValidator
     const ERR_WRONG_COUNTRY = 'This country is not allowed';
 
     /**
-     * Validates basic site details
+     * Validates basic site details.
      *
      * @param VehicleTestingStationDto $siteDto
-     * @param bool $checkType
-     * @param bool $checkStatus
+     * @param bool                     $checkType
+     * @param bool                     $checkStatus
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
+     *
      * @internal param bool $update
      */
     public function validate(VehicleTestingStationDto $siteDto, $checkType = true, $checkStatus = true)
     {
-        if(true == $checkType){
+        if (true == $checkType) {
             $this->validateType($siteDto);
         }
 
-        if(true == $checkStatus){
+        if (true == $checkStatus) {
             $this->validateStatus($siteDto);
         }
 
@@ -56,7 +57,7 @@ class SiteDetailsValidator extends AbstractValidator
     {
         $status = $siteDto->getStatus();
 
-        if (empty($status) || !in_array($status, $this->getAllowedStatuses())){
+        if (empty($status) || !in_array($status, $this->getAllowedStatuses())) {
             $this->errors->add(self::ERR_STATUS_REQUIRE, self::FIELD_STATUS);
         }
     }
@@ -65,11 +66,11 @@ class SiteDetailsValidator extends AbstractValidator
     {
         $classes = $siteDto->getTestClasses();
 
-        if(!is_array($classes)) {
+        if (!is_array($classes)) {
             $this->errors->add(self::ERR_VEHICLE_CLASSES_MUST_BE_ARRAY, self::FIELD_VEHICLE_CLASSES);
         } else {
-            array_walk($classes, function($item) {
-                if(!is_int($item)) {
+            array_walk($classes, function ($item) {
+                if (!is_int($item)) {
                     $this->errors->add(self::ERR_VEHICLE_CLASS_MUST_BE_INTEGER, self::FIELD_VEHICLE_CLASSES);
                 }
             });
@@ -78,7 +79,7 @@ class SiteDetailsValidator extends AbstractValidator
 
     public function validateName(VehicleTestingStationDto $siteDto)
     {
-        if(!empty($siteDto->getName())) {
+        if (!empty($siteDto->getName())) {
             return true;
         } else {
             $this->errors->add(self::ERR_NAME_MUST_BE_NOT_EMPTY, self::FIELD_NAME);
@@ -88,16 +89,15 @@ class SiteDetailsValidator extends AbstractValidator
     public function validateCountry(VehicleTestingStationDto $siteDto)
     {
         //todo the same list is used in Form, etract both to common class
-        if(in_array($siteDto->getCountry(), [
+        if (in_array($siteDto->getCountry(), [
             CountryCode::WALES,
             CountryCode::SCOTLAND,
-            CountryCode::ENGLAND
+            CountryCode::ENGLAND,
         ])) {
             return true;
         } else {
             $this->errors->add(self::ERR_WRONG_COUNTRY, self::FIELD_COUNTRY);
         }
-
     }
 
     private function getAllowedStatuses()
@@ -111,5 +111,4 @@ class SiteDetailsValidator extends AbstractValidator
             'EX',
         ];
     }
-
 }

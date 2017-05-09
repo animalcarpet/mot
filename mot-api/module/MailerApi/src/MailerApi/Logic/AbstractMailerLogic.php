@@ -26,15 +26,16 @@ abstract class AbstractMailerLogic
     private $templateResolverService;
 
     /**
-     * Configuration variables, passed in via service locator
+     * Configuration variables, passed in via service locator.
+     *
      * @var array
      */
     private $mailerConfig;
 
     /**
-     * @param MailerService $mailerService
+     * @param MailerService           $mailerService
      * @param TemplateResolverService $templateResolverService
-     * @param array $config Passed in by serviceLocator
+     * @param array                   $config                  Passed in by serviceLocator
      */
     public function __construct(
         MailerService $mailerService,
@@ -53,6 +54,7 @@ abstract class AbstractMailerLogic
      * @param string $recipient
      * @param string $subject
      * @param string $message
+     *
      * @return bool
      */
     final public function send($recipient, $subject, $message)
@@ -67,7 +69,8 @@ abstract class AbstractMailerLogic
     /**
      * @param string $type
      * @param string $templateName
-     * @param array $data
+     * @param array  $data
+     *
      * @return string
      */
     public function renderTemplate($type, $templateName, $data = [])
@@ -78,13 +81,14 @@ abstract class AbstractMailerLogic
         $renderer->setResolver($resolver);
 
         $viewModel = new ViewModel($data);
-        $viewModel->setTemplate($type . '-' . $templateName);
+        $viewModel->setTemplate($type.'-'.$templateName);
 
         return $renderer->render($viewModel);
     }
 
     /**
-     * Returns the base URL from the mailer configuration
+     * Returns the base URL from the mailer configuration.
+     *
      * @return string
      */
     public function getBaseUrl()

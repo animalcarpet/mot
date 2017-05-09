@@ -16,14 +16,11 @@ use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Model\MotTestComparator;
 
 /**
- * Class MotTestCompareService
- *
- * @package DvsaMotApi\Service
+ * Class MotTestCompareService.
  */
 class MotTestCompareService extends AbstractService
 {
-
-    /** @var MotTestRepository  */
+    /** @var MotTestRepository */
     protected $motTestRepository;
     protected $objectHydrator;
     protected $authService;

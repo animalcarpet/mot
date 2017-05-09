@@ -7,9 +7,8 @@ use MailerApi\Factory\Logic\UserNameCreatorFactory;
 use MailerApi\Logic\AbstractMailerLogic;
 use MailerApi\Service\MailerService;
 use MailerApi\Service\TemplateResolverService;
-use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
-use MailerApi\Logic\UsernameCreator;;
+use MailerApi\Logic\UsernameCreator;
 
 class UserNameCreatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +20,7 @@ class UserNameCreatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Faking a config
         $config = [
-            AbstractMailerLogic::CONFIG_KEY => []
+            AbstractMailerLogic::CONFIG_KEY => [],
         ];
         $serviceManager->setService('config', $config);
 

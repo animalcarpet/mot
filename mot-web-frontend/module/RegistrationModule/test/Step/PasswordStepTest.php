@@ -110,8 +110,8 @@ class PasswordStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            'password'         => __METHOD__ . '_password',
-            'passwordConfirm'  => __METHOD__ . '_passwordConfirm',
+            'password' => __METHOD__.'_password',
+            'passwordConfirm' => __METHOD__.'_passwordConfirm',
         ];
 
         return $fixture;

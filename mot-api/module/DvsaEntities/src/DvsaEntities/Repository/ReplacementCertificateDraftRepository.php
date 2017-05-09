@@ -8,25 +8,24 @@ use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaEntities\Entity\MotTest;
 
 /**
- * Class ReplacementCertificateDraftRepository
+ * Class ReplacementCertificateDraftRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class ReplacementCertificateDraftRepository extends AbstractMutableRepository
 {
-
     /**
      * @param string $draftId
      *
      * @return CertificateReplacementDraft
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($draftId)
     {
         $result = $this->find($draftId);
         if (!$result) {
-            throw new NotFoundException("Replacement certificate draft", $draftId);
+            throw new NotFoundException('Replacement certificate draft', $draftId);
         }
 
         $this->loadMotTest($result);

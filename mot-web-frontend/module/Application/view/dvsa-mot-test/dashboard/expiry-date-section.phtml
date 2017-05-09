@@ -14,12 +14,12 @@
                     <?php echo $this->partial(
                         'partial/forms/datePickerBox.phtml',
                         [
-                            'prefix'    => 'expiryDate',
-                            'label'     => 'MOT Test Expiry Date',
-                            'day'       => $day,
-                            'month'     => $month,
-                            'year'      => $year,
-                            'help'      => 'For example, 31 3 2015'
+                            'prefix' => 'expiryDate',
+                            'label' => 'MOT Test Expiry Date',
+                            'day' => $day,
+                            'month' => $month,
+                            'year' => $year,
+                            'help' => 'For example, 31 3 2015',
                         ]
                     ); ?>
                 </div>
@@ -32,6 +32,6 @@
     'dvsa-mot-test/dashboard/generic-section',
     [
         'sectionId' => 'expiryDate',
-        'actionName' => 'updateExpiryDate'
+        'actionName' => 'updateExpiryDate',
     ]
 );

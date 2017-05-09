@@ -29,11 +29,13 @@ class VehicleWeight
 
     /**
      * @param int $weight
+     *
      * @return VehicleWeight
      */
     public function setWeight($weight)
     {
         $this->weight = $weight;
+
         return $this;
     }
 
@@ -47,11 +49,13 @@ class VehicleWeight
 
     /**
      * @param int $weightSource
+     *
      * @return VehicleWeight
      */
     public function setWeightSource($weightSource)
     {
         $this->weightSource = $weightSource;
+
         return $this;
     }
 

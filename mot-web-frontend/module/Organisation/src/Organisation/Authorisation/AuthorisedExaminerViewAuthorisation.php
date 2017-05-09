@@ -8,11 +8,9 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Organisation\OrganisationPositionDto;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Dto\Person\PersonDto;
-use DvsaFeature\FeatureToggles;
 
 class AuthorisedExaminerViewAuthorisation
 {
@@ -29,8 +27,8 @@ class AuthorisedExaminerViewAuthorisation
 
     /**
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param MotIdentityProviderInterface $identityProvider
-     * @param int $authorisedExaminerId
+     * @param MotIdentityProviderInterface     $identityProvider
+     * @param int                              $authorisedExaminerId
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
@@ -55,18 +53,21 @@ class AuthorisedExaminerViewAuthorisation
     public function canViewAuthorisedExaminerPrincipals()
     {
         $permission = PermissionAtOrganisation::LIST_AEP_AT_AUTHORISED_EXAMINER;
+
         return $this->authorisationService->isGrantedAtOrganisation($permission, $this->authorisedExaminerId);
     }
 
     public function canCreateAuthorisedExaminerPrincipal()
     {
         $permission = PermissionAtOrganisation::AUTHORISED_EXAMINER_PRINCIPAL_CREATE;
+
         return $this->authorisationService->isGrantedAtOrganisation($permission, $this->authorisedExaminerId);
     }
 
     public function canRemoveAuthorisedExaminerPrincipal()
     {
         $permission = PermissionAtOrganisation::AUTHORISED_EXAMINER_PRINCIPAL_REMOVE;
+
         return $this->authorisationService->isGrantedAtOrganisation($permission, $this->authorisedExaminerId);
     }
 

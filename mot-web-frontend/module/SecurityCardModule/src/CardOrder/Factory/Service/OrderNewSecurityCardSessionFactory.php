@@ -17,7 +17,7 @@ class OrderNewSecurityCardSessionFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sessionContainer =  new Container(OrderNewSecurityCardSessionService::UNIQUE_KEY);
+        $sessionContainer = new Container(OrderNewSecurityCardSessionService::UNIQUE_KEY);
 
         return new OrderNewSecurityCardSessionService(
             $sessionContainer,

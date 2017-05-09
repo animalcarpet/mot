@@ -9,7 +9,6 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 
 class LoggedInUserManagerFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $motSession = $serviceLocator->get('MotSession');

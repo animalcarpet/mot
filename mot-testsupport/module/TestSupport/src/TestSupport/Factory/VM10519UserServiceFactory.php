@@ -13,6 +13,7 @@ class VM10519UserServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new VM10519UserService($accountService);
+
         return $service;
     }
 }

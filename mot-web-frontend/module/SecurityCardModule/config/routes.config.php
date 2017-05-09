@@ -22,102 +22,102 @@ return [
     'router' => [
         'routes' => [
             'security-card-order' => [
-                'type'    => 'literal',
+                'type' => 'literal',
                 'options' => [
-                    'route'    => '/security-card-order',
+                    'route' => '/security-card-order',
                     'defaults' => [
                         'controller' => OrderNewCardController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => false,
-                'child_routes'  => [
+                'child_routes' => [
                     'new' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/new[/:userId]',
+                            'route' => '/new[/:userId]',
                             'defaults' => [
                                 'controller' => OrderNewCardController::class,
                             ],
                         ],
                     ],
                     'address' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/address[/:userId]',
+                            'route' => '/address[/:userId]',
                             'defaults' => [
                                 'controller' => CardOrderAddressController::class,
                             ],
                         ],
                     ],
                     'review' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/review[/:userId]',
+                            'route' => '/review[/:userId]',
                             'defaults' => [
                                 'controller' => CardOrderReviewController::class,
                             ],
                         ],
                     ],
                     'confirmation' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/confirmation[/:userId]',
+                            'route' => '/confirmation[/:userId]',
                             'defaults' => [
                                 'controller' => CardOrderConfirmationController::class,
                             ],
                         ],
                     ],
                     'already-ordered' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/already-ordered',
+                            'route' => '/already-ordered',
                             'defaults' => [
                                 'controller' => AlreadyOrderedNewCardController::class,
                             ],
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ],
 
             'register-card' => [
-                'type'    => 'literal',
+                'type' => 'literal',
                 'options' => [
-                    'route'    => '/register-card',
+                    'route' => '/register-card',
                     'defaults' => [
                         'controller' => RegisterCardController::class,
-                        'action' => 'register'
+                        'action' => 'register',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'success' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/success',
+                            'route' => '/success',
                             'defaults' => [
                                 'controller' => RegisterCardSuccessController::class,
-                                'action'     => 'success'
+                                'action' => 'success',
                             ],
                         ],
                     ],
                     'already-has-card' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/already-has-card',
+                            'route' => '/already-has-card',
                             'defaults' => [
                                 'controller' => AlreadyHasRegisteredCardController::class,
-                                'action'     => 'index'
+                                'action' => 'index',
                             ],
                         ],
                     ],
                     'hard-stop' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/hard-stop',
+                            'route' => '/hard-stop',
                             'defaults' => [
                                 'controller' => RegisterCardHardStopController::class,
-                                'action'     => 'index'
+                                'action' => 'index',
                             ],
                         ],
                     ],
@@ -156,14 +156,12 @@ return [
                 ],
             ],
 
-
-
             'security-card-information' => [
                 'type' => 'Segment',
                 'options' => [
                     'route' => '/security-card-information/:userId',
                     'constraints' => [
-                        'userId'   => '[0-9]+',
+                        'userId' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => RegisterCardInformationController::class,
@@ -176,7 +174,7 @@ return [
                 'options' => [
                     'route' => '/security-card-information-new-user/:userId',
                     'constraints' => [
-                        'userId'   => '[0-9]+',
+                        'userId' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => RegisterCardInformationNewUserController::class,
@@ -189,7 +187,7 @@ return [
                 'options' => [
                     'route' => '/order-card-new-user/:userId',
                     'constraints' => [
-                        'userId'   => '[0-9]+',
+                        'userId' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => NewUserOrderCardController::class,
@@ -198,89 +196,89 @@ return [
                 ],
             ],
             'security-card-order-report-list' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/security-card-order-report-list',
+                    'route' => '/security-card-order-report-list',
                     'defaults' => [
                         'controller' => CardOrderReportListController::class,
-                        'action'     => 'list',
+                        'action' => 'list',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'download-csv' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:date/download-csv',
+                            'route' => '/:date/download-csv',
                             'constraints' => [
-                                'date'   => '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z',
+                                'date' => '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z',
                             ],
                             'defaults' => [
                                 'controller' => CardOrderCsvReportController::class,
-                                'action'     => 'downloadCsv'
+                                'action' => 'downloadCsv',
                             ],
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ],
             'lost-or-forgotten-card' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/lost-or-forgotten-card',
+                    'route' => '/lost-or-forgotten-card',
                     'defaults' => [
                         'controller' => LostOrForgottenCardController::class,
-                        'action'     => 'start',
+                        'action' => 'start',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'already-ordered' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/already-ordered',
+                            'route' => '/already-ordered',
                             'defaults' => [
                                 'controller' => LostOrForgottenCardController::class,
-                                'action'     => 'startAlreadyOrdered'
+                                'action' => 'startAlreadyOrdered',
                             ],
                         ],
                     ],
                     'question-one' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/question-one',
+                            'route' => '/question-one',
                             'defaults' => [
                                 'controller' => LostOrForgottenCardController::class,
-                                'action'     => 'securityQuestionOne'
+                                'action' => 'securityQuestionOne',
                             ],
                         ],
                     ],
                     'question-two' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/question-two',
+                            'route' => '/question-two',
                             'defaults' => [
                                 'controller' => LostOrForgottenCardController::class,
-                                'action'     => 'securityQuestionTwo'
+                                'action' => 'securityQuestionTwo',
                             ],
                         ],
                     ],
                     'confirmation' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/confirmation',
+                            'route' => '/confirmation',
                             'defaults' => [
                                 'controller' => LostOrForgottenCardController::class,
-                                'action'     => 'confirmation'
+                                'action' => 'confirmation',
                             ],
                         ],
                     ],
                     'forgot-question' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/forgot-question',
+                            'route' => '/forgot-question',
                             'defaults' => [
                                 'controller' => ForgotSecurityQuestionController::class,
-                                'action'     => 'forgotQuestionAnswer'
+                                'action' => 'forgotQuestionAnswer',
                             ],
                         ],
                     ],

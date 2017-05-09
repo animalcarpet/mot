@@ -16,6 +16,7 @@ class DuplicateEmailCheckerService
     public function isEmailDuplicated($email)
     {
         $result = $this->entityRepository->findBy(['email' => $email, 'isPrimary' => 1]);
+
         return !empty($result);
     }
 }

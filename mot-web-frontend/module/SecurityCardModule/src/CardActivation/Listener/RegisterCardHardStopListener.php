@@ -4,10 +4,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Listener;
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaFeature\FeatureToggles;
-use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\MvcEvent;
-use Zend\View\Helper\Identity;
 
 class RegisterCardHardStopListener
 {
@@ -26,7 +23,7 @@ class RegisterCardHardStopListener
         '@forgotten-password/(.*)@',
         '@lost-or-forgotten-card@',
         '@account/claim@',
-        '@account/claim/(.*)@'
+        '@account/claim/(.*)@',
     ];
 
     /**
@@ -34,15 +31,14 @@ class RegisterCardHardStopListener
      */
     private $identityProvider;
 
-    /** @var  RegisterCardHardStopCondition */
+    /** @var RegisterCardHardStopCondition */
     private $condition;
 
     /**
-     * @param MotIdentityProviderInterface $motIdentityProviderInterface
+     * @param MotIdentityProviderInterface  $motIdentityProviderInterface
      * @param RegisterCardHardStopCondition $hardStopCondition
      */
-    public function __construct
-    (
+    public function __construct(
         MotIdentityProviderInterface $motIdentityProviderInterface,
         RegisterCardHardStopCondition $hardStopCondition
     ) {
@@ -61,7 +57,6 @@ class RegisterCardHardStopListener
         $isRouteRestricted = $this->isRouteRestricted($routeName);
 
         if ($isRouteRestricted && $this->condition->isTrue()) {
-
             $redirectUrl = $event->getRouter()->assemble([], ['name' => 'register-card/hard-stop']);
 
             $response = $event->getResponse();
@@ -75,8 +70,8 @@ class RegisterCardHardStopListener
     }
 
     /**
-     *
      * @param string $routeName
+     *
      * @return bool
      */
     private function isRouteRestricted($routeName)

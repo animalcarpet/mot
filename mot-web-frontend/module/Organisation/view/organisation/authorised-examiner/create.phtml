@@ -1,11 +1,10 @@
 <?php
 
 /**
- * @var \Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel $model
+ * @var \Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel
  * @var AeCreateForm                                               $form
  * @var \Zend\Mvc\Controller\Plugin\FlashMessenger                 $flashMessenger
  */
-
 use DvsaClient\ViewModel\PhoneFormModel;
 use DvsaCommon\Enum\OrganisationContactTypeCode;
 use Organisation\Form\AeCreateForm;
@@ -33,46 +32,46 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'           => AeCreateForm::FIELD_NAME,
-                'label'        => 'Business name',
-                'title'        => 'Enter AE business name',
-                'value'        => $form->getName(),
+                'id' => AeCreateForm::FIELD_NAME,
+                'label' => 'Business name',
+                'title' => 'Enter AE business name',
+                'value' => $form->getName(),
                 'errorMessage' => $form->getError(AeCreateForm::FIELD_NAME),
-                'maxLength'    => 60,
-                'autofocus'    => true,
+                'maxLength' => 60,
+                'autofocus' => true,
             ]
         );
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'           => AeCreateForm::FIELD_TRADING_AS,
-                'label'        => 'Trading name',
-                'title'        => 'Enter AE trading as',
+                'id' => AeCreateForm::FIELD_TRADING_AS,
+                'label' => 'Trading name',
+                'title' => 'Enter AE trading as',
                 'errorMessage' => $form->getError(AeCreateForm::FIELD_TRADING_AS),
-                'value'        => $form->getTradingAs(),
-                'maxLength'    => 60,
+                'value' => $form->getTradingAs(),
+                'maxLength' => 60,
             ]
         );
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
-                'id'           => AeCreateForm::FIELD_COMPANY_TYPE,
-                'label'        => 'Business type',
+                'id' => AeCreateForm::FIELD_COMPANY_TYPE,
+                'label' => 'Business type',
                 'errorMessage' => $form->getError(AeCreateForm::FIELD_COMPANY_TYPE),
-                'value'        => $form->getCompanyType(),
-                'options'      => $form->getCompanyTypes(),
+                'value' => $form->getCompanyType(),
+                'options' => $form->getCompanyTypes(),
             ]
         );
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'           => AeCreateForm::FIELD_REG_NR,
-                'label'        => 'Company number (for limited companies only)',
-                'title'        => 'Enter Company number',
-                'elementId'    => 'registeredCompanyNumberDiv',
+                'id' => AeCreateForm::FIELD_REG_NR,
+                'label' => 'Company number (for limited companies only)',
+                'title' => 'Enter Company number',
+                'elementId' => 'registeredCompanyNumberDiv',
                 'errorMessage' => $form->getError(AeCreateForm::FIELD_REG_NR),
-                'value'        => $form->getRegisteredCompanyNumber(),
-                'maxLength'    => 20,
+                'value' => $form->getRegisteredCompanyNumber(),
+                'maxLength' => 20,
             ]
         );
         ?>
@@ -90,27 +89,27 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-address-group',
             [
-                'id'    => 'address',
+                'id' => 'address',
                 'group' => OrganisationContactTypeCode::REGISTERED_COMPANY,
-                'form'  => $busContactModel->getAddressModel(),
+                'form' => $busContactModel->getAddressModel(),
             ],
             'Core'
         );
 
         //  business contact :: phone number
         $phoneModel = $busContactModel->getPhoneModel();
-        $fieldId = OrganisationContactTypeCode::REGISTERED_COMPANY . PhoneFormModel::FIELD_NUMBER;
-        $fieldName = OrganisationContactTypeCode::REGISTERED_COMPANY . '[' . PhoneFormModel::FIELD_NUMBER . ']';
+        $fieldId = OrganisationContactTypeCode::REGISTERED_COMPANY.PhoneFormModel::FIELD_NUMBER;
+        $fieldName = OrganisationContactTypeCode::REGISTERED_COMPANY.'['.PhoneFormModel::FIELD_NUMBER.']';
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => $fieldId,
-                'name'          => $fieldName,
-                'errorMessage'  => $phoneModel->getError($fieldName),
+                'id' => $fieldId,
+                'name' => $fieldName,
+                'errorMessage' => $phoneModel->getError($fieldName),
                 'inputModifier' => '1-3',
-                'label'         => 'Phone number',
-                'value'         => $phoneModel->getNumber(),
-                'maxLength'     => 24,
+                'label' => 'Phone number',
+                'value' => $phoneModel->getNumber(),
+                'maxLength' => 24,
             ]
         );
 
@@ -118,10 +117,10 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-email-conf-group',
             [
-                'id'    => 'email',
-                'key'   => 'Email address not provided',
+                'id' => 'email',
+                'key' => 'Email address not provided',
                 'group' => OrganisationContactTypeCode::REGISTERED_COMPANY,
-                'form'  => $busContactModel->getEmailModel(),
+                'form' => $busContactModel->getEmailModel(),
             ],
             'Core'
         );
@@ -138,9 +137,9 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-is-the-same',
             [
-                'title'      => 'Are they the same as the business contact details? ',
-                'name'       => AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME,
-                'value'      => $form->isCorrDetailsTheSame(),
+                'title' => 'Are they the same as the business contact details? ',
+                'name' => AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME,
+                'value' => $form->isCorrDetailsTheSame(),
                 'addressElm' => 'addressDetailsFragmentDiv',
             ],
             'Core'
@@ -155,27 +154,27 @@ echo $this->partial(
             echo $this->partial(
                 'partial/gds/form/control-address-group',
                 [
-                    'id'    => 'address',
+                    'id' => 'address',
                     'group' => OrganisationContactTypeCode::CORRESPONDENCE,
-                    'form'  => $corrContactModel->getAddressModel(),
+                    'form' => $corrContactModel->getAddressModel(),
                 ],
                 'Core'
             );
 
             //  correspondence contact :: phone number
             $phoneModel = $corrContactModel->getPhoneModel();
-            $fieldId = OrganisationContactTypeCode::CORRESPONDENCE . PhoneFormModel::FIELD_NUMBER;
-            $fieldName = OrganisationContactTypeCode::CORRESPONDENCE . '[' . PhoneFormModel::FIELD_NUMBER . ']';
+            $fieldId = OrganisationContactTypeCode::CORRESPONDENCE.PhoneFormModel::FIELD_NUMBER;
+            $fieldName = OrganisationContactTypeCode::CORRESPONDENCE.'['.PhoneFormModel::FIELD_NUMBER.']';
             echo $this->partial(
                 'partial/gds/form/control-text-group',
                 [
-                    'id'            => $fieldId,
-                    'name'          => $fieldName,
-                    'errorMessage'  => $phoneModel->getError($fieldName),
+                    'id' => $fieldId,
+                    'name' => $fieldName,
+                    'errorMessage' => $phoneModel->getError($fieldName),
                     'inputModifier' => '1-3',
-                    'label'         => 'Phone number',
-                    'value'         => $phoneModel->getNumber(),
-                    'maxLength'     => 24,
+                    'label' => 'Phone number',
+                    'value' => $phoneModel->getNumber(),
+                    'maxLength' => 24,
                 ]
             );
 
@@ -183,10 +182,10 @@ echo $this->partial(
             echo $this->partial(
                 'partial/gds/form/control-email-conf-group',
                 [
-                    'id'    => 'email',
-                    'key'   => 'Email address not provided',
+                    'id' => 'email',
+                    'key' => 'Email address not provided',
                     'group' => OrganisationContactTypeCode::CORRESPONDENCE,
-                    'form'  => $corrContactModel->getEmailModel(),
+                    'form' => $corrContactModel->getEmailModel(),
                 ],
                 'Core'
             );
@@ -209,8 +208,8 @@ echo $this->partial(
     echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'         => 'submitAeEdit',
-            'value'      => 'Continue',
+            'id' => 'submitAeEdit',
+            'value' => 'Continue',
             'navigation' => [
                 'Cancel and return home' => $model->getCancelUrl(),
             ],
@@ -222,7 +221,7 @@ echo $this->partial(
 <?php $this->inlineScript()->captureStart(); ?>
 
 $(function() {
-    if (!!'<?php echo (bool)$form->isCorrDetailsTheSame(); ?>') {
+    if (!!'<?php echo (bool) $form->isCorrDetailsTheSame(); ?>') {
         $('#addressDetailsFragmentDiv').hide();
     }
 });

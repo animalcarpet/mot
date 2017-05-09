@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\Validator;
 
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
@@ -35,7 +36,7 @@ class MotTestingCertificateValidator extends AbstractValidator implements AutoWi
             CertificateNumberInput::FIELD => $dto->getCertificateNumber(),
             DateOfQualificationInput::FIELD => $dto->getDateOfQualification(),
             SiteNumberInput::FIELD => $dto->getSiteNumber(),
-            VehicleClassGroupCodeInput::FIELD => $dto->getVehicleClassGroupCode()
+            VehicleClassGroupCodeInput::FIELD => $dto->getVehicleClassGroupCode(),
         ];
 
         $this->inputFilter->setData($data);

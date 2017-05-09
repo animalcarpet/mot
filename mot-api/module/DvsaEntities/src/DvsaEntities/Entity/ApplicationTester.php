@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * ApplicationTester
+ * ApplicationTester.
  *
  * @ORM\Table(name="application_tester")
  * @ORM\Entity
@@ -16,23 +16,23 @@ class ApplicationTester
     use CommonIdentityTrait;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="testing_two_wheeled", type="boolean", nullable=true)
      */
     private $testingTwoWheeled = '0';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="testing_four_wheeled", type="boolean", nullable=true)
      */
     private $testingFourWheeled = '0';
 
     /**
-     * Set testingTwoWheeled
+     * Set testingTwoWheeled.
      *
-     * @param boolean $testingTwoWheeled
+     * @param bool $testingTwoWheeled
      *
      * @return ApplicationTester
      */
@@ -44,9 +44,9 @@ class ApplicationTester
     }
 
     /**
-     * Get testingTwoWheeled
+     * Get testingTwoWheeled.
      *
-     * @return boolean
+     * @return bool
      */
     public function getTestingTwoWheeled()
     {
@@ -54,9 +54,9 @@ class ApplicationTester
     }
 
     /**
-     * Set testingFourWheeled
+     * Set testingFourWheeled.
      *
-     * @param boolean $testingFourWheeled
+     * @param bool $testingFourWheeled
      *
      * @return ApplicationTester
      */
@@ -68,9 +68,9 @@ class ApplicationTester
     }
 
     /**
-     * Get testingFourWheeled
+     * Get testingFourWheeled.
      *
-     * @return boolean
+     * @return bool
      */
     public function getTestingFourWheeled()
     {

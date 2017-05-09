@@ -9,7 +9,7 @@ use TestSupport\Helper\TestSupportRestClientHelper;
 class SiteRoleNominationService
 {
     /**
-     * @var TestSupportRestClientHelper $testSupportRestClientHelper
+     * @var TestSupportRestClientHelper
      */
     private $testSupportRestClientHelper;
 
@@ -28,11 +28,11 @@ class SiteRoleNominationService
 
         $return = $restClient->post($positionPath, [
             'nomineeId' => $userId,
-            'roleCode'  => $roleCode,
+            'roleCode' => $roleCode,
         ]);
 
-        if (! isset($return['data'])) {
-                throw new \Exception('Failed to add permission to siteId '.$siteId);
+        if (!isset($return['data'])) {
+            throw new \Exception('Failed to add permission to siteId '.$siteId);
         }
 
         return $return['data'];

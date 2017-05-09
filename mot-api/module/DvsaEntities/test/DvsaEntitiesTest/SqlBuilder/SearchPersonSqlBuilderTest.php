@@ -2,13 +2,12 @@
 
 namespace DvsaEntitiesTest\SqlBuilder;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommon\Model\SearchPersonModel;
 use DvsaEntities\SqlBuilder\SearchPersonSqlBuilder;
 
 /**
- * Unit tests for SearchPersonSqlBuilder
+ * Unit tests for SearchPersonSqlBuilder.
  */
 class SearchPersonSqlBuilderTest extends AbstractServiceTestCase
 {

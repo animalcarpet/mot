@@ -5,7 +5,7 @@ namespace DvsaEntities\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Repository for
+ * Repository for.
  *
  * @see \DvsaEntities\Entity\OrganisationSiteStatus
  * @codeCoverageIgnore

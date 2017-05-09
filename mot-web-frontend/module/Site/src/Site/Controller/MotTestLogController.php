@@ -72,7 +72,7 @@ class MotTestLogController extends AbstractAuthActionController
 
     /**
      * @param MotFrontendAuthorisationServiceInterface $authService
-     * @param MapperFactory $mapperFactory
+     * @param MapperFactory                            $mapperFactory
      */
     public function __construct(
         MotFrontendAuthorisationServiceInterface $authService,
@@ -130,7 +130,7 @@ class MotTestLogController extends AbstractAuthActionController
 
         $breadcrumbs = [
             $site->getName() => VehicleTestingStationUrlBuilderWeb::byId($siteId),
-            'Test logs'      => '',
+            'Test logs' => '',
         ];
 
         $breadcrumbs = $this->prependBreadcrumbsWithAeLink($site, $breadcrumbs);
@@ -168,9 +168,9 @@ class MotTestLogController extends AbstractAuthActionController
 
         $csvBody = ($apiResult->getResultCount() > 0) ? $this->prepareCsvBody($apiResult->getData()) : '';
 
-        $fileName = 'test-log-' .
-            (new DateTime('@' . $searchParams->getDateFromTs()))->format('dmY') . '-' .
-            (new DateTime('@' . $searchParams->getDateToTs()))->format('dmY') . '.csv';
+        $fileName = 'test-log-'.
+            (new DateTime('@'.$searchParams->getDateFromTs()))->format('dmY').'-'.
+            (new DateTime('@'.$searchParams->getDateToTs()))->format('dmY').'.csv';
 
         /** @var \Zend\Http\Response $response */
         $response = $this->getResponse();
@@ -179,7 +179,7 @@ class MotTestLogController extends AbstractAuthActionController
         $headers
             ->clearHeaders()
             ->addHeaderLine('Content-Type', 'text/csv; charset=utf-8')
-            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $fileName . '"')
+            ->addHeaderLine('Content-Disposition', 'attachment; filename="'.$fileName.'"')
             ->addHeaderLine('Accept-Ranges', 'bytes')
             ->addHeaderLine('Content-Length', strlen($csvBody))
             ->addHeaderLine('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
@@ -215,16 +215,16 @@ class MotTestLogController extends AbstractAuthActionController
             }
 
             if (isset($row['clientIp'])) {
-                $ips = explode(", ", $row['clientIp']);
+                $ips = explode(', ', $row['clientIp']);
                 $row['clientIp'] = $ips[0];
             }
 
             // "formula" hack preventing Excel from converting columns to Date or Number
-            $row['vehicleModel'] = '="' . $row['vehicleModel'] . '"';
-            $row['testNumber'] = '="' . $row['testNumber'] . '"';
+            $row['vehicleModel'] = '="'.$row['vehicleModel'].'"';
+            $row['testNumber'] = '="'.$row['testNumber'].'"';
 
             // VIN must use ="<vin>" to prevent Excel truncating numeric VIN longer than 15 digits
-            $row['vehicleVIN'] = '="' . $row['vehicleVIN'] . '"';
+            $row['vehicleVIN'] = '="'.$row['vehicleVIN'].'"';
 
             fputcsv($csvBuffer, $row);
         }
@@ -341,7 +341,8 @@ class MotTestLogController extends AbstractAuthActionController
 
     /**
      * @param SiteDto $site
-     * @param array $breadcrumbs
+     * @param array   $breadcrumbs
+     *
      * @return array
      */
     private function prependBreadcrumbsWithAeLink(SiteDto $site, &$breadcrumbs)
@@ -351,7 +352,7 @@ class MotTestLogController extends AbstractAuthActionController
         if ($org) {
             $canVisitAePage = $this->canAccessAePage($org->getId());
 
-            if($canVisitAePage) {
+            if ($canVisitAePage) {
                 $aeBreadcrumb = [$org->getName() => AuthorisedExaminerUrlBuilderWeb::of($org->getId())->toString()];
                 $breadcrumbs = $aeBreadcrumb + $breadcrumbs;
             }
@@ -370,6 +371,5 @@ class MotTestLogController extends AbstractAuthActionController
         return
             $this->authService->isGranted(PermissionInSystem::AUTHORISED_EXAMINER_READ_FULL) ||
             $this->authService->isGrantedAtOrganisation(PermissionAtOrganisation::AUTHORISED_EXAMINER_READ, $orgId);
-        ;
     }
 }

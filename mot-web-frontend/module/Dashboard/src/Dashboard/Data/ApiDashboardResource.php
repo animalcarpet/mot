@@ -7,16 +7,15 @@ use DvsaCommon\UrlBuilder\DashboardUrlBuilder;
 
 /**
  * Handles calls to API, paths:
- *      /person/:personId/dashboard
+ *      /person/:personId/dashboard.
  */
 class ApiDashboardResource extends ApiResources
 {
-
     /** @var $dashboardData array */
     private static $dashboardData = null;
 
     /**
-     * Gets all data for dashboard
+     * Gets all data for dashboard.
      *
      * @param int $personId
      *

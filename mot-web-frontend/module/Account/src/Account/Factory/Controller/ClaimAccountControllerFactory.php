@@ -10,9 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ClaimAccountControllerFactory
- *
- * @package Account\Factory\Controller
+ * Class ClaimAccountControllerFactory.
  */
 class ClaimAccountControllerFactory implements FactoryInterface
 {

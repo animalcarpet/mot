@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
@@ -8,7 +7,7 @@ use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurity
 
 class ChangeSecurityQuestionsReviewController extends AbstractDvsaActionController
 {
-    const ROUTE = "newProfile/change-security-questions/review";
+    const ROUTE = 'newProfile/change-security-questions/review';
 
     private $action;
 
@@ -22,6 +21,7 @@ class ChangeSecurityQuestionsReviewController extends AbstractDvsaActionControll
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
         $this->setHeadTitle('Review security question changes');
+
         return $this->applyActionResult($result);
     }
 

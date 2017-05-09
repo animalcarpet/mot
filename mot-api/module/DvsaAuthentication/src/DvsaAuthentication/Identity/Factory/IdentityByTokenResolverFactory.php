@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaAuthentication\Identity\Factory;
 
 use Dvsa\OpenAM\OpenAMClientInterface;
@@ -6,7 +7,6 @@ use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use DvsaAuthentication\Authentication\Adapter\OpenAM\OpenAMCachedClient;
 use DvsaAuthentication\Factory\IdentityFactoryFactory;
 use DvsaAuthentication\Identity\OpenAM\OpenAMIdentityByTokenResolver;
-use DvsaAuthentication\IdentityFactory;
 use DvsaCommon\Configuration\MotConfig;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

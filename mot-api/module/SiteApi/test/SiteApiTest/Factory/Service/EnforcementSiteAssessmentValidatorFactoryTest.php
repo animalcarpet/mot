@@ -12,7 +12,6 @@ use Zend\ServiceManager\ServiceManager;
 
 class EnforcementSiteAssessmentValidatorFactoryTest extends AbstractServiceTestCase
 {
-
     public function testFactory()
     {
         $serviceManager = new ServiceManager();

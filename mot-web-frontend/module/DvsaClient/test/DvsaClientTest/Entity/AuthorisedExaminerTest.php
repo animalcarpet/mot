@@ -7,8 +7,7 @@ use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Enum\OrganisationContactTypeCode;
 
 /**
- * Class AuthorisedExaminerTest
- * @package DvsaClient\test\DvsaClientTest\EntityTest
+ * Class AuthorisedExaminerTest.
  */
 class AuthorisedExaminerTest extends BaseEntityTestCase
 {
@@ -72,6 +71,7 @@ class AuthorisedExaminerTest extends BaseEntityTestCase
     {
         $ae = new OrganisationDto();
         $ae->setContacts($contactDetailsArray);
+
         return $ae;
     }
 }

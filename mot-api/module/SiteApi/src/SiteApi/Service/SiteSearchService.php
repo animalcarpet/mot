@@ -14,7 +14,6 @@ use DvsaEntities\DqlBuilder\SearchParam\SiteSearchParam;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Repository\SiteRepository;
 use SiteApi\Service\Mapper\VtsMapper;
-use Zend\Http\Request;
 
 /**
  * Service which creates/edits new VTS.
@@ -40,9 +39,10 @@ class SiteSearchService extends AbstractService
     }
 
     /**
-     * Assert the permission to search for site and return the result
+     * Assert the permission to search for site and return the result.
      *
      * @param SiteSearchParamsDto $params
+     *
      * @return \DvsaCommon\Dto\Site\SiteListDto
      */
     public function findSites(SiteSearchParamsDto $params)
@@ -66,12 +66,15 @@ class SiteSearchService extends AbstractService
 
     /**
      * @param string $siteNumber
+     *
      * @return VehicleTestingStationDto
+     *
      * @throws NotFoundException
      */
     public function findSiteByNumber($siteNumber)
     {
         $site = $this->siteRepository->getBySiteNumber(strtoupper(trim($siteNumber)));
+
         return $this->vtsMapper->toDto($site);
     }
 }

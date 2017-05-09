@@ -23,6 +23,7 @@ class MessageMapper extends AbstractApiMapper
      * @param Message $message
      *
      * @return MessageDto
+     *
      * @throws \RuntimeException
      */
     public function toDto($message)

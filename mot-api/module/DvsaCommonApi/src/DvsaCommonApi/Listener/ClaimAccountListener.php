@@ -32,19 +32,19 @@ class ClaimAccountListener extends AbstractListenerAggregate
     private function createWhiteList()
     {
         return [
-            new ApiEndPoint("session", "POST"),
-            new ApiEndPoint("catalog", "GET"),
-            new ApiEndPoint("identity-data", "GET"),
-            new ApiEndPoint("person/rbac-roles", "GET"),
-            new ApiEndPoint("person/dashboard", "GET"),
-            new ApiEndPoint("AccountApi/default", "GET"),
-            new ApiEndPoint("AccountApi/default", "PUT"),
-            new ApiEndPoint("security-question", "GET"),
-            new ApiEndPoint("person/reset-pin", "GET"),
-            new ApiEndPoint("person/reset-pin", "PUT"),
-            new ApiEndPoint("notification/person", "GET"),
-            new ApiEndPoint("notification/item/read", "PUT"),
-            new ApiEndPoint("notification/item/action", "PUT"),
+            new ApiEndPoint('session', 'POST'),
+            new ApiEndPoint('catalog', 'GET'),
+            new ApiEndPoint('identity-data', 'GET'),
+            new ApiEndPoint('person/rbac-roles', 'GET'),
+            new ApiEndPoint('person/dashboard', 'GET'),
+            new ApiEndPoint('AccountApi/default', 'GET'),
+            new ApiEndPoint('AccountApi/default', 'PUT'),
+            new ApiEndPoint('security-question', 'GET'),
+            new ApiEndPoint('person/reset-pin', 'GET'),
+            new ApiEndPoint('person/reset-pin', 'PUT'),
+            new ApiEndPoint('notification/person', 'GET'),
+            new ApiEndPoint('notification/item/read', 'PUT'),
+            new ApiEndPoint('notification/item/action', 'PUT'),
         ];
     }
 
@@ -85,11 +85,11 @@ class ClaimAccountListener extends AbstractListenerAggregate
             [
                 'errors' => [[
                     'message' => 'Forbidden',
-                    'code' => ApiErrorCodes::UNAUTHORISED
+                    'code' => ApiErrorCodes::UNAUTHORISED,
                 ]],
-                'debugInfo' => ["Account claim required. "
-                    . "This person has not completed claim account process. "
-                    . "Api route: '" . $routeName . "', Web method: '" . $webMethod . "'."]
+                'debugInfo' => ['Account claim required. '
+                    .'This person has not completed claim account process. '
+                    ."Api route: '".$routeName."', Web method: '".$webMethod."'.", ],
             ]
         );
 

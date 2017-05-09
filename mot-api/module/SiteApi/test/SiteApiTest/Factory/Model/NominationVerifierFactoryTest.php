@@ -7,7 +7,6 @@ use DvsaCommonTest\TestUtils\XMock;
 use SiteApi\Factory\Model\NominationVerifierFactory;
 use SiteApi\Model\NominationVerifier;
 use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class NominationVerifierFactoryTest extends \PHPUnit_Framework_TestCase
 {

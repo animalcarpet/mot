@@ -2,7 +2,6 @@
 
 namespace DvsaAuthentication\Login\Factory;
 
-use Dvsa\OpenAM\OpenAMClient;
 use Dvsa\OpenAM\OpenAMClientInterface;
 use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use DvsaAuthentication\Identity\IdentityByTokenResolver;

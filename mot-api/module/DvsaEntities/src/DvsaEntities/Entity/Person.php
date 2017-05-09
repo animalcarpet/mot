@@ -4,7 +4,6 @@ namespace DvsaEntities\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use DvsaCommon\Constants\PersonContactType;
 use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommon\Formatting\PersonFullNameFormatter;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
@@ -22,7 +21,7 @@ class Person extends Entity
 {
     use CommonIdentityTrait;
 
-    const ENTITY_NAME           = 'Person';
+    const ENTITY_NAME = 'Person';
     const FIELD_USERNAME_LENGTH = 50;
 
     /**
@@ -112,20 +111,20 @@ class Person extends Entity
     private $contacts;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="otp_failed_attempts", type="integer", length=5, nullable=true)
      */
     private $otpFailedAttempts;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(name="is_account_claim_required", type="boolean", nullable=false)
      */
     private $accountClaimRequired;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(name="is_password_change_required", type="boolean", nullable=false)
      */
     private $passwordChangeRequired;
@@ -193,8 +192,8 @@ class Person extends Entity
 
     /**
      * @param $pin
-     * @return Person
      *
+     * @return Person
      * @return $this
      */
     public function setPin($pin)
@@ -393,7 +392,7 @@ class Person extends Entity
     public static function getShortName($personData)
     {
         if (is_array($personData)) {
-            $person = new Person();
+            $person = new self();
             $person
                 ->setFirstName(ArrayUtils::tryGet($personData, 'firstName', ''))
                 ->setMiddleName(ArrayUtils::tryGet($personData, 'middleName', ''))
@@ -404,8 +403,8 @@ class Person extends Entity
 
         return implode(
             '', [
-                (strlen($t = trim($person->getFirstName())) ? $t[0] . '. ' : ''),
-                (strlen($t = trim($person->getMiddleName())) ? $t[0] . '. ' : ''),
+                (strlen($t = trim($person->getFirstName())) ? $t[0].'. ' : ''),
+                (strlen($t = trim($person->getMiddleName())) ? $t[0].'. ' : ''),
                 trim($person->getFamilyName()),
             ]
         );
@@ -481,7 +480,7 @@ class Person extends Entity
     }
 
     /**
-     * @param integer $otpFailedAttempts
+     * @param int $otpFailedAttempts
      *
      * @return Person
      */
@@ -493,7 +492,7 @@ class Person extends Entity
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getOtpFailedAttempts()
     {
@@ -501,16 +500,15 @@ class Person extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAccountClaimRequired()
     {
         return $this->accountClaimRequired;
     }
 
-
     /**
-     * @param boolean $accountClaimRequired
+     * @param bool $accountClaimRequired
      *
      * @return Person
      */
@@ -522,7 +520,7 @@ class Person extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPasswordChangeRequired()
     {
@@ -530,7 +528,7 @@ class Person extends Entity
     }
 
     /**
-     * @param boolean $passwordChangeRequired
+     * @param bool $passwordChangeRequired
      *
      * @return Person
      */
@@ -541,14 +539,13 @@ class Person extends Entity
         return $this;
     }
 
-
     /**
      * Add Vehicle Testing Station.
      *
      * @param \DvsaEntities\Entity\Site $vehicleTestingStation
      *
      * @deprecated This method is only used for unit testing, for convenience.
-     *             Please don't use it outside of unit tests.
+     *             Please don't use it outside of unit tests
      *
      * @return Person
      */
@@ -566,7 +563,7 @@ class Person extends Entity
     /**
      * @param string $filterRole SiteBusinessRoleCode
      *                           If specified will only take those sites where a person fulfills the given role.
-     *                           If not, then all sites where the person works will be returned.
+     *                           If not, then all sites where the person works will be returned
      *
      * @return Site[]
      */
@@ -591,7 +588,7 @@ class Person extends Entity
      * Gets all positions this person fulfills in all sites.
      * The collection contains also positions that are pending, rejected etc.
      *
-     * @param string $filterRole SiteBusinessRoleCode Get only those positions that relate to to given role.
+     * @param string $filterRole SiteBusinessRoleCode Get only those positions that relate to to given role
      *
      * @return SiteBusinessRoleMap[]
      */
@@ -616,7 +613,7 @@ class Person extends Entity
      * Gets all ACTIVE positions the person fulfills in all sites.
      * Does not include pending positions, rejected ones etc.
      *
-     * @param string $filterRole SiteBusinessRoleCode Get only those positions that relate to the given role.
+     * @param string $filterRole SiteBusinessRoleCode Get only those positions that relate to the given role
      *
      * @return SiteBusinessRoleMap[]
      */
@@ -633,7 +630,7 @@ class Person extends Entity
     /**
      * @param string $filterRole OrganisationBusinessRoleCode
      *                           If specified will only take those organisations where a person fulfills the given role.
-     *                           If not, then all organisations where the person works will be returned.
+     *                           If not, then all organisations where the person works will be returned
      *
      * @return Organisation[]
      */
@@ -658,7 +655,7 @@ class Person extends Entity
      * @param string $filterRole OrganisationBusinessRoleCode
      *                           If specified will only take those authorised examiners where a person fulfills
      *                           the given role.
-     *                           If not, then all authorised examiners where the person works will be returned.
+     *                           If not, then all authorised examiners where the person works will be returned
      *
      * @return Organisation[]
      */
@@ -680,7 +677,7 @@ class Person extends Entity
      * Gets all positions this person fulfills in all organisations.
      * The collection contains also positions that are pending, rejected etc.
      *
-     * @param string $filterRole OrganisationBusinessRoleCode Get only those positions that relate to to given role.
+     * @param string $filterRole OrganisationBusinessRoleCode Get only those positions that relate to to given role
      *
      * @return OrganisationBusinessRoleMap[]
      */
@@ -705,7 +702,7 @@ class Person extends Entity
      * Gets all ACTIVE positions the person fulfills in all organisations.
      * Does not include pending positions, rejected ones etc.
      *
-     * @param string $filterRole OrganisationBusinessRoleCode Get only those positions that relate to the given role.
+     * @param string $filterRole OrganisationBusinessRoleCode Get only those positions that relate to the given role
      *
      * @return OrganisationBusinessRoleMap[]
      */
@@ -831,7 +828,7 @@ class Person extends Entity
     }
 
     /**
-     * This function return the first primary email for a person
+     * This function return the first primary email for a person.
      *
      * @return null|string
      */
@@ -843,8 +840,8 @@ class Person extends Entity
                 return $contactDetails->getDetails()->getPrimaryEmail()->getEmail();
             }
         }
-        return null;
 
+        return null;
     }
 
     /**
@@ -857,11 +854,13 @@ class Person extends Entity
 
     /**
      * @param \Doctrine\Common\Collections\Collection $personSystemRoleMaps
+     *
      * @return $this
      */
     public function setPersonSystemRoleMaps($personSystemRoleMaps)
     {
         $this->personSystemRoleMaps = $personSystemRoleMaps;
+
         return $this;
     }
 }

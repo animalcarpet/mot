@@ -22,7 +22,7 @@ class AddressPropertyFormTest extends \PHPUnit_Framework_TestCase
         $data = [
             AddressPropertyForm::FIELD_ADDRESS_LINE_1 => '',
             AddressPropertyForm::FIELD_TOWN => '',
-            AddressPropertyForm::FIELD_POSTCODE => ''
+            AddressPropertyForm::FIELD_POSTCODE => '',
         ];
 
         $form = new AddressPropertyForm();
@@ -42,7 +42,7 @@ class AddressPropertyFormTest extends \PHPUnit_Framework_TestCase
             AddressPropertyForm::FIELD_ADDRESS_LINE_2 => str_repeat('A', 51),
             AddressPropertyForm::FIELD_ADDRESS_LINE_3 => str_repeat('A', 51),
             AddressPropertyForm::FIELD_TOWN => str_repeat('A', 51),
-            AddressPropertyForm::FIELD_POSTCODE => str_repeat('A', 11)
+            AddressPropertyForm::FIELD_POSTCODE => str_repeat('A', 11),
         ];
 
         $form = new AddressPropertyForm();
@@ -50,11 +50,11 @@ class AddressPropertyFormTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($form->isValid());
         $this->assertCount(5, $form->getMessages());
-        $this->assertContains("must be 50 characters or less", self::messagesForField($form, AddressPropertyForm::FIELD_ADDRESS_LINE_1));
-        $this->assertContains("must be 50 characters or less", self::messagesForField($form, AddressPropertyForm::FIELD_ADDRESS_LINE_2));
-        $this->assertContains("must be 50 characters or less", self::messagesForField($form, AddressPropertyForm::FIELD_ADDRESS_LINE_3));
-        $this->assertContains("must be 50 characters or less", self::messagesForField($form, AddressPropertyForm::FIELD_TOWN));
-        $this->assertContains("must be 10 characters or less", self::messagesForField($form, AddressPropertyForm::FIELD_POSTCODE));
+        $this->assertContains('must be 50 characters or less', self::messagesForField($form, AddressPropertyForm::FIELD_ADDRESS_LINE_1));
+        $this->assertContains('must be 50 characters or less', self::messagesForField($form, AddressPropertyForm::FIELD_ADDRESS_LINE_2));
+        $this->assertContains('must be 50 characters or less', self::messagesForField($form, AddressPropertyForm::FIELD_ADDRESS_LINE_3));
+        $this->assertContains('must be 50 characters or less', self::messagesForField($form, AddressPropertyForm::FIELD_TOWN));
+        $this->assertContains('must be 10 characters or less', self::messagesForField($form, AddressPropertyForm::FIELD_POSTCODE));
     }
 
     public function testFormForToMaxLength_shouldExpectNoErrors()
@@ -65,7 +65,7 @@ class AddressPropertyFormTest extends \PHPUnit_Framework_TestCase
             AddressPropertyForm::FIELD_ADDRESS_LINE_3 => str_repeat('A', 50),
 
             AddressPropertyForm::FIELD_TOWN => str_repeat('A', 50),
-            AddressPropertyForm::FIELD_POSTCODE => str_repeat('A', 10)
+            AddressPropertyForm::FIELD_POSTCODE => str_repeat('A', 10),
         ];
 
         $form = new AddressPropertyForm();
@@ -78,15 +78,15 @@ class AddressPropertyFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[
-                AddressPropertyForm::FIELD_ADDRESS_LINE_1 => "LINE1",
+                AddressPropertyForm::FIELD_ADDRESS_LINE_1 => 'LINE1',
                 AddressPropertyForm::FIELD_TOWN => 'my town',
-                AddressPropertyForm::FIELD_POSTCODE => 'BS2FDW'
+                AddressPropertyForm::FIELD_POSTCODE => 'BS2FDW',
             ]],
         ];
     }
 
-    private static function messagesForField($form, $field) {
+    private static function messagesForField($form, $field)
+    {
         return array_values($form->getMessages($field));
     }
-
 }

@@ -6,7 +6,6 @@ use CensorApi\Service\CensorService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\ReasonForRejection;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Messages\InvalidTestStatus;
@@ -98,7 +97,7 @@ class MotTestValidator extends AbstractValidator
             return true;
         }
 
-        if($motTest->getMotTestType()->isNonMotTest()){
+        if ($motTest->getMotTestType()->isNonMotTest()) {
             return true;
         }
 

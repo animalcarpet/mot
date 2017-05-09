@@ -107,14 +107,14 @@ class DvlaVehicle implements VehicleInterface
     private $bodyType;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_id", type="integer", nullable=true)
      */
     private $vehicleId;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="engine_capacity", type="integer", nullable=true)
      */
@@ -123,7 +123,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Designed gross weight in kilos.
      *
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="designed_gross_weight", type="integer", nullable=true)
      */
@@ -132,7 +132,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Unladen weight in kilos.
      *
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="unladen_weight", type="integer", nullable=true)
      */
@@ -141,7 +141,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Mass in service weight in kilos.
      *
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="mass_in_service_weight", type="integer", nullable=true)
      */
@@ -155,14 +155,14 @@ class DvlaVehicle implements VehicleInterface
     private $engineNumber;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="seating_capacity", type="integer", nullable=true)
      */
     private $seatingCapacity;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="is_vehicle_new_at_first_registration", type="smallint", nullable=true)
      */
@@ -184,7 +184,7 @@ class DvlaVehicle implements VehicleInterface
     private $modelDetail = null;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="recent_v5_document_number", type="integer", nullable=true)
      */
@@ -239,19 +239,20 @@ class DvlaVehicle implements VehicleInterface
         return $this->firstRegistrationDate;
     }
 
-
     /**
-     * @param Integer $value
+     * @param int $value
+     *
      * @return DvlaVehicle
      */
     public function setV5DocumentNumber($value)
     {
         $this->v5DocumentNumber = $value;
+
         return $this;
     }
 
     /**
-     * @return Integer
+     * @return int
      */
     public function getV5DocumentNumber()
     {
@@ -569,7 +570,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Set designedGrossWeight.
      *
-     * @param integer $designedGrossWeight weight in kilos
+     * @param int $designedGrossWeight weight in kilos
      *
      * @return DvlaVehicle
      */
@@ -583,7 +584,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Get designedGrossWeight.
      *
-     * @return integer weight in kilos
+     * @return int weight in kilos
      */
     public function getDesignedGrossWeight()
     {
@@ -593,7 +594,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Set unladenWeight.
      *
-     * @param integer $unladenWeight weight in kilos
+     * @param int $unladenWeight weight in kilos
      *
      * @return DvlaVehicle
      */
@@ -607,7 +608,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Get unladen weight.
      *
-     * @return integer weight in kilos
+     * @return int weight in kilos
      */
     public function getUnladenWeight()
     {
@@ -617,7 +618,7 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Set massInServiceWeight.
      *
-     * @param integer $massInServiceWeight in kilos
+     * @param int $massInServiceWeight in kilos
      *
      * @return DvlaVehicle
      */
@@ -631,13 +632,12 @@ class DvlaVehicle implements VehicleInterface
     /**
      * Get Mass In Service weight.
      *
-     * @return integer weight in kilos
+     * @return int weight in kilos
      */
     public function getMassInServiceWeight()
     {
         return $this->massInServiceWeight;
     }
-
 
     /**
      * @param string $engineNumber
@@ -660,7 +660,7 @@ class DvlaVehicle implements VehicleInterface
     }
 
     /**
-     * @param integer $seatingCapacity
+     * @param int $seatingCapacity
      *
      * @return Vehicle
      */
@@ -672,7 +672,7 @@ class DvlaVehicle implements VehicleInterface
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSeatingCapacity()
     {
@@ -680,19 +680,19 @@ class DvlaVehicle implements VehicleInterface
     }
 
     /**
-     * @param integer $value
+     * @param int $value
      *
      * @return Vehicle
      */
     public function setNewAtFirstReg($value)
     {
-        $this->newAtFirstReg = (boolean)$value;
+        $this->newAtFirstReg = (bool) $value;
 
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNewAtFirstReg()
     {
@@ -713,6 +713,7 @@ class DvlaVehicle implements VehicleInterface
     public function setDvlaVehicleId($dvlaVehicleId)
     {
         $this->dvlaVehicleId = $dvlaVehicleId;
+
         return $this;
     }
 

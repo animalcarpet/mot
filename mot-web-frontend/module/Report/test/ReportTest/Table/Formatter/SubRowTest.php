@@ -5,11 +5,7 @@ namespace ReportTest\Table\Formatter;
 use DvsaCommonTest\TestUtils\TestCaseViewTrait;
 use Report\Table\ColumnOptions;
 use Report\Table\Formatter\SubRow;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver as Resolver;
 
 class SubRowTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +16,7 @@ class SubRowTest extends \PHPUnit_Framework_TestCase
         //  logical block: create view renderer
         $renderer = $this->getPhpRenderer(
             [
-                'table/formatter/sub-row' => __DIR__ . '/../../../../view/table/formatter/sub-row.phtml',
+                'table/formatter/sub-row' => __DIR__.'/../../../../view/table/formatter/sub-row.phtml',
             ]
         );
 
@@ -38,6 +34,6 @@ class SubRowTest extends \PHPUnit_Framework_TestCase
         $output = SubRow::format($rowData, $column, $renderer);
 
         //  logical block: check
-        $this->assertStringEndsWith($expectFieldValue . '</span>', trim($output));
+        $this->assertStringEndsWith($expectFieldValue.'</span>', trim($output));
     }
 }

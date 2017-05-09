@@ -40,7 +40,7 @@ class DownloadableSurveyReports implements IteratorAggregate
     public static function fromApi(array $result)
     {
         if (!isset($result['data'])) {
-            return new DownloadableSurveyReports([]);
+            return new self([]);
         }
 
         $reports = [];
@@ -61,14 +61,14 @@ class DownloadableSurveyReports implements IteratorAggregate
             }
 
             $reports[$year][$date->format('m')] = new DownloadableSurveyReport($date, $data['size'], $data['csv']);
-            $count++;
+            ++$count;
 
             if ($count >= 12) {
                 break;
             }
         }
 
-        return new DownloadableSurveyReports($reports);
+        return new self($reports);
     }
 
     /**

@@ -8,7 +8,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * factory to create UserSearchController instances
+ * factory to create UserSearchController instances.
  */
 class UserSearchControllerFactory implements FactoryInterface
 {

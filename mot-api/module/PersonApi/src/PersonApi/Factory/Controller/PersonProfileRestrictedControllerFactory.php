@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonProfileRestrictedControllerFactory
+ * Class PersonProfileRestrictedControllerFactory.
  *
  * Generates the PersonProfileRestrictedController, injecting dependencies
  */

@@ -100,7 +100,7 @@ class RoleSummaryCollectionTest extends PHPUnit_Framework_TestCase
         $response = [
             'system' => [],
             'organisations' => [],
-            'sites' => []
+            'sites' => [],
         ];
 
         foreach ($this->organisationRoles as $pendingRoleTuple) {
@@ -112,7 +112,7 @@ class RoleSummaryCollectionTest extends PHPUnit_Framework_TestCase
                     'name' => 'Test Organisation',
                     'number' => 'B000058',
                     'address' => 'Flat 57972a7fca2616.00930308 Lord House, Ipswich, IP1 1LL',
-                    'roles' => []
+                    'roles' => [],
                 ];
 
                 $response['organisations'][$orgId] = $organisation;
@@ -130,7 +130,7 @@ class RoleSummaryCollectionTest extends PHPUnit_Framework_TestCase
                     'name' => 'Test Garage',
                     'address' => 'addressLine1, Toulouse, BS1 3LL',
                     'addressParts' => [],
-                    'roles' => []
+                    'roles' => [],
                 ];
 
                 $response['sites'][$siteId] = $site;

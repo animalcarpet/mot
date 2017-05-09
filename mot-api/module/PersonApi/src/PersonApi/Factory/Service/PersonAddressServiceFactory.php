@@ -2,7 +2,6 @@
 
 namespace PersonApi\Factory\Service;
 
-
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Validator\AddressValidator;
 use PersonApi\Service\PersonAddressService;

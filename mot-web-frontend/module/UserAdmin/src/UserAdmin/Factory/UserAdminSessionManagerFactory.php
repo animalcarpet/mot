@@ -8,19 +8,20 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container;
 
 /**
- * Class UserAdminSessionManagerFactory
- * @package UserAdmin\Factory
+ * Class UserAdminSessionManagerFactory.
  */
 class UserAdminSessionManagerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return UserAdminSessionManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $authorisationService = $serviceLocator->get("AuthorisationService");
+        $authorisationService = $serviceLocator->get('AuthorisationService');
         $container = new Container(UserAdminSessionManager::USER_ADMIN_SESSION_NAME);
+
         return new UserAdminSessionManager($container, $authorisationService);
     }
 }

@@ -2,12 +2,10 @@
 
 namespace OrganisationApiTest\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
 use OrganisationApi\Controller\AuthorisedExaminerStatusController;
 use OrganisationApi\Factory\Controller\AuthorisedExaminerStatusControllerFactory;
 use OrganisationApi\Service\AuthorisedExaminerStatusService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class AuthorisedExaminerStatusControllerFactoryTest extends \PHPUnit_Framework_TestCase

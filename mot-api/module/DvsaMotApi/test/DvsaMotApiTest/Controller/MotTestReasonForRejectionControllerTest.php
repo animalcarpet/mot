@@ -111,7 +111,7 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
         $motTestNumber = 1;
         $expectedData = [
             'data' => [
-                'id'=> 666,
+                'id' => 666,
                 'parentCategoryId' => 261,
                 'description' => '',
                 'defectBreadcrumb' => 'Motorcycle drive system > Chain guard',
@@ -121,7 +121,7 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
                 'prs' => true,
                 'failure' => false,
                 '_class' => 'DvsaCommon\Dto\MotTesting\DefectDto',
-            ]
+            ],
         ];
 
         $motTest = MotTestServiceTest::getTestMotTestEntity();
@@ -193,6 +193,7 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
 
     /**
      * @param $expectedData
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function mockTestItemSelector($expectedData)
@@ -213,6 +214,7 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
     /**
      * @param $expectedData
      * @param $testItemSelectorMock
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function mockReasonForRejection($expectedData, $testItemSelectorMock)

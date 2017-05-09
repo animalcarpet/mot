@@ -1,15 +1,13 @@
 <?php
+
 namespace DvsaCommonApiTest\Service;
 
 use DvsaCommonApi\Module\AbstractErrorHandlingModule;
 use Zend\Mvc\MvcEvent;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class AbstractErrorHandlingModuleTest
- *
- * @package DvsaCommonApiTest\Service
+ * Class AbstractErrorHandlingModuleTest.
  */
 class AbstractErrorHandlingModuleTest extends PHPUnit_Framework_TestCase
 {
@@ -31,9 +29,7 @@ class AbstractErrorHandlingModuleTest extends PHPUnit_Framework_TestCase
 }
 
 /**
- * Class TestErrorHandlingModule
- *
- * @package DvsaCommonApiTest\Service
+ * Class TestErrorHandlingModule.
  */
 class TestErrorHandlingModule extends AbstractErrorHandlingModule
 {

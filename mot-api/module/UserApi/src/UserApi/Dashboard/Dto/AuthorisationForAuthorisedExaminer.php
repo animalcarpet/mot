@@ -5,7 +5,7 @@ namespace UserApi\Dashboard\Dto;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer as AuthorisationForAuthorisedExaminerEntity;
 
 /**
- * AuthorisationForAuthorisedExaminer data returned from API to web
+ * AuthorisationForAuthorisedExaminer data returned from API to web.
  */
 class AuthorisationForAuthorisedExaminer
 {
@@ -163,7 +163,8 @@ class AuthorisationForAuthorisedExaminer
 
     /**
      * @param Site $site
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasSite(Site $site)
     {

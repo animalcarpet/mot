@@ -28,8 +28,7 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
         $year,
         $month,
         $group
-    )
-    {
+    ) {
         parent::__construct($dateTimeHolder, $timeoutPeriod);
 
         $this->repository = $componentStatisticsRepository;
@@ -62,7 +61,7 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
     /**
      * @return ReportDtoInterface
      */
-    function createEmptyReport()
+    public function createEmptyReport()
     {
         return new NationalComponentStatisticsDto();
     }
@@ -78,6 +77,7 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
     /**
      * @param $results \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult\ComponentFailRateResult[]
      * @param $total
+     *
      * @return NationalComponentStatisticsDto
      */
     private function buildComponentDtosFromQueryResults(array $results, $total)

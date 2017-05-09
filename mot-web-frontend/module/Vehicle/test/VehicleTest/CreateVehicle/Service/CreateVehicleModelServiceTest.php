@@ -64,7 +64,7 @@ class CreateVehicleModelServiceTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getStep')
             ->with(CreateVehicleStepService::MAKE_STEP)
-            ->willReturn([MakeForm::MODEL => $make ]);
+            ->willReturn([MakeForm::MODEL => $make]);
 
         $this->client
             ->expects($this->once())

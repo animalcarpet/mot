@@ -1,17 +1,18 @@
 <?php
 
 /**
- * Date
+ * Date.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace DvsaEntities\CustomDql\Functions;
 
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 
 /**
- * Date
+ * Date.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -31,6 +32,6 @@ class Date extends FunctionNode
 
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-        return 'DATE(' . $this->date->dispatch($sqlWalker) . ')';
+        return 'DATE('.$this->date->dispatch($sqlWalker).')';
     }
 }

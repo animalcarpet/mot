@@ -6,9 +6,7 @@ use Core\ViewModel\Badge\Badge;
 use Dvsa\Mot\Frontend\PersonModule\Model\CertificateFieldsData;
 
 /**
- * Class CertificateFieldsDataTest
- *
- * @package DashboardTest\Model
+ * Class CertificateFieldsDataTest.
  */
 class CertificateFieldsDataTest extends \PHPUnit_Framework_TestCase
 {

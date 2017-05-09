@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\Controller;
 
 use Core\Controller\AbstractAuthActionController;
@@ -12,9 +13,7 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class AbstractDvsaMotTestController
- *
- * @package DvsaMotTest\Controller
+ * Class AbstractDvsaMotTestController.
  */
 abstract class AbstractDvsaMotTestController extends AbstractAuthActionController
 {
@@ -140,10 +139,9 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
         return $data;
     }
 
-
     protected function getMotTestShortSummaryFromApi($motTestNumber)
     {
-        $urlBuilder = UrlBuilder::of()->motTest()->routeParam("motTestNumber", $motTestNumber)->motTestShortSummary();
+        $urlBuilder = UrlBuilder::of()->motTest()->routeParam('motTestNumber', $motTestNumber)->motTestShortSummary();
         $apiUrl = $urlBuilder->toString();
 
         $result = $this->getRestClient()->get($apiUrl);
@@ -155,12 +153,13 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
 
     /**
      * @param null $motTestNumber
+     *
      * @return MotTest | null
      */
     public function tryGetMotTestOrAddErrorMessages($motTestNumber = null)
     {
         if ($motTestNumber === null) {
-            $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+            $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         }
 
         try {
@@ -175,7 +174,7 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
     public function tryGetMotTestStatusOrAddErrorMessages($motTestNumber = null)
     {
         if ($motTestNumber === null) {
-            $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+            $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         }
 
         try {
@@ -190,7 +189,7 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
     public function tryGetMotTestShortSummaryOrAddErrorMessages($motTestNumber = null)
     {
         if ($motTestNumber === null) {
-            $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
+            $motTestNumber = (int) $this->params()->fromRoute('motTestNumber', 0);
         }
 
         try {

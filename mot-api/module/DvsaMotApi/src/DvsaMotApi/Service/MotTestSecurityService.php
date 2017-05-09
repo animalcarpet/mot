@@ -18,17 +18,15 @@ use DvsaEntities\Repository\MotTestRepository;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class MotTestSecurityService
- *
- * @package DvsaMotApi\Service
+ * Class MotTestSecurityService.
  */
 class MotTestSecurityService extends AbstractService
 {
     private static $CONFIG_PARAM_ODOMETER_READING_MODIFICATION_WINDOW_LENGTH_IN_DAYS
-        = "odometerReadingModificationWindowLengthInDays";
+        = 'odometerReadingModificationWindowLengthInDays';
 
     /**
-     * @var TesterService $testerService
+     * @var TesterService
      */
     private $testerService;
 
@@ -38,17 +36,17 @@ class MotTestSecurityService extends AbstractService
     private $motIdentityProvider;
 
     /**
-     * @var DateTimeHolder $dateTimeHolder
+     * @var DateTimeHolder
      */
     private $dateTimeHolder;
 
     /**
-     * @var ConfigurationRepository $configurationRepository
+     * @var ConfigurationRepository
      */
     private $configurationRepository;
 
     /**
-     * @var AuthorisationServiceInterface $authorisationService
+     * @var AuthorisationServiceInterface
      */
     private $authorisationService;
 
@@ -63,13 +61,13 @@ class MotTestSecurityService extends AbstractService
     private $readMotTestAssertion;
 
     /**
-     * @param EntityManager $entityManager
-     * @param AuthenticationService $motIdentityProvider
-     * @param TesterService $testerService
+     * @param EntityManager                    $entityManager
+     * @param AuthenticationService            $motIdentityProvider
+     * @param TesterService                    $testerService
      * @param ConfigurationRepositoryInterface $configurationRepository
-     * @param AuthorisationServiceInterface $authorisationService
-     * @param AuthenticationService $authenticationService
-     * @param MotTestRepository $motTestRepository
+     * @param AuthorisationServiceInterface    $authorisationService
+     * @param AuthenticationService            $authenticationService
+     * @param MotTestRepository                $motTestRepository
      */
     public function __construct(
         EntityManager $entityManager,
@@ -110,18 +108,19 @@ class MotTestSecurityService extends AbstractService
     /**
      * @param $motTest
      *
-     * @return boolean
+     * @return bool
      */
     public function isCurrentTesterAssignedToMotTest(MotTest $motTest)
     {
         $tester = $this->testerService->getTesterByUserId($this->getUserId());
+
         return $tester->getId() === $motTest->getTester()->getId();
     }
 
     /**
      * @param $motTestNumber
      *
-     * @return boolean
+     * @return bool
      */
     public function canModifyOdometerForTest($motTestNumber)
     {
@@ -137,6 +136,7 @@ class MotTestSecurityService extends AbstractService
                 $allowedToUpdate = false;
             }
         }
+
         return $allowedToUpdate;
     }
 
@@ -156,10 +156,11 @@ class MotTestSecurityService extends AbstractService
     private function isOdometerReadingModificationWindowOpen(MotTest $motTest)
     {
         if (!$motTest->getIssuedDate()) {
-            return FALSE;
+            return false;
         }
 
         $checkResult = $this->validateOdometerReadingModificationWindowOpen($motTest);
+
         return $checkResult->isEmpty();
     }
 
@@ -171,11 +172,11 @@ class MotTestSecurityService extends AbstractService
     public function validateOdometerReadingModificationWindowOpen(MotTest $motTest)
     {
         $checkResult = CheckResult::ok();
-        $daysPassedSinceTestIssue = (int)DateUtils::getDaysDifference(
+        $daysPassedSinceTestIssue = (int) DateUtils::getDaysDifference(
             DateUtils::cropTime($motTest->getIssuedDate()),
             $this->dateTimeHolder->getCurrentDate()
         );
-        $odometerReadingModificationWindowLengthInDays = (int)$this->configurationRepository->getValue(
+        $odometerReadingModificationWindowLengthInDays = (int) $this->configurationRepository->getValue(
             self::$CONFIG_PARAM_ODOMETER_READING_MODIFICATION_WINDOW_LENGTH_IN_DAYS
         );
         if ($daysPassedSinceTestIssue > $odometerReadingModificationWindowLengthInDays) {
@@ -186,12 +187,15 @@ class MotTestSecurityService extends AbstractService
                 )
             );
         }
+
         return $checkResult;
     }
 
     /**
      * @param $motTestNumber
+     *
      * @return MotTest
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     private function getMotTest($motTestNumber)

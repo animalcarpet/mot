@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OrganisationSiteStatus
+ * OrganisationSiteStatus.
  *
  * @ORM\Table(
  *  name="organisation_site_status",

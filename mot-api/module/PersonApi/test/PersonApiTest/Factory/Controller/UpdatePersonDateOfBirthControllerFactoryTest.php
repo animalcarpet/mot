@@ -2,7 +2,6 @@
 
 namespace PersonApiTest\Factory\Controller;
 
-
 use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Controller\UpdatePersonDateOfBirthController;
 use PersonApi\Factory\Controller\UpdatePersonDateOfBirthControllerFactory;
@@ -11,7 +10,6 @@ use Zend\ServiceManager\ServiceManager;
 
 class UpdatePersonDateOfBirthControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFactory()
     {
         $serviceManager = new ServiceManager();

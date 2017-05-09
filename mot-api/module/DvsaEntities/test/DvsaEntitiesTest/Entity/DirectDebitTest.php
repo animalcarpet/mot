@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\DirectDebit;
@@ -8,7 +9,7 @@ use DvsaEntities\Entity\Person;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class DirectDebitTest
+ * Class DirectDebitTest.
  */
 class DirectDebitTest extends PHPUnit_Framework_TestCase
 {
@@ -21,7 +22,7 @@ class DirectDebitTest extends PHPUnit_Framework_TestCase
         $setupDate = new \DateTime();
         $slotsCount = 456;
         $person = new Person();
-        $mandateId = "124";
+        $mandateId = '124';
         $dd = new DirectDebit();
         $dd->setStatus($ddStatus)
             ->setOrganisation($org)

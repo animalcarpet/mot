@@ -19,8 +19,8 @@ use DvsaMotApi\Validation\ContingencyTestValidator;
  */
 class ContingencyTestController extends AbstractDvsaRestfulController
 {
-    const ERR_NOT_A_DTO = "Invalid / missing DTO in request";
-    const ERR_DTO_INCOMPLETE = "DTO is not fully populated";
+    const ERR_NOT_A_DTO = 'Invalid / missing DTO in request';
+    const ERR_DTO_INCOMPLETE = 'DTO is not fully populated';
 
     const SESSION_NAME = 'EmergencyLogInfo';
 

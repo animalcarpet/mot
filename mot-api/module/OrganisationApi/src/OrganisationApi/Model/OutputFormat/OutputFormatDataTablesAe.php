@@ -7,13 +7,10 @@ use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use OrganisationApi\Service\Mapper\AuthorisedExaminerListItemMapper;
 
 /**
- * Class OutputFormatDataTablesAe
- *
- * @package DvsaMotApi\Model\OutputFormat
+ * Class OutputFormatDataTablesAe.
  */
 class OutputFormatDataTablesAe extends OutputFormat
 {
-
     public function extractItems($items)
     {
         $mapper = new AuthorisedExaminerListItemMapper();
@@ -22,7 +19,7 @@ class OutputFormatDataTablesAe extends OutputFormat
     }
 
     /**
-     * Responsible for extracting the current item into the required format
+     * Responsible for extracting the current item into the required format.
      *
      * @param array                              $results
      * @param mixed                              $key

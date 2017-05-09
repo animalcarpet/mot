@@ -4,7 +4,6 @@ namespace OrganisationApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Identity;
-use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
@@ -91,7 +90,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
      */
     private function buildService()
     {
-        $service = new OrganisationPositionService (
+        $service = new OrganisationPositionService(
             $this->organisationRepository,
             $this->organisationPositionRepository,
             $this->positionHistoryRepository,
@@ -112,7 +111,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
         $removeEntitySpy = new MethodSpy($this->entityManager, 'remove');
 
         // GIVEN I have a position in an AE
-        $notificationRecipient = rand(1,10000);
+        $notificationRecipient = rand(1, 10000);
         $position = $this->createMyOrganisationPosition(
             OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
             $notificationRecipient,
@@ -153,7 +152,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
         // WHEN I remove my position
         try {
             $this->buildService()->remove($this->myAeId, $this->myPositionId);
-            $this->fail("Exception was expected");
+            $this->fail('Exception was expected');
         } catch (BadRequestException $e) {
             // THEN validation exception is thrown with message stating that
             // role couldn't be removed because it doesn't exist anymore
@@ -164,7 +163,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
         // AND no positions are removed
         $this->assertEquals(0, $removeEntitySpy->invocationCount());
         // AND no notifications are sent
-        $this->notificationService->expects($this->never())->method("add");
+        $this->notificationService->expects($this->never())->method('add');
 
         // AND no events are sent
         $this->assertEventsWereNotSent();
@@ -187,7 +186,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
         // WHEN I remove my position
         try {
             $this->buildService()->remove($this->myAeId, $this->myPositionId);
-            $this->fail("UnauthorisedException was expected");
+            $this->fail('UnauthorisedException was expected');
         } catch (UnauthorisedException $e) {
             // THEN validation exception is thrown with message stating that
             // role couldn't be removed because it doesn't exist anymore
@@ -196,7 +195,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
         // AND no positions are removed
         $this->assertEquals(0, $removeEntitySpy->invocationCount());
         // AND no notifications are sent
-        $this->notificationService->expects($this->never())->method("add");
+        $this->notificationService->expects($this->never())->method('add');
 
         // AND no events are sent
         $this->assertEventsWereNotSent();
@@ -212,7 +211,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
         $siteBusinessRoleMap->setPerson((new Person())->setId($notificationRecipientId));
         $siteBusinessRoleMap->setOrganisationBusinessRole((new OrganisationBusinessRole())->setRole($role));
 
-        $authExaminer = (new AuthorisationForAuthorisedExaminer)->setNumber(self::AE_NUMBER);
+        $authExaminer = (new AuthorisationForAuthorisedExaminer())->setNumber(self::AE_NUMBER);
 
         $org = (new Organisation())->setId($this->myAeId);
         $org->setAuthorisedExaminer($authExaminer);
@@ -242,7 +241,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
     private function notificationSent()
     {
         $capNotification = ArgCapture::create();
-        $this->notificationService->expects($this->atLeastOnce())->method("add")
+        $this->notificationService->expects($this->atLeastOnce())->method('add')
             ->with($capNotification());
 
         return $capNotification;
@@ -257,7 +256,7 @@ class RemoveOwnOrganisationPositionServiceTest extends \PHPUnit_Framework_TestCa
         $this->assertEquals($params[1], $expectedContent);
 
         $paramsSite = $this->submitEventSpy->paramsForInvocation(1);
-        $expectedSiteContent = sprintf(EventDescription::ROLE_SELF_ASSOCIATION_REMOVE_SITE_ORG, null, null, null,null, self::AE_NUMBER);
+        $expectedSiteContent = sprintf(EventDescription::ROLE_SELF_ASSOCIATION_REMOVE_SITE_ORG, null, null, null, null, self::AE_NUMBER);
         $this->assertEquals($paramsSite[1], $expectedSiteContent);
     }
 

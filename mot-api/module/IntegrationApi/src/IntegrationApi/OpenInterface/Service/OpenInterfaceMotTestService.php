@@ -2,7 +2,6 @@
 
 namespace IntegrationApi\OpenInterface\Service;
 
-use Doctrine\Common\Collections\Criteria;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -40,7 +39,8 @@ class OpenInterfaceMotTestService
      * @param $issuedBeforeString - latest possible date of the issue given in YYYYMMDD format
      *
      * @return array - MOT Test data
-     * @throws \DvsaCommonApi\Service\Exception\ServiceException when Pass MOT test not found
+     *
+     * @throws \DvsaCommonApi\Service\Exception\ServiceException  when Pass MOT test not found
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException when none (Pass or Fail MOT) test found at all
      */
     public function getPassMotTestForVehicleIssuedBefore($vrm, $issuedBeforeString = null)
@@ -58,7 +58,7 @@ class OpenInterfaceMotTestService
                 MotTestTypeCode::TARGETED_REINSPECTION,
                 MotTestTypeCode::MOT_COMPLIANCE_SURVEY,
                 MotTestTypeCode::NON_MOT_TEST,
-                MotTestTypeCode::MYSTERY_SHOPPER
+                MotTestTypeCode::MYSTERY_SHOPPER,
             ]
         );
 
@@ -87,14 +87,14 @@ class OpenInterfaceMotTestService
                     }
                 }
 
-                $dvlaMakeCode  = $vehicle->getMakeCode();
+                $dvlaMakeCode = $vehicle->getMakeCode();
                 if ($dvlaMakeCode !== null) {
                     $dvlaMake = $this->repository->findDvlaMakeByCode($dvlaMakeCode);
                     if ($dvlaMake !== null) {
                         $dvlaMakeName = $dvlaMake->GetName();
                     }
 
-                    $dvlaModelCode  = $vehicle->getModelCode();
+                    $dvlaModelCode = $vehicle->getModelCode();
                     if ($dvlaModelCode !== null) {
                         $dvlaModel = $this->repository->findDvlaModelByMakeCodeModelCode($dvlaMakeCode, $dvlaModelCode);
                         if ($dvlaModel !== null) {
@@ -124,23 +124,24 @@ class OpenInterfaceMotTestService
                 MotTestTypeCode::TARGETED_REINSPECTION,
                 MotTestTypeCode::MOT_COMPLIANCE_SURVEY,
                 MotTestTypeCode::NON_MOT_TEST,
-                MotTestTypeCode::MYSTERY_SHOPPER
+                MotTestTypeCode::MYSTERY_SHOPPER,
             ]
         );
 
         if ($failedMotTest) {
             $noPassException = new ServiceException(null, NotFoundException::ERROR_CODE_NOT_FOUND);
-            $noPassException->addError("Pass MOT test not found; Fail found", "NO_PASS", null);
+            $noPassException->addError('Pass MOT test not found; Fail found', 'NO_PASS', null);
 
             throw $noPassException;
         }
 
-        throw new NotFoundException("MOT test");
+        throw new NotFoundException('MOT test');
     }
 
     /**
      * @param DvlaVehicle $vehicle
-     * @return boolean
+     *
+     * @return bool
      */
     private function isVehiclePre1960(DvlaVehicle $vehicle)
     {
@@ -153,7 +154,8 @@ class OpenInterfaceMotTestService
         $validator = new OpenInterfaceMotTestRequestValidator();
         $validator->validateDate($dateString);
 
-        $toDayEnd = $dateString . " 235959";
+        $toDayEnd = $dateString.' 235959';
+
         return \DateTime::createFromFormat('Ymd His', $toDayEnd);
     }
 }

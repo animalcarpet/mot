@@ -16,9 +16,9 @@ class CpmsNotificationStatus extends Entity
     use CommonIdentityTrait;
     use EnumType1EntityTrait;
 
-    CONST RECIEVED_CODE = 'R';
-    CONST REJECTED_CODE = 'RJ';
-    CONST PROCESSSED_CODE = 'P';
+    const RECIEVED_CODE = 'R';
+    const REJECTED_CODE = 'RJ';
+    const PROCESSSED_CODE = 'P';
 
     /**
      * @var string
@@ -37,6 +37,7 @@ class CpmsNotificationStatus extends Entity
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)

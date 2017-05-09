@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Class CertificateType
+ * Class CertificateType.
  *
  * Used to store & retrieve the type of replacement certificate
  *
@@ -32,11 +32,13 @@ class CertificateType
 
     /**
      * @param $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -50,11 +52,13 @@ class CertificateType
 
     /**
      * @param $code
+     *
      * @return $this
      */
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 

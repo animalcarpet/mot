@@ -1,9 +1,9 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
-use DvsaCommon\FeatureToggling\Feature;
 use DvsaMotApi\Service\DemoTestAssessmentService;
 
 class DemoTestAssessmentController extends AbstractDvsaRestfulController
@@ -12,8 +12,7 @@ class DemoTestAssessmentController extends AbstractDvsaRestfulController
 
     public function __construct(
         DemoTestAssessmentService $recordDemoTestService
-    )
-    {
+    ) {
         $this->recordDemoTestService = $recordDemoTestService;
     }
 

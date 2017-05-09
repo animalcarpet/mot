@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Special Notice
+ * Special Notice.
  *
  * @ORM\Table(name="special_notice", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\SpecialNoticeRepository")
@@ -32,15 +33,14 @@ class SpecialNotice extends Entity
     private $content;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="special_notice_content_id", type="integer")
      */
     private $contentId;
 
-
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_acknowledged", type="boolean", nullable=false)
      */
@@ -53,14 +53,14 @@ class SpecialNotice extends Entity
     private $acknowledgedOn;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_deleted", type="boolean", nullable=false)
      */
     private $isDeleted = false;
 
     /**
-     * @param boolean $isDeleted
+     * @param bool $isDeleted
      *
      * @return $this
      * @codeCoverageIgnore
@@ -68,11 +68,12 @@ class SpecialNotice extends Entity
     public function setIsDeleted($isDeleted)
     {
         $this->isDeleted = $isDeleted;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @codeCoverageIgnore
      */
     public function getIsDeleted()
@@ -121,7 +122,7 @@ class SpecialNotice extends Entity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsAcknowledged()
     {
@@ -129,7 +130,7 @@ class SpecialNotice extends Entity
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getContentId()
     {
@@ -137,11 +138,12 @@ class SpecialNotice extends Entity
     }
 
     /**
-     * @param integer $contentId
+     * @param int $contentId
      */
     public function setContentId($contentId)
     {
         $this->contentId = $contentId;
+
         return $this;
     }
 

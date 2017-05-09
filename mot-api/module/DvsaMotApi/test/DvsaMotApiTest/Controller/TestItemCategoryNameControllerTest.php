@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Dto\Vehicle\VehicleDto;
@@ -6,8 +7,6 @@ use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaMotApi\Controller\TestItemCategoryNameController;
 use DvsaMotApi\Service\TestItemSelectorService;
-use SebastianBergmann\Exporter\Exception;
-use Zend\Stdlib\Parameters;
 
 /**
  * Test for TestItemSelectorController.
@@ -52,7 +51,7 @@ class TestItemCategoryNameControllerTest extends AbstractMotApiControllerTestCas
                 [
                     'vehicle' => (new VehicleDto())->setVehicleClass(
                         (new VehicleClassDto())->setCode('1')
-                    )
+                    ),
                 ]
             );
 

@@ -6,17 +6,14 @@ use CoreTest\Service\AbstractFrontendServiceTestCase;
 use DvsaClient\Entity\Person;
 use Account\Service\PasswordResetService;
 use DvsaClient\Mapper\AccountMapper;
-use DvsaClient\Mapper\PersonMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Dto\Account\MessageDto;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class ResetServiceTest
+ * Class ResetServiceTest.
  *
  * Class PasswordResetServiceTest
- * @package AccountTest\Service
  */
 class PasswordResetServiceTest extends AbstractFrontendServiceTestCase
 {
@@ -24,11 +21,11 @@ class PasswordResetServiceTest extends AbstractFrontendServiceTestCase
     const USER_NAME = 'unit_userName';
     const TOKEN = 'unit_token12345';
 
-    /** @var  PasswordResetService */
+    /** @var PasswordResetService */
     private $resetService;
-    /** @var  MapperFactory */
+    /** @var MapperFactory */
     private $mockMapperFactory;
-    /** @var  AccountMapper */
+    /** @var AccountMapper */
     private $mockAccountMapper;
 
     public function setUp()

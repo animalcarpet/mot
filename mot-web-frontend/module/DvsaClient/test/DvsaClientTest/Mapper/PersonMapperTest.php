@@ -6,9 +6,7 @@ use DvsaClient\Mapper\PersonMapper;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 
 /**
- * Class PersonMapperTest
- *
- * @package DvsaClientTest\Mapper
+ * Class PersonMapperTest.
  */
 class PersonMapperTest extends AbstractMapperTest
 {

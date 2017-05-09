@@ -21,9 +21,7 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\Http\TreeRouteStack as Router;
 
 /**
- * Class MotTestLogControllerTest
- *
- * @package OrganisationTest\Controller
+ * Class MotTestLogControllerTest.
  */
 class EventControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -51,15 +49,15 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Test has user access to page or not with/out auth and permission
+     * Test has user access to page or not with/out auth and permission.
      *
-     * @param string  $action                   Action name
-     * @param array   $params                   Action parameters
-     * @param array   $permissions              User has permissions
-     * @param boolean $expectCanAccess          Expect user has or not access to page
-     * @param string  $expectedUrl              Expect redirect if failure
-     * @param boolean $expectedException        Expect Entity Error
-     * @param boolean $expectedExceptionDetail  Expect Entity Error for the detail
+     * @param string $action                  Action name
+     * @param array  $params                  Action parameters
+     * @param array  $permissions             User has permissions
+     * @param bool   $expectCanAccess         Expect user has or not access to page
+     * @param string $expectedUrl             Expect redirect if failure
+     * @param bool   $expectedException       Expect Entity Error
+     * @param bool   $expectedExceptionDetail Expect Entity Error for the detail
      *
      * @dataProvider dataProviderEventControllerTestCanAccessHasRight
      */
@@ -92,22 +90,22 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
 
         return [
             ['list', ['type' => 'ae', 'id' => self::INVALID_PARAM], [PermissionInSystem::LIST_EVENT_HISTORY],
-                true, null, true],
+                true, null, true, ],
             ['list', ['type' => 'ae', 'id' => self::AE_ID], [PermissionInSystem::LIST_EVENT_HISTORY], true],
             ['list', ['type' => 'ae', 'id' => self::AE_ID], [PermissionInSystem::MOT_TEST_READ], true, $homeUrl],
             ['list', ['type' => 'ae', 'id' => self::AE_ID], [], false, $homeUrl],
             ['list', ['type' => 'site', 'id' => self::INVALID_PARAM], [PermissionInSystem::LIST_EVENT_HISTORY],
-                true, null, true],
+                true, null, true, ],
             ['list', ['type' => 'site', 'id' => self::SITE_ID], [PermissionInSystem::LIST_EVENT_HISTORY], true],
             ['list', ['type' => 'site', 'id' => self::SITE_ID], [PermissionInSystem::MOT_TEST_READ], true, $homeUrl],
             ['list', ['type' => 'site', 'id' => self::SITE_ID], [], false, $homeUrl],
             ['list', ['type' => 'person', 'id' => self::INVALID_PARAM], [PermissionInSystem::LIST_EVENT_HISTORY],
-                true, null, true],
+                true, null, true, ],
             ['list', ['type' => 'person', 'id' => self::PERSON_ID], [PermissionInSystem::LIST_EVENT_HISTORY], true],
             ['list', ['type' => 'person', 'id' => self::PERSON_ID], [PermissionInSystem::MOT_TEST_READ], true, $homeUrl],
             ['list', ['type' => 'person', 'id' => self::PERSON_ID], [], false, $homeUrl],
             ['detail', ['type' => 'ae', 'id' => self::AE_ID, 'event-id' => self::INVALID_PARAM],
-                [PermissionInSystem::EVENT_READ], true, null, false, true],
+                [PermissionInSystem::EVENT_READ], true, null, false, true, ],
             ['detail', ['event-id' => self::EVENT_ID], [PermissionInSystem::EVENT_READ], true],
             ['detail', ['event-id' => self::EVENT_ID], [PermissionInSystem::MOT_TEST_READ], true, $homeUrl],
             ['detail', ['event-id' => self::EVENT_ID], [], false, $homeUrl],
@@ -115,13 +113,13 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Test has user access to page or not with/out auth and permission
+     * Test has user access to page or not with/out auth and permission.
      *
-     * @param boolean   $csrf               Request query
-     * @param boolean   $isShowDate         Request query
-     * @param array     $dateFrom           Request query
-     * @param array     $dateTo             Request query
-     * @param string    $search             Request query
+     * @param bool   $csrf       Request query
+     * @param bool   $isShowDate Request query
+     * @param array  $dateFrom   Request query
+     * @param array  $dateTo     Request query
+     * @param string $search     Request query
      *
      * @dataProvider dataProviderEventControllerFormValidation
      */
@@ -172,19 +170,18 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
             [false, false], // No Search
             [true, false, null, null, 'search'], // Just search filter
             [true, true], // No Date Passed But Form shown
-            [true, true, ['Day' => '01','Month' => '01','Year' => '2014'],
-                'dateTo' => ['Day' => '01','Month' => '01','Year' => '2014']], // Valid Date form
-            [true, true, ['Day' => '01','Month' => '01', 'Year' => '2015',],
+            [true, true, ['Day' => '01', 'Month' => '01', 'Year' => '2014'],
+                'dateTo' => ['Day' => '01', 'Month' => '01', 'Year' => '2014'], ], // Valid Date form
+            [true, true, ['Day' => '01', 'Month' => '01', 'Year' => '2015'],
                 'dateTo' => ['Day' => '01', 'Month' => '01', 'Year' => '2014',
-                ]], // Invalid Date form DateTo After DateFrom
-            [true, true, ['Day' => 'aa','Month' => 'bb', 'Year' => 'abcd',]], // Invalid Date form format incorrect
+                ], ], // Invalid Date form DateTo After DateFrom
+            [true, true, ['Day' => 'aa', 'Month' => 'bb', 'Year' => 'abcd']], // Invalid Date form format incorrect
             [true, true,
-                ['Day' => '01', 'Month' => '01', 'Year' => date('Y') + 1,]], // Invalid Date form Date in the future
+                ['Day' => '01', 'Month' => '01', 'Year' => date('Y') + 1], ], // Invalid Date form Date in the future
             [true, true,
-                ['Day' => '01','Month' => '01', 'Year' => '1899',]], // Invalid Date form Date to far in the past
+                ['Day' => '01', 'Month' => '01', 'Year' => '1899'], ], // Invalid Date form Date to far in the past
         ];
     }
-
 
     private function getMapperFactory($expectedException, $expectedExceptionDetail)
     {
@@ -192,9 +189,9 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
 
         $map = [
             [MapperFactory::ORGANISATION,
-                $this->getOrganisationMapperMock($expectedException)],
+                $this->getOrganisationMapperMock($expectedException), ],
             [MapperFactory::SITE,
-                $this->getSiteMapperMock($expectedException)],
+                $this->getSiteMapperMock($expectedException), ],
             [MapperFactory::PERSON, $this->getPersonMapperMock($expectedException)],
             [MapperFactory::EVENT, $this->getEventMapperMock($expectedException, $expectedExceptionDetail)],
         ];
@@ -224,6 +221,7 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
                 ->with(self::AE_ID)
                 ->will($this->returnValue($orgDto));
         }
+
         return $mapper;
     }
 
@@ -242,6 +240,7 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
                 ->with(self::SITE_ID)
                 ->will($this->returnValue([]));
         }
+
         return $mapper;
     }
 
@@ -260,6 +259,7 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
                 ->with(self::PERSON_ID)
                 ->will($this->returnValue([]));
         }
+
         return $mapper;
     }
 
@@ -287,6 +287,7 @@ class EventControllerTest extends AbstractFrontendControllerTestCase
                 ->method('getEvent')
                 ->will($this->returnValue([]));
         }
+
         return $mapper;
     }
 }

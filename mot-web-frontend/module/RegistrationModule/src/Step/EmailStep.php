@@ -3,14 +3,13 @@
 namespace Dvsa\Mot\Frontend\RegistrationModule\Step;
 
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
-use Zend\InputFilter\InputFilter;
 
 class EmailStep extends AbstractRegistrationStep
 {
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "EMAIL";
+    const STEP_ID = 'EMAIL';
 
     /**
      * @var string
@@ -64,8 +63,8 @@ class EmailStep extends AbstractRegistrationStep
     public function toArray()
     {
         return [
-            EmailInputFilter::FIELD_EMAIL          => $this->getEmailAddress(),
-            EmailInputFilter::FIELD_EMAIL_CONFIRM  => $this->getConfirmEmailAddress(),
+            EmailInputFilter::FIELD_EMAIL => $this->getEmailAddress(),
+            EmailInputFilter::FIELD_EMAIL_CONFIRM => $this->getConfirmEmailAddress(),
         ];
     }
 

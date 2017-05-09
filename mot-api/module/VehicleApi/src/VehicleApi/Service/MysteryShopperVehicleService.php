@@ -104,7 +104,7 @@ class MysteryShopperVehicleService
         $vehicle = $this->vehicleRepository->find($vehicleId);
 
         if (!$vehicle) {
-            throw new NotFoundException('Vehicle ' . $vehicleId);
+            throw new NotFoundException('Vehicle '.$vehicleId);
         }
 
         $data = $this->prepareCampaignDatesField($data);
@@ -142,7 +142,9 @@ class MysteryShopperVehicleService
 
     /**
      * @param $incognitoVehicleId
+     *
      * @return bool
+     *
      * @throws NotFoundException
      */
     public function optOut($incognitoVehicleId)
@@ -152,30 +154,32 @@ class MysteryShopperVehicleService
         $incognitoVehicle = $this->incognitoVehicleRepository->find($incognitoVehicleId);
 
         if (!$incognitoVehicle) {
-            throw new NotFoundException('IncognitoVehicle ' . $incognitoVehicleId);
+            throw new NotFoundException('IncognitoVehicle '.$incognitoVehicleId);
         }
 
         $incognitoVehicle->setEndDate(new \DateTime('NOW'));
         $this->incognitoVehicleRepository->save($incognitoVehicle);
+
         return true;
     }
-
 
     /**
      * @param int   $campaignId
      * @param array $data
+     *
      * @return bool|IncognitoVehicle
+     *
      * @throws NotFoundException
      */
     public function edit($campaignId, $data)
     {
         $this->authService->assertGranted(PermissionInSystem::MANAGE_MYSTERY_SHOPPER_CAMPAIGN);
 
-        /** @var IncognitoVehicle  $campaign */
+        /** @var IncognitoVehicle $campaign */
         $campaign = $this->incognitoVehicleRepository->find($campaignId);
 
         if (!$campaign) {
-            throw new NotFoundException(sprintf('There is no campaign with id "%s" in the system ' , $campaignId));
+            throw new NotFoundException(sprintf('There is no campaign with id "%s" in the system ', $campaignId));
         }
 
         $data = $this->prepareCampaignDatesField($data, $campaign);
@@ -215,11 +219,10 @@ class MysteryShopperVehicleService
         }
 
         if (array_key_exists(MysteryShopperInputFilter::FIELD_VEHICLE_ID, $data)) {
-
             $vehicle = $this->vehicleRepository->find($data[MysteryShopperInputFilter::FIELD_VEHICLE_ID]);
 
             if (!$vehicle) {
-                throw new NotFoundException('Vehicle ' . (string) $data[MysteryShopperInputFilter::FIELD_VEHICLE_ID]);
+                throw new NotFoundException('Vehicle '.(string) $data[MysteryShopperInputFilter::FIELD_VEHICLE_ID]);
             }
 
             $campaign->setVehicle($vehicle);
@@ -232,7 +235,9 @@ class MysteryShopperVehicleService
 
     /**
      * @param $id
+     *
      * @return array|null
+     *
      * @throws NotFoundException
      */
     public function getAllCampaigns($id)
@@ -241,7 +246,7 @@ class MysteryShopperVehicleService
 
         $vehicle = $this->vehicleRepository->get($id);
         if (!$vehicle) {
-            throw new NotFoundException('Vehicle ' . (string) $id);
+            throw new NotFoundException('Vehicle '.(string) $id);
         }
 
         return $this->incognitoVehicleRepository->findAllCampaignsForVehicle($vehicle);
@@ -260,7 +265,7 @@ class MysteryShopperVehicleService
 
         $vehicle = $this->vehicleRepository->get($vehicleId);
         if (!$vehicle) {
-            throw new NotFoundException('Vehicle ' . (string) $vehicleId);
+            throw new NotFoundException('Vehicle '.(string) $vehicleId);
         }
 
         return $this->incognitoVehicleRepository->getCurrent($vehicle) ?: null;
@@ -279,7 +284,7 @@ class MysteryShopperVehicleService
     /**
      * To initiate the input filter validators and set its data.
      *
-     * @param array $data
+     * @param array      $data
      * @param bool|false $toUpdate
      */
     private function prepareInputFilter($data, $toUpdate = false)
@@ -300,22 +305,21 @@ class MysteryShopperVehicleService
      */
     private function prepareCampaignDatesField($data, IncognitoVehicle $campaign = null)
     {
-
         $data[MysteryShopperInputFilter::FIELD_CAMPAIGN_DATES] = new CampaignDates(
             ArrayUtils::tryGet(
                 $data,
                 MysteryShopperInputFilter::FIELD_START_DATE,
-                is_null($campaign)? null : $campaign->getStartDate()->format('Y-m-d H:i:s')
+                is_null($campaign) ? null : $campaign->getStartDate()->format('Y-m-d H:i:s')
             ),
             ArrayUtils::tryGet(
                 $data,
                 MysteryShopperInputFilter::FIELD_END_DATE,
-                is_null($campaign)? null : $campaign->getEndDate()->format('Y-m-d H:i:s')
+                is_null($campaign) ? null : $campaign->getEndDate()->format('Y-m-d H:i:s')
             ),
             ArrayUtils::tryGet(
                 $data,
                 MysteryShopperInputFilter::FIELD_TEST_DATE,
-                is_null($campaign)? null : $campaign->getTestDate()->format('Y-m-d H:i:s')
+                is_null($campaign) ? null : $campaign->getTestDate()->format('Y-m-d H:i:s')
             )
         );
 
@@ -326,8 +330,9 @@ class MysteryShopperVehicleService
      * To prepare required context for the CampaignDateValidator which needs understanding of all the potential existing
      *  campaigns for the same vehicle (aka. booked date ranges).
      *
-     * @param IncognitoVehicle[]    $bookedCampaigns
-     * @param int                   $filteredCampaignId to filter out the upd campaign when needed
+     * @param IncognitoVehicle[] $bookedCampaigns
+     * @param int                $filteredCampaignId to filter out the upd campaign when needed
+     *
      * @return array
      */
     private function prepareContext($bookedCampaigns, $filteredCampaignId = null)
@@ -335,14 +340,13 @@ class MysteryShopperVehicleService
         $bookedDateRanges = [];
 
         foreach ($bookedCampaigns as $incognitoVehicle) {
-
             if (!is_null($filteredCampaignId) && $filteredCampaignId == $incognitoVehicle->getId()) {
                 continue;
             }
 
             $bookedDateRanges[] = [
                 MysteryShopperInputFilter::FIELD_START_DATE => $incognitoVehicle->getStartDate(),
-                MysteryShopperInputFilter::FIELD_END_DATE   => $incognitoVehicle->getEndDate(),
+                MysteryShopperInputFilter::FIELD_END_DATE => $incognitoVehicle->getEndDate(),
             ];
         }
 
@@ -353,6 +357,7 @@ class MysteryShopperVehicleService
 
     /**
      * @return \DvsaEntities\Entity\Person
+     *
      * @throws NotFoundException
      */
     private function getPerson()

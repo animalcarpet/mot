@@ -2,17 +2,11 @@
 
 namespace DvsaAuthenticationTest\Service;
 
-use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaAuthentication\Service\OtpServiceAdapter;
 use DvsaAuthentication\Service\OtpServiceAdapter\PinOtpServiceAdapter;
-use DvsaCommon\Auth\MotIdentity;
 use DvsaCommon\Crypt\Hash\BCryptHashFunction;
 use DvsaCommonApiTest\Service\AbstractServiceTest;
-use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
-use DvsaEntities\Repository\ConfigurationRepository;
-use DvsaEntities\Repository\PersonRepository;
-use Zend\Authentication\AuthenticationService;
 
 class PinOtpServiceAdapterTest extends AbstractServiceTest
 {

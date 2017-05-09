@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryResult\AbstractTesterPerformanceResult;
@@ -17,6 +18,7 @@ class TesterPerformanceResult extends AbstractTesterPerformanceResult implements
     public function setPersonId($person_id)
     {
         $this->person_id = $person_id;
+
         return $this;
     }
 
@@ -28,7 +30,7 @@ class TesterPerformanceResult extends AbstractTesterPerformanceResult implements
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 }
-

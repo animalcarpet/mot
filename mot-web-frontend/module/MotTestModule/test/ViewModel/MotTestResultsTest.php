@@ -38,7 +38,7 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
     public function testIsBrakeTestRecorded($brakeTestResult, $expectedResult)
     {
         $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
-        if($brakeTestResult === null || empty($brakeTestResult)){
+        if ($brakeTestResult === null || empty($brakeTestResult)) {
             $testMotTestData->brakeTestResult = $brakeTestResult;
         } else {
             $testMotTestData->brakeTestResult = (object) $brakeTestResult;
@@ -84,7 +84,7 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
 
         if (!$isOriginalMotTest) {
             $originalMotTestTest = Fixture::getMotTestDataVehicleClass4(true);
-            if($originalBrakeTestResult === null || empty($originalBrakeTestResult)){
+            if ($originalBrakeTestResult === null || empty($originalBrakeTestResult)) {
                 $originalMotTestTest->brakeTestResult = $originalBrakeTestResult;
             } else {
                 $originalMotTestTest->brakeTestResult = (object) $originalBrakeTestResult;
@@ -93,7 +93,7 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
         } else {
             $originalMotTestTest = Fixture::getMotTestDataVehicleClass4(true);
             $originalMotTestTest->motTestOriginalNumber = null;
-            if($originalBrakeTestResult === null || empty($originalBrakeTestResult)) {
+            if ($originalBrakeTestResult === null || empty($originalBrakeTestResult)) {
                 $originalMotTestTest->brakeTestResult = $originalBrakeTestResult;
             } else {
                 $originalMotTestTest->brakeTestResult = (object) $originalBrakeTestResult;
@@ -130,110 +130,110 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
         return [
             [
                 null, null, false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED,
             ],
             [
                 null, [], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED,
             ],
             [
                 null, ['generalPass' => 'undefined'], false, MotTestTypeCode::NORMAL_TEST,
-                ''
+                '',
             ],
             [
                 null, ['generalPass' => true], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_PASSED
+                MotTestResults::BRAKE_TEST_OUTCOME_PASSED,
             ],
             [
                 null, ['generalPass' => false], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_FAILED
+                MotTestResults::BRAKE_TEST_OUTCOME_FAILED,
             ],
             [
                 ['generalPass' => true], null, false, MotTestTypeCode::RE_TEST,
-                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_PASSED
+                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_PASSED,
             ],
             [
                 ['generalPass' => true], [], false, MotTestTypeCode::RE_TEST,
-                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_PASSED
+                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_PASSED,
             ],
             [
                 ['generalPass' => true], ['generalPass' => 'undefined'], false, MotTestTypeCode::RE_TEST,
-                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_PASSED
+                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_PASSED,
             ],
             [
                 ['generalPass' => true], ['generalPass' => true], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_PASSED],
+                MotTestResults::BRAKE_TEST_OUTCOME_PASSED, ],
             [
                 ['generalPass' => true], ['generalPass' => false], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_FAILED
+                MotTestResults::BRAKE_TEST_OUTCOME_FAILED,
             ],
             [
                 ['generalPass' => false], null, false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED,
             ],
             [
                 ['generalPass' => false], [], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_RECORDED,
             ],
             [
                 ['generalPass' => false], ['generalPass' => 'undefined'], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_FAILED
+                MotTestResults::INITIAL_BRAKE_TEST_OUTCOME_FAILED,
             ],
             [
                 ['generalPass' => false], ['generalPass' => true], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_PASSED
+                MotTestResults::BRAKE_TEST_OUTCOME_PASSED,
             ],
             [
                 ['generalPass' => false], ['generalPass' => false], false, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_FAILED
+                MotTestResults::BRAKE_TEST_OUTCOME_FAILED,
             ],
             [
                 null, ['generalPass' => true], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 null, ['generalPass' => false], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => true], null, true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => true], [], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => true], ['generalPass' => 'undefined'], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => true], ['generalPass' => true], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => true], ['generalPass' => false], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => false], null, true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => false], [], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => false], ['generalPass' => 'undefined'], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => false], ['generalPass' => true], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
             [
                 ['generalPass' => false], ['generalPass' => false], true, MotTestTypeCode::NORMAL_TEST,
-                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED
+                MotTestResults::BRAKE_TEST_OUTCOME_NOT_TESTED,
             ],
         ];
     }
@@ -253,7 +253,7 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
         $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
         $testMotTestData->testerBrakePerformanceNotTested = $isBrakePerformanceNotTested;
         $testMotTestData->testTypeCode = $motTestTypeCode;
-        if($brakeTestResult === null || empty($brakeTestResult)){
+        if ($brakeTestResult === null || empty($brakeTestResult)) {
             $testMotTestData->brakeTestResult = $brakeTestResult;
         } else {
             $testMotTestData->brakeTestResult = (object) $brakeTestResult;
@@ -261,8 +261,8 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
 
         $originalMotTestTest = Fixture::getMotTestDataVehicleClass4(true);
 
-        $originalMotTestTest->motTestOriginalNumber = "12345";
-        if($originalBrakeTestResult === null || empty($originalBrakeTestResult)) {
+        $originalMotTestTest->motTestOriginalNumber = '12345';
+        if ($originalBrakeTestResult === null || empty($originalBrakeTestResult)) {
             $originalMotTestTest->brakeTestResult = $originalBrakeTestResult;
         } else {
             $originalMotTestTest->brakeTestResult = (object) $originalBrakeTestResult;

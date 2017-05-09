@@ -1,16 +1,14 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Constants\Role;
-use DvsaMotApiTest\Controller\AbstractMotApiControllerTestCase;
 use DvsaMotApi\Controller\TesterController;
 use DvsaCommonApi\Service\Exception\NotFoundException;
-
 use Zend\Http\Request;
-use Zend\Http\Response;
 
 /**
- * Class NominatedTesterControllerTest
+ * Class NominatedTesterControllerTest.
  */
 class NominatedTesterControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -44,7 +42,7 @@ class NominatedTesterControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * @expectedException     DvsaCommonApi\Service\Exception\NotFoundException
+     * @expectedException     \DvsaCommonApi\Service\Exception\NotFoundException
      * @expectedExceptionCode 404
      */
     public function testGetReturnsErrorForInvalidNominatedTester()
@@ -66,7 +64,7 @@ class NominatedTesterControllerTest extends AbstractMotApiControllerTestCase
         $this->controller = new TesterController($mockNominatedTesterService);
         $this->setUpController($this->controller);
 
-        $result   = $this->controller->dispatch($this->request);
+        $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertResponseStatusAndResultHasError(

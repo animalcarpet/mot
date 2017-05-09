@@ -1,12 +1,12 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\AuthorisedExaminerDesignatedManager;
-use DvsaEntities\Entity\Person;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class AuthorisedExaminerDesignatedManagerTest
+ * Class AuthorisedExaminerDesignatedManagerTest.
  */
 class AuthorisedExaminerDesignatedManagerTest extends PHPUnit_Framework_TestCase
 {

@@ -22,12 +22,12 @@ class TwoFactorNotificationTemplateHelper
 
     public static function forPendingDirectNomination($nomineeTwoFactorStatus, $isTwoFactorToggleEnabled)
     {
-        return new TwoFactorNotificationTemplateHelper($nomineeTwoFactorStatus, true, $isTwoFactorToggleEnabled);
+        return new self($nomineeTwoFactorStatus, true, $isTwoFactorToggleEnabled);
     }
 
     public static function forPendingConditionalNomination($nomineeTwoFactorStatus, $isTwoFactorToggleEnabled)
     {
-        return new TwoFactorNotificationTemplateHelper($nomineeTwoFactorStatus, false, $isTwoFactorToggleEnabled);
+        return new self($nomineeTwoFactorStatus, false, $isTwoFactorToggleEnabled);
     }
 
     public function getTemplate($originalTemplate)

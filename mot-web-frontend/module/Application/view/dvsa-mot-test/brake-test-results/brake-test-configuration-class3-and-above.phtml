@@ -1,12 +1,10 @@
 <?php
 
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper as ConfigHelper;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
-/**
+/*
  * @var array                                         $brakeTestTypes
  * @var ConfigHelper                                  $configHelper
  * @var MotTestTitleModel                             $motTestTitleViewModel
@@ -27,7 +25,7 @@ echo $this->partial(
     'motTestProgress',
     [
         'currentStep' => 2,
-        'isMotContingency' => $this->isMotContingency
+        'isMotContingency' => $this->isMotContingency,
     ]
 );
 $this->placeholder('progressBar')->captureEnd();
@@ -45,20 +43,20 @@ $this->placeholder('progressBar')->captureEnd();
             <?php echo $this->partial(
                 'partial/forms/selectBox.phtml',
                 [
-                    'id'       => 'serviceBrake1TestType',
-                    'label'    => 'Service brake test type',
-                    'options'  => $brakeTestTypes,
-                    'value'    => $configHelper->getServiceBrakeTestType(),
+                    'id' => 'serviceBrake1TestType',
+                    'label' => 'Service brake test type',
+                    'options' => $brakeTestTypes,
+                    'value' => $configHelper->getServiceBrakeTestType(),
                     'required' => true,
                 ]
             );
             echo $this->partial(
                 'partial/forms/selectBox.phtml',
                 [
-                    'id'       => 'parkingBrakeTestType',
-                    'label'    => 'Parking brake test type',
-                    'options'  => $brakeTestTypes,
-                    'value'    => $configHelper->getParkingBrakeTestType(),
+                    'id' => 'parkingBrakeTestType',
+                    'label' => 'Parking brake test type',
+                    'options' => $brakeTestTypes,
+                    'value' => $configHelper->getParkingBrakeTestType(),
                     'required' => true,
                 ]
             ); ?>
@@ -86,8 +84,8 @@ $this->placeholder('progressBar')->captureEnd();
                                        value="<?php echo $this->escapeHtml($weightType); ?>"
                                        onchange="weightTypeChange(this.value)"
                                     <?php if ($hasBrakeTestWeight) {
-                                        echo 'checked';
-                                    } ?>
+                                echo 'checked';
+                            } ?>
                                  />
                                 <?php echo $this->escapeHtml($weightTypeName); ?>
                             </label>
@@ -98,9 +96,9 @@ $this->placeholder('progressBar')->captureEnd();
                         <?php echo $this->partial(
                             'inputElement',
                             [
-                                'id'          => 'vehicleWeight',
-                                'name'        => 'vehicleWeight',
-                                'value'       => $configHelper->getVehicleWeight(),
+                                'id' => 'vehicleWeight',
+                                'name' => 'vehicleWeight',
+                                'value' => $configHelper->getVehicleWeight(),
                             ]
                         ); ?>
                         <?php if ($vehicleClass === VehicleClassCode::CLASS_7) : ?>
@@ -119,13 +117,13 @@ $this->placeholder('progressBar')->captureEnd();
             <?php echo $this->partial(
                 'partial/forms/radioBoxDouble.phtml',
                 [
-                    'label'            => 'Brake line type',
-                    'name'             => 'brakeLineType',
-                    'value'            => $configHelper->getServiceBrakeLineType(),
-                    'option1'          => 'Dual',
-                    'option2'          => 'Single',
-                    'option1Value'     => ConfigHelper::BRAKE_LINE_TYPE_DUAL,
-                    'option2Value'     => ConfigHelper::BRAKE_LINE_TYPE_SINGLE,
+                    'label' => 'Brake line type',
+                    'name' => 'brakeLineType',
+                    'value' => $configHelper->getServiceBrakeLineType(),
+                    'option1' => 'Dual',
+                    'option2' => 'Single',
+                    'option1Value' => ConfigHelper::BRAKE_LINE_TYPE_DUAL,
+                    'option2Value' => ConfigHelper::BRAKE_LINE_TYPE_SINGLE,
                     'fieldsetCssClass' => 'label-reg',
                 ]
             ); ?>
@@ -133,13 +131,13 @@ $this->placeholder('progressBar')->captureEnd();
                 <?php echo $this->partial(
                     'partial/forms/radioBoxDouble.phtml',
                     [
-                        'label'            => 'Vehicle type',
-                        'name'             => 'vehiclePurposeType',
-                        'value'            => $configHelper->getVehiclePurposeType(),
-                        'option1'          => 'Passenger',
-                        'option2'          => 'Goods',
-                        'option1Value'     => ConfigHelper::PURPOSE_PERSONAL,
-                        'option2Value'     => ConfigHelper::PURPOSE_COMMERCIAL,
+                        'label' => 'Vehicle type',
+                        'name' => 'vehiclePurposeType',
+                        'value' => $configHelper->getVehiclePurposeType(),
+                        'option1' => 'Passenger',
+                        'option2' => 'Goods',
+                        'option1Value' => ConfigHelper::PURPOSE_PERSONAL,
+                        'option2Value' => ConfigHelper::PURPOSE_COMMERCIAL,
                         'fieldsetCssClass' => 'label-lg',
                     ]
                 ); ?>
@@ -149,43 +147,43 @@ $this->placeholder('progressBar')->captureEnd();
                     echo $this->partial(
                         'partial/forms/radioBoxDouble.phtml',
                         [
-                            'label'            => 'Position of single wheel',
-                            'name'             => 'positionOfSingleWheel',
-                            'value'            => $configHelper->getPositionOfSingleWheel(),
-                            'option1'          => 'Front',
-                            'option2'          => 'Rear',
-                            'option1Value'     => ConfigHelper::LOCATION_FRONT,
-                            'option2Value'     => ConfigHelper::LOCATION_REAR,
+                            'label' => 'Position of single wheel',
+                            'name' => 'positionOfSingleWheel',
+                            'value' => $configHelper->getPositionOfSingleWheel(),
+                            'option1' => 'Front',
+                            'option2' => 'Rear',
+                            'option1Value' => ConfigHelper::LOCATION_FRONT,
+                            'option2Value' => ConfigHelper::LOCATION_REAR,
                             'fieldsetCssClass' => 'label-reg',
                         ]
                     );
                     echo $this->partial(
                         'partial/forms/radioBoxDouble.phtml',
                         [
-                            'label'            => 'Parking brake operated on',
-                            'name'             => 'parkingBrakeWheelsCount',
-                            'value'            => $configHelper->getParkingBrakeWheelsCount(),
-                            'option1'          => 'One wheel',
-                            'option2'          => 'Two wheels',
-                            'option1Value'     => 1,
-                            'option2Value'     => 2,
-                            'id1'              => 'parkingBrakeOperatedOnOne',
-                            'id2'              => 'parkingBrakeOperatedOnTwo',
+                            'label' => 'Parking brake operated on',
+                            'name' => 'parkingBrakeWheelsCount',
+                            'value' => $configHelper->getParkingBrakeWheelsCount(),
+                            'option1' => 'One wheel',
+                            'option2' => 'Two wheels',
+                            'option1Value' => 1,
+                            'option2Value' => 2,
+                            'id1' => 'parkingBrakeOperatedOnOne',
+                            'id2' => 'parkingBrakeOperatedOnTwo',
                             'fieldsetCssClass' => 'label-lg',
                         ]
                     );
                     echo $this->partial(
                         'partial/forms/radioBoxDouble.phtml',
                         [
-                            'label'            => 'Service brake controls',
-                            'name'             => 'serviceBrakeControlsCount',
-                            'value'            => $configHelper->getServiceBrakeControlsCount(),
-                            'option1'          => 'One control',
-                            'option2'          => 'Two controls',
-                            'option1Value'     => 1,
-                            'option2Value'     => 2,
-                            'id1'              => 'numberOfServiceBrakeControlsOne',
-                            'id2'              => 'numberOfServiceBrakeControlsTwo',
+                            'label' => 'Service brake controls',
+                            'name' => 'serviceBrakeControlsCount',
+                            'value' => $configHelper->getServiceBrakeControlsCount(),
+                            'option1' => 'One control',
+                            'option2' => 'Two controls',
+                            'option1Value' => 1,
+                            'option2Value' => 2,
+                            'id1' => 'numberOfServiceBrakeControlsOne',
+                            'id2' => 'numberOfServiceBrakeControlsTwo',
                         ]
                     );
                     break;
@@ -197,10 +195,10 @@ $this->placeholder('progressBar')->captureEnd();
                         <?php echo $this->partial(
                             'partial/forms/selectBox.phtml',
                             [
-                                'id'       => 'numberOfAxles',
-                                'label'    => 'Number of axles',
-                                'options'  => [2 => '2 axles', 3 => '3 axles'],
-                                'value'    => $configHelper->getNumberOfAxles(),
+                                'id' => 'numberOfAxles',
+                                'label' => 'Number of axles',
+                                'options' => [2 => '2 axles', 3 => '3 axles'],
+                                'value' => $configHelper->getNumberOfAxles(),
                                 'required' => true,
                             ]
                         ); ?>
@@ -210,10 +208,10 @@ $this->placeholder('progressBar')->captureEnd();
                         <?php echo $this->partial(
                             'partial/forms/selectBox.phtml',
                             [
-                                'id'       => 'parkingBrakeNumberOfAxles',
-                                'label'    => 'Parking brake number of axles',
-                                'options'  => [1 => '1 axles', 2 => '2 axles'],
-                                'value'    => $configHelper->getParkingBrakeNumberOfAxles(),
+                                'id' => 'parkingBrakeNumberOfAxles',
+                                'label' => 'Parking brake number of axles',
+                                'options' => [1 => '1 axles', 2 => '2 axles'],
+                                'value' => $configHelper->getParkingBrakeNumberOfAxles(),
                                 'required' => true,
                             ]
                         ); ?>
@@ -242,7 +240,7 @@ $this->placeholder('progressBar')->captureEnd();
 </form>
 <script type="text/javascript">
 
-    var vehicleClass = '<?php echo (new Zend\Escaper\Escaper('UTF-8'))->escapeJs(($vehicleClass)); ?>';
+    var vehicleClass = '<?php echo(new Zend\Escaper\Escaper('UTF-8'))->escapeJs(($vehicleClass)); ?>';
 
     function refreshVisibleItems() {
         var serviceBrakeTestType = $('#serviceBrake1TestType').val();

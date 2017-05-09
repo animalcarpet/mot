@@ -7,12 +7,11 @@ use DvsaCommon\Enum\FuelTypeId;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Messages\Vehicle\CreateVehicleErrors;
 use DvsaCommonApi\Service\Exception\BadRequestException;
-use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaMotApi\Service\Validator\VehicleValidator;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class VehicleValidatorTest
+ * Class VehicleValidatorTest.
  */
 class VehicleValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -86,7 +85,7 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateCylinderCapacityCannotBeANonInteger()
     {
-        $data = array_merge($this->getCorrectData(), ['cylinderCapacity' => '10.2',]);
+        $data = array_merge($this->getCorrectData(), ['cylinderCapacity' => '10.2']);
 
         $this->callValidator($data);
     }
@@ -104,7 +103,7 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
             $this->assertEquals(sprintf(CreateVehicleErrors::VIN_LENGTH, 1, VehicleValidator::LIMIT_VIN_MAX),
                 $e->getErrors()[0]['message']);
         } catch (\Exception $e) {
-            $this->fail("Invalid exception thrown");
+            $this->fail('Invalid exception thrown');
         }
     }
 
@@ -118,7 +117,6 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
             ['vin' => null]
         );
         $a = $this->callValidator($data);
-
     }
 
     public function testValidateRegistrationNumberCannotBeTooLong()
@@ -136,7 +134,7 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
                 $e->getErrors()[0]['message']
             );
         } catch (\Exception $e) {
-            $this->fail("Invalid exception thrown");
+            $this->fail('Invalid exception thrown');
         }
     }
 
@@ -152,7 +150,7 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
             $this->assertEquals(1, count($e->getErrors()));
             $this->assertEquals(CreateVehicleErrors::VIN_INVALID, $e->getErrors()[0]['message']);
         } catch (\Exception $e) {
-            $this->fail("Invalid exception thrown");
+            $this->fail('Invalid exception thrown');
         }
     }
 
@@ -165,7 +163,7 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
             $this->assertEquals(1, count($e->getErrors()));
             $this->assertEquals(CreateVehicleErrors::REG_INVALID, $e->getErrors()[0]['message']);
         } catch (\Exception $e) {
-            $this->fail("Invalid exception thrown");
+            $this->fail('Invalid exception thrown');
         }
     }
 

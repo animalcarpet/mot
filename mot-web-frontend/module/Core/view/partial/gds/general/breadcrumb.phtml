@@ -6,8 +6,8 @@
             <?php
             use DvsaCommon\Utility\ArrayUtils;
 
-            $counter = 1;
-            if(ArrayUtils::isAssoc($breadcrumbs)):
+$counter = 1;
+            if (ArrayUtils::isAssoc($breadcrumbs)):
             foreach ($breadcrumbs as $name => $link): ?>
                 <li id="breadcrumb-<?php echo $counter++ ?>">
                     <?php if (!empty($link)): ?>
@@ -27,7 +27,7 @@
                         <?php echo $this->escapeHtmlAttr($name); ?>
                     <?php endif; ?>
                 </li>
-            <?php endforeach; endforeach; endif;?>
+            <?php endforeach; endforeach; endif; ?>
         </ol>
     </nav>
 </div>

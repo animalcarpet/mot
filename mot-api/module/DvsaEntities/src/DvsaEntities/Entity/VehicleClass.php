@@ -7,7 +7,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 use DvsaEntities\EntityTrait\EnumType1EntityTrait;
 
 /**
- * VehicleClass
+ * VehicleClass.
  *
  * @ORM\Table(
  *  name="vehicle_class",
@@ -24,13 +24,11 @@ class VehicleClass extends Entity
 
     use EnumType1EntityTrait;
 
-
     /**
      * @var string
      *
      * @ORM\Column(name="vehicle_class_group_id", type="string", length=5, nullable=false)
      */
-
     private $group;
 
     public function __construct($code = null, $name = null)
@@ -44,7 +42,7 @@ class VehicleClass extends Entity
      */
     public function __toString()
     {
-        return (string)$this->code;
+        return (string) $this->code;
     }
 
     /**

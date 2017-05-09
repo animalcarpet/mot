@@ -17,8 +17,9 @@ class RoleNotificationHelper
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $role
+     *
      * @return int
      */
     public function sendAssignRoleNotification(Person $person, PersonSystemRole $role)
@@ -27,8 +28,9 @@ class RoleNotificationHelper
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $role
+     *
      * @return int
      */
     public function sendRemoveRoleNotification(Person $person, PersonSystemRole $role)
@@ -37,9 +39,10 @@ class RoleNotificationHelper
     }
 
     /**
-     * @param Person $person
+     * @param Person           $person
      * @param PersonSystemRole $role
-     * @param int $template
+     * @param int              $template
+     *
      * @return int
      */
     private function send(Person $person, PersonSystemRole $role, $template)

@@ -111,18 +111,18 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
     /** @var MotAuthorisationServiceInterface */
     protected $authorisationService;
 
-    /** @var  StartTestChangeService */
+    /** @var StartTestChangeService */
     private $startTestChangeService;
 
     /**
-     * @param VehicleSearchService $vehicleSearchService
-     * @param ParamObfuscator $paramObfuscator
-     * @param CatalogService $catalogService
-     * @param VehicleSearchResult $vehicleSearchResultModel
-     * @param MapperFactory $mapperFactory
-     * @param Client $client
+     * @param VehicleSearchService             $vehicleSearchService
+     * @param ParamObfuscator                  $paramObfuscator
+     * @param CatalogService                   $catalogService
+     * @param VehicleSearchResult              $vehicleSearchResultModel
+     * @param MapperFactory                    $mapperFactory
+     * @param Client                           $client
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param StartTestChangeService $startTestChangeService
+     * @param StartTestChangeService           $startTestChangeService
      */
     public function __construct(
         VehicleSearchService $vehicleSearchService,
@@ -161,7 +161,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
     }
 
     /**
-     * Duplicate and Replacement vehicle search by registration
+     * Duplicate and Replacement vehicle search by registration.
      *
      * @return \Zend\Http\Response|ViewModel
      */
@@ -177,7 +177,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
     }
 
     /**
-     * Duplicate and Replacement vehicle search by vin
+     * Duplicate and Replacement vehicle search by vin.
      *
      * @return \Zend\Http\Response|ViewModel
      */
@@ -228,6 +228,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
 
     /**
      * @param string $searchType
+     *
      * @return \Zend\Http\Response|\Zend\View\Model\ViewModel
      */
     private function vehicleSearch($searchType)
@@ -240,11 +241,11 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
         $tester = $loggedInUserManager->getTesterData();
 
         if ($this->getAuthorizationService()->isTester() && in_array($searchType, [
-                    VehicleSearchService::SEARCH_TYPE_STANDARD, VehicleSearchService::SEARCH_TYPE_RETEST
+                    VehicleSearchService::SEARCH_TYPE_STANDARD, VehicleSearchService::SEARCH_TYPE_RETEST,
                 ])) {
-            $authorisationsForTestingMot = (!is_null($tester["authorisationsForTestingMot"]))? $tester["authorisationsForTestingMot"]: [];
+            $authorisationsForTestingMot = (!is_null($tester['authorisationsForTestingMot'])) ? $tester['authorisationsForTestingMot'] : [];
             $url = (new UrlBuilder())->specialNoticeOverdue()->toString();
-            $overdueSpecialNotices = $this->client->get($url)["data"];
+            $overdueSpecialNotices = $this->client->get($url)['data'];
 
             $overdueSpecialNotices = new OverdueSpecialNoticeAssertion($overdueSpecialNotices, $authorisationsForTestingMot);
             $overdueSpecialNotices->assertPerformTest();
@@ -278,7 +279,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
             && $this->getAuthorizationService()->isTester()
             && !$this->getIdentity()->getCurrentVts()
         ) {
-
 
             // Avoid redirecting to the LocationSelectionController if the tester has only one associated site.
             if (count($tester['vtsSites']) == 1) {
@@ -395,15 +395,15 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
     }
 
     /**
-     * @param \Zend\Form\Form $form form object for vehicle search
-     * @param bool $noMatches true if there were no matches in previous search
-     * @param bool $regError true if reg was not provided, but required
-     * @param bool $showCreateButton true to show Create Vehicle button
-     * @param array $results show any non exact or multiple results for search criteria
-     * @param bool $tooManyMatches more than five results returned
-     * @param VehicleSearchResultUrlTemplateInterface $urlTemplate creates a searchType specific url to follow from results list
-     * @param VehicleSearchResultMessage $searchResultMessage message for the user when no results are found
-     * @param boolean $hideIncognitoVehicles true if the user is not authorised to view vehicles masked under a mystery shopper campaign
+     * @param \Zend\Form\Form                         $form                  form object for vehicle search
+     * @param bool                                    $noMatches             true if there were no matches in previous search
+     * @param bool                                    $regError              true if reg was not provided, but required
+     * @param bool                                    $showCreateButton      true to show Create Vehicle button
+     * @param array                                   $results               show any non exact or multiple results for search criteria
+     * @param bool                                    $tooManyMatches        more than five results returned
+     * @param VehicleSearchResultUrlTemplateInterface $urlTemplate           creates a searchType specific url to follow from results list
+     * @param VehicleSearchResultMessage              $searchResultMessage   message for the user when no results are found
+     * @param bool                                    $hideIncognitoVehicles true if the user is not authorised to view vehicles masked under a mystery shopper campaign
      *
      * @return ViewModel vehicle search view model
      */
@@ -438,7 +438,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
                 'urlTemplate' => $urlTemplate,
                 'isRetest' => $this->vehicleSearchService->isRetestSearchType(),
                 'isTraining' => $this->vehicleSearchService->isTrainingSearchType(),
-                'hideIncognitoVehicles' => $this->hideIncognitoVehicles()
+                'hideIncognitoVehicles' => $this->hideIncognitoVehicles(),
             ]
         );
 
@@ -455,6 +455,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
         if ($this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)) {
             return false;
         }
+
         return true;
     }
 

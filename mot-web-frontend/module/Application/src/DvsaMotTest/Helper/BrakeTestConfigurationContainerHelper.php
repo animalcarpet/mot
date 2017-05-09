@@ -5,9 +5,7 @@ namespace DvsaMotTest\Helper;
 use Zend\Session\Container as SessionContainer;
 
 /**
- * Class BrakeTestConfigurationContainerHelper
- *
- * @package DvsaMotTest\Helper
+ * Class BrakeTestConfigurationContainerHelper.
  */
 class BrakeTestConfigurationContainerHelper
 {

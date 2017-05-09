@@ -1,9 +1,7 @@
 <?php
 
-use Organisation\UpdateAeProperty\Process\Form\AddressPropertyForm;
 use Organisation\UpdateAeProperty\UpdateAePropertyViewModel;
 use Organisation\UpdateAeProperty\Process\Form\AepForm;
-use DvsaCommon\Utility\ArrayUtils;
 
 /** @var UpdateAePropertyViewModel $viewModel */
 /** @var AepForm $form */
@@ -19,19 +17,19 @@ $form = $viewModel->getForm();
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getFirstNameElement()
+            'element' => $form->getFirstNameElement(),
         ]
     );
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getMiddleNameElement()
+            'element' => $form->getMiddleNameElement(),
         ]
     );
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getLastNameElement()
+            'element' => $form->getLastNameElement(),
         ]
     );
 ?>
@@ -61,37 +59,37 @@ $form = $viewModel->getForm();
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getAddressLine1Element()
+            'element' => $form->getAddressLine1Element(),
         ]
     );
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getAddressLine2Element()
+            'element' => $form->getAddressLine2Element(),
         ]
     );
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getAddressLine3Element()
+            'element' => $form->getAddressLine3Element(),
         ]
     );
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getTownElement()
+            'element' => $form->getTownElement(),
         ]
     );
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getCountryElement()
+            'element' => $form->getCountryElement(),
         ]
     );
     echo $this->partial(
         'partial/gds/form/control',
         [
-            'element' => $form->getPostcodeElement()
+            'element' => $form->getPostcodeElement(),
         ]
     );
     ?>

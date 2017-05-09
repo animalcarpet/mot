@@ -6,7 +6,7 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 /** @var Notification[] $notifications */
 /** @var int $count */
 $count = count($notifications);
-/** @var int $unread */
+/* @var int $unread */
 ?>
 
 <section class="module-pivot-panel" id="notification-list">
@@ -35,9 +35,9 @@ $count = count($notifications);
 
     <?php
     foreach ($notifications as $notification) :
-        $escUrl = $this->url(NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notification->getId()], ["query" => ["backTo" => NotificationController::BACK_TO_HOME_PARAM]]);
+        $escUrl = $this->url(NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notification->getId()], ['query' => ['backTo' => NotificationController::BACK_TO_HOME_PARAM]]);
         $date = DateTimeDisplayFormat::textDateTime($notification->getCreatedOn());
-        $cssClass = (null === $notification->getReadOn()) ? "is-unread" : "is-read";
+        $cssClass = (null === $notification->getReadOn()) ? 'is-unread' : 'is-read';
         if ($notification->isActionRequired()) {
             $cssClass .= ' is-nomination';
         }

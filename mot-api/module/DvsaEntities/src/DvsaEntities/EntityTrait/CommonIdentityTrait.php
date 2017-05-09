@@ -3,12 +3,12 @@
 namespace DvsaEntities\EntityTrait;
 
 /**
- * CommonIdentityTrait
+ * CommonIdentityTrait.
  */
 trait CommonIdentityTrait
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -28,15 +28,15 @@ trait CommonIdentityTrait
         if (null != $id && !is_numeric($id)) {
             throw new \InvalidArgumentException("Expected numeric id, got [$id]");
         }
-        $this->id =(int)$id;
+        $this->id = (int) $id;
 
         return $this;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

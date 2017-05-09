@@ -22,14 +22,13 @@ class NotificationAction implements AutoWireableInterface
         Url $url,
         ApiNotificationResource $notificationResource,
         MotFrontendIdentityProviderInterface $frontendIdentityProvider
-    )
-    {
+    ) {
         $this->notificationResource = $notificationResource;
         $this->frontendIdentityProvider = $frontendIdentityProvider;
         $this->urlPlugin = $url;
     }
 
-   /**
+    /**
      * @return ViewActionResult
      */
     public function getInboxView()
@@ -47,6 +46,7 @@ class NotificationAction implements AutoWireableInterface
 
     /**
      * @param $isArchive
+     *
      * @return ViewActionResult
      */
     private function getView($isArchive)
@@ -71,7 +71,8 @@ class NotificationAction implements AutoWireableInterface
 
     /**
      * @param bool $isArchive
-     * @param int $userId
+     * @param int  $userId
+     *
      * @return \Dashboard\Model\Notification[]
      */
     private function getNotifications($isArchive, $userId)

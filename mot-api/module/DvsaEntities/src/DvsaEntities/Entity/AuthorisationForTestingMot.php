@@ -7,7 +7,7 @@ use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * AuthorisationForTestingMot
+ * AuthorisationForTestingMot.
  *
  * @ORM\Table(name="auth_for_testing_mot")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\AuthorisationForTestingMotRepository")
@@ -61,7 +61,7 @@ class AuthorisationForTestingMot extends Entity
     private $person;
 
     /**
-     * Set validFrom
+     * Set validFrom.
      *
      * @param \DateTime $validFrom
      *
@@ -75,7 +75,7 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Get validFrom
+     * Get validFrom.
      *
      * @return \DateTime
      */
@@ -85,7 +85,7 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Set expiryDate
+     * Set expiryDate.
      *
      * @param \DateTime $expiryDate
      *
@@ -99,7 +99,7 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Get expiryDate
+     * Get expiryDate.
      *
      * @return \DateTime
      */
@@ -109,7 +109,7 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Set vehicleClass
+     * Set vehicleClass.
      *
      * @param \DvsaEntities\Entity\VehicleClass $vehicleClass
      *
@@ -123,7 +123,7 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Get vehicleClass
+     * Get vehicleClass.
      *
      * @return \DvsaEntities\Entity\VehicleClass
      */
@@ -133,7 +133,8 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Set status
+     * Set status.
+     *
      * @param AuthorisationForTestingMotStatus $status
      *
      * @return $this
@@ -141,11 +142,12 @@ class AuthorisationForTestingMot extends Entity
     public function setStatus(AuthorisationForTestingMotStatus $status = null)
     {
         $this->status = $status;
+
         return $this;
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return AuthorisationForTestingMotStatus
      */
@@ -155,7 +157,7 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param \DvsaEntities\Entity\Person $person
      *
@@ -169,7 +171,7 @@ class AuthorisationForTestingMot extends Entity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return \DvsaEntities\Entity\Person
      */
@@ -190,10 +192,10 @@ class AuthorisationForTestingMot extends Entity
 
     /**
      * Checks if a given array of classes (@see Vehicle) are covered by a give
-     * set of authorisations
+     * set of authorisations.
      *
      * @param \DvsaEntities\Entity\AuthorisationForTestingMot[] $authorisations
-     * @param  array $classes
+     * @param array                                             $classes
      *
      * @return bool
      */
@@ -208,6 +210,7 @@ class AuthorisationForTestingMot extends Entity
                 }
             }
         }
+
         return $counter === 0;
     }
 

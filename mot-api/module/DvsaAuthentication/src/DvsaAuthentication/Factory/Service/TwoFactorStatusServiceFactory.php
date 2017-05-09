@@ -9,8 +9,8 @@ use DvsaEntities\Repository\PersonRepository;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class TwoFactorStatusServiceFactory implements FactoryInterface {
-
+class TwoFactorStatusServiceFactory implements FactoryInterface
+{
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var AuthorisationServiceClient $authorisationServiceClient */

@@ -1,10 +1,11 @@
 <?php
+
 namespace DvsaMotApiTest\Helper;
 
-use \DvsaMotApi\Helper\FuzzySearchRegexHelper as SUT;
+use DvsaMotApi\Helper\FuzzySearchRegexHelper as SUT;
 
 /**
- * Class FuzzySearchRegexHelperTest
+ * Class FuzzySearchRegexHelperTest.
  */
 class FuzzySearchRegexHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,12 +14,12 @@ class FuzzySearchRegexHelperTest extends \PHPUnit_Framework_TestCase
         //given
         $charGroup = [
             ['1', 'l', 'I'],
-            ['6', 'G', 'b']
+            ['6', 'G', 'b'],
         ];
 
         $expectedResult = [
             ['1', 'L', 'I'],
-            ['6', 'G', 'B']
+            ['6', 'G', 'B'],
         ];
 
         //when
@@ -33,13 +34,13 @@ class FuzzySearchRegexHelperTest extends \PHPUnit_Framework_TestCase
         //given
         $charGroups = [
             ['6', 'G'],
-            ['9', 'G']
+            ['9', 'G'],
         ];
 
         $expectedResult = [
             '6' => ['6', 'G'],
             'G' => ['6', 'G', '9'],
-            '9' => ['9', 'G']
+            '9' => ['9', 'G'],
         ];
 
         //when
@@ -55,7 +56,7 @@ class FuzzySearchRegexHelperTest extends \PHPUnit_Framework_TestCase
         $string = 'test';
         $charMapping = [
             's' => ['s', '5'],
-            't' => ['7', 't']
+            't' => ['7', 't'],
         ];
         $expectedResult = '[7t]e[s5][7t]';
 

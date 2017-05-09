@@ -8,16 +8,14 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesVehicle;
 
 /**
- * Class ESDocVehicle
+ * Class ESDocVehicle.
  *
  * I manage the data for a Vehicle and can return it in various formats.
- *
- * @package DvsaElasticSearch\Model
  */
 class ESDocVehicle extends ESDocType
 {
     /**
-     * Return the internal state for ES consumption
+     * Return the internal state for ES consumption.
      *
      * @param \DvsaEntities\Entity\MotTest $entity
      *
@@ -36,12 +34,10 @@ class ESDocVehicle extends ESDocType
             'make' => $entity->getModel()->getMake()->getName(),
             'model' => $entity->getModelName(),
             'displayDate' => $updatedDate,
-            'updatedDate_display' =>
-                $entity->getLastUpdatedOn() !== null ?
+            'updatedDate_display' => $entity->getLastUpdatedOn() !== null ?
                     $entity->getLastUpdatedOn()->format('d M Y') :
                     null,
-            'updatedDate_timestamp' =>
-                $entity->getLastUpdatedOn() !== null ?
+            'updatedDate_timestamp' => $entity->getLastUpdatedOn() !== null ?
                     strtotime($entity->getLastUpdatedOn()->format('d M Y h:i')) :
                     null,
         ];
@@ -53,6 +49,7 @@ class ESDocVehicle extends ESDocType
      * @param $results
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function asJson($results)
@@ -62,7 +59,7 @@ class ESDocVehicle extends ESDocType
         }
 
         throw new BadRequestException(
-            'Unknown search format: ' . $results['format'],
+            'Unknown search format: '.$results['format'],
             BadRequestException::ERROR_CODE_INVALID_DATA
         );
     }

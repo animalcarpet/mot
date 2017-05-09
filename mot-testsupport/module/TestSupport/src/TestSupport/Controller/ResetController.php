@@ -4,7 +4,6 @@ namespace TestSupport\Controller;
 
 use TestSupport\Helper\TestDataResponseHelper;
 use Zend\Mvc\Controller\AbstractRestfulController;
-use Zend\View\Model\JsonModel;
 
 /**
  * Resets the DB.
@@ -26,10 +25,10 @@ class ResetController extends AbstractRestfulController
             $returnVar
         );
         if ($returnVar == 0) {
-            return TestDataResponseHelper::jsonOk(["message" => "DB has been reset", "output" => $output]);
+            return TestDataResponseHelper::jsonOk(['message' => 'DB has been reset', 'output' => $output]);
         } else {
             $this->getResponse()->setStatusCode(500);
-            $outputMessage = "DB Reset failed! Output: [" . implode(" ", $output) . "]";
+            $outputMessage = 'DB Reset failed! Output: ['.implode(' ', $output).']';
 
             return TestDataResponseHelper::jsonError($outputMessage);
         }

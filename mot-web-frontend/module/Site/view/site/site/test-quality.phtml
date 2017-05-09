@@ -1,7 +1,6 @@
 <?php
 
 /** @var $viewModel SiteTestQualityViewModel */
-use Core\Routing\VtsRouteList;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
 
@@ -23,15 +22,15 @@ $returnLink = $viewModel->getReturnLink();
         <?php
         if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::BIKES)) {
             echo $this->partial('site/site/partials/test-quality-group', [
-                'group'       => $viewModel->getA(),
-                'queryParams' => $viewModel->getQueryParams()
+                'group' => $viewModel->getA(),
+                'queryParams' => $viewModel->getQueryParams(),
             ]);
         }
 
         if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::CARS_ETC)) {
             echo $this->partial('site/site/partials/test-quality-group', [
                 'group' => $viewModel->getB(),
-                'queryParams' => $viewModel->getQueryParams()
+                'queryParams' => $viewModel->getQueryParams(),
             ]);
         }
         ?>

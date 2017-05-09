@@ -7,15 +7,13 @@ use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\Site;
 
 /**
- * Class OutputFormatOrganisationSlotUsage
- *
- * @package OrganisationApi\Model\OutputFormat
+ * Class OutputFormatOrganisationSlotUsage.
  */
 class OutputFormatOrganisationSlotUsage extends OutputFormat
 {
     /**
      * Responsible for extracting the current item into the required format
-     * and adding to the passed results array
+     * and adding to the passed results array.
      *
      * @param $results
      * @param $key
@@ -26,14 +24,14 @@ class OutputFormatOrganisationSlotUsage extends OutputFormat
     public function extractItem(&$results, $key, $item)
     {
         $usage = $item['usage'];
-        $item  = $item[0];
+        $item = $item[0];
 
         $result = [
-            'id'                   => $item->getId(),
-            'usage'                => $usage,
-            'name'                 => $item->getName(),
-            'siteNumber'           => $item->getSiteNumber(),
-            'location'             => $this->getInlineAddress($item->getAddress()),
+            'id' => $item->getId(),
+            'usage' => $usage,
+            'name' => $item->getName(),
+            'siteNumber' => $item->getSiteNumber(),
+            'location' => $this->getInlineAddress($item->getAddress()),
             'authorisedExaminerId' => $item->getOrganisation()->getId(),
         ];
 
@@ -41,7 +39,8 @@ class OutputFormatOrganisationSlotUsage extends OutputFormat
     }
 
     /**
-     * @param  Address $address
+     * @param Address $address
+     *
      * @return string
      */
     public function getInlineAddress($address)

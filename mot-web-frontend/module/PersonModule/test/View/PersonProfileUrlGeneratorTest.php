@@ -38,7 +38,7 @@ class PersonProfileUrlGeneratorTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->router = new TreeRouteStack();
-        $this->router->setRoutes(require __DIR__ . '/Fixtures/routes.php');
+        $this->router->setRoutes(require __DIR__.'/Fixtures/routes.php');
         $this->request = new Request();
 
         $this->identityProvider = $this

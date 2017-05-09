@@ -1,4 +1,5 @@
 <?php
+
 namespace MailerApiTest\Logic;
 
 use DvsaCommon\Dto\Mailer\MailerDto;
@@ -11,7 +12,6 @@ use MailerApi\Logic\ClaimAccountReminder;
 use MailerApi\Service\MailerService;
 use MailerApi\Validator\MailerValidator;
 use PHPUnit_Framework_TestCase;
-use Zend\Log\Logger;
 
 class ClaimAccountReminderTest extends PHPUnit_Framework_TestCase
 {
@@ -36,7 +36,7 @@ class ClaimAccountReminderTest extends PHPUnit_Framework_TestCase
         // Turn off the logging feature
         $this->config = [
             'mailer' => [],
-            'helpdesk' => []
+            'helpdesk' => [],
         ];
         $this->config['mailer']['logfile'] = '';
         $this->config['mailer']['sendingAllowed'] = false;
@@ -57,7 +57,7 @@ class ClaimAccountReminderTest extends PHPUnit_Framework_TestCase
         $this->mailDto = new MailerDto();
         $this->mailDto->setData(['userid' => 5, 'user' => $mockPerson]);
 
-        $emailAddress = 'claimaccountremindertest@' . EmailAddressValidator::TEST_DOMAIN;
+        $emailAddress = 'claimaccountremindertest@'.EmailAddressValidator::TEST_DOMAIN;
 
         $logic = new ClaimAccountReminder(
             $this->config['mailer'],
@@ -90,7 +90,7 @@ class ClaimAccountReminderTest extends PHPUnit_Framework_TestCase
         $this->mailDto = new MailerDto();
         $this->mailDto->setData(['userid' => 5, 'user' => $mockPerson]);
 
-        $emailAddress = 'claimaccountremindertest@' . EmailAddressValidator::TEST_DOMAIN;
+        $emailAddress = 'claimaccountremindertest@'.EmailAddressValidator::TEST_DOMAIN;
 
         $logic = new ClaimAccountReminder(
             $this->config['mailer'],

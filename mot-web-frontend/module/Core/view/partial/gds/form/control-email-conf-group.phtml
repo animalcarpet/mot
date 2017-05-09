@@ -9,31 +9,31 @@ $group = $this->group ?: '';
 $tmplFieldName = (!empty($group) ? '%1$s[%2$s]' : '%2$s');
 $key = isset($this->key) ? $this->key : 'I don\'t want to supply an email address';
 
-$emailFldId = $group . EmailFormModel::FIELD_EMAIL;
+$emailFldId = $group.EmailFormModel::FIELD_EMAIL;
 echo $this->partial(
     'partial/gds/form/control-text-group',
     [
-        'id'            => $emailFldId,
-        'name'          => sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL),
-        'errorMessage'  => $emailModel->getError(sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL)),
+        'id' => $emailFldId,
+        'name' => sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL),
+        'errorMessage' => $emailModel->getError(sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL)),
         'inputModifier' => '1-3',
-        'label'         => 'Email address',
-        'value'         => $emailModel->getEmail(),
-        'maxLength'     => 255,
+        'label' => 'Email address',
+        'value' => $emailModel->getEmail(),
+        'maxLength' => 255,
     ]
 );
 
-$confirmFldId = $group . EmailFormModel::FIELD_EMAIL_CONFIRM;
+$confirmFldId = $group.EmailFormModel::FIELD_EMAIL_CONFIRM;
 echo $this->partial(
     'partial/gds/form/control-text-group',
     [
-        'id'            => $confirmFldId,
-        'name'          => sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL_CONFIRM),
-        'errorMessage'  => $emailModel->getError(sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL_CONFIRM)),
+        'id' => $confirmFldId,
+        'name' => sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL_CONFIRM),
+        'errorMessage' => $emailModel->getError(sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL_CONFIRM)),
         'inputModifier' => '1-3',
-        'label'         => 'Re-type email address',
-        'value'         => $emailModel->getEmailConfirm(),
-        'maxLength'     => 255,
+        'label' => 'Re-type email address',
+        'value' => $emailModel->getEmailConfirm(),
+        'maxLength' => 255,
     ]
 );
 
@@ -41,13 +41,13 @@ $isSupplyFld = sprintf($tmplFieldName, $group, EmailFormModel::FIELD_IS_NOT_SUPP
 echo $this->partial(
     'partial/gds/form/control-checkbox-group',
     [
-        'label'   => '',
+        'label' => '',
         'options' => [
             [
-                'value'     => '1',
+                'value' => '1',
                 'inputName' => $isSupplyFld,
-                'key'       => $key,
-                'checked'   => !$emailModel->isSupplied(),
+                'key' => $key,
+                'checked' => !$emailModel->isSupplied(),
             ],
         ],
     ]

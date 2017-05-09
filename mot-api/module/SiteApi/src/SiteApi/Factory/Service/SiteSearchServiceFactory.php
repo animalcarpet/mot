@@ -10,9 +10,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SiteSearchServiceFactory
- *
- * @package SiteApi\Factory\Service
+ * Class SiteSearchServiceFactory.
  */
 class SiteSearchServiceFactory implements FactoryInterface
 {

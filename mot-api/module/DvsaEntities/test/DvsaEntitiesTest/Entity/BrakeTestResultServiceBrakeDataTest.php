@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaCommon\Enum\BrakeTestTypeCode;
@@ -6,7 +7,7 @@ use PHPUnit_Framework_TestCase;
 use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
 
 /**
- * Class BrakeTestResultServiceBrakeDataTest
+ * Class BrakeTestResultServiceBrakeDataTest.
  */
 class BrakeTestResultServiceBrakeDataTest extends PHPUnit_Framework_TestCase
 {
@@ -83,6 +84,7 @@ class BrakeTestResultServiceBrakeDataTest extends PHPUnit_Framework_TestCase
     {
         $brakeTestResult = new BrakeTestResultServiceBrakeData();
         $data = self::getTestData();
+
         return $brakeTestResult
             ->setEffortNearsideAxle1($data['effortNearsideAxle1'])
             ->setEffortOffsideAxle1($data['effortOffsideAxle1'])
@@ -105,24 +107,24 @@ class BrakeTestResultServiceBrakeDataTest extends PHPUnit_Framework_TestCase
     public static function getTestData()
     {
         return [
-            'id'                  => 2,
-            'testType'            => BrakeTestTypeCode::ROLLER,
+            'id' => 2,
+            'testType' => BrakeTestTypeCode::ROLLER,
             'effortNearsideAxle1' => 11,
-            'effortOffsideAxle1'  => 12,
+            'effortOffsideAxle1' => 12,
             'effortNearsideAxle2' => 13,
-            'effortOffsideAxle2'  => 14,
+            'effortOffsideAxle2' => 14,
             'effortNearsideAxle3' => 41,
-            'effortOffsideAxle3'  => 42,
-            'lockNearsideAxle1'   => true,
-            'lockOffsideAxle1'    => false,
-            'lockNearsideAxle2'   => true,
-            'lockOffsideAxle2'    => false,
-            'lockNearsideAxle3'   => true,
-            'lockOffsideAxle3'    => false,
-            'imbalanceAxle1'      => 30,
-            'imbalanceAxle2'      => 31,
-            'imbalanceAxle3'      => 53,
-            'imbalancePass'       => true,
+            'effortOffsideAxle3' => 42,
+            'lockNearsideAxle1' => true,
+            'lockOffsideAxle1' => false,
+            'lockNearsideAxle2' => true,
+            'lockOffsideAxle2' => false,
+            'lockNearsideAxle3' => true,
+            'lockOffsideAxle3' => false,
+            'imbalanceAxle1' => 30,
+            'imbalanceAxle2' => 31,
+            'imbalanceAxle3' => 53,
+            'imbalancePass' => true,
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Organisation\Traits;
 
 use DvsaClient\MapperFactory;

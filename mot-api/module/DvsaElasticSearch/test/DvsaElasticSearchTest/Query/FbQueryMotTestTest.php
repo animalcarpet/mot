@@ -3,7 +3,6 @@
 namespace DvsaElasticSearchTest\Query;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -23,14 +22,9 @@ use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\MotTestRepository;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use PHPUnit_Framework_TestCase;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\DateTime;
 
 /**
- * Class FbQueryMotTestTest
- *
- * @package DvsaElasticSearchTest\Query
+ * Class FbQueryMotTestTest.
  */
 class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,9 +32,9 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
     const VIN = 'hdh7htref0gr5greh';
     const REG = 'FNZ 6JZ';
 
-    /** @var  EntityManager */
+    /** @var EntityManager */
     private $mockEM;
-    /** @var  FbQueryMotTest */
+    /** @var FbQueryMotTest */
     protected $FbQueryMotTest;
     /** @var MotTestRepository|MockObj */
     protected $mockRepository;
@@ -143,7 +137,7 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
             ->setSiteNumber('V1234');
 
         $type = new MotTestType();
-        $type->setDescription("Normal Test");
+        $type->setDescription('Normal Test');
         $type->setCode('NT');
 
         $motTest->setId(1)
@@ -174,24 +168,24 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
             ->setSearched($searchParams->toDto())
             ->setData([
                 '123456789012' => [
-                    'motTestNumber'       => '123456789012',
-                    'status'              => 'ACTIVE',
-                    'primaryColour'       => 'Blue',
-                    'hasRegistration'     => 1,
-                    'odometer'            => 'Not recorded',
-                    'vin'                 => self::VIN,
-                    'registration'        => self::REG,
-                    'make'                => 'Porshe',
-                    'model'               => '911 Turbo',
-                    'testType'            => 'Normal Test',
-                    'siteId'              => self::SITE_ID,
-                    'siteNumber'          => 'V1234',
-                    'testDate'            => null,
-                    'startedDate'         => null,
-                    'completedDate'       => null,
-                    'testerUsername'      => 'ft-catb',
-                    'reasonsForRejection' => null
-                ]
+                    'motTestNumber' => '123456789012',
+                    'status' => 'ACTIVE',
+                    'primaryColour' => 'Blue',
+                    'hasRegistration' => 1,
+                    'odometer' => 'Not recorded',
+                    'vin' => self::VIN,
+                    'registration' => self::REG,
+                    'make' => 'Porshe',
+                    'model' => '911 Turbo',
+                    'testType' => 'Normal Test',
+                    'siteId' => self::SITE_ID,
+                    'siteNumber' => 'V1234',
+                    'testDate' => null,
+                    'startedDate' => null,
+                    'completedDate' => null,
+                    'testerUsername' => 'ft-catb',
+                    'reasonsForRejection' => null,
+                ],
             ]);
 
         return $result;
@@ -202,7 +196,7 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn(MotTestStatusName::ACTIVE);
 
         return $status;

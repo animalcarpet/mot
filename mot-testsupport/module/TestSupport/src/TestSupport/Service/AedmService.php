@@ -35,8 +35,7 @@ class AedmService
         AccountService $accountService,
         EntityManager $em,
         Client $restClient
-    )
-    {
+    ) {
         $this->accountDataService = $accountDataService;
         $this->accountService = $accountService;
         $this->em = $em;
@@ -44,9 +43,10 @@ class AedmService
     }
 
     /**
-     * Create a AO1 with the data supplied
+     * Create a AO1 with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)
@@ -77,13 +77,13 @@ class AedmService
 
         return TestDataResponseHelper::jsonOk(
             [
-                "message"  => "Authorised Examiner (Designated Manager) created",
-                "username" => $account->getUsername(),
-                "password" => $account->getPassword(),
-                "personId" => $account->getPersonId(),
-                "firstName" => $account->getFirstName(),
-                "middleName" => ($accountPerson)? $accountPerson->getMiddleName(): "",
-                "surname"  => $account->getSurname()
+                'message' => 'Authorised Examiner (Designated Manager) created',
+                'username' => $account->getUsername(),
+                'password' => $account->getPassword(),
+                'personId' => $account->getPersonId(),
+                'firstName' => $account->getFirstName(),
+                'middleName' => ($accountPerson) ? $accountPerson->getMiddleName() : '',
+                'surname' => $account->getSurname(),
             ]
         );
     }
@@ -92,14 +92,14 @@ class AedmService
     {
         if (!in_array($organisationRoleId, OrganisationBusinessRoleId::getAll())) {
             throw new \Exception('Provided role ID is not available. see DvsaCommon\Enum\OrganisationBusinessRoleId');
-        };
+        }
 
         foreach ($organisationIds as $aeId) {
-             $this->restClient->post(
+            $this->restClient->post(
                 OrganisationUrlBuilder::position($aeId)->toString(),
                 [
                     'nomineeId' => $nomineeId,
-                    'roleId' => $organisationRoleId
+                    'roleId' => $organisationRoleId,
                 ]
             );
         }
@@ -108,9 +108,9 @@ class AedmService
     private function activateBusinessRoleForPersonInOrganisation($personId)
     {
         $stmt = $this->em->getConnection()->prepare(
-            "UPDATE organisation_business_role_map SET status_id =
+            'UPDATE organisation_business_role_map SET status_id =
             (SELECT `id` FROM `business_role_status` WHERE `code` = ?)
-             WHERE person_id = ?"
+             WHERE person_id = ?'
         );
         $stmt->bindValue(1, BusinessRoleStatusCode::ACTIVE);
         $stmt->bindValue(2, $personId);

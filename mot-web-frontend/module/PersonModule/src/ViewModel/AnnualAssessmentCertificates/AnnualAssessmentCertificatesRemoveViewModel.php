@@ -1,8 +1,8 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates;
 
 use Core\ViewModel\Gds\Table\GdsTable;
-use PersonModule\src\Form\AnnualAssessmentCertificatesRemoveForm;
 
 class AnnualAssessmentCertificatesRemoveViewModel
 {
@@ -21,7 +21,6 @@ class AnnualAssessmentCertificatesRemoveViewModel
         $backRoute,
         $backRouteParams
     ) {
-
         $this->table = $table;
         $this->editStepPageTitle = $editStepPageTitle;
         $this->pageSubTitle = $pageSubTitle;

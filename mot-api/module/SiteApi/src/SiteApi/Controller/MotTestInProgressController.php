@@ -7,9 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\MotTestInProgressService;
 
 /**
- * Class MotTestInProgressController
- *
- * @package SiteApi\Controller
+ * Class MotTestInProgressController.
  */
 class MotTestInProgressController extends AbstractDvsaRestfulController
 {
@@ -30,6 +28,7 @@ class MotTestInProgressController extends AbstractDvsaRestfulController
     public function countAction()
     {
         $siteId = $this->params('id');
+
         return ApiResponse::jsonOk($this->service->getCountForSite($siteId));
     }
 }

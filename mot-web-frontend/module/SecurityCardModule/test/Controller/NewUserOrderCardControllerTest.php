@@ -9,8 +9,6 @@ use Zend\Http\Response;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use Core\Service\LazyMotFrontendAuthorisationService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use Zend\Di\ServiceLocator;
-use Zend\ServiceManager\ServiceManager;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Http\HttpStatus;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
@@ -32,7 +30,7 @@ class NewUserOrderCardControllerTest extends AbstractLightWebControllerTest
     /** @var LazyMotFrontendAuthorisationService $authorisationService */
     private $authorisationService;
 
-    /** @var  TwoFaFeatureToggle */
+    /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
     public function setUp()
@@ -97,7 +95,8 @@ class NewUserOrderCardControllerTest extends AbstractLightWebControllerTest
         return $this;
     }
 
-    private function setUpIsDvsaUser($isDvsa) {
+    private function setUpIsDvsaUser($isDvsa)
+    {
         $this->authorisationService->expects($this->any())
             ->method('isDvsa')
             ->willReturn($isDvsa);
@@ -122,6 +121,4 @@ class NewUserOrderCardControllerTest extends AbstractLightWebControllerTest
 
         return $controller;
     }
-
-
 }

@@ -1,19 +1,15 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\AuthenticationModule\AuthAdapter;
 
 use DvsaApplicationLogger\TokenService\TokenServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
-use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\ForbiddenOrUnauthorisedException;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Session\Container;
-
 
 class Rest implements AdapterInterface
 {
@@ -28,7 +24,7 @@ class Rest implements AdapterInterface
     private $tokenService;
 
     /**
-     * @param \DvsaCommon\HttpRestJson\Client $client
+     * @param \DvsaCommon\HttpRestJson\Client                           $client
      * @param \DvsaApplicationLogger\TokenService\TokenServiceInterface $tokenServices
      */
     public function __construct(HttpRestJsonClient $client, TokenServiceInterface $tokenService)
@@ -45,11 +41,11 @@ class Rest implements AdapterInterface
         try {
             $restResult = $this->client->get((new UrlBuilder())->identityData()->toString());
         } catch (ForbiddenOrUnauthorisedException $fe) {
-            return new Result(Result::FAILURE_CREDENTIAL_INVALID, null, ["Credentials not valid"]);
+            return new Result(Result::FAILURE_CREDENTIAL_INVALID, null, ['Credentials not valid']);
         }
 
         if ($restResult == null || $restResult['data'] == null) {
-            return new Result(Result::FAILURE_UNCATEGORIZED, null, ["Service not available."]);
+            return new Result(Result::FAILURE_UNCATEGORIZED, null, ['Service not available.']);
         }
 
         $restResultData = $restResult['data'];

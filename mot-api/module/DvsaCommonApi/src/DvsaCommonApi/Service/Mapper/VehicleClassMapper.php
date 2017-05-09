@@ -6,9 +6,7 @@ use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaEntities\Entity\VehicleClass;
 
 /**
- * Class VehicleClassMapper
- *
- * @package DvsaCommonApi\Service\Mapper
+ * Class VehicleClassMapper.
  */
 class VehicleClassMapper extends AbstractStaticDataMapper
 {

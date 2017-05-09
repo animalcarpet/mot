@@ -8,7 +8,6 @@ use DvsaCommonApi\Listener\ErrorHandlingListener;
 
 class ErrorHandlingListenerFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ErrorHandlingListener();

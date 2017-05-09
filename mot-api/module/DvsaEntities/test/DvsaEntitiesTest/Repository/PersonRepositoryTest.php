@@ -19,7 +19,7 @@ class PersonRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindPersonEmailReturnsNullOnEmptyResult()
     {
-        $query         = $this->createQueryMock();
+        $query = $this->createQueryMock();
         $query
             ->expects($this->once())
             ->method('getSingleScalarResult')
@@ -29,7 +29,7 @@ class PersonRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $personRepository = new PersonRepository($entityManager, $classMetadata);
 
-        $personId    = 1;
+        $personId = 1;
         $contactType = new PersonContactType();
 
         $this->assertNull($personRepository->findPersonEmail($personId, $contactType));
@@ -40,7 +40,7 @@ class PersonRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindPersonEmailReturnsEmailOnValidResult()
     {
-        $query         = $this->createQueryMock();
+        $query = $this->createQueryMock();
         $query
             ->expects($this->once())
             ->method('getSingleScalarResult')
@@ -50,7 +50,7 @@ class PersonRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $personRepository = new PersonRepository($entityManager, $classMetadata);
 
-        $personId    = 1;
+        $personId = 1;
         $contactType = new PersonContactType();
 
         $this->assertEquals(self::EMAIL_ADDRESS, $personRepository->findPersonEmail($personId, $contactType));

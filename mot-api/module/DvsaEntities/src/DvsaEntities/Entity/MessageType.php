@@ -25,7 +25,7 @@ class MessageType extends Entity
     private $name;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="expiry_period", type="integer")
      */

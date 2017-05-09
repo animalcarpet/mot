@@ -49,10 +49,8 @@ abstract class AbstractSingleStepAeProcess implements SingleStepProcessInterface
 
     public function getPageSubTitle()
     {
-        return "Authorised Examiner";
+        return 'Authorised Examiner';
     }
-
-
 
     public function buildEditStepViewModel($form)
     {

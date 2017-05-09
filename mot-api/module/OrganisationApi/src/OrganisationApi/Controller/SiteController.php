@@ -7,7 +7,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use OrganisationApi\Service\SiteService;
 
 /**
- * Class SiteController
+ * Class SiteController.
  */
 class SiteController extends AbstractDvsaRestfulController
 {

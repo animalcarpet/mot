@@ -1,10 +1,9 @@
 <?php
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
-/** @var  DvsaVehicleViewModel $vehicle */
+/** @var DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicle;
 
 $registration = $vehicle->getRegistration();
@@ -13,7 +12,7 @@ $cylinderCapacity = $vehicle->getCylinderCapacity();
 $firstUsedDate = $vehicle->getFirstUsedDate();
 
 if ($vehicle instanceof VehicleDto) {
-    $makeAndModel = $vehicle->getMakeName() . ' ' . $vehicle->getModelName();
+    $makeAndModel = $vehicle->getMakeName().' '.$vehicle->getModelName();
     $transmissionType = $vehicle->getTransmissionType()->getName();
     $fuelType = $vehicle->getFuelType()->getName();
     $bodyType = $vehicle->getBodyType()->getName();
@@ -54,7 +53,7 @@ if ($vehicle instanceof VehicleDto) {
         echo $this->partial(
             'dldtdd', [
                 'dlCssClass' => 'dl-horizontal',
-                'items'      => [
+                'items' => [
                     [
                         'label' => 'VIN/Chassis',
                         'value' => $vin,
@@ -68,7 +67,7 @@ if ($vehicle instanceof VehicleDto) {
                     [
                         'label' => 'Fuel type',
                         'value' => $fuelType,
-                        'id' => 'fuelType'
+                        'id' => 'fuelType',
                     ],
                 ],
             ]
@@ -77,16 +76,16 @@ if ($vehicle instanceof VehicleDto) {
         echo $this->partial(
             'dldtdd', [
                 'dlCssClass' => 'dl-horizontal',
-                'items'      => [
+                'items' => [
                     [
                         'label' => 'Body type',
                         'value' => $bodyType,
-                        'id' => 'bodyType'
+                        'id' => 'bodyType',
                     ],
                     [
                         'label' => 'Cylinder capacity',
                         'value' => $cylinderCapacity,
-                        'id' => 'cylinderCapacity'
+                        'id' => 'cylinderCapacity',
                     ],
                     [
                         'label' => 'First used',

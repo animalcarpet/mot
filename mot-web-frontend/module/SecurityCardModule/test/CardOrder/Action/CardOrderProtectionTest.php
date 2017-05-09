@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardOrder\Action;
 
 use Core\Service\MotFrontendIdentityProvider;
 use Dashboard\Controller\UserHomeController;
-use DoctrineORMModuleTest\Assets\GraphEntity\User;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderProtection;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller\AlreadyOrderedNewCardController;
@@ -41,7 +40,7 @@ class CardOrderProtectionTest extends \PHPUnit_Framework_TestCase
         $this->withFeatureToggle(false);
 
         /**
-         * @var RedirectToRoute $actual
+         * @var RedirectToRoute
          */
         $actual = $this->buildProtectionObject()->checkAuthorisation(self::USER_ID);
         $this->assertInstanceOf(RedirectToRoute::class, $actual);
@@ -56,7 +55,7 @@ class CardOrderProtectionTest extends \PHPUnit_Framework_TestCase
         $this->withHasPermissionToOrderForOtherUser(false);
 
         /**
-         * @var RedirectToRoute $actual
+         * @var RedirectToRoute
          */
         $actual = $this->buildProtectionObject()->checkAuthorisation(self::SECONDARY_ID);
         $this->assertInstanceOf(RedirectToRoute::class, $actual);
@@ -73,7 +72,7 @@ class CardOrderProtectionTest extends \PHPUnit_Framework_TestCase
         $this->withOutstandingCardOrders(true);
 
         /**
-         * @var RedirectToRoute $actual
+         * @var RedirectToRoute
          */
         $actual = $this->buildProtectionObject()->checkAuthorisation(self::USER_ID);
         $this->assertInstanceOf(RedirectToRoute::class, $actual);
@@ -90,7 +89,7 @@ class CardOrderProtectionTest extends \PHPUnit_Framework_TestCase
         $this->withOutstandingCardOrders(false);
 
         /**
-         * @var RedirectToRoute $actual
+         * @var RedirectToRoute
          */
         $actual = $this->buildProtectionObject()->checkAuthorisation(self::USER_ID);
         $this->assertInstanceOf(RedirectToRoute::class, $actual);
@@ -132,7 +131,6 @@ class CardOrderProtectionTest extends \PHPUnit_Framework_TestCase
             ->method('getAuthorisation')
             ->willReturn(new TesterAuthorisation());
     }
-
 
     private function withIdentity()
     {

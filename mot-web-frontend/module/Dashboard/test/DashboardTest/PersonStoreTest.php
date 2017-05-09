@@ -7,7 +7,7 @@ use DvsaCommon\HttpRestJson\Client;
 use Dashboard\PersonStore;
 
 /**
- * unit tests for PersonStore
+ * unit tests for PersonStore.
  */
 class PersonStoreTest extends \PHPUnit_Framework_TestCase
 {

@@ -16,8 +16,6 @@ use SiteApi\Service\SiteService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-
 
 /**
  * Factory for ContingencyTestController instances.
@@ -44,7 +42,6 @@ class ContingencyTestControllerFactory implements FactoryInterface
 
         /** @var bool isInfinityContingencyOn */
         $isInfinityContingencyOn = $featureToggle->isEnabled(FeatureToggle::INFINITY_CONTINGENCY);
-
 
         $contingencyTestValidator = new ContingencyTestValidator($emergencyService, $siteService, $isInfinityContingencyOn);
 

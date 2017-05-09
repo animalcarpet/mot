@@ -142,7 +142,7 @@ class SurveyService
     }
 
     /**
-     * @param array $data Contains 'token' and 'satisfaction_rating' keys.
+     * @param array $data Contains 'token' and 'satisfaction_rating' keys
      *
      * @throws BadRequestException
      * @throws NotFoundException
@@ -267,7 +267,7 @@ class SurveyService
         try {
             $lastSurveyDate = $motTestSurveyRepository->getLastUserSurveyDate($testerId);
             $latestSurvey = new DateTime($lastSurveyDate);
-            $beginningOfWindow = new DateTime(date('Y-m-d', strtotime('-' . $timeBetweenSurveys)));
+            $beginningOfWindow = new DateTime(date('Y-m-d', strtotime('-'.$timeBetweenSurveys)));
 
             return $latestSurvey >= $beginningOfWindow;
         } catch (NotFoundException $e) {
@@ -300,9 +300,9 @@ class SurveyService
         $result = $this
             ->entityManager
             ->createQuery(sprintf(
-                'SELECT COUNT(s.rating) AS ratingCount, s.rating FROM %s s INDEX BY s.rating WHERE s.createdOn LIKE ' .
+                'SELECT COUNT(s.rating) AS ratingCount, s.rating FROM %s s INDEX BY s.rating WHERE s.createdOn LIKE '.
                 ':date GROUP BY s.rating', Survey::class))
-            ->setParameter('date', $date . '%')
+            ->setParameter('date', $date.'%')
             ->getArrayResult();
 
         $total = 0;
@@ -311,7 +311,7 @@ class SurveyService
         foreach (range(1, 5) as $rating) {
             $ratingCount = isset($result[$rating]['ratingCount']) ? $result[$rating]['ratingCount'] : 0;
             $total += $ratingCount;
-            $ratingCounts['rating_' . $rating] = (string) $ratingCount;
+            $ratingCounts['rating_'.$rating] = (string) $ratingCount;
         }
 
         $ratingCounts['total'] = $total;
@@ -385,7 +385,7 @@ class SurveyService
 
     /**
      * @param string $token
-     * 
+     *
      * @return bool
      */
     public function sessionTokenIsValid($token)
@@ -422,7 +422,7 @@ class SurveyService
     {
         $connection = $this->entityManager->getConnection();
 
-        if($connection !== null) {
+        if ($connection !== null) {
             $connection->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data' LIMIT 1)");
         }
     }

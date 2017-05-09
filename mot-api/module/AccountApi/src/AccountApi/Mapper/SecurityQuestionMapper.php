@@ -7,8 +7,7 @@ use DvsaCommonApi\Service\Mapper\AbstractApiMapper;
 use DvsaEntities\Entity\SecurityQuestion;
 
 /**
- * Class SecurityQuestionMapper
- * @package AccountApi\Mapper
+ * Class SecurityQuestionMapper.
  */
 class SecurityQuestionMapper extends AbstractApiMapper
 {

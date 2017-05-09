@@ -6,9 +6,7 @@ use Report\Table\ColumnOptions;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class Subline
- *
- * @package Report\Table\Formatter
+ * Class Subline.
  */
 class SubRow implements FormatterInterface
 {
@@ -19,7 +17,7 @@ class SubRow implements FormatterInterface
     {
         return $view->partial(
             'table/formatter/sub-row', [
-                'value'  => $data[$column->getField()],
+                'value' => $data[$column->getField()],
                 'escape' => $column->isEscapeHtml(),
             ]
         );

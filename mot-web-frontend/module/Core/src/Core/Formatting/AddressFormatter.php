@@ -43,8 +43,7 @@ class AddressFormatter
         $country = null,
         $town = null,
         $postcode = null
-    )
-    {
+    ) {
         $escaper = new Utf8Escaper();
 
         $lines = [
@@ -62,6 +61,7 @@ class AddressFormatter
 
     /**
      * @param string $addressPartsGlue
+     *
      * @return AddressFormatter
      *
      * @deprecated This is hax, add a method that uses a specific glue
@@ -69,6 +69,7 @@ class AddressFormatter
     public function setAddressPartsGlue($addressPartsGlue)
     {
         $this->addressPartsGlue = $addressPartsGlue;
+
         return $this;
     }
 }

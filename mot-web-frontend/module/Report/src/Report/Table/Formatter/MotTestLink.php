@@ -7,7 +7,7 @@ use Report\Table\ColumnOptions;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class MotTestLink formatter for Table
+ * Class MotTestLink formatter for Table.
  */
 class MotTestLink implements FormatterInterface
 {
@@ -20,7 +20,7 @@ class MotTestLink implements FormatterInterface
 
         return $view->partial(
             'table/formatter/mot-test-link', [
-                'url'   => MotTestUrlBuilderWeb::motTest($data['motTestNumber']),
+                'url' => MotTestUrlBuilderWeb::motTest($data['motTestNumber']),
                 'value' => $data[$field],
             ]
         );

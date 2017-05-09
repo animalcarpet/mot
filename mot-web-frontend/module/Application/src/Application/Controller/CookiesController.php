@@ -3,16 +3,13 @@
 namespace Application\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
-use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class CookiesController
- *
- * @package Application\Controller
+ * Class CookiesController.
  */
-class CookiesController extends AbstractDvsaActionController {
-
+class CookiesController extends AbstractDvsaActionController
+{
     public function indexAction()
     {
         $view = new ViewModel();

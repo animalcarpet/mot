@@ -20,12 +20,10 @@ use SiteApi\Factory\Service\SiteDetailsServiceFactory;
 use SiteApi\Service\SiteDetailsService;
 use SiteApi\Service\Validator\SiteDetailsValidator;
 use SiteApi\Service\Validator\TestingFacilitiesValidator;
-use Zend\Form\Annotation\Hydrator;
 use Zend\ServiceManager\ServiceManager;
 
 class SiteDetailsServiceFactoryTest extends AbstractServiceTestCase
 {
-
     public function testSiteDetailsServiceFactoryReturnsService()
     {
         $serviceManager = new ServiceManager();
@@ -49,7 +47,6 @@ class SiteDetailsServiceFactoryTest extends AbstractServiceTestCase
         $this->mockMethod($entityManager, 'getRepository', $this->at(3), XMock::of(SiteStatusRepository::class));
         $this->mockMethod($entityManager, 'getRepository', $this->at(4), XMock::of(SiteTypeRepository::class));
         $this->mockMethod($entityManager, 'getRepository', $this->at(5), XMock::of(NonWorkingDayCountryRepository::class));
-
 
         $factory = new SiteDetailsServiceFactory();
 

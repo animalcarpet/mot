@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 class MotTestComplaintRef extends Entity
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -47,14 +47,16 @@ class MotTestComplaintRef extends Entity
 
     /**
      * @param mixed $id
+     *
      * @return MotTestComplaintRef
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -65,11 +67,13 @@ class MotTestComplaintRef extends Entity
 
     /**
      * @param $complaintRef
+     *
      * @return $this
      */
     public function setComplaintRef($complaintRef)
     {
         $this->complaintRef = $complaintRef;
+
         return $this;
     }
 

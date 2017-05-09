@@ -7,19 +7,17 @@ use DvsaCommonApi\Model\SearchParam;
 use DvsaEntities\DqlBuilder\SearchParamDqlBuilder;
 
 /**
- * Class SearchRepository
- *
- * @package DvsaEntities\Repository
+ * Class SearchRepository.
  */
 trait SearchRepositoryTrait
 {
     use SearchParamTrait;
 
     /**
-     * Search the current repository using params and an output format
+     * Search the current repository using params and an output format.
      *
      * @param SearchParam $params
-     * @param null $format
+     * @param null        $format
      *
      * @return array
      */
@@ -46,10 +44,10 @@ trait SearchRepositoryTrait
         }
 
         return [
-            "resultCount"      => (string)count($data),
-            "totalResultCount" => $totalResultCount,
-            "data"             => $data,
-            "searched"         => $params->toArray()
+            'resultCount' => (string) count($data),
+            'totalResultCount' => $totalResultCount,
+            'data' => $data,
+            'searched' => $params->toArray(),
         ];
     }
 

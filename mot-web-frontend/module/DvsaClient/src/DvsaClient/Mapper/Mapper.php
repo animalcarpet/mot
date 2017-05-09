@@ -7,9 +7,7 @@ use Zend\Http\Client;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
- * Class Mapper
- *
- * @package DvsaClient\Mapper
+ * Class Mapper.
  */
 abstract class Mapper
 {
@@ -47,6 +45,7 @@ abstract class Mapper
             return $this->hydrator;
         } else {
             $this->hydrator = new ClassMethods();
+
             return $this->hydrator;
         }
     }
@@ -59,6 +58,7 @@ abstract class Mapper
 
             $stack[] = $obj;
         }
+
         return $stack;
     }
 
@@ -106,11 +106,11 @@ abstract class Mapper
 
     public function createEntity()
     {
-        return new $this->entityClass;
+        return new $this->entityClass();
     }
 
     public function getPaginationUrlString($offset, $limit)
     {
-        return '?offset=' . $offset . '&limit=' . $limit;
+        return '?offset='.$offset.'&limit='.$limit;
     }
 }

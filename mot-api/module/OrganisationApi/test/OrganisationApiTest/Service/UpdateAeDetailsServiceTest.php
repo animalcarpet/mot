@@ -1,4 +1,5 @@
 <?php
+
 namespace OrganisationApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -6,8 +7,6 @@ use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
 use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommon\Enum\EventTypeCode;
-use DvsaCommon\Enum\OrganisationContactTypeCode;
-use DvsaCommon\Enum\SiteTypeCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Model\AuthorisedExaminerPatchModel;
 use DvsaCommon\Utility\ArrayUtils;
@@ -43,12 +42,9 @@ use OrganisationApi\Service\UpdateAeDetailsService;
 use OrganisationApi\Service\Validator\UpdateProperty\AeAddressValidator;
 use OrganisationApi\Service\Validator\UpdateProperty\AeEmailValidator;
 use OrganisationApi\Service\Validator\UpdateProperty\AePhoneValidator;
-use Zend\Feed\Reader\Collection\Author;
 
 /**
- * Class UpdateOrganisationDetailTest
- *
- * @package OrganisationApiTest\Service
+ * Class UpdateOrganisationDetailTest.
  */
 class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
 {
@@ -72,13 +68,13 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
     /** @var MethodSpy */
     private $organisationRepositoryPersistSpy;
 
-    /** @var  EntityManagerSpy */
+    /** @var EntityManagerSpy */
     private $entityManagerSpy;
 
-    /** @var  CompanyTypeRepository */
+    /** @var CompanyTypeRepository */
     private $companyTypeRepository;
 
-    /** @var  SiteRepository */
+    /** @var SiteRepository */
     private $siteRepository;
 
     /** @var EntityManager */
@@ -102,11 +98,11 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
     /** @var AuthForAeStatusRepository */
     private $authForAeStatusRepository;
 
-    private $username = "johny001";
+    private $username = 'johny001';
 
-    private $aeNumber = "AE0105";
+    private $aeNumber = 'AE0105';
 
-    private $aeName = "Smart industries";
+    private $aeName = 'Smart industries';
 
     private $companyNumber = 100200300;
 
@@ -115,7 +111,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
     public function setUp()
     {
         $this->organisationContactTypeRepository = new OrganisationContactTypeRepositoryFake();
-        /** @var EntityManager|\PHPUnit_Framework_MockObject_MockObject $entityManager */
+        /* @var EntityManager|\PHPUnit_Framework_MockObject_MockObject $entityManager */
         $this->entityManager = XMock::of(EntityManager::class);
 
         $this->entityManagerSpy = new EntityManagerSpy($this->entityManager);
@@ -147,26 +143,25 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         $authForAe = new AuthorisationForAuthorisedExaminer();
         $authForAe->setNumber($this->aeNumber);
         $authForAe->setStatus((new AuthForAeStatus())
-            ->setName("STATUS NAME")
+            ->setName('STATUS NAME')
         );
         $authForAe->setAreaOffice((new Site())
-            ->setSiteNumber("1")
+            ->setSiteNumber('1')
         );
 
         $this->authorisedExaminer->setAuthorisedExaminer($authForAe);
         $this->authorisedExaminer->setId($this->aeId);
         $this->authorisedExaminer->setCompanyType((new CompanyType())
-            ->setName("COMPANY TYPE")
+            ->setName('COMPANY TYPE')
         );
 
         $this->organisationRepository = XMock::of(OrganisationRepository::class);
         $this->organisationRepository->expects($this->any())
-            ->method("getAuthorisedExaminer")
+            ->method('getAuthorisedExaminer')
             ->with($this->equalTo($this->aeId))
             ->willReturn($this->authorisedExaminer);
 
         $this->companyTypeRepository = $this->buildCompanyTypeRepositoryMock();
-
 
         $this->organisationRepositoryPersistSpy = new MethodSpy($this->organisationRepository, 'persist');
 
@@ -183,18 +178,18 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
 
         $this->siteRepository = XMock::of(SiteRepository::class);
         $this->siteRepository->expects($this->any())
-            ->method("getAllAreaOffices")
+            ->method('getAllAreaOffices')
             ->willReturn([
                 $this->areaOfficeNumber => [
                     'id' => 1,
                     'areaOfficeNumber' => '01',
-                ]
+                ],
             ]);
         $this->siteRepository->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn(
                 (new Site())
-                    ->setSiteNumber("01")
+                    ->setSiteNumber('01')
             );
 
         $this->updateAeService = new UpdateAeDetailsService(
@@ -234,7 +229,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
             $this->updateAeService->update($this->aeId, $data);
 
             // THEN validation occurs
-            $this->fail("Validation did not occur");
+            $this->fail('Validation did not occur');
         } catch (ServiceException $ex) {
         }
 
@@ -279,7 +274,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
             $this->updateAeService->update($this->aeId, $data);
 
             // THEN validation occurs
-            $this->fail("Authorisation did not occur");
+            $this->fail('Authorisation did not occur');
         } catch (UnauthorisedException $ex) {
         }
 
@@ -305,9 +300,6 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         ];
     }
 
-
-
-
     /*
      * #########################################
      *
@@ -325,20 +317,20 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
     {
         // GIVEN I have correct data for address
 
-        $line1 = "Line 1";
-        $line2 = "Line 2";
-        $line3 = "Line 3";
-        $postcode = "A postcode";
-        $country = "The country";
-        $town = "The town";
+        $line1 = 'Line 1';
+        $line2 = 'Line 2';
+        $line3 = 'Line 3';
+        $postcode = 'A postcode';
+        $country = 'The country';
+        $town = 'The town';
 
         $data = [
             $testArguments->getAddressLine1Field() => $line1,
             $testArguments->getAddressLine2Field() => $line2,
             $testArguments->getAddressLine3Field() => $line3,
-            $testArguments->getPostcodeField()     => $postcode,
-            $testArguments->getCountryField()      => $country,
-            $testArguments->getTownField()         => $town,
+            $testArguments->getPostcodeField() => $postcode,
+            $testArguments->getCountryField() => $country,
+            $testArguments->getTownField() => $town,
         ];
 
         // WHEN update the details
@@ -374,21 +366,21 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         // GIVEN I provided address without first line
         $data = [
             $testArguments->getAddressLine1Field() => '',
-            $testArguments->getTownField()         => null,
-            $testArguments->getPhoneField()        => '',
+            $testArguments->getTownField() => null,
+            $testArguments->getPhoneField() => '',
         ];
 
         try {
             // WHEN I update AE
             $this->updateAeService->update($this->aeId, $data);
 
-            $this->fail("Validation exception was expected");
+            $this->fail('Validation exception was expected');
         } catch (ServiceException $e) {
             // THEN I get an error saying that Address is required
-            $this->assertContainsError($testArguments->getAddressLine1Field() . " is required", $e);
-            $this->assertContainsError($testArguments->getTownField() . " is required", $e);
-            $this->assertContainsError($testArguments->getPostcodeField() . " is required", $e);
-            $this->assertContainsError($testArguments->getPhoneField() . " is required", $e);
+            $this->assertContainsError($testArguments->getAddressLine1Field().' is required', $e);
+            $this->assertContainsError($testArguments->getTownField().' is required', $e);
+            $this->assertContainsError($testArguments->getPostcodeField().' is required', $e);
+            $this->assertContainsError($testArguments->getPhoneField().' is required', $e);
         }
 
         // THEN nothing is persisted
@@ -400,7 +392,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
     {
         return [
             [AuthorisedExaminerPatchModel::createForRegisteredContact()],
-            [AuthorisedExaminerPatchModel::createForCorrespondenceContact()]
+            [AuthorisedExaminerPatchModel::createForCorrespondenceContact()],
         ];
     }
 
@@ -424,30 +416,30 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
             $testArguments->getAddressLine1Field() => $tooLongAddressLine,
             $testArguments->getAddressLine2Field() => $tooLongAddressLine,
             $testArguments->getAddressLine3Field() => $tooLongAddressLine,
-            $testArguments->getCountryField()      => $tooLongCountry,
-            $testArguments->getTownField()         => $tooLongTown,
-            $testArguments->getPostcodeField()     => $tooLongPostcode,
+            $testArguments->getCountryField() => $tooLongCountry,
+            $testArguments->getTownField() => $tooLongTown,
+            $testArguments->getPostcodeField() => $tooLongPostcode,
 
-            $testArguments->getEmailField()        => $tooLongEmail,
-            $testArguments->getPhoneField()        => $tooLongPhone,
+            $testArguments->getEmailField() => $tooLongEmail,
+            $testArguments->getPhoneField() => $tooLongPhone,
         ];
 
         try {
             // WHEN I update AE
             $this->updateAeService->update($this->aeId, $data);
 
-            $this->fail("Exception was expected");
+            $this->fail('Exception was expected');
         } catch (BadRequestException $e) {
             // THEN I get an error saying that property is too long line was too long
-            $this->assertContainsError($testArguments->getAddressLine1Field() . " - must be " . AeAddressValidator::MAX_ADDRESS_LINE_LENGTH . " characters or less", $e);
-            $this->assertContainsError($testArguments->getAddressLine2Field() . " - must be " . AeAddressValidator::MAX_ADDRESS_LINE_LENGTH . " characters or less", $e);
-            $this->assertContainsError($testArguments->getAddressLine3Field() . " - must be " . AeAddressValidator::MAX_ADDRESS_LINE_LENGTH . " characters or less", $e);
-            $this->assertContainsError($testArguments->getPhoneField() . " - must be " . AePhoneValidator::MAX_PHONE_LENGTH . " characters or less", $e);
-            $this->assertContainsError($testArguments->getEmailField() . " - must be " . AeEmailValidator::MAX_EMAIL_LENGTH . " characters or less", $e);
+            $this->assertContainsError($testArguments->getAddressLine1Field().' - must be '.AeAddressValidator::MAX_ADDRESS_LINE_LENGTH.' characters or less', $e);
+            $this->assertContainsError($testArguments->getAddressLine2Field().' - must be '.AeAddressValidator::MAX_ADDRESS_LINE_LENGTH.' characters or less', $e);
+            $this->assertContainsError($testArguments->getAddressLine3Field().' - must be '.AeAddressValidator::MAX_ADDRESS_LINE_LENGTH.' characters or less', $e);
+            $this->assertContainsError($testArguments->getPhoneField().' - must be '.AePhoneValidator::MAX_PHONE_LENGTH.' characters or less', $e);
+            $this->assertContainsError($testArguments->getEmailField().' - must be '.AeEmailValidator::MAX_EMAIL_LENGTH.' characters or less', $e);
 
-            $this->assertContainsError($testArguments->getTownField() . " - must be " . AeAddressValidator::MAX_TOWN_LENGTH . " characters or less", $e);
-            $this->assertContainsError($testArguments->getCountryField() . " - must be " . AeAddressValidator::MAX_COUNTRY_LENGTH . " characters or less", $e);
-            $this->assertContainsError($testArguments->getPostcodeField() . " - must be " . AeAddressValidator::MAX_POSTCODE_LENGTH . " characters or less", $e);
+            $this->assertContainsError($testArguments->getTownField().' - must be '.AeAddressValidator::MAX_TOWN_LENGTH.' characters or less', $e);
+            $this->assertContainsError($testArguments->getCountryField().' - must be '.AeAddressValidator::MAX_COUNTRY_LENGTH.' characters or less', $e);
+            $this->assertContainsError($testArguments->getPostcodeField().' - must be '.AeAddressValidator::MAX_POSTCODE_LENGTH.' characters or less', $e);
         }
 
         // AND nothing is saved
@@ -466,20 +458,20 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
 
         $data = [
             $testArguments->getAddressLine1Field() => 'address line 1',
-            $testArguments->getTownField()         => 'London',
-            $testArguments->getPostcodeField()     => 'ABC-DEF',
+            $testArguments->getTownField() => 'London',
+            $testArguments->getPostcodeField() => 'ABC-DEF',
 
-            $testArguments->getEmailField()        => 'malformed_email',
+            $testArguments->getEmailField() => 'malformed_email',
         ];
 
         try {
             // WHEN I update AE
             $this->updateAeService->update($this->aeId, $data);
 
-            $this->fail("Exception was expected");
+            $this->fail('Exception was expected');
         } catch (BadRequestException $e) {
             // THEN I get an messages saying email is incorrect
-            $this->assertContainsError($testArguments->getEmailField() . " - is invalid email", $e);
+            $this->assertContainsError($testArguments->getEmailField().' - is invalid email', $e);
         }
 
         // AND nothing is saved
@@ -499,9 +491,9 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
 
         $saveCount = $this->organisationRepositoryPersistSpy->invocationCount();
 
-        $this->assertEquals((bool)$expectedSave, $saveCount);
+        $this->assertEquals((bool) $expectedSave, $saveCount);
 
-        if(!empty($expectedEvent)) {
+        if (!empty($expectedEvent)) {
 
             // AND event is saved
             $this->assertEquals(1, $this->eventServiceSpy->invocationCount());
@@ -516,15 +508,15 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         return [
             [
                 'data' => [
-                    AuthorisedExaminerPatchModel::NAME => 'New name'
+                    AuthorisedExaminerPatchModel::NAME => 'New name',
                 ],
                 'expectedSave' => true,
                 'expectedException' => false,
-                'expectedEvent' => 'Name has been updated from "Smart industries" to "New name" for Authorised Examiner AE0105 New name by user johny001'
+                'expectedEvent' => 'Name has been updated from "Smart industries" to "New name" for Authorised Examiner AE0105 New name by user johny001',
             ],
             [
                 'data' => [
-                    AuthorisedExaminerPatchModel::TRADING_NAME => 'New trading name'
+                    AuthorisedExaminerPatchModel::TRADING_NAME => 'New trading name',
                 ],
                 'expectedSave' => true,
             ],
@@ -582,13 +574,13 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
             ],
             [
                 'data' => [
-                    AuthorisedExaminerPatchModel::TRADING_NAME => 'New trading name'
+                    AuthorisedExaminerPatchModel::TRADING_NAME => 'New trading name',
                 ],
                 'expectedSave' => true,
             ],
             [
                 'data' => [
-                    AuthorisedExaminerPatchModel::TRADING_NAME => ''
+                    AuthorisedExaminerPatchModel::TRADING_NAME => '',
                 ],
                 'expectedSave' => false,
                 'expectedException' => BadRequestException::class,
@@ -614,7 +606,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         $contactType = $testArguments->getOrganisationContactTypeCode();
 
         // GIVEN I have a correct phone
-        $newPhoneNumber = "123-456-759";
+        $newPhoneNumber = '123-456-759';
         $data = [$testArguments->getPhoneField() => $newPhoneNumber];
 
         // WHEN I update it
@@ -657,7 +649,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         );
 
         // AND I have a correct phone
-        $newPhoneNumber = "123-456-759";
+        $newPhoneNumber = '123-456-759';
         $data = [$testArguments->getPhoneField() => $newPhoneNumber];
 
         // WHEN I update it
@@ -691,7 +683,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         $contactType = $testArguments->getOrganisationContactTypeCode();
 
         // GIVEN I have a correct email
-        $newEmail = "updateaedetailsservicetest@dvsa.test";
+        $newEmail = 'updateaedetailsservicetest@dvsa.test';
         $data = [$testArguments->getEmailField() => $newEmail];
 
         // WHEN I update it
@@ -737,7 +729,7 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
         );
 
         // AND I have a correct email
-        $newEmail = "updateaedetailsservicetest@dvsa.test";
+        $newEmail = 'updateaedetailsservicetest@dvsa.test';
         $data = [$testArguments->getEmailField() => $newEmail];
 
         // WHEN I update it
@@ -756,11 +748,11 @@ class UpdateAeDetailsServiceTest extends AbstractServiceTestCase
     public function test_status_isStatusChangeDateSaved()
     {
         $data = [
-            AuthorisedExaminerPatchModel::STATUS => AuthorisationForAuthorisedExaminerStatusCode::APPROVED
+            AuthorisedExaminerPatchModel::STATUS => AuthorisationForAuthorisedExaminerStatusCode::APPROVED,
         ];
 
         $ae = $this->organisationRepository->getAuthorisedExaminer($this->aeId);
-        $ae->getAuthorisedExaminer()->setStatusChangedOn(new \DateTime("2000-01-01"));
+        $ae->getAuthorisedExaminer()->setStatusChangedOn(new \DateTime('2000-01-01'));
         $oldAeStatusChangeDate = $ae->getAuthorisedExaminer()->getStatusChangedOn();
 
         $this->updateAeService->update($ae->getId(), $data);

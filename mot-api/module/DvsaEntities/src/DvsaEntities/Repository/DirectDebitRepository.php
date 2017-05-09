@@ -8,18 +8,17 @@ use DvsaEntities\Entity\DirectDebit;
 use DvsaEntities\Entity\DirectDebitStatus;
 
 /**
- * Class DirectDebitRepository
+ * Class DirectDebitRepository.
  *
- * @package DvsaEntities\Repository
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
 class DirectDebitRepository extends AbstractMutableRepository
 {
-
     /**
-     * Get all direct debit mandates for slot increment for given collection date
+     * Get all direct debit mandates for slot increment for given collection date.
      *
      * @param \DateTime $collectionDate
+     *
      * @return array
      */
     public function getValidDirectDebitMandatesForSlotIncrement($collectionDate)
@@ -51,10 +50,11 @@ class DirectDebitRepository extends AbstractMutableRepository
     {
         $directDebitActive = $this->getEntityManager()->getRepository(DirectDebitStatus::class)
             ->getByCode(DirectDebitStatusCode::ACTIVE);
+
         return $this->findOneBy(
             [
                 'organisation' => $organisationId,
-                'status' => $directDebitActive
+                'status' => $directDebitActive,
             ]
         );
     }
@@ -64,6 +64,7 @@ class DirectDebitRepository extends AbstractMutableRepository
      * @param int $directDebitId
      *
      * @return DirectDebit
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getByOrganisationAndId($organisationId, $directDebitId)
@@ -71,12 +72,13 @@ class DirectDebitRepository extends AbstractMutableRepository
         $directDebit = $this->findOneBy(
             [
                 'organisation' => $organisationId,
-                'id' => $directDebitId
+                'id' => $directDebitId,
             ]
         );
         if (is_null($directDebit)) {
             throw new NotFoundException($this->getEntityName(), "$organisationId, $directDebitId");
         }
+
         return $directDebit;
     }
 }

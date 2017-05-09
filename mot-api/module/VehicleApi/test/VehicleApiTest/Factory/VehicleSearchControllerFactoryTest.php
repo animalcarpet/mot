@@ -13,7 +13,7 @@ class VehicleSearchControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testVehicleSearchControllerFactory()
     {
-        $serviceManager = new ServiceManager;
+        $serviceManager = new ServiceManager();
 
         $serviceManager->setService(VehicleSearchService::class, XMock::of(VehicleSearchService::class));
         $serviceManager->setService(VehicleSearchParam::class, XMock::of(VehicleSearchParam::class));

@@ -6,58 +6,58 @@ $month = $this->withDefault('')->getValue($month);
 $year = $this->withDefault('')->getValue($year);
 /** @var \DateTime $value */
 $value = $this->withDefault(false)->getValue($value);
-$help  = $this->withDefault(false)->getValue($help);
+$help = $this->withDefault(false)->getValue($help);
 
 if (!$value instanceof DateTime) {
     $value = DateTime::createFromFormat('Y-m-d', $value);
 }
 if ($value instanceof DateTime) {
-    $day   = $value->format('d');
+    $day = $value->format('d');
     $month = $value->format('m');
-    $year  = $value->format('Y');
+    $year = $value->format('Y');
 }
 ?>
 
 <div class="form-group">
     <fieldset>
         <legend class="form-label"><?php echo $this->escapeHtml($label); ?></legend>
-        <?php if($help): ?>
+        <?php if ($help): ?>
             <p class="help-block"><?php echo $this->escapeHtml($help) ?></p>
         <?php endif ?>
         <div class="date-group">
             <?php echo $this->partial(
                 'partial/forms/inputBox.phtml',
                 [
-                    'id'             => $prefix . 'Day',
-                    'label'          => 'Day',
+                    'id' => $prefix.'Day',
+                    'label' => 'Day',
                     'classFormGroup' => 'form-group-day',
-                    'value'          => $day,
-                    'required'       => true,
-                    'maxLength'      => 2,
+                    'value' => $day,
+                    'required' => true,
+                    'maxLength' => 2,
                 ]
             );
             ?>
             <?php echo $this->partial(
                 'partial/forms/inputBox.phtml',
                 [
-                    'id'             => $prefix . 'Month',
-                    'label'          => 'Month',
+                    'id' => $prefix.'Month',
+                    'label' => 'Month',
                     'classFormGroup' => 'form-group-month',
-                    'value'          => $month,
-                    'required'       => true,
-                    'maxLength'      => 2,
+                    'value' => $month,
+                    'required' => true,
+                    'maxLength' => 2,
                 ]
             );
             ?>
             <?php echo $this->partial(
                 'partial/forms/inputBox.phtml',
                 [
-                    'id'             => $prefix . 'Year',
-                    'label'          => 'Year',
+                    'id' => $prefix.'Year',
+                    'label' => 'Year',
                     'classFormGroup' => 'form-group-year',
-                    'value'          => $year,
-                    'required'       => true,
-                    'maxLength'      => 4,
+                    'value' => $year,
+                    'required' => true,
+                    'maxLength' => 4,
                 ]
             );
             ?>

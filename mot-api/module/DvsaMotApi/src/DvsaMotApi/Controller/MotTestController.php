@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -63,11 +64,12 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
 
     /**
      * @return JsonModel
+     *
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
     public function getMinimalMotAction()
     {
-        $motTestNumber    = $this->params()->fromRoute('motTestNumber');
+        $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $motTestData = $this->getMotTestService()->getMotTestData($motTestNumber, true);
 
         return ApiResponse::jsonOk($motTestData);
@@ -79,13 +81,13 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
         $motTest = $this->getMotTestService()->createMotTest($data);
 
         return ApiResponse::jsonOk([
-            "motTestNumber" => $motTest->getNumber(),
-            "dvsaVehicleId" => $motTest->getVehicle()->getId()
+            'motTestNumber' => $motTest->getNumber(),
+            'dvsaVehicleId' => $motTest->getVehicle()->getId(),
         ]);
     }
 
     /**
-     * Perform an UPDATE of an existing MOT record by checking for:
+     * Perform an UPDATE of an existing MOT record by checking for:.
      *
      * siteid/location: mutually exclusive
      *
@@ -145,10 +147,11 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
                                 self::ERROR_MSG_FAILED_TO_UPDATE_TEST,
                                 self::ERROR_CODE_REQUIRED,
                                 self::ERROR_MSG_FAILED_TO_UPDATE_TEST
-                            )
+                            ),
                         ]
                     );
                 }
+
                 return ApiResponse::jsonOk(['updated' => true]);
             }
         }
@@ -163,6 +166,7 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
      * @param $motId  String the MOT id from the URL parameter
      * @param $data   Array  the POST data sent from the page
      * @param $errors Array& accumulator for errors
+     *
      * @return array [new site id, new site location text]
      *
      * @throws BadRequestException
@@ -191,11 +195,13 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
 
             if (!$siteIdExists && !$locationExists) {
                 $errors[] = $this->makeFieldIsRequiredError(self::FIELD_SITEID);
+
                 return $response;
             }
 
             if ($siteIdExists && $locationExists) {
                 $errors[] = $this->makeErrorMessage(self::ERROR_MSG_EITHER_OR_LOCATION);
+
                 return $response;
             }
 
@@ -225,14 +231,15 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
                 $response = [null, trim($data[self::FIELD_LOCATION])];
             }
         }
+
         return $response;
     }
 
     /**
-     * Validate One Person Test Fields
+     * Validate One Person Test Fields.
      *
-     * @param string $motId the MOT id from the URL parameter
-     * @param array  $data the POST data sent from the page
+     * @param string $motId  the MOT id from the URL parameter
+     * @param array  $data   the POST data sent from the page
      * @param array  $errors accumulator for errors
      *
      * @return array response
@@ -250,16 +257,19 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
 
             if (!$onePersonTest) {
                 $errors[] = $this->makeFieldIsRequiredError(self::FIELD_ONE_PERSON_TEST);
+
                 return $response;
             }
 
             if (!$onePersonReInspection) {
                 $errors[] = $this->makeFieldIsRequiredError(self::FIELD_ONE_PERSON_RE_INSPECTION);
+
                 return $response;
             }
 
             return [$data[self::FIELD_ONE_PERSON_TEST], $data[self::FIELD_ONE_PERSON_RE_INSPECTION]];
         }
+
         return $response;
     }
 
@@ -281,30 +291,31 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
                 $type = $testType->getCode();
             }
         }
+
         return $type;
     }
 
     /**
-     * Based on MOT test certificate number returns common MOT test data
+     * Based on MOT test certificate number returns common MOT test data.
      *
      * @return JsonModel
      */
     public function getMotTestByNumberAction()
     {
-        $number = $this->params()->fromQuery("number");
+        $number = $this->params()->fromQuery('number');
 
         return $this->get($number);
     }
 
     /**
      * Based on MOT test ID and optional variation, return the relevant
-     * document identifiers and certificate names (VT20, VT30 etc)
+     * document identifiers and certificate names (VT20, VT30 etc).
      *
      * @return JsonModel
      */
     public function getCertificateDetailsAction()
     {
-        $motTestNumber    = $this->params()->fromRoute('motTestNumber');
+        $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $variation = $this->params()->fromRoute('variation', null);
 
         $motTest = $this->getMotTestService()->getMotTestData($motTestNumber);
@@ -350,9 +361,9 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
                 $reportName = $documentService->getReportName($id, $variation);
 
                 $details[] = [
-                    'documentId'    => $id,
-                    'reportName'    => $reportName,
-                    'isReplacement' => $isReplacement
+                    'documentId' => $id,
+                    'reportName' => $reportName,
+                    'isReplacement' => $isReplacement,
                 ];
             }
         }
@@ -363,7 +374,7 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
     /**
      * Returns whether or not there is an existing in progress test for a vehicle id.
      * Expected params:
-     *  route: id - vehicle id
+     *  route: id - vehicle id.
      *
      * TODO extract to mot test - vehicle part
      *
@@ -378,8 +389,8 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
     }
 
     /**
-    * @return JsonModel
-    */
+     * @return JsonModel
+     */
     public function validateMOTRetestAction()
     {
         $motNumber = $this->params()->fromRoute('motTestNumber');

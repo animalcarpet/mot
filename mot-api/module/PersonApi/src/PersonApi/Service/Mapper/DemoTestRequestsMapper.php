@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\Mapper;
 
 use DvsaCommon\Dto\MotTesting\DemoTestRequestsDto;
@@ -19,6 +20,7 @@ class DemoTestRequestsMapper extends AbstractApiMapper implements AutoWireableIn
 
     /**
      * @param array $object
+     *
      * @return DemoTestRequestsDto
      */
     public function toDto($object)

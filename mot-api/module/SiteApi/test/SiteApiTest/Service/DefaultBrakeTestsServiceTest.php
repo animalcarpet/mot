@@ -14,7 +14,7 @@ use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
 use SiteApi\Service\DefaultBrakeTestsService;
 
 /**
- * Tests for DefaultBrakeTestService
+ * Tests for DefaultBrakeTestService.
  */
 class DefaultBrakeTestsServiceTest extends AbstractServiceTestCase
 {
@@ -60,7 +60,7 @@ class DefaultBrakeTestsServiceTest extends AbstractServiceTestCase
         $this->setupMockForBrakeTestTypeRepository($brakeTestTypeFloor, $brakeTestTypePlate, $brakeTestTypeGradient);
 
         $inputData = [
-            'defaultBrakeTestClass1And2'            => BrakeTestTypeCode::FLOOR,
+            'defaultBrakeTestClass1And2' => BrakeTestTypeCode::FLOOR,
             'defaultServiceBrakeTestClass3AndAbove' => BrakeTestTypeCode::PLATE,
             'defaultParkingBrakeTestClass3AndAbove' => BrakeTestTypeCode::GRADIENT,
         ];

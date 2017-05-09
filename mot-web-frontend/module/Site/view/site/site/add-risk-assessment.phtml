@@ -1,7 +1,8 @@
 <?php
 
 use Site\Form\VtsSiteAssessmentForm;
-/**
+
+/*
  * @var int $siteId
  * @var string $vtsViewUrl
  * @var string $cancelUrl
@@ -12,11 +13,11 @@ use Site\Form\VtsSiteAssessmentForm;
 <form method="POST" action="<?php echo $form->getFormUrl(); ?>">
     <?php echo $this->csrfToken() ?>
 
-    <?php if($form->hasErrors()): ?>
+    <?php if ($form->hasErrors()): ?>
         <div class="validation-summary" id="validation-summary-id">
             <h2 class="heading-medium">There was a problem with the information you entered:</h2>
             <ol>
-                <?php foreach($form->getAllErrors() as $error): ?>
+                <?php foreach ($form->getAllErrors() as $error): ?>
                         <?php
                         $field = $form->getFieldLabel($error['field']);
                         $errorMsg = $error['displayMessage'];
@@ -59,7 +60,7 @@ use Site\Form\VtsSiteAssessmentForm;
                     'inputName' => VtsSiteAssessmentForm::FIELD_USER_IS_NOT_ASSESSOR,
                     'key' => 'No',
                     'value' => 'false',
-                    'checked' => $form->getUserIsNotAssessor() != true
+                    'checked' => $form->getUserIsNotAssessor() != true,
                 ],
                 [
                     'divModifier' => 'inline',
@@ -68,8 +69,8 @@ use Site\Form\VtsSiteAssessmentForm;
                     'key' => 'Yes',
                     'value' => 'true',
                     'dataTarget' => 'examiner-details',
-                    'checked' => $form->getUserIsNotAssessor() == true
-                ]
+                    'checked' => $form->getUserIsNotAssessor() == true,
+                ],
             ],
         ]
     );
@@ -77,11 +78,12 @@ use Site\Form\VtsSiteAssessmentForm;
 
     <div id="examiner-details" class="panel-indent
         <?php
-        if(
+        if (
             !$form->getError(VtsSiteAssessmentForm::FIELD_DVSA_EXAMINERS_USER_ID) &&
             $form->getUserIsNotAssessor() != true
-        )
-            echo 'js-hidden'
+        ) {
+            echo 'js-hidden';
+        }
         ?>
     ">
         <div class="form-group">
@@ -97,7 +99,7 @@ use Site\Form\VtsSiteAssessmentForm;
                         'errorMessage' => $form->getError(VtsSiteAssessmentForm::FIELD_DVSA_EXAMINERS_USER_ID),
                         'maxLength' => 100,
                         'autofocus' => true,
-                        'name' => VtsSiteAssessmentForm::FIELD_DVSA_EXAMINERS_USER_ID
+                        'name' => VtsSiteAssessmentForm::FIELD_DVSA_EXAMINERS_USER_ID,
                     ]
                 );
                 ?>
@@ -118,7 +120,7 @@ use Site\Form\VtsSiteAssessmentForm;
                     'maxLength' => 50,
                     'autofocus' => true,
                     'name' => VtsSiteAssessmentForm::FIELD_AE_REPRESENTATIVES_USER_ID,
-                    'inputModifier' => '1-8'
+                    'inputModifier' => '1-8',
                 ]
             );
             ?>
@@ -136,7 +138,7 @@ use Site\Form\VtsSiteAssessmentForm;
                     'errorMessage' => $form->getError(VtsSiteAssessmentForm::FIELD_AE_REPRESENTATIVES_FULL_NAME),
                     'maxLength' => 100,
                     'autofocus' => true,
-                    'name' => VtsSiteAssessmentForm::FIELD_AE_REPRESENTATIVES_FULL_NAME
+                    'name' => VtsSiteAssessmentForm::FIELD_AE_REPRESENTATIVES_FULL_NAME,
                 ]
             );
             ?>
@@ -154,7 +156,7 @@ use Site\Form\VtsSiteAssessmentForm;
                     'errorMessage' => $form->getError(VtsSiteAssessmentForm::FIELD_AE_REPRESENTATIVES_ROLE),
                     'maxLength' => 100,
                     'autofocus' => true,
-                    'name' => VtsSiteAssessmentForm::FIELD_AE_REPRESENTATIVES_ROLE
+                    'name' => VtsSiteAssessmentForm::FIELD_AE_REPRESENTATIVES_ROLE,
                 ]
             );
             ?>
@@ -173,7 +175,7 @@ use Site\Form\VtsSiteAssessmentForm;
                     'maxLength' => 50,
                     'autofocus' => true,
                     'name' => VtsSiteAssessmentForm::FIELD_TESTERS_USER_ID,
-                    'inputModifier' => '1-8'
+                    'inputModifier' => '1-8',
                 ]
             );
             ?>
@@ -199,7 +201,7 @@ use Site\Form\VtsSiteAssessmentForm;
             [
                 'id' => 'submit',
                 'label' => 'Continue',
-                'cssClass' => 'button'
+                'cssClass' => 'button',
             ]
         );
         ?>

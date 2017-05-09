@@ -4,19 +4,18 @@ use Site\Controller\VehicleTestingStationController;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 
 /**
- * @var \Site\ViewModel\VTSDecorator                   $siteDetails
+ * @var \Site\ViewModel\VTSDecorator
  * @var \Site\Authorization\VtsOverviewPagePermissions $permissions
  */
-
 $siteDetails = $this->siteDetails;
 $permissions = $siteDetails->getPermissions();
 
 $brakeTestTypeCodeToNameMap = [
-    BrakeTestTypeCode::ROLLER        => 'Roller',
-    BrakeTestTypeCode::PLATE         => 'Plate',
+    BrakeTestTypeCode::ROLLER => 'Roller',
+    BrakeTestTypeCode::PLATE => 'Plate',
     BrakeTestTypeCode::DECELEROMETER => 'Decelerometer',
-    BrakeTestTypeCode::GRADIENT      => 'Gradient',
-    BrakeTestTypeCode::FLOOR         => 'Floor',
+    BrakeTestTypeCode::GRADIENT => 'Gradient',
+    BrakeTestTypeCode::FLOOR => 'Floor',
 ];
 
 ?>

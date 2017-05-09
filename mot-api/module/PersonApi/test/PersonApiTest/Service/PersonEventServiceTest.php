@@ -27,12 +27,12 @@ class PersonEventServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->createData = [
-            'eventCategoryCode' => EventCategoryCode::NT_EVENTS
+            'eventCategoryCode' => EventCategoryCode::NT_EVENTS,
         ];
     }
 
     /**
-     * @expectedException DvsaCommon\Exception\UnauthorisedException
+     * @expectedException \DvsaCommon\Exception\UnauthorisedException
      * @expectedExceptionMessage Not allowed
      */
     public function testCreateNotGranted_Exception()
@@ -41,14 +41,14 @@ class PersonEventServiceTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::EVENT_CREATE)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $obj = $this->createServiceWithMocks();
         $obj->create(1, $this->createData);
     }
 
     /**
-     * @expectedException DvsaCommonApi\Service\Exception\NotFoundException
+     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
      * @expectedExceptionMessage Not found
      */
     public function testCreateNoEntity_Exception()
@@ -64,7 +64,7 @@ class PersonEventServiceTest extends \PHPUnit_Framework_TestCase
         $mock = $this->getMockService(PersonRepository::class);
         $mock->expects($this->once())
             ->method('find')
-            ->willThrowException(new NotFoundException("Not found"));
+            ->willThrowException(new NotFoundException('Not found'));
 
         $obj = $this->createServiceWithMocks();
         $obj->create(1, $this->createData);
@@ -107,14 +107,17 @@ class PersonEventServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $name
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getMockService($name)
     {
-        if(!isset($this->mocks[$name])) {
+        if (!isset($this->mocks[$name])) {
             $this->mocks[$name] = XMock::of($name);
         }
+
         return $this->mocks[$name];
     }
 }

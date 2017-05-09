@@ -12,8 +12,6 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\ContactDetail;
-use DvsaEntities\Entity\Make;
-use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\Phone;
@@ -57,7 +55,7 @@ class TransportForLondonMotTestServiceTest extends AbstractServiceTestCase
         $this->underTest->getMotTest($this->anything(), $this->anything());
 
         //then an exception is thrown
-        $this->assertTrue(false, "NotFoundException should be thrown.");
+        $this->assertTrue(false, 'NotFoundException should be thrown.');
     }
 
     public function test_givenExpiredPassFoundAndNoLaterInScopeAndNoLaterOutScope_shouldSetAppropriateFlags()
@@ -207,7 +205,7 @@ class TransportForLondonMotTestServiceTest extends AbstractServiceTestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;

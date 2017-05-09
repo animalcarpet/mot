@@ -89,14 +89,15 @@ class RegistrationService extends AbstractPersistableService
 
     /**
      * RegistrationService constructor.
-     * @param EntityManager $entityManager
-     * @param Logger $logger
-     * @param OpenAMIdentityCreator $openAMService
-     * @param RegistrationValidator $registrationValidator
-     * @param PersonCreator $personService
-     * @param BusinessRoleAssigner $roleAssigner
-     * @param ContactDetailsCreator $contactDetailService
-     * @param UsernameCreator $mailerLogic
+     *
+     * @param EntityManager                $entityManager
+     * @param Logger                       $logger
+     * @param OpenAMIdentityCreator        $openAMService
+     * @param RegistrationValidator        $registrationValidator
+     * @param PersonCreator                $personService
+     * @param BusinessRoleAssigner         $roleAssigner
+     * @param ContactDetailsCreator        $contactDetailService
+     * @param UsernameCreator              $mailerLogic
      * @param DuplicateEmailCheckerService $duplicateEmailCheckerService
      */
     public function __construct(
@@ -152,7 +153,6 @@ class RegistrationService extends AbstractPersistableService
                     $contactDetailService,
                     $openAMService
                 ) {
-
                     $this->logInfo(self::LOG_REG_TRANSACTION_STARTED);
 
                     try {
@@ -288,7 +288,7 @@ class RegistrationService extends AbstractPersistableService
      */
     private function logInfo($message)
     {
-        $this->logger->info(self::LOG_SIGNATURE . $message);
+        $this->logger->info(self::LOG_SIGNATURE.$message);
     }
 
     /**
@@ -298,7 +298,7 @@ class RegistrationService extends AbstractPersistableService
      */
     private function logDebug($message)
     {
-        $this->logger->debug(self::LOG_SIGNATURE . $message);
+        $this->logger->debug(self::LOG_SIGNATURE.$message);
     }
 
     /**
@@ -308,6 +308,6 @@ class RegistrationService extends AbstractPersistableService
      */
     private function logError($message)
     {
-        $this->logger->err(self::LOG_SIGNATURE . $message);
+        $this->logger->err(self::LOG_SIGNATURE.$message);
     }
 }

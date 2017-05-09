@@ -93,7 +93,7 @@ class SatisfactionSurveyListener
      */
     public function displaySurveyOnSignOut(Event $event)
     {
-        $token  = $event->getParam('token');
+        $token = $event->getParam('token');
         $response = $event->getParam('response');
         $response->setStatusCode(303);
 
@@ -113,7 +113,7 @@ class SatisfactionSurveyListener
      *
      * @param string     $route   RouteInterface name
      * @param array      $params  Parameters to use in url generation, if any
-     * @param array|bool $options RouteInterface-specific options to use in url generation, if any.
+     * @param array|bool $options RouteInterface-specific options to use in url generation, if any
      *
      * @return string
      */

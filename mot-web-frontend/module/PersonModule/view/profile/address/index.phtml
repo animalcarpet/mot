@@ -1,17 +1,17 @@
 <?php
 
 /**
- * @var string $firstLine
- * @var string $secondLine
- * @var string $thirdLine
- * @var string $townOrCity
- * @var string $country
- * @var string $postcode
+ * @var string
+ * @var string     $secondLine
+ * @var string     $thirdLine
+ * @var string     $townOrCity
+ * @var string     $country
+ * @var string     $postcode
  * @var null|array $errors
- * @var bool $viewingOwnProfile
+ * @var bool       $viewingOwnProfile
  */
 $errorMessages = $this->layout()->flashMessenger->getErrorMessages();
-echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorMessages]);
+echo $this->partial('partial/forms/errorMessagePageHeader.phtml', ['messages' => $errorMessages]);
 ?>
 <form method="POST">
     <?php echo $this->csrfToken(); ?>

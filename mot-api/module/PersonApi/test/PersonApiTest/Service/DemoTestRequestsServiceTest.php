@@ -7,19 +7,15 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\MotTesting\DemoTestRequestsListDto;
 use DvsaCommon\Dto\Search\DemoTestRequestsSearchParamsDto;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
-use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\DqlBuilder\SearchParam\DemoTestRequestsSearchParam;
-use DvsaEntities\Entity;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\QualificationAwardRepository;
 use PersonApi\Service\Mapper\DemoTestRequestsMapper;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
-
 /**
- * Tests for DemoTestRequestsService
- * @package PersonApiTest\Service
+ * Tests for DemoTestRequestsService.
  */
 class DemoTestRequestsServiceTest extends AbstractServiceTestCase
 {
@@ -87,6 +83,7 @@ class DemoTestRequestsServiceTest extends AbstractServiceTestCase
     {
         $searchParam = (new DemoTestRequestsSearchParam())
             ->fromDto($this->getDemoTestRequestsSearchParamsDto());
+
         return $searchParam;
     }
 }

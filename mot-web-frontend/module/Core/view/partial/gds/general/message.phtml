@@ -2,7 +2,7 @@
     <div class="message" id="validation-summary-message">
         <p>
             <?php if (!empty($link)): ?>
-                <?php echo sprintf($this->escapeHtml($message), '<a href="' . $this->escapeHtmlAttr($link) . '">', '</a>'); ?>
+                <?php echo sprintf($this->escapeHtml($message), '<a href="'.$this->escapeHtmlAttr($link).'">', '</a>'); ?>
             <?php else: ?>
                 <?php if (is_array($message)): ?>
                     <?php foreach ($message as $m): ?>

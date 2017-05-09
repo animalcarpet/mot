@@ -5,13 +5,12 @@ namespace DvsaEntitiesTest\DqlBuilder\SearchParam;
 use DvsaEntities\DqlBuilder\SearchParam\SiteSlotUsageParam;
 
 /**
- * Class SiteSlotUsageParamTest
+ * Class SiteSlotUsageParamTest.
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
 class SiteSlotUsageParamTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var SiteSlotUsageParam
      */
@@ -35,7 +34,7 @@ class SiteSlotUsageParamTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(1, 1),
-            array(999, 999)
+            array(999, 999),
         );
     }
 

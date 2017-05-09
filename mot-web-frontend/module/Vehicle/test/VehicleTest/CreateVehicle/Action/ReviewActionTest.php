@@ -17,15 +17,15 @@ use Zend\View\Model\ViewModel;
 
 class ReviewActionTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var MotAuthorisationServiceInterface  */
+    /** @var MotAuthorisationServiceInterface */
     private $authorisationService;
-    /** @var CreateVehicleStepService  */
+    /** @var CreateVehicleStepService */
     private $createVehicleStepService;
-    /** @var CreateVehicleModelService  */
+    /** @var CreateVehicleModelService */
     private $createVehicleModelService;
-    /** @var CreateNewVehicleService  */
+    /** @var CreateNewVehicleService */
     private $createNewVehicleService;
-    /** @var  Request */
+    /** @var Request */
     private $request;
 
     public function setUp()
@@ -147,7 +147,7 @@ class ReviewActionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::MOT_TEST_START)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $this->buildAction()->execute($this->request);
     }
@@ -385,7 +385,7 @@ class ReviewActionTest extends \PHPUnit_Framework_TestCase
                 ],
         ];
     }
-    
+
     private function mockModelData()
     {
         return [

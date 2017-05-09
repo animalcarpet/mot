@@ -1,4 +1,5 @@
 <?php
+
 namespace DataCatalogApiTest\Controller;
 
 use DataCatalogApi\Controller\DataCatalogController;
@@ -7,9 +8,7 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
 
 /**
- * Class DataCatalogControllerTest
- *
- * @package DataCatalogApiTest\Controller
+ * Class DataCatalogControllerTest.
  */
 class DataCatalogControllerTest extends AbstractRestfulControllerTestCase
 {

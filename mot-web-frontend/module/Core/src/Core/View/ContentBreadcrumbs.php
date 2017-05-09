@@ -14,5 +14,4 @@ namespace Core\View;
  */
 class ContentBreadcrumbs extends Breadcrumbs
 {
-
 }

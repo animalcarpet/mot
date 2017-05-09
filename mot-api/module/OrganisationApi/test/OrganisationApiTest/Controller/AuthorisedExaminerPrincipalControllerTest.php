@@ -9,21 +9,19 @@ use OrganisationApi\Controller\AuthorisedExaminerPrincipalController;
 use OrganisationApi\Service\AuthorisedExaminerPrincipalService;
 
 /**
- * Class AuthorisedExaminerPrincipalControllerTest
+ * Class AuthorisedExaminerPrincipalControllerTest.
  *
  * @property-read AuthorisedExaminerPrincipalController $controller
- *
- * @package OrganisationApiTest\Controller
  */
 class AuthorisedExaminerPrincipalControllerTest extends AbstractRestfulControllerTestCase
 {
-    private $authorisedExaminerId          = 1;
+    private $authorisedExaminerId = 1;
     private $authorisedExaminerPrincipalId = 2;
     private $authorisedExaminerPrincipalService;
 
     protected function setUp()
     {
-        $this->controller                         = new AuthorisedExaminerPrincipalController();
+        $this->controller = new AuthorisedExaminerPrincipalController();
         $this->authorisedExaminerPrincipalService = $this->getAuthorisedExaminerPrincipalService();
         $this->setupServiceManager();
 

@@ -7,11 +7,6 @@ use Core\Action\NotFoundActionResult;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use Zend\Form\Form;
-use Core\TwoStepForm\TwoStepFormContainer;
-use Core\TwoStepForm\TwoStepProcessInterface;
-use Core\TwoStepForm\SingleStepProcessInterface;
-use Core\TwoStepForm\FormContextInterface;
 use Zend\View\Model\ViewModel;
 
 final class ConfirmationStepAction implements AutoWireableInterface
@@ -22,8 +17,7 @@ final class ConfirmationStepAction implements AutoWireableInterface
     public function __construct(
         TwoStepFormContainer $formContainer,
         MotAuthorisationServiceInterface $authorisationService
-    )
-    {
+    ) {
         $this->formContainer = $formContainer;
         $this->authorisationService = $authorisationService;
     }
@@ -31,8 +25,10 @@ final class ConfirmationStepAction implements AutoWireableInterface
     /**
      * @param $isPost
      * @param SingleStepProcessInterface $process
-     * @param FormContextInterface $context
+     * @param FormContextInterface       $context
+     *
      * @return ViewActionResult
+     *
      * @throws UnauthorisedException
      */
     public function execute($isPost, SingleStepProcessInterface $process, FormContextInterface $context)
@@ -55,12 +51,13 @@ final class ConfirmationStepAction implements AutoWireableInterface
     private function assertGranted(SingleStepProcessInterface $process)
     {
         if (!$process->isAuthorised($this->authorisationService)) {
-            throw new UnauthorisedException("Not authorised to view the confirmation page");
+            throw new UnauthorisedException('Not authorised to view the confirmation page');
         }
     }
 
     /**
      * @param TwoStepProcessInterface $process
+     *
      * @return ViewActionResult
      */
     protected function buildActionResult(TwoStepProcessInterface $process)

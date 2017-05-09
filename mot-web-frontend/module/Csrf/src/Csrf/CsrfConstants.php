@@ -3,9 +3,7 @@
 namespace Csrf;
 
 /**
- * Class CsrfConstants
- *
- * @package Csrf
+ * Class CsrfConstants.
  */
 class CsrfConstants
 {

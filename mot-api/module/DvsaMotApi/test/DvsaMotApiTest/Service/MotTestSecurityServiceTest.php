@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Service;
 
 use DvsaAuthentication\Identity;
@@ -8,7 +9,6 @@ use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonApiTest\Stub\ConfigurationRepositoryStub;
 use DvsaCommonTest\Date\TestDateTimeHolder;
-use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
@@ -19,9 +19,7 @@ use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\TesterService;
 
 /**
- * Class MotTestSecurityServiceTest
- *
- * @package DvsaMotApiTest\Service
+ * Class MotTestSecurityServiceTest.
  */
 class MotTestSecurityServiceTest extends AbstractServiceTestCase
 {
@@ -31,12 +29,12 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
     private $testerServiceMock;
     private $motIdentityProviderMock;
     /**
-     * @var  ConfigurationRepositoryStub
+     * @var ConfigurationRepositoryStub
      */
     private $configurationRepositoryStub;
 
     /**
-     * @var MotTestSecurityService $motTestSecurityService
+     * @var MotTestSecurityService
      */
     private $service;
 
@@ -50,15 +48,15 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         // vtsId 4 to 6 are in vehicleTestingStations in supplied tester
         return [
             [
-                'vtsId'  => 3,
+                'vtsId' => 3,
                 'result' => false,
             ],
             [
-                'vtsId'  => 4,
+                'vtsId' => 4,
                 'result' => true,
             ],
             [
-                'vtsId'  => 5,
+                'vtsId' => 5,
                 'result' => true,
             ],
         ];
@@ -104,6 +102,7 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $person->setId(3);
         $person->setUsername('user');
         $identity = new Identity($person);
+
         return $identity;
     }
 
@@ -111,11 +110,12 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
     {
         $tester = new Person();
         $tester->setId($testerId);
-        for ($i = 4; $i <= 6; $i++) {
+        for ($i = 4; $i <= 6; ++$i) {
             $vts = new Site();
             $vts->setId($i);
             $tester->addVehicleTestingStation($vts);
         }
+
         return $tester;
     }
 
@@ -133,12 +133,11 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
             ->will($this->returnValue($this->getMotTest($motTestNumber, '2010-01-01', $status)));
 
         // when
-        $this->currentDateIs("2010-01-03");
-
+        $this->currentDateIs('2010-01-03');
 
         $result = $this->service->canModifyOdometerForTest($motTestNumber);
         // then
-        $this->assertFalse($result, "Should not allow to update but did!");
+        $this->assertFalse($result, 'Should not allow to update but did!');
     }
 
     private function currentDateIs($date)
@@ -150,7 +149,7 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
     {
         // given
         $motTestNumber = 2;
-        $this->currentDateIs("2010-01-03");
+        $this->currentDateIs('2010-01-03');
         $this->motTestRepository->expects($this->any())
             ->method('getMotTestByNumber')
             ->will($this->returnValue($this->getMotTest($motTestNumber, '2010-01-01')));
@@ -159,7 +158,7 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $result = $this->service->canModifyOdometerForTest($motTestNumber);
 
         // then
-        $this->assertTrue($result, "Should allow to update but didnt!");
+        $this->assertTrue($result, 'Should allow to update but didnt!');
     }
 
     public function testCanModifyOdometerForTest_givenTestCompletedAndHitModificationWindow_shouldAllowToUpdate()
@@ -177,7 +176,7 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $result = $this->service->canModifyOdometerForTest($motTestNumber);
 
         // then
-        $this->assertTrue($result, "Update should be allowed but it is not!");
+        $this->assertTrue($result, 'Update should be allowed but it is not!');
     }
 
     private function givenOdometerReadingModificationWindowLengthInDaysEqualTo($numberOfDays)
@@ -200,20 +199,22 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $result = $this->service->canModifyOdometerForTest($motTestNumber);
 
         // then
-        $this->assertFalse($result, "Should now allow but did!");
+        $this->assertFalse($result, 'Should now allow but did!');
     }
 
     public function dataProvider_ineditableStatuses()
     {
         return [[MotTestStatusName::ABANDONED], [MotTestStatusName::ABORTED],
-                [MotTestStatusName::REFUSED]];
+                [MotTestStatusName::REFUSED], ];
     }
 
     /**
      * @param $testNumber
      * @param $issuedDate
      * @param string $status
+     *
      * @return MotTest
+     *
      * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
      */
     private function getMotTest($testNumber, $issuedDate, $status = MotTestStatusName::PASSED)
@@ -232,7 +233,7 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;

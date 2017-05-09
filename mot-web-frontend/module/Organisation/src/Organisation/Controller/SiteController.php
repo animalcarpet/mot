@@ -5,7 +5,6 @@ namespace Organisation\Controller;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionAtOrganisation;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
 use DvsaCommon\Enum\OrganisationSiteStatusName;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
@@ -18,7 +17,6 @@ use Organisation\Form\AeLinkSiteForm;
 use Organisation\Form\AeUnlinkSiteForm;
 use Organisation\ViewModel\AuthorisedExaminer\AeFormViewModel;
 use Organisation\ViewModel\AuthorisedExaminer\AeSiteUnlinkModel;
-use SebastianBergmann\Exporter\Exception;
 use Zend\View\Model\ViewModel;
 
 class SiteController extends AbstractDvsaMotTestController
@@ -27,7 +25,7 @@ class SiteController extends AbstractDvsaMotTestController
     const UNLINK_TITLE = 'Remove site association';
     const AE_TEXT = 'Authorised Examiner';
 
-    const ERR_ORG_SITE_LINK_NOT_FOUND = "Association between Authorised Examiner and Site not found";
+    const ERR_ORG_SITE_LINK_NOT_FOUND = 'Association between Authorised Examiner and Site not found';
 
     const ROUTE_INDEX = 'vehicle-testing-station';
     const ROUTE_LINK = 'authorised-examiner/site/link';
@@ -76,8 +74,8 @@ class SiteController extends AbstractDvsaMotTestController
 
             try {
                 $this->mapper->OrganisationSites->createSiteLink($orgId, $form->getSiteNumber());
-                return $this->redirect()->toUrl($aeViewUrl);
 
+                return $this->redirect()->toUrl($aeViewUrl);
             } catch (ValidationException $e) {
                 $form->addErrors($e->getErrors());
             } catch (NotFoundException $e) {
@@ -92,7 +90,7 @@ class SiteController extends AbstractDvsaMotTestController
             ->setCancelUrl($aeViewUrl);
 
         //  logical block :: prepare view
-        $subTitle = self::AE_TEXT . ' - ' .
+        $subTitle = self::AE_TEXT.' - '.
             $organisation->getAuthorisedExaminerAuthorisation()->getAuthorisedExaminerRef();
 
         $breadcrumbs = [$organisation->getName() => $aeViewUrl->toString()];
@@ -156,11 +154,11 @@ class SiteController extends AbstractDvsaMotTestController
         //  logical block :: prepare view
         $orgName = $organisation->getName();
 
-        $overTitle = self::AE_TEXT . ' - ' .
+        $overTitle = self::AE_TEXT.' - '.
             $organisation->getAuthorisedExaminerAuthorisation()->getAuthorisedExaminerRef();
 
         $breadcrumbs = [$orgName => $aeViewUrl];
-        $subTitle = $orgName . ' - ' .
+        $subTitle = $orgName.' - '.
             AddressUtils::stringify($organisation->getRegisteredCompanyContactDetail()->getAddress());
 
         return $this->prepareViewModel(
@@ -169,7 +167,7 @@ class SiteController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Prepare the view model for all the step of the create ae
+     * Prepare the view model for all the step of the create ae.
      *
      * @param ViewModel $view
      * @param string    $title
@@ -209,7 +207,7 @@ class SiteController extends AbstractDvsaMotTestController
     {
         return [
             OrganisationSiteStatusCode::SURRENDERED => OrganisationSiteStatusName::SURRENDERED,
-            OrganisationSiteStatusCode::WITHDRAWN   => OrganisationSiteStatusName::WITHDRAWN,
+            OrganisationSiteStatusCode::WITHDRAWN => OrganisationSiteStatusName::WITHDRAWN,
         ];
     }
 }

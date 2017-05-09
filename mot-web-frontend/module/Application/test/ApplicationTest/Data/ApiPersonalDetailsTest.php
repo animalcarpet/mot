@@ -1,11 +1,12 @@
 <?php
+
 namespace ApplicationTest\Data;
 
 use Application\Data\ApiPersonalDetails;
 use DvsaCommon\HttpRestJson\Client;
 
 /**
- * unit tests for ApiApplication
+ * unit tests for ApiApplication.
  */
 class ApiPersonalDetailsTest extends \PHPUnit_Framework_TestCase
 {

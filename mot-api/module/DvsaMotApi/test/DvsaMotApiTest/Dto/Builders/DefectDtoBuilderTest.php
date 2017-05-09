@@ -96,7 +96,7 @@ class DefectDtoBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $expectedData
+     * @param array            $expectedData
      * @param TestItemSelector $testItemSelectorMock
      *
      * @return \PHPUnit_Framework_MockObject_MockObject

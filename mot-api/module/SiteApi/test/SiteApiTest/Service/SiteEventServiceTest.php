@@ -16,7 +16,8 @@ use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Event;
 
 /**
- * Class SiteEventServiceTest
+ * Class SiteEventServiceTest.
+ *
  * @group event
  */
 class SiteEventServiceTest extends \PHPUnit_Framework_TestCase
@@ -31,12 +32,12 @@ class SiteEventServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->createData = [
-            'eventCategoryCode' => EventCategoryCode::VTS_EVENT
+            'eventCategoryCode' => EventCategoryCode::VTS_EVENT,
         ];
     }
 
     /**
-     * @expectedException DvsaCommon\Exception\UnauthorisedException
+     * @expectedException \DvsaCommon\Exception\UnauthorisedException
      * @expectedExceptionMessage Not allowed
      */
     public function testCreateNotGranted_Exception()
@@ -45,14 +46,14 @@ class SiteEventServiceTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::EVENT_CREATE)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $obj = $this->createServiceWithMocks();
         $obj->create(1, $this->createData);
     }
 
     /**
-     * @expectedException DvsaCommonApi\Service\Exception\NotFoundException
+     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
      * @expectedExceptionMessage Not found
      */
     public function testCreateNoEntity_Exception()
@@ -68,7 +69,7 @@ class SiteEventServiceTest extends \PHPUnit_Framework_TestCase
         $mock = $this->getMockService(SiteRepository::class);
         $mock->expects($this->once())
             ->method('find')
-            ->willThrowException(new NotFoundException("Not found"));
+            ->willThrowException(new NotFoundException('Not found'));
 
         $obj = $this->createServiceWithMocks();
         $obj->create(1, $this->createData);
@@ -111,14 +112,17 @@ class SiteEventServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $name
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     *
      * @throws \Exception
      */
     private function getMockService($name)
     {
-        if(!isset($this->mocks[$name])) {
+        if (!isset($this->mocks[$name])) {
             $this->mocks[$name] = XMock::of($name);
         }
+
         return $this->mocks[$name];
     }
 }

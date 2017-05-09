@@ -7,12 +7,10 @@ use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Controller\ResetClaimAccountController;
 use PersonApi\Factory\Controller\ResetClaimAccountControllerFactory;
 use UserApi\HelpDesk\Service\ResetClaimAccountService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ResetClaimAccountControllerFactoryTest
- * @package UserApiTest\HelpDesk\Factory\Controller
+ * Class ResetClaimAccountControllerFactoryTest.
  */
 class ResetClaimAccountControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

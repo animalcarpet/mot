@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * VehicleTestingStationTestingFacility
+ * VehicleTestingStationTestingFacility.
  *
  * @ORM\Table(
  * name="application_site_testing_facility",
@@ -42,46 +43,47 @@ class VehicleTestingStationTestingFacility
     private $vehicleTestingStationDetails = '';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="petrol_engine", type="boolean", nullable=false)
      */
     private $petrolEngine;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="diesel_engine", type="boolean", nullable=false)
      */
     private $dieselEngine;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="automated_test_lane_atl", type="boolean", nullable=false)
      */
     private $automatedTestLaneAtl;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="one_person_test_lane_optl", type="boolean", nullable=false)
      */
     private $onePersonTestLaneOptl;
 
     /**
-     * @param boolean $automatedTestLaneAtl
+     * @param bool $automatedTestLaneAtl
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationTestingFacility
      */
     public function setAutomatedTestLaneAtl($automatedTestLaneAtl)
     {
         $this->automatedTestLaneAtl = $automatedTestLaneAtl;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAutomatedTestLaneAtl()
     {
@@ -89,18 +91,19 @@ class VehicleTestingStationTestingFacility
     }
 
     /**
-     * @param boolean $dieselEngine
+     * @param bool $dieselEngine
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationTestingFacility
      */
     public function setDieselEngine($dieselEngine)
     {
         $this->dieselEngine = $dieselEngine;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDieselEngine()
     {
@@ -108,18 +111,19 @@ class VehicleTestingStationTestingFacility
     }
 
     /**
-     * @param boolean $onePersonTestLaneOptl
+     * @param bool $onePersonTestLaneOptl
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationTestingFacility
      */
     public function setOnePersonTestLaneOptl($onePersonTestLaneOptl)
     {
         $this->onePersonTestLaneOptl = $onePersonTestLaneOptl;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getOnePersonTestLaneOptl()
     {
@@ -127,18 +131,19 @@ class VehicleTestingStationTestingFacility
     }
 
     /**
-     * @param boolean $petrolEngine
+     * @param bool $petrolEngine
      *
      * @return \DvsaEntities\Entity\VehicleTestingStationTestingFacility
      */
     public function setPetrolEngine($petrolEngine)
     {
         $this->petrolEngine = $petrolEngine;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getPetrolEngine()
     {
@@ -153,6 +158,7 @@ class VehicleTestingStationTestingFacility
     public function setVehicleTestingStationDetails($vehicleTestingStationDetails)
     {
         $this->vehicleTestingStationDetails = $vehicleTestingStationDetails;
+
         return $this;
     }
 

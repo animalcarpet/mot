@@ -88,7 +88,7 @@ class BrakeTestResultsHelperTest extends PHPUnit_Framework_TestCase
                 ->setControl1EffortFront(10)
                 ->setControl1EffortRear(10)
                 ->setControl2EffortFront(10)
-                ->setControl2EffortRear(10)
+                ->setControl2EffortRear(10),
         ];
 
         $this->mockBrakeTestResultClass12 = $this
@@ -108,7 +108,7 @@ class BrakeTestResultsHelperTest extends PHPUnit_Framework_TestCase
         $result = [
             (new BrakeTestResultClass3AndAbove())
                 ->setParkingBrakeEffortOffside(10)
-                ->setParkingBrakeEffortNearside(10)
+                ->setParkingBrakeEffortNearside(10),
         ];
 
         $this->mockBrakeTestResultClass3AndAbove = $this

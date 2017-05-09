@@ -17,10 +17,8 @@ use DvsaCommon\UrlBuilder\PersonUrlBuilder;
  *
  * Also contains a few extra methods from MotFrontendAuthorizationServiceInterface that eventually should be removed.
  */
-class LazyMotFrontendAuthorisationService extends AbstractMotAuthorisationService
-    implements MotFrontendAuthorisationServiceInterface,  MotAuthorizationRefresherInterface
+class LazyMotFrontendAuthorisationService extends AbstractMotAuthorisationService implements MotFrontendAuthorisationServiceInterface, MotAuthorizationRefresherInterface
 {
-
     /** @var MotIdentityProviderInterface $motIdentityProvider */
     private $motIdentityProvider;
 
@@ -42,7 +40,7 @@ class LazyMotFrontendAuthorisationService extends AbstractMotAuthorisationServic
     {
         return $this->hasRole(Role::TESTER_ACTIVE);
     }
-    
+
     public function isDvsa()
     {
         $rolesAndPermissions = $this->getPersonAuthorization()->getRoles()->asArray();
@@ -80,6 +78,7 @@ class LazyMotFrontendAuthorisationService extends AbstractMotAuthorisationServic
                 $personAuthorization = PersonAuthorization::fromArray($rolesArray);
                 $identity->setPersonAuthorization($personAuthorization);
             }
+
             return $identity->getPersonAuthorization();
         }
     }

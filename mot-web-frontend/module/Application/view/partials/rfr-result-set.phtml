@@ -1,29 +1,30 @@
 <?php
 use \DvsaCommon\Utility\ArrayUtils;
+
 $rfrArray = isset($rfrArray) ? $rfrArray : [];
 $cssId = isset($cssId) ? $cssId : '';
 $allowEditRfr = isset($allowEditRfr) ? $allowEditRfr : true;
 ?>
 <ul id="<?php echo $cssId ?>" class="<?php echo ($rfrCount > 0) ? 'rfr-list' : '' ?>">
-    <?php if (!empty($rfrArray)) :foreach ($rfrArray as $rfr) { ?>
+    <?php if (!empty($rfrArray)) : foreach ($rfrArray as $rfr) {
+    ?>
         <li>
-            <div id="<?php echo $this->escapeHtmlAttr($rfr['type'] . '_' . $rfr['id']); ?>" class="col-sm-8">
+            <div id="<?php echo $this->escapeHtmlAttr($rfr['type'].'_'.$rfr['id']); ?>" class="col-sm-8">
                 <?php echo $this->escapeHtml(
-                    ArrayUtils::tryGet($rfr, 'testItemSelectorDescription', '') . ' ' .
-                    $rfr['failureText'] . ' '
+                    ArrayUtils::tryGet($rfr, 'testItemSelectorDescription', '').' '.
+                    $rfr['failureText'].' '
                 );
-                if (!empty($rfr['inspectionManualReference'])) {
-                    echo $this->escapeHtml(' [' . $rfr['inspectionManualReference'] . '] ');
-                }
-                echo $this->escapeHtml(
-                    $rfr['locationLateral'] . ' ' .
-                    $rfr['locationLongitudinal'] . ' ' .
+    if (!empty($rfr['inspectionManualReference'])) {
+        echo $this->escapeHtml(' ['.$rfr['inspectionManualReference'].'] ');
+    }
+    echo $this->escapeHtml(
+                    $rfr['locationLateral'].' '.
+                    $rfr['locationLongitudinal'].' '.
                     $rfr['locationVertical']
                 );
-                if ($rfr['comment']) {
-                    echo $this->escapeHtml(' (' . $rfr['comment'] . ') ');
-                }
-                ?>
+    if ($rfr['comment']) {
+        echo $this->escapeHtml(' ('.$rfr['comment'].') ');
+    } ?>
                 <?php if ($rfr['failureDangerous']): ?>
                     <span class="label label-danger">Dangerous</span>
                 <?php endif ?>
@@ -32,7 +33,8 @@ $allowEditRfr = isset($allowEditRfr) ? $allowEditRfr : true;
             <?php if ($allowEditRfr): ?>
                 <div class="col-sm-4">
                     <div class="pull-right">
-                        <?php if (!$rfr['generated']) { ?>
+                        <?php if (!$rfr['generated']) {
+        ?>
                             <?php if (!$rfr['onOriginalTest']) : ?>
                                 <a href="#rfr-edit-dialog-<?php echo $this->escapeHtml($rfr['id']); ?>" class="btn btn-primary rfr-edit"
                                    data-id="<?php echo $this->escapeHtml($rfr['id']); ?>" data-toggle="modal"
@@ -43,26 +45,27 @@ $allowEditRfr = isset($allowEditRfr) ? $allowEditRfr : true;
                                 ['motTestNumber' => $motTestNumber, 'rfr-id' => $rfr['id']]
                             ); ?>" class="btn btn-danger" id="rfr-remove"><?php echo $rfr['onOriginalTest'] ? 'Repaired'
                                     : 'Remove'; ?></a>
-                        <?php } ?>
+                        <?php 
+    } ?>
                     </div>
                 </div>
                 <!-- location dialogue -->
                 <?php
                 //TODO: canBeDangerous field is currently not loading from server side, defaulting to true
                 $rfr['canBeDangerous'] = true;
-                echo $this->partial(
+    echo $this->partial(
                     'rfrEditLocationModal',
                     [
                         'escRfrId' => $rfr['id'],
                         'rfr' => $rfr,
                         'motTestNumber' => $motTestNumber,
-                        'title' => 'Edit RFR'
+                        'title' => 'Edit RFR',
 
                     ]
-                );
-                ?>
+                ); ?>
                 <!-- /location dialogue -->
             <?php endif; ?>
         </li>
-    <?php } endif; ?>
+    <?php 
+} endif; ?>
 </ul>

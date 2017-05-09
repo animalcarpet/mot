@@ -34,7 +34,7 @@ use DvsaEntities\Entity\VehicleHistory;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 
 /**
- * Class MotTestRepository
+ * Class MotTestRepository.
  */
 class MotTestRepository extends AbstractMutableRepository
 {
@@ -59,7 +59,7 @@ class MotTestRepository extends AbstractMutableRepository
     const STATUS_CANCELLED = [
         MotTestStatusCode::ABANDONED,
         MotTestStatusCode::ABORTED,
-        MotTestStatusCode::ABORTED_VE
+        MotTestStatusCode::ABORTED_VE,
     ];
 
     /**
@@ -114,10 +114,10 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param int $vehicleId
-     * @param DateTime $from
+     * @param int                     $vehicleId
+     * @param DateTime                $from
      * @param ContingencyTestDto|null $contingencyDto
-     * @param bool $isMysteryShopper
+     * @param bool                    $isMysteryShopper
      *
      * @return int
      */
@@ -143,7 +143,7 @@ class MotTestRepository extends AbstractMutableRepository
                 ->setParameter('contingencyDatetime', $contingencyDto->getPerformedAt());
         }
 
-        return (int)$qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -226,7 +226,7 @@ class MotTestRepository extends AbstractMutableRepository
                 [
                     MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
                     MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
-                    MotTestTypeCode::NON_MOT_TEST
+                    MotTestTypeCode::NON_MOT_TEST,
                 ]
             )
             ->setMaxResults(1);
@@ -253,8 +253,8 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @see findInProgressDemoTestForPerson for different type of demo tests
      *
-     * @param int $personId
-     * @param bool $routine To set the demo test type
+     * @param int  $personId
+     * @param bool $routine  To set the demo test type
      *
      * @return string|null
      */
@@ -273,8 +273,8 @@ class MotTestRepository extends AbstractMutableRepository
      *          - Routine Demonstration Test (DR)
      *       this method will return the "Demonstration Test following training" by default
      *
-     * @param int $personId
-     * @param bool $routine To set the demo test type
+     * @param int  $personId
+     * @param bool $routine  To set the demo test type
      *
      * @return MotTest|null
      */
@@ -286,8 +286,9 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param int $personId
+     * @param int    $personId
      * @param string $testTypeCode
+     *
      * @return MotTest|null
      */
     private function findInProgressTestOfTypeForPerson($personId, $testTypeCode)
@@ -366,7 +367,7 @@ class MotTestRepository extends AbstractMutableRepository
             ->setParameter(':STATUS', MotTestStatusCode::ACTIVE)
             ->setParameter(':VTS_ID', $vtsId);
 
-        return (int)$qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -394,7 +395,7 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param int $siteNumber
+     * @param int   $siteNumber
      * @param array $optionalMotTestTypes
      *
      * @return array
@@ -456,7 +457,7 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $result = $this->createQueryBuilder('mt')
             ->addSelect(['rfr', 'rfrCustomDescription', 'rfrMarkedAsRepaired', 'vts', 'defaultBrakeTestClass1And2',
-                'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove', 'prs', 'originalMt'])
+                'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove', 'prs', 'originalMt', ])
             ->innerJoin('mt.motTestType', 'tt')
             ->innerJoin('mt.status', 's')
             ->leftJoin('mt.motTestReasonForRejections', 'rfr')
@@ -506,12 +507,13 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * Find recent tests for a given vehicle
+     * Find recent tests for a given vehicle.
      *
-     * @param int $vehicleId
-     * @param string|null $startDate
+     * @param int                  $vehicleId
+     * @param string|null          $startDate
      * @param MysteryShopperHelper $mysteryShopperHelper
-     * @param array $mysteryShopperSiteIds Optional
+     * @param array                $mysteryShopperSiteIds Optional
+     *
      * @return mixed
      */
     public function findTestsForVehicle(
@@ -529,7 +531,7 @@ class MotTestRepository extends AbstractMutableRepository
 
         if ($canViewAllMysteryShopperTests) {
             $testTypes[] = MotTestTypeCode::MYSTERY_SHOPPER;
-        } else if (!empty($mysteryShopperSiteIds)) {
+        } elseif (!empty($mysteryShopperSiteIds)) {
             $testTypeWhereClauseFunction = function ($qb) use ($mysteryShopperSiteIds) {
                 return $qb->andWhere('(
                         t.code IN (:testTypes)
@@ -548,7 +550,7 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Returns a list of tests for a given vehicle as of a specified date.
      *
-     * @param int $vehicleId
+     * @param int           $vehicleId
      * @param DateTime|null $startDate
      *
      * @return MotTest[]
@@ -602,10 +604,10 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Returns a list of Mystery Shopper test type mot tests for a given vehicle as of a specified date and vts.
      *
-     * @param int $vehicleId
+     * @param int      $vehicleId
      * @param DateTime $startDate (optional)
-     * @param int $limit (optional)
-     * @param int $siteId (optional)
+     * @param int      $limit     (optional)
+     * @param int      $siteId    (optional)
      *
      * @return MotTest[]
      */
@@ -709,8 +711,7 @@ class MotTestRepository extends AbstractMutableRepository
         $vehicleId,
         $status = MotTestStatusName::PASSED,
         $issuedDate = false
-    )
-    {
+    ) {
         $testTypeCodes = \DvsaCommon\Domain\MotTestType::getExpiryDateDefiningTypes();
 
         $qb = $this->createQueryBuilder('t')
@@ -742,20 +743,19 @@ class MotTestRepository extends AbstractMutableRepository
      * @param string $vrm
      * @param string $status
      * @param string $issuedDate
-     * @param array $excludeCodes
+     * @param array  $excludeCodes
      *
      * @return MotTest
      */
     public function findLatestMotTestByVrmAndResult(
         $vrm,
-        $status = MotTestStatusName::PASSED,
+        $status,
         $issuedDate,
         $excludeCodes = [
             MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
             MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
         ]
-    )
-    {
+    ) {
         $qb = $this
             ->createQueryBuilder('t')
             ->innerJoin('t.motTestType', 'tt')
@@ -781,8 +781,8 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Retrieve the latest MOT test number of a specific status by vehicle ID.
      *
-     * @param int $vehicleId Non-obfuscated vehicle ID
-     * @param string $status Status of MOT test to retrieve, default passed
+     * @param int    $vehicleId Non-obfuscated vehicle ID
+     * @param string $status    Status of MOT test to retrieve, default passed
      *
      * @throws NotFoundException
      *
@@ -816,7 +816,7 @@ class MotTestRepository extends AbstractMutableRepository
             return $result[0]['number'];
         }
 
-        throw new NotFoundException('MOT test with status ' . $status . ' for vehicle ' . $vehicleId);
+        throw new NotFoundException('MOT test with status '.$status.' for vehicle '.$vehicleId);
     }
 
     /**
@@ -880,10 +880,10 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Get the odometer history for a given vehicle id.
      *
-     * @param int $vehicleId
-     * @param DateTime $dateTo
+     * @param int                     $vehicleId
+     * @param DateTime                $dateTo
      * @param array [MotTestTypeCode] $optionalMotTestTypeCodes (default = null)
-     * @param int $limit (default = 4)
+     * @param int                     $limit                    (default = 4)
      *
      * @return array
      */
@@ -953,10 +953,10 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * This function allow us to paginate all the database to avoid memory limit.
      *
-     * @param int $start
-     * @param int $offset
+     * @param int    $start
+     * @param int    $offset
      * @param string $orderBy
-     * @param int $hydrateMode
+     * @param int    $hydrateMode
      *
      * @return array
      *
@@ -967,8 +967,7 @@ class MotTestRepository extends AbstractMutableRepository
         $offset,
         $orderBy = 'test.id',
         $hydrateMode = Query::HYDRATE_OBJECT
-    )
-    {
+    ) {
         $qb = $this->createQueryBuilder('test')
             ->addSelect(['model', 'make'])
             ->leftJoin('test.make', 'make')
@@ -1055,7 +1054,6 @@ class MotTestRepository extends AbstractMutableRepository
         return $this->getCountOfMotTests('t.person_id = :PERSON_ID', 'PERSON_ID', $testerId, false);
     }
 
-
     /**
      * Prepare statement to get mot tests log data.
      *
@@ -1093,12 +1091,12 @@ class MotTestRepository extends AbstractMutableRepository
         if (!empty($testType)) {
             $query = [];
             foreach ($testType as $key => $item) {
-                $query[] = ':TEST_TYPE' . $key;
+                $query[] = ':TEST_TYPE'.$key;
 
-                $qb->setParameter('TEST_TYPE' . $key, $item);
+                $qb->setParameter('TEST_TYPE'.$key, $item);
             }
 
-            $qb->andwhere('tt.code IN (' . implode(',', $query) . ')');
+            $qb->andwhere('tt.code IN ('.implode(',', $query).')');
         }
 
         $statuses = $searchParam->getStatus();
@@ -1126,7 +1124,7 @@ class MotTestRepository extends AbstractMutableRepository
             }
         }
 
-        /** Note: Test logs at the minute has no means of searching on:
+        /* Note: Test logs at the minute has no means of searching on:
          *  Registration, Vin, or Vehicle Id, Site Number or Status
          * Debatable if the following conditions should even be included
          * as they only serve to confuse.
@@ -1170,12 +1168,12 @@ class MotTestRepository extends AbstractMutableRepository
 
             $query = [];
             foreach ($statuses as $key => $item) {
-                $query[] = ':STATUS' . $key;
+                $query[] = ':STATUS'.$key;
 
-                $qb->setParameter('STATUS' . $key, $item);
+                $qb->setParameter('STATUS'.$key, $item);
             }
 
-            $qb->andwhere('ts.name IN (' . implode(',', $query) . ')');
+            $qb->andwhere('ts.name IN ('.implode(',', $query).')');
         }
 
         return $qb;
@@ -1233,7 +1231,7 @@ class MotTestRepository extends AbstractMutableRepository
                 }
 
                 foreach ($orderBy as $order) {
-                    $subQuery->orderBy($order . ' ' . $searchParam->getSortDirection());
+                    $subQuery->orderBy($order.' '.$searchParam->getSortDirection());
                 }
             }
 
@@ -1247,7 +1245,7 @@ class MotTestRepository extends AbstractMutableRepository
                 $subQuery->setLimit($searchParam->getRowCount());
             }
 
-            $subQuerySql = '(' . $subQuery->getSql() . ')';
+            $subQuerySql = '('.$subQuery->getSql().')';
         }
 
         //  --  prepare main query   --
@@ -1306,12 +1304,12 @@ class MotTestRepository extends AbstractMutableRepository
         if (!empty($testType)) {
             $query = [];
             foreach ($testType as $key => $item) {
-                $query[] = ':TEST_TYPE' . $key;
+                $query[] = ':TEST_TYPE'.$key;
 
-                $qb->setParameter('TEST_TYPE' . $key, $item);
+                $qb->setParameter('TEST_TYPE'.$key, $item);
             }
 
-            $qb->andwhere('tt.code IN (' . implode(',', $query) . ')');
+            $qb->andwhere('tt.code IN ('.implode(',', $query).')');
         }
 
         $statuses = $searchParam->getStatus();
@@ -1336,7 +1334,7 @@ class MotTestRepository extends AbstractMutableRepository
             }
         }
 
-        /** Note: Test logs at the minute has no means of using:
+        /* Note: Test logs at the minute has no means of using:
          *  Registration, Vin, or Vehicle Id, SiteNumber or Status for searching.
          * Debatable if the following conditions should even be included
          * as they only serve to confuse.
@@ -1375,11 +1373,11 @@ class MotTestRepository extends AbstractMutableRepository
 
             $query = [];
             foreach ($statuses as $key => $item) {
-                $query[] = ':STATUS' . $key;
+                $query[] = ':STATUS'.$key;
 
-                $qb->setParameter('STATUS' . $key, $item);
+                $qb->setParameter('STATUS'.$key, $item);
             }
-            $qb->andWhere('ts.name IN (' . implode(',', $query) . ')');
+            $qb->andWhere('ts.name IN ('.implode(',', $query).')');
         }
 
         if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
@@ -1422,7 +1420,7 @@ class MotTestRepository extends AbstractMutableRepository
      * NOT FINISHED.
      *
      * @param MotTestSearchParam $searchParam
-     * @param array $optionalMotTestTypes
+     * @param array              $optionalMotTestTypes
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -1448,7 +1446,7 @@ class MotTestRepository extends AbstractMutableRepository
         }
 
         if ($searchParam->getDateTo()) {
-            $endDate = clone($searchParam->getDateTo());
+            $endDate = clone $searchParam->getDateTo();
             $qb->andwhere('test.startedDate <= :DATE_TO')
                 ->setParameter('DATE_TO', $endDate->add(new \DateInterval('P1M')));
         }
@@ -1487,7 +1485,7 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param MotTestSearchParam $searchParam
-     * @param array $optionalMotTestTypes
+     * @param array              $optionalMotTestTypes
      *
      * @return array
      */
@@ -1520,7 +1518,7 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param MotTestSearchParam $searchParam
-     * @param array $optionalMotTestTypes
+     * @param array              $optionalMotTestTypes
      *
      * @return int
      */
@@ -1529,7 +1527,7 @@ class MotTestRepository extends AbstractMutableRepository
         $dql = $this->prepareMotSearch($searchParam, $optionalMotTestTypes);
         $dql->select('count(test)');
 
-        return (int)$dql->getQuery()->getSingleScalarResult();
+        return (int) $dql->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -1575,7 +1573,7 @@ class MotTestRepository extends AbstractMutableRepository
         $qb->setParameter('testTypeCode', MotTestTypeCode::NORMAL_TEST);
         $qb->setParameter('lastSurveyMotTestId', $lastSurveyMotTestId);
 
-        $count = (int)$qb->getQuery()->getSingleScalarResult();
+        $count = (int) $qb->getQuery()->getSingleScalarResult();
 
         return $count;
     }
@@ -1597,11 +1595,11 @@ class MotTestRepository extends AbstractMutableRepository
             return 0;
         }
 
-        return (int)$result;
+        return (int) $result;
     }
 
     /**
-     * Finds an odometer reading for a given MOT test
+     * Finds an odometer reading for a given MOT test.
      *
      * @param int $motTestNumber
      *
@@ -1659,8 +1657,8 @@ class MotTestRepository extends AbstractMutableRepository
         $query = $this->getEntityManager()->getConnection()->prepare($sql);
 
         $query->bindValue('motTestNumber', $motTestNumber);
-        $query->bindValue("testTypeNormal", MotTestTypeCode::NORMAL_TEST);
-        $query->bindValue("testTypeRetest", MotTestTypeCode::RE_TEST);
+        $query->bindValue('testTypeNormal', MotTestTypeCode::NORMAL_TEST);
+        $query->bindValue('testTypeRetest', MotTestTypeCode::RE_TEST);
 
         $query->execute();
 
@@ -1670,9 +1668,10 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * To check if this is the latest test for the given vehicle at specific version
+     * To check if this is the latest test for the given vehicle at specific version.
      *
      * @param MotTest $motTest
+     *
      * @return bool
      */
     public function isVehicleLatestTest(MotTest $motTest)
@@ -1730,7 +1729,7 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param string $whereString
-     * @param bool $isQueryForVts
+     * @param bool   $isQueryForVts
      *
      * @return string
      */
@@ -1780,9 +1779,9 @@ class MotTestRepository extends AbstractMutableRepository
         //  --  add test type where clause --
         $whereParams = [];
         foreach (static::$testLogTestTypes as $key => $val) {
-            $whereParams[] = ':' . $key;
+            $whereParams[] = ':'.$key;
         }
-        $sql .= ' AND tt.code IN (' . implode(', ', $whereParams) . ')';
+        $sql .= ' AND tt.code IN ('.implode(', ', $whereParams).')';
 
         return $sql;
     }
@@ -1804,6 +1803,7 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param $reading
+     *
      * @return OdometerReadingDto|null
      */
     private function odometerReadingToDto($reading)

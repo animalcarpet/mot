@@ -2,7 +2,6 @@
 
 namespace Core\FormWizard;
 
-use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class Wizard implements AutoWireableInterface
@@ -18,8 +17,10 @@ class Wizard implements AutoWireableInterface
     {
         $this->stepList = $this->stepList->map(function (AbstractStep $step) use ($context) {
             $step->setContext($context);
+
             return $step;
         });
+
         return $this;
     }
 
@@ -27,6 +28,7 @@ class Wizard implements AutoWireableInterface
     {
         $this->stepList = $this->stepList->map(function (AbstractStep $step) use ($sessionStoreKey) {
             $step->setSessionStoreKey($sessionStoreKey);
+
             return $step;
         });
 
@@ -40,7 +42,7 @@ class Wizard implements AutoWireableInterface
         if ($this->hasValidAllPrevSteps($step, $formUuid) === false) {
             $validStep = $this->getPrevValidStep($step->getPrevStep(), $formUuid);
 
-            return $validStep->getRoute(["formUuid" => $formUuid]);
+            return $validStep->getRoute(['formUuid' => $formUuid]);
         }
 
         if ($isPost) {
@@ -55,6 +57,7 @@ class Wizard implements AutoWireableInterface
     /**
      * @param AbstractStep $step
      * @param $formUuid
+     *
      * @return AbstractStep
      */
     private function getPrevValidStep(AbstractStep $step, $formUuid)
@@ -84,6 +87,7 @@ class Wizard implements AutoWireableInterface
 
     /**
      * @param string $stepName
+     *
      * @return AbstractStep
      */
     private function getStep($stepName)

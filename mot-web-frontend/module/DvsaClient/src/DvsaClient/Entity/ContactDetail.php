@@ -6,9 +6,7 @@ use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class ContactDetail
- *
- * @package DvsaClient\Entity
+ * Class ContactDetail.
  */
 class ContactDetail
 {
@@ -47,6 +45,7 @@ class ContactDetail
 
     /**
      * @param \DvsaClient\Entity\Email[] $emails
+     *
      * @return $this
      */
     public function setEmails($emails)

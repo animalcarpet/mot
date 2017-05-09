@@ -16,7 +16,6 @@ use DvsaCommon\Dto\Account\ClaimStartDto;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
@@ -24,7 +23,6 @@ use DvsaEntities\Entity\Email;
 use DvsaEntities\Entity\EventPersonMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\PersonContact;
-use DvsaEntities\Entity\PersonContactType;
 use DvsaEntities\Entity\PersonSecurityAnswer;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
@@ -42,7 +40,7 @@ class ClaimService extends AbstractService
     private $motIdentityProvider;
     /** @var ClaimValidator $claimValidator */
     private $claimValidator;
-    /**@var  SecurityQuestionRepository $securityQuestionRepository */
+    /** @var SecurityQuestionRepository $securityQuestionRepository */
     private $securityQuestionRepository;
     /** @var PersonRepository $personRepository */
     private $personRepository;
@@ -95,7 +93,7 @@ class ClaimService extends AbstractService
     /**
      * Save user details, if the parameters are valid.
      *
-     * @param  array|null $data
+     * @param array|null $data
      *
      * @throws \DvsaCommon\Exception\UnauthorisedException
      * @throws \Exception
@@ -218,9 +216,9 @@ class ClaimService extends AbstractService
 
         foreach (['One', 'Two'] as $index) {
             $personSecurityAnswer = new PersonSecurityAnswer(
-                $securityQuestions[$data['securityQuestion' . $index . 'Id']],
+                $securityQuestions[$data['securityQuestion'.$index.'Id']],
                 $person,
-                $hashFunction->hash($data['securityAnswer' . $index])
+                $hashFunction->hash($data['securityAnswer'.$index])
             );
 
             $person->addSecurityAnswer($personSecurityAnswer);
@@ -230,7 +228,7 @@ class ClaimService extends AbstractService
     }
 
     /**
-     * @return integer
+     * @return int
      * @description return ID from zend identity
      */
     private function getUserId()
@@ -298,14 +296,14 @@ class ClaimService extends AbstractService
     private function updatePin($personId, $pin)
     {
         $hashFunction = new BCryptHashFunction();
-        $pinHash      = $hashFunction->hash($pin);
+        $pinHash = $hashFunction->hash($pin);
 
         $rows = $this
             ->entityManager
             ->createQuery(sprintf('UPDATE %s p SET p.pin = :pin WHERE p.id = :personId',
                 $this->personRepository->getClassName()))
             ->setParameters([
-                'pin'      => $pinHash,
+                'pin' => $pinHash,
                 'personId' => $personId,
             ])
             ->execute();

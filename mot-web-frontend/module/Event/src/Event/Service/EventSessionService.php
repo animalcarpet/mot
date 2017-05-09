@@ -8,7 +8,6 @@
 namespace Event\Service;
 
 use Core\Service\SessionService;
-use Zend\Session\Container;
 
 /**
  * Class EventSessionService.

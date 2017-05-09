@@ -5,11 +5,9 @@ namespace TestSupport\Service;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 use DvsaCommon\Constants\Role;
 use Zend\View\Model\JsonModel;
-use TestSupport\Service\AccountDataService;
 
 class FinanceUserService
 {
-
     /**
      * @var AccountDataService
      */
@@ -21,9 +19,10 @@ class FinanceUserService
     }
 
     /**
-     * Create a financeuser with the data supplied
+     * Create a financeuser with the data supplied.
      *
      * @param array $data
+     *
      * @return JsonModel
      */
     public function create(array $data)

@@ -7,7 +7,7 @@ $errorMessage = ArrayUtils::firstOrNull($errorMessages);
 $groupLabel = !empty($this->groupLabel) ? $this->groupLabel : 'Date of birth';
 ?>
 
-<div class="form-group <?php if ($errorMessage): echo "has-error"; endif; ?>">
+<div class="form-group <?php if ($errorMessage): echo 'has-error'; endif; ?>">
     <fieldset>
         <legend class="form-label">
             <?php echo $groupLabel; ?>
@@ -25,7 +25,7 @@ $groupLabel = !empty($this->groupLabel) ? $this->groupLabel : 'Date of birth';
                         'partial/gds/form/control-dob',
                         [
                             'element' => $dayElement,
-                            'label' => "Day"
+                            'label' => 'Day',
                         ]
                     );
                 ?>
@@ -36,7 +36,7 @@ $groupLabel = !empty($this->groupLabel) ? $this->groupLabel : 'Date of birth';
                     echo $this->partial(
                         'partial/gds/form/control-dob',
                         [
-                            'element' => $monthElement
+                            'element' => $monthElement,
                         ]
                     );
                 ?>
@@ -47,7 +47,7 @@ $groupLabel = !empty($this->groupLabel) ? $this->groupLabel : 'Date of birth';
                     echo $this->partial(
                         'partial/gds/form/control-dob',
                         [
-                            'element' => $yearElement
+                            'element' => $yearElement,
                         ]
                     );
                 ?>

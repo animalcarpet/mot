@@ -21,19 +21,16 @@ use DvsaEntities\Entity\MotTest;
 use DvsaMotApi\Service\MotTestSecurityService;
 
 /**
- * Class ReplacementCertificateDraftCreator
- *
- * @package DvsaMotApi\Service\ReplacementCertificate
+ * Class ReplacementCertificateDraftCreator.
  */
 class ReplacementCertificateDraftCreator
 {
-
     /**
-     * @var \DvsaAuthorisation\Service\AuthorisationServiceInterface $authorizationService
+     * @var \DvsaAuthorisation\Service\AuthorisationServiceInterface
      */
     private $authorizationService;
     /**
-     * @var \DvsaMotApi\Service\MotTestSecurityService $motTestSecurityService
+     * @var \DvsaMotApi\Service\MotTestSecurityService
      */
     private $motTestSecurityService;
 
@@ -44,18 +41,17 @@ class ReplacementCertificateDraftCreator
     private $entityManager;
 
     /**
-     * @param MotTestSecurityService $motTestSecurityService
+     * @param MotTestSecurityService        $motTestSecurityService
      * @param AuthorisationServiceInterface $authorizationService
-     * @param VehicleService $vehicleService
-     * @param EntityManager $entityManager
+     * @param VehicleService                $vehicleService
+     * @param EntityManager                 $entityManager
      */
     public function __construct(
         MotTestSecurityService $motTestSecurityService,
         AuthorisationServiceInterface $authorizationService,
         VehicleService $vehicleService,
         EntityManager $entityManager
-    )
-    {
+    ) {
         $this->motTestSecurityService = $motTestSecurityService;
         $this->authorizationService = $authorizationService;
         $this->vehicleService = $vehicleService;
@@ -66,6 +62,7 @@ class ReplacementCertificateDraftCreator
      * @param MotTest $motTest
      *
      * @return CertificateReplacementDraft
+     *
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
     public function create(MotTest $motTest, $replacementReason = '')
@@ -73,15 +70,15 @@ class ReplacementCertificateDraftCreator
         $hasFullRights = $this->authorizationService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
 
         if (!$motTest->isPassedOrFailed()) {
-            throw new ForbiddenException("Mot test is neither PASSED nor FAILED");
+            throw new ForbiddenException('Mot test is neither PASSED nor FAILED');
         }
 
         $vtsId = $motTest->getVehicleTestingStation()->getId();
         // to be reviewed: implicit assumption: !ADMIN => TESTER
         if (!$hasFullRights && !$this->motTestSecurityService->isCurrentTesterAssignedToVts($vtsId)) {
             throw new ForbiddenException(
-                "Current user is not allowed to replace this certificate since he is not registered
-                 in the VTS the certificate was issued at"
+                'Current user is not allowed to replace this certificate since he is not registered
+                 in the VTS the certificate was issued at'
             );
         }
 
@@ -132,6 +129,7 @@ class ReplacementCertificateDraftCreator
 
     /**
      * @param string $code
+     *
      * @return null|Colour
      */
     private function getColourByCode($code)

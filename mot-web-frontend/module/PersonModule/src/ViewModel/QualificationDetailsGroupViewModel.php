@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel;
 
 use Core\ViewModel\Gds\Table\GdsTable;
@@ -35,13 +36,13 @@ class QualificationDetailsGroupViewModel
         $certificateFieldsData = (new CertificateFields())->getCertificateFields($this->status->getCode());
         $sidebarBadgeClass = $certificateFieldsData->getSidebarBadge()->getCssClass();
 
-        if(!empty($this->motTestingCertificate)) {
+        if (!empty($this->motTestingCertificate)) {
             $certificateNumber = $this->motTestingCertificate->getCertificateNumber();
             $date = 'Awarded '.
                 (new \DateTime($this->motTestingCertificate->getDateOfQualification()))
                 ->format(DateTimeDisplayFormat::FORMAT_DATE);
         } else {
-            if($this->status->getCode() == AuthorisationForTestingMotStatusCode::QUALIFIED) {
+            if ($this->status->getCode() == AuthorisationForTestingMotStatusCode::QUALIFIED) {
                 $certificateNumber = 'Not needed';
                 $date = 'Before 1 April 2016';
             } else {
@@ -51,26 +52,25 @@ class QualificationDetailsGroupViewModel
         }
 
         $table = new GdsTable();
-        $table->newRow('qualification-status-' . $className, $sidebarBadgeClass)->setLabel('Qualification status')
+        $table->newRow('qualification-status-'.$className, $sidebarBadgeClass)->setLabel('Qualification status')
             ->setValue($this->status->getName());
-        $certificateNumberRow = $table->newRow('certificate-number-' . $className)->setLabel('Certificate')
+        $certificateNumberRow = $table->newRow('certificate-number-'.$className)->setLabel('Certificate')
             ->setValue($certificateNumber);
 
         $certificateNumberRow
             ->setValueMetaData($date);
 
-        if(!empty($this->motTestingCertificate)) {
-
-            if(!empty($this->changeUrl)) {
+        if (!empty($this->motTestingCertificate)) {
+            if (!empty($this->changeUrl)) {
                 $certificateNumberRow->addActionLink('Change', $this->changeUrl, '', 'change');
             }
 
-            if(!empty($this->removeUrl)) {
+            if (!empty($this->removeUrl)) {
                 $certificateNumberRow->addActionLink('Remove', $this->removeUrl, '', 'remove');
             }
         }
 
-        if(!empty($this->addUrl)) {
+        if (!empty($this->addUrl)) {
             $certificateNumberRow->addActionLink('Add certificate and request a demo test', $this->addUrl);
         }
 

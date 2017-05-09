@@ -11,9 +11,9 @@ class HydratorFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function testFactoryReturnsInstance()
     {
-        $factory        = new HydratorFactory();
+        $factory = new HydratorFactory();
         $serviceLocator = new ServiceManager();
-        $service        = $factory->createService($serviceLocator);
+        $service = $factory->createService($serviceLocator);
         $this->assertInstanceOf(Hydrator::class, $service);
     }
 }

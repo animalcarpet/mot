@@ -10,6 +10,7 @@ class HttpRouteMatchFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return RouteMatch
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -6,9 +6,8 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\SiteDetailsService;
 
-
 /**
- * Controller for getting / updating site's testing facilities
+ * Controller for getting / updating site's testing facilities.
  */
 class SiteDetailsController extends AbstractDvsaRestfulController
 {

@@ -49,9 +49,11 @@ class OrganisationEventService
     }
 
     /**
-     * @param int $organisationId
+     * @param int   $organisationId
      * @param array $data
+     *
      * @return Event
+     *
      * @throws NotFoundException
      * @throws \Exception
      */
@@ -73,7 +75,6 @@ class OrganisationEventService
             $this->entityManager->commit();
 
             return new RecordEventResult($event);
-
         } catch (\Exception $e) {
             $this->entityManager->rollback();
             throw $e;
@@ -82,7 +83,8 @@ class OrganisationEventService
 
     /**
      * @param Organisation $organisation
-     * @param Event $event
+     * @param Event        $event
+     *
      * @return bool
      */
     private function createEventOrganisationMap(Organisation $organisation, Event $event)
@@ -93,13 +95,17 @@ class OrganisationEventService
 
         $this->entityManager->persist($eventOrganisationMap);
         $this->entityManager->flush();
+
         return true;
     }
 
     /**
-     * Ensures that the category being passed in data is the right one for the entity
+     * Ensures that the category being passed in data is the right one for the entity.
+     *
      * @param array $data
+     *
      * @return bool
+     *
      * @throws \InvalidArgumentException if wrong category supplied
      */
     private function assertEventCategory(array $data)
@@ -111,9 +117,12 @@ class OrganisationEventService
     }
 
     /**
-     * Retrieves the organisation entity from the DB
+     * Retrieves the organisation entity from the DB.
+     *
      * @param int $organisationId
+     *
      * @return Organisation
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     private function getOrganisationEntity($organisationId)
@@ -121,8 +130,9 @@ class OrganisationEventService
         // OrganisationRepository
         $organisation = $this->organisationRepository->find($organisationId);
         if (!$organisation instanceof Organisation) {
-            throw new NotFoundException('Unable to find organisation with id ' . $organisationId);
+            throw new NotFoundException('Unable to find organisation with id '.$organisationId);
         }
+
         return $organisation;
     }
 }

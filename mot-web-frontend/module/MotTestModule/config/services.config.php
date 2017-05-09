@@ -4,7 +4,6 @@
  *
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
-
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Service\SurveyServiceFactory;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Validation\ContingencyTestValidatorFactory;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\View\DefectsJourneyContextProviderFactory;
@@ -25,6 +24,6 @@ return [
         SurveyService::class => SurveyServiceFactory::class,
         DefectsJourneyContextProvider::class => DefectsJourneyContextProviderFactory::class,
         DefectsJourneyUrlGenerator::class => DefectsJourneyUrlGeneratorFactory::class,
-        SatisfactionSurveyListener::class => SatisfactionSurveyListenerFactory::class
+        SatisfactionSurveyListener::class => SatisfactionSurveyListenerFactory::class,
     ],
 ];

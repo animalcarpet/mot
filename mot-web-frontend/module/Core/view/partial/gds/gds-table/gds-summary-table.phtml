@@ -3,7 +3,7 @@ use Core\ViewModel\Gds\Table\GdsTable;
 
 /** @var GdsTable $table */
 if (!isset($table) || !$table instanceof GdsTable) {
-    throw new InvalidArgumentException('This partial expects variable $table of type ' . GdsTable::class);
+    throw new InvalidArgumentException('This partial expects variable $table of type '.GdsTable::class);
 }
 
 ?>
@@ -34,22 +34,23 @@ if (!isset($table) || !$table instanceof GdsTable) {
                 ?>
                 <td class="table-summary__value">
                     <span<?php
-                        echo($row->getHtmlId() ? ' id="' . $this->escapeHtmlAttr($row->getHtmlId()) . '"' : '');
-                        echo $row->isHtmlClassSet() ? ' class="' . $this->escapeHtmlAttr($row->getHtmlClass()) .'"' : '';
+                        echo $row->getHtmlId() ? ' id="'.$this->escapeHtmlAttr($row->getHtmlId()).'"' : '';
+                        echo $row->isHtmlClassSet() ? ' class="'.$this->escapeHtmlAttr($row->getHtmlClass()).'"' : '';
                         ?>>
                         <?php echo $row->getValue()->isEscapeRequired() ? $this->escapeHtml($value) : $value; ?>
                     </span>
                     <?php if (!empty($row->getValueMetaData())): ?>
                         <span class="table-summary__meta"
-                        <?php echo($row->getHtmlId() ? ' id="' . $this->escapeHtmlAttr($row->getHtmlId()) . '-meta-data"' : '');?>>
+                        <?php echo $row->getHtmlId() ? ' id="'.$this->escapeHtmlAttr($row->getHtmlId()).'-meta-data"' : ''; ?>>
                             <?php $valueMetaData = $row->getValueMetaData()->getContent();
                             echo $row->getValueMetaData()->isEscapeRequired() ? $this->escapeHtml($valueMetaData) : $valueMetaData; ?>
                         </span>
                     <?php endif ?>
-                <?php if (!empty($row->hasActionLink()))
-                    echo '<a href="' . $row->getActionLink()->getUrl() . '" class="table-summary__action" title="'. $row->getActionLink()->getTooltip() . '"' .($row->getHtmlId() ? (' id="' . $this->escapeHtmlAttr($row->getHtmlId()) .'-change"') : '')
-                        . '>'. $row->getActionLink()->getText() .'<span class="visuallyhidden"> ' .  $this->escapeHtml($row->getLabel()->getContent()) . '</span>
-                    </a>' ?>
+                <?php if (!empty($row->hasActionLink())) {
+                                echo '<a href="'.$row->getActionLink()->getUrl().'" class="table-summary__action" title="'.$row->getActionLink()->getTooltip().'"'.($row->getHtmlId() ? (' id="'.$this->escapeHtmlAttr($row->getHtmlId()).'-change"') : '')
+                        .'>'.$row->getActionLink()->getText().'<span class="visuallyhidden"> '.$this->escapeHtml($row->getLabel()->getContent()).'</span>
+                    </a>';
+                            } ?>
                 </td>
             </tr>
         <?php endforeach; ?>

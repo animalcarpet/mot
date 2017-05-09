@@ -8,12 +8,11 @@ use DvsaEntities\Repository\OrganisationRepository;
 use OrganisationApi\Service\Mapper\SiteMapper;
 
 /**
- * Class SiteService
- * @package OrganisationApi\Service
+ * Class SiteService.
  */
 class SiteService
 {
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     protected $authorisationService;
     /** @var OrganisationRepository */
     private $organisationRepository;
@@ -25,9 +24,9 @@ class SiteService
         OrganisationRepository $organisationRepository,
         SiteMapper $mapper
     ) {
-        $this->authorisationService   = $authSrv;
+        $this->authorisationService = $authSrv;
         $this->organisationRepository = $organisationRepository;
-        $this->mapper                 = $mapper;
+        $this->mapper = $mapper;
     }
 
     public function getListForOrganisation($organisationId)
@@ -37,7 +36,7 @@ class SiteService
         );
 
         $organisation = $this->organisationRepository->get($organisationId);
-        $data         = $this->mapper->manyToDto($organisation->getSites());
+        $data = $this->mapper->manyToDto($organisation->getSites());
 
         return $data;
     }

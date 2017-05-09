@@ -7,12 +7,11 @@ use DvsaClient\Mapper\ExpiredPasswordMapper;
 use DvsaCommonTest\TestUtils\XMock;
 use Account\Service\ExpiredPasswordService;
 use Core\Service\MotFrontendIdentityProviderInterface;
-use Dvsa\OpenAM\OpenAMClientInterface;
 
 class ExpiredPasswordServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const TOKEN = "token";
-    const USERNAME = "tester1";
+    const TOKEN = 'token';
+    const USERNAME = 'tester1';
     private $mapper;
 
     public function setUp()
@@ -20,7 +19,7 @@ class ExpiredPasswordServiceTest extends \PHPUnit_Framework_TestCase
         $mapper = XMock::of(ExpiredPasswordMapper::class);
         $mapper
             ->expects($this->exactly(0))
-            ->method("postPasswordExpiredDate");
+            ->method('postPasswordExpiredDate');
 
         $this->mapper = $mapper;
     }
@@ -29,7 +28,7 @@ class ExpiredPasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->createMotConfig(['feature_toggle' => false]);
 
-        $this->sentExpiredPasswordNotificationIfNeeded($config,$this->mapper, null);
+        $this->sentExpiredPasswordNotificationIfNeeded($config, $this->mapper, null);
     }
 
     public function test_doNotSendNotification_whenPasswordExpiryNotificationDaysIsEmpty()
@@ -69,7 +68,7 @@ class ExpiredPasswordServiceTest extends \PHPUnit_Framework_TestCase
         $mapper = XMock::of(ExpiredPasswordMapper::class);
         $mapper
             ->expects($this->exactly(1))
-            ->method("postPasswordExpiredDate");
+            ->method('postPasswordExpiredDate');
 
         $this->sentExpiredPasswordNotificationIfNeeded($config, $mapper, $date);
     }
@@ -92,6 +91,7 @@ class ExpiredPasswordServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $data
+     *
      * @return MotConfig
      */
     private function createMotConfig(array $data = [])
@@ -99,7 +99,7 @@ class ExpiredPasswordServiceTest extends \PHPUnit_Framework_TestCase
         $defaults = [
             'feature_toggle' => true,
             'password_expiry_notification_days' => [7, 3, 2, 1],
-            'password_expiry_grace_period' => '30 days'
+            'password_expiry_grace_period' => '30 days',
         ];
 
         $data = array_replace($defaults, $data);
@@ -107,9 +107,9 @@ class ExpiredPasswordServiceTest extends \PHPUnit_Framework_TestCase
         $config = XMock::of(MotConfig::class);
         $config
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturnCallback(function ($args) use ($data) {
-                $arg = (is_array($args))? array_shift($args) : $args;
+                $arg = (is_array($args)) ? array_shift($args) : $args;
                 foreach ($data as $key => $value) {
                     if ($arg === $key) {
                         return $value;

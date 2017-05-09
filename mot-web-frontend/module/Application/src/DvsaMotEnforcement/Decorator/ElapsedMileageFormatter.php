@@ -59,7 +59,7 @@ class ElapsedMileageFormatter
         switch ($odometer->getResultType()) {
             case OdometerReadingResultType::OK:
                 return (is_null($odometer->getValue()) || is_null($odometer->getUnit()))
-                    ? 'n/a' : $odometer->getValue() . ' ' . $odometer->getUnit();
+                    ? 'n/a' : $odometer->getValue().' '.$odometer->getUnit();
 
             case OdometerReadingResultType::NO_ODOMETER:
                 return 'No odometer';

@@ -11,9 +11,9 @@ $latestRfrs = $motTestDetails->getReasonsForRejection();
 <?php echo $this->partial(
     'motHeaderDetails',
     [
-        'motTestDetails'    => $motTestDetails,
-        'motTestNumber'     => $motTestNumber,
-        'isMotContingency'     => $this->isMotContingency,
+        'motTestDetails' => $motTestDetails,
+        'motTestNumber' => $motTestNumber,
+        'isMotContingency' => $this->isMotContingency,
     ]
 ); ?>
 <?php echo $this->partial('rfrResultsSummary', ['reasonsForRejection' => $latestRfrs, 'motTestNumber' => $motTestNumber]); ?>
@@ -29,7 +29,7 @@ echo $this->partial('testItemSelectorSearch', ['motTestNumber' => $motTestNumber
     [
         'motTestNumber' => $motTestNumber,
         'reasonsForRejection' => $reasonsForRejection,
-        'vehicleClassCode' => $motTestDetails->getVehicleClass()->getCode()
+        'vehicleClassCode' => $motTestDetails->getVehicleClass()->getCode(),
     ]
 ); ?>
 

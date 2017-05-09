@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Enum\SiteBusinessRoleCode;
@@ -8,16 +9,16 @@ use VehicleApi\Service\VehicleSearchService;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class VehicleControllerTest
+ * Class VehicleControllerTest.
  */
 class VehicleControllerTest extends AbstractMotApiControllerTestCase
 {
     const VEHICLE_TEST_ID = '1';
-    const TEST_REG_MARK = "CRZ 4545";
-    const TEST_REG_MARK_SANITIZED = "CRZ 4545";
-    const TEST_SHORT_VIN = "111111";
-    const TEST_FULL_VIN = "100000000001111111";
-    const TEST_INCORRECT_VIN = "100000111";
+    const TEST_REG_MARK = 'CRZ 4545';
+    const TEST_REG_MARK_SANITIZED = 'CRZ 4545';
+    const TEST_SHORT_VIN = '111111';
+    const TEST_FULL_VIN = '100000000001111111';
+    const TEST_INCORRECT_VIN = '100000111';
     const TEST_NO_VIN = null;
     const TEST_NO_REG = null;
     const TEST_VIN_IS_PARTIAL = false;
@@ -48,7 +49,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
             new Parameters(
                 [VehicleController::VIN_QUERY_PARAMETER => self::TEST_SHORT_VIN,
                       VehicleController::REG_QUERY_PARAMETER => self::TEST_REG_MARK,
-                      VehicleController::VIN_TYPE_PARAMETER  => VehicleController::PARTIAL_VIN
+                      VehicleController::VIN_TYPE_PARAMETER => VehicleController::PARTIAL_VIN,
                 ]
             )
         );
@@ -81,7 +82,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
             new Parameters(
                 [VehicleController::VIN_QUERY_PARAMETER => self::TEST_SHORT_VIN,
                       VehicleController::REG_QUERY_PARAMETER => self::TEST_REG_MARK,
-                      VehicleController::VIN_TYPE_PARAMETER  => VehicleController::PARTIAL_VIN
+                      VehicleController::VIN_TYPE_PARAMETER => VehicleController::PARTIAL_VIN,
                 ]
             )
         );
@@ -114,7 +115,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
             new Parameters(
                 [VehicleController::VIN_QUERY_PARAMETER => self::TEST_SHORT_VIN,
                       VehicleController::REG_QUERY_PARAMETER => self::TEST_REG_MARK,
-                      VehicleController::VIN_TYPE_PARAMETER  => VehicleController::PARTIAL_VIN
+                      VehicleController::VIN_TYPE_PARAMETER => VehicleController::PARTIAL_VIN,
                 ]
             )
         );
@@ -147,7 +148,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
             new Parameters(
                 [VehicleController::VIN_QUERY_PARAMETER => self::TEST_FULL_VIN,
                       VehicleController::REG_QUERY_PARAMETER => self::TEST_REG_MARK,
-                      VehicleController::VIN_TYPE_PARAMETER  => VehicleController::FULL_VIN
+                      VehicleController::VIN_TYPE_PARAMETER => VehicleController::FULL_VIN,
                 ]
             )
         );
@@ -179,7 +180,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setQuery(
             new Parameters(
                 [VehicleController::VIN_QUERY_PARAMETER => self::TEST_FULL_VIN,
-                      VehicleController::VIN_TYPE_PARAMETER  => VehicleController::FULL_VIN
+                      VehicleController::VIN_TYPE_PARAMETER => VehicleController::FULL_VIN,
                 ]
             )
         );
@@ -226,7 +227,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setQuery(
             new Parameters(
                 [VehicleController::REG_QUERY_PARAMETER => self::TEST_REG_MARK,
-                      VehicleController::VIN_TYPE_PARAMETER  => VehicleController::NO_VIN
+                      VehicleController::VIN_TYPE_PARAMETER => VehicleController::NO_VIN,
                 ]
             )
         );
@@ -244,7 +245,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
     {
         $this->mockValidAuthorization([SiteBusinessRoleCode::TESTER]);
 
-        $twoVehiclesData      = [['id' => 1], ['id' => 2]];
+        $twoVehiclesData = [['id' => 1], ['id' => 2]];
         $expectedSearchReturn = [$twoVehiclesData, true];
 
         $mockVehicleService = $this->getMockServiceManagerClass(
@@ -258,7 +259,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setQuery(
             new Parameters(
                 [VehicleController::REG_QUERY_PARAMETER => self::TEST_REG_MARK,
-                      VehicleController::VIN_TYPE_PARAMETER  => VehicleController::NO_VIN
+                      VehicleController::VIN_TYPE_PARAMETER => VehicleController::NO_VIN,
                 ]
             )
         );
@@ -275,7 +276,7 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
     protected function getTestResponse($vehicleData)
     {
         return [
-            "data" => ["vehicle" => $vehicleData]
+            'data' => ['vehicle' => $vehicleData],
         ];
     }
 
@@ -292,9 +293,9 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
         $response = [
             'data' => [
                 'resultCount' => 2,
-                'resultType'  => VehicleController::SEARCH_RESULT_MULTIPLE_MATCHES,
-                'vehicles'    => $vehiclesData,
-            ]
+                'resultType' => VehicleController::SEARCH_RESULT_MULTIPLE_MATCHES,
+                'vehicles' => $vehiclesData,
+            ],
         ];
 
         return $response;
@@ -306,15 +307,16 @@ class VehicleControllerTest extends AbstractMotApiControllerTestCase
     private function getTwoVehiclesData()
     {
         $twoVehiclesData = [
-            ['id'           => 1,
+            ['id' => 1,
              'registration' => 'RIA8080',
-             'vin'          => '4S4BP67CX45450432'
+             'vin' => '4S4BP67CX45450432',
             ],
-            ['id'           => 2,
+            ['id' => 2,
              'registration' => 'RIA8080',
-             'vin'          => 'S4BP67CX45450433'
-            ]
+             'vin' => 'S4BP67CX45450433',
+            ],
         ];
+
         return $twoVehiclesData;
     }
 }

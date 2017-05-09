@@ -23,7 +23,7 @@ class WebAuthenticationCookieServiceFactoryTest extends \PHPUnit_Framework_TestC
             WebAuthenticationCookieService::class,
             [
                 OpenAMClientOptions::class,
-                'Request'  => Request::class,
+                'Request' => Request::class,
                 'Response' => Response::class,
             ]
         );

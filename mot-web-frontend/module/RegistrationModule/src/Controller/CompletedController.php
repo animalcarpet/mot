@@ -4,6 +4,7 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
+
 namespace Dvsa\Mot\Frontend\RegistrationModule\Controller;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;

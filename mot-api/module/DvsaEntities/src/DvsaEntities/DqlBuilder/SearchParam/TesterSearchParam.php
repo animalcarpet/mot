@@ -1,20 +1,19 @@
 <?php
+
 namespace DvsaEntities\DqlBuilder\SearchParam;
 
 use DvsaCommonApi\Model\SearchParam;
 
 /**
- * Class SearchParam
- *
- * @package DvsaEntities\DqlBuilder\SearchParam
+ * Class SearchParam.
  */
 class TesterSearchParam extends SearchParam
 {
     protected $search = null;
 
-    static public $columnNames = [
-        "0" => "id",
-        "1" => "username"
+    public static $columnNames = [
+        '0' => 'id',
+        '1' => 'username',
     ];
 
     /**
@@ -23,12 +22,12 @@ class TesterSearchParam extends SearchParam
     public function toArray()
     {
         return [
-            "search"         => $this->getSearch(),
-            "sortColumnId"   => $this->getSortColumnId(),
-            "sortColumnName" => $this->getSortColumnName(),
-            "sortDirection"  => $this->getSortDirection(),
-            "rowCount"       => $this->getRowCount(),
-            "start"          => $this->getStart()
+            'search' => $this->getSearch(),
+            'sortColumnId' => $this->getSortColumnId(),
+            'sortColumnName' => $this->getSortColumnName(),
+            'sortDirection' => $this->getSortDirection(),
+            'rowCount' => $this->getRowCount(),
+            'start' => $this->getStart(),
         ];
     }
 
@@ -40,12 +39,10 @@ class TesterSearchParam extends SearchParam
     public function setSearch($search)
     {
         $this->search = $search;
+
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getSearch()
     {
         return $this->search;

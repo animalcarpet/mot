@@ -9,14 +9,15 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * DefectJourneyContextProviderFactory
+ * DefectJourneyContextProviderFactory.
  */
 class DefectsJourneyContextProviderFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return DefectsJourneyContextProvider
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

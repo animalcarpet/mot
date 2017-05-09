@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApi\Authorisation\Assertion;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -10,9 +11,7 @@ use DvsaEntities\Entity\Vehicle;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class ReadMotTestAssertion
- *
- * @package DvsaCommonApi\Authorisation\Assertion
+ * Class ReadMotTestAssertion.
  */
 class ReadMotTestAssertion
 {
@@ -64,19 +63,22 @@ class ReadMotTestAssertion
     public function isMotTestOwnerForDto(MotTestDto $motTest)
     {
         $testerId = $motTest->getTester()->getId();
+
         return $this->compareCurrentUserIdAgainstTesterId($testerId);
     }
 
     public function isMotTestOwner(MotTest $motTest)
     {
         $testerId = $motTest->getTester()->getId();
+
         return $this->compareCurrentUserIdAgainstTesterId($testerId);
     }
 
     /**
-     * Tells us if the current user has read access to the demo test
+     * Tells us if the current user has read access to the demo test.
+     *
      * @param MotTest $motTest
-     * @return null
+     *
      * @throws UnauthorisedException
      */
     private function assertGrantedForDemoTest(MotTest $motTest)

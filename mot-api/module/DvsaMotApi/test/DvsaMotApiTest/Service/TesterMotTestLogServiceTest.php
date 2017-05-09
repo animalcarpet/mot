@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -13,16 +14,15 @@ use OrganisationApi\Service\Mapper\MotTestLogSummaryMapper;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class TesterMotTestLogServiceTest
- * @package DvsaMotApiTest\Service
+ * Class TesterMotTestLogServiceTest.
  */
 class TesterMotTestLogServiceTest extends AbstractServiceTestCase
 {
     private static $testerId = 1;
-    private static $YEAR  = '1024';
+    private static $YEAR = '1024';
     private static $MONTH = '256';
-    private static $WEEK  = '12';
-    private static $DAY   = '2';
+    private static $WEEK = '12';
+    private static $DAY = '2';
 
     /** @var TesterMotTestLogService */
     private $testerMotTestLogService;
@@ -39,7 +39,7 @@ class TesterMotTestLogServiceTest extends AbstractServiceTestCase
     public function setUp()
     {
         $this->mockAuthSrv = $this->getMockAuthorizationService();
-        $this->mockEm      = XMock::of(EntityManager::class, ['getRepository']);
+        $this->mockEm = XMock::of(EntityManager::class, ['getRepository']);
         $this->mockMotRepo = XMock::of(MotTestRepository::class, ['getCountOfTesterMotTestsSummary']);
 
         $this->testerMotTestLogService = new TesterMotTestLogService(
@@ -73,9 +73,9 @@ class TesterMotTestLogServiceTest extends AbstractServiceTestCase
     protected function getFakeSummary()
     {
         return [
-            'year'  => self::$YEAR,
+            'year' => self::$YEAR,
             'month' => self::$MONTH,
-            'week'  => self::$WEEK,
+            'week' => self::$WEEK,
             'today' => self::$DAY,
         ];
     }

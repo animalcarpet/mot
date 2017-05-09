@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 use Core\Form\View\Helper\MotFormLabel;
 use Core\Form\View\Helper\MotFormRow;
 use Core\View\Helper\Factory\GetReleaseTagFactory;
@@ -12,13 +11,13 @@ use DvsaFeature\Factory\View\Helper\FeatureToggleViewHelperFactory;
 
 return [
     'view_manager' => [
-        'template_map'        => [
-            'googleAnalyticsSnippet' => __DIR__ . '/../view/partial/fragments/google-analytics.phtml',
-            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
-            'contentBreadcrumb' => __DIR__ . '/../view/partial/fragments/content-breadcrumb.twig',
+        'template_map' => [
+            'googleAnalyticsSnippet' => __DIR__.'/../view/partial/fragments/google-analytics.phtml',
+            'layout/layout' => __DIR__.'/../view/layout/layout.phtml',
+            'contentBreadcrumb' => __DIR__.'/../view/partial/fragments/content-breadcrumb.twig',
         ],
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
     ],
     'view_helpers' => [
@@ -27,9 +26,9 @@ return [
             'googleAnalyticsHelper' => \Core\Factory\GoogleAnalyticsHelperFactory::class,
             'featureToggle' => FeatureToggleViewHelperFactory::class,
         ],
-        'invokables'=> [
+        'invokables' => [
             'MotFormRow' => MotFormRow::class,
             'MotFormLabel' => MotFormLabel::class,
         ],
-    ]
+    ],
 ];

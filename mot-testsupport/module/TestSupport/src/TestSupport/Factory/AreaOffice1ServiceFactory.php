@@ -13,6 +13,7 @@ class AreaOffice1ServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new AreaOffice1Service($accountService);
+
         return $service;
     }
 }

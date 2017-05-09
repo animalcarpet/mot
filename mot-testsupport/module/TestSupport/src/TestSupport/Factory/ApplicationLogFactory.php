@@ -15,6 +15,7 @@ class ApplicationLogFactory implements FactoryInterface
         $logger = new Logger();
         $writer = new Stream($config['logger']['output']);
         $logger->addWriter($writer);
+
         return $logger;
     }
 }

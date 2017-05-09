@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Service\MotTestingCertificate\Event;
 
 use DvsaCommon\Enum\VehicleClassGroupCode;

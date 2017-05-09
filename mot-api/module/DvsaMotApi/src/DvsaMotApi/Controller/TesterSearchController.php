@@ -1,10 +1,9 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaMotApi\Model\OutputFormat;
-use Zend\View\Model\JsonModel;
 
 /**
  * Move to the following syntax for searches..
@@ -18,8 +17,6 @@ use Zend\View\Model\JsonModel;
  *
  *
  * Class TesterSearchController
- *
- * @package DvsaMotApi\Controller
  */
 class TesterSearchController extends AbstractDvsaRestfulController
 {
@@ -52,7 +49,7 @@ class TesterSearchController extends AbstractDvsaRestfulController
     }
 
     /**
-     * Build the search params from the current request
+     * Build the search params from the current request.
      *
      * @param $service
      *
@@ -60,8 +57,8 @@ class TesterSearchController extends AbstractDvsaRestfulController
      */
     protected function buildSearchParams($service)
     {
-        $request        = $this->getRequest();
-        $search       = (string)$request->getQuery(self::SEARCH_PARAMETER);
+        $request = $this->getRequest();
+        $search = (string) $request->getQuery(self::SEARCH_PARAMETER);
 
         $searchParams = $service
             ->getSearchParams()

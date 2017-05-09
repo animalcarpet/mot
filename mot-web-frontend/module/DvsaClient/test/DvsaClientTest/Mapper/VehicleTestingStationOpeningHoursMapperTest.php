@@ -7,15 +7,12 @@ use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 
 /**
- * Class VehicleTestingStationOpeningHoursMapperTest
- *
- * @package DvsaClientTest\Mapper
+ * Class VehicleTestingStationOpeningHoursMapperTest.
  */
 class VehicleTestingStationOpeningHoursMapperTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var $mapper VehicleTestingStationOpeningHoursMapper
+     * @var VehicleTestingStationOpeningHoursMapper
      */
     private $mapper;
 
@@ -373,8 +370,9 @@ class VehicleTestingStationOpeningHoursMapperTest extends \PHPUnit_Framework_Tes
             'sundayOpenTimePeriod' => 'am',
             'sundayCloseTime' => '5.00',
             'sundayCloseTimePeriod' => 'pm',
-            'sundayIsClosed' => ''
+            'sundayIsClosed' => '',
         ];
+
         return $data;
     }
 
@@ -382,12 +380,12 @@ class VehicleTestingStationOpeningHoursMapperTest extends \PHPUnit_Framework_Tes
     {
         $siteData = [];
 
-        for ($i = 1; $i < 8; $i++) {
+        for ($i = 1; $i < 8; ++$i) {
             $siteData['weeklySchedule'][] = [
-                "weekday"   => $i,
-                "openTime"  => "09:00:00",
-                "closeTime" => "17:00:00",
-                'isClosed' => ''
+                'weekday' => $i,
+                'openTime' => '09:00:00',
+                'closeTime' => '17:00:00',
+                'isClosed' => '',
             ];
         }
 

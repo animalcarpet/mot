@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\Service;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper\TesterStatisticsMapper;
@@ -12,8 +13,7 @@ class TesterMultiSiteStatisticsService implements AutoWireableInterface
 
     public function __construct(
         TesterMultiSiteStatisticsRepository $repository
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->mapper = new TesterStatisticsMapper();
     }

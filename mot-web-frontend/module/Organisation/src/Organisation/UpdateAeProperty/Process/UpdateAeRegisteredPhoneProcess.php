@@ -15,10 +15,10 @@ class UpdateAeRegisteredPhoneProcess extends AbstractSingleStepAeProcess impleme
     protected $propertyName = UpdateAePropertyAction::AE_REGISTERED_TELEPHONE_PROPERTY;
     protected $permission = PermissionAtOrganisation::AE_UPDATE_REGISTERED_OFFICE_PHONE;
     protected $requiresReview = false;
-    protected $submitButtonText = "Change registered office telephone number";
-    protected $successfulEditMessage = "Registered office telephone number has been successfully changed.";
-    protected $formPageTitle = "Change registered office telephone number";
-    protected $formPartial = "organisation/update-ae-property/partials/edit-phone";
+    protected $submitButtonText = 'Change registered office telephone number';
+    protected $successfulEditMessage = 'Registered office telephone number has been successfully changed.';
+    protected $formPageTitle = 'Change registered office telephone number';
+    protected $formPartial = 'organisation/update-ae-property/partials/edit-phone';
 
     public function getPropertyName()
     {

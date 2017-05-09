@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * TestSlotTransaction
+ * TestSlotTransaction.
  *
  * @ORM\Table(name="test_slot_transaction", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\TestSlotTransactionRepository")
@@ -15,21 +16,21 @@ class TestSlotTransaction extends Entity
     use CommonIdentityTrait;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="slots", type="integer", nullable=false)
      */
     private $slots;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="slots_after", type="integer", nullable=false)
      */
     private $slotsAfter;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="real_slots", type="integer", nullable=false)
      */
@@ -108,7 +109,7 @@ class TestSlotTransaction extends Entity
     private $transactionAmendments;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -117,9 +118,10 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Set slots
+     * Set slots.
      *
-     * @param integer $slots
+     * @param int $slots
+     *
      * @return TestSlotTransaction
      */
     public function setSlots($slots)
@@ -130,9 +132,9 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Get slots
+     * Get slots.
      *
-     * @return integer
+     * @return int
      */
     public function getSlots()
     {
@@ -140,9 +142,10 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param \DvsaEntities\Entity\TestSlotTransactionStatus $status
+     *
      * @return TestSlotTransaction
      */
     public function setStatus($status)
@@ -153,7 +156,7 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return \DvsaEntities\Entity\TestSlotTransactionStatus
      */
@@ -164,6 +167,7 @@ class TestSlotTransaction extends Entity
 
     /**
      * @param string $state
+     *
      * @return TestSlotTransaction
      */
     public function setState($state)
@@ -182,9 +186,10 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Set payment
+     * Set payment.
      *
      * @param \DvsaEntities\Entity\payment $payment
+     *
      * @return TestSlotTransaction
      */
     public function setPayment(Payment $payment = null)
@@ -195,7 +200,7 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Get payment
+     * Get payment.
      *
      * @return \DvsaEntities\Entity\payment
      */
@@ -205,9 +210,10 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param \DvsaEntities\Entity\Organisation $organisation
+     *
      * @return TestSlotTransaction
      */
     public function setOrganisation(Organisation $organisation = null)
@@ -218,7 +224,7 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return \DvsaEntities\Entity\Organisation
      */
@@ -228,9 +234,10 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
+     *
      * @return TestSlotTransaction
      */
     public function setCreated($created)
@@ -241,7 +248,7 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -251,9 +258,10 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Set createdByUsername
+     * Set createdByUsername.
      *
      * @param string $createdByUsername
+     *
      * @return TestSlotTransaction
      */
     public function setCreatedByUsername($createdByUsername)
@@ -264,7 +272,7 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Get CreatedByUsername
+     * Get CreatedByUsername.
      *
      * @return string
      */
@@ -274,9 +282,10 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Set completedOn
+     * Set completedOn.
      *
      * @param \DateTime $completedOn
+     *
      * @return TestSlotTransaction
      */
     public function setCompletedOn($completedOn)
@@ -287,7 +296,7 @@ class TestSlotTransaction extends Entity
     }
 
     /**
-     * Get completedOn
+     * Get completedOn.
      *
      * @return \DateTime
      */
@@ -335,6 +344,7 @@ class TestSlotTransaction extends Entity
     public function setSlotsAfter($slotsAfter)
     {
         $this->slotsAfter = $slotsAfter;
+
         return $this;
     }
 

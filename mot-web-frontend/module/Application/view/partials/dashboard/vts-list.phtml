@@ -17,7 +17,7 @@ foreach ($dashboard->getAuthorisedExaminers() as $authorisedExaminer) :
     $escUrlAEView = AuthorisedExaminerUrlBuilderWeb::of($authorisedExaminer->getId());
     $vtsCount = $authorisedExaminer->getSiteCount();
 
-    $currentIndex++;
+    ++$currentIndex;
     ?>
     <section class="module-pivot-panel" id="ae-vts-list_<?php echo $this->escapeHtmlAttr($currentIndex); ?>">
         <header class="pivot-panel_header ae-header">
@@ -39,7 +39,7 @@ foreach ($dashboard->getAuthorisedExaminers() as $authorisedExaminer) :
                     <li>
                         <a href="<?php echo VehicleTestingStationUrlBuilderWeb::byId($site->getId()); ?>"
                            class="site-link" title="">
-                            <?php echo $this->escapeHtml('(' . $site->getSiteNumber() . ') ' . $site->getName()); ?>
+                            <?php echo $this->escapeHtml('('.$site->getSiteNumber().') '.$site->getName()); ?>
                         </a>
                         <span class="pivot-panel_subtitle vts-roles">
                             <?php echo $this->escapeHtml(implode(', ', $site->getPositions())); ?>

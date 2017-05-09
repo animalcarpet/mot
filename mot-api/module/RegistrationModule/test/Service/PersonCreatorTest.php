@@ -118,9 +118,9 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     ValidatorKeyConverter::inputFilterToStep(DetailsInputFilter::class) => [
-                        DetailsInputFilter::FIELD_FIRST_NAME  => 'x',
+                        DetailsInputFilter::FIELD_FIRST_NAME => 'x',
                         DetailsInputFilter::FIELD_MIDDLE_NAME => 'y',
-                        DetailsInputFilter::FIELD_LAST_NAME   => 'o',
+                        DetailsInputFilter::FIELD_LAST_NAME => 'o',
                         DetailsInputFilter::FIELD_DATE => [
                             DetailsInputFilter::FIELD_DAY => '01',
                             DetailsInputFilter::FIELD_MONTH => '02',
@@ -129,9 +129,9 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
                     ],
                     ValidatorKeyConverter::inputFilterToStep(SecurityQuestionsInputFilter::class) => [
                         SecurityQuestionsInputFilter::FIELD_QUESTION_1 => 1,
-                        SecurityQuestionsInputFilter::FIELD_ANSWER_1   => 'Something',
+                        SecurityQuestionsInputFilter::FIELD_ANSWER_1 => 'Something',
                         SecurityQuestionsInputFilter::FIELD_QUESTION_2 => 2,
-                        SecurityQuestionsInputFilter::FIELD_ANSWER_2   => 'Something else',
+                        SecurityQuestionsInputFilter::FIELD_ANSWER_2 => 'Something else',
                     ],
                     ValidatorKeyConverter::inputFilterToStep(PasswordInputFilter::class) => [
                         PasswordInputFilter::FIELD_PASSWORD => 'password',

@@ -11,71 +11,71 @@ use VehicleApi\Controller\VehicleSearchController;
 
 return [
     'controllers' => include 'controllers.config.php',
-    'router'      => [
+    'router' => [
         'routes' => [
             'vehicle-search' => [
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/vehicle-search',
+                    'route' => '/vehicle-search',
                     'defaults' => [
                         'controller' => VehicleSearchController::class,
                     ],
                 ],
             ],
             'vehicle-new' => [
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/vehicle/:id',
+                    'route' => '/vehicle/:id',
                     'defaults' => [
                         'controller' => VehicleController::class,
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
+                'child_routes' => [
                     'test-in-progress-check' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/test-in-progress-check',
+                            'route' => '/test-in-progress-check',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'isTestInProgress',
+                                'action' => 'isTestInProgress',
                             ],
                         ],
                     ],
                     'test-expiry-check' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/test-expiry-check[/:isDvla]',
+                            'route' => '/test-expiry-check[/:isDvla]',
                             'defaults' => [
                                 'controller' => VehicleCertificateExpiryController::class,
                             ],
                             'constraints' => [
-                                'isDvla'    => '[0-1]',
+                                'isDvla' => '[0-1]',
                             ],
                         ],
                     ],
                     'test-history' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/test-history',
+                            'route' => '/test-history',
                             'defaults' => [
                                 'controller' => VehicleHistoryController::class,
                             ],
                         ],
                     ],
                     'retest-eligibility-check' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/retest-eligibility-check/[:siteId]',
+                            'route' => '/retest-eligibility-check/[:siteId]',
                             'defaults' => [
                                 'controller' => VehicleRetestEligibilityController::class,
                             ],
                         ],
                     ],
                     'mystery-shopper-campaign' => [
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => [
-                            'route'    => '/mystery-shopper-campaign',
+                            'route' => '/mystery-shopper-campaign',
                             'defaults' => [
                                 'controller' => MysteryShopperVehicleController::class,
                             ],
@@ -85,7 +85,7 @@ return [
                             'delete' => [
                                 'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/:incognitoVehicleId',
+                                    'route' => '/:incognitoVehicleId',
                                     'defaults' => [
                                         'controller' => MysteryShopperVehicleController::class,
                                     ],
@@ -94,7 +94,7 @@ return [
                             'current' => [
                                 'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/current',
+                                    'route' => '/current',
                                     'defaults' => [
                                         'controller' => MysteryShopperVehicleController::class,
                                     ],
@@ -103,7 +103,7 @@ return [
                             'extend' => [
                                 'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/extend',
+                                    'route' => '/extend',
                                     'defaults' => [
                                         'controller' => MysteryShopperVehicleController::class,
                                     ],
@@ -124,18 +124,18 @@ return [
                 ],
             ],
             'vehicle-new-list' => [
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => [
-                    'route'    => '/vehicle/list',
+                    'route' => '/vehicle/list',
                     'defaults' => [
                         'controller' => VehicleController::class,
                     ],
                 ],
             ],
             'vehicle-dvla' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle-dvla/:id',
+                    'route' => '/vehicle-dvla/:id',
                     'defaults' => [
                         'controller' => VehicleDvlaController::class,
                     ],

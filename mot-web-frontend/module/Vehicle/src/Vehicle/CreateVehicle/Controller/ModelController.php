@@ -12,8 +12,7 @@ class ModelController extends BaseCreateVehicleController
 
     public function __construct(
         ModelAction $action
-    )
-    {
+    ) {
         $this->action = $action;
     }
 
@@ -22,7 +21,7 @@ class ModelController extends BaseCreateVehicleController
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
         $this->setLayout('What is the vehicle\'s model?', self::SUB_TITLE);
+
         return $this->applyActionResult($result);
     }
-
 }

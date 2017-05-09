@@ -2,10 +2,8 @@
 
 namespace NotificationApi\Factory\Service;
 
-use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationService;
 use NotificationApi\Service\PositionRemovalNotificationService;
-use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,7 +17,7 @@ class PositionRemovalNotificationServiceFactory implements FactoryInterface
         $roles = $authorisationService->getAuthorizationDataAsArray();
 
         if (empty($roles)) {
-            throw new \InvalidArgumentException("Roles are not valid");
+            throw new \InvalidArgumentException('Roles are not valid');
         }
 
         if (
@@ -28,10 +26,9 @@ class PositionRemovalNotificationServiceFactory implements FactoryInterface
             !array_key_exists('normal', $roles
             )
         ) {
-            throw new \InvalidArgumentException("Site/Organisation/System roles must be defined");
+            throw new \InvalidArgumentException('Site/Organisation/System roles must be defined');
         }
 
         return new PositionRemovalNotificationService($roles);
     }
-
 }

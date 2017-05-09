@@ -21,7 +21,6 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 
-
 /**
  * DvsaCommonApi Module.
  */
@@ -54,7 +53,7 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface, Boots
      */
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     /**
@@ -64,19 +63,19 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface, Boots
     {
         return [
             'factories' => [
-                'ErrorHandlingListener'             => \DvsaCommonApi\Factory\Listener\ErrorHandlingListenerFactory::class,
-                EntityHelperService::class          => \DvsaCommonApi\Factory\Service\EntityHelperServiceFactory::class,
-                'Application\SqlLogger'             => \DvsaCommonApi\Factory\SqlLoggerFactory::class,
-                'UnauthorizedStrategy'              => \DvsaCommonApi\Factory\Listener\UnauthorizedStrategyFactory::class,
-                'JsonContentTypeFilter'             => \DvsaCommonApi\Factory\Listener\JsonContentTypeFilterFactory::class,
-                'Hydrator'                          => \DvsaCommonApi\Factory\HydratorFactory::class,
-                ApiPerformMotTestAssertion::class   => ApiPerformMotTestAssertionFactory::class,
-                ReadMotTestAssertion::class         => ApiReadMotTestAssertionFactory::class,
-                ClaimAccountListener::class         => ClaimAccountListenerFactory::class,
+                'ErrorHandlingListener' => \DvsaCommonApi\Factory\Listener\ErrorHandlingListenerFactory::class,
+                EntityHelperService::class => \DvsaCommonApi\Factory\Service\EntityHelperServiceFactory::class,
+                'Application\SqlLogger' => \DvsaCommonApi\Factory\SqlLoggerFactory::class,
+                'UnauthorizedStrategy' => \DvsaCommonApi\Factory\Listener\UnauthorizedStrategyFactory::class,
+                'JsonContentTypeFilter' => \DvsaCommonApi\Factory\Listener\JsonContentTypeFilterFactory::class,
+                'Hydrator' => \DvsaCommonApi\Factory\HydratorFactory::class,
+                ApiPerformMotTestAssertion::class => ApiPerformMotTestAssertionFactory::class,
+                ReadMotTestAssertion::class => ApiReadMotTestAssertionFactory::class,
+                ClaimAccountListener::class => ClaimAccountListenerFactory::class,
                 // @TODO after mot-common-web-module is part of composer remove the below lines as the module will already have these services registered.
-                ParamEncrypter::class               => \DvsaCommon\Obfuscate\Factory\ParamEncrypterFactory::class,
-                ParamObfuscator::class              => \DvsaCommon\Obfuscate\Factory\ParamObfuscatorFactory::class,
-                XssFilter::class                    => XssFilterFactory::class,
+                ParamEncrypter::class => \DvsaCommon\Obfuscate\Factory\ParamEncrypterFactory::class,
+                ParamObfuscator::class => \DvsaCommon\Obfuscate\Factory\ParamObfuscatorFactory::class,
+                XssFilter::class => XssFilterFactory::class,
             ],
         ];
     }

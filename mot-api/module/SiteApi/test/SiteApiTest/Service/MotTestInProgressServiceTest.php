@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApiTest\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -14,13 +15,10 @@ use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\MotTestRepository;
 use SiteApi\Service\MotTestInProgressService;
-use Zend\Authentication\AuthenticationService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Class MotTestInProgressServiceTest
- *
- * @package SiteApiTest\Service
+ * Class MotTestInProgressServiceTest.
  */
 class MotTestInProgressServiceTest extends AbstractServiceTestCase
 {
@@ -29,7 +27,7 @@ class MotTestInProgressServiceTest extends AbstractServiceTestCase
     /** @var MotTestRepository */
     private $mockMotTestRepo;
     /**
-     * @var  AuthorisationServiceInterface|MockObj
+     * @var AuthorisationServiceInterface|MockObj
      */
     private $mockAuthService;
     /** @var MotTestInProgressService */
@@ -99,7 +97,6 @@ class MotTestInProgressServiceTest extends AbstractServiceTestCase
         );
     }
 
-
     /**
      * @dataProvider dataProviderTestMethodsPermissionsAndResults
      */
@@ -136,41 +133,41 @@ class MotTestInProgressServiceTest extends AbstractServiceTestCase
     public function dataProviderTestMethodsPermissionsAndResults()
     {
         $unauthException = [
-            'class'   => UnauthorisedException::class,
+            'class' => UnauthorisedException::class,
             'message' => 'You not have permissions',
-            'code'    => 0,
+            'code' => 0,
         ];
 
         return [
             //  logical block :: siteChangeStatus
             //  no permission
             [
-                'method'      => 'getCountForSite',
-                'params'      => [
+                'method' => 'getCountForSite',
+                'params' => [
                     'siteId' => self::SITE_ID,
                 ],
-                'repo'        => null,
+                'repo' => null,
                 'permissions' => [],
-                'expect'      => [
+                'expect' => [
                     'exception' => $unauthException,
                 ],
             ],
             //  success
             [
-                'method'      => 'getCountForSite',
-                'params'      => [
+                'method' => 'getCountForSite',
+                'params' => [
                     'siteId' => self::SITE_ID,
                 ],
-                'repo'        => [
+                'repo' => [
                     [
-                        'class'  => 'mockMotTestRepo',
+                        'class' => 'mockMotTestRepo',
                         'method' => 'countInProgressTestsForVts',
                         'params' => [self::SITE_ID],
                         'result' => 6666,
                     ],
                 ],
                 'permissions' => [PermissionAtSite::VIEW_TESTS_IN_PROGRESS_AT_VTS],
-                'expect'      => [
+                'expect' => [
                     'result' => 6666,
                 ],
             ],

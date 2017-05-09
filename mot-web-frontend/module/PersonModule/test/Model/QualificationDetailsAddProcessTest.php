@@ -1,4 +1,5 @@
 <?php
+
 use Application\Data\ApiPersonalDetails;
 use Core\TwoStepForm\FormContextInterface;
 use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
@@ -12,7 +13,6 @@ use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
-use Dvsa\Mot\Frontend\SecurityCardModuleTest\Support\TwoFaFeatureToggleTest;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaClient\Mapper\SiteMapper;
@@ -23,7 +23,6 @@ use DvsaCommon\Model\TesterGroupAuthorisationStatus;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\Mvc\Controller\AbstractActionController;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\ApiClient\Resource\Collection;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardOrder;
@@ -36,29 +35,29 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
     /** @var QualificationDetailsMapper */
     private $qualificationDetailsMapperMock;
-    /** @var  SiteMapper */
+    /** @var SiteMapper */
     private $siteMapperMock;
-    /** @var  CertificatesBreadcrumbs */
+    /** @var CertificatesBreadcrumbs */
     private $qualificationDetailsBreadcrumbsMock;
-    /** @var  ApiPersonalDetails */
+    /** @var ApiPersonalDetails */
     private $personalDetailsServiceMock;
-    /** @var  PersonProfileGuardBuilder */
+    /** @var PersonProfileGuardBuilder */
     private $personProfileGuardBuilderMock;
-    /** @var  ContextProvider */
+    /** @var ContextProvider */
     private $contextProviderMock;
     /** @var AuthorisationServiceInterface */
     private $authorisationServiceMock;
     /** @var FormContextInterface */
     private $contextMock;
-    /** @var  QualificationDetailsAddProcess */
+    /** @var QualificationDetailsAddProcess */
     private $sut;
-    /** @var  QualificationDetailsController */
+    /** @var QualificationDetailsController */
     private $controllerMock;
-    /** @var  PersonProfileGuard */
+    /** @var PersonProfileGuard */
     private $personProfileGuardMock;
-    /** @var  QualificationDetailsRoutes */
+    /** @var QualificationDetailsRoutes */
     private $qualificationDetailsRoutesMock;
-    /** @var  AuthorisationService */
+    /** @var AuthorisationService */
     private $authClientMock;
 
     private $twoFaFeatureToggle;
@@ -133,7 +132,8 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if providing correct form data results in createQualificationDetails execution
+     * Test if providing correct form data results in createQualificationDetails execution.
+     *
      * @dataProvider dataProviderTestUpdate
      */
     public function testUpdate($formData, $expected)
@@ -193,7 +193,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->personProfileGuardBuilderMock
             ->expects($this->once())
-            ->method("getTesterAuthorisation")
+            ->method('getTesterAuthorisation')
             ->with(self::USER_ID)
             ->willReturn($this->withGroupADemoTestNeeded());
 
@@ -217,7 +217,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->personProfileGuardBuilderMock
             ->expects($this->once())
-            ->method("getTesterAuthorisation")
+            ->method('getTesterAuthorisation')
             ->with(self::USER_ID)
             ->willReturn($this->withGroupADemoTestNeeded());
 
@@ -251,7 +251,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->personProfileGuardBuilderMock
             ->expects($this->once())
-            ->method("getTesterAuthorisation")
+            ->method('getTesterAuthorisation')
             ->with(self::USER_ID)
             ->willReturn($this->withGroupADemoTestNeeded());
 
@@ -272,7 +272,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->personProfileGuardBuilderMock
             ->expects($this->once())
-            ->method("getTesterAuthorisation")
+            ->method('getTesterAuthorisation')
             ->willReturn($this->withFullyAuthorisedTester());
 
         $actual = $this->sut->populateConfirmationPageVariables();
@@ -285,26 +285,26 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
         $personalDetailsServiceMock = Xmock::of(ApiPersonalDetails::class);
         $personalDetailsServiceMock->method('getPersonalDetailsData')
             ->willReturn([
-                'id'                   => self::USER_ID,
-                'firstName'            => 'foo',
-                'middleName'           => 'bar',
-                'surname'              => 'baz',
-                'username'             =>  self::USERNAME,
-                'dateOfBirth'          => '1979-12-20',
-                'title'                => 'Mr',
-                'gender'               => 'male',
-                'addressLine1'         => 'foo',
-                'addressLine2'         => 'foo',
-                'addressLine3'         => 'foo',
-                'town'                 => 'foo',
-                'postcode'             => 'AA11 1AA',
-                'email'                => 'foo',
-                'emailConfirmation'    => null,
-                'phone'                => 1234,
+                'id' => self::USER_ID,
+                'firstName' => 'foo',
+                'middleName' => 'bar',
+                'surname' => 'baz',
+                'username' => self::USERNAME,
+                'dateOfBirth' => '1979-12-20',
+                'title' => 'Mr',
+                'gender' => 'male',
+                'addressLine1' => 'foo',
+                'addressLine2' => 'foo',
+                'addressLine3' => 'foo',
+                'town' => 'foo',
+                'postcode' => 'AA11 1AA',
+                'email' => 'foo',
+                'emailConfirmation' => null,
+                'phone' => 1234,
                 'drivingLicenceNumber' => 'foo',
                 'drivingLicenceRegion' => 'bar',
-                'positions'            => [],
-                'roles'                => $this->setMockRoles(),
+                'positions' => [],
+                'roles' => $this->setMockRoles(),
             ]);
 
         return $personalDetailsServiceMock;
@@ -312,49 +312,51 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
     private function withGroupADemoTestNeeded()
     {
-        $demoTestStatus = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, "name");
-        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, "name");
+        $demoTestStatus = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, 'name');
+        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, 'name');
+
         return new TesterAuthorisation($demoTestStatus, $status);
     }
 
     private function withFullyAuthorisedTester()
     {
-        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, "name");
+        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, 'name');
+
         return new TesterAuthorisation($status, $status);
     }
 
     private function setMockRoles()
     {
         return [
-            'system'        => [
+            'system' => [
                 'roles' => ['USER'],
             ],
             'organisations' => [10 => [
-                'name'    => 'testing',
-                'number'  => 'VTESTING',
+                'name' => 'testing',
+                'number' => 'VTESTING',
                 'address' => '34 Test Road',
-                'roles'   => ['AEDM'],
+                'roles' => ['AEDM'],
             ]],
-            'sites'         => [20 => [
-                'name'    => 'testing',
-                'number'  => 'VTESTING',
+            'sites' => [20 => [
+                'name' => 'testing',
+                'number' => 'VTESTING',
                 'address' => '34 Test Road',
-                'roles'   => ['TESTER'],
-            ]]
+                'roles' => ['TESTER'],
+            ]],
         ];
     }
 
     private function orderResponseArray()
     {
         return [
-            "submittedOn" => "2014-05-25",
-            "fullName" => "AUTH_INT_YOTURWDKSPFUMKBPMGMU AUTH_INT_YOTURWDKSPFUMKBPMGMU",
-            "recipientName" => "",
-            "addressLine1" => "9f1341",
-            "addressLine2" => "5 Uncanny St",
-            "addressLine3" => "fake address line 3",
-            "postcode" => "L1 1PQ",
-            "town" => "Liverpool"
+            'submittedOn' => '2014-05-25',
+            'fullName' => 'AUTH_INT_YOTURWDKSPFUMKBPMGMU AUTH_INT_YOTURWDKSPFUMKBPMGMU',
+            'recipientName' => '',
+            'addressLine1' => '9f1341',
+            'addressLine2' => '5 Uncanny St',
+            'addressLine3' => 'fake address line 3',
+            'postcode' => 'L1 1PQ',
+            'town' => 'Liverpool',
         ];
     }
 

@@ -2,7 +2,6 @@
 
 namespace PersonApi\Dto;
 
-use Doctrine\ORM\EntityManager;
 use DvsaEntities\Entity\Licence;
 use DvsaEntities\Entity\LicenceType;
 use Zend\Stdlib\Hydrator;
@@ -10,32 +9,32 @@ use Zend\Stdlib\Hydrator;
 class LicenceDetails
 {
     /**
-     * @var int $id
+     * @var int
      */
     private $id;
 
     /**
-     * @var String $licenceNumber
+     * @var string
      */
     private $licenceNumber;
 
     /**
-     * @var String $licenceCountry
+     * @var string
      */
     private $licenceCountry;
 
     /**
-     * @var \DateTime $validFrom
+     * @var \DateTime
      */
     private $validFrom;
 
     /**
-     * @var \DateTime $expiryDate
+     * @var \DateTime
      */
     private $expiryDate;
 
     /**
-     * @var LicenceType $licenceType
+     * @var LicenceType
      */
     private $licenceType;
 
@@ -88,7 +87,7 @@ class LicenceDetails
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getLicenceNumber()
     {
@@ -96,7 +95,7 @@ class LicenceDetails
     }
 
     /**
-     * @param String $licenceNumber
+     * @param string $licenceNumber
      *
      * @return $this
      */
@@ -128,7 +127,7 @@ class LicenceDetails
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getLicenceCountry()
     {
@@ -136,7 +135,7 @@ class LicenceDetails
     }
 
     /**
-     * @param String $licenceCountry
+     * @param string $licenceCountry
      *
      * @return $this
      */
@@ -186,5 +185,4 @@ class LicenceDetails
 
         return $this;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 return [
     'modules' => [
         'DoctrineModule',
@@ -13,12 +14,12 @@ return [
         'DataCatalogApi',
         'DvsaElasticSearch',
         'DvsaAuthentication',
-        'DvsaAuthorisation'
+        'DvsaAuthorisation',
     ],
     'test_namespaces' => [
-        'DvsaMotApiTest'        => __DIR__ . '/' . '../../DvsaMotApiTest',
-        'DvsaEntitiesTest'      => __DIR__ . '/' . '/../../DvsaEntities/test/DvsaEntitiesTest',
-        'DvsaCommonApiTest'     => __DIR__ . '/../../DvsaCommonApi/test/DvsaCommonApiTest',
-        'DvsaElasticSearchTest' => __DIR__ . '/DvsaElasticSearchTest',
-    ]
+        'DvsaMotApiTest' => __DIR__.'/'.'../../DvsaMotApiTest',
+        'DvsaEntitiesTest' => __DIR__.'/'.'/../../DvsaEntities/test/DvsaEntitiesTest',
+        'DvsaCommonApiTest' => __DIR__.'/../../DvsaCommonApi/test/DvsaCommonApiTest',
+        'DvsaElasticSearchTest' => __DIR__.'/DvsaElasticSearchTest',
+    ],
 ];

@@ -5,9 +5,7 @@ namespace DashboardTest\Model;
 use Dashboard\Model\Notification;
 
 /**
- * Class NotificationTest
- *
- * @package DashboardTest\Model
+ * Class NotificationTest.
  */
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
@@ -97,15 +95,15 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     public static function getNotificationData()
     {
         return [
-            'id'        => self::ID,
+            'id' => self::ID,
             'createdOn' => self::CREATED_ON,
             'updatedOn' => self::UPDATED_ON,
-            'readOn'    => self::READ_ON,
-            'content'   => self::CONTENT,
-            'subject'   => self::SUBJECT,
+            'readOn' => self::READ_ON,
+            'content' => self::CONTENT,
+            'subject' => self::SUBJECT,
             'isArchived' => self::IS_ARCHIVED,
             'fields' => [],
-            'templateId' => 1
+            'templateId' => 1,
         ];
     }
 

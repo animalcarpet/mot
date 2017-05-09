@@ -62,7 +62,7 @@ $this->headTitle($title);
         </div>
     </div>
 
-    <?php if($specialNotices) : ?>
+    <?php if ($specialNotices) : ?>
         <?php echo $this->partial(
             'specialNotice', ['specialNotices' => $specialNotices, 'showRemoveButton' => !$removed, 'canAcknowledge' => $canAcknowledge, 'canRemove' => $canRemove, 'canUpdate' => $canUpdate]
         ); ?>

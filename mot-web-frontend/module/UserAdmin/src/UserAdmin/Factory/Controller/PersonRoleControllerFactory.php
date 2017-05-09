@@ -8,7 +8,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for {@link \UserAdmin\Controller\PersonRoleController}
+ * Factory for {@link \UserAdmin\Controller\PersonRoleController}.
  */
 class PersonRoleControllerFactory implements FactoryInterface
 {
@@ -16,7 +16,7 @@ class PersonRoleControllerFactory implements FactoryInterface
     {
         $appServiceLocator = $controllerManager->getServiceLocator();
 
-        $authorisationService = $appServiceLocator->get("AuthorisationService");
+        $authorisationService = $appServiceLocator->get('AuthorisationService');
         $personRoleManagementService = $appServiceLocator->get(PersonRoleManagementService::class);
 
         $controller = new PersonRoleController(

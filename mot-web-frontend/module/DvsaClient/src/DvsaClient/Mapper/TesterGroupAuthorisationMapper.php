@@ -41,15 +41,19 @@ class TesterGroupAuthorisationMapper implements TesterGroupAuthorisationMapperIn
     private function cleanResponse($vehicleClassAuthorisations)
     {
         return ArrayUtils::mapWithKeys($vehicleClassAuthorisations,
-            function ($key, $value) { return substr($key, 5); },
-            function ($key, $value) { return $value; }
+            function ($key, $value) {
+                return substr($key, 5);
+            },
+            function ($key, $value) {
+                return $value;
+            }
         );
     }
 
     private function groupAuthorisations($vehicleClassAuthorisations)
     {
         $groupedQualification = [
-            VehicleClassGroupCode::BIKES    => [],
+            VehicleClassGroupCode::BIKES => [],
             VehicleClassGroupCode::CARS_ETC => [],
         ];
 
@@ -115,7 +119,7 @@ class TesterGroupAuthorisationMapper implements TesterGroupAuthorisationMapperIn
     private function getNameForStatus($status, $authorisationStatusNames)
     {
         if (!array_key_exists($status, $authorisationStatusNames)) {
-            throw new \InvalidArgumentException('Unknown status named: ' . $status);
+            throw new \InvalidArgumentException('Unknown status named: '.$status);
         }
 
         return $authorisationStatusNames[$status];

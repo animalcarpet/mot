@@ -2,13 +2,11 @@
 
 namespace DvsaEntities\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * MotTest
+ * MotTest.
  *
  * @ORM\Table(name="qualification_award")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\QualificationAwardRepository")
@@ -41,7 +39,6 @@ class QualificationAward extends Entity
      */
     private $vehicleClassGroup;
 
-
     /**
      * @var string
      *
@@ -66,11 +63,13 @@ class QualificationAward extends Entity
 
     /**
      * @param Person $person
+     *
      * @return QualificationAward
      */
     public function setPerson(Person $person)
     {
         $this->person = $person;
+
         return $this;
     }
 
@@ -84,11 +83,13 @@ class QualificationAward extends Entity
 
     /**
      * @param Site $site
+     *
      * @return QualificationAward
      */
     public function setSite(Site $site = null)
     {
         $this->site = $site;
+
         return $this;
     }
 
@@ -117,11 +118,13 @@ class QualificationAward extends Entity
 
     /**
      * @param $certificateNumber
+     *
      * @return QualificationAward
      */
     public function setCertificateNumber($certificateNumber)
     {
         $this->certificateNumber = $certificateNumber;
+
         return $this;
     }
 
@@ -135,11 +138,13 @@ class QualificationAward extends Entity
 
     /**
      * @param \DateTime $dateOfQualification
+     *
      * @return QualificationAward
      */
     public function setDateOfQualification(\DateTime $dateOfQualification)
     {
         $this->dateOfQualification = $dateOfQualification;
+
         return $this;
     }
 }

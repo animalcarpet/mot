@@ -98,10 +98,10 @@ class VehicleSearchService
     {
         $apiUrl = VehicleUrlBuilder::vehicleList();
         $params = [
-            'reg'         => $vrm,
-            'vin'         => $vin,
+            'reg' => $vrm,
+            'vin' => $vin,
             'excludeDvla' => !$searchDvla,
-            'vtsId'       => $vtsId,
+            'vtsId' => $vtsId,
         ];
 
         if ($isContingency) {
@@ -153,83 +153,83 @@ class VehicleSearchService
         if (!$vrmGiven && !$vinGiven) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found <strong>without a registration</strong> and <strong>without a VIN</strong>.",
+                    '<strong>%s</strong> %s found <strong>without a registration</strong> and <strong>without a VIN</strong>.',
                     $numberOfFoundVehicles,
                     $vehiclesString
                 ),
-                sprintf("Enter the registration mark and Vehicle Identification Number (VIN) to search for a vehicle.")
+                sprintf('Enter the registration mark and Vehicle Identification Number (VIN) to search for a vehicle.')
             );
         }
 
         if ($vrmGiven && $partialVin) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found with registration <strong>%s</strong> and a VIN <strong>ending</strong> in <strong>%s</strong>.",
+                    '<strong>%s</strong> %s found with registration <strong>%s</strong> and a VIN <strong>ending</strong> in <strong>%s</strong>.',
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vrm,
                     $vin
                 ),
-                "Check the vehicle details are correct and try again."
+                'Check the vehicle details are correct and try again.'
             );
         }
 
         if ($vrmGiven && $vinGiven && !$partialVin) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found with registration <strong>%s</strong> and a VIN matching <strong>%s</strong>.",
+                    '<strong>%s</strong> %s found with registration <strong>%s</strong> and a VIN matching <strong>%s</strong>.',
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vrm,
                     $vin
                 ),
-                "Only enter the last 6 digits of the VIN if you want to search for a partial match."
+                'Only enter the last 6 digits of the VIN if you want to search for a partial match.'
             );
         }
 
         if ($vrmGiven && !$vinGiven) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found with registration <strong>%s</strong> and <strong>without a VIN</strong>.",
+                    '<strong>%s</strong> %s found with registration <strong>%s</strong> and <strong>without a VIN</strong>.',
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vrm
                 ),
-                "You must enter the VIN if the vehicle has one."
+                'You must enter the VIN if the vehicle has one.'
             );
         }
 
         if (!$vrmGiven && $partialVin) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN ending in <strong>%s</strong>.",
+                    '<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN ending in <strong>%s</strong>.',
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vin
                 ),
-                "You must enter the registration mark if the vehicle has one."
+                'You must enter the registration mark if the vehicle has one.'
             );
         }
 
         if (!$vrmGiven && $vinGiven && !$partialVin) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN matching <strong>%s</strong>.",
+                    '<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN matching <strong>%s</strong>.',
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vin
                 ),
-                "You must enter the registration mark if the vehicle has one. Only enter the last 6 digits of the VIN if you want to search for a partial match."
+                'You must enter the registration mark if the vehicle has one. Only enter the last 6 digits of the VIN if you want to search for a partial match.'
             );
         }
 
         return new VehicleSearchResultMessage(
             sprintf(
-                "<strong>%s</strong> %s found <strong>without a registration</strong> and <strong>without a VIN.</strong>",
+                '<strong>%s</strong> %s found <strong>without a registration</strong> and <strong>without a VIN.</strong>',
                 $numberOfFoundVehicles,
                 $vehiclesString
             ),
-            ""
+            ''
         );
     }
 
@@ -287,7 +287,7 @@ class VehicleSearchService
      */
     public function shouldSearchInDvlaVehicleList($searchType)
     {
-        return ($searchType === self::SEARCH_TYPE_STANDARD);
+        return $searchType === self::SEARCH_TYPE_STANDARD;
     }
 
     /**
@@ -335,13 +335,13 @@ class VehicleSearchService
     public function getUrlTemplate($noRegistration, Url $urlPlugin)
     {
         switch ($this->getSearchType()) {
-            case VehicleSearchService::SEARCH_TYPE_CERTIFICATE:
+            case self::SEARCH_TYPE_CERTIFICATE:
                 return new CertificateUrlTemplate($noRegistration, $this->authorisationService, $urlPlugin);
-            case VehicleSearchService::SEARCH_TYPE_TRAINING:
+            case self::SEARCH_TYPE_TRAINING:
                 return new TrainingTestUrlTemplate($noRegistration, $urlPlugin);
-            case VehicleSearchService::SEARCH_TYPE_STANDARD:
+            case self::SEARCH_TYPE_STANDARD:
                 return new MotTestUrlTemplate($noRegistration, $urlPlugin);
-            case VehicleSearchService::SEARCH_TYPE_NON_MOT:
+            case self::SEARCH_TYPE_NON_MOT:
                 return new NonMotTestUrlTemplate($noRegistration, $urlPlugin);
         }
 
@@ -369,7 +369,7 @@ class VehicleSearchService
      */
     public function isStandardSearchType()
     {
-        return ($this->getSearchType() === self::SEARCH_TYPE_STANDARD);
+        return $this->getSearchType() === self::SEARCH_TYPE_STANDARD;
     }
 
     /**
@@ -377,7 +377,7 @@ class VehicleSearchService
      */
     public function isRetestSearchType()
     {
-        return ($this->getSearchType() === self::SEARCH_TYPE_RETEST);
+        return $this->getSearchType() === self::SEARCH_TYPE_RETEST;
     }
 
     /**
@@ -385,11 +385,11 @@ class VehicleSearchService
      */
     public function isTrainingSearchType()
     {
-        return ($this->getSearchType() === self::SEARCH_TYPE_TRAINING);
+        return $this->getSearchType() === self::SEARCH_TYPE_TRAINING;
     }
 
     public function isNonMotSearchType()
     {
-        return ($this->getSearchType() === self::SEARCH_TYPE_NON_MOT);
+        return $this->getSearchType() === self::SEARCH_TYPE_NON_MOT;
     }
 }

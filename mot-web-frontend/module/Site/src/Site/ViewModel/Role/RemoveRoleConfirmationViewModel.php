@@ -3,9 +3,7 @@
 namespace Site\ViewModel\Role;
 
 /**
- * Class RemoveRoleConfirmationViewModel
- *
- * @package Site\ViewModel\View\Role
+ * Class RemoveRoleConfirmationViewModel.
  */
 class RemoveRoleConfirmationViewModel
 {
@@ -27,7 +25,7 @@ class RemoveRoleConfirmationViewModel
     /** @var $positionId int */
     private $positionId;
 
-    /** @var $activeMotTestNumber string*/
+    /** @var $activeMotTestNumber string */
     private $activeMotTestNumber;
 
     /**
@@ -38,11 +36,12 @@ class RemoveRoleConfirmationViewModel
     public function setActiveMotTestNumber($activeMotTestNumber)
     {
         $this->activeMotTestNumber = $activeMotTestNumber;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasActiveMotTest()
     {
@@ -54,7 +53,7 @@ class RemoveRoleConfirmationViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function canRoleBeRemoved()
     {
@@ -69,6 +68,7 @@ class RemoveRoleConfirmationViewModel
     public function setEmployeeName($employeeName)
     {
         $this->employeeName = $employeeName;
+
         return $this;
     }
 
@@ -88,6 +88,7 @@ class RemoveRoleConfirmationViewModel
     public function setSiteId($siteId)
     {
         $this->siteId = $siteId;
+
         return $this;
     }
 
@@ -107,6 +108,7 @@ class RemoveRoleConfirmationViewModel
     public function setSiteName($siteName)
     {
         $this->siteName = $siteName;
+
         return $this;
     }
 
@@ -126,6 +128,7 @@ class RemoveRoleConfirmationViewModel
     public function setPositionId($positionId)
     {
         $this->positionId = $positionId;
+
         return $this;
     }
 
@@ -145,6 +148,7 @@ class RemoveRoleConfirmationViewModel
     public function setRoleName($roleName)
     {
         $this->roleName = $roleName;
+
         return $this;
     }
 
@@ -164,6 +168,7 @@ class RemoveRoleConfirmationViewModel
     public function setEmployeeId($employeeId)
     {
         $this->employeeId = $employeeId;
+
         return $this;
     }
 

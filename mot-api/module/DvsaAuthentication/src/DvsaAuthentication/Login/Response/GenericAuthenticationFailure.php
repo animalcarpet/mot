@@ -5,7 +5,7 @@ namespace DvsaAuthentication\Login\Response;
 use DvsaCommon\Authn\AuthenticationResultCode;
 
 /**
- * Represents other/unknown/expected error when contacting authentication system
+ * Represents other/unknown/expected error when contacting authentication system.
  */
 class GenericAuthenticationFailure extends AuthenticationResponse
 {

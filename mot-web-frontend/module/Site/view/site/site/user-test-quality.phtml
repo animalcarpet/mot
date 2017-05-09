@@ -1,6 +1,6 @@
 <?php
 echo $this->partial('site/site/partials/test-quality-group-brakedown', [
-    'group' => $this->viewModel->getTable()
+    'group' => $this->viewModel->getTable(),
 ]);
 use Core\Routing\VtsRouteList;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
@@ -19,7 +19,7 @@ $vm = $this->viewModel;
             'group' => $vm->getTable()->getGroupCode(),
             'month' => $vm->getMonth(),
             'year' => $vm->getYear(),
-            'user'
+            'user',
         ]) ?>" rel="external">
         CSV (Spreadsheet)
     </a> file (<?php echo $vm->getCsvFileSize() ?>).

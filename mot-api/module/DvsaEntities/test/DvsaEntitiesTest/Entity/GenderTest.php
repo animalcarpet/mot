@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity\Gender;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class GenderTest
+ * Class GenderTest.
  */
 class GenderTest extends PHPUnit_Framework_TestCase
 {

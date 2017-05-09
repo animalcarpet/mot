@@ -30,8 +30,7 @@ class UpdateAePropertyAction implements AutoWireableInterface
     public function __construct(
         UpdateAePropertyProcessBuilder $processBuilder,
         EditStepAction $editStepProcess
-    )
-    {
+    ) {
         $this->processBuilder = $processBuilder;
         $this->editStepProcess = $editStepProcess;
     }

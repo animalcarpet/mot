@@ -1,4 +1,5 @@
 <?php
+
 return [
     'modules' => [
         'DvsaFeature',
@@ -6,9 +7,9 @@ return [
         'DoctrineORMModule',
         'DvsaCommonApi',
         'DvsaEntities',
-        'CensorApi'
+        'CensorApi',
     ],
     'test_namespaces' => [
-        'CensorApiTest' => __DIR__ . '/' . 'CensorApiTest',
-    ]
+        'CensorApiTest' => __DIR__.'/'.'CensorApiTest',
+    ],
 ];

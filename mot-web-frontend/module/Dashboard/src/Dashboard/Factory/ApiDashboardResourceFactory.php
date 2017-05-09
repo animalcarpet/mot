@@ -9,7 +9,6 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 
 class ApiDashboardResourceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ApiDashboardResource($serviceLocator->get(HttpRestJsonClient::class));

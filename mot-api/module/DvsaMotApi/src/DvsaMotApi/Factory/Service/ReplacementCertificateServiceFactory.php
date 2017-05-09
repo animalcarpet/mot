@@ -13,7 +13,6 @@ use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
 
 class ReplacementCertificateServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ReplacementCertificateService(

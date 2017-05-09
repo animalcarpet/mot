@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Form;
 
-use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -67,15 +66,15 @@ class QualificationDetailsForm extends Form
     {
         $valid = parent::isValid();
 
-        if(!$valid) {
+        if (!$valid) {
             $messages = $this->getInputFilter()->getMessages();
 
             $parsedMessages = [];
-            foreach($messages as $m) {
+            foreach ($messages as $m) {
                 $parsedMessages[$m['field']] = $m;
             }
 
-            foreach($parsedMessages as $dtoField => $m) {
+            foreach ($parsedMessages as $dtoField => $m) {
                 $this->get($this->translateDtoFieldToForm($dtoField))->setMessages($m['displayMessage']);
             }
         }
@@ -86,13 +85,13 @@ class QualificationDetailsForm extends Form
     protected function translateDtoFieldToForm($key)
     {
         $dtoToForm = [
-            'certificateNumber' => QualificationDetailsForm::FIELD_CERT_NUMBER,
-            'dateOfQualification' => QualificationDetailsForm::FIELD_DATE_DAY,
-            'siteNumber' => QualificationDetailsForm::FIELD_VTS_ID,
+            'certificateNumber' => self::FIELD_CERT_NUMBER,
+            'dateOfQualification' => self::FIELD_DATE_DAY,
+            'siteNumber' => self::FIELD_VTS_ID,
         ];
 
-        if(!array_key_exists($key, $dtoToForm)) {
-            throw new \Exception("Wrong key: " . $key);
+        if (!array_key_exists($key, $dtoToForm)) {
+            throw new \Exception('Wrong key: '.$key);
         }
 
         return $dtoToForm[$key];

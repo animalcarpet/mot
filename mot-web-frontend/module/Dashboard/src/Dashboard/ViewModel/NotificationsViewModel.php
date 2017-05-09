@@ -21,7 +21,7 @@ class NotificationsViewModel implements Countable, Iterator
      * NotificationsViewModel constructor.
      *
      * @param array $notifications
-     * @param int $totalUnreadCount
+     * @param int   $totalUnreadCount
      */
     public function __construct(array $notifications, $totalUnreadCount)
     {
@@ -44,7 +44,7 @@ class NotificationsViewModel implements Countable, Iterator
             $notificationViewModels[] = NotificationViewModel::fromNotification($notification, $url);
         }
 
-        return new NotificationsViewModel($notificationViewModels, $totalUnreadCount);
+        return new self($notificationViewModels, $totalUnreadCount);
     }
 
     /**
@@ -81,7 +81,7 @@ class NotificationsViewModel implements Countable, Iterator
 
     public function next()
     {
-        $this->currentPosition++;
+        ++$this->currentPosition;
     }
 
     /**

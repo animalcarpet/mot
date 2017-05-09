@@ -6,7 +6,6 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaMotTest\Data\TesterInProgressTestNumberResource;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\Container;
 
 class TesterInProgressTestNumberResourceFactory implements FactoryInterface
 {

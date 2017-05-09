@@ -14,7 +14,7 @@ class DetailsStep extends AbstractRegistrationStep
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "DETAILS";
+    const STEP_ID = 'DETAILS';
 
     /**
      * @var string
@@ -98,13 +98,13 @@ class DetailsStep extends AbstractRegistrationStep
     public function toArray()
     {
         return [
-            DetailsInputFilter::FIELD_FIRST_NAME     => $this->getFirstName(),
-            DetailsInputFilter::FIELD_MIDDLE_NAME    => $this->getMiddleName(),
-            DetailsInputFilter::FIELD_LAST_NAME      => $this->getLastName(),
-            DetailsInputFilter::FIELD_DATE           => $this->makeDate(),
-            DetailsInputFilter::FIELD_DAY            => $this->getDay(),
-            DetailsInputFilter::FIELD_MONTH          => $this->getMonth(),
-            DetailsInputFilter::FIELD_YEAR           => $this->getYear(),
+            DetailsInputFilter::FIELD_FIRST_NAME => $this->getFirstName(),
+            DetailsInputFilter::FIELD_MIDDLE_NAME => $this->getMiddleName(),
+            DetailsInputFilter::FIELD_LAST_NAME => $this->getLastName(),
+            DetailsInputFilter::FIELD_DATE => $this->makeDate(),
+            DetailsInputFilter::FIELD_DAY => $this->getDay(),
+            DetailsInputFilter::FIELD_MONTH => $this->getMonth(),
+            DetailsInputFilter::FIELD_YEAR => $this->getYear(),
         ];
     }
 
@@ -113,7 +113,7 @@ class DetailsStep extends AbstractRegistrationStep
         return [
             DetailsInputFilter::FIELD_DAY => $this->getDay(),
             DetailsInputFilter::FIELD_MONTH => $this->getMonth(),
-            DetailsInputFilter::FIELD_YEAR => $this->getYear()
+            DetailsInputFilter::FIELD_YEAR => $this->getYear(),
         ];
     }
 
@@ -245,7 +245,6 @@ class DetailsStep extends AbstractRegistrationStep
     {
         return $this->date;
     }
-
 
     /**
      * @param array $date

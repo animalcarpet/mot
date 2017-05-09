@@ -5,14 +5,12 @@ namespace DvsaEntities\Repository;
 use DvsaEntities\Entity\SitePositionHistory;
 
 /**
- * Class SitePositionHistoryRepository
+ * Class SitePositionHistoryRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class SitePositionHistoryRepository extends AbstractMutableRepository
 {
-
     /**
      * @param $position SitePositionHistory
      */

@@ -12,8 +12,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ContactDetailsServiceFactory
- * @package OrganisationApi\Factory\Service
+ * Class ContactDetailsServiceFactory.
  */
 class ContactDetailsServiceFactory implements FactoryInterface
 {

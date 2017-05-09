@@ -3,13 +3,11 @@
 namespace NonWorkingDaysApi\Constants;
 
 /**
- * Class CountryCode
- *
- * @package NonWorkingDaysApi\Constants
+ * Class CountryCode.
  */
 class CountryCode
 {
-    const SCOTLAND = "GBSCT";
+    const SCOTLAND = 'GBSCT';
     const ENGLAND = 'GBENG';
-    const WALES = "GBWLS";
+    const WALES = 'GBWLS';
 }

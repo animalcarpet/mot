@@ -17,5 +17,4 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 abstract class Breadcrumbs extends ArrayCollection
 {
-
 }

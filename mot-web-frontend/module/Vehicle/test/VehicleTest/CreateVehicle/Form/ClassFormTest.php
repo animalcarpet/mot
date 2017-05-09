@@ -2,7 +2,7 @@
 
 namespace Vehicle\CreateVehicle\Form;
 
-class ClassFormTest  extends \PHPUnit_Framework_TestCase
+class ClassFormTest extends \PHPUnit_Framework_TestCase
 {
     const VALID_VEHICLE_CLASS = '5';
     const INVALID_VEHICLE_CLASS = '';
@@ -44,8 +44,7 @@ class ClassFormTest  extends \PHPUnit_Framework_TestCase
 
     private function mockAllowedClasses()
     {
-        return ['forPerson' =>
-            [
+        return ['forPerson' => [
                 0 => '1',
                 1 => '2',
                 2 => '3',
@@ -53,8 +52,7 @@ class ClassFormTest  extends \PHPUnit_Framework_TestCase
                 4 => '5',
                 5 => '7',
             ],
-            'forVts' =>
-                [
+            'forVts' => [
                     0 => '1',
                     1 => '2',
                     2 => '3',

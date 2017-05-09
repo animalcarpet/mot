@@ -23,7 +23,7 @@ class HelpdeskAccountAdminService
 
     /**
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param UserAdminMapper $userAdminMapper
+     * @param UserAdminMapper                  $userAdminMapper
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
@@ -35,7 +35,9 @@ class HelpdeskAccountAdminService
 
     /**
      * @param int $personId
+     *
      * @return PersonHelpDeskProfileDto
+     *
      * @throws NotFoundException
      */
     public function getUserProfile($personId)
@@ -49,14 +51,15 @@ class HelpdeskAccountAdminService
 
         $this->postMessage(
             [
-                'personId'        => $personId,
-                'messageTypeCode' => MessageTypeCode::ACCOUNT_RESET_BY_LETTER
+                'personId' => $personId,
+                'messageTypeCode' => MessageTypeCode::ACCOUNT_RESET_BY_LETTER,
             ]
         );
     }
 
     /**
      * @param int $personId
+     *
      * @return bool
      */
     public function resetClaimAccount($personId)
@@ -66,6 +69,7 @@ class HelpdeskAccountAdminService
 
     /**
      * @param array $params
+     *
      * @return bool
      */
     public function postMessage($params)
@@ -76,6 +80,7 @@ class HelpdeskAccountAdminService
     /**
      * @param $personId
      * @param $email
+     *
      * @return PersonContactDto
      */
     public function updatePersonContactEmail($personId, $email)
@@ -87,6 +92,7 @@ class HelpdeskAccountAdminService
      * @param int    $personId
      * @param string $licenceNumber
      * @param string $licenceRegion
+     *
      * @return mixed|string
      */
     public function updateDrivingLicence($personId, $licenceNumber, $licenceRegion)
@@ -96,6 +102,7 @@ class HelpdeskAccountAdminService
 
     /**
      * @param $personId
+     *
      * @return mixed|string
      */
     public function deleteDrivingLicence($personId)
@@ -108,6 +115,7 @@ class HelpdeskAccountAdminService
      * @param $firstName
      * @param $middleName
      * @param $lastName
+     *
      * @return string|\Exception
      */
     public function updateName($personId, $firstName, $middleName, $lastName)

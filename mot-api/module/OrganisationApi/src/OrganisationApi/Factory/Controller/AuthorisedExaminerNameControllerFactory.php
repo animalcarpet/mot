@@ -9,10 +9,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class AuthorisedExaminerNameControllerFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
+
         return new AuthorisedExaminerNameController(
             $serviceLocator->get(AuthorisedExaminerService::class)
         );

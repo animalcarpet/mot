@@ -16,7 +16,7 @@ use Zend\View\Helper\Url;
 
 class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  DvsaVehicleBuilder */
+    /** @var DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
 
     /** @var UpdateFirstUsedDateProcess */
@@ -31,7 +31,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
     /** @var DvsaVehicle */
     private $vehicle;
 
-    private $obfuscatedId = "OBF-15-SCATED";
+    private $obfuscatedId = 'OBF-15-SCATED';
 
     public function setUp()
     {
@@ -62,7 +62,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         // WHEN the process updates vehicle's first used date
-        $date = new \DateTime("1-12-2001");
+        $date = new \DateTime('1-12-2001');
 
         $this->process->update($this->getFormData($date));
 
@@ -83,7 +83,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
     public function testPrePopulatedData()
     {
         // GIVEN the vehicle has a first used date
-        $date = new \DateTime("02-10-2010");
+        $date = new \DateTime('02-10-2010');
 
         $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $stdClass->firstUsedDate = $date->format('Y-m-d');
@@ -109,7 +109,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
         return [
             FirstUsedDateForm::FIELD_DATE_DAY => $date->format('d'),
             FirstUsedDateForm::FIELD_DATE_MONTH => $date->format('m'),
-            FirstUsedDateForm::FIELD_DATE_YEAR => $date->format('Y')
+            FirstUsedDateForm::FIELD_DATE_YEAR => $date->format('Y'),
         ];
     }
 }

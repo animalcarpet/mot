@@ -12,7 +12,6 @@ use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
 use Organisation\Form\SelectRoleForm;
 use Site\Traits\SiteServicesTrait;
 use Site\ViewModel\Role\RemoveRoleConfirmationViewModel;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use DvsaCommon\Validator\UsernameValidator;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
@@ -46,7 +45,7 @@ class RoleController extends AbstractAuthActionController
     public function __construct(UsernameValidator $usernameValidator, HTMLPurifier $htmlPurifier)
     {
         $this->usernameValidator = $usernameValidator;
-        $this->htmlPurifier      = $htmlPurifier;
+        $this->htmlPurifier = $htmlPurifier;
     }
 
     /**
@@ -83,7 +82,7 @@ class RoleController extends AbstractAuthActionController
                             self::ROUTE_LIST_USER_ROLES,
                             [
                                 'vehicleTestingStationId' => $vehicleTestingStationId,
-                                'personId' => $person->getId()
+                                'personId' => $person->getId(),
                             ]
                         );
                     }
@@ -136,13 +135,14 @@ class RoleController extends AbstractAuthActionController
                     [
                         'nomineeId' => $personId,
                         'vehicleTestingStationId' => $vehicleTestingStationId,
-                        'roleCode' => $form->getRoleId()->getValue()
+                        'roleCode' => $form->getRoleId()->getValue(),
                     ]
                 );
             }
         }
 
         $this->layout('layout/layout-govuk.phtml');
+
         return new ViewModel(
             [
                 'form' => $form,
@@ -150,7 +150,7 @@ class RoleController extends AbstractAuthActionController
                 'personId' => $personId,
                 'personUsername' => $personUsername,
                 'personFullName' => $personFullName,
-                'hasRoleOption' => !empty($roleCodes)
+                'hasRoleOption' => !empty($roleCodes),
             ]
         );
     }
@@ -166,7 +166,7 @@ class RoleController extends AbstractAuthActionController
         $mapperFactory = $this->getMapperFactory();
         $nominee = $mapperFactory->Person->getById($nomineeId);
         $roleCodeNameMap = $this->getCatalogService()->getSiteBusinessRoles();
-        $featureToggles   = $this->getFeatureToggles();
+        $featureToggles = $this->getFeatureToggles();
 
         if ($this->getRequest()->isPost()) {
             try {
@@ -174,7 +174,7 @@ class RoleController extends AbstractAuthActionController
 
                 $this->addSuccessMessage(
                     sprintf(
-                        "You have assigned a role to %s, %s. They have been sent a notification.",
+                        'You have assigned a role to %s, %s. They have been sent a notification.',
                         $nominee->getFullName(),
                         $nominee->getUsername()
                     )
@@ -191,10 +191,10 @@ class RoleController extends AbstractAuthActionController
 
         return new ViewModel(
             [
-                'nominee'                   => $nominee,
-                'vehicleTestingStationId'   => $vehicleTestingStationId,
-                'roleName'                  => $roleCodeNameMap[$roleCode],
-                'twoFactorEnabled'          => $twoFactorOn
+                'nominee' => $nominee,
+                'vehicleTestingStationId' => $vehicleTestingStationId,
+                'roleName' => $roleCodeNameMap[$roleCode],
+                'twoFactorEnabled' => $twoFactorOn,
             ]
         );
     }
@@ -211,11 +211,12 @@ class RoleController extends AbstractAuthActionController
 
         $site = $mapperFactory->Site->getById($siteId);
 
-        $position = $this->findPositionInListById($site->getPositions(), (int)$positionId);
+        $position = $this->findPositionInListById($site->getPositions(), (int) $positionId);
         $roleCodeNameMap = $this->getCatalogService()->getSiteBusinessRoles();
 
         if (null === $position) {
             $this->addErrorMessages('Position at site does not exist');
+
             return $this->redirect()->toUrl(VehicleTestingStationUrlBuilderWeb::byId($siteId));
         }
 
@@ -228,8 +229,8 @@ class RoleController extends AbstractAuthActionController
             try {
                 $mapperFactory->SitePosition->deletePosition($siteId, $positionId);
                 $this->addSuccessMessage(
-                    'You have removed the role of ' . $roleCodeNameMap[$position->getRole()->getCode()]
-                    . ' from ' . $position->getPerson()->getFullName()
+                    'You have removed the role of '.$roleCodeNameMap[$position->getRole()->getCode()]
+                    .' from '.$position->getPerson()->getFullName()
                 );
             } catch (RestApplicationException $e) {
                 $this->addErrorMessages($e->getDisplayMessages());
@@ -273,6 +274,7 @@ class RoleController extends AbstractAuthActionController
 
     /**
      * @param array $roles array of roles
+     *
      * @return \Organisation\Form\SelectRoleForm
      */
     private function getSelectRoleForm($roles)
@@ -284,11 +286,11 @@ class RoleController extends AbstractAuthActionController
                 'value' => $roleCode,
                 'label' => $roleCodeNameMap[$roleCode],
                 'label_attributes' => [
-                    'id' => 'site-role-label-' . $roleCode,
+                    'id' => 'site-role-label-'.$roleCode,
                 ],
                 'attributes' => [
-                    'id' => 'site-role-' . $roleCode
-                ]
+                    'id' => 'site-role-'.$roleCode,
+                ],
             ];
         }
         $form = new SelectRoleForm('site', $rolesArray);
@@ -298,7 +300,7 @@ class RoleController extends AbstractAuthActionController
 
     /**
      * @param RolesMapDto[] $list
-     * @param int $positionId
+     * @param int           $positionId
      *
      * @return RolesMapDto|null
      */

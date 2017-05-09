@@ -8,13 +8,12 @@ use DvsaEntities\DqlBuilder\SearchParam\OrgSlotUsageParam;
 use DvsaEntities\Entity\SiteContactType;
 
 /**
- * class SlotUsageParamDqlBuilder
+ * class SlotUsageParamDqlBuilder.
  */
 class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
 {
-
     /**
-     * Build the Dql from the params
+     * Build the Dql from the params.
      *
      * @param bool $totalCount
      *
@@ -22,8 +21,8 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
      */
     protected function buildDql($totalCount = false)
     {
-        $dql         = [];
-        $filters     = [];
+        $dql = [];
+        $filters = [];
 
         $dql[] = $this->generateDqlHeader($totalCount);
 
@@ -31,7 +30,7 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
         $filters[] = '(tt.code IN (:SLOT_TEST_TYPES))';
 
         $orgId = $this->params->getOrganisationId();
-        $this->addFiltersByValues($filters, [$orgId], "s.organisation = :ORG_ID", 'AND');
+        $this->addFiltersByValues($filters, [$orgId], 's.organisation = :ORG_ID', 'AND');
 
         if ($this->params->getDateFrom() != null) {
             $this->addFiltersByValues($filters, [$this->params->getDateFrom()], 't.completedDate >= :DATE_FROM', '%s');
@@ -52,7 +51,7 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
             );
         }
 
-        $dql[] = count($filters) ? join(' AND ', $filters): '1';
+        $dql[] = count($filters) ? implode(' AND ', $filters) : '1';
 
         if (!$totalCount) {
             $dql[] = 'GROUP BY s, o';
@@ -64,7 +63,7 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
     }
 
     /**
-     * Build the Query and add any parameters
+     * Build the Query and add any parameters.
      *
      * @param bool $totalCount
      *
@@ -87,7 +86,7 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
         }
 
         if (strlen($this->params->getSearchText())) {
-            $query->setParameter('SEARCH_TEXT', '%' . $this->params->getSearchText() . '%');
+            $query->setParameter('SEARCH_TEXT', '%'.$this->params->getSearchText().'%');
         }
 
         $query->setParameter('contactType', SiteContactTypeCode::BUSINESS);
@@ -106,15 +105,15 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
     {
         $select = $totalCount ? 'count(distinct s), count(t.id)' : 's, o, count(t.id) usage';
 
-        return 'SELECT ' . $select . ' from DvsaEntities\Entity\Site s '
-            . ' INNER JOIN s.tests t '
-            . ' LEFT JOIN s.contacts sc WITH sc.type = (SELECT sct.id FROM ' . SiteContactType::class . ' sct WHERE sct.code = :contactType )'
-            . ' LEFT JOIN sc.contactDetail cd '
-            . ' LEFT JOIN cd.address a '
-            . ' LEFT JOIN t.motTestType tt'
-            . ' LEFT JOIN t.status ts'
-            . ' LEFT JOIN s.organisation o'
-            . ' WHERE ';
+        return 'SELECT '.$select.' from DvsaEntities\Entity\Site s '
+            .' INNER JOIN s.tests t '
+            .' LEFT JOIN s.contacts sc WITH sc.type = (SELECT sct.id FROM '.SiteContactType::class.' sct WHERE sct.code = :contactType )'
+            .' LEFT JOIN sc.contactDetail cd '
+            .' LEFT JOIN cd.address a '
+            .' LEFT JOIN t.motTestType tt'
+            .' LEFT JOIN t.status ts'
+            .' LEFT JOIN s.organisation o'
+            .' WHERE ';
     }
 
     /**
@@ -126,11 +125,11 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
     protected function generateDqlFooter($totalCount, $dql)
     {
         if ($totalCount) {
-            $this->searchCountDql = join(" ", $dql);
+            $this->searchCountDql = implode(' ', $dql);
         } else {
-            $dql[] = "ORDER BY {$this->getOrderForDql()} " .
+            $dql[] = "ORDER BY {$this->getOrderForDql()} ".
                 $this->params->getSortDirection();
-            $this->searchDql = join(" ", $dql);
+            $this->searchDql = implode(' ', $dql);
         }
     }
 
@@ -150,6 +149,6 @@ class SlotUsageParamDqlBuilder extends SearchParamDqlBuilder
             $entityAliasPart = 's.';
         }
 
-        return $entityAliasPart . $name;
+        return $entityAliasPart.$name;
     }
 }

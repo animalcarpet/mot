@@ -9,14 +9,15 @@ use DvsaCommon\Utility\ArrayUtils;
 use Zend\View\Model\ViewModel;
 
 /**
- * ReportController
+ * ReportController.
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 class ReportController extends AbstractAuthActionController
 {
     /**
-     * Choose whether to download the report as CSV or PDF
+     * Choose whether to download the report as CSV or PDF.
+     *
      * @return \Zend\View\Model\ViewModel
      */
     public function chooseAction()
@@ -40,7 +41,7 @@ class ReportController extends AbstractAuthActionController
             $route = $this->params()->fromPost('route');
             $format = $this->params()->fromPost('format');
             $routeParameters = $this->params()->fromPost('routeParameters');
-            $routeParameters['extension'] = '.' . $format;
+            $routeParameters['extension'] = '.'.$format;
             $this->redirect()->toRoute($route, $routeParameters, ['query' => ['format' => $format]]);
         }
 

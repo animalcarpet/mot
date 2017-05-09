@@ -1,12 +1,12 @@
 <?php
 
 namespace OrganisationTest\UpdateAeProperty\Form;
+
 use Application\Service\CatalogService;
 use Core\Catalog\Organisation\OrganisationCompanyTypeCatalog;
 use DvsaCommon\Enum\CompanyTypeCode;
 use DvsaCommonTest\TestUtils\XMock;
 use Organisation\UpdateAeProperty\Process\Form\BusinessTypePropertyForm;
-
 
 class BusinessTypePropertyFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -93,7 +93,7 @@ class BusinessTypePropertyFormTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 [
-                    BusinessTypePropertyForm::FIELD_COMPANY_NUMBER =>  str_repeat(' ', 6),
+                    BusinessTypePropertyForm::FIELD_COMPANY_NUMBER => str_repeat(' ', 6),
                     BusinessTypePropertyForm::FIELD_TYPE => 'business type is not in the haystack',
                 ],
             ],
@@ -118,12 +118,12 @@ class BusinessTypePropertyFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function createName($length, $char = "X")
+    private function createName($length, $char = 'X')
     {
-        $name = "";
+        $name = '';
         while ($length) {
             $name .= $char;
-            $length--;
+            --$length;
         }
 
         return $name;

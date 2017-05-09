@@ -9,7 +9,7 @@ use IntegrationApi\DvlaVehicle\Service\DvlaVehicleUpdatedService;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class DvlaVehicleUpdatedController
+ * Class DvlaVehicleUpdatedController.
  */
 class DvlaVehicleUpdatedController extends AbstractDvsaRestfulController
 {
@@ -22,7 +22,9 @@ class DvlaVehicleUpdatedController extends AbstractDvsaRestfulController
 
     /**
      * @param array $data
+     *
      * @return JsonModel
+     *
      * @throws NotFoundException
      */
     public function create($data)
@@ -34,6 +36,7 @@ class DvlaVehicleUpdatedController extends AbstractDvsaRestfulController
         $isDvlaImport = true;
 
         $this->dvlaVehicleUpdatedService->createReplacementCertificate($data['vehicleId'], $this->getUserId(), $isDvlaImport);
+
         return ApiResponse::jsonOk();
     }
 }

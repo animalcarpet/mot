@@ -1,4 +1,5 @@
 <?php
+
 namespace AccountApiTest\Factory\Controller;
 
 use AccountApi\Controller\PasswordUpdateController;
@@ -6,12 +7,10 @@ use AccountApi\Factory\Controller\PasswordUpdateControllerFactory;
 use AccountApi\Service\TokenService;
 use Doctrine\ORM\EntityManager;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PasswordUpdateControllerFactoryTest
- * @package AccountTest\Factory
+ * Class PasswordUpdateControllerFactoryTest.
  */
 class PasswordUpdateControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

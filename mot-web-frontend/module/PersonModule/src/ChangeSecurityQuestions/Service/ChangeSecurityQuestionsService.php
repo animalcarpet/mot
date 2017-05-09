@@ -11,7 +11,7 @@ class ChangeSecurityQuestionsService
 {
     const UPDATE_ROUTE = 'security-question/%s';
 
-    /** @var MapperFactory $mapperFactory*/
+    /** @var MapperFactory $mapperFactory */
     private $mapperFactory;
 
     /** @var Client $client */
@@ -36,6 +36,7 @@ class ChangeSecurityQuestionsService
 
     /**
      * @param ChangeSecurityQuestionsSubmissionModel $model
+     *
      * @return bool
      */
     public function updateSecurityQuestions(ChangeSecurityQuestionsSubmissionModel $model)

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * OrganisationPositionHistory
+ * OrganisationPositionHistory.
  *
  * @ORM\Table(name="organisation_position_history")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\OrganisationPositionHistoryRepository")
@@ -43,7 +43,7 @@ class OrganisationPositionHistory extends Entity
     private $organisation;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="status_id", type="integer", nullable=false)
      */
@@ -57,10 +57,10 @@ class OrganisationPositionHistory extends Entity
     private $actionedOn;
 
     /**
-     * Constructs history item based on existing position
+     * Constructs history item based on existing position.
      *
      * @param OrganisationBusinessRoleMap $organisationPosition
-     * @param                      $status
+     * @param                             $status
      *
      * @return OrganisationPositionHistory
      */
@@ -70,7 +70,7 @@ class OrganisationPositionHistory extends Entity
         $historyItem->person = $organisationPosition->getPerson();
         $historyItem->role = $organisationPosition->getOrganisationBusinessRole()->getId();
         $historyItem->organisation = $organisationPosition->getOrganisation();
-        $historyItem->status = $status ? : $organisationPosition->getBusinessRoleStatus()->getId();
+        $historyItem->status = $status ?: $organisationPosition->getBusinessRoleStatus()->getId();
         $historyItem->actionedOn = new \DateTime();
 
         return $historyItem;

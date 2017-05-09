@@ -11,7 +11,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Model\User;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class UserTest
+ * Class UserTest.
  */
 class UserTest extends PHPUnit_Framework_TestCase
 {
@@ -26,8 +26,8 @@ class UserTest extends PHPUnit_Framework_TestCase
     public function testExchangeArraySetsPropertiesCorrectly()
     {
         $user = new User();
-        $data  = ['username' => 'test_username',
-                       'password'     => 'test_p4ssw0rd',];
+        $data = ['username' => 'test_username',
+                       'password' => 'test_p4ssw0rd', ];
 
         $user->exchangeArray($data);
 
@@ -38,8 +38,8 @@ class UserTest extends PHPUnit_Framework_TestCase
     public function testExchangeArraySetsPropertiesToNullIfKeysAreNotPresent()
     {
         $user = new User();
-        $data  = ['username' => 'test_username',
-                       'password'     => 'test_p4ssw0rd',];
+        $data = ['username' => 'test_username',
+                       'password' => 'test_p4ssw0rd', ];
 
         $user->exchangeArray($data);
         $user->exchangeArray([]);

@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Dto;
 
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
@@ -8,7 +9,7 @@ use DvsaEntities\Entity\VehicleClass;
 use PersonApi\Dto\MotTestingAuthorisationCollector;
 
 /**
- * Unit tests for MotTestingAuthorisationCollectorTest dto
+ * Unit tests for MotTestingAuthorisationCollectorTest dto.
  */
 class MotTestingAuthorisationCollectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,7 +34,7 @@ class MotTestingAuthorisationCollectorTest extends \PHPUnit_Framework_TestCase
         $auth = self::createAuthorisedForVehicleClassesCollector(
             [
                 1 => AuthorisationForTestingMotStatusCode::QUALIFIED,
-                2 => AuthorisationForTestingMotStatusCode::QUALIFIED
+                2 => AuthorisationForTestingMotStatusCode::QUALIFIED,
             ]
         );
 
@@ -83,7 +84,7 @@ class MotTestingAuthorisationCollectorTest extends \PHPUnit_Framework_TestCase
                 3 => AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 4 => AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED,
                 5 => AuthorisationForTestingMotStatusCode::QUALIFIED,
-                7 => AuthorisationForTestingMotStatusCode::SUSPENDED
+                7 => AuthorisationForTestingMotStatusCode::SUSPENDED,
             ]
         );
 
@@ -94,7 +95,7 @@ class MotTestingAuthorisationCollectorTest extends \PHPUnit_Framework_TestCase
                 'class3' => AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
                 'class4' => AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED,
                 'class5' => AuthorisationForTestingMotStatusCode::QUALIFIED,
-                'class7' => AuthorisationForTestingMotStatusCode::SUSPENDED
+                'class7' => AuthorisationForTestingMotStatusCode::SUSPENDED,
             ],
             $auth->toArray()
         );
@@ -115,6 +116,7 @@ class MotTestingAuthorisationCollectorTest extends \PHPUnit_Framework_TestCase
 
             $authorisations[] = $authorisation;
         }
+
         return new MotTestingAuthorisationCollector($authorisations);
     }
 }

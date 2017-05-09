@@ -9,7 +9,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class TestingOutsideOpeningHoursNotificationServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new TestingOutsideOpeningHoursNotificationService(

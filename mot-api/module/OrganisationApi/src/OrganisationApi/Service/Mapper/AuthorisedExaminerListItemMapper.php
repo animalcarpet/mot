@@ -10,13 +10,11 @@ use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use DvsaEntities\Entity\OrganisationContact;
 
 /**
- * Mapper class to display Auth Examiner in list (search)
- *
- * @package OrganisationApi\Service\Mapper
+ * Mapper class to display Auth Examiner in list (search).
  */
 class AuthorisedExaminerListItemMapper extends AbstractApiMapper
 {
-    /** @var ContactMapper  */
+    /** @var ContactMapper */
     private $contactMapper;
 
     public function __construct()
@@ -33,7 +31,7 @@ class AuthorisedExaminerListItemMapper extends AbstractApiMapper
      */
     public function toDto($ae)
     {
-        $org    = $ae->getOrganisation();
+        $org = $ae->getOrganisation();
         $status = $ae->getStatus();
 
         $statusDto = new AuthForAeStatusDto();

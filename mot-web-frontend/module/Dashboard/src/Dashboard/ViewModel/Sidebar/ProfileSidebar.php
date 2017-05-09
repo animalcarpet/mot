@@ -1,4 +1,5 @@
 <?php
+
 namespace Dashboard\ViewModel\Sidebar;
 
 use Core\ViewModel\Sidebar\GeneralSidebar;
@@ -15,7 +16,7 @@ class ProfileSidebar extends GeneralSidebar
         $htmlId = 'roles-and-associations-link';
         $text = 'Roles and associations';
 
-        $url = '/your-profile/' . $personId . '/trade-roles';
+        $url = '/your-profile/'.$personId.'/trade-roles';
 
         $relatedList = new GeneralSidebarLinkList('Related');
         $relatedList->addLink(new GeneralSidebarLink($htmlId, $text, $url));

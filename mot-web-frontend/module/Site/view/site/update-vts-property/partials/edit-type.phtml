@@ -2,7 +2,7 @@
 use Site\UpdateVtsProperty\Process\Form\TypePropertyForm;
 use Site\UpdateVtsProperty\UpdateVtsPropertyViewModel;
 
-/** @var UpdateVtsPropertyViewModel $viewModel */
+/* @var UpdateVtsPropertyViewModel $viewModel */
 
 $this->headTitle('Change site type');
 
@@ -16,9 +16,9 @@ $form = $viewModel->getForm();
             <?php  echo $this->partial(
                 'partial/gds/form/control',
                 [
-                    'element' => $form->getTypeElement()
+                    'element' => $form->getTypeElement(),
                 ]
-            );?>
+            ); ?>
         </fieldset>
     </div>
 </div>

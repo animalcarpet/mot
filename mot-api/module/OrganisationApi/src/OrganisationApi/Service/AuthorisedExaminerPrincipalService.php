@@ -6,7 +6,6 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Enum\EventTypeCode;
-use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\AddressLine1Input;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\AddressLine2Input;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\AddressLine3Input;
@@ -18,12 +17,10 @@ use DvsaCommon\Input\AuthorisedExaminerPrincipal\MiddleNameInput;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\PostcodeInput;
 use DvsaCommon\Input\AuthorisedExaminerPrincipal\TownInput;
 use DvsaCommon\Utility\ArrayUtils;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaEntities\Entity\AuthorisedExaminerPrincipal;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
-use DvsaEntities\Entity\AuthorisedExaminerPrincipalAssociation;
 use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\AuthorisedExaminerPrincipalRepository;
 use OrganisationApi\Service\Mapper\AuthorisedExaminerPrincipalWithAddressMapper;
@@ -33,11 +30,10 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use OrganisationApi\Service\Validator\AuthorisedExaminerPrincipalValidator;
 
 /**
- * AEP service for getting, adding and deleting in context of an AE
+ * AEP service for getting, adding and deleting in context of an AE.
  */
 class AuthorisedExaminerPrincipalService
 {
-
     const NO_ASSOCIATION_FOUND
         = 'Could not delete Authorised Examiner Principal that is not associated with this Authorised Examiner';
 
@@ -58,12 +54,12 @@ class AuthorisedExaminerPrincipalService
 
     ) {
         $this->organisationRepository = $organisationRepository;
-        $this->mapper                 = new AuthorisedExaminerPrincipalWithAddressMapper();
-        $this->authorisationService   = $authorisationService;
-        $this->eventService           = $eventService;
-        $this->aepRepository          = $aepRepository;
-        $this->identityProvider       = $identityProvider;
-        $this->aepValidator           = $aepValidator;
+        $this->mapper = new AuthorisedExaminerPrincipalWithAddressMapper();
+        $this->authorisationService = $authorisationService;
+        $this->eventService = $eventService;
+        $this->aepRepository = $aepRepository;
+        $this->identityProvider = $identityProvider;
+        $this->aepValidator = $aepValidator;
     }
 
     public function getForAuthorisedExaminer($authorisedExaminerId)
@@ -111,7 +107,6 @@ class AuthorisedExaminerPrincipalService
             $this->aepRepository->remove($address);
         }
 
-
         foreach ($contactDetails->getEmails() as $email) {
             $this->aepRepository->remove($email);
         }
@@ -144,7 +139,7 @@ class AuthorisedExaminerPrincipalService
 
         $this->aepValidator->validate($data);
 
-        $authorisedExaminer              = $this->organisationRepository->getAuthorisedExaminer($authorisedExaminerId);
+        $authorisedExaminer = $this->organisationRepository->getAuthorisedExaminer($authorisedExaminerId);
         $authorisedExaminerAuthorisation = $authorisedExaminer->getAuthorisedExaminer();
 
         $aep = $this->createPrincipal($authorisedExaminerAuthorisation, $data);
@@ -169,10 +164,11 @@ class AuthorisedExaminerPrincipalService
 
     /**
      * @param AuthorisationForAuthorisedExaminer $authorisationForAuthorisedExaminer
-     * @param array $data
+     * @param array                              $data
+     *
      * @return AuthorisedExaminerPrincipal
      */
-    private function createPrincipal(AuthorisationForAuthorisedExaminer $authorisationForAuthorisedExaminer,array $data)
+    private function createPrincipal(AuthorisationForAuthorisedExaminer $authorisationForAuthorisedExaminer, array $data)
     {
         $address = new Address();
         $address->setAddressLine1(ArrayUtils::get($data, AddressLine1Input::FIELD));

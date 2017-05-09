@@ -21,8 +21,8 @@ class ClassesPropertyFormTest extends \PHPUnit_Framework_TestCase
     public function validData()
     {
         return [
-            [[ClassesPropertyForm::FIELD_CLASSES => ["1", "2", "3", "4", "5", "7"]]],
-            [[ClassesPropertyForm::FIELD_CLASSES => ["1", "7"]]],
+            [[ClassesPropertyForm::FIELD_CLASSES => ['1', '2', '3', '4', '5', '7']]],
+            [[ClassesPropertyForm::FIELD_CLASSES => ['1', '7']]],
             [[ClassesPropertyForm::FIELD_CLASSES => []]],
             [[]],
         ];

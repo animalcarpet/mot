@@ -3,16 +3,12 @@
 namespace Application\Data;
 
 use DvsaCommon\HttpRestJson\Client;
-use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 
 /**
- * Class ApiResources
- *
- * @package Application\Data
+ * Class ApiResources.
  */
 class ApiResources
 {
-
     protected $restClient;
 
     public function __construct(Client $restClient)

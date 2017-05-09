@@ -13,10 +13,10 @@ class UpdateVtsStatusProcess extends AbstractSingleStepVtsProcess implements Aut
 {
     private $propertyName = UpdateVtsPropertyAction::VTS_STATUS_PROPERTY;
     private $permission = PermissionAtSite::VTS_UPDATE_STATUS;
-    private $submitButtonText = "Change site status";
-    private $successfulEditMessage = "Site status has been successfully changed.";
-    private $formPageTitle = "Change status";
-    private $formPartial = "site/update-vts-property/partials/edit-status";
+    private $submitButtonText = 'Change site status';
+    private $successfulEditMessage = 'Site status has been successfully changed.';
+    private $formPageTitle = 'Change status';
+    private $formPartial = 'site/update-vts-property/partials/edit-status';
 
     public function getPropertyName()
     {
@@ -41,6 +41,7 @@ class UpdateVtsStatusProcess extends AbstractSingleStepVtsProcess implements Aut
     public function getPrePopulatedData()
     {
         $vtsData = $this->siteMapper->getById($this->context->getVtsId());
+
         return [$this->propertyName => $vtsData->getStatus()];
     }
 

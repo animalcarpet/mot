@@ -21,11 +21,11 @@ class RoleAvailabilityFactoryTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->roleAvailabilityFactory  = new RoleAvailabilityFactory();
+        $this->roleAvailabilityFactory = new RoleAvailabilityFactory();
         $this->authorisationServiceMock = XMock::of(AuthorisationService::class);
-        $this->entityManagerMock        = XMock::of(EntityManager::class, ['getRepository']);
-        $this->entityRepositoryMock     = XMock::of(EntityRepository::class);
-        $this->serviceLocator           = new ServiceManager();
+        $this->entityManagerMock = XMock::of(EntityManager::class, ['getRepository']);
+        $this->entityRepositoryMock = XMock::of(EntityRepository::class);
+        $this->serviceLocator = new ServiceManager();
         $this->serviceLocator->setService(EntityManager::class, $this->entityManagerMock);
         $this->serviceLocator->setService('DvsaAuthorisationService', $this->authorisationServiceMock);
     }

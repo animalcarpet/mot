@@ -3,11 +3,9 @@
 namespace DvsaCommonApi\Error;
 
 /**
- * Class Message
+ * Class Message.
  *
  * A lightweight class to store error messages
- *
- * @package DvsaCommon\Error
  */
 class Message
 {

@@ -17,8 +17,6 @@ use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommon\Model\TesterAuthorisation;
-use Zend\Session\Container;
-use Zend\View\Model\ViewModel;
 
 /**
  * SecurityQuestionController Test.
@@ -29,7 +27,7 @@ class QualificationDetailsActionTest extends AbstractAuthActionController
 
     private $link = 'http://LINK';
 
-    private $requiredPermission = "PERMISSION";
+    private $requiredPermission = 'PERMISSION';
 
     /** @var QualificationDetailsAction $qualificationDetailsAction */
     private $qualificationDetailsAction;
@@ -144,10 +142,9 @@ class QualificationDetailsActionTest extends AbstractAuthActionController
         $this->assertInstanceOf(QualificationDetailsViewModel::class, $vm);
 
         // AND title and subtitles are correctly set
-        $this->assertEquals("Qualification details", $result->layout()->getPageTitle());
-        $this->assertEquals("User profile", $result->layout()->getPageSubTitle());
+        $this->assertEquals('Qualification details', $result->layout()->getPageTitle());
+        $this->assertEquals('User profile', $result->layout()->getPageSubTitle());
     }
-
 
     /**
      * @param int $personId

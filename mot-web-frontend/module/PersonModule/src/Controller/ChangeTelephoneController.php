@@ -120,14 +120,14 @@ class ChangeTelephoneController extends AbstractAuthActionController
         }
 
         $viewingOwnProfile = $personProfileGuard->isViewingOwnProfile();
-        $subtitle = ($viewingOwnProfile ? 'Your' : 'User') . ' profile';
+        $subtitle = ($viewingOwnProfile ? 'Your' : 'User').' profile';
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('pageTitle', 'Change telephone number');
         $this->layout()->setVariable('pageSubTitle', $subtitle);
         $this->setHeadTitle('Change telephone number');
 
-        if ($data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX . $personId)) {
+        if ($data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX.$personId)) {
             // If we've come from the summary window, we want to load the phone data stored in the session
             $phoneNumber = $data[self::PHONE_NUMBER_KEY];
         } else {
@@ -159,7 +159,7 @@ class ChangeTelephoneController extends AbstractAuthActionController
         }
 
         $this->layout()->setVariable('breadcrumbs', [
-            'breadcrumbs' => $this->getBreadcrumbs($personalDetails, $personId, $viewingOwnProfile)
+            'breadcrumbs' => $this->getBreadcrumbs($personalDetails, $personId, $viewingOwnProfile),
         ]);
 
         $viewModel = new ViewModel();
@@ -174,6 +174,7 @@ class ChangeTelephoneController extends AbstractAuthActionController
     /**
      * @param PersonalDetails $personalDetails
      * @param int|string      $personId
+     *
      * @return array
      */
     private function getBreadcrumbs($personalDetails, $personId, $isProfile = false)
@@ -211,7 +212,7 @@ class ChangeTelephoneController extends AbstractAuthActionController
             $profileUrl = $isProfile === false ?
                 $this->url()->fromRoute(ContextProvider::AE_PARENT_ROUTE, [
                     'authorisedExaminerId' => $aeId,
-                    'id' => $personId
+                    'id' => $personId,
                 ]) : '';
             $breadcrumbs += [$personName => $profileUrl];
         } elseif (ContextProvider::VTS_CONTEXT === $context) {
@@ -232,7 +233,7 @@ class ChangeTelephoneController extends AbstractAuthActionController
             $profileUrl = $isProfile === false ?
                 $this->url()->fromRoute(ContextProvider::VTS_PARENT_ROUTE, [
                     'vehicleTestingStationId' => $vtsId,
-                    'id' => $personId
+                    'id' => $personId,
                 ]) : '';
             $breadcrumbs += [$personName => $profileUrl];
         } else {
@@ -249,6 +250,7 @@ class ChangeTelephoneController extends AbstractAuthActionController
 
     /**
      * @param array $params
+     *
      * @return bool
      */
     private function validate($params)
@@ -263,9 +265,10 @@ class ChangeTelephoneController extends AbstractAuthActionController
         $this->validationErrors = $validator->getMessages();
 
         foreach ($this->validationErrors as $field => $errorMessage) {
-            $message = $validator->getFieldLabel($field) . ' - ' . $errorMessage;
+            $message = $validator->getFieldLabel($field).' - '.$errorMessage;
             $this->flashMessenger()->addErrorMessage([$message]);
         }
+
         return false;
     }
 
@@ -294,6 +297,6 @@ class ChangeTelephoneController extends AbstractAuthActionController
             return $url;
         }
 
-        return $url . '?' . http_build_query($params);
+        return $url.'?'.http_build_query($params);
     }
 }

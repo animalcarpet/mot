@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service;
 
 use DvsaCommonTest\TestUtils\XMock;
@@ -28,18 +29,18 @@ class PasswordServiceTest extends AbstractServiceTestCase
         $this->setExpectedException(BadRequestException::class);
 
         $personId = 1;
-        $oldPassword = "Password1";
+        $oldPassword = 'Password1';
         $data = [
             ChangePasswordInputFilter::FIELD_OLD_PASSWORD => $oldPassword,
             ChangePasswordInputFilter::FIELD_PASSWORD => $oldPassword,
-            ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => $oldPassword
+            ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => $oldPassword,
         ];
 
         $openAmIdentityService = XMock::of(OpenAmIdentityService::class);
         $openAmIdentityService
             ->expects($this->any())
-            ->method("changePassword")
-            ->willReturnCallback(function($username, $password) use ($oldPassword) {
+            ->method('changePassword')
+            ->willReturnCallback(function ($username, $password) use ($oldPassword) {
                 if ($password === $oldPassword) {
                     throw new OpenAmChangePasswordException(ChangePasswordInputFilter::MSG_PASSWORD_HISTORY);
                 }
@@ -53,13 +54,13 @@ class PasswordServiceTest extends AbstractServiceTestCase
     {
         $personId = 1;
         $data = [
-            ChangePasswordInputFilter::FIELD_OLD_PASSWORD => "InvalidPassword",
-            ChangePasswordInputFilter::FIELD_PASSWORD => "Password1",
-            ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => "Password1"
+            ChangePasswordInputFilter::FIELD_OLD_PASSWORD => 'InvalidPassword',
+            ChangePasswordInputFilter::FIELD_PASSWORD => 'Password1',
+            ChangePasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'Password1',
         ];
 
         $passwordService = $this->createPasswordService($personId, XMock::of(OpenAmIdentityService::class));
-        $passwordService->changePassword($personId , $data);
+        $passwordService->changePassword($personId, $data);
     }
 
     private function createPasswordService($personId, $openAmIdentityService)
@@ -76,13 +77,13 @@ class PasswordServiceTest extends AbstractServiceTestCase
         $identity = XMock::of(MotIdentityInterface::class);
         $identity
             ->expects($this->any())
-            ->method("getUserId")
+            ->method('getUserId')
             ->willReturn($personId);
 
         $identityProvider = XMock::of(MotIdentityProviderInterface::class);
         $identityProvider
             ->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($identity);
 
         return $identityProvider;

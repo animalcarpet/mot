@@ -1,6 +1,7 @@
 <?php
+
 return [
-    'modules'         => [
+    'modules' => [
         'DvsaFeature',
         'DoctrineModule',
         'DoctrineORMModule',
@@ -15,7 +16,7 @@ return [
         'DvsaAuthentication',
     ],
     'test_namespaces' => [
-        'OrganisationApiTest' => __DIR__ . '/' . 'OrganisationApiTest',
-        'DvsaCommonApiTest'   => __DIR__ . '/../../DvsaCommonApi/test/DvsaCommonApiTest',
+        'OrganisationApiTest' => __DIR__.'/'.'OrganisationApiTest',
+        'DvsaCommonApiTest' => __DIR__.'/../../DvsaCommonApi/test/DvsaCommonApiTest',
     ],
 ];

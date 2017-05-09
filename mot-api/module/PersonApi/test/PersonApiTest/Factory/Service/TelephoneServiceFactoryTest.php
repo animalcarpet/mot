@@ -3,8 +3,6 @@
 namespace PersonApiTest\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
-use Dvsa\OpenAM\OpenAMClientInterface;
-use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommonApi\Service\ContactDetailsService;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
@@ -12,15 +10,10 @@ use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Factory\Service\TelephoneServiceFactory;
 use PersonApi\Helper\PersonDetailsChangeNotificationHelper;
 use PersonApi\Service\TelephoneService;
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class PersonServiceFactoryTest
- *
- * @package PersonApiTest\Factory\Service
+ * Class PersonServiceFactoryTest.
  */
 class TelephoneServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

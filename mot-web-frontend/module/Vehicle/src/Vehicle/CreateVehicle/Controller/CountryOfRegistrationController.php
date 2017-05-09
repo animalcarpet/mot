@@ -2,7 +2,6 @@
 
 namespace Vehicle\CreateVehicle\Controller;
 
-
 use Vehicle\CreateVehicle\Action\CountryOfRegistrationAction;
 
 class CountryOfRegistrationController extends BaseCreateVehicleController
@@ -13,8 +12,7 @@ class CountryOfRegistrationController extends BaseCreateVehicleController
 
     public function __construct(
         CountryOfRegistrationAction $action
-    )
-    {
+    ) {
         $this->action = $action;
     }
 

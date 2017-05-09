@@ -16,8 +16,7 @@ use SiteApi\Service\Mapper\VtsMapper;
 use SiteApi\Service\SiteSearchService;
 
 /**
- * Class SiteSearchServiceTest
- * @package SiteApiTest\Service
+ * Class SiteSearchServiceTest.
  */
 class SiteSearchServiceTest extends AbstractServiceTestCase
 {
@@ -72,6 +71,7 @@ class SiteSearchServiceTest extends AbstractServiceTestCase
     {
         $dto = (new SiteSearchParamsDto())
             ->setSiteName(self::SITE_NAME);
+
         return $dto;
     }
 
@@ -79,6 +79,7 @@ class SiteSearchServiceTest extends AbstractServiceTestCase
     {
         $searchParam = (new SiteSearchParam())
             ->fromDto($this->getSiteSearchParamsDto());
+
         return $searchParam;
     }
 }

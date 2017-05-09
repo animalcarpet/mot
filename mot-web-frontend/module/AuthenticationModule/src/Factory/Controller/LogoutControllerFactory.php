@@ -37,9 +37,8 @@ class LogoutControllerFactory implements FactoryInterface
         /** @var WebLogoutService $logoutService */
         $logoutService = $serviceLocator->get(WebLogoutService::class);
 
-
         /**
-         * @var MapperFactory $mapper
+         * @var MapperFactory
          */
         $mapper = $serviceLocator->get(MapperFactory::class);
 

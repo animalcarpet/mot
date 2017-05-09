@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommonApi\Service\Hydrator;
 
 use Doctrine\ORM\EntityManager;
@@ -7,7 +8,7 @@ use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class HydratorFactory
+ * Class HydratorFactory.
  */
 class HydratorFactory implements AbstractFactoryInterface
 {
@@ -28,6 +29,6 @@ class HydratorFactory implements AbstractFactoryInterface
 
     private function endsWith($haystack, $needle)
     {
-        return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
+        return $needle === '' || substr($haystack, -strlen($needle)) === $needle;
     }
 }

@@ -1,10 +1,9 @@
 <?php
+
 namespace VehicleApiTest\Controller;
 
-use DvsaCommon\Constants\Role;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
-use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonTest\TestUtils\XMock;
@@ -16,7 +15,7 @@ use VehicleApi\Controller\VehicleDvlaController;
 use VehicleApi\Service\VehicleService;
 
 /**
- * Test class VehicleController
+ * Test class VehicleController.
  */
 class VehicleDvsaControllerTest extends AbstractMotApiControllerTestCase
 {
@@ -33,7 +32,7 @@ class VehicleDvsaControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * Test access for specified action and parameters
+     * Test access for specified action and parameters.
      *
      * @param string $method        HTTP request type (get, post, put)
      * @param string $action        Route action
@@ -47,7 +46,7 @@ class VehicleDvsaControllerTest extends AbstractMotApiControllerTestCase
     public function testCanAccessed(
         $method,
         $action,
-        $params = [],
+        $params,
         $serviceMethod,
         $serviceReturn,
         $expectResult
@@ -112,32 +111,32 @@ class VehicleDvsaControllerTest extends AbstractMotApiControllerTestCase
 
         return [
             [
-                'method'        => 'get',
-                'action'        => null,
-                'params'        => [
+                'method' => 'get',
+                'action' => null,
+                'params' => [
                     'id' => self::$VEHICLE_ID,
                 ],
                 'serviceMethod' => 'getDvlaVehicleData',
                 'serviceReturn' => $vehicleDto,
 
-                'expectResult'  => [
+                'expectResult' => [
                     'statusCode' => self::HTTP_OK_CODE,
-                    'result'     => ['data' => $hydrator->extract($vehicleDto)],
+                    'result' => ['data' => $hydrator->extract($vehicleDto)],
                 ],
             ],
             [
-                'method'        => 'get',
-                'action'        => null,
-                'params'        => [
+                'method' => 'get',
+                'action' => null,
+                'params' => [
                     'id' => self::$VEHICLE_ID,
                 ],
                 'serviceMethod' => 'getDvlaVehicleData',
                 'serviceReturn' => new NotFoundException('Vehicle', self::$VEHICLE_INVAILD_ID),
 
-                'expectResult'  => [
-                    'statusCode'    => self::HTTP_ERR_400,
+                'expectResult' => [
+                    'statusCode' => self::HTTP_ERR_400,
                     'exceptionCode' => NotFoundException::ERROR_CODE_NOT_FOUND,
-                    'exceptionMsg'  => 'Vehicle ' . self::$VEHICLE_INVAILD_ID . ' not found'
+                    'exceptionMsg' => 'Vehicle '.self::$VEHICLE_INVAILD_ID.' not found',
                 ],
             ],
         ];

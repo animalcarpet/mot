@@ -7,8 +7,9 @@ use DvsaEntities\Entity\PersonSecurityAnswer;
 class PersonSecurityAnswerRepository extends AbstractMutableRepository
 {
     /**
-     * @param integer $personId
-     * @param integer $questionId
+     * @param int $personId
+     * @param int $questionId
+     *
      * @return null|PersonSecurityAnswer
      */
     public function getPersonAnswerForQuestion($personId, $questionId)

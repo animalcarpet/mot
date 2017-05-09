@@ -17,6 +17,7 @@ class ApiIdentityProviderStub implements MotIdentityProviderInterface
     public function setIdentity(Identity $identity)
     {
         $this->identity = $identity;
+
         return $this;
     }
 

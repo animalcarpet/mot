@@ -15,12 +15,12 @@ class DvlaMakeModelMapTest extends \PHPUnit_Framework_TestCase
     public function testSettersAndGetters()
     {
         $data = [
-            'id'            => 1,
-            'dvlaMakeCode'  => 'AA',
+            'id' => 1,
+            'dvlaMakeCode' => 'AA',
             'dvlaModelCode' => '000',
-            'make'          => new Make(),
-            'model'         => new Model(),
-            'modelDetail'   => new ModelDetail(),
+            'make' => new Make(),
+            'model' => new Model(),
+            'modelDetail' => new ModelDetail(),
         ];
 
         $dvlaMakeModelMap = new DvlaMakeModelMap();

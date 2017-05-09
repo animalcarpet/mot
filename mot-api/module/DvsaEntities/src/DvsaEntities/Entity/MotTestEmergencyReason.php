@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 class MotTestEmergencyReason extends Entity
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -64,11 +64,13 @@ class MotTestEmergencyReason extends Entity
 
     /**
      * @param int $id
+     *
      * @return MotTestEmergencyReason
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -82,11 +84,13 @@ class MotTestEmergencyReason extends Entity
 
     /**
      * @param EmergencyLog $emergencyLog
+     *
      * @return MotTestEmergencyReason
      */
     public function setEmergencyLog(EmergencyLog $emergencyLog)
     {
         $this->emergencyLog = $emergencyLog;
+
         return $this;
     }
 
@@ -100,11 +104,13 @@ class MotTestEmergencyReason extends Entity
 
     /**
      * @param EmergencyReason $emergencyReason
+     *
      * @return $this
      */
     public function setEmergencyReason(EmergencyReason $emergencyReason)
     {
         $this->emergencyReason = $emergencyReason;
+
         return $this;
     }
 
@@ -118,11 +124,13 @@ class MotTestEmergencyReason extends Entity
 
     /**
      * @param Comment $comment
+     *
      * @return $this
      */
     public function setComment(Comment $comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 }

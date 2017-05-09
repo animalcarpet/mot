@@ -3,10 +3,8 @@
 namespace SiteTest\Controller;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
-use DvsaClient\Entity\SiteDailyOpeningHours;
 use DvsaClient\Mapper\SiteMapper;
 use DvsaClient\MapperFactory;
-use DvsaCommon\Date\Time;
 use DvsaCommon\Dto\Site\SiteTestingDailyScheduleDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommonTest\Bootstrap;
@@ -15,11 +13,9 @@ use DvsaCommonTest\TestUtils\XMock;
 use Site\Controller\SiteTestingDailyScheduleController;
 
 /**
- * Class SiteTestingDailyScheduleControllerTest
+ * Class SiteTestingDailyScheduleControllerTest.
  *
  * Tests the functionality of the controller and the output of its associated mapper.
- *
- * @package SiteTest\Controller
  */
 class SiteTestingDailyScheduleControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -97,11 +93,11 @@ class SiteTestingDailyScheduleControllerTest extends AbstractFrontendControllerT
     {
         $weeklySchedule = [];
 
-        for ($i = 1; $i < 8; $i++) {
+        for ($i = 1; $i < 8; ++$i) {
             $tmp = new SiteTestingDailyScheduleDto();
             $tmp->setWeekday($i)
-                ->setOpenTime("09:00:00")
-                ->setCloseTime("17:00:00");
+                ->setOpenTime('09:00:00')
+                ->setCloseTime('17:00:00');
             $weeklySchedule[] = $tmp;
         }
 
@@ -151,10 +147,11 @@ class SiteTestingDailyScheduleControllerTest extends AbstractFrontendControllerT
             'sundayOpenTimePeriod' => 'am',
             'sundayCloseTime' => '5.00',
             'sundayCloseTimePeriod' => 'pm',
-            'sundayIsClosed' => ''
+            'sundayIsClosed' => '',
         ];
         $weeklySchedule['errorData'] = [];
         $weeklySchedule['vtsName'] = 'unknown';
+
         return $weeklySchedule;
     }
 }

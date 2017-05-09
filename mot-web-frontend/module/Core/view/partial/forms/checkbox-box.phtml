@@ -12,11 +12,11 @@ $isChecked = (isset($isChecked) && true === $isChecked) ? true : false;
         <?php echo $this->partial(
             'partial/forms/checkbox-element.phtml',
             [
-                'id'           => $id,
-                'name'         => $name,
-                'value'        => $value,
+                'id' => $id,
+                'name' => $name,
+                'value' => $value,
                 'defaultValue' => $defaultValue,
-                'isChecked'    => $isChecked,
+                'isChecked' => $isChecked,
             ]
         ); ?>
         <?php if ($label) : ?>

@@ -1,8 +1,8 @@
 <?php
+
 /** @var string $searchType */
 /** @var \DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultUrlTemplateInterface $urlTemplate */
 /** @var \DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultMessage $searchResultMessage */
-
 use DvsaMotTest\Controller\VehicleSearchController;
 
 $searchType = $this->searchType;
@@ -18,7 +18,7 @@ if (!empty($this->title)) {
     if ($isRetest) {
         $title .= ' - retest';
     } elseif ($isDemo) {
-        $title =  'DEMO ' . $title;
+        $title = 'DEMO '.$title;
     }
 }
 $escTitle = $this->escapeHtml($title);
@@ -36,31 +36,31 @@ $tooManyMatches = isset($tooManyMatches) ? $tooManyMatches : null;
 $registrationNumberMaxLength = isset($registrationNumberMaxLength) ? $registrationNumberMaxLength : 10;
 
 $form = $this->form;
-$action = (!empty($action)? $action : '');
+$action = (!empty($action) ? $action : '');
 $form->setAttribute('method', 'post');
 $form->setAttribute('action', $action);
 $form->prepare();
 
 $data = [
-    'registrationElement'         => $form->get('registration'),
-    'vinElement'                  => $form->get('vin'),
-    'submitElement'               => $form->get('submit'),
-    'testNumberElement'           => $form->get('testNumber'),
-    'searchType'                  => (isset($searchType) ? $searchType : null),
-    'vinTypeElement'              => $form->get('vinType'),
+    'registrationElement' => $form->get('registration'),
+    'vinElement' => $form->get('vin'),
+    'submitElement' => $form->get('submit'),
+    'testNumberElement' => $form->get('testNumber'),
+    'searchType' => (isset($searchType) ? $searchType : null),
+    'vinTypeElement' => $form->get('vinType'),
     'previousRegistrationElement' => $form->get('previousSearchRegistration'),
-    'previousVinElement'          => $form->get('previousSearchVin'),
+    'previousVinElement' => $form->get('previousSearchVin'),
 ];
 
 echo $this->partial(
     'vehicleRetestSearch',
     [
-        'form'                          => $form,
-        'data'                          => $data,
-        'noMatches'                     => $noMatches,
-        'showCreateButton'              => $showCreateButton,
-        'results'                       => $results,
-        'tooManyMatches'                => $tooManyMatches,
-        'registrationNumberMaxLength'   => $registrationNumberMaxLength,
+        'form' => $form,
+        'data' => $data,
+        'noMatches' => $noMatches,
+        'showCreateButton' => $showCreateButton,
+        'results' => $results,
+        'tooManyMatches' => $tooManyMatches,
+        'registrationNumberMaxLength' => $registrationNumberMaxLength,
     ]
 );

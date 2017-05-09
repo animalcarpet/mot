@@ -26,16 +26,18 @@ class DuplicateCertificateSearchViewModel
 
     /**
      * @param AbstractDuplicateCertificateSearchForm $form
+     *
      * @return DuplicateCertificateSearchViewModel
      */
     public function setForm($form)
     {
         $this->form = $form;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getShowNoResultsMessage()
     {
@@ -43,12 +45,14 @@ class DuplicateCertificateSearchViewModel
     }
 
     /**
-     * @param boolean $showNoResultsMessage
+     * @param bool $showNoResultsMessage
+     *
      * @return DuplicateCertificateSearchViewModel
      */
     public function setShowNoResultsMessage($showNoResultsMessage)
     {
         $this->showNoResultsMessage = $showNoResultsMessage;
+
         return $this;
     }
 }

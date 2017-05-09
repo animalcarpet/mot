@@ -11,5 +11,4 @@ use Core\Service\StepService;
 
 class RegistrationStepService extends StepService
 {
-
 }

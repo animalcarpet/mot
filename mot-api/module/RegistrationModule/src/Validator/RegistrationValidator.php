@@ -23,7 +23,7 @@ class RegistrationValidator
     const EXP_CALLING_IS_VALID_BEFORE_VALIDATING = '%s::%s method has to be called before calling %s::%s';
     const EXP_MISSING_STEP_DATA = 'Required data for "%s" step is not provided';
 
-    /** @var boolean */
+    /** @var bool */
     private $isValid;
 
     /** @var InputFilter[] */

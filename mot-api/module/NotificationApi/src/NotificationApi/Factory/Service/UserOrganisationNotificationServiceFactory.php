@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NotificationApi\Factory\Service;
-
 
 use NotificationApi\Service\NotificationService;
 use NotificationApi\Service\PositionRemovalNotificationService;
@@ -14,6 +12,7 @@ class UserOrganisationNotificationServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return UserOrganisationNotificationService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

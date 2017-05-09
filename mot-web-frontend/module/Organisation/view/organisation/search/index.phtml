@@ -1,17 +1,16 @@
 <?php
 /**
- * @var \Organisation\ViewModel\Search\AeSearchViewModel  $viewModel
+ * @var \Organisation\ViewModel\Search\AeSearchViewModel
  */
+$labelText = 'AE Number';
+$inputId = 'number';
+$inputName = 'number';
+$help = 'For example, A12345';
+$labelError = $viewModel->getErrorMessage();
+$maxLength = $viewModel->getMaxSearchLength();
 
-$labelText          = 'AE Number';
-$inputId            = 'number';
-$inputName          = 'number';
-$help               = 'For example, A12345';
-$labelError         = $viewModel->getErrorMessage();
-$maxLength          = $viewModel->getMaxSearchLength();
-
-$errorMessages      = $this->layout()->flashMessenger->getErrorMessages();
-$successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
+$errorMessages = $this->layout()->flashMessenger->getErrorMessages();
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
 ?>
 
 <?php echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']); ?>
@@ -23,13 +22,13 @@ $successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
         <?php echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => $inputId,
-                'name'          => $inputName,
-                'help'          => $help,
-                'errorMessage'  => $labelError,
-                'label'         => $labelText,
-                'value'         => $viewModel->getSearch(),
-                'maxLength'     => $maxLength,
+                'id' => $inputId,
+                'name' => $inputName,
+                'help' => $help,
+                'errorMessage' => $labelError,
+                'label' => $labelText,
+                'value' => $viewModel->getSearch(),
+                'maxLength' => $maxLength,
             ]
         ); ?>
     </fieldset>
@@ -37,11 +36,11 @@ $successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
     <?php echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'            => 'submitAeSearch',
-            'value'         => 'Search',
-            'navigation'    => [
+            'id' => 'submitAeSearch',
+            'value' => 'Search',
+            'navigation' => [
                 'Return home' => '/',
-            ]
+            ],
         ]
     ); ?>
 </form>

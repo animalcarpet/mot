@@ -13,6 +13,7 @@ class CronUserServiceFactory implements FactoryInterface
     {
         $accountService = $serviceLocator->get(AccountDataService::class);
         $service = new CronUserService($accountService);
+
         return $service;
     }
 }

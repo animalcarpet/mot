@@ -2,16 +2,13 @@
 
 namespace DvsaEventApi\Service\Mapper;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Dto\Event\EventDto;
 use DvsaCommonApi\Service\Mapper\AbstractApiMapper;
 use DvsaEntities\Entity\Event;
 
 /**
- * Class EventListMapper
- *
- * @package DvsaEventApi\Service\Mapper
+ * Class EventListMapper.
  */
 class EventListMapper extends AbstractApiMapper
 {

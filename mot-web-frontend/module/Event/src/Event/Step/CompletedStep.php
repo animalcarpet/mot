@@ -7,14 +7,12 @@
 
 namespace Event\Step;
 
-use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
-
 class CompletedStep extends AbstractEventStep
 {
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "COMPLETED";
+    const STEP_ID = 'COMPLETED';
 
     /**
      * @return string
@@ -52,6 +50,7 @@ class CompletedStep extends AbstractEventStep
     public function toArray()
     {
         $values = $this->sessionService->toArray();
+
         return array_reduce($values, 'array_merge', []);
     }
 

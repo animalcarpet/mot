@@ -2,7 +2,6 @@
 
 namespace MailerApi\Logic;
 
-
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\AggregateResolver;
@@ -17,6 +16,7 @@ class EmailTemplateRenderer
 
     /**
      * EmailTemplateRenderer constructor.
+     *
      * @param array $templateMap
      */
     public function __construct($templateMap)
@@ -31,6 +31,7 @@ class EmailTemplateRenderer
     /**
      * @param $data
      * @param $templateName
+     *
      * @return string
      */
     public function renderTemplate($data, $templateName)

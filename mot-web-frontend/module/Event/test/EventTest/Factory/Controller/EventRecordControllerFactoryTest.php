@@ -2,7 +2,6 @@
 
 namespace EventTest\Factory\Controller;
 
-use Core\Service\SessionService;
 use DvsaCommonTest\TestUtils\XMock;
 use Event\Factory\Controllers\EventRecordControllerFactory;
 use Event\Controller\EventRecordController;
@@ -11,7 +10,7 @@ use Event\Service\EventSessionService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 
-class EventRecordControllerFactoryTest  extends \PHPUnit_Framework_TestCase
+class EventRecordControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @throws \Exception

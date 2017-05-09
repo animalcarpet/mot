@@ -25,6 +25,6 @@ class OpenAMIdentityAttributesCacheProvider
 
     public function saveAttributes($token, $attributes)
     {
-        $this->cache->save($this->cacheNamespace . $token, $attributes, $this->lifeTime);
+        $this->cache->save($this->cacheNamespace.$token, $attributes, $this->lifeTime);
     }
 }

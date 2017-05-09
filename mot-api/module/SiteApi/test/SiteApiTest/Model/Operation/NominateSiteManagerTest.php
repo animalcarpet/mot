@@ -1,4 +1,5 @@
 <?php
+
 namespace SiteApiTest\Model\Operation;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -19,20 +20,18 @@ use SiteApi\Model\RoleRestrictionsSet;
 use SiteApi\Service\SiteNominationService;
 
 /**
- * Class NominateSiteManagerTest
- *
- * @package SiteApiTest\Model\Operation
+ * Class NominateSiteManagerTest.
  */
 class NominateSiteManagerTest extends AbstractServiceTestCase
 {
-    /** @var  SitePositionRepository | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var SitePositionRepository | \PHPUnit_Framework_MockObject_MockObject */
     private $positionRepository;
-    /** @var  NominateOperation */
+    /** @var NominateOperation */
     private $nominateOperation;
     private $person;
     private $siteManagerRole;
 
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     private $authorizationService;
 
     public function setUp()
@@ -77,7 +76,7 @@ class NominateSiteManagerTest extends AbstractServiceTestCase
         try {
             $this->nominateOperation->nominate(new Person(), $siteManagerNomination);
         } catch (BadRequestException $e) {
-            $error = $e->getErrors()[0]["message"];
+            $error = $e->getErrors()[0]['message'];
         }
 
         $this->assertNull($error);
@@ -100,7 +99,7 @@ class NominateSiteManagerTest extends AbstractServiceTestCase
         try {
             $this->nominateOperation->nominate(new Person(), $position);
         } catch (BadRequestException $e) {
-            $error = $e->getErrors()[0]["message"];
+            $error = $e->getErrors()[0]['message'];
         }
 
         $this->assertEquals('No error', $error);

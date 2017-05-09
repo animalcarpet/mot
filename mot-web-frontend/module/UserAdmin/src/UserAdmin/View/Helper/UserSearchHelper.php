@@ -7,15 +7,15 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 
 /**
- * User search view helper
+ * User search view helper.
  */
 class UserSearchHelper
 {
-    /** @var  AuthorisationServiceInterface */
+    /** @var AuthorisationServiceInterface */
     protected $authService;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct($authService)
     {

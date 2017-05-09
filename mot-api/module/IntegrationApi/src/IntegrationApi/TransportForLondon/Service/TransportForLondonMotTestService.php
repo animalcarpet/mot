@@ -2,7 +2,6 @@
 
 namespace IntegrationApi\TransportForLondon\Service;
 
-use Doctrine\Common\Collections\Criteria;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -11,11 +10,10 @@ use DvsaEntities\Repository\MotTestRepository;
 use IntegrationApi\TransportForLondon\Mapper\TransportForLondonMotTestMapper as Mapper;
 
 /**
- * Class TransportForLondonMotTestService
+ * Class TransportForLondonMotTestService.
  */
 class TransportForLondonMotTestService
 {
-
     private $repository;
     private $mapper;
 
@@ -36,6 +34,7 @@ class TransportForLondonMotTestService
      * @param $v5c
      *
      * @return array
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function getMotTest($vrm, $v5c)
@@ -61,6 +60,7 @@ class TransportForLondonMotTestService
      * @param $v5c
      *
      * @return MotTest
+     *
      * @throws NotFoundException
      * @throws \DvsaCommonApi\Service\Exception\ServiceException
      */
@@ -83,7 +83,7 @@ class TransportForLondonMotTestService
             if ($lastNonPass) {
                 return $lastNonPass;
             } else {
-                throw new NotFoundException("MOT test");
+                throw new NotFoundException('MOT test');
             }
         }
     }

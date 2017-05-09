@@ -5,9 +5,7 @@ namespace DvsaClientTest\Mapper;
 use DvsaClient\Mapper\SitePositionMapper;
 
 /**
- * Class SitePositionMapperTest
- *
- * @package DvsaClientTest\Mapper
+ * Class SitePositionMapperTest.
  */
 class SitePositionMapperTest extends AbstractMapperTest
 {

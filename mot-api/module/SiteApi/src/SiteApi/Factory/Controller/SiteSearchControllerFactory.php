@@ -2,7 +2,6 @@
 
 namespace SiteApi\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use SiteApi\Controller\SiteSearchController;
 use SiteApi\Service\SiteSearchService;
 use Zend\ServiceManager\FactoryInterface;
@@ -10,13 +9,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SiteSearchControllerFactory
- * @package SiteApi\Factory\Controller
+ * Class SiteSearchControllerFactory.
  */
 class SiteSearchControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return SiteSearchController
      */
     public function createService(ServiceLocatorInterface $controllerManager)

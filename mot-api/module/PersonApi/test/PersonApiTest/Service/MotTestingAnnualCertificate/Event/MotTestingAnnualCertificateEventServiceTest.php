@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApiTest\Service\MotTestingAnnualCertificate\Event;
 
 use DvsaCommon\Auth\MotIdentityInterface;
@@ -19,17 +20,17 @@ use PersonApi\Service\MotTestingAnnualCertificate\MotTestingAnnualCertificateEve
 
 class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const CERTIFICATE_NUMBER = "CERTIFICATE NUMBER";
+    const CERTIFICATE_NUMBER = 'CERTIFICATE NUMBER';
     const SCORE = 100;
-    const USERNAME = "USERNAME";
-    const DATE_AWARDED = "2010-10-10";
-    const DATE_CURRENT = "2016-06-06";
-    const GROUP_A_EXPECTED_DESCRIPTION = "Tester annual exam details for group A recorded by USERNAME. Certificate number CERTIFICATE NUMBER and Certificate date 10 October 2010";
-    const GROUP_B_EXPECTED_DESCRIPTION = "Tester annual exam details for group B recorded by USERNAME. Certificate number CERTIFICATE NUMBER and Certificate date 10 October 2010";
+    const USERNAME = 'USERNAME';
+    const DATE_AWARDED = '2010-10-10';
+    const DATE_CURRENT = '2016-06-06';
+    const GROUP_A_EXPECTED_DESCRIPTION = 'Tester annual exam details for group A recorded by USERNAME. Certificate number CERTIFICATE NUMBER and Certificate date 10 October 2010';
+    const GROUP_B_EXPECTED_DESCRIPTION = 'Tester annual exam details for group B recorded by USERNAME. Certificate number CERTIFICATE NUMBER and Certificate date 10 October 2010';
 
     /** @var MotIdentityProviderInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $identityProvider;
-    /** @var  EventService|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var EventService|\PHPUnit_Framework_MockObject_MockObject */
     private $eventService;
     /** @var EventPersonMapRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $eventPersonMapRepository;
@@ -42,7 +43,7 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
     {
         $this->identityProvider = XMock::of(MotIdentityProviderInterface::class);
         $this->identityProvider->expects($this->any())
-            ->method("getIdentity")
+            ->method('getIdentity')
             ->willReturn($this->createIdentity());
 
         $this->eventService = XMock::of(EventService::class);
@@ -62,8 +63,8 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
      */
     public function testSendCreateEvent($groupCode, $eventTypeCode, $expectedDescription)
     {
-        $addEventSpy = new MethodSpy($this->eventService, "addEvent");
-        $eventPersonMapSpy = new MethodSpy($this->eventPersonMapRepository, "save");
+        $addEventSpy = new MethodSpy($this->eventService, 'addEvent');
+        $eventPersonMapSpy = new MethodSpy($this->eventPersonMapRepository, 'save');
 
         $this->sut->sendCreateEvent($this->createCertificate($groupCode));
 
@@ -81,13 +82,13 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
             [
                 VehicleClassGroupCode::BIKES,
                 EventTypeCode::GROUP_A_TESTER_ANNUAL_EXAM,
-                self::GROUP_A_EXPECTED_DESCRIPTION
+                self::GROUP_A_EXPECTED_DESCRIPTION,
             ],
             [
                 VehicleClassGroupCode::CARS_ETC,
                 EventTypeCode::GROUP_B_TESTER_ANNUAL_EXAM,
-                self::GROUP_B_EXPECTED_DESCRIPTION
-            ]
+                self::GROUP_B_EXPECTED_DESCRIPTION,
+            ],
         ];
     }
 
@@ -96,16 +97,15 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
      */
     public function testSendUpdateEvent($groupCode, $eventTypeCode)
     {
-        $addEventSpy = new MethodSpy($this->eventService, "addEvent");
-        $eventPersonMapSpy = new MethodSpy($this->eventPersonMapRepository, "save");
+        $addEventSpy = new MethodSpy($this->eventService, 'addEvent');
+        $eventPersonMapSpy = new MethodSpy($this->eventPersonMapRepository, 'save');
 
         $oldCertificate = $this->createCertificate($groupCode);
         $newCertificate = $this->createCertificate($groupCode);
         $newCertificate
-            ->setCertificateNumber("NEW-CERT-NUMB")
+            ->setCertificateNumber('NEW-CERT-NUMB')
             ->setScore(1)
-            ->setDateAwarded(new \DateTime("2016-07-24"));
-
+            ->setDateAwarded(new \DateTime('2016-07-24'));
 
         $this->sut->sendUpdateEvent($oldCertificate, $newCertificate);
 
@@ -139,7 +139,7 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
             [
                 VehicleClassGroupCode::CARS_ETC,
                 EventTypeCode::CHANGE_GROUP_B_TESTER_ANNUAL_EXAM,
-            ]
+            ],
         ];
     }
 
@@ -152,12 +152,12 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
 
         $this->eventService
             ->expects($this->once())
-            ->method("addEvent")
+            ->method('addEvent')
             ->with($eventTypeCode, $expectedDescription, $this->dateTimeHolder->getCurrent());
 
         $this->eventPersonMapRepository
             ->expects($this->once())
-            ->method("save");
+            ->method('save');
 
         $this->sut->sendRemoveEvent($certificate);
     }
@@ -174,7 +174,7 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
                 VehicleClassGroupCode::CARS_ETC,
                 EventTypeCode::REMOVE_GROUP_B_TESTER_ANNUAL_EXAM,
                 'Tester annual exam removed for group B by USERNAME. Certificate number CERTIFICATE NUMBER, Exam date 10 October 2010 and score achieved 100%',
-            ]
+            ],
         ];
     }
 
@@ -196,7 +196,7 @@ class MotTestingAnnualCertificateEventServiceTest extends \PHPUnit_Framework_Tes
     {
         $identity = XMock::of(MotIdentityInterface::class);
         $identity->expects($this->any())
-            ->method("getUsername")
+            ->method('getUsername')
             ->willReturn(self::USERNAME);
 
         return $identity;

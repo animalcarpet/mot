@@ -14,14 +14,14 @@ use DvsaEntitiesTest\Entity\WeightSourceFactory;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
 
 /**
- * Unit tests for BrakeTestResultClass3AndAboveCalculatorTest
+ * Unit tests for BrakeTestResultClass3AndAboveCalculatorTest.
  */
 class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_TestCase
 {
     const DATE_DEFAULT_FIRST_USED = '2008-01-01';
 
     /**
-     * This is the data provided for the test
+     * This is the data provided for the test.
      *
      * @dataProvider allData
      */
@@ -129,7 +129,7 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
         $serviceBrakeDataApplicableTypes = [
             BrakeTestTypeCode::ROLLER,
             BrakeTestTypeCode::PLATE,
-            BrakeTestTypeCode::DECELEROMETER
+            BrakeTestTypeCode::DECELEROMETER,
         ];
         if (in_array($serviceBrake1TestType, $serviceBrakeDataApplicableTypes)
             || in_array($serviceBrake2TestType, $serviceBrakeDataApplicableTypes)
@@ -154,7 +154,7 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
             [
                 BrakeTestTypeCode::ROLLER,
                 BrakeTestTypeCode::PLATE,
-                BrakeTestTypeCode::DECELEROMETER
+                BrakeTestTypeCode::DECELEROMETER,
             ]
         )
         ) {
@@ -241,7 +241,7 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
         $testName
     ) {
         if (in_array($serviceBrakeType, [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE])) {
-            $outputKey = 'imbalanceServiceBrake' . $serviceBrakeNumber;
+            $outputKey = 'imbalanceServiceBrake'.$serviceBrakeNumber;
 
             if (isset($output[$outputKey])) {
                 $output = array_replace_recursive(
@@ -315,66 +315,50 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
 
     private function axleDefaults()
     {
-        return ['efforts' => ['near'   => null, 'off' => null, 'nearSecondary' => null, 'offSecondary' => null,
-                              'single' => null], 'locks' => ['single' => null]];
+        return ['efforts' => ['near' => null, 'off' => null, 'nearSecondary' => null, 'offSecondary' => null,
+                              'single' => null, ], 'locks' => ['single' => null]];
     }
 
     private function coreDefaults()
     {
-        return ['input'  => [
-            'vehicleClass'        => '',
-            'vehicleFirstUsed'    => self::DATE_DEFAULT_FIRST_USED,
-            'isSingleLine'        => null,
-            'isSingleInFront'     => null,
+        return ['input' => [
+            'vehicleClass' => '',
+            'vehicleFirstUsed' => self::DATE_DEFAULT_FIRST_USED,
+            'isSingleLine' => null,
+            'isSingleInFront' => null,
             'isCommercialVehicle' => null,
-            'weight'              => [],
-            'serviceBrake1Test'   => [],
-            'serviceBrake2Test'   => null,
-            'parkingBrakeTest'    => [],
+            'weight' => [],
+            'serviceBrake1Test' => [],
+            'serviceBrake2Test' => null,
+            'parkingBrakeTest' => [],
         ],
                 'output' => [
-                    'passes' => []
-                ]];
+                    'passes' => [],
+                ], ];
     }
 
     public static function serviceBrakeDeceleratorAndParkingBrakeGradientTestData()
     {
         return [
             [[
-                 'desc'     =>
-                     'D+G, class4, service brake decelerator above threshold, parking brake gradient fails, all fail'
-                 , 'input'  =>
-                    [
-                        'vehicleClass'        => VehicleClassCode::CLASS_4
-                        , 'isSingleLine'      => false
-                        , 'serviceBrake1Test' => ['type'                    => BrakeTestTypeCode::DECELEROMETER,
-                                                  'serviceBrake1Efficiency' => 50]
-                        , 'parkingBrakeTest'  => ['type'                       => BrakeTestTypeCode::GRADIENT,
-                                                  'parkingBrakeEfficiencyPass' => false]
-                    ]
-                 , 'output' =>
-                    [
+                 'desc' => 'D+G, class4, service brake decelerator above threshold, parking brake gradient fails, all fail', 'input' => [
+                        'vehicleClass' => VehicleClassCode::CLASS_4, 'isSingleLine' => false, 'serviceBrake1Test' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'serviceBrake1Efficiency' => 50, ], 'parkingBrakeTest' => ['type' => BrakeTestTypeCode::GRADIENT,
+                                                  'parkingBrakeEfficiencyPass' => false, ],
+                    ], 'output' => [
                         'passes' => ['serviceBrake1Efficiency' => true, 'parkingBrakeEfficiency' => false,
-                                     'general'                 => false]
-                    ]
+                                     'general' => false, ],
+                    ],
              ]],
             [[
-                 'desc'     =>
-                     'D+G, class4, service brake decelerator above threshold, parking brake gradient passes, all pass'
-                 , 'input'  =>
-                    [
-                        'vehicleClass'        => VehicleClassCode::CLASS_4
-                        , 'isSingleLine'      => false
-                        , 'serviceBrake1Test' => ['type'                    => BrakeTestTypeCode::DECELEROMETER,
-                                                  'serviceBrake1Efficiency' => 50]
-                        , 'parkingBrakeTest'  => ['type'                       => BrakeTestTypeCode::GRADIENT,
-                                                  'parkingBrakeEfficiencyPass' => true]
-                    ]
-                 , 'output' =>
-                    [
+                 'desc' => 'D+G, class4, service brake decelerator above threshold, parking brake gradient passes, all pass', 'input' => [
+                        'vehicleClass' => VehicleClassCode::CLASS_4, 'isSingleLine' => false, 'serviceBrake1Test' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'serviceBrake1Efficiency' => 50, ], 'parkingBrakeTest' => ['type' => BrakeTestTypeCode::GRADIENT,
+                                                  'parkingBrakeEfficiencyPass' => true, ],
+                    ], 'output' => [
                         'passes' => ['serviceBrake1Efficiency' => true, 'parkingBrakeEfficiency' => true,
-                                     'general'                 => true]
-                    ]
+                                     'general' => true, ],
+                    ],
              ]],
         ];
     }
@@ -383,72 +367,44 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
     {
         return [
             [[
-                 'desc'     => 'D+D, class4, service and parking brake threshold efficiencies for dual line, all pass'
-                 , 'input'  =>
-                    [
-                        'vehicleClass'        => VehicleClassCode::CLASS_4
-                        , 'isSingleLine'      => false
-                        , 'serviceBrake1Test' => ['type'                    => BrakeTestTypeCode::DECELEROMETER,
-                                                  'serviceBrake1Efficiency' => 50]
-                        , 'parkingBrakeTest'  => ['type'                   => BrakeTestTypeCode::DECELEROMETER,
-                                                  'parkingBrakeEfficiency' => 16]
-                    ]
-                 , 'output' =>
-                    [
+                 'desc' => 'D+D, class4, service and parking brake threshold efficiencies for dual line, all pass', 'input' => [
+                        'vehicleClass' => VehicleClassCode::CLASS_4, 'isSingleLine' => false, 'serviceBrake1Test' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'serviceBrake1Efficiency' => 50, ], 'parkingBrakeTest' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'parkingBrakeEfficiency' => 16, ],
+                    ], 'output' => [
                         'passes' => ['serviceBrake1Efficiency' => true, 'parkingBrakeEfficiency' => true,
-                                     'general'                 => true]
-                    ]
+                                     'general' => true, ],
+                    ],
              ]],
             [[
-                 'desc'     => 'D+D, class4, service and parking brake threshold efficiencies for single line, all pass'
-                 , 'input'  =>
-                    [
-                        'vehicleClass'        => VehicleClassCode::CLASS_4
-                        , 'isSingleLine'      => true
-                        , 'serviceBrake1Test' => ['type'                    => BrakeTestTypeCode::DECELEROMETER,
-                                                  'serviceBrake1Efficiency' => 50]
-                        , 'parkingBrakeTest'  => ['type'                   => BrakeTestTypeCode::DECELEROMETER,
-                                                  'parkingBrakeEfficiency' => 25]
-                    ]
-                 , 'output' =>
-                    [
+                 'desc' => 'D+D, class4, service and parking brake threshold efficiencies for single line, all pass', 'input' => [
+                        'vehicleClass' => VehicleClassCode::CLASS_4, 'isSingleLine' => true, 'serviceBrake1Test' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'serviceBrake1Efficiency' => 50, ], 'parkingBrakeTest' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'parkingBrakeEfficiency' => 25, ],
+                    ], 'output' => [
                         'passes' => ['serviceBrake1Efficiency' => true, 'parkingBrakeEfficiency' => true,
-                                     'general'                 => true]
-                    ]
+                                     'general' => true, ],
+                    ],
              ]],
             [[
-                 'desc'     => 'D+D, class4, service and parking brake below threshold,'
-                 , 'input'  =>
-                    [
-                        'vehicleClass'        => VehicleClassCode::CLASS_4
-                        , 'isSingleLine'      => true
-                        , 'serviceBrake1Test' => ['type'                    => BrakeTestTypeCode::DECELEROMETER,
-                                                  'serviceBrake1Efficiency' => 49]
-                        , 'parkingBrakeTest'  => ['type'                   => BrakeTestTypeCode::DECELEROMETER,
-                                                  'parkingBrakeEfficiency' => 24]
-                    ]
-                 , 'output' =>
-                    [
+                 'desc' => 'D+D, class4, service and parking brake below threshold,', 'input' => [
+                        'vehicleClass' => VehicleClassCode::CLASS_4, 'isSingleLine' => true, 'serviceBrake1Test' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'serviceBrake1Efficiency' => 49, ], 'parkingBrakeTest' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'parkingBrakeEfficiency' => 24, ],
+                    ], 'output' => [
                         'passes' => ['serviceBrake1Efficiency' => false, 'parkingBrakeEfficiency' => false,
-                                     'general'                 => false]
-                    ]
+                                     'general' => false, ],
+                    ],
              ]],
             [[
-                 'desc'     => 'D+D, class4,  service brake below and parking brake above threshold, general fails'
-                 , 'input'  =>
-                    [
-                        'vehicleClass'        => VehicleClassCode::CLASS_4
-                        , 'isSingleLine'      => true
-                        , 'serviceBrake1Test' => ['type'                    => BrakeTestTypeCode::DECELEROMETER,
-                                                  'serviceBrake1Efficiency' => 49]
-                        , 'parkingBrakeTest'  => ['type'                   => BrakeTestTypeCode::DECELEROMETER,
-                                                  'parkingBrakeEfficiency' => 25]
-                    ]
-                 , 'output' =>
-                    [
+                 'desc' => 'D+D, class4,  service brake below and parking brake above threshold, general fails', 'input' => [
+                        'vehicleClass' => VehicleClassCode::CLASS_4, 'isSingleLine' => true, 'serviceBrake1Test' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'serviceBrake1Efficiency' => 49, ], 'parkingBrakeTest' => ['type' => BrakeTestTypeCode::DECELEROMETER,
+                                                  'parkingBrakeEfficiency' => 25, ],
+                    ], 'output' => [
                         'passes' => ['serviceBrake1Efficiency' => false, 'parkingBrakeEfficiency' => true,
-                                     'general'                 => false]
-                    ]
+                                     'general' => false, ],
+                    ],
              ]],
         ];
     }

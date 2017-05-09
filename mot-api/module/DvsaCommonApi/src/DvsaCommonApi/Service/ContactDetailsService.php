@@ -19,7 +19,7 @@ use DvsaEntities\Entity\Phone;
 use DvsaEntities\Repository\PhoneContactTypeRepository;
 
 /**
- * Service to handle Contact Detail entities
+ * Service to handle Contact Detail entities.
  */
 class ContactDetailsService extends AbstractService
 {
@@ -98,7 +98,7 @@ class ContactDetailsService extends AbstractService
 
         if ($addressDto instanceof AddressDto && !$addressDto->isEmpty()) {
             if ($addressEntity === null) {
-                $addressEntity = new Address;
+                $addressEntity = new Address();
                 $contactDetails->setAddress($addressEntity);
             }
 
@@ -108,7 +108,6 @@ class ContactDetailsService extends AbstractService
             }
 
             $this->addressService->persist($addressEntity, $addressDto->toArray(), $isNeedValidate);
-
         } elseif ($addressEntity instanceof Address) {
             $this->entityManager->remove($addressEntity);
             $contactDetails->setAddress(null);
@@ -142,7 +141,7 @@ class ContactDetailsService extends AbstractService
                 }
             );
 
-            if ((string)$number === '') {
+            if ((string) $number === '') {
                 if ($phoneEntity !== null) {
                     //  --  if number is empty, then drop entity in db    --
                     $this->entityManager->remove($phoneEntity);
@@ -180,7 +179,7 @@ class ContactDetailsService extends AbstractService
             $emailEntity = ArrayUtils::firstOrNull(
                 $emailEntities,
                 function (Email $email) use ($id, $isPrimary) {
-                    return ((int)$email->getId() === $id)
+                    return ((int) $email->getId() === $id)
                     || ($id === null && $isPrimary === true && $email->getIsPrimary() === $isPrimary);
                 }
             );

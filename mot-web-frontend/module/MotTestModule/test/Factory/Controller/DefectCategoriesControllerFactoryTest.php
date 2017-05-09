@@ -22,7 +22,7 @@ class DefectCategoriesControllerFactoryTest extends \PHPUnit_Framework_TestCase
             DefectCategoriesController::class,
             [
                 'AuthorisationService' => MotAuthorisationServiceInterface::class,
-                DefectsContentBreadcrumbsBuilder::class => DefectsContentBreadcrumbsBuilder::class
+                DefectsContentBreadcrumbsBuilder::class => DefectsContentBreadcrumbsBuilder::class,
             ]
         );
     }

@@ -37,10 +37,9 @@ use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use PHPUnit_Framework_TestCase;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\AuthenticationServiceInterface;
 
 /**
- * Class MotTestValidatorTest
+ * Class MotTestValidatorTest.
  */
 class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -48,7 +47,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     private $motTestValidator;
 
     /**
-     * @var CensorService $censorServiceMock
+     * @var CensorService
      */
     private $censorServiceMock;
 
@@ -122,7 +121,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $motTest->setVehicle($vehicle);
         $motTest->setVehicleVersion($vehicle->getVersion());
 
-
         $rfr = (new MotTestReasonForRejection())
             ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection(
@@ -164,7 +162,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     {
         $rfr = new MotTestReasonForRejection();
         $rfr->setReasonForRejection(new ReasonForRejection());
-        $rfr->setComment(str_repeat("X", ReasonForRejectionConstants::MAX_DESCRIPTION_LENGTH + 1));
+        $rfr->setComment(str_repeat('X', ReasonForRejectionConstants::MAX_DESCRIPTION_LENGTH + 1));
         $rfr->setCustomDescription(new MotTestReasonForRejectionDescription());
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
@@ -180,7 +178,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $rfr->setReasonForRejection(new ReasonForRejection());
 
         $description = new MotTestReasonForRejectionDescription();
-        $description->setCustomDescription(str_repeat("X", ReasonForRejectionConstants::MAX_DESCRIPTION_LENGTH + 1));
+        $description->setCustomDescription(str_repeat('X', ReasonForRejectionConstants::MAX_DESCRIPTION_LENGTH + 1));
 
         $rfr->setCustomDescription($description);
 
@@ -193,7 +191,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateMotTestReasonForRejectionProfanityDetected()
     {
-        $textUnderProfanityTest = "badword";
+        $textUnderProfanityTest = 'badword';
 
         $description = new MotTestReasonForRejectionDescription();
         $description->setCustomDescription($textUnderProfanityTest);
@@ -274,7 +272,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     public function test_validateMotTestReasonForRejection_throws_an_exception_for_adding_wrong_class_rfr_to_vehicle()
     {
         $vehicle = $this->getVehicle();
-        
+
         $rfr = (new MotTestReasonForRejection())
             ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection(
@@ -333,7 +331,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $this->motTestValidator->validateNewMotTest($motTest);
     }
 
-
     /**
      * @expectedException        \DvsaCommonApi\Service\Exception\ForbiddenException
      */
@@ -341,7 +338,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     {
         $this->specialNoticeService
             ->expects($this->any())
-            ->method("countOverdueSpecialNoticesForClass")
+            ->method('countOverdueSpecialNoticesForClass')
             ->willReturn(1);
 
         $motTest = $this->setupMotTest(new Person(), new Site());
@@ -472,7 +469,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn($name);
 
         return $status;
@@ -480,9 +477,11 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param string $class
+     *
      * @return Vehicle
      */
-    private function getVehicle($class = VehicleClassCode::CLASS_4){
+    private function getVehicle($class = VehicleClassCode::CLASS_4)
+    {
         $vehicleClass = new VehicleClass($class);
         $modelDetail = new ModelDetail();
         $vehicle = new Vehicle();

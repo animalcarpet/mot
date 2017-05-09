@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleTest\Service;
 
 use Core\Helper\GoogleAnalyticsHelper;

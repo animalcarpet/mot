@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -31,6 +32,7 @@ class EnforcementConditionAppointment
     public function setOutcome($description)
     {
         $this->description = $description;
+
         return $this;
     }
 

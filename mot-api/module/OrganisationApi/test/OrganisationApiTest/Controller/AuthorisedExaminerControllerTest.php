@@ -11,13 +11,9 @@ use OrganisationApi\Controller\AuthorisedExaminerController;
 use OrganisationApi\Service\AuthorisedExaminerService;
 use OrganisationApi\Service\UpdateAeDetailsService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Stdlib\Parameters;
 
 /**
- * Tests for add, edit and view AuthorisedExaminer
- *
- * @package OrganisationApiTest\Controller
+ * Tests for add, edit and view AuthorisedExaminer.
  */
 class AuthorisedExaminerControllerTest extends AbstractRestfulControllerTestCase
 {
@@ -73,7 +69,7 @@ class AuthorisedExaminerControllerTest extends AbstractRestfulControllerTestCase
                 'params' => [
                     'route' => ['id' => self::AE_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     'method' => 'get',
                     'params' => [self::AE_ID],
                     'result' => $getServiceResult,
@@ -81,8 +77,8 @@ class AuthorisedExaminerControllerTest extends AbstractRestfulControllerTestCase
                 'expect' => [
                     'result' => [
                         'data' => $jsonOrganisationDto,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'method' => 'get',
@@ -90,7 +86,7 @@ class AuthorisedExaminerControllerTest extends AbstractRestfulControllerTestCase
                 'params' => [
                     'route' => ['number' => self::AE_ID],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     'method' => 'getByNumber',
                     'params' => [self::AE_ID],
                     'result' => $getServiceResult,
@@ -98,20 +94,20 @@ class AuthorisedExaminerControllerTest extends AbstractRestfulControllerTestCase
                 'expect' => [
                     'result' => [
                         'data' => $jsonOrganisationDto,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'method' => 'post',
                 'action' => null,
                 'params' => [
                     'route' => null,
-                    'post'  => [
-                        'id'     => self::AE_ID,
+                    'post' => [
+                        'id' => self::AE_ID,
                         '_class' => OrganisationDto::class,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     'method' => 'create',
                     'params' => $getServiceResult,
                     'result' => ['id' => self::AE_ID],
@@ -119,8 +115,8 @@ class AuthorisedExaminerControllerTest extends AbstractRestfulControllerTestCase
                 'expect' => [
                     'result' => [
                         'data' => $postServiceResult,
-                    ]
-                ]
+                    ],
+                ],
             ],
         ];
     }

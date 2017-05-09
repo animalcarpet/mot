@@ -1,10 +1,9 @@
 <?php
+
 namespace DvsaMotApi\Service\Helper;
 
 /**
- * Class ExtractionHelper
- *
- * @package DvsaMotApi\Service\Helper
+ * Class ExtractionHelper.
  */
 class ExtractionHelper
 {

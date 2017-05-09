@@ -1,17 +1,15 @@
 <?php
+
 namespace SiteApi\Controller;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use SiteApi\Service\SiteService;
-use Zend\Http\Request;
-use Zend\View\Model\JsonModel;
 
 /**
- * Controller which creates/edits new VTS
+ * Controller which creates/edits new VTS.
  */
 class SiteController extends AbstractDvsaRestfulController
 {
@@ -40,7 +38,7 @@ class SiteController extends AbstractDvsaRestfulController
     public function create($data)
     {
         /** @var VehicleTestingStationDto $dto */
-        $dto    = DtoHydrator::jsonToDto($data);
+        $dto = DtoHydrator::jsonToDto($data);
         $result = $this->service->create($dto);
 
         return ApiResponse::jsonOk($result);

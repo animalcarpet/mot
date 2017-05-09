@@ -9,10 +9,9 @@ use PersonApi\Dto\MotTestingAuthorisationCollector;
 use PersonApi\Service\PersonalAuthorisationForMotTestingService;
 use PersonApi\Service\PersonalDetailsService;
 use PersonApi\Service\PersonService;
-use Zend\Stdlib\Parameters;
 
 /**
- * Base for common application controller test in PersonApi namespace
+ * Base for common application controller test in PersonApi namespace.
  */
 abstract class AbstractPersonControllerTestCase extends \PHPUnit_Framework_TestCase implements
     ApiControllerUnitTestInterface

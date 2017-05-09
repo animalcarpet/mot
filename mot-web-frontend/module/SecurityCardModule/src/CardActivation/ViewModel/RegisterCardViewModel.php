@@ -40,11 +40,13 @@ class RegisterCardViewModel
 
     /**
      * @param SecurityCardActivationForm $form
+     *
      * @return RegisterCardViewModel
      */
     public function setForm($form)
     {
         $this->form = $form;
+
         return $this;
     }
 
@@ -58,6 +60,7 @@ class RegisterCardViewModel
 
     /**
      * @param array $gtmData
+     *
      * @return RegisterCardViewModel
      */
     public function setGtmData(array $gtmData)
@@ -68,7 +71,7 @@ class RegisterCardViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPinMismatch()
     {
@@ -76,17 +79,19 @@ class RegisterCardViewModel
     }
 
     /**
-     * @param boolean $pinMismatch
+     * @param bool $pinMismatch
+     *
      * @return RegisterCardViewModel
      */
     public function setPinMismatch($pinMismatch)
     {
         $this->pinMismatch = $pinMismatch;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isInvalidSerialNumber()
     {
@@ -94,7 +99,8 @@ class RegisterCardViewModel
     }
 
     /**
-     * @param boolean $invalidSerialNumber
+     * @param bool $invalidSerialNumber
+     *
      * @return RegisterCardViewModel
      */
     public function setInvalidSerialNumber($invalidSerialNumber)
@@ -105,7 +111,7 @@ class RegisterCardViewModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCardAlreadyRegistered()
     {
@@ -113,7 +119,8 @@ class RegisterCardViewModel
     }
 
     /**
-     * @param boolean $cardAlreadyRegistered
+     * @param bool $cardAlreadyRegistered
+     *
      * @return RegisterCardViewModel
      */
     public function setCardAlreadyRegistered($cardAlreadyRegistered)
@@ -133,11 +140,13 @@ class RegisterCardViewModel
 
     /**
      * @param mixed $skipCtaTemplate
+     *
      * @return RegisterCardViewModel
      */
     public function setSkipCtaTemplate($skipCtaTemplate)
     {
         $this->skipCtaTemplate = $skipCtaTemplate;
+
         return $this;
     }
 }

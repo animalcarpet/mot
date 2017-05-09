@@ -1,4 +1,5 @@
 <?php
+
 namespace TestSupport\Controller;
 
 use TestSupport\Helper\TestDataResponseHelper;
@@ -10,7 +11,7 @@ class VehicleTestingAdviceController extends BaseTestSupportRestfulController
     {
         /** @var VehicleTestingAdviceService $vehicleExaminerService */
         $vehicleExaminerService = $this->getServiceLocator()->get(VehicleTestingAdviceService::class);
-        $vehicleExaminerService->createDefault($data["vehicle_id"], $data["model_id"]);
+        $vehicleExaminerService->createDefault($data['vehicle_id'], $data['model_id']);
 
         return TestDataResponseHelper::jsonOk($data);
     }

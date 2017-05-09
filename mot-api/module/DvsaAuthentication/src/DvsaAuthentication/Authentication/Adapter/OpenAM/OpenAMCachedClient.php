@@ -6,15 +6,12 @@ use Dvsa\OpenAM\Model\OpenAMExistingIdentity;
 use Dvsa\OpenAM\Model\OpenAMLoginDetails;
 use Dvsa\OpenAM\Model\OpenAMNewIdentity;
 use Dvsa\OpenAM\OpenAMClientInterface;
-use Zend\Http\Response;
 use Zend\Log\LoggerInterface;
 
 /**
- * Class OpenAMCachedClient
+ * Class OpenAMCachedClient.
  *
  * Provides cache over getIdentityAttributes method
- *
- * @package Dvsa\OpenAM
  */
 class OpenAMCachedClient implements OpenAMClientInterface
 {
@@ -26,15 +23,14 @@ class OpenAMCachedClient implements OpenAMClientInterface
         OpenAMClientInterface $openAMClient,
         OpenAMIdentityAttributesCacheProvider $cacheProvider,
         LoggerInterface  $logger
-    )
-    {
+    ) {
         $this->openAMClient = $openAMClient;
         $this->cacheProvider = $cacheProvider;
         $this->logger = $logger;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isTokenValid($token)
     {
@@ -42,7 +38,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function lockAccount(OpenAMLoginDetails $userDetails)
     {
@@ -50,7 +46,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unlockAccount(OpenAMLoginDetails $userDetails)
     {
@@ -58,7 +54,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isAccountLocked(OpenAMLoginDetails $userDetails)
     {
@@ -66,25 +62,25 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentityAttributes($subjectId)
     {
         $attributes = $this->cacheProvider->getAttributes($subjectId);
 
         if (!$attributes) {
-            $this->logger->debug("Identity attributes not in cache. Retrieving attributes from OpenAM");
+            $this->logger->debug('Identity attributes not in cache. Retrieving attributes from OpenAM');
             $attributes = $this->openAMClient->getIdentityAttributes($subjectId);
             $this->cacheProvider->saveAttributes($subjectId, $attributes);
         } else {
-            $this->logger->debug("Identity attributes found in cache");
+            $this->logger->debug('Identity attributes found in cache');
         }
 
         return $attributes;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function authenticate(OpenAMLoginDetails $loginDetails)
     {
@@ -92,7 +88,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function logout($token)
     {
@@ -100,7 +96,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createIdentity(OpenAMNewIdentity $newIdentity)
     {
@@ -108,7 +104,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateIdentity(OpenAMExistingIdentity $identity)
     {
@@ -116,7 +112,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validateCredentials(OpenAMLoginDetails $loginDetails)
     {
@@ -124,7 +120,7 @@ class OpenAMCachedClient implements OpenAMClientInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPasswordExpiryDate(OpenAMLoginDetails $loginDetails)
     {

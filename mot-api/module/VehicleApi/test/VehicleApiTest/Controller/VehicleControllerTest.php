@@ -1,4 +1,5 @@
 <?php
+
 namespace VehicleApiTest\Controller;
 
 use DvsaCommonTest\TestUtils\XMock;
@@ -8,7 +9,7 @@ use Zend\View\Model\JsonModel;
 use VehicleApi\Service\VehicleSearchService;
 
 /**
- * Test class VehicleController
+ * Test class VehicleController.
  */
 class VehicleControllerTest extends PHPUnit_Framework_TestCase
 {
@@ -34,7 +35,6 @@ class VehicleControllerTest extends PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getVehicleDto')
             ->will($this->returnValue($this->vehicleDtoMock));
-
     }
 
     public function testController()

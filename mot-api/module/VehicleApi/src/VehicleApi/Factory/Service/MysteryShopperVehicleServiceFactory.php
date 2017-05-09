@@ -24,12 +24,13 @@ use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Entity\Person;
 
 /**
- * Class MysteryShopperVehicleServiceFactory
+ * Class MysteryShopperVehicleServiceFactory.
  */
 class MysteryShopperVehicleServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return MysteryShopperVehicleService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

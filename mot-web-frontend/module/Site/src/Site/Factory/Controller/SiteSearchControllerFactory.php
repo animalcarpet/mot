@@ -9,13 +9,13 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class SiteSearchControllerFactory
- * @package Site\Factory\Controller
+ * Class SiteSearchControllerFactory.
  */
 class SiteSearchControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return SiteSearchController
      */
     public function createService(ServiceLocatorInterface $controllerManager)
@@ -30,6 +30,7 @@ class SiteSearchControllerFactory implements FactoryInterface
          * @var SiteSearchService
          */
         $service = $appServiceLocator->get(SiteSearchService::class);
+
         return new SiteSearchController($mapper, $service);
     }
 }

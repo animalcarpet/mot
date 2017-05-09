@@ -5,14 +5,12 @@ namespace DvsaMotApi\Model\OutputFormat;
 use DvsaCommonApi\Model\OutputFormat;
 
 /**
- * Class OutputFormatTypeAheadVehicleSearch
- *
- * @package DvsaMotApi\Model\OutputFormat
+ * Class OutputFormatTypeAheadVehicleSearch.
  */
 class OutputFormatTypeAheadTester extends OutputFormat
 {
     /**
-     * Responsible for extracting the current item into the required format
+     * Responsible for extracting the current item into the required format.
      *
      * @param $results
      * @param $key
@@ -26,11 +24,11 @@ class OutputFormatTypeAheadTester extends OutputFormat
         $id = $item->getId();
 
         if ($id) {
-            $results[$id] = join(
-                ", ",
+            $results[$id] = implode(
+                ', ',
                 [
                     $item->getUserName(),
-                    $item->getDisplayName()
+                    $item->getDisplayName(),
                 ]
             );
         }

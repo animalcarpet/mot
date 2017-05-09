@@ -50,10 +50,10 @@ class ApiTokenService implements TokenServiceInterface
             try {
                 $authHeader = AuthorizationBearer::fromString($header->toString());
                 $token = $authHeader->getToken();
-            } catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {
+            }
         }
 
         return $token;
     }
-
 }

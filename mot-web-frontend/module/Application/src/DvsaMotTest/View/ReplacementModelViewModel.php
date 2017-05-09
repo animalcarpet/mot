@@ -6,7 +6,6 @@ use DvsaCommon\Utility\ArrayUtils;
 
 class ReplacementModelViewModel
 {
-
     /** @var string $id */
     private $id;
     /** @var string $name */

@@ -6,13 +6,10 @@ use DvsaClient\Entity\ContactDetail;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
- * Class ContactDetailMapper
- *
- * @package DvsaClient\Mapper
+ * Class ContactDetailMapper.
  */
 class ContactDetailMapper extends Mapper
 {
-
     protected $entityClass = ContactDetail::class;
 
     /**

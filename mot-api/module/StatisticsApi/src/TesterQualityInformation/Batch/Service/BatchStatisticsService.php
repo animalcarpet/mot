@@ -26,13 +26,12 @@ class BatchStatisticsService
      */
     private $nationalComponentBreakdownStatisticsService;
 
-    function __construct(
+    public function __construct(
         KeyValueStorageInterface $s3Service,
         DateTimeHolderInterface $dateTimeHolder,
         NationalStatisticsService $nationalStatisticsService,
         NationalComponentStatisticsService $nationalComponentBreakdownStatisticsService
-    )
-    {
+    ) {
         $this->s3Service = $s3Service;
         $this->dateTimeHolder = $dateTimeHolder;
         $this->nationalStatisticsService = $nationalStatisticsService;
@@ -63,6 +62,7 @@ class BatchStatisticsService
 
     /**
      * @param \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Task\AbstractBatchTask[] $tasks
+     *
      * @return AbstractBatchTask[]
      */
     public function sortTaskByMothDesc(array $tasks)
@@ -74,6 +74,7 @@ class BatchStatisticsService
             if ($taskA->getMonth()->greaterThan($taskB->getMonth())) {
                 return -1;
             }
+
             return 1;
         };
 
@@ -84,6 +85,7 @@ class BatchStatisticsService
 
     /**
      * @param Month[] $months
+     *
      * @return \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Task\AbstractBatchTask[]
      */
     private function getTasksForTesterPerformance(array $months)
@@ -94,6 +96,7 @@ class BatchStatisticsService
 
         $missingMonths = ArrayUtils::filter($months, function (Month $month) use ($existingReports, $keyGenerator) {
             $expectedReport = $keyGenerator->generateForNationalTesterStatistics($month->getYear(), $month->getMonth());
+
             return !in_array($expectedReport, $existingReports);
         });
 
@@ -107,6 +110,7 @@ class BatchStatisticsService
     /**
      * @param Month[] $months
      * @param $vehicleGroup
+     *
      * @return \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Task\AbstractBatchTask[]
      */
     private function getTasksForComponentBreakdown(array $months, $vehicleGroup)
@@ -119,6 +123,7 @@ class BatchStatisticsService
 
         $missingMonths = ArrayUtils::filter($months, function (Month $month) use ($existingReports, $keyGenerator, $vehicleGroup) {
             $expectedReport = $keyGenerator->generateForComponentBreakdownStatistics($month->getYear(), $month->getMonth(), $vehicleGroup);
+
             return !in_array($expectedReport, $existingReports);
         });
 
@@ -139,7 +144,7 @@ class BatchStatisticsService
 
         $months = [];
 
-        for ($i = 0; $i < self::NUMBER_OF_PAST_MONTHS_TO_GENERATE; $i++) {
+        for ($i = 0; $i < self::NUMBER_OF_PAST_MONTHS_TO_GENERATE; ++$i) {
             $previousMonth = $currentMonth->previous();
             $months[] = $previousMonth;
             $currentMonth = $previousMonth;

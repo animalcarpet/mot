@@ -9,7 +9,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\View\Model\JsonModel;
 
 /**
- * Originally copied form \DvsaCommonApi\Listener\ErrorHandlingListener
+ * Originally copied form \DvsaCommonApi\Listener\ErrorHandlingListener.
  */
 class JsonErrorHandlingListener extends AbstractListenerAggregate
 {
@@ -21,7 +21,7 @@ class JsonErrorHandlingListener extends AbstractListenerAggregate
 
     public function handleNotFound(MvcEvent $e)
     {
-        $e->setViewModel(new JsonModel(["error" => "not found"]));
+        $e->setViewModel(new JsonModel(['error' => 'not found']));
     }
 
     public function handleError(MvcEvent $e)
@@ -51,17 +51,17 @@ class JsonErrorHandlingListener extends AbstractListenerAggregate
 
         if ($exception) {
             $exceptionJson = [
-                'class'      => get_class($exception),
-                'file'       => $exception->getFile(),
-                'line'       => $exception->getLine(),
-                'message'    => $exception->getMessage(),
-                'stacktrace' => $exception->getTraceAsString()
+                'class' => get_class($exception),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage(),
+                'stacktrace' => $exception->getTraceAsString(),
             ];
         }
 
         $errorJson = [
-            'message'   => 'An error occurred during execution; please try again later.',
-            'error'     => $error,
+            'message' => 'An error occurred during execution; please try again later.',
+            'error' => $error,
             'exception' => $exceptionJson,
         ];
         if ($error == 'error-router-no-match') {
@@ -69,7 +69,6 @@ class JsonErrorHandlingListener extends AbstractListenerAggregate
         }
 
         return new JsonModel(['errors' => [$errorJson]]);
-
     }
 
     /**
@@ -81,7 +80,7 @@ class JsonErrorHandlingListener extends AbstractListenerAggregate
     {
         $error = $e->getError();
         if (!$error) {
-            throw new \LogicException("This listener is only meant to be called on errors");
+            throw new \LogicException('This listener is only meant to be called on errors');
         }
     }
 }

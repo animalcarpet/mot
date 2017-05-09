@@ -9,7 +9,7 @@
 namespace Dvsa\Mot\Frontend\TestQualityInformation;
 
 /**
- * Class Module
+ * Class Module.
  */
 class Module
 {

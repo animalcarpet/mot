@@ -7,11 +7,9 @@ use Doctrine\ORM\EntityManager;
 use DvsaCommon\Utility\ArrayUtils;
 use TestSupport\Helper\RestClientGetterTrait;
 use TestSupport\Helper\TestDataResponseHelper;
-use UserApi\SpecialNotice\Service\SpecialNoticeService;
-use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
- * Special notices related methods
+ * Special notices related methods.
  *
  * Should not be deployed in production.
  */
@@ -24,7 +22,7 @@ class SpecialNoticeDataController extends BaseTestSupportRestfulController
         $data = json_decode($this->getRequest()->getContent(), true);
 
         $username = ArrayUtils::get($data, 'username');
-        $specialNoticeContentId = (int)ArrayUtils::get($data, 'specialNoticeContentId');
+        $specialNoticeContentId = (int) ArrayUtils::get($data, 'specialNoticeContentId');
         $isAcknowledged = ArrayUtils::get($data, 'isAcknowledged') === 'true';
 
         /** @var EntityManager $entityManager */
@@ -36,10 +34,10 @@ class SpecialNoticeDataController extends BaseTestSupportRestfulController
             'INSERT INTO special_notice (username, special_notice_content_id, is_acknowledged, created_by)
              VALUE (:username, :specialNoticeContentId, :isAcknowledged, :createdBy)',
             [
-                'username'               => $username,
+                'username' => $username,
                 'specialNoticeContentId' => $specialNoticeContentId,
-                'isAcknowledged'         => (int)$isAcknowledged,
-                'createdBy'              => 1
+                'isAcknowledged' => (int) $isAcknowledged,
+                'createdBy' => 1,
             ]
         );
         $id = $connection->lastInsertId();
@@ -54,7 +52,6 @@ class SpecialNoticeDataController extends BaseTestSupportRestfulController
         /** @var EntityManager $entityManager */
         $entityManager = $this->getServiceLocator()->get(EntityManager::class);
         /** @var Connection $connection */
-
         $connection = $entityManager->getConnection();
 
         $issueNumber = $connection->executeQuery('SELECT issue_number FROM special_notice_content ORDER BY issue_number DESC LIMIT 1');
@@ -69,6 +66,7 @@ class SpecialNoticeDataController extends BaseTestSupportRestfulController
         );
 
         $id = $connection->lastInsertId();
+
         return TestDataResponseHelper::jsonOk(['id' => $id]);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
@@ -6,9 +7,7 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaMotApi\Service\TesterExpiryService;
 
 /**
- * Class TesterExpiryController
- *
- * @package DvsaMotApi\Controller
+ * Class TesterExpiryController.
  */
 class TesterExpiryController extends AbstractDvsaRestfulController
 {

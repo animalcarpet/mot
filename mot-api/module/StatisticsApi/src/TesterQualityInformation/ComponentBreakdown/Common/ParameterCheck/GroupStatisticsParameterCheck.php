@@ -18,6 +18,6 @@ class GroupStatisticsParameterCheck
     {
         $isValid = $this->nationalStatisticsParameterCheck->isValid($year, $month);
 
-        return ($isValid && VehicleClassGroupCode::exists($group));
+        return $isValid && VehicleClassGroupCode::exists($group);
     }
 }

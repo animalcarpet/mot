@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\ParameterCheck;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck;
@@ -36,17 +37,17 @@ class GroupStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
             [
                 $year,
                 $month,
-                "C",
+                'C',
             ],
             [
                 $year,
                 $month,
-                "",
+                '',
             ],
             [
                 $year,
                 $month,
-                " ",
+                ' ',
             ],
             [
                 $year,
@@ -56,12 +57,12 @@ class GroupStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
             [
                 $year,
                 $month,
-                "a",
+                'a',
             ],
             [
                 $year,
                 $month,
-                "b",
+                'b',
             ],
         ];
     }
@@ -82,15 +83,15 @@ class GroupStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                "1001",
-                "01",
-                VehicleClassGroupCode::BIKES
+                '1001',
+                '01',
+                VehicleClassGroupCode::BIKES,
             ],
             [
                 1999,
                 2,
-                VehicleClassGroupCode::CARS_ETC
-            ]
+                VehicleClassGroupCode::CARS_ETC,
+            ],
         ];
     }
 
@@ -132,11 +133,11 @@ class GroupStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     private function getYear()
     {
-        return (int)DateUtils::firstOfThisMonth()->sub(new \DateInterval("P1M"))->format("Y");
+        return (int) DateUtils::firstOfThisMonth()->sub(new \DateInterval('P1M'))->format('Y');
     }
 
     private function getMonth()
     {
-        return (int)DateUtils::firstOfThisMonth()->sub(new \DateInterval("P1M"))->format("m");
+        return (int) DateUtils::firstOfThisMonth()->sub(new \DateInterval('P1M'))->format('m');
     }
 }

@@ -16,6 +16,6 @@ class PasswordServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return (new PasswordService(new PasswordValidator()));
+        return new PasswordService(new PasswordValidator());
     }
 }

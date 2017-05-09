@@ -1,14 +1,14 @@
 <?php
 /**
- * @var string $id
- * @var int $value
+ * @var string
+ * @var int    $value
  * @var string $label
  */
 ?>
     <legend>Efficiency %</legend>
     <?php echo $this->partial(
         'partial/forms/inputBox.phtml', [
-            'id'    => $id,
+            'id' => $id,
             'label' => $label,
             'value' => ($this->value ?: ''),
             'optional' => false,

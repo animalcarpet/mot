@@ -51,7 +51,7 @@ class ClassActionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('assertGranted')
             ->with(PermissionInSystem::MOT_TEST_START)
-            ->willThrowException(new UnauthorisedException("Not allowed"));
+            ->willThrowException(new UnauthorisedException('Not allowed'));
 
         $this->createVehicleStepService
             ->expects($this->never())
@@ -231,8 +231,7 @@ class ClassActionTest extends \PHPUnit_Framework_TestCase
 
     private function mockAllowedClasses()
     {
-        return ['forPerson' =>
-                [
+        return ['forPerson' => [
                     0 => '1',
                     1 => '2',
                     2 => '3',
@@ -240,8 +239,7 @@ class ClassActionTest extends \PHPUnit_Framework_TestCase
                     4 => '5',
                     5 => '7',
                 ],
-            'forVts' =>
-                [
+            'forVts' => [
                     0 => '1',
                     1 => '2',
                     2 => '3',

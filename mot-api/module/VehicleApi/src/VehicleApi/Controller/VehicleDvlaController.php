@@ -4,16 +4,10 @@ namespace VehicleApi\Controller;
 
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
-use Doctrine\ORM\EntityManager;
 use VehicleApi\Service\VehicleService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-
 
 /**
- * Class VehicleDvlaController
- *
- * @package VehicleApi\Controller
+ * Class VehicleDvlaController.
  */
 class VehicleDvlaController extends AbstractDvsaRestfulController
 {

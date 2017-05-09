@@ -7,9 +7,7 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaMotApi\Controller\Validator\ReinspectionReportValidator;
 
 /**
- * Class ReinspectionReportValidatorTest
- *
- * @package DvsaMotApiTest\Controller\Validator
+ * Class ReinspectionReportValidatorTest.
  */
 class ReinspectionReportValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,8 +16,7 @@ class ReinspectionReportValidatorTest extends \PHPUnit_Framework_TestCase
         $outcome = EnfDecisionReinspectionOutcomeId::AGREED_FULLY_WITH_TEST_RESULT;
         $v = new ReinspectionReportValidator(
             [
-                'reinspection-outcome'
-                    => $outcome
+                'reinspection-outcome' => $outcome,
             ]
         );
         $this->assertEquals($outcome, $v->getOutcome());
@@ -30,8 +27,7 @@ class ReinspectionReportValidatorTest extends \PHPUnit_Framework_TestCase
         $outcome = EnfDecisionReinspectionOutcomeId::AGREED_FULLY_WITH_TEST_RESULT;
         $v = new ReinspectionReportValidator(
             [
-                'reinspection-outcome'
-                    => $outcome
+                'reinspection-outcome' => $outcome,
             ]
         );
         $v->validate();
@@ -44,8 +40,7 @@ class ReinspectionReportValidatorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(BadRequestException::class);
         $v = new ReinspectionReportValidator(
             [
-                'reinspection-outcome'
-                    => $outcome
+                'reinspection-outcome' => $outcome,
             ]
         );
         $v->validate();

@@ -15,7 +15,7 @@ class DateOfBirthFilterService
     /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
     private $authorisationService;
 
-    /** @var ApiPersonalDetails $personalDetailsService*/
+    /** @var ApiPersonalDetails $personalDetailsService */
     private $personalDetailsService;
 
     private static $tradeRolesForTarget = [
@@ -30,7 +30,7 @@ class DateOfBirthFilterService
      * DateOfBirthFilterService constructor.
      *
      * @param MotFrontendAuthorisationServiceInterface $authorisationService
-     * @param ApiPersonalDetails $personalDetailsService
+     * @param ApiPersonalDetails                       $personalDetailsService
      */
     public function __construct(MotFrontendAuthorisationServiceInterface $authorisationService,
                                 ApiPersonalDetails $personalDetailsService)
@@ -40,42 +40,42 @@ class DateOfBirthFilterService
     }
 
     /**
-     * remove any date of birth not viewable by this logged in user
+     * remove any date of birth not viewable by this logged in user.
      *
      * @param SearchPersonResultDto[]
      */
     public function filterPersonalDetails(&$users)
     {
         /* @var $users SearchPersonResultDto[] */
-        foreach ($users as $key => $user)
-        {
+        foreach ($users as $key => $user) {
             /* @var $user SearchPersonResultDto */
-            if (!$this->canViewDateOfBirth($user->getPersonId()))
-            {
+            if (!$this->canViewDateOfBirth($user->getPersonId())) {
                 $users[$key]->setDateOfBirth(null);
             }
         }
     }
 
     /**
-     * Can view date of birth on user search
+     * Can view date of birth on user search.
      *
      * @param string $targetUserId
+     *
      * @return bool
      */
     public function canViewDateOfBirth($targetUserId)
     {
-        if (!$this->authorisationService->isGranted(PermissionInSystem::VIEW_DATE_OF_BIRTH))
-        {
+        if (!$this->authorisationService->isGranted(PermissionInSystem::VIEW_DATE_OF_BIRTH)) {
             return false;
         }
+
         return $this->targetPersonHasATradeRoleOrNoRole($this->getRolesForPersonWithId($targetUserId));
     }
 
     /**
-     * Get the roles associated with the person for the given user id
+     * Get the roles associated with the person for the given user id.
      *
      * @param string $targetUserId
+     *
      * @return array
      */
     private function getRolesForPersonWithId($targetUserId)
@@ -97,6 +97,7 @@ class DateOfBirthFilterService
      * role before performing our checks.
      *
      * @param array $targetPersonRoles
+     *
      * @return bool
      */
     private function targetPersonHasATradeRoleOrNoRole(array $targetPersonRoles)
@@ -107,6 +108,7 @@ class DateOfBirthFilterService
                 break;
             }
         }
+
         return empty($targetPersonRoles) || !empty(array_intersect(self::$tradeRolesForTarget, $targetPersonRoles));
     }
 }

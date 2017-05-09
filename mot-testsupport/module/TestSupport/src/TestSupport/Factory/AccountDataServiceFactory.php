@@ -15,6 +15,7 @@ class AccountDataServiceFactory implements FactoryInterface
         $accountService = $serviceLocator->get(AccountService::class);
         $entityManagerService = $serviceLocator->get(EntityManager::class);
         $service = new AccountDataService($accountService, $entityManagerService);
+
         return $service;
     }
 }

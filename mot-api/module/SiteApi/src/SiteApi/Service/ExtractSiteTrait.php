@@ -14,7 +14,7 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
  */
 trait ExtractSiteTrait
 {
-    /** @var  \Zend\Stdlib\Hydrator\HydratorInterface $objectHydrator */
+    /** @var \Zend\Stdlib\Hydrator\HydratorInterface $objectHydrator */
     protected $objectHydrator;
 
     /**
@@ -143,8 +143,8 @@ trait ExtractSiteTrait
             $facilityType = $facility->getFacilityType();
             $facilityData['facilityType'] = [
                 'name' => $facilityType->getName(),
-                'id'   => $facilityType->getId(),
-                'code' => $facilityType->getCode()
+                'id' => $facilityType->getId(),
+                'code' => $facilityType->getCode(),
             ];
 
             $facilitiesGroupedByType[$type][] = $facilityData;
@@ -279,11 +279,10 @@ trait ExtractSiteTrait
                 ['weekday' => 4, 'openTime' => null, 'closeTime' => null],
                 ['weekday' => 5, 'openTime' => null, 'closeTime' => null],
                 ['weekday' => 6, 'openTime' => null, 'closeTime' => null],
-                ['weekday' => 7, 'openTime' => null, 'closeTime' => null]
+                ['weekday' => 7, 'openTime' => null, 'closeTime' => null],
             ];
         }
 
         return $extractedSchedules;
     }
-
 }

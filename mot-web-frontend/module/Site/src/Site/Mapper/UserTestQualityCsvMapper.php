@@ -1,4 +1,5 @@
 <?php
+
 namespace Site\Mapper;
 
 use Core\File\CsvFile;
@@ -11,8 +12,8 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 
 class UserTestQualityCsvMapper
 {
-    const NOT_APPLICABLE = "n/a";
-    const NOT_AVAILABLE = "Not available";
+    const NOT_APPLICABLE = 'n/a';
+    const NOT_AVAILABLE = 'Not available';
 
     private $userBreakdown;
     private $nationalBreakdown;
@@ -29,8 +30,7 @@ class UserTestQualityCsvMapper
         $group,
         $month,
         $year
-    )
-    {
+    ) {
         $this->userBreakdown = $userBreakdown;
         $this->nationalBreakdown = $nationalBreakdown;
         $this->nationalGroupPerformance = $nationalGroupPerformance;
@@ -82,8 +82,7 @@ class UserTestQualityCsvMapper
     private function buildTesterRow(
         ComponentBreakdownDto $userBreakdown,
         VehicleTestingStationDto $site
-    )
-    {
+    ) {
         $groupPerformance = $userBreakdown->getGroupPerformance();
 
         $row = [
@@ -97,11 +96,11 @@ class UserTestQualityCsvMapper
             $groupPerformance->getTotal(),
             VehicleAgeFormatter::calculateVehicleAge($groupPerformance->getAverageVehicleAgeInMonths()),
             $groupPerformance->getAverageTime()->getTotalMinutes(),
-            round($groupPerformance->getPercentageFailed()) . "%",
+            round($groupPerformance->getPercentageFailed()).'%',
         ];
 
         foreach ($userBreakdown->getComponents() as $component) {
-            $row[] = ComponentFailRateFormatter::format($component->getPercentageFailed()) . "%";
+            $row[] = ComponentFailRateFormatter::format($component->getPercentageFailed()).'%';
         }
 
         return $row;
@@ -121,12 +120,12 @@ class UserTestQualityCsvMapper
                 $this->nationalGroupPerformance->getTotal(),
                 VehicleAgeFormatter::calculateVehicleAge($this->nationalGroupPerformance->getAverageVehicleAgeInMonths()),
                 $this->nationalGroupPerformance->getAverageTime()->getTotalMinutes(),
-                round($this->nationalGroupPerformance->getPercentageFailed()) . "%",
+                round($this->nationalGroupPerformance->getPercentageFailed()).'%',
             ];
 
             $components = $this->nationalBreakdown->getComponents();
             foreach ($components as $component) {
-                $row[] = ComponentFailRateFormatter::format($component->getPercentageFailed()) . "%";
+                $row[] = ComponentFailRateFormatter::format($component->getPercentageFailed()).'%';
             }
         } else {
             $row = [
@@ -145,18 +144,19 @@ class UserTestQualityCsvMapper
 
             $missingRowsCount = $csv->getColumnCount() - count($row);
 
-            for ($i = 0; $i < $missingRowsCount; $i++) {
+            for ($i = 0; $i < $missingRowsCount; ++$i) {
                 $row[] = self::NOT_AVAILABLE;
             }
         }
+
         return $row;
     }
 
     private function buildFileName()
     {
-        $pattern = "Test-quality-information_%s_%s_%s_Group-%s_%s.csv";
+        $pattern = 'Test-quality-information_%s_%s_%s_Group-%s_%s.csv';
 
-        return str_replace(" ", "-", sprintf($pattern,
+        return str_replace(' ', '-', sprintf($pattern,
                 $this->userBreakdown->getDisplayName(),
                 $this->userBreakdown->getUserName(),
                 $this->vehicleTestingStation->getSiteNumber(),

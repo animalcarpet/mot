@@ -8,13 +8,10 @@ use DvsaEntities\Entity\Vehicle;
 use SiteApi\Model\OutputFormat\OutputFormatSiteSlotUsage;
 
 /**
- * Class OutputFormatSiteSlotUsageTest
- *
- * @package SiteApiTest\Model\OutputParam
+ * Class OutputFormatSiteSlotUsageTest.
  */
 class OutputFormatSiteSlotUsageTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var OutputFormatSiteSlotUsage
      */

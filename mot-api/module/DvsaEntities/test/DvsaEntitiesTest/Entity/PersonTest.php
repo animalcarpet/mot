@@ -1,13 +1,11 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use DvsaCommon\Constants\PersonContactType;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Validator\EmailAddressValidator;
-use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\AuthorisationForTestingMot;
 use DvsaEntities\Entity\AuthorisationForTestingMotStatus;
 use DvsaEntities\Entity\ContactDetail;
@@ -23,7 +21,7 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class PersonTest
+ * Class PersonTest.
  */
 class PersonTest extends PHPUnit_Framework_TestCase
 {
@@ -47,7 +45,7 @@ class PersonTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check transformation First Middle and Last name to short presentation F. M. Last_name
+     * Check transformation First Middle and Last name to short presentation F. M. Last_name.
      *
      * @param array|Person $personData Person data
      * @param string       $expect     expected short name
@@ -70,26 +68,26 @@ class PersonTest extends PHPUnit_Framework_TestCase
                     'middleName' => null,
                     'familyName' => null,
                 ],
-                'expect'     => '',
+                'expect' => '',
             ],
             [
                 [
-                    'firstName'  => 'Simon',
+                    'firstName' => 'Simon',
                     'middleName' => 'John',
                     'familyName' => 'Thebad',
                 ],
                 'S. J. Thebad',
             ],
             [
-                (new Person)->setFirstName('Simon')->setMiddleName('John')->setFamilyName('Thebad'),
+                (new Person())->setFirstName('Simon')->setMiddleName('John')->setFamilyName('Thebad'),
                 'S. J. Thebad',
             ],
             [
-                (new Person)->setFirstName('  Simon ')->setMiddleName('  John ')->setFamilyName('    Thebad    '),
+                (new Person())->setFirstName('  Simon ')->setMiddleName('  John ')->setFamilyName('    Thebad    '),
                 'S. J. Thebad',
             ],
             [
-                (new Person)->setFirstName('  Simon ')->setMiddleName('  John ')
+                (new Person())->setFirstName('  Simon ')->setMiddleName('  John ')
                     ->setFamilyName('    TheVeryVeryVeryVeryLongFamilyNamebad    '),
                 'S. J. TheVeryVeryVeryVeryLongFamilyNamebad',
             ],
@@ -111,7 +109,6 @@ class PersonTest extends PHPUnit_Framework_TestCase
 
         //THEN I should find all positions
         $this->assertCount(2, $allPositions);
-
     }
 
     public function testFindAllOrganisationPositionsWithFilterParam()
@@ -170,7 +167,7 @@ class PersonTest extends PHPUnit_Framework_TestCase
     private function givePersonOrganisationPosition(Person $person, $organisationBusinessRoleCode)
     {
         $role = (new OrganisationBusinessRole())->setName($organisationBusinessRoleCode);
-        $organisationBusinessRoleMap = (new OrganisationBusinessRoleMap)->setOrganisationBusinessRole($role);
+        $organisationBusinessRoleMap = (new OrganisationBusinessRoleMap())->setOrganisationBusinessRole($role);
 
         $person->addOrganisationBusinessRoleMap($organisationBusinessRoleMap);
     }
@@ -178,7 +175,7 @@ class PersonTest extends PHPUnit_Framework_TestCase
     private function givePersonSiteBusinessPosition(Person $person, $siteBusinessRoleCode)
     {
         $role = (new SiteBusinessRole())->setName($siteBusinessRoleCode);
-        $siteBusinessRoleMaps = (new SiteBusinessRoleMap)->setSiteBusinessRole($role);
+        $siteBusinessRoleMaps = (new SiteBusinessRoleMap())->setSiteBusinessRole($role);
         $person->addSiteBusinessRoleMaps($siteBusinessRoleMaps);
     }
 
@@ -195,7 +192,7 @@ class PersonTest extends PHPUnit_Framework_TestCase
         $person = new Person();
 
         $email = (new Email())
-            ->setEmail('persontest@' . EmailAddressValidator::TEST_DOMAIN)
+            ->setEmail('persontest@'.EmailAddressValidator::TEST_DOMAIN)
             ->setIsPrimary(true);
 
         $contactDetail = (new ContactDetail())
@@ -205,6 +202,6 @@ class PersonTest extends PHPUnit_Framework_TestCase
         $personContact = new PersonContact($contactDetail, $contactType, $person);
         $person->addContact($personContact);
 
-        $this->assertSame('persontest@' . EmailAddressValidator::TEST_DOMAIN, $person->getPrimaryEmail());
+        $this->assertSame('persontest@'.EmailAddressValidator::TEST_DOMAIN, $person->getPrimaryEmail());
     }
 }

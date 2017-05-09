@@ -21,10 +21,10 @@ class BusinessTypePropertyForm extends Form
     const FIELD_TYPE = UpdateAePropertyAction::AE_BUSINESS_TYPE_PROPERTY;
     const FIELD_COMPANY_NUMBER = UpdateAePropertyAction::AE_COMPANY_NUMBER_PROPERTY;
 
-    const COMPANY_TYPE_TOO_LONG_MSG = "must be %max% characters or less";
+    const COMPANY_TYPE_TOO_LONG_MSG = 'must be %max% characters or less';
     const FIELD_NAME_MAX_LENGTH = 20;
 
-    const TYPE_EMPTY_MSG = "you must choose a business type";
+    const TYPE_EMPTY_MSG = 'you must choose a business type';
     const COMPANY_NUMBER_EMPTY_MSG = 'you must enter a company number';
     protected $companyNumberElement;
 
@@ -45,9 +45,9 @@ class BusinessTypePropertyForm extends Form
             $companyType = $organisationCompanyTypeCatalog->getByCode($typeCode);
             if ($companyType) {
                 $option = [
-                    'label'     => $companyType->getName(),
-                    'value'     => $companyType->getCode(),
-                    'key'       => $companyType->getName(),
+                    'label' => $companyType->getName(),
+                    'value' => $companyType->getCode(),
+                    'key' => $companyType->getName(),
                     'inputName' => self::FIELD_TYPE,
                 ];
                 if ($typeCode == CompanyTypeCode::COMPANY) {
@@ -146,4 +146,3 @@ class BusinessTypePropertyForm extends Form
         return $valid;
     }
 }
-

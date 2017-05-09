@@ -13,57 +13,57 @@ use Dvsa\Mot\Frontend\PersonModule\Factory\Service\QualificationDetailsServiceFa
 
 return [
 
-    'controllers'  => [
+    'controllers' => [
         'invokables' => [
             MyApplicationsController::class => MyApplicationsController::class,
-            UserStatsController::class      => UserStatsController::class,
+            UserStatsController::class => UserStatsController::class,
         ],
-        'factories'  => [
-            UserHomeControllerFactory::class         => UserHomeControllerFactory::class,
-            UserTradeRolesController::class          => UserTradeRolesControllerFactory::class,
-            PasswordControllerFactory::class         => PasswordControllerFactory::class
-        ]
+        'factories' => [
+            UserHomeControllerFactory::class => UserHomeControllerFactory::class,
+            UserTradeRolesController::class => UserTradeRolesControllerFactory::class,
+            PasswordControllerFactory::class => PasswordControllerFactory::class,
+        ],
     ],
-    'router'       => [
+    'router' => [
         'routes' => [
             'user-home' => [
-                'type'          => 'Zend\Mvc\Router\Http\Literal',
-                'options'       => [
-                    'route'    => '/',
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/',
                     'defaults' => [
                         'controller' => UserHomeControllerFactory::class,
-                        'action'     => 'userHome',
+                        'action' => 'userHome',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'stats'           => [
-                        'type'    => 'segment',
+                'child_routes' => [
+                    'stats' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => 'stats',
+                            'route' => 'stats',
                             'defaults' => [
                                 'controller' => UserStatsController::class,
-                                'action'     => 'show',
+                                'action' => 'show',
                             ],
                         ],
                     ],
-                    'refactor'           => [
-                        'type'    => 'segment',
+                    'refactor' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => 'refactor',
+                            'route' => 'refactor',
                             'defaults' => [
                                 'controller' => UserHomeControllerFactory::class,
-                                'action'     => 'userHomeRefactor',
+                                'action' => 'userHomeRefactor',
                             ],
                         ],
                     ],
                     'my-applications' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => 'my-applications',
+                            'route' => 'my-applications',
                             'defaults' => [
                                 'controller' => MyApplicationsController::class,
-                                'action'     => 'myApplications',
+                                'action' => 'myApplications',
                             ],
                         ],
                     ],
@@ -107,13 +107,13 @@ return [
                                     ],
                                 ],
                             ],
-                            'archive'   => [
-                                'type'    => 'segment',
+                            'archive' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/archive',
+                                    'route' => '/archive',
                                     'defaults' => [
                                         'controller' => NotificationController::class,
-                                        'action'     => 'archiveNotification',
+                                        'action' => 'archiveNotification',
                                     ],
                                 ],
                             ],
@@ -134,17 +134,17 @@ return [
         ],
     ],
     'view_manager' => [
-        'template_map'        => [
-            'notification/list' => __DIR__ . '/../view/dashboard/partials/notification/list.phtml',
+        'template_map' => [
+            'notification/list' => __DIR__.'/../view/dashboard/partials/notification/list.phtml',
         ],
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
     ],
     'view_helpers' => [
         'invokables' => [
-            'notificationLink' => NotificationLinkViewHelper::class
-        ]
+            'notificationLink' => NotificationLinkViewHelper::class,
+        ],
     ],
     'service_manager' => [
         'factories' => [

@@ -2,7 +2,6 @@
 
 namespace OrganisationApi\Factory\Controller;
 
-use Doctrine\ORM\EntityManager;
 use OrganisationApi\Controller\AuthorisedExaminerController;
 use OrganisationApi\Service\AuthorisedExaminerService;
 use OrganisationApi\Service\UpdateAeDetailsService;

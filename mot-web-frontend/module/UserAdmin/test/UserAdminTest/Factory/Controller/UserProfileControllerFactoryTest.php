@@ -30,7 +30,7 @@ class UserProfileControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(HelpdeskAccountAdminService::class, $userAccountAdminService);
 
         $authorisationService = XMock::of(MotFrontendAuthorisationServiceInterface::class);
-        $serviceManager->setService("AuthorisationService", $authorisationService);
+        $serviceManager->setService('AuthorisationService', $authorisationService);
 
         $testerQualificationStatus = XMock::of(TesterGroupAuthorisationMapper::class);
         $serviceManager->setService(TesterGroupAuthorisationMapper::class, $testerQualificationStatus);
@@ -39,7 +39,7 @@ class UserProfileControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(PersonRoleManagementService::class, $personRoleManagementService);
 
         $catalogService = XMock::of(CatalogService::class);
-        $serviceManager->setService("CatalogService", $catalogService);
+        $serviceManager->setService('CatalogService', $catalogService);
 
         $viewTradeRolesAssertion = XMock::of(ViewTradeRolesAssertion::class);
         $serviceManager->setService(ViewTradeRolesAssertion::class, $viewTradeRolesAssertion);

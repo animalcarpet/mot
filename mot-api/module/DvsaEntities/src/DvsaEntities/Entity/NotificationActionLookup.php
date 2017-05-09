@@ -1,12 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * NotificationActionLookup
+ * NotificationActionLookup.
  *
  * @ORM\Table(name="notification_action_lookup", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})})
  * @ORM\Entity(readOnly=true)
@@ -39,6 +39,7 @@ class NotificationActionLookup extends Entity
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
 

@@ -5,9 +5,9 @@
  *
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
+
 namespace Dvsa\Mot\Frontend\MotTestModule\Exception;
 
 class DefectTypeNotFoundException extends \Exception
 {
-
 }

@@ -4,7 +4,7 @@
 <div class="text">
     <h3 class="heading-medium">What happens next?</h3>
     <p>A Vehicle Examiner will contact you to book a demo test.</p>
-    <?php if($this->viewModel->canOrderCard === true) : ?>
+    <?php if ($this->viewModel->canOrderCard === true) : ?>
         <p>Now <a href="<?php echo $this->url('security-card-order/new')?>">order your security card</a> - you will need this to securely sign in to the service.</p>
     <?php endif; ?>
     <div class="message" id="order-card-section">

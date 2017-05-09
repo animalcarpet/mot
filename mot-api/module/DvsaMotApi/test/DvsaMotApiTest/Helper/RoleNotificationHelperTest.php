@@ -41,7 +41,7 @@ class RoleNotificationHelperTest extends \PHPUnit_Framework_TestCase
         $this->helper = new RoleNotificationHelper($this->notificationService);
 
         $role = new PersonSystemRole();
-        $role->setFullName("DVSA Area Admin");
+        $role->setFullName('DVSA Area Admin');
         $this->role = $role;
     }
 
@@ -74,9 +74,9 @@ class RoleNotificationHelperTest extends \PHPUnit_Framework_TestCase
             'Wrong template was chosen for the notification');
 
         $this->assertEquals($this->user->getId(), $notification['recipient'],
-            "It was addressed to the wrong person");
+            'It was addressed to the wrong person');
 
         $this->assertEquals($this->role->getFullName(), $notification['fields']['role'],
-            "Wrong role name is displayed in the notification");
+            'Wrong role name is displayed in the notification');
     }
 }

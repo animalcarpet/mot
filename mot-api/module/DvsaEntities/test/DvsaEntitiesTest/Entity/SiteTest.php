@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaCommon\Enum\AuthorisationForTestingMotAtSiteStatusCode;
@@ -9,7 +10,6 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
-use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use DvsaEntities\Entity\AuthorisationForTestingMotAtSite;
 use DvsaEntities\Entity\AuthorisationForTestingMotAtSiteStatus;
 use DvsaEntities\Entity\Comment;
@@ -17,20 +17,15 @@ use DvsaEntities\Entity\OrganisationSiteMap;
 use DvsaEntities\Entity\OrganisationSiteStatus;
 use DvsaEntities\Entity\SiteComment;
 use DvsaEntities\Entity\ContactDetail;
-use DvsaEntities\Entity\EnforcementSiteAssessment;
-use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Site;
-use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteContact;
 use DvsaEntities\Entity\SiteContactType;
-use DvsaEntities\Entity\SiteFacility;
 use DvsaEntities\Entity\SiteType;
 use DvsaEntities\Entity\VehicleClass;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class SiteTest
+ * Class SiteTest.
  */
 class SiteTest extends PHPUnit_Framework_TestCase
 {
@@ -41,7 +36,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
         $addressId = 5;
         $contactDetail = (new ContactDetail())->setAddress((new Address())->setId($addressId));
         $contactType = (new SiteContactType())->setCode(SiteContactTypeCode::BUSINESS);
-        $site = new Site;
+        $site = new Site();
 
         $site->setContact($contactDetail, $contactType);
         $this->assertCount(1, $site->getContacts());
@@ -50,7 +45,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
 
     public function testComments()
     {
-        $site = new Site;
+        $site = new Site();
         $siteComment = new SiteComment();
         $site->addSiteComment($siteComment);
         $this->assertEquals($siteComment, $site->getSiteComments()->first());
@@ -60,7 +55,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
     {
         $expect = 'free location';
 
-        $site = new Site;
+        $site = new Site();
         $siteType = (new SiteType())->setCode(SiteTypeCode::OFFSITE);
         $siteComment = new SiteComment();
         $comment = new Comment();
@@ -77,7 +72,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
     public function testGetName()
     {
         $name = "John & Son's Garage";
-        $site = new Site;
+        $site = new Site();
         $siteType = (new SiteType())->setCode(SiteTypeCode::VEHICLE_TESTING_STATION); // something other than OFFSITE
         $site->setType($siteType);
         $site->setName($name);
@@ -192,7 +187,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
         ];
 
         /**
-         * @var Site                $site
+         * @var Site
          * @var OrganisationSiteMap $actual
          */
         $site = XMock::of(Site::class, ['getAssociationWithAe']);

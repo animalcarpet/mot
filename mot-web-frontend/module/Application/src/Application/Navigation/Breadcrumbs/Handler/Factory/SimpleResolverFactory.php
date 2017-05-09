@@ -3,7 +3,6 @@
 namespace Application\Navigation\Breadcrumbs\Handler\Factory;
 
 use Application\Navigation\Breadcrumbs\Handler\SimpleResolver;
-use Zend\Http\Client;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

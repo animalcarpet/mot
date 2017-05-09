@@ -21,233 +21,233 @@ return [
             'max' => 50, // FIXME: This should match DvsaEntities\Entity\Person\Person::FIELD_USERNAME_LENGTH
         ],
     ],
-    'router'         => [
+    'router' => [
         'routes' => [
             'authorised-examiner-search' => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/authorised-examiner/search',
-                    'defaults'    => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/authorised-examiner/search',
+                    'defaults' => [
                         'controller' => SearchController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
             ],
             'authorised-examiner-create' => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/authorised-examiner/create',
-                    'defaults'    => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/authorised-examiner/create',
+                    'defaults' => [
                         'controller' => AuthorisedExaminerControllerFactory::class,
-                        'action'     => 'create',
+                        'action' => 'create',
                     ],
                 ],
                 'may_terminate' => true,
             ],
             'authorised-examiner' => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/authorised-examiner[/:id]',
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/authorised-examiner[/:id]',
                     'constraints' => [
                         'id' => '[1-9]+[0-9]*',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => AuthorisedExaminerControllerFactory::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'search'                        => [
-                        'type'    => 'literal',
+                'child_routes' => [
+                    'search' => [
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/search',
+                            'route' => '/search',
                             'defaults' => [
                                 'controller' => SearchController::class,
                             ],
                         ],
                     ],
-                    'create'                        => [
-                        'type'    => 'literal',
+                    'create' => [
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/create',
+                            'route' => '/create',
                             'defaults' => [
                                 'controller' => AuthorisedExaminerControllerFactory::class,
-                                'action'     => 'create',
+                                'action' => 'create',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'confirmation' => [
-                                'type'    => 'literal',
+                                'type' => 'literal',
                                 'options' => [
-                                    'route'    => '/confirmation',
+                                    'route' => '/confirmation',
                                     'defaults' => [
                                         'controller' => AuthorisedExaminerControllerFactory::class,
-                                        'action'     => 'confirmation',
+                                        'action' => 'confirmation',
                                     ],
                                 ],
                             ],
                         ],
                     ],
                     'test-quality-information' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/test-quality-information',
-                            'defaults'    => [
+                            'route' => '/test-quality-information',
+                            'defaults' => [
                                 'controller' => TestQualityInformationController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                     ],
-                    'mot-test-log'       => [
-                        'type'    => 'segment',
+                    'mot-test-log' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/mot-test-log',
-                            'defaults'    => [
+                            'route' => '/mot-test-log',
+                            'defaults' => [
                                 'controller' => MotTestLogController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
 
                             ],
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'download'    => [
-                                'type'    => 'segment',
+                            'download' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/csv',
-                                    'defaults'    => [
+                                    'route' => '/csv',
+                                    'defaults' => [
                                         'controller' => MotTestLogController::class,
-                                        'action'     => 'downloadCsv',
+                                        'action' => 'downloadCsv',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'roles'                         => [
-                        'type'    => 'segment',
+                    'roles' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/roles',
-                            'defaults'    => [
+                            'route' => '/roles',
+                            'defaults' => [
                                 'controller' => RoleController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                     ],
-                    'list-user-roles'               => [
-                        'type'    => 'segment',
+                    'list-user-roles' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/:personId/list-roles',
+                            'route' => '/:personId/list-roles',
                             'constraints' => [
                                 'personId' => '[1-9]+[0-9]*',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => RoleController::class,
-                                'action'     => 'listUserRoles',
+                                'action' => 'listUserRoles',
                             ],
                         ],
                     ],
-                    'confirm-nomination'            => [
-                        'type'    => 'segment',
+                    'confirm-nomination' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/:nomineeId/confirm-nomination/:roleId',
+                            'route' => '/:nomineeId/confirm-nomination/:roleId',
                             'constraints' => [
                                 'personId' => '[1-9]+[0-9]*',
-                                'roleId'   => '[1-9]+[0-9]*',
+                                'roleId' => '[1-9]+[0-9]*',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => RoleController::class,
-                                'action'     => 'confirmNomination',
+                                'action' => 'confirmNomination',
                             ],
                         ],
                     ],
-                    'remove-role'                   => [
-                        'type'    => 'segment',
+                    'remove-role' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/remove-role/:roleId',
+                            'route' => '/remove-role/:roleId',
                             'constraints' => [
                                 'roleId' => '[1-9]+[0-9]*',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => RoleController::class,
-                                'action'     => 'remove',
+                                'action' => 'remove',
                             ],
                         ],
                     ],
-                    'remove-role-confirmation'      => [
-                        'type'    => 'segment',
+                    'remove-role-confirmation' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/:personId/remove-role-confirmation',
+                            'route' => '/:personId/remove-role-confirmation',
                             'constraints' => [
                                 'personId' => '[1-9]+[0-9]*',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => RoleController::class,
-                                'action'     => 'removeConfirmation',
+                                'action' => 'removeConfirmation',
                             ],
                         ],
                     ],
-                    'create-principal'                    => [
-                        'type'    => 'segment',
+                    'create-principal' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/add-principal',
-                            'defaults'    => [
+                            'route' => '/add-principal',
+                            'defaults' => [
                                 'controller' => AuthorisedExaminerPrincipalController::class,
-                                'action'     => 'create',
+                                'action' => 'create',
                             ],
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'review-principal'    => [
-                                'type'    => 'segment',
+                            'review-principal' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/review[/:formUuid]',
-                                    'defaults'    => [
-                                        'action'     => 'review',
+                                    'route' => '/review[/:formUuid]',
+                                    'defaults' => [
+                                        'action' => 'review',
                                     ],
                                 ],
                             ],
-                        ]
+                        ],
                     ],
                     'remove-principal-confirmation' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/:principalId/remove-principal-confirmation',
+                            'route' => '/:principalId/remove-principal-confirmation',
                             'constraints' => [
                                 'principalId' => '[1-9]+[0-9]*',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => AuthorisedExaminerPrincipalController::class,
-                                'action'     => 'removeConfirmation',
+                                'action' => 'removeConfirmation',
                             ],
                         ],
                     ],
-                    'site'       => [
-                        'type'    => 'segment',
+                    'site' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/site',
-                            'defaults'    => [
+                            'route' => '/site',
+                            'defaults' => [
                                 'controller' => SiteController::class,
                             ],
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'link'    => [
-                                'type'    => 'segment',
+                            'link' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/link',
-                                    'defaults'    => [
-                                        'action'     => 'link',
+                                    'route' => '/link',
+                                    'defaults' => [
+                                        'action' => 'link',
                                     ],
                                 ],
                             ],
-                            'unlink'    => [
-                                'type'    => 'segment',
+                            'unlink' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'       => '/unlink[/:linkId]',
-                                    'defaults'    => [
-                                        'action'     => 'unlink',
+                                    'route' => '/unlink[/:linkId]',
+                                    'defaults' => [
+                                        'action' => 'unlink',
                                     ],
                                 ],
                             ],
@@ -255,46 +255,46 @@ return [
                     ],
                 ],
             ],
-            'authorised-examiner-edit-property'     => [
-                'type'    => 'segment',
+            'authorised-examiner-edit-property' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/authorised-examiner/:id/:propertyName/change',
+                    'route' => '/authorised-examiner/:id/:propertyName/change',
                     'constraints' => [
                         'id' => '[0-9]+',
-                        'propertyName' => 'name|trading-name|business-type|status|areaoffice' .
-                            '|registered-address|registered-email|registered-telephone' .
-                            '|correspondence-address|correspondence-email|correspondence-telephone'
+                        'propertyName' => 'name|trading-name|business-type|status|areaoffice'.
+                            '|registered-address|registered-email|registered-telephone'.
+                            '|correspondence-address|correspondence-email|correspondence-telephone',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => UpdateAePropertyController::class,
-                        'action'     => 'edit',
+                        'action' => 'edit',
                     ],
                 ],
             ],
-            'authorised-examiner-edit-property-review'     => [
-                'type'    => 'segment',
+            'authorised-examiner-edit-property-review' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/authorised-examiner/:id/:propertyName/review/:formUuid',
+                    'route' => '/authorised-examiner/:id/:propertyName/review/:formUuid',
                     'constraints' => [
                         'id' => '[0-9]+',
                         'propertyName' => 'registered-address|correspondence-address',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => UpdateAePropertyController::class,
-                        'action'     => 'review',
+                        'action' => 'review',
                     ],
                 ],
             ],
         ],
     ],
-    'controllers'    => [
+    'controllers' => [
         'invokables' => [
-            SearchController::class                      => SearchController::class,
+            SearchController::class => SearchController::class,
         ],
         'factories' => [
-            SiteController::class                      => SiteControllerFactory::class,
+            SiteController::class => SiteControllerFactory::class,
             AuthorisedExaminerControllerFactory::class => AuthorisedExaminerControllerFactory::class,
-        ]
+        ],
     ],
     'service_manager' => [
         'factories' => [
@@ -302,13 +302,12 @@ return [
             UpdateAePropertyProcessBuilder::class => UpdateAePropertyProcessBuilderFactory::class,
         ],
     ],
-    'view_manager'   => [
-        'template_map'        => [
-            'mot-test-log/formatter/vehicle-model-sub-row' =>
-                __DIR__ . '/../view/organisation/mot-test-log/formatter/vehicle-model-sub-row.phtml',
+    'view_manager' => [
+        'template_map' => [
+            'mot-test-log/formatter/vehicle-model-sub-row' => __DIR__.'/../view/organisation/mot-test-log/formatter/vehicle-model-sub-row.phtml',
         ],
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            __DIR__.'/../view',
         ],
     ],
 ];

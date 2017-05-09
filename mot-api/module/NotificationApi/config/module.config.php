@@ -8,15 +8,15 @@ use NotificationApi\Controller\PersonReadNotificationController;
 return [
     'controllers' => [
         'invokables' => [
-            NotificationActionController::class     => NotificationActionController::class,
+            NotificationActionController::class => NotificationActionController::class,
             PersonReadNotificationController::class => PersonReadNotificationController::class,
         ],
     ],
-    'router'      => [
+    'router' => [
         'routes' => [
             'notification' => [
-                'type'         => 'Segment',
-                'options'      => [
+                'type' => 'Segment',
+                'options' => [
                     'route' => '/notification',
                     'defaults' => [
                         'controller' => NotificationController::class,
@@ -26,21 +26,21 @@ return [
                 'may_terminate' => true,
                 'child_routes' => [
 
-                    'item'   => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'    => '/:id',
+                    'item' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/:id',
                             'defaults' => [
                                 'controller' => NotificationController::class,
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
 
                             'read' => [
-                                'type'          => 'segment',
-                                'options'       => [
-                                    'route'    => '/read',
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/read',
                                     'defaults' => [
                                         'controller' => NotificationController::class,
                                     ],
@@ -48,9 +48,9 @@ return [
                                 'may_terminate' => true,
                             ],
                             'action' => [
-                                'type'          => 'segment',
-                                'options'       => [
-                                    'route'    => '/action',
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/action',
                                     'defaults' => [
                                         'controller' => NotificationActionController::class,
                                     ],
@@ -72,20 +72,20 @@ return [
                     ],
 
                     'person' => [
-                        'type'          => 'segment',
-                        'options'       => [
-                            'route'    => '/person/:personId',
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/person/:personId',
                             'defaults' => [
                                 'controller' => PersonNotificationController::class,
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
 
                             'read' => [
-                                'type'          => 'segment',
-                                'options'       => [
-                                    'route'    => '/read',
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/read',
                                     'defaults' => [
                                         'controller' => PersonReadNotificationController::class,
                                     ],
@@ -93,9 +93,9 @@ return [
                                 'may_terminate' => true,
                             ],
                             'unread-count' => [
-                                'type'          => 'segment',
-                                'options'       => [
-                                    'route'    => '/unread-count',
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/unread-count',
                                     'defaults' => [
                                         'controller' => PersonNotificationController::class,
                                         'action' => 'unreadCount',

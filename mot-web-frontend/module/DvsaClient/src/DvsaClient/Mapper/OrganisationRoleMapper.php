@@ -3,9 +3,7 @@
 namespace DvsaClient\Mapper;
 
 /**
- * Class OrganisationRoleMapper
- *
- * @package DvsaClient\Mapper
+ * Class OrganisationRoleMapper.
  */
 class OrganisationRoleMapper extends DtoMapper
 {
@@ -19,7 +17,8 @@ class OrganisationRoleMapper extends DtoMapper
      */
     public function fetchAllForPerson($organisationId, $personId)
     {
-        $url = 'organisation/' . $organisationId . '/person/' . $personId . '/role';
+        $url = 'organisation/'.$organisationId.'/person/'.$personId.'/role';
+
         return $this->get($url);
     }
 }

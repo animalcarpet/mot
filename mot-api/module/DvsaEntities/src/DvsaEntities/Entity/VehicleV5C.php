@@ -15,7 +15,7 @@ class VehicleV5C extends Entity
     use CommonIdentityTrait;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="vehicle_id", type="integer", nullable=false)
      */
@@ -52,11 +52,13 @@ class VehicleV5C extends Entity
 
     /**
      * @param \DateTime $firstSeen
+     *
      * @return $this
      */
     public function setFirstSeen($firstSeen)
     {
         $this->firstSeen = $firstSeen;
+
         return $this;
     }
 
@@ -70,11 +72,13 @@ class VehicleV5C extends Entity
 
     /**
      * @param \DateTime $lastSeen
+     *
      * @return $this
      */
     public function setLastSeen($lastSeen)
     {
         $this->lastSeen = $lastSeen;
+
         return $this;
     }
 
@@ -88,11 +92,13 @@ class VehicleV5C extends Entity
 
     /**
      * @param string $v5cRef
+     *
      * @return $this
      */
     public function setV5cRef($v5cRef)
     {
         $this->v5cRef = $v5cRef;
+
         return $this;
     }
 
@@ -106,11 +112,13 @@ class VehicleV5C extends Entity
 
     /**
      * @param int $vehicleId
+     *
      * @return $this
      */
     public function setVehicleId($vehicleId)
     {
         $this->vehicleId = $vehicleId;
+
         return $this;
     }
 }

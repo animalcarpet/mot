@@ -1,12 +1,12 @@
 <?php
+
 namespace DvsaCommonApiTest\Service\Exception;
 
 use DvsaCommonApi\Service\Exception\NotFoundException;
-
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class NotFoundExceptionTest
+ * Class NotFoundExceptionTest.
  */
 class NotFoundExceptionTest extends PHPUnit_Framework_TestCase
 {
@@ -16,9 +16,9 @@ class NotFoundExceptionTest extends PHPUnit_Framework_TestCase
         $message = 'User tester1 not found';
 
         $expectedErrors = [[
-            "message" => $message,
-            "code" => NotFoundException::ERROR_CODE_NOT_FOUND,
-            "displayMessage" => $message
+            'message' => $message,
+            'code' => NotFoundException::ERROR_CODE_NOT_FOUND,
+            'displayMessage' => $message,
         ]];
 
         $this->assertEquals($message, $notFoundException->getMessage());
@@ -32,9 +32,9 @@ class NotFoundExceptionTest extends PHPUnit_Framework_TestCase
         $message = 'User not found';
 
         $expectedErrors = [[
-            "message" => $message,
-            "code" => NotFoundException::ERROR_CODE_NOT_FOUND,
-            "displayMessage" => $message
+            'message' => $message,
+            'code' => NotFoundException::ERROR_CODE_NOT_FOUND,
+            'displayMessage' => $message,
         ]];
 
         $this->assertEquals($message, $notFoundException->getMessage());
@@ -48,9 +48,9 @@ class NotFoundExceptionTest extends PHPUnit_Framework_TestCase
         $notFoundException = new NotFoundException($specificMessage, null, false);
 
         $expectedErrors = [[
-            "message" => $specificMessage,
-            "code" => NotFoundException::ERROR_CODE_NOT_FOUND,
-            "displayMessage" => $specificMessage
+            'message' => $specificMessage,
+            'code' => NotFoundException::ERROR_CODE_NOT_FOUND,
+            'displayMessage' => $specificMessage,
         ]];
 
         $this->assertEquals($specificMessage, $notFoundException->getMessage());

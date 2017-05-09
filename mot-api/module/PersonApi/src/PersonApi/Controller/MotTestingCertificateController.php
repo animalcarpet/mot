@@ -1,4 +1,5 @@
 <?php
+
 namespace PersonApi\Controller;
 
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
@@ -17,7 +18,7 @@ class MotTestingCertificateController extends AbstractDvsaRestfulController impl
 
     public function __construct(MotTestingCertificateService $motTestingCertificateService, DtoReflectiveDeserializer $deserializer)
     {
-        $this->setIdentifierName("group");
+        $this->setIdentifierName('group');
         $this->motTestingCertificateService = $motTestingCertificateService;
         $this->deserializer = $deserializer;
     }
@@ -66,8 +67,8 @@ class MotTestingCertificateController extends AbstractDvsaRestfulController impl
     {
         return ArrayUtils::tryGet(
             [
-                "a" => VehicleClassGroupCode::BIKES,
-                "b" => VehicleClassGroupCode::CARS_ETC,
+                'a' => VehicleClassGroupCode::BIKES,
+                'b' => VehicleClassGroupCode::CARS_ETC,
             ],
             $group
         );

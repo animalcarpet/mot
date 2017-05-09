@@ -3,7 +3,6 @@
 namespace DvsaMotApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
-use DvsaAuthentication\Service\OtpService;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaMotApi\Helper\MysteryShopperHelper;

@@ -29,9 +29,9 @@ class MotTestLogSummaryMapperTest extends \PHPUnit_Framework_TestCase
     protected function getMotTestLog()
     {
         return [
-            'year'  => '1024',
+            'year' => '1024',
             'month' => '256',
-            'week'  => '12',
+            'week' => '12',
             'today' => '1',
         ];
     }

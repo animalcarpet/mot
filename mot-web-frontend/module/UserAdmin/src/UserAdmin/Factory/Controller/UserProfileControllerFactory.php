@@ -13,7 +13,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for {@link \UserAdmin\Controller\UserProfileController}
+ * Factory for {@link \UserAdmin\Controller\UserProfileController}.
  */
 class UserProfileControllerFactory implements FactoryInterface
 {
@@ -21,11 +21,11 @@ class UserProfileControllerFactory implements FactoryInterface
     {
         $appServiceLocator = $controllerManager->getServiceLocator();
 
-        $authorisationService = $appServiceLocator->get("AuthorisationService");
+        $authorisationService = $appServiceLocator->get('AuthorisationService');
         $accountAdminService = $appServiceLocator->get(HelpdeskAccountAdminService::class);
         $testerGroupAuthorisationMapper = $appServiceLocator->get(TesterGroupAuthorisationMapper::class);
         $personRoleManagementService = $appServiceLocator->get(PersonRoleManagementService::class);
-        $catalogService = $appServiceLocator->get("CatalogService");
+        $catalogService = $appServiceLocator->get('CatalogService');
         $viewTradeRolesAssertion = $appServiceLocator->get(ViewTradeRolesAssertion::class);
         $registeredCardService = $appServiceLocator->get(RegisteredCardService::class);
         /** @var TwoFaFeatureToggle */

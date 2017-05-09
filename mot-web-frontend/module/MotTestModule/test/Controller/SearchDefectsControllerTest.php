@@ -49,6 +49,7 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockMotTestServiceClient == null) {
             $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
         }
+
         return $this->mockMotTestServiceClient;
     }
 
@@ -57,6 +58,7 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
         }
+
         return $this->mockVehicleServiceClient;
     }
 

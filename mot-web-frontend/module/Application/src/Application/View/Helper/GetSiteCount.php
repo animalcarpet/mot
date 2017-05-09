@@ -7,8 +7,7 @@ use Core\Helper\AbstractMotViewHelper;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 
 /**
- * Class GetSiteCount
- *
+ * Class GetSiteCount.
  */
 class GetSiteCount extends AbstractMotViewHelper
 {

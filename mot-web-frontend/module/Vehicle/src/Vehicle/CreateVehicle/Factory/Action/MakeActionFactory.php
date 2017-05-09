@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Vehicle\CreateVehicle\Factory\Action;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;

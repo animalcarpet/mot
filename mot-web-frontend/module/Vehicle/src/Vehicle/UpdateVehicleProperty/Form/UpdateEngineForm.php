@@ -121,6 +121,7 @@ class UpdateEngineForm extends Form
 
     /**
      * @param array $fuelTypes
+     *
      * @return array
      */
     private function orderFuelTypes($fuelTypes)
@@ -143,11 +144,13 @@ class UpdateEngineForm extends Form
 
     /**
      * @param InputFilterInterface $engineCapacityValidator
+     *
      * @return UpdateEngineForm
      */
     public function setEngineCapacityValidator(InputFilterInterface $engineCapacityValidator)
     {
         $this->engineCapacityValidator = $engineCapacityValidator;
+
         return $this;
     }
 }

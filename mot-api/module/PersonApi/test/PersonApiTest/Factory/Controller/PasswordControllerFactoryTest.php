@@ -7,7 +7,6 @@ use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Controller\PasswordController;
 use PersonApi\Factory\Controller\PasswordControllerFactory;
 use PersonApi\Service\PasswordService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class PasswordControllerFactoryTest extends \PHPUnit_Framework_TestCase

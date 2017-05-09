@@ -29,7 +29,7 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use Zend\Http\Client;
 
 /**
- * Class MapperFactory
+ * Class MapperFactory.
  *
  * @property-read AccountMapper                                      $Account
  * @property-read DemoTestAssessmentMapper                           $DemoTestAssessment
@@ -54,8 +54,6 @@ use Zend\Http\Client;
  * @property-read VehicleMapper                                      $Vehicle
  * @property-read SiteMapper                                         $Site
  * @property-read VehicleTestingStationOpeningHoursMapper            $VehicleTestingStationOpeningHours
- *
- * @package DvsaClient
  */
 class MapperFactory
 {
@@ -87,11 +85,11 @@ class MapperFactory
 
     public function __get($class)
     {
-        $fullclass = __NAMESPACE__ . '\\Mapper\\' . ucfirst($class) . 'Mapper';
+        $fullclass = __NAMESPACE__.'\\Mapper\\'.ucfirst($class).'Mapper';
         if (class_exists($fullclass)) {
             return new $fullclass($this->client);
         }
 
-        throw new \RuntimeException('Class not found: ' . $fullclass);
+        throw new \RuntimeException('Class not found: '.$fullclass);
     }
 }

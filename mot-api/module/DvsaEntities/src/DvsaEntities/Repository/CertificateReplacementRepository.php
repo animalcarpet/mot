@@ -1,10 +1,10 @@
 <?php
+
 namespace DvsaEntities\Repository;
 
 /**
- * Class CertificateReplacementRepository
+ * Class CertificateReplacementRepository.
  *
- * @package DvsaEntities\Repository
  * @codeCoverageIgnore
  */
 class CertificateReplacementRepository extends AbstractMutableRepository

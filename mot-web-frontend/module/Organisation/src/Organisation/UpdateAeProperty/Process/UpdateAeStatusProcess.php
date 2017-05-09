@@ -1,4 +1,5 @@
 <?php
+
 namespace Organisation\UpdateAeProperty\Process;
 
 use Core\Catalog\Authorisation\AuthForAuthorisedExaminerStatusCatalog;
@@ -16,10 +17,10 @@ class UpdateAeStatusProcess extends AbstractSingleStepAeProcess implements AutoW
 {
     private $propertyName = UpdateAePropertyAction::AE_STATUS_PROPERTY;
     private $permission = PermissionAtOrganisation::AE_UPDATE_STATUS;
-    private $submitButtonText = "Change status";
-    private $successfulEditMessage = "Status has been successfully changed.";
-    private $formPageTitle = "Change status";
-    private $formPartial = "organisation/update-ae-property/partials/edit-status";
+    private $submitButtonText = 'Change status';
+    private $successfulEditMessage = 'Status has been successfully changed.';
+    private $formPageTitle = 'Change status';
+    private $formPartial = 'organisation/update-ae-property/partials/edit-status';
 
     /**
      * @var AuthForAuthorisedExaminerStatusCatalog
@@ -35,8 +36,7 @@ class UpdateAeStatusProcess extends AbstractSingleStepAeProcess implements AutoW
         AuthForAuthorisedExaminerStatusCatalog $authForAuthorisedExaminerStatusCatalog,
         MapperFactory $mapper,
         Url $url
-    )
-    {
+    ) {
         parent::__construct($organisationMapper, $url);
         $this->authForAuthorisedExaminerStatusCatalog = $authForAuthorisedExaminerStatusCatalog;
         $this->mapper = $mapper;
@@ -65,6 +65,7 @@ class UpdateAeStatusProcess extends AbstractSingleStepAeProcess implements AutoW
     public function getPrePopulatedData()
     {
         $aeData = $this->organisationMapper->getAuthorisedExaminer($this->context->getAeId());
+
         return [$this->propertyName => $aeData->getAuthorisedExaminerAuthorisation()->getStatus()->getCode()];
     }
 

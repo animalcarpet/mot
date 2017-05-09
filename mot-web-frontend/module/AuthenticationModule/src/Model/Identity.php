@@ -10,7 +10,7 @@ namespace Dvsa\Mot\Frontend\AuthenticationModule\Model;
 use DvsaCommon\Model\PersonAuthorization;
 
 /**
- * Class Identity
+ * Class Identity.
  */
 class Identity implements MotFrontendIdentityInterface
 {
@@ -30,7 +30,7 @@ class Identity implements MotFrontendIdentityInterface
     private $displayName;
 
     /**
-     * @var $string
+     * @var
      */
     private $displayRole;
 
@@ -61,7 +61,7 @@ class Identity implements MotFrontendIdentityInterface
 
     /**
      * By default we can assume the password has expired.
-     * It will be verified by ExpiredPasswordListener
+     * It will be verified by ExpiredPasswordListener.
      *
      * @var bool
      */
@@ -84,6 +84,7 @@ class Identity implements MotFrontendIdentityInterface
 
     /**
      * @return PersonAuthorization
+     *
      * @deprecated will be removed - do not use
      */
     public function getPersonAuthorization()
@@ -93,16 +94,18 @@ class Identity implements MotFrontendIdentityInterface
 
     /**
      * @param PersonAuthorization $personAuthorization
+     *
      * @deprecated will be removed - do not use
      */
     public function setPersonAuthorization($personAuthorization)
     {
         $this->personAuthorization = $personAuthorization;
+
         return $this;
     }
 
     /**
-     * TO BE REMOVED AND EXPLICITLY STORED IN SESSION
+     * TO BE REMOVED AND EXPLICITLY STORED IN SESSION.
      *
      * @var PersonAuthorization
      */
@@ -136,6 +139,7 @@ class Identity implements MotFrontendIdentityInterface
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+
         return $this;
     }
 
@@ -155,6 +159,7 @@ class Identity implements MotFrontendIdentityInterface
     public function setDisplayRole($displayRole)
     {
         $this->displayRole = $displayRole;
+
         return $this;
     }
 
@@ -174,6 +179,7 @@ class Identity implements MotFrontendIdentityInterface
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -193,6 +199,7 @@ class Identity implements MotFrontendIdentityInterface
     public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
+
         return $this;
     }
 
@@ -212,6 +219,7 @@ class Identity implements MotFrontendIdentityInterface
     public function setCurrentVts(VehicleTestingStation $currentVts = null)
     {
         $this->currentVts = $currentVts;
+
         return $this;
     }
 
@@ -231,6 +239,7 @@ class Identity implements MotFrontendIdentityInterface
     public function setAccountClaimRequired($accountClaimRequired)
     {
         $this->accountClaimRequired = $accountClaimRequired;
+
         return $this;
     }
 
@@ -242,6 +251,7 @@ class Identity implements MotFrontendIdentityInterface
     public function setPasswordChangeRequired($passwordChangeRequired)
     {
         $this->passwordChangeRequired = $passwordChangeRequired;
+
         return $this;
     }
 
@@ -255,11 +265,13 @@ class Identity implements MotFrontendIdentityInterface
 
     /**
      * @param $secondFactorRequired
+     *
      * @return $this
      */
     public function setSecondFactorRequired($secondFactorRequired)
     {
         $this->secondFactorRequired = $secondFactorRequired;
+
         return $this;
     }
 
@@ -295,6 +307,7 @@ class Identity implements MotFrontendIdentityInterface
 
     /**
      * @param \DateTime $passwordExpiryDate
+     *
      * @return Identity
      */
     public function setPasswordExpiryDate($passwordExpiryDate)
@@ -314,6 +327,7 @@ class Identity implements MotFrontendIdentityInterface
 
     /**
      * @param $authenticatedWith2FA
+     *
      * @return $this
      */
     public function setAuthenticatedWith2FA($authenticatedWith2FA)
@@ -333,6 +347,7 @@ class Identity implements MotFrontendIdentityInterface
 
     /**
      * @param $authenticatedWithLostForgotten
+     *
      * @return $this
      */
     public function setAuthenticatedWithLostForgotten($authenticatedWithLostForgotten)

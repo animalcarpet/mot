@@ -1,13 +1,12 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
-use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use Zend\View\Model\JsonModel;
 
 /**
- * Class MotTestBrakeTestResultController
+ * Class MotTestBrakeTestResultController.
  */
 class MotTestBrakeTestResultController extends AbstractDvsaRestfulController
 {

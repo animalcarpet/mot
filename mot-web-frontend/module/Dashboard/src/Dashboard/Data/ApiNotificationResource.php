@@ -8,11 +8,10 @@ use DvsaCommon\UrlBuilder\NotificationUrlBuilder;
 /**
  * Handles calls to API, paths:
  *      /notification/:notificationId[/action]
- *      /notification/person/:personId[/read]
+ *      /notification/person/:personId[/read].
  */
 class ApiNotificationResource extends ApiResources
 {
-
     /**
      * @param int $notificationId
      *
@@ -21,6 +20,7 @@ class ApiNotificationResource extends ApiResources
     public function markAsRead($notificationId)
     {
         $path = $this->notificationResource($notificationId)->read()->toString();
+
         return $this->restUpdate($path, [])['data'];
     }
 
@@ -32,6 +32,7 @@ class ApiNotificationResource extends ApiResources
     public function get($notificationId)
     {
         $path = $this->notificationResource($notificationId)->toString();
+
         return $this->restGet($path)['data'];
     }
 
@@ -43,6 +44,7 @@ class ApiNotificationResource extends ApiResources
     public function archive($notificationId)
     {
         $path = $this->notificationResource($notificationId)->archive()->toString();
+
         return $this->restUpdate($path, []);
     }
 
@@ -54,6 +56,7 @@ class ApiNotificationResource extends ApiResources
     public function getInboxNotifications($personId)
     {
         $path = $this->notificationForPersonResource($personId)->toString();
+
         return $this->restGet($path)['data'];
     }
 
@@ -65,6 +68,7 @@ class ApiNotificationResource extends ApiResources
     public function getUnreadCount($personId)
     {
         $path = $this->notificationUnreadCountForPerson($personId)->toString();
+
         return $this->restGet($path)['data'];
     }
     /**
@@ -75,11 +79,12 @@ class ApiNotificationResource extends ApiResources
     public function getArchivedNotifications($personId)
     {
         $path = $this->notificationForPersonResource($personId)->queryParam('archived', 1)->toString();
+
         return $this->restGet($path)['data'];
     }
 
     /**
-     * Calls notification action (nomination)
+     * Calls notification action (nomination).
      *
      * @param int    $personId
      * @param int    $notificationId

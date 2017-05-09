@@ -12,12 +12,13 @@ use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use UserAdmin\Service\UserAdminSessionService;
 
 /**
- * Factory for {@link \UserAdmin\Controller\DrivingLicenceController}
+ * Factory for {@link \UserAdmin\Controller\DrivingLicenceController}.
  */
 class DrivingLicenceControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $controllerManager
+     *
      * @return DrivingLicenceController
      */
     public function createService(ServiceLocatorInterface $controllerManager)
@@ -26,7 +27,7 @@ class DrivingLicenceControllerFactory implements FactoryInterface
 
         return new DrivingLicenceController(
             $serviceLocator->get(HelpdeskAccountAdminService::class),
-            $serviceLocator->get("AuthorisationService"),
+            $serviceLocator->get('AuthorisationService'),
             $serviceLocator->get(TesterGroupAuthorisationMapper::class),
             $serviceLocator->get(UserAdminSessionService::class),
             $serviceLocator->get(PersonRoleManagementService::class),

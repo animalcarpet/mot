@@ -15,11 +15,8 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardServ
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardViewStrategy;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\TwoFactorNominationNotificationService;
-use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaFeature\FeatureToggles;
 use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 
 class RegisterCardPostAction extends RegisterCardAction implements AutoWireableInterface
 {
@@ -27,12 +24,12 @@ class RegisterCardPostAction extends RegisterCardAction implements AutoWireableI
     protected $registerCardService;
 
     /**
-     * @var TwoFactorNominationNotificationService $twoFactorNominationNotificationService
+     * @var TwoFactorNominationNotificationService
      */
     protected $twoFactorNominationNotificationService;
 
     /**
-     * @var MotFrontendIdentityProviderInterface $identityProvider
+     * @var MotFrontendIdentityProviderInterface
      */
     protected $identityProvider;
 
@@ -61,7 +58,6 @@ class RegisterCardPostAction extends RegisterCardAction implements AutoWireableI
         $viewModel->setForm($form);
 
         if ($form->isValid()) {
-
             try {
                 $this->registerCardService->registerCard($postData['serial_number'], $postData['pin']);
                 $identity = $this->identityProvider->getIdentity();
@@ -70,9 +66,8 @@ class RegisterCardPostAction extends RegisterCardAction implements AutoWireableI
                     ->sendNotificationsForPendingNominations($identity->getUserId());
 
                 return $this->getSuccessRedirect($updatedNominations);
-
             } catch (ResourceNotFoundException $e) {
-                $form->setCustomError($form->getSerialNumberField(), "Enter a valid serial number");
+                $form->setCustomError($form->getSerialNumberField(), 'Enter a valid serial number');
                 $viewModel->setInvalidSerialNumber(true);
             } catch (ResourceConflictException $e) {
                 $viewModel->setCardAlreadyRegistered(true);
@@ -95,6 +90,6 @@ class RegisterCardPostAction extends RegisterCardAction implements AutoWireableI
             $queryParams = ['newlyAssignedRoles' => 'AEDM'];
         }
 
-        return new RedirectToRoute("register-card/success", $routeParams, $queryParams);
+        return new RedirectToRoute('register-card/success', $routeParams, $queryParams);
     }
 }

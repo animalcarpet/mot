@@ -65,11 +65,11 @@ class PersonProfileSidebar extends GeneralSidebar
 
     /**
      * @param $personId
-     * @param PersonProfileGuard $personProfileGuard
+     * @param PersonProfileGuard  $personProfileGuard
      * @param TesterAuthorisation $testerAuthorisation
      * @param $currentUrl
      * @param PersonProfileRoutes $personProfileRoutes
-     * @param Url $urlPlugin
+     * @param Url                 $urlPlugin
      * @param $isTwoFactorAuthEnabled
      * @param $canOrderSecurityCard
      * @param $displayResetAccountByEmailButton
@@ -141,7 +141,7 @@ class PersonProfileSidebar extends GeneralSidebar
             case AuthorisationForTestingMotStatusCode::SUSPENDED:
                 return Badge::alert();
                 break;
-            default :
+            default:
                 return Badge::normal();
         }
     }
@@ -153,17 +153,17 @@ class PersonProfileSidebar extends GeneralSidebar
 
         if (true === $this->personProfileGuard->shouldDisplayTesterQualificationStatusBox()) {
             $statusBox->addItem(new GeneralSidebarStatusItem(
-                "group-a",
-                "Group A",
+                'group-a',
+                'Group A',
                 $this->testerAuthorisation->getGroupAStatus()->getName(),
                 $this->getQualificationStatusModifier($this->testerAuthorisation->getGroupAStatus()->getCode()),
-                "Class 1 and 2"));
+                'Class 1 and 2'));
             $statusBox->addItem(new GeneralSidebarStatusItem(
-                "group-b",
-                "Group B",
+                'group-b',
+                'Group B',
                 $this->testerAuthorisation->getGroupBStatus()->getName(),
                 $this->getQualificationStatusModifier($this->testerAuthorisation->getGroupBStatus()->getCode()),
-                "Class 3, 4, 5 and 7"));
+                'Class 3, 4, 5 and 7'));
         }
 
         $this->addItem($statusBox);
@@ -175,24 +175,21 @@ class PersonProfileSidebar extends GeneralSidebar
             return;
         }
 
-        $changePasswordUrl = self::USER_PROFILE_URL . 'change-password';
-        $changeSecurityQuestionsUrl = self::USER_PROFILE_URL . 'change-security-questions';
-        $resetPinUrl = self::USER_PROFILE_URL . 'security-question';
+        $changePasswordUrl = self::USER_PROFILE_URL.'change-password';
+        $changeSecurityQuestionsUrl = self::USER_PROFILE_URL.'change-security-questions';
+        $resetPinUrl = self::USER_PROFILE_URL.'security-question';
 
         $accountSecurityBox = new GeneralSidebarLinkList('Account security');
         $accountSecurityBox->setId('account_security');
         $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password', $changePasswordUrl));
         $accountSecurityBox->addLink(new GeneralSidebarLink('change-security-questions', 'Change your security questions', $changeSecurityQuestionsUrl));
 
-        if ($this->isTwoFactorAuthEnabled)
-        {
-            if ($this->canOrderSecurityCard)
-            {
+        if ($this->isTwoFactorAuthEnabled) {
+            if ($this->canOrderSecurityCard) {
                 $accountSecurityBox->addLink(
                     new GeneralSidebarLink('security-card-order', 'Order a security card', 'security-card-order/new'));
             } elseif ($this->personProfileGuard->isExpectedToRegisterForTwoFactorAuth($this->hasSecurityCardOrders,
-                $this->hasDeactivated2FaCard, $this->isAuthenticatedWithLostAndForgotten))
-            {
+                $this->hasDeactivated2FaCard, $this->isAuthenticatedWithLostAndForgotten)) {
                 $accountSecurityBox->addLink(
                     new GeneralSidebarLink('register-card', 'Activate your security card', '/register-card'));
             }
@@ -216,7 +213,7 @@ class PersonProfileSidebar extends GeneralSidebar
                     new GeneralSidebarLink(
                         'reset-by-email',
                         'Reset account security by email',
-                        '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/claim-reset',
+                        '/'.self::USER_ADMIN_PROFILE_URL.$this->personId.'/claim-reset',
                         'related-button--warning'
                     )
                 );
@@ -224,7 +221,7 @@ class PersonProfileSidebar extends GeneralSidebar
                     new GeneralSidebarLink(
                         'reset-by-post',
                         'Reset account by post',
-                        '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/password-reset', '', 'or '
+                        '/'.self::USER_ADMIN_PROFILE_URL.$this->personId.'/password-reset', '', 'or '
                     )
                 );
             }
@@ -233,7 +230,7 @@ class PersonProfileSidebar extends GeneralSidebar
                     new GeneralSidebarLink(
                         'reset-by-post',
                         'Reset account by post',
-                        '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/password-reset', ''
+                        '/'.self::USER_ADMIN_PROFILE_URL.$this->personId.'/password-reset', ''
                     )
                 );
             }
@@ -244,7 +241,7 @@ class PersonProfileSidebar extends GeneralSidebar
                 new GeneralSidebarLink(
                     'id-by-post',
                     'Send User ID by post',
-                    '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/username-recover'
+                    '/'.self::USER_ADMIN_PROFILE_URL.$this->personId.'/username-recover'
                 )
             );
         }
@@ -254,7 +251,7 @@ class PersonProfileSidebar extends GeneralSidebar
                 new GeneralSidebarLink(
                     'password-by-post',
                     'Send password reset by post',
-                    '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/claim-reset/post'
+                    '/'.self::USER_ADMIN_PROFILE_URL.$this->personId.'/claim-reset/post'
                 )
             );
         }
@@ -264,7 +261,7 @@ class PersonProfileSidebar extends GeneralSidebar
                 new GeneralSidebarLink(
                     'management-order-card',
                     'Order Security Card',
-                    '/security-card-order/new/' . $this->personId
+                    '/security-card-order/new/'.$this->personId
                 )
             );
         }
@@ -274,9 +271,9 @@ class PersonProfileSidebar extends GeneralSidebar
 
     private function setUpQualificationsAndAnnualAssessmentSection()
     {
-        $qualificationDetailsUrl = $this->currentUrl . '/qualification-details';
+        $qualificationDetailsUrl = $this->currentUrl.'/qualification-details';
 
-        $annualAssessmentCertificatesUrl = $this->currentUrl . '/annual-assessment-certificates';
+        $annualAssessmentCertificatesUrl = $this->currentUrl.'/annual-assessment-certificates';
 
         $relatedBox = new GeneralSidebarLinkList('MOT training and certificates');
         $relatedBox->setId('qualifications');
@@ -308,20 +305,20 @@ class PersonProfileSidebar extends GeneralSidebar
 
     private function setUpRelatedLinksSection()
     {
-        $changeQualificationStatusUrl = $this->currentUrl . '/change-qualification-status/';
-        $changeGroupAQualificationUrl = $changeQualificationStatusUrl . 'A';
-        $changeGroupBQualificationUrl = $changeQualificationStatusUrl . 'B';
+        $changeQualificationStatusUrl = $this->currentUrl.'/change-qualification-status/';
+        $changeGroupAQualificationUrl = $changeQualificationStatusUrl.'A';
+        $changeGroupBQualificationUrl = $changeQualificationStatusUrl.'B';
 
-        $rolesAndAssociationsUrl = $this->currentUrl . '/trade-roles';
+        $rolesAndAssociationsUrl = $this->currentUrl.'/trade-roles';
 
-        $internalRolesUrl = $this->currentUrl . '/manage-internal-role';
+        $internalRolesUrl = $this->currentUrl.'/manage-internal-role';
 
-        $testQualityInformationUrl = $this->currentUrl .
+        $testQualityInformationUrl = $this->currentUrl.
                 sprintf(
                     '/test-quality-information/%s',
                     DateUtils::subtractCalendarMonths(
                         DateUtils::toUserTz(DateUtils::firstOfThisMonth()), 1)
-                        ->format("m/Y"));
+                        ->format('m/Y'));
 
         $relatedBox = new GeneralSidebarLinkList('Related');
         $relatedBox->setId('related');

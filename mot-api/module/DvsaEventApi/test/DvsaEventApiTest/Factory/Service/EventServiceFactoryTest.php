@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaEventApiTest\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -14,9 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 
 /**
- * Class EventServiceFactoryTest
- *
- * @package DvsaEventApiTest\Factory\Service
+ * Class EventServiceFactoryTest.
  */
 class EventServiceFactoryTest extends AbstractServiceTestCase
 {

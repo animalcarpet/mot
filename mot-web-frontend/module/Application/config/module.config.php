@@ -17,7 +17,6 @@ use Application\View\HelperFactory\LocationSelectorFactory;
 use Application\View\HelperFactory\ManualsAndGuidesFactory;
 use Application\View\HelperFactory\ResourcesOnGovUkFactory;
 use Dvsa\Mot\Frontend\Plugin\AjaxResponsePlugin;
-use Dvsa\OpenAM\OpenAMClientInterface;
 use DvsaCommon\Constants\MotTestNumberConstraint;
 use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use DvsaMotEnforcement\Controller as Enforcement;
@@ -33,238 +32,237 @@ use DvsaMotTest\Form\Validator\SpecialNoticePublishDateValidator;
 use DvsaMotTest\Service\MotChecklistPdfService;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\StartTestSessionService;
-use Zend\EventManager\EventManager;
 use Application\Service\CanTestWithoutOtpService;
 use Application\Factory\Service\CanTestWithoutOtpServiceFactory;
 use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
 
 return [
-    'controllers' => require __DIR__ . '/controllers.config.php',
-    'router'                     => [
+    'controllers' => require __DIR__.'/controllers.config.php',
+    'router' => [
         'routes' => [
-            'forms'                                       => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/forms',
+            'forms' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/forms',
                     'defaults' => [
                         'controller' => Application\FormsController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'contingency-pass-certificate'     => [
-                        'type'    => 'segment',
+                'child_routes' => [
+                    'contingency-pass-certificate' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/contingency-pass-certificate',
+                            'route' => '/contingency-pass-certificate',
                             'defaults' => [
                                 'controller' => Application\FormsController::class,
-                                'action'     => 'contingencyPassCertificate',
+                                'action' => 'contingencyPassCertificate',
                             ],
                         ],
                     ],
-                    'contingency-fail-certificate'     => [
-                        'type'    => 'segment',
+                    'contingency-fail-certificate' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/contingency-fail-certificate',
+                            'route' => '/contingency-fail-certificate',
                             'defaults' => [
                                 'controller' => Application\FormsController::class,
-                                'action'     => 'contingencyFailCertificate',
+                                'action' => 'contingencyFailCertificate',
                             ],
                         ],
                     ],
                     'contingency-advisory-certificate' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/contingency-advisory-certificate',
+                            'route' => '/contingency-advisory-certificate',
                             'defaults' => [
                                 'controller' => Application\FormsController::class,
-                                'action'     => 'contingencyAdvisoryCertificate',
+                                'action' => 'contingencyAdvisoryCertificate',
                             ],
                         ],
                     ],
                 ],
             ],
             'cookies' => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'     => '/cookies',
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/cookies',
                     'defaults' => [
                         'controller' => Application\CookiesController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
-            'special-notices'                             => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/special-notices',
+            'special-notices' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/special-notices',
                     'defaults' => [
                         'controller' => MotTest\SpecialNoticesController::class,
-                        'action'     => 'displaySpecialNotices',
+                        'action' => 'displaySpecialNotices',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'all'     => [
-                        'type'    => 'segment',
+                'child_routes' => [
+                    'all' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/all',
+                            'route' => '/all',
                             'defaults' => [
                                 'controller' => MotTest\SpecialNoticesController::class,
-                                'action'     => 'displayAllSpecialNotices',
+                                'action' => 'displayAllSpecialNotices',
                             ],
                         ],
                     ],
-                    'print'   => [
-                        'type'    => 'segment',
+                    'print' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/print/:id[:extension]',
+                            'route' => '/print/:id[:extension]',
                             'constraints' => [
-                                'id'        => '[0-9]+',
+                                'id' => '[0-9]+',
                                 'extension' => '.[a-z]{3}',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => MotTest\SpecialNoticesController::class,
-                                'action'     => 'printSpecialNotice',
+                                'action' => 'printSpecialNotice',
                             ],
                         ],
                     ],
                     'removed' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/removed',
+                            'route' => '/removed',
                             'defaults' => [
                                 'controller' => MotTest\SpecialNoticesController::class,
-                                'action'     => 'displayRemovedSpecialNotices',
+                                'action' => 'displayRemovedSpecialNotices',
                             ],
                         ],
                     ],
-                    'remove'  => [
-                        'type'    => 'segment',
+                    'remove' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:id/remove',
+                            'route' => '/:id/remove',
                             'defaults' => [
                                 'controller' => MotTest\SpecialNoticesController::class,
-                                'action'     => 'removeSpecialNotice',
+                                'action' => 'removeSpecialNotice',
                             ],
                         ],
                     ],
-                    'create'  => [
-                        'type'    => 'segment',
+                    'create' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/create',
+                            'route' => '/create',
                             'defaults' => [
                                 'controller' => MotTest\SpecialNoticesController::class,
-                                'action'     => 'createSpecialNotice',
+                                'action' => 'createSpecialNotice',
                             ],
                         ],
                     ],
-                    'edit'    => [
-                        'type'    => 'segment',
+                    'edit' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:id/edit',
+                            'route' => '/:id/edit',
                             'defaults' => [
                                 'controller' => MotTest\SpecialNoticesController::class,
-                                'action'     => 'edit',
+                                'action' => 'edit',
                             ],
                         ],
                     ],
                     'preview' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/:id/preview',
+                            'route' => '/:id/preview',
                             'defaults' => [
                                 'controller' => MotTest\SpecialNoticesController::class,
-                                'action'     => 'previewSpecialNotice',
+                                'action' => 'previewSpecialNotice',
                             ],
                         ],
                     ],
                 ],
             ],
-            'special-notice-acknowledge'                  => [
-                'type'    => 'segment',
+            'special-notice-acknowledge' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/special-notice-acknowledge/:id',
+                    'route' => '/special-notice-acknowledge/:id',
                     'defaults' => [
                         'controller' => MotTest\SpecialNoticesController::class,
-                        'action'     => 'acknowledgeSpecialNotice',
+                        'action' => 'acknowledgeSpecialNotice',
                     ],
                 ],
             ],
-            'vehicle-makes'                               => [
-                'type'    => 'segment',
+            'vehicle-makes' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle-makes',
+                    'route' => '/vehicle-makes',
                     'defaults' => [
                         'controller' => MotTest\VehicleDictionaryController::class,
-                        'action'     => 'findMake',
+                        'action' => 'findMake',
                     ],
                 ],
             ],
-            'vehicle-certificates'                               => [
-                'type'    => 'segment',
+            'vehicle-certificates' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle-certificates',
+                    'route' => '/vehicle-certificates',
                     'defaults' => [
                         'controller' => MotTest\VehicleSearchController::class,
-                        'action'     => 'certificateList',
+                        'action' => 'certificateList',
                     ],
                 ],
             ],
-            'vehicle-models'                              => [
-                'type'    => 'segment',
+            'vehicle-models' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle-models',
+                    'route' => '/vehicle-models',
                     'defaults' => [
                         'controller' => MotTest\VehicleDictionaryController::class,
-                        'action'     => 'findModel',
+                        'action' => 'findModel',
                     ],
                 ],
             ],
-            'vehicle-search'                              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/vehicle-search',
+            'vehicle-search' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/vehicle-search',
                     'defaults' => [
                         'controller' => MotTest\VehicleSearchController::class,
-                        'action'     => 'vehicleSearch',
+                        'action' => 'vehicleSearch',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'not-found'  => [
-                        'type'    => 'segment',
+                'child_routes' => [
+                    'not-found' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route' => '/not-found'
+                            'route' => '/not-found',
                         ],
                     ],
                     'create-new' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route' => '/create-new'
+                            'route' => '/create-new',
                         ],
                     ],
                 ],
             ],
             'tester-mot-test-log' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/mot-test-log',
+                    'route' => '/mot-test-log',
                     'defaults' => [
                         'controller' => MotTest\TesterMotTestLogController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'download'    => [
-                        'type'    => 'segment',
+                    'download' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/csv',
-                            'defaults'    => [
+                            'route' => '/csv',
+                            'defaults' => [
                                 'controller' => MotTest\TesterMotTestLogController::class,
-                                'action'     => 'downloadCsv',
+                                'action' => 'downloadCsv',
                             ],
                         ],
                     ],
@@ -291,444 +289,444 @@ return [
                 ],
             ],
             // TODO remove
-            'vehicle-class-rfr-groups'                    => [
-                'type'          => 'Segment',
-                'options'       => [
-                    'route'       => '/vehicle-class/:id/rfr-groups',
+            'vehicle-class-rfr-groups' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/vehicle-class/:id/rfr-groups',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => MotTest\TestItemSelectorController::class,
-                        'action'     => 'suggestions',
+                        'action' => 'suggestions',
                     ],
                 ],
                 'may_terminate' => true,
             ],
-            'training-test-vehicle-search'                         => [
-                'type'    => 'segment',
+            'training-test-vehicle-search' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/training-test-vehicle-search',
+                    'route' => '/training-test-vehicle-search',
                     'defaults' => [
                         'controller' => MotTest\VehicleSearchController::class,
-                        'action'     => 'trainingTestVehicleSearch',
+                        'action' => 'trainingTestVehicleSearch',
                     ],
                 ],
             ],
-            'non-mot-test-vehicle-search'                         => [
-                'type'    => 'segment',
+            'non-mot-test-vehicle-search' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/non-mot-test-vehicle-search',
+                    'route' => '/non-mot-test-vehicle-search',
                     'defaults' => [
                         'controller' => MotTest\VehicleSearchController::class,
-                        'action'     => 'nonMotVehicleSearch',
+                        'action' => 'nonMotVehicleSearch',
                     ],
                 ],
             ],
-            'start-test-confirmation'                     => [
-                'type'    => 'segment',
+            'start-test-confirmation' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/start-test-confirmation[/:id[/:noRegistration[/:source]]]',
+                    'route' => '/start-test-confirmation[/:id[/:noRegistration[/:source]]]',
                     'constraints' => [
-                        'id'             => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
+                        'id' => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
                         'noRegistration' => '[0-9]+',
-                        'source'         => '[0-9]+'
+                        'source' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => MotTest\StartTestConfirmationController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
-            'start-training-test-confirmation'                     => [
-                'type'    => 'segment',
+            'start-training-test-confirmation' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/start-training-test-confirmation[/:id[/:noRegistration[/:source]]]',
+                    'route' => '/start-training-test-confirmation[/:id[/:noRegistration[/:source]]]',
                     'constraints' => [
-                        'id'             => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
+                        'id' => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
                         'noRegistration' => '[0-9]+',
-                        'source'         => '[0-9]+'
+                        'source' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => MotTest\StartTestConfirmationController::class,
-                        'action'     => 'training',
+                        'action' => 'training',
                     ],
                 ],
             ],
-            NonMotTestUrlTemplate::START_NON_MOT_TEST_CONFIRMATION_ROUTE    => [
-                'type'    => 'segment',
+            NonMotTestUrlTemplate::START_NON_MOT_TEST_CONFIRMATION_ROUTE => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/start-non-mot-test-confirmation[/:id[/:noRegistration[/:source]]]',
+                    'route' => '/start-non-mot-test-confirmation[/:id[/:noRegistration[/:source]]]',
                     'constraints' => [
-                        'id'             => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
+                        'id' => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
                         'noRegistration' => '[0-9]+',
-                        'source'         => '[0-9]+'
+                        'source' => '[0-9]+',
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => MotTest\StartTestConfirmationController::class,
-                        'action'     => 'nonMotTest',
+                        'action' => 'nonMotTest',
                     ],
                 ],
             ],
-            'refuse-to-test'                              => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/refuse-to-test/:testTypeCode[/:id]',
+            'refuse-to-test' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/refuse-to-test/:testTypeCode[/:id]',
                     'constraints' => [
-                        'id'           => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
+                        'id' => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
                         'testTypeCode' => '[A-Z]{2}',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'reason'  => [
-                        'type'    => 'segment',
+                'child_routes' => [
+                    'reason' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/reason',
+                            'route' => '/reason',
                             'defaults' => [
                                 'controller' => MotTest\RefuseToTestController::class,
-                                'action'     => 'refuseToTestReason',
+                                'action' => 'refuseToTestReason',
                             ],
                         ],
                     ],
                     'summary' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/summary',
+                            'route' => '/summary',
                             'defaults' => [
                                 'controller' => MotTest\RefuseToTestController::class,
-                                'action'     => 'refuseToTestSummary',
+                                'action' => 'refuseToTestSummary',
                             ],
                         ],
                     ],
-                    'print'   => [
-                        'type'    => 'segment',
+                    'print' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/print',
+                            'route' => '/print',
                             'defaults' => [
                                 'controller' => MotTest\RefuseToTestController::class,
-                                'action'     => 'refuseToTestPrint',
+                                'action' => 'refuseToTestPrint',
                             ],
                         ],
                     ],
                 ],
             ],
-            'mot-test'                                    => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'       => '/mot-test/:motTestNumber',
+            'mot-test' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/mot-test/:motTestNumber',
                     'constraints' => [
                         'motTestNumber' => MotTestNumberConstraint::FORMAT_REGEX,
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => MotTestController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'options'                     => [
-                        'type'    => 'segment',
+                'child_routes' => [
+                    'options' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/options',
+                            'route' => '/options',
                             'defaults' => [
                                 'controller' => MotTest\MotTestOptionsController::class,
-                                'action'     => 'motTestOptions',
+                                'action' => 'motTestOptions',
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes'  => [
+                        'child_routes' => [
                             'mot-checklist' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/checklist',
+                                    'route' => '/checklist',
                                     'defaults' => [
                                         'controller' => MotTest\MotTestOptionsController::class,
-                                        'action'     => 'motChecklist',
+                                        'action' => 'motChecklist',
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'odometer-update'             => [
-                        'type'    => 'segment',
+                    'odometer-update' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/odometer-update',
+                            'route' => '/odometer-update',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'updateOdometer',
+                                'action' => 'updateOdometer',
                             ],
                         ],
                     ],
-                    'brake-test-configuration'    => [
-                        'type'    => 'segment',
+                    'brake-test-configuration' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/brake-test-configuration',
+                            'route' => '/brake-test-configuration',
                             'defaults' => [
                                 'controller' => MotTest\BrakeTestResultsController::class,
-                                'action'     => 'configureBrakeTest',
+                                'action' => 'configureBrakeTest',
                             ],
                         ],
                     ],
-                    'brake-test-results'          => [
-                        'type'    => 'segment',
+                    'brake-test-results' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/brake-test-results',
+                            'route' => '/brake-test-results',
                             'defaults' => [
                                 'controller' => MotTest\BrakeTestResultsController::class,
-                                'action'     => 'addBrakeTestResults',
+                                'action' => 'addBrakeTestResults',
                             ],
                         ],
                     ],
-                    'brake-test-summary'          => [
-                        'type'    => 'segment',
+                    'brake-test-summary' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/brake-test-summary',
+                            'route' => '/brake-test-summary',
                             'defaults' => [
                                 'controller' => MotTest\BrakeTestResultsController::class,
-                                'action'     => 'displayBrakeTestSummary',
+                                'action' => 'displayBrakeTestSummary',
                             ],
                         ],
                     ],
-                    'submit-test-results'         => [
-                        'type'    => 'segment',
+                    'submit-test-results' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/submit-test-results',
+                            'route' => '/submit-test-results',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'submitTestResults',
+                                'action' => 'submitTestResults',
                             ],
                         ],
                     ],
-                    'test-summary'                => [
-                        'type'    => 'segment',
+                    'test-summary' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/test-summary',
+                            'route' => '/test-summary',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'displayTestSummary',
+                                'action' => 'displayTestSummary',
                             ],
                         ],
                     ],
-                    'cancel'                      => [
-                        'type'    => 'segment',
+                    'cancel' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/cancel',
+                            'route' => '/cancel',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'cancelMotTest',
+                                'action' => 'cancelMotTest',
                             ],
                         ],
                     ],
-                    'cancelled'                   => [
-                        'type'    => 'segment',
+                    'cancelled' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/cancelled',
+                            'route' => '/cancelled',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'cancelledMotTest',
+                                'action' => 'cancelledMotTest',
                             ],
                         ],
                     ],
-                    'short-summary'               => [
-                        'type'    => 'segment',
+                    'short-summary' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/short-summary',
+                            'route' => '/short-summary',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'shortSummary',
+                                'action' => 'shortSummary',
                             ],
                         ],
                     ],
-                    'reason-for-aborting'         => [
-                        'type'    => 'segment',
+                    'reason-for-aborting' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/reason-for-aborting',
+                            'route' => '/reason-for-aborting',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'reasonForAbortingMotTest',
+                                'action' => 'reasonForAbortingMotTest',
                             ],
                         ],
                     ],
-                    'abort-success'               => [
-                        'type'    => 'segment',
+                    'abort-success' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/abort-success',
+                            'route' => '/abort-success',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'abortedMotTest',
-                                'success'    => true,
+                                'action' => 'abortedMotTest',
+                                'success' => true,
                             ],
                         ],
                     ],
-                    'abort-fail'                  => [
-                        'type'    => 'segment',
+                    'abort-fail' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/abort-fail',
+                            'route' => '/abort-fail',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'abortedMotTest',
-                                'success'    => false,
+                                'action' => 'abortedMotTest',
+                                'success' => false,
                             ],
                         ],
                     ],
-                    'test-result'           => [
-                        'type'    => 'segment',
+                    'test-result' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/test-result',
+                            'route' => '/test-result',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'testResult',
+                                'action' => 'testResult',
                             ],
                         ],
                     ],
                     'print-duplicate-test-result' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/print-duplicate-test-result',
+                            'route' => '/print-duplicate-test-result',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'printDuplicateCertificateResult',
+                                'action' => 'printDuplicateCertificateResult',
                             ],
                         ],
                     ],
-                    'print-certificate'           => [
-                        'type'    => 'segment',
+                    'print-certificate' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/print-certificate',
+                            'route' => '/print-certificate',
                             'defaults' => [
                                 'controller' => MotTest\CertificatePrintingController::class,
-                                'action'     => 'retrievePdf',
+                                'action' => 'retrievePdf',
                             ],
                         ],
                     ],
                     'print-duplicate-certificate' => [
-                        'type'    => 'segment',
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/print-duplicate-certificate',
+                            'route' => '/print-duplicate-certificate',
                             'defaults' => [
-                                'controller'  => MotTest\CertificatePrintingController::class,
-                                'action'      => 'retrievePdf',
+                                'controller' => MotTest\CertificatePrintingController::class,
+                                'action' => 'retrievePdf',
                                 'isDuplicate' => true,
                             ],
                         ],
                     ],
-                    'reason-for-rejection'        => [
-                        'type'    => 'segment',
+                    'reason-for-rejection' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/reason-for-rejection/:rfr-id',
+                            'route' => '/reason-for-rejection/:rfr-id',
                             'constraints' => [
                                 'rfr-id' => '[0-9]+',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'deleteReasonForRejection',
+                                'action' => 'deleteReasonForRejection',
                             ],
                         ],
                     ],
-                    'test-item-selector'          => [
-                        'type'    => 'segment',
+                    'test-item-selector' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/test-item-selector[/:tis-id]',
+                            'route' => '/test-item-selector[/:tis-id]',
                             'constraints' => [
                                 'tis-id' => '[0-9]+',
                             ],
-                            'defaults'    => [
-                                'controller' => MotTest\TestItemSelectorController::class,
-                                'action'     => 'testItemSelectors',
-                            ],
-                        ],
-                    ],
-                    'test-item-selector-search'   => [
-                        'type'    => 'segment',
-                        'options' => [
-                            'route'    => '/test-item-selector-search',
                             'defaults' => [
                                 'controller' => MotTest\TestItemSelectorController::class,
-                                'action'     => 'search',
+                                'action' => 'testItemSelectors',
                             ],
                         ],
                     ],
-                    'rfr-add'                     => [
-                        'type'    => 'segment',
+                    'test-item-selector-search' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/reason-for-rejection/:tis-id/rfr-add/:rfr-id',
+                            'route' => '/test-item-selector-search',
+                            'defaults' => [
+                                'controller' => MotTest\TestItemSelectorController::class,
+                                'action' => 'search',
+                            ],
+                        ],
+                    ],
+                    'rfr-add' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/reason-for-rejection/:tis-id/rfr-add/:rfr-id',
                             'constraints' => [
                                 'tis-id' => '[0-9]+',
                                 'rfr-id' => '[0-9]+',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => MotTest\TestItemSelectorController::class,
-                                'action'     => 'addReasonForRejection',
+                                'action' => 'addReasonForRejection',
                             ],
                         ],
                     ],
-                    'rfr-edit'                    => [
-                        'type'    => 'segment',
+                    'rfr-edit' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'       => '/rfr-edit/:rfr-id',
+                            'route' => '/rfr-edit/:rfr-id',
                             'constraints' => [
                                 'rfr-id' => '[0-9]+',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => MotTest\TestItemSelectorController::class,
-                                'action'     => 'editReasonForRejection',
+                                'action' => 'editReasonForRejection',
                             ],
                         ],
                     ],
-                    'replacement-certificate'                     => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'       => '/replacement-certificate[/:id]',
+                    'replacement-certificate' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/replacement-certificate[/:id]',
                             'constraints' => [
                                 'id' => '[0-9]+',
                             ],
-                            'defaults'    => [
+                            'defaults' => [
                                 'controller' => MotTest\ReplacementCertificateController::class,
-                                'action'     => 'replacementCertificate',
+                                'action' => 'replacementCertificate',
                             ],
                         ],
                         'may_terminate' => 'true',
-                        'child_routes'  => [
+                        'child_routes' => [
                             'select-model' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/select-model[/:makeId]',
+                                    'route' => '/select-model[/:makeId]',
                                     'constraints' => [
                                         'makeId' => '[0-9]+',
-                                    ]
-                                ]
+                                    ],
+                                ],
                             ],
                             'other-vehicle' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/other-vehicle[/:makeId]',
+                                    'route' => '/other-vehicle[/:makeId]',
                                     'constraints' => [
                                         'makeId' => '[0-9]+',
                                     ],
                                     'defaults' => [
                                         'controller' => MotTest\ReplacementCertificateController::class,
-                                        'action'     => 'otherVehicle',
+                                        'action' => 'otherVehicle',
                                     ],
                                 ],
                             ],
                             'summary' => [
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/summary',
+                                    'route' => '/summary',
                                     'defaults' => [
                                         'controller' => MotTest\ReplacementCertificateController::class,
-                                        'action'     => 'review',
+                                        'action' => 'review',
                                     ],
                                 ],
                             ],
-                            'finish'  => [
-                                'type'    => 'Segment',
+                            'finish' => [
+                                'type' => 'Segment',
                                 'options' => [
-                                    'route'    => '/finish',
+                                    'route' => '/finish',
                                     'defaults' => [
                                         'controller' => MotTest\ReplacementCertificateController::class,
-                                        'action'     => 'finish',
+                                        'action' => 'finish',
                                     ],
                                 ],
                             ],
@@ -736,218 +734,218 @@ return [
                     ],
                 ],
             ],
-            'mot-test-certificate'                        => [
-                'type'    => 'segment',
+            'mot-test-certificate' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/mot-test-certificate/:motTestNumber',
+                    'route' => '/mot-test-certificate/:motTestNumber',
                     'constraints' => [
                         'motTestNumber' => \DvsaCommon\Constants\MotTestNumberConstraint::FORMAT_REGEX,
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => MotTestController::class,
-                        'action'     => 'displayCertificateSummary',
+                        'action' => 'displayCertificateSummary',
                     ],
                 ],
             ],
-            'location-select'                             => [
-                'type'    => 'segment',
+            'location-select' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/location-select',
+                    'route' => '/location-select',
                     'defaults' => [
                         'controller' => MotTest\LocationSelectController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
-            'mot-test-search'                             => [
-                'type'          => 'segment',
-                'options'       => [
-                    'route'    => '/mot-test-search',
+            'mot-test-search' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/mot-test-search',
                     'defaults' => [
                         'controller' => EnforcementMotTestSearchController::class,
-                        'action'     => 'motTestSearch',
+                        'action' => 'motTestSearch',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'vts'     => [
-                        'type'    => 'literal',
+                'child_routes' => [
+                    'vts' => [
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/vts',
+                            'route' => '/vts',
                             'defaults' => [
                                 'controller' => EnforcementMotTestSearchController::class,
-                                'action'     => 'motTestSearchByVts',
+                                'action' => 'motTestSearchByVts',
                             ],
                         ],
                     ],
                     'vtsDate' => [
-                        'type'    => 'literal',
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/vtsDate',
+                            'route' => '/vtsDate',
                             'defaults' => [
                                 'controller' => EnforcementMotTestSearchController::class,
-                                'action'     => 'motTestSearchByDateRange',
+                                'action' => 'motTestSearchByDateRange',
                             ],
                         ],
                     ],
-                    'tester'  => [
-                        'type'    => 'literal',
+                    'tester' => [
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/tester',
+                            'route' => '/tester',
                             'defaults' => [
                                 'controller' => EnforcementMotTestSearchController::class,
-                                'action'     => 'motTestSearchByDateRange',
+                                'action' => 'motTestSearchByDateRange',
                             ],
                         ],
                     ],
-                    'vrm'     => [
-                        'type'    => 'literal',
+                    'vrm' => [
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/vrm',
+                            'route' => '/vrm',
                             'defaults' => [
                                 'controller' => EnforcementMotTestSearchController::class,
-                                'action'     => 'motTestSearchByVrmOrVin',
+                                'action' => 'motTestSearchByVrmOrVin',
                             ],
                         ],
                     ],
-                    'testNumber'     => [
-                        'type'    => 'literal',
+                    'testNumber' => [
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/testNumber',
+                            'route' => '/testNumber',
                             'defaults' => [
                                 'controller' => EnforcementMotTestSearchController::class,
-                                'action'     => 'motTestSearchByMotTestNumber',
+                                'action' => 'motTestSearchByMotTestNumber',
                             ],
                         ],
                     ],
-                    'vin'     => [
-                        'type'    => 'literal',
+                    'vin' => [
+                        'type' => 'literal',
                         'options' => [
-                            'route'    => '/vin',
+                            'route' => '/vin',
                             'defaults' => [
                                 'controller' => EnforcementMotTestSearchController::class,
-                                'action'     => 'motTestSearchByVrmOrVin',
+                                'action' => 'motTestSearchByVrmOrVin',
                             ],
                         ],
                     ],
                 ],
             ],
-            'enforcement-list-recent-mot-tests-api'       => [
-                'type'    => 'segment',
+            'enforcement-list-recent-mot-tests-api' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/api/enforcement/mot-test/:siteNumber',
+                    'route' => '/api/enforcement/mot-test/:siteNumber',
                     'defaults' => [
                         'controller' => Ajax\MotTestApiController::class,
-                        'action'     => 'examinerFetchRecentMotTestData',
+                        'action' => 'examinerFetchRecentMotTestData',
                     ],
                 ],
             ],
-            'enforcement-list-mot-tests-by-date-api'      => [
-                'type'    => 'segment',
+            'enforcement-list-mot-tests-by-date-api' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/api/enforcement/mot-tests-by-date-api/:search',
+                    'route' => '/api/enforcement/mot-tests-by-date-api/:search',
                     'defaults' => [
                         'controller' => Ajax\MotTestApiController::class,
-                        'action'     => 'examinerFetchMotTestByDate',
+                        'action' => 'examinerFetchMotTestByDate',
                     ],
                 ],
             ],
-            'enforcement-view-mot-test'                   => [
-                'type'    => 'segment',
+            'enforcement-view-mot-test' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/enforcement/mot-test/:motTestNumber/test-summary',
+                    'route' => '/enforcement/mot-test/:motTestNumber/test-summary',
                     'constraints' => [
                         'motTestNumber' => \DvsaCommon\Constants\MotTestNumberConstraint::FORMAT_REGEX,
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => EnforcementMotTestController::class,
-                        'action'     => 'displayTestSummary',
+                        'action' => 'displayTestSummary',
                     ],
                 ],
             ],
-            'enforcement-start-inspection'                => [
-                'type'    => 'segment',
+            'enforcement-start-inspection' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/enforcement/mot-test/:motTestNumber/start-inspection',
+                    'route' => '/enforcement/mot-test/:motTestNumber/start-inspection',
                     'constraints' => [
                         'motTestNumber' => \DvsaCommon\Constants\MotTestNumberConstraint::FORMAT_REGEX,
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => EnforcementMotTestController::class,
-                        'action'     => 'startInspection',
+                        'action' => 'startInspection',
                     ],
                 ],
             ],
-            'enforcement-abort-mot-test'                  => [
-                'type'    => 'segment',
+            'enforcement-abort-mot-test' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/enforcement/mot-test/:motTestNumber/abort',
+                    'route' => '/enforcement/mot-test/:motTestNumber/abort',
                     'constraints' => [
                         'motTestNumber' => \DvsaCommon\Constants\MotTestNumberConstraint::FORMAT_REGEX,
                     ],
-                    'defaults'    => [
+                    'defaults' => [
                         'controller' => EnforcementMotTestController::class,
-                        'action'     => 'abortMotTest',
+                        'action' => 'abortMotTest',
                     ],
                 ],
             ],
             'enforcement-differences-found-between-tests' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'       => '/enforcement/mot-test/:motTestNumber/differences-found-between-tests',
+                    'route' => '/enforcement/mot-test/:motTestNumber/differences-found-between-tests',
                     'constraints' => [
                         'motTestNumber' => \DvsaCommon\Constants\MotTestNumberConstraint::FORMAT_REGEX,
                     ],
-                    'defaults'    => [
-                        'controller' => EnforcementMotTestController::class,
-                        'action'     => 'differencesFoundBetweenTests',
-                    ],
-                ],
-            ],
-            'enforcement-compare-tests'                   => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'    => '/enforcement/mot-test/compare[/:motTestNumber][/:motTestNumberToCompare]',
                     'defaults' => [
                         'controller' => EnforcementMotTestController::class,
-                        'action'     => 'motTestStartCompare',
+                        'action' => 'differencesFoundBetweenTests',
                     ],
                 ],
             ],
-            'enforcement-record-assessment-confirmation'                   => [
-                'type'    => 'segment',
+            'enforcement-compare-tests' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/enforcement/mot-test/:motTestNumber/record-assessment-confirmation/:resultId',
+                    'route' => '/enforcement/mot-test/compare[/:motTestNumber][/:motTestNumberToCompare]',
+                    'defaults' => [
+                        'controller' => EnforcementMotTestController::class,
+                        'action' => 'motTestStartCompare',
+                    ],
+                ],
+            ],
+            'enforcement-record-assessment-confirmation' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/enforcement/mot-test/:motTestNumber/record-assessment-confirmation/:resultId',
                     'defaults' => [
                         'controller' => Enforcement\ReinspectionReportController::class,
-                        'action'     => 'recordAssessmentConfirmation',
+                        'action' => 'recordAssessmentConfirmation',
                     ],
                 ],
             ],
-            'report'                                      => [
-                'type'    => 'segment',
+            'report' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/report/choose',
+                    'route' => '/report/choose',
                     'defaults' => [
                         'controller' => Application\ReportController::class,
-                        'action'     => 'choose',
+                        'action' => 'choose',
                     ],
                 ],
             ],
         ],
     ],
-    'service_manager'            => [
+    'service_manager' => [
         'abstract_factories' => [
             AutoWireFactory::class,
             \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
             \Zend\Log\LoggerAbstractServiceFactory::class,
         ],
-        'aliases'            => [
+        'aliases' => [
             'translator' => 'MvcTranslator',
         ],
         'factories' => [
             MotChecklistPdfService::class => MotChecklistPdfServiceFactory::class,
-            CanTestWithoutOtpService::class    => CanTestWithoutOtpServiceFactory::class,
+            CanTestWithoutOtpService::class => CanTestWithoutOtpServiceFactory::class,
             StartTestChangeService::class => StartTestChangeServiceFactory::class,
             StartTestSessionService::class => StartTestSessionServiceFactory::class,
 
@@ -957,207 +955,146 @@ return [
         'DvsaMotEnforcement\\Session\\',
     ],
 
-    'controller_plugins'         => [
+    'controller_plugins' => [
         'invokables' => [
             'ajaxResponse' => AjaxResponsePlugin::class,
         ],
     ],
-    'view_manager'               => [
+    'view_manager' => [
         'display_not_found_reason' => true,
-        'display_exceptions'       => (getenv('APPLICATION_ENV') === 'development'),
-        'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
-        'exception_template'       => 'error/index',
-        'template_map'             => [
-            'address'                                                                    =>
-                __DIR__ . '/../view/partials/address.phtml',
-            'layout/layout_enforcement'                                                  =>
-                __DIR__ . '/../view/layout/layout_enforcement.phtml',
-            'error/404'                                                                  =>
-                __DIR__ . '/../view/error/404.phtml',
-            'error/index'                                                                =>
-                __DIR__ . '/../view/error/index.phtml',
-            'error/flash-error'                                                          =>
-                __DIR__ . '/../view/error/flash-error.phtml',
-            'signOut'                                                                    =>
-                __DIR__ . '/../view/partials/sign-out.phtml',
-            'vehicleExaminerDetails'                                                     =>
-                __DIR__ . '/../view/partials/vehicleExaminerDetails.phtml',
-            'slots'                                                                      =>
-                __DIR__ . '/../view/partials/slots.phtml',
-            'errorMessages'                                                              =>
-                __DIR__ . '/../view/partials/errorMessages.phtml',
-            'infoMessages'                                                               =>
-                __DIR__ . '/../view/partials/infoMessages.phtml',
-            'testItemSelectorSearch'                                                     =>
-                __DIR__ . '/../view/partials/testItemSelectorSearch.phtml',
-            'motHeaderDetails'                                                           =>
-                __DIR__ . '/../view/partials/motHeaderDetails.phtml',
-            'rfrList'                                                                    =>
-                __DIR__ . '/../view/partials/rfrList.phtml',
-            'rfrBreadcrumb'                                                              =>
-                __DIR__ . '/../view/partials/rfrBreadcrumb.phtml',
-            'rfrLocationModal'                                                           =>
-                __DIR__ . '/../view/partials/rfrLocationModal.phtml',
-            'rfrEditLocationModal'                                                       =>
-                __DIR__ . '/../view/partials/rfrEditLocationModal.phtml',
-            'rfrResults'                                                                 =>
-                __DIR__ . '/../view/partials/rfr-results.phtml',
-            'rfrResultsSummary'                                                          =>
-                __DIR__ . '/../view/partials/rfr-results-summary.phtml',
-            'rfrResultSet'                                                               =>
-                __DIR__ . '/../view/partials/rfr-result-set.phtml',
-            'brakeTestResult'                                                            =>
-                __DIR__ . '/../view/partials/brakeTestResult.phtml',
-            'brakeTestInput'                                                             =>
-                __DIR__ . '/../view/partials/brakeTestInput.phtml',
-            'motTestProgress'                                                            =>
-                __DIR__ . '/../view/partials/motTestProgress.phtml',
-            'motTestPopover'                                                             =>
-                __DIR__ . '/../view/partials/motTestPopover.phtml',
-            'motTestSearchSummaryLink'                                                   =>
-                __DIR__ . '/../view/partials/enforcement/motTestSearchSummaryLink.phtml',
-            'vehicleSummary'                                                             =>
-                __DIR__ . '/../view/partials/vehicleSummary.phtml',
-            'dldtdd'                                                                     =>
-                __DIR__ . '/../view/partials/dldtdd.phtml',
-            'modalMessages'                                                              =>
-                __DIR__ . '/../view/partials/modalMessages.phtml',
-            'carColours'                                                                 =>
-                __DIR__ . '/../view/partials/carColours.phtml',
-            'confirmationVehicleSummary'                                                 =>
-                __DIR__ . '/../view/partials/confirmationVehicleSummary.phtml',
-            'vehicleSearch'                                                              =>
-                __DIR__ . '/../view/partials/vehicleSearch.phtml',
-            'vehicleRetestSearch'                                                        =>
-                __DIR__ . '/../view/partials/vehicleRetestSearch.phtml',
-            'contingencyMotTest'                                                         =>
-                __DIR__ . '/../view/partials/contingencyMotTest.phtml',
-            'specialNotice'                                                              =>
-                __DIR__ . '/../view/partials/specialNotice.phtml',
-            'motTestSearch'                                                              =>
-                __DIR__ . '/../view/partials/motTestSearch.phtml',
-            'genSearchVTS'                                                               =>
-                __DIR__ . '/../view/partials/genericSearchResultsVTS.phtml',
-            'otpInput'                                                                   =>
-                __DIR__ . '/../view/partials/otpInput.phtml',
-            '2faDeclaration'                                                             =>
-                __DIR__ . '/../view/partials/2faDeclaration.phtml',
-            'otpError'                                                                   =>
-                __DIR__ . '/../view/partials/otpError.phtml',
-            'checkboxesElement'                                                          =>
-                __DIR__ . '/../view/partials/checkboxesElement.phtml',
-            'searchAgain'                                                                =>
-                __DIR__ . '/../view/partials/searchAgain.phtml',
-            'primaryAction/tester'                                                       =>
-                __DIR__ . '/../view/partials/primary-action/tester.phtml',
-            'primaryAction/finance'                                                       =>
-                __DIR__ . '/../view/partials/primary-action/finance.phtml',
-            'primaryAction/testerApplicant'                                              =>
-                __DIR__ . '/../view/partials/primary-action/tester-applicant.phtml',
-            'primaryAction/user'                                                         =>
-                __DIR__ . '/../view/partials/primary-action/user.phtml',
-            'primaryAction/aedm'                                                         =>
-                __DIR__ . '/../view/partials/primary-action/aedm.phtml',
-            'primaryAction/admin'                                                        =>
-                __DIR__ . '/../view/partials/primary-action/admin.phtml',
-            'primaryAction/vehicle-examiner'                                             =>
-                __DIR__ . '/../view/partials/primary-action/vehicle-examiner.phtml',
-            'primaryAction/links'                                                        =>
-                __DIR__ . '/../view/partials/primary-action/links.phtml',
-            'dashboard/specialNotice'                                                    =>
-                __DIR__ . '/../view/partials/dashboard/special-notice.phtml',
-            'dashboard/veList'                                                           =>
-                __DIR__ . '/../view/partials/dashboard/ve-list.phtml',
-            'dashboard/vtsList'                                                          =>
-                __DIR__ . '/../view/partials/dashboard/vts-list.phtml',
-            'dashboard/aeHeader'                                                         =>
-                __DIR__ . '/../view/partials/dashboard/authorised-examiner-header.phtml',
-            'dashboard/dvsaAdminBox'                                                     =>
-                __DIR__ . '/../view/partials/dashboard/dvsa-admin-box.phtml',
-            'dashboard/testerStatsBox'                                                   =>
-                __DIR__ . '/../view/partials/dashboard/tester-stats-box.phtml',
-            'dashboard/testerContingencyBox'                                             =>
-                __DIR__ . '/../view/partials/dashboard/tester-contingency-box.phtml',
-            'dashboard/financeBox'                                                       =>
-                __DIR__ . '/../view/partials/dashboard/finance-box.phtml',
-            'dashboard/trainingTestBox'                                                  =>
-                __DIR__ . '/../view/partials/dashboard/tester-training-test-box.phtml',
-            'dashboard/nonMotTestBox'                                                    =>
-                __DIR__ . '/../view/partials/dashboard/non-mot-test-box.phtml',
-            'dashboard/motActivity'                                                      =>
-                __DIR__ . '/../view/partials/dashboard/mot-activity.phtml',
-            'dashboard/overdueSpecialNoticeHeader'                                       =>
-                __DIR__ . '/../view/partials/dashboard/overdue-special-notice-header.phtml',
-            'vehicle/history'                                                            =>
-                __DIR__ . '/../view/partials/vehicle-history/history.phtml',
-            'vehicle/history-item'                                                       => __DIR__ .
+        'display_exceptions' => (getenv('APPLICATION_ENV') === 'development'),
+        'doctype' => 'HTML5',
+        'not_found_template' => 'error/404',
+        'exception_template' => 'error/index',
+        'template_map' => [
+            'address' => __DIR__.'/../view/partials/address.phtml',
+            'layout/layout_enforcement' => __DIR__.'/../view/layout/layout_enforcement.phtml',
+            'error/404' => __DIR__.'/../view/error/404.phtml',
+            'error/index' => __DIR__.'/../view/error/index.phtml',
+            'error/flash-error' => __DIR__.'/../view/error/flash-error.phtml',
+            'signOut' => __DIR__.'/../view/partials/sign-out.phtml',
+            'vehicleExaminerDetails' => __DIR__.'/../view/partials/vehicleExaminerDetails.phtml',
+            'slots' => __DIR__.'/../view/partials/slots.phtml',
+            'errorMessages' => __DIR__.'/../view/partials/errorMessages.phtml',
+            'infoMessages' => __DIR__.'/../view/partials/infoMessages.phtml',
+            'testItemSelectorSearch' => __DIR__.'/../view/partials/testItemSelectorSearch.phtml',
+            'motHeaderDetails' => __DIR__.'/../view/partials/motHeaderDetails.phtml',
+            'rfrList' => __DIR__.'/../view/partials/rfrList.phtml',
+            'rfrBreadcrumb' => __DIR__.'/../view/partials/rfrBreadcrumb.phtml',
+            'rfrLocationModal' => __DIR__.'/../view/partials/rfrLocationModal.phtml',
+            'rfrEditLocationModal' => __DIR__.'/../view/partials/rfrEditLocationModal.phtml',
+            'rfrResults' => __DIR__.'/../view/partials/rfr-results.phtml',
+            'rfrResultsSummary' => __DIR__.'/../view/partials/rfr-results-summary.phtml',
+            'rfrResultSet' => __DIR__.'/../view/partials/rfr-result-set.phtml',
+            'brakeTestResult' => __DIR__.'/../view/partials/brakeTestResult.phtml',
+            'brakeTestInput' => __DIR__.'/../view/partials/brakeTestInput.phtml',
+            'motTestProgress' => __DIR__.'/../view/partials/motTestProgress.phtml',
+            'motTestPopover' => __DIR__.'/../view/partials/motTestPopover.phtml',
+            'motTestSearchSummaryLink' => __DIR__.'/../view/partials/enforcement/motTestSearchSummaryLink.phtml',
+            'vehicleSummary' => __DIR__.'/../view/partials/vehicleSummary.phtml',
+            'dldtdd' => __DIR__.'/../view/partials/dldtdd.phtml',
+            'modalMessages' => __DIR__.'/../view/partials/modalMessages.phtml',
+            'carColours' => __DIR__.'/../view/partials/carColours.phtml',
+            'confirmationVehicleSummary' => __DIR__.'/../view/partials/confirmationVehicleSummary.phtml',
+            'vehicleSearch' => __DIR__.'/../view/partials/vehicleSearch.phtml',
+            'vehicleRetestSearch' => __DIR__.'/../view/partials/vehicleRetestSearch.phtml',
+            'contingencyMotTest' => __DIR__.'/../view/partials/contingencyMotTest.phtml',
+            'specialNotice' => __DIR__.'/../view/partials/specialNotice.phtml',
+            'motTestSearch' => __DIR__.'/../view/partials/motTestSearch.phtml',
+            'genSearchVTS' => __DIR__.'/../view/partials/genericSearchResultsVTS.phtml',
+            'otpInput' => __DIR__.'/../view/partials/otpInput.phtml',
+            '2faDeclaration' => __DIR__.'/../view/partials/2faDeclaration.phtml',
+            'otpError' => __DIR__.'/../view/partials/otpError.phtml',
+            'checkboxesElement' => __DIR__.'/../view/partials/checkboxesElement.phtml',
+            'searchAgain' => __DIR__.'/../view/partials/searchAgain.phtml',
+            'primaryAction/tester' => __DIR__.'/../view/partials/primary-action/tester.phtml',
+            'primaryAction/finance' => __DIR__.'/../view/partials/primary-action/finance.phtml',
+            'primaryAction/testerApplicant' => __DIR__.'/../view/partials/primary-action/tester-applicant.phtml',
+            'primaryAction/user' => __DIR__.'/../view/partials/primary-action/user.phtml',
+            'primaryAction/aedm' => __DIR__.'/../view/partials/primary-action/aedm.phtml',
+            'primaryAction/admin' => __DIR__.'/../view/partials/primary-action/admin.phtml',
+            'primaryAction/vehicle-examiner' => __DIR__.'/../view/partials/primary-action/vehicle-examiner.phtml',
+            'primaryAction/links' => __DIR__.'/../view/partials/primary-action/links.phtml',
+            'dashboard/specialNotice' => __DIR__.'/../view/partials/dashboard/special-notice.phtml',
+            'dashboard/veList' => __DIR__.'/../view/partials/dashboard/ve-list.phtml',
+            'dashboard/vtsList' => __DIR__.'/../view/partials/dashboard/vts-list.phtml',
+            'dashboard/aeHeader' => __DIR__.'/../view/partials/dashboard/authorised-examiner-header.phtml',
+            'dashboard/dvsaAdminBox' => __DIR__.'/../view/partials/dashboard/dvsa-admin-box.phtml',
+            'dashboard/testerStatsBox' => __DIR__.'/../view/partials/dashboard/tester-stats-box.phtml',
+            'dashboard/testerContingencyBox' => __DIR__.'/../view/partials/dashboard/tester-contingency-box.phtml',
+            'dashboard/financeBox' => __DIR__.'/../view/partials/dashboard/finance-box.phtml',
+            'dashboard/trainingTestBox' => __DIR__.'/../view/partials/dashboard/tester-training-test-box.phtml',
+            'dashboard/nonMotTestBox' => __DIR__.'/../view/partials/dashboard/non-mot-test-box.phtml',
+            'dashboard/motActivity' => __DIR__.'/../view/partials/dashboard/mot-activity.phtml',
+            'dashboard/overdueSpecialNoticeHeader' => __DIR__.'/../view/partials/dashboard/overdue-special-notice-header.phtml',
+            'vehicle/history' => __DIR__.'/../view/partials/vehicle-history/history.phtml',
+            'vehicle/history-item' => __DIR__.
                 '/../view/partials/vehicle-history/history-item.phtml',
-            'brake-test-results-class-1-and-2/brake-effort'                              => __DIR__ .
+            'brake-test-results-class-1-and-2/brake-effort' => __DIR__.
                 '/../view/partials/brake-test-results-class-1-and-2/brake-effort.phtml',
-            'brake-test-results-class-1-and-2/vehicle-weight-details'                    => __DIR__ .
+            'brake-test-results-class-1-and-2/vehicle-weight-details' => __DIR__.
                 '/../view/partials/brake-test-results-class-1-and-2/vehicle-weight-details.phtml',
-            'brake-test-results-class-3-and-above/parking-brake-effort-table'            => __DIR__ .
+            'brake-test-results-class-3-and-above/parking-brake-effort-table' => __DIR__.
                 '/../view/partials/brake-test-results-class-3-and-above/parking-brake-effort-table.phtml',
-            'brake-test-results-class-3-and-above/service-brake-effort-table'            => __DIR__ .
+            'brake-test-results-class-3-and-above/service-brake-effort-table' => __DIR__.
                 '/../view/partials/brake-test-results-class-3-and-above/service-brake-effort-table.phtml',
-            'brake-test-results-class-3-and-above/service-brake-effort-row-single-input' => __DIR__ .
+            'brake-test-results-class-3-and-above/service-brake-effort-row-single-input' => __DIR__.
                 '/../view/partials/brake-test-results-class-3-and-above/service-brake-effort-row-single-input.phtml',
-            'brake-test-results-class-3-and-above/service-brake-effort-row-double-input' => __DIR__ .
+            'brake-test-results-class-3-and-above/service-brake-effort-row-double-input' => __DIR__.
                 '/../view/partials/brake-test-results-class-3-and-above/service-brake-effort-row-double-input.phtml',
-            'brake-test-results-class-3-and-above/parking-brake-effort-row-double-input' => __DIR__ .
+            'brake-test-results-class-3-and-above/parking-brake-effort-row-double-input' => __DIR__.
                 '/../view/partials/brake-test-results-class-3-and-above/parking-brake-effort-row-double-input.phtml',
-            'brake-test-results-class-3-and-above/brake-efficiency-box'                  => __DIR__ .
+            'brake-test-results-class-3-and-above/brake-efficiency-box' => __DIR__.
                 '/../view/partials/brake-test-results-class-3-and-above/brake-efficiency-box.phtml',
         ],
-        'template_path_stack'      => [
-            __DIR__ . '/../view',
+        'template_path_stack' => [
+            __DIR__.'/../view',
         ],
-        'strategies'               => [
+        'strategies' => [
             'ViewJsonStrategy',
         ],
     ],
     // Placeholder for console routes
-    'console'                    => [
+    'console' => [
         'router' => [
             'routes' => [],
         ],
     ],
-    'view_helpers'               => [
+    'view_helpers' => [
         'invokables' => [
-            'camelCaseToReadable'               => CamelCaseToReadable::class,
+            'camelCaseToReadable' => CamelCaseToReadable::class,
             'camelCaseToFirstUppercaseReadable' => CamelCaseToFirstUppercaseReadable::class,
         ],
-        'factories'  => [
-            'identityHelper'         => IdentityHelperFactory::class,
-            'authorisationHelper'    => AuthorisationHelperFactory::class,
-            'dashboardDataProvider'  => DashboardDataProviderFactory::class,
-            'currentMotTest'         => CurrentMotTestFactory::class,
-            'getSites'               => GetSitesFactory::class,
-            'locationSelector'       => LocationSelectorFactory::class,
-            'getSiteCount'           => GetSiteCountFactory::class,
-            'manualsHelper'          => ManualsAndGuidesFactory::class,
+        'factories' => [
+            'identityHelper' => IdentityHelperFactory::class,
+            'authorisationHelper' => AuthorisationHelperFactory::class,
+            'dashboardDataProvider' => DashboardDataProviderFactory::class,
+            'currentMotTest' => CurrentMotTestFactory::class,
+            'getSites' => GetSitesFactory::class,
+            'locationSelector' => LocationSelectorFactory::class,
+            'getSiteCount' => GetSiteCountFactory::class,
+            'manualsHelper' => ManualsAndGuidesFactory::class,
             'resourcesOnGovUkHelper' => ResourcesOnGovUkFactory::class,
-            'canTestWithoutOtp'      => CanTestWithoutOtpFactory::class,
-        ]
+            'canTestWithoutOtp' => CanTestWithoutOtpFactory::class,
+        ],
     ],
-    'module_layouts'             => [
-        'Application'           => 'application/layout',
-        'Dvsa\Mot\Frontend\AuthenticationModule'    => 'application/layout',
-        'DvsaMotEnforcement'    => 'application/layout',
+    'module_layouts' => [
+        'Application' => 'application/layout',
+        'Dvsa\Mot\Frontend\AuthenticationModule' => 'application/layout',
+        'DvsaMotEnforcement' => 'application/layout',
         'DvsaMotEnforcementApi' => 'application/layout',
-        'DvsaMotTest'           => 'application/layout',
+        'DvsaMotTest' => 'application/layout',
     ],
     'validators' => [
         'invokables' => [
-            'SpecialNoticePublishDate' => SpecialNoticePublishDateValidator::class
-        ]
+            'SpecialNoticePublishDate' => SpecialNoticePublishDateValidator::class,
+        ],
     ],
     'breadcrumbs' => [
         'resolvers' => [
             'site' => SiteNameResolver::class,
             'organisationBySite' => OrganisationNameBySiteResolver::class,
-            'simple' => SimpleResolver::class
-        ]
-    ]
+            'simple' => SimpleResolver::class,
+        ],
+    ],
 ];

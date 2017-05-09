@@ -44,8 +44,8 @@ class OrganisationNominationEventHelperTest extends \PHPUnit_Framework_TestCase
     {
         $person = (new Person())
             ->setId(1)
-            ->setFirstName("John")
-            ->setFamilyName("Rambo");
+            ->setFirstName('John')
+            ->setFamilyName('Rambo');
 
         $this->person = $person;
 
@@ -53,12 +53,12 @@ class OrganisationNominationEventHelperTest extends \PHPUnit_Framework_TestCase
         $this->eventService = $this->createEventService($eventType);
 
         $org = new Organisation();
-        $org->setName("Organisation LTD");
+        $org->setName('Organisation LTD');
 
         $this->organisation = $org;
 
         $auth = new AuthorisationForAuthorisedExaminer();
-        $auth->setNumber("AE1234");
+        $auth->setNumber('AE1234');
         $auth->setOrganisation($org);
 
         $this->organisation->setAuthorisedExaminer($auth);
@@ -66,7 +66,7 @@ class OrganisationNominationEventHelperTest extends \PHPUnit_Framework_TestCase
         $authRepository = XMock::of(AuthorisationForAuthorisedExaminerRepository::class);
         $authRepository
             ->expects($this->any())
-            ->method("getByNumber")
+            ->method('getByNumber')
             ->willReturn($auth);
 
         $this->organisationEventHelper = new OrganisationNominationEventHelper(

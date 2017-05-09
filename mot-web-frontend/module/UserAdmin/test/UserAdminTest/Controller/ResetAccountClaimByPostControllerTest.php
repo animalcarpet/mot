@@ -7,7 +7,6 @@ use DvsaCommon\Model\TesterAuthorisation;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
-use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
@@ -23,7 +22,6 @@ use Zend\View\Model\ViewModel;
  */
 class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTestCase
 {
-
     const PERSON_ID = 13;
     const PERSON_USERNAME = 'toto';
 
@@ -111,14 +109,14 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'method' => 'get',
                 'action' => 'index',
                 'params' => [
-                    'post'  => [],
+                    'post' => [],
                     'route' => [
                         'id' => self::PERSON_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'accountAdminServiceMock',
+                        'class' => 'accountAdminServiceMock',
                         'method' => 'getUserProfile',
                         'params' => self::PERSON_ID,
                         'result' => new PersonHelpDeskProfileDto(),
@@ -133,17 +131,17 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'method' => 'get',
                 'action' => 'index',
                 'params' => [
-                    'post'  => [],
+                    'post' => [],
                     'route' => [
                         'id' => self::PERSON_ID,
                     ],
-                    'get'   => [
+                    'get' => [
                         'personUsername' => self::PERSON_USERNAME,
-                    ]
+                    ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'accountAdminServiceMock',
+                        'class' => 'accountAdminServiceMock',
                         'method' => 'getUserProfile',
                         'params' => self::PERSON_ID,
                         'result' => new PersonHelpDeskProfileDto(),
@@ -158,21 +156,21 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'method' => 'post',
                 'action' => 'index',
                 'params' => [
-                    'post'  => [],
+                    'post' => [],
                     'route' => [
                         'id' => self::PERSON_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'accountAdminServiceMock',
+                        'class' => 'accountAdminServiceMock',
                         'method' => 'resetAccount',
                         'params' => self::PERSON_ID,
                         'result' => true,
                     ],
                 ],
                 'expect' => [
-                    'url' => '/user-admin/user/' . self::PERSON_ID,
+                    'url' => '/user-admin/user/'.self::PERSON_ID,
                 ],
             ],
             //  --  index: post action fail --
@@ -180,21 +178,21 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'method' => 'post',
                 'action' => 'index',
                 'params' => [
-                    'post'  => [],
+                    'post' => [],
                     'route' => [
                         'id' => self::PERSON_ID,
                     ],
                 ],
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'accountAdminServiceMock',
+                        'class' => 'accountAdminServiceMock',
                         'method' => 'resetAccount',
                         'params' => self::PERSON_ID,
                         'result' => new ValidationException('/', 'post', [], 10, [['displayMessage' => 'error']]),
                     ],
                 ],
                 'expect' => [
-                    'url' => '/user-admin/user/' . self::PERSON_ID,
+                    'url' => '/user-admin/user/'.self::PERSON_ID,
                 ],
             ],
         ];

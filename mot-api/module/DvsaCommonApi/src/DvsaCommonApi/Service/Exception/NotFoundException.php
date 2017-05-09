@@ -3,18 +3,16 @@
 namespace DvsaCommonApi\Service\Exception;
 
 /**
- * Class NotFoundException
- *
- * @package DvsaCommonApi\Service\Exception
+ * Class NotFoundException.
  */
 class NotFoundException extends ServiceException
 {
     const ERROR_CODE_NOT_FOUND = 404;
-    const ERROR_MSG_NOT_FOUND = "%s%s not found";
+    const ERROR_MSG_NOT_FOUND = '%s%s not found';
 
     public function __construct($object, $key = null, $useFormat = true)
     {
-        $message = sprintf(self::ERROR_MSG_NOT_FOUND, $object, ($key ? ' ' . $key : ''));
+        $message = sprintf(self::ERROR_MSG_NOT_FOUND, $object, ($key ? ' '.$key : ''));
 
         if (!$useFormat) {
             $message = $object;

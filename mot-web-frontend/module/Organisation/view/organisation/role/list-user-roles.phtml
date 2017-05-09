@@ -1,13 +1,13 @@
 <?php
 
 /**
- * @var $personUsername
+ * @var
  * @var $hasRoleOption
  * @var $id
  */
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 
-/**
+/*
  * @var \Organisation\Form\SelectRoleForm $form
  */
 ?>
@@ -65,8 +65,8 @@ use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
     echo $this->url(
         'authorised-examiner/list-user-roles',
         [
-            'id'       => $id,
-            'personId' => $personId
+            'id' => $id,
+            'personId' => $personId,
         ]
     ); ?>" method="POST">
         <?php echo $this->csrfToken() ?>

@@ -14,7 +14,7 @@ use Core\Action\ViewActionResult;
 
 class DisplayAdviceAction implements AutoWireableInterface
 {
-    const PAGE_TITLE = "Testing advice for this vehicle";
+    const PAGE_TITLE = 'Testing advice for this vehicle';
 
     private $vehicleService;
     private $motTestService;
@@ -24,8 +24,7 @@ class DisplayAdviceAction implements AutoWireableInterface
         VehicleService $vehicleService,
         MotTestService $motTestService,
         MotConfig $motConfig
-    )
-    {
+    ) {
         $this->vehicleService = $vehicleService;
         $this->motTestService = $motTestService;
         $this->motConfig = $motConfig;
@@ -40,7 +39,7 @@ class DisplayAdviceAction implements AutoWireableInterface
 
         $actionResult = new ViewActionResult();
         $actionResult->setViewModel($viewModel);
-        $actionResult->setTemplate("vehicle/testing-advice/display.twig");
+        $actionResult->setTemplate('vehicle/testing-advice/display.twig');
         $actionResult->layout()->setBreadcrumbs($breadcrumbs);
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');
         $actionResult->layout()->setPageTitle(self::PAGE_TITLE);
@@ -54,7 +53,7 @@ class DisplayAdviceAction implements AutoWireableInterface
         $tertiaryList = new HeaderTertiaryList();
         $tertiaryList->addElement($vehicle->getMakeAndModel())->bold();
         $tertiaryList->addElement($vehicle->getRegistration());
-        $tertiaryList->addElement(sprintf("First used %s", DateTimeDisplayFormat::dateShort(new \DateTime($vehicle->getFirstUsedDate()))));
+        $tertiaryList->addElement(sprintf('First used %s', DateTimeDisplayFormat::dateShort(new \DateTime($vehicle->getFirstUsedDate()))));
 
         return $tertiaryList;
     }

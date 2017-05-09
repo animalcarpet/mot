@@ -17,7 +17,7 @@ class SiteValidator extends AbstractValidator
     private $siteDetailsValidator;
 
     public function __construct(
-        $errors = null,
+        $errors,
         TestingFacilitiesValidator $testingFacilitiesValidator,
         SiteDetailsValidator $siteDetailsValidator
     ) {

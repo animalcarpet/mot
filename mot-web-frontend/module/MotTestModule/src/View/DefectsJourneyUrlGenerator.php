@@ -178,7 +178,7 @@ class DefectsJourneyUrlGenerator
     }
 
     /**
-     * @param int $identifiedDefectId Id of a defect that was already added to a specified MOT Test.
+     * @param int $identifiedDefectId Id of a defect that was already added to a specified MOT Test
      *
      * @throws RouteNotAllowedInContextException
      *

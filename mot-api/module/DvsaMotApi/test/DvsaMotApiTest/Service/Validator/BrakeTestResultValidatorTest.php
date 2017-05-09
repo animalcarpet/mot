@@ -16,14 +16,14 @@ use DvsaEntitiesTest\Entity\WeightSourceFactory;
 use DvsaMotApi\Service\Validator\BrakeTestResultValidator;
 
 /**
- * Class BrakeTestResultValidatorTest
+ * Class BrakeTestResultValidatorTest.
  */
 class BrakeTestResultValidatorTest extends AbstractServiceTestCase
 {
     const MOCK_VALIDATOR = 'mockBrakeTestConfigurationValidator';
 
     /**
-     * TODO: Change this test to be more flexible (ps)
+     * TODO: Change this test to be more flexible (ps).
      *
      * @dataProvider brakeTestValidatorItemsClass3AndAbove
      */

@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Colour
+ * Colour.
  *
  * @ORM\Table(
  *  name="colour_lookup",
@@ -42,6 +43,7 @@ class Colour extends Entity
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -61,6 +63,7 @@ class Colour extends Entity
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

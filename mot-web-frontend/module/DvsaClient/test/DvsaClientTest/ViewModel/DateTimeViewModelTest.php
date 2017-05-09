@@ -33,12 +33,12 @@ class DateTimeViewModelTest extends \PHPUnit_Framework_TestCase
         $method = ucfirst($property);
 
         //  logical block: set value and check set method
-        $result = $this->model->{'set' . $method}($value);
+        $result = $this->model->{'set'.$method}($value);
         $this->assertInstanceOf(DateTimeViewModel::class, $result);
 
         //  logical block: check get method
         $expect = ($expect === null ? $value : $expect);
-        $method = (is_bool($expect) ? 'is' : 'get') . $method;
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
         $this->assertEquals($expect, $this->model->{$method}());
     }
 
@@ -68,7 +68,7 @@ class DateTimeViewModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDateReturnNullIfPartIsInvalid($datePart, $value)
     {
-        $this->model->{'set' . lcfirst($datePart)}($value);
+        $this->model->{'set'.lcfirst($datePart)}($value);
         $actual = $this->model->getDate();
         print_r($actual);
         $this->assertEquals(null, $actual);

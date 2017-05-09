@@ -18,13 +18,13 @@ class UpdateAeRegisteredAddressProcess extends AbstractTwoStepAeProcess implemen
     protected $propertyName = UpdateAePropertyAction::AE_REGISTERED_ADDRESS_PROPERTY;
     protected $permission = PermissionAtOrganisation::AE_UPDATE_REGISTERED_OFFICE_ADDRESS;
     protected $requiresReview = true;
-    protected $submitButtonText = "Review registered office address";
-    protected $successfulEditMessage = "Registered office address has been successfully changed.";
-    protected $formPageTitle = "Change registered office address";
-    protected $formPartial = "organisation/update-ae-property/partials/edit-address";
-    protected $reviewPageTitle = "Review registered address";
-    protected $reviewPageLede = "Please check the address below is correct.";
-    protected $reviewPageButtonText = "Change registered address";
+    protected $submitButtonText = 'Review registered office address';
+    protected $successfulEditMessage = 'Registered office address has been successfully changed.';
+    protected $formPageTitle = 'Change registered office address';
+    protected $formPartial = 'organisation/update-ae-property/partials/edit-address';
+    protected $reviewPageTitle = 'Review registered address';
+    protected $reviewPageLede = 'Please check the address below is correct.';
+    protected $reviewPageButtonText = 'Change registered address';
 
     public function getPropertyName()
     {
@@ -67,11 +67,11 @@ class UpdateAeRegisteredAddressProcess extends AbstractTwoStepAeProcess implemen
     {
         $this->organisationMapper->updateAePropertiesWithArray($this->context->getAeId(), [
             AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_POSTCODE => $formData[AddressPropertyForm::FIELD_POSTCODE],
-            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_COUNTRY  => $formData[AddressPropertyForm::FIELD_COUNTRY],
-            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_LINE_1   => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_1],
-            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_LINE_2   => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_2],
-            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_LINE_3   => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_3],
-            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_TOWN     => $formData[AddressPropertyForm::FIELD_TOWN],
+            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_COUNTRY => $formData[AddressPropertyForm::FIELD_COUNTRY],
+            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_LINE_1 => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_1],
+            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_LINE_2 => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_2],
+            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_LINE_3 => $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_3],
+            AuthorisedExaminerPatchModel::REGISTERED_ADDRESS_TOWN => $formData[AddressPropertyForm::FIELD_TOWN],
         ]);
     }
 
@@ -90,7 +90,7 @@ class UpdateAeRegisteredAddressProcess extends AbstractTwoStepAeProcess implemen
         $table = new GdsTable();
         $authorisedExaminer = $this->organisationMapper->getAuthorisedExaminer($this->context->getAeId());
         $table->newRow()->setLabel('Authorised Examiner')->setValue($authorisedExaminer->getName());
-        $table->newRow("address")->setLabel("Address")
+        $table->newRow('address')->setLabel('Address')
             ->setValue((new AddressFormatter())->escapeAddressToMultiLine(
                 $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_1],
                 $formData[AddressPropertyForm::FIELD_ADDRESS_LINE_2],
@@ -99,8 +99,7 @@ class UpdateAeRegisteredAddressProcess extends AbstractTwoStepAeProcess implemen
                 $formData[AddressPropertyForm::FIELD_TOWN],
                 $formData[AddressPropertyForm::FIELD_COUNTRY],
                 $formData[AddressPropertyForm::FIELD_POSTCODE]
-            )
-                , false);
+            ), false);
 
         return $table;
     }
@@ -122,14 +121,15 @@ class UpdateAeRegisteredAddressProcess extends AbstractTwoStepAeProcess implemen
 
     /**
      * @param AddressDto $address
+     *
      * @return array
      */
     protected function prepopulateFromAddressDto($address)
     {
         return [
-            AddressPropertyForm::FIELD_TOWN           => $address->getTown(),
-            AddressPropertyForm::FIELD_POSTCODE       => $address->getPostcode(),
-            AddressPropertyForm::FIELD_COUNTRY        => $address->getCountry(),
+            AddressPropertyForm::FIELD_TOWN => $address->getTown(),
+            AddressPropertyForm::FIELD_POSTCODE => $address->getPostcode(),
+            AddressPropertyForm::FIELD_COUNTRY => $address->getCountry(),
             AddressPropertyForm::FIELD_ADDRESS_LINE_1 => $address->getAddressLine1(),
             AddressPropertyForm::FIELD_ADDRESS_LINE_2 => $address->getAddressLine2(),
             AddressPropertyForm::FIELD_ADDRESS_LINE_3 => $address->getAddressLine3(),

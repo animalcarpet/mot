@@ -2,7 +2,7 @@
 
 use Site\ViewModel\SiteSearchViewModel;
 
-/**
+/*
  * @var SiteSearchViewModel $viewModel
  */
 
@@ -11,9 +11,9 @@ use Site\ViewModel\SiteSearchViewModel;
 <?php if ($viewModel->getTable()->getRowsTotalCount() !== 0): ?>
 
     <?php echo $this->partial('report/top-line', [
-        'text'          => '<strong>%s</strong> sites found <strong>%s</strong>',
-        'itemsNumber'   => $viewModel->getTable()->getRowsTotalCount(),
-        'label'         => ''
+        'text' => '<strong>%s</strong> sites found <strong>%s</strong>',
+        'itemsNumber' => $viewModel->getTable()->getRowsTotalCount(),
+        'label' => '',
     ]); ?>
 
     <?php echo $viewModel->getTable()->renderTable($this); ?>
@@ -25,9 +25,9 @@ use Site\ViewModel\SiteSearchViewModel;
     <?php echo $this->partial(
         'partial/gds/form/control-navigation-secondary',
         [
-            'navigation'    => [
+            'navigation' => [
                 'Return to search' => $viewModel->getSearchPage(),
-            ]
+            ],
         ]
     ); ?>
 </nav>

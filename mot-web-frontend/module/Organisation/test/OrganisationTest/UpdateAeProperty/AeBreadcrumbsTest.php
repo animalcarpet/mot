@@ -11,9 +11,9 @@ use Zend\View\Helper\Url;
 class AeBreadcrumbsTest extends \PHPUnit_Framework_TestCase
 {
     const ORG_ID = 2;
-    const ORG_NAME = "orgName";
+    const ORG_NAME = 'orgName';
 
-    const LINK = "http://link";
+    const LINK = 'http://link';
 
     private $url;
 
@@ -22,7 +22,7 @@ class AeBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $url = XMock::of(Url::class);
         $url
             ->expects($this->any())
-            ->method("__invoke")
+            ->method('__invoke')
             ->willReturn(self::LINK);
 
         $this->url = $url;
@@ -33,7 +33,7 @@ class AeBreadcrumbsTest extends \PHPUnit_Framework_TestCase
         $authorisationService = XMock::of(MotAuthorisationServiceInterface::class);
         $authorisationService
             ->expects($this->any())
-            ->method("isGrantedAtOrganisation")
+            ->method('isGrantedAtOrganisation')
             ->willReturn($value);
 
         return $authorisationService;

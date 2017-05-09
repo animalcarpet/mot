@@ -10,7 +10,7 @@ class CertificateNumberInput extends Input
 {
     const FIELD = 'certificateNumber';
     const MSG_EMPTY = 'you must enter a certificate number';
-    const MSG_TOO_LONG = "must be %max% characters or less";
+    const MSG_TOO_LONG = 'must be %max% characters or less';
     const MAX_LENGTH = 50;
 
     public function __construct($name = null)

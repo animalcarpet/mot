@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotTest\View\VehicleSearchResult;
 
 class VehicleSearchResultMessage
@@ -22,7 +23,8 @@ class VehicleSearchResultMessage
         return $this->mainMessage;
     }
 
-    static public function getEmpty(){
-        return new VehicleSearchResultMessage("","");
+    public static function getEmpty()
+    {
+        return new self('', '');
     }
 }

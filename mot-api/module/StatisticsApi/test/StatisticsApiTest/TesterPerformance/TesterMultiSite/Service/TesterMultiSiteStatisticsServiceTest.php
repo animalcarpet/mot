@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\TesterMultiSite\Service;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper\TesterStatisticsMapper;
@@ -16,28 +17,28 @@ class TesterMultiSiteStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     const TESTER_ID = 1;
     const YEAR = 2016;
     const MONTH = 8;
-    const ADDRESS_LINE_1 = "address line 1";
-    const TOWN = "town";
-    const COUNTRY = "country";
-    const POSTCODE = "postcode";
+    const ADDRESS_LINE_1 = 'address line 1';
+    const TOWN = 'town';
+    const COUNTRY = 'country';
+    const POSTCODE = 'postcode';
     const SITE_ID = 1;
-    const SITE_NAME_1 = "site1";
-    const SITE_NAME_2 = "site2";
-    const SITE_NAME_3 = "site3";
+    const SITE_NAME_1 = 'site1';
+    const SITE_NAME_2 = 'site2';
+    const SITE_NAME_3 = 'site3';
 
-    /** @var  TesterMultiSiteStatisticsRepository */
+    /** @var TesterMultiSiteStatisticsRepository */
     private $repository;
-    /** @var  TesterStatisticsMapper */
+    /** @var TesterStatisticsMapper */
     private $mapper;
 
-    /** @var  TesterMultiSiteStatisticsService */
+    /** @var TesterMultiSiteStatisticsService */
     private $sut;
 
     public function setUp()
     {
         $this->repository = XMock::of(TesterMultiSiteStatisticsRepository::class);
         $this->repository->expects($this->once())
-            ->method("get")
+            ->method('get')
             ->willReturn($this->createRepositoryResult());
 
         $this->mapper = new TesterStatisticsMapper();
@@ -97,5 +98,4 @@ class TesterMultiSiteStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::COUNTRY, $dto->getSiteAddress()->getCountry());
         $this->assertEquals(self::POSTCODE, $dto->getSiteAddress()->getPostcode());
     }
-
 }

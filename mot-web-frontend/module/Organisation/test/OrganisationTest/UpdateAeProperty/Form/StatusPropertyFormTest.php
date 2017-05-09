@@ -1,6 +1,7 @@
 <?php
 
 namespace OrganisationTest\UpdateAeProperty\Form;
+
 use Application\Service\CatalogService;
 use Core\Catalog\Authorisation\AuthForAuthorisedExaminerStatusCatalog;
 use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
@@ -8,10 +9,8 @@ use DvsaCommonTest\TestUtils\XMock;
 use Organisation\UpdateAeProperty\Process\Form\StatusPropertyForm;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
-
 class StatusPropertyFormTest extends \PHPUnit_Framework_TestCase
 {
-
     /*
      * @var AuthForAuthorisedExaminerStatusCatalog|MockObj
      */
@@ -65,8 +64,8 @@ class StatusPropertyFormTest extends \PHPUnit_Framework_TestCase
     public function invalidData()
     {
         return [
-            [[StatusPropertyForm::FIELD_STATUS => ""]],
-            [[StatusPropertyForm::FIELD_STATUS => " "]],
+            [[StatusPropertyForm::FIELD_STATUS => '']],
+            [[StatusPropertyForm::FIELD_STATUS => ' ']],
         ];
     }
 

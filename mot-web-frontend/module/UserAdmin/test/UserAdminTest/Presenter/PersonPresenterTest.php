@@ -53,7 +53,7 @@ class PersonPresenterTest extends \PHPUnit_Framework_TestCase
     public function testEmptyAddressDataDisplaysAnEmptyString()
     {
         $address = '';
-        $sp      = new PersonPresenter($this->buildSearchPersonResultDtoWithEmptyAddressDetails());
+        $sp = new PersonPresenter($this->buildSearchPersonResultDtoWithEmptyAddressDetails());
 
         $this->assertEquals($address, $sp->displayUserAddress());
     }
@@ -91,18 +91,18 @@ class PersonPresenterTest extends \PHPUnit_Framework_TestCase
     {
         return new SearchPersonResultDto(
             [
-                'id'           => '1',
-                'firstName'    => 'Mallory',
-                'lastName'     => 'Archer',
-                'middleName'   => 'Thomas',
-                'dateOfBirth'  => '1981-04-24',
+                'id' => '1',
+                'firstName' => 'Mallory',
+                'lastName' => 'Archer',
+                'middleName' => 'Thomas',
+                'dateOfBirth' => '1981-04-24',
                 'addressLine1' => 'Straw Hut',
                 'addressLine2' => 'not relevant',
                 'addressLine3' => 'not relevant',
                 'addressLine4' => 'not relevant',
-                'town'         => 'Liverpool',
-                'postcode'     => 'BS1 6JZ',
-                'username'     => 'tester1',
+                'town' => 'Liverpool',
+                'postcode' => 'BS1 6JZ',
+                'username' => 'tester1',
             ]
         );
     }
@@ -114,18 +114,18 @@ class PersonPresenterTest extends \PHPUnit_Framework_TestCase
     {
         return new SearchPersonResultDto(
             [
-                'id'           => '1',
-                'firstName'    => 'Mallory',
-                'lastName'     => 'Archer',
-                'middleName'   => 'Thomas',
-                'dateOfBirth'  => '1981-04-24',
+                'id' => '1',
+                'firstName' => 'Mallory',
+                'lastName' => 'Archer',
+                'middleName' => 'Thomas',
+                'dateOfBirth' => '1981-04-24',
                 'addressLine1' => null,
                 'addressLine2' => null,
                 'addressLine3' => null,
                 'addressLine4' => null,
-                'town'         => null,
-                'postcode'     => null,
-                'username'     => 'tester1',
+                'town' => null,
+                'postcode' => null,
+                'username' => 'tester1',
             ]
         );
     }

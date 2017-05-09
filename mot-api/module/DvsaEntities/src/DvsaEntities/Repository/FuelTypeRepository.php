@@ -6,8 +6,8 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\FuelType;
 
 /**
- * Class FuelTypeRepository
- * @package DvsaEntities\Repository
+ * Class FuelTypeRepository.
+ *
  * @method FuelType|null findOneByDvlaPropulsionCode(string $code)
  * @codeCoverageIgnore
  */
@@ -24,6 +24,7 @@ class FuelTypeRepository extends AbstractMutableRepository
      * @param $id
      *
      * @return FuelType
+     *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     public function get($id)
@@ -32,6 +33,7 @@ class FuelTypeRepository extends AbstractMutableRepository
         if (!$entity) {
             throw new NotFoundException($this->getEntityName(), $id);
         }
+
         return $entity;
     }
 }

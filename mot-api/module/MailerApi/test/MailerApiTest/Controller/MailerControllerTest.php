@@ -23,7 +23,7 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
 
     protected function setUp()
     {
-        $appTestConfig = include getcwd() . '/test/test.config.php';
+        $appTestConfig = include getcwd().'/test/test.config.php';
         Bootstrap::init($appTestConfig);
 
         $this->setController(new MailerController());
@@ -175,7 +175,7 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
         $config['mailer']['mail-class'] = 31415;
         $this->serviceManager->setService('Config', $config);
 
-        /** @var \Zend\View\Model\JsonModel $result */
+        /* @var \Zend\View\Model\JsonModel $result */
         $this->triggerAction(
             [
                 '_class' => '\\DvsaCommon\\Dto\\Mailer\\MailerDto',
@@ -202,7 +202,7 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
         $config['mailer']['mta-class'] = 42;
         $this->serviceManager->setService('Config', $config);
 
-        /** @var \Zend\View\Model\JsonModel $result */
+        /* @var \Zend\View\Model\JsonModel $result */
         $this->triggerAction(
             [
                 '_class' => '\\DvsaCommon\\Dto\\Mailer\\MailerDto',
@@ -243,7 +243,7 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
         $mockTransport = XMock::of(\Zend\Mail\Transport\Sendmail::class, ['send']);
         $mockTransport->expects($this->once())
             ->method('send')
-            ->willThrowException(new \Exception("broken"));
+            ->willThrowException(new \Exception('broken'));
 
         // Turn off the logging feature
         $config = $this->serviceManager->get('Config');
@@ -308,7 +308,7 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
         $this->request->setContent(
             json_encode(
                 [
-                    '_class' => "\\DvsaCommon\\Dto\\Mailer\\MailerDto",
+                    '_class' => '\\DvsaCommon\\Dto\\Mailer\\MailerDto',
                     'data' => [
                         'userid' => 5,
                         'user' => $detailsService,
@@ -316,6 +316,7 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
                 ]
             )
         );
+
         return $this;
     }
 
@@ -331,10 +332,9 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
                 )
             );
         $this->serviceManager->setService('Zend\View\Renderer\RendererInterface', $mockRender);
-
     }
 
-    private function triggerAction(Array $postData)
+    private function triggerAction(array $postData)
     {
         return $this->getResultForAction('post', null, [], [], $postData);
     }

@@ -3,8 +3,6 @@
 namespace Dvsa\Mot\Frontend\PersonModule\Form;
 
 use DvsaCommon\Validator\DateInPastValidator;
-use Zend\Filter\DateTimeFormatter;
-use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Input;
@@ -27,7 +25,7 @@ class AnnualAssessmentCertificatesForm extends Form
     const MSG_BETWEEN = 'must be between 0 and 100';
     const MSG_DIGITS = 'enter whole numbers only';
     const MSG_CERTIFICATE_EMPTY = 'you must enter a certificate number';
-    const MSG_SCORE_EMPTY = "Score must not be empty";
+    const MSG_SCORE_EMPTY = 'Score must not be empty';
     const MSG_DATE_EMPTY = 'you must enter a date';
     const SCORE_MIN = 0;
     const SCORE_MAX = 100;
@@ -120,10 +118,10 @@ class AnnualAssessmentCertificatesForm extends Form
         $day = $this->get(self::FIELD_DATE_DAY)->getValue();
 
         if (empty($year) || empty($month) || empty($day)) {
-            return "";
+            return '';
         }
 
-        return join("-", [$year, $month, $day]);
+        return implode('-', [$year, $month, $day]);
     }
 
     private function isValidDate()
@@ -139,7 +137,6 @@ class AnnualAssessmentCertificatesForm extends Form
             ->getValidatorChain()
             ->attach($dobValidator)
             ->attach($emptyDateValidator);
-
 
         $isValid = $dobInput->isValid();
         if ($isValid === false) {
@@ -171,13 +168,13 @@ class AnnualAssessmentCertificatesForm extends Form
     protected function translateDtoFieldToForm($key)
     {
         $dtoToForm = [
-            'certificateNumber' => AnnualAssessmentCertificatesForm::FIELD_CERT_NUMBER,
-            'dateOfQualification' => AnnualAssessmentCertificatesForm::FIELD_DATE_DAY,
-            'siteNumber' => AnnualAssessmentCertificatesForm::FIELD_SCORE,
+            'certificateNumber' => self::FIELD_CERT_NUMBER,
+            'dateOfQualification' => self::FIELD_DATE_DAY,
+            'siteNumber' => self::FIELD_SCORE,
         ];
 
         if (!array_key_exists($key, $dtoToForm)) {
-            throw new \Exception("Wrong key: " . $key);
+            throw new \Exception('Wrong key: '.$key);
         }
 
         return $dtoToForm[$key];

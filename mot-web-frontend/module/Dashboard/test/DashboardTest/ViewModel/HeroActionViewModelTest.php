@@ -19,7 +19,7 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
     /** @var SlotsViewModel | \PHPUnit_Framework_MockObject_MockObject $mockSlotsViewModel */
     private $mockSlotsViewModel;
 
-    /** @var  TargetedReinspectionViewModel | \PHPUnit_Framework_MockObject_MockObject $mockTargetedReinspectionViewModel */
+    /** @var TargetedReinspectionViewModel | \PHPUnit_Framework_MockObject_MockObject $mockTargetedReinspectionViewModel */
     private $mockTargetedReinspectionViewModel;
 
     /** @var StartMotViewModel | \PHPUnit_Framework_MockObject_MockObject $mockStartMotViewModel */

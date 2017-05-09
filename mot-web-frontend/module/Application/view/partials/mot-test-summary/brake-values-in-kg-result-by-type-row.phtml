@@ -7,8 +7,8 @@ if (!$this->val1) {
 $canLock = ($this->canLock === true);
 $index = $this->index ? $this->index : '';
 
-$label1 = $this->label1 ? $this->label1 : 'NS Axle' . $index;
-$label2 = $this->label2 ? $this->label2 : 'OS Axle' . $index;
+$label1 = $this->label1 ? $this->label1 : 'NS Axle'.$index;
+$label2 = $this->label2 ? $this->label2 : 'OS Axle'.$index;
 
 ?>
 
@@ -50,7 +50,7 @@ $label2 = $this->label2 ? $this->label2 : 'OS Axle' . $index;
                 echo $this->escapeHtml(
                     !isset($this->imbalance)
                     ? '&nbsp;'
-                    : number_format($this->imbalance) . '%'
+                    : number_format($this->imbalance).'%'
                 );
                 ?>
             </strong>

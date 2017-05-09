@@ -1,11 +1,12 @@
 <?php
+
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * CertificateChangeDifferentTesterReason
+ * CertificateChangeDifferentTesterReason.
  *
  * @ORM\Table(name="certificate_change_different_tester_reason_lookup",
  * indexes={@ORM\Index(name="fk_certificate_change_different_tester_reason_lookup_creator", columns={"created_by"}),
@@ -26,7 +27,7 @@ class CertificateChangeDifferentTesterReason extends Entity
     private $description;
 
     /**
-     * @var string $code
+     * @var string
      *
      * @ORM\Column(name="code", type="string", length=4, nullable=false)
      */
@@ -40,6 +41,7 @@ class CertificateChangeDifferentTesterReason extends Entity
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -59,6 +61,7 @@ class CertificateChangeDifferentTesterReason extends Entity
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 

@@ -18,13 +18,11 @@ use DvsaCommon\Constants\Role;
 use Core\Service\SessionService;
 use DvsaCommon\Exception\UnauthorisedException;
 use Exception;
-use DvsaCommon\Constants\FeatureToggle;
 use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 
 /**
- * Class DrivingLicenceController
- * @package UserAdmin\Controller
+ * Class DrivingLicenceController.
  */
 class DrivingLicenceController extends AbstractDvsaMotTestController
 {
@@ -77,12 +75,12 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
     private $contextProvider;
 
     /**
-     * @param HelpdeskAccountAdminService $accountAdminService
+     * @param HelpdeskAccountAdminService      $accountAdminService
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
-     * @param SessionService $sessionService
-     * @param PersonRoleManagementService $personRoleManagementService
-     * @param ContextProvider $contextProvider
+     * @param TesterGroupAuthorisationMapper   $testerGroupAuthorisationMapper
+     * @param SessionService                   $sessionService
+     * @param PersonRoleManagementService      $personRoleManagementService
+     * @param ContextProvider                  $contextProvider
      */
     public function __construct(
         HelpdeskAccountAdminService $accountAdminService,
@@ -101,7 +99,8 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Handle DVSA user adding and editing of a persons driving licence
+     * Handle DVSA user adding and editing of a persons driving licence.
+     *
      * @return \Zend\Http\Response|ViewModel
      */
     public function indexAction()
@@ -121,7 +120,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         $this->layout()->setVariable('pageTitle', 'Change driving licence');
         $this->layout()->setVariable('pageSubTitle', self::PAGE_SUBTITLE);
 
-        if ($data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX . $personId)) {
+        if ($data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX.$personId)) {
             // If we've come from the summary window, we want to load the licence data stored in the session
             $drivingLicenceNumber = $data['drivingLicenceNumber'];
             $drivingLicenceRegion = $data['drivingLicenceRegion'];
@@ -147,7 +146,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         }
 
         $this->layout()->setVariable('breadcrumbs', [
-            'breadcrumbs' => $this->getBreadcrumbBase($presenter, $personId)
+            'breadcrumbs' => $this->getBreadcrumbBase($presenter, $personId),
         ]);
 
         return new ViewModel([
@@ -159,7 +158,8 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Summary screen for changing user's driving licence
+     * Summary screen for changing user's driving licence.
+     *
      * @return ViewModel
      */
     public function summaryAction()
@@ -171,7 +171,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         $request = $this->getRequest();
 
         // If there is no summary data stored in the session for this user, redirect to their profile
-        if (!$data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX . $personId)) {
+        if (!$data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX.$personId)) {
             return $this->redirect()->toUrl(UserAdminUrlBuilderWeb::of()->userProfile($personId));
         }
 
@@ -184,7 +184,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
                         $data['drivingLicenceRegion']
                     );
 
-                    $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX . $personId, null);
+                    $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX.$personId, null);
                     $this->flashMessenger()->addSuccessMessage(self::MSG_DRIVING_LICENCE_CHANGED_SUCCESSFULLY);
                 } catch (Exception $e) {
                     $this->flashMessenger()->addErrorMessage(self::MSG_DRIVING_LICENCE_CHANGED_FAILURE);
@@ -203,11 +203,11 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         $breadcrumbs = $breadcrumbs = $this->getBreadcrumbBase($presenter, $personId);
 
         $this->layout()->setVariable('breadcrumbs', [
-            'breadcrumbs' => $breadcrumbs
+            'breadcrumbs' => $breadcrumbs,
         ]);
 
         return new ViewModel([
-            'presenter' => (new DrivingLicenceSummaryPresenter)->setPersonId($personId),
+            'presenter' => (new DrivingLicenceSummaryPresenter())->setPersonId($personId),
             'drivingLicenceNumber' => $data['drivingLicenceNumber'],
             'drivingLicenceRegion' => $data['drivingLicenceRegion'],
         ]);
@@ -227,6 +227,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         if ($profile->getDrivingLicenceNumber() === '') {
             // Redirect to the user profile if no licence is associated with account
             $redirectUrl = UserAdminUrlBuilderWeb::of()->userProfile($personId);
+
             return $this->redirect()->toUrl($redirectUrl);
         }
 
@@ -234,7 +235,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         $request = $this->getRequest();
         $profile = $this->accountAdminService->getUserProfile($personId);
 
-        if ($data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX . $personId)) {
+        if ($data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX.$personId)) {
             // If we've come from the summary window, we want to load the licence data stored in the session
             $drivingLicenceNumber = $data['drivingLicenceNumber'];
             $drivingLicenceRegion = $data['drivingLicenceRegion'];
@@ -247,7 +248,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         if ($request->isPost()) {
             try {
                 $this->accountAdminService->deleteDrivingLicence($personId);
-                $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX . $personId, null);
+                $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX.$personId, null);
                 $this->flashMessenger()->addSuccessMessage(self::MSG_DRIVING_LICENCE_REMOVE_SUCCESSFUL);
             } catch (Exception $e) {
                 $this->flashMessenger()->addErrorMessage(self::MSG_DRIVING_LICENCE_REMOVE_FAILURE);
@@ -268,7 +269,7 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         $this->layout()->setVariable(
             'breadcrumbs',
             [
-                'breadcrumbs' => $breadcrumbs
+                'breadcrumbs' => $breadcrumbs,
             ]
         );
 
@@ -276,19 +277,19 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
 
         return new ViewModel(
             [
-                'presenter' => new DrivingLicenceSummaryPresenter,
+                'presenter' => new DrivingLicenceSummaryPresenter(),
                 'drivingLicenceNumber' => $drivingLicenceNumber,
                 'drivingLicenceRegion' => $drivingLicenceRegion,
                 'backButtonUrl' => $backButtonUrl,
-                'fullName' => $profile->getFirstName() . ' ' . $profile->getMiddleName() . ' ' . $profile->getLastName(),
-                'title' => $profile->getTitle()
+                'fullName' => $profile->getFirstName().' '.$profile->getMiddleName().' '.$profile->getLastName(),
+                'title' => $profile->getTitle(),
             ],
             ['template' => self::DRIVING_LICENCE_DELETE_TEMPLATE]
         );
     }
 
     /**
-     * Validates a driving licence is correct format for the region
+     * Validates a driving licence is correct format for the region.
      *
      * This method expects that the fields `drivingLicenceNumber` and `drivingLicenceRegion`
      * will be in the POST data of the request. Not providing either of these values will
@@ -296,17 +297,19 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
      * will be null, and also fail validation
      *
      * @param array $params
+     *
      * @return bool
      */
     private function validate(array $params)
     {
-        $validator = new DrivingLicenceValidator;
+        $validator = new DrivingLicenceValidator();
         if (!$validator->isValid($params)) {
             $this->validationErrors = $validator->getMessages();
             foreach ($this->validationErrors as $field => $errorMessage) {
-                $message = $validator->getFieldLabel($field) . ' - ' . $errorMessage;
+                $message = $validator->getFieldLabel($field).' - '.$errorMessage;
                 $this->flashMessenger()->addErrorMessage([$message]);
             }
+
             return false;
         }
 
@@ -314,19 +317,23 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Save the driving licence number and region to the session
-     * @param int $personId
+     * Save the driving licence number and region to the session.
+     *
+     * @param int   $personId
      * @param array $params
+     *
      * @return bool
      */
     private function saveToSession($personId, array $params)
     {
-        $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX . $personId, $params);
+        $this->sessionService->save(self::SESSION_STORAGE_KEY_PREFIX.$personId, $params);
+
         return true;
     }
 
     /**
      * @param $personId
+     *
      * @return UserProfilePresenter
      */
     private function createPresenter($personId)
@@ -341,11 +348,13 @@ class DrivingLicenceController extends AbstractDvsaMotTestController
         );
 
         $presenter->setPersonId($personId);
+
         return $presenter;
     }
 
     /**
      * @param $personId
+     *
      * @return TesterAuthorisationViewModel
      */
     private function getTesterAuthorisationViewModel($personId)

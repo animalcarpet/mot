@@ -23,10 +23,10 @@ class ClassesPropertyForm extends Form
         $valueOptions = ArrayUtils::map(VehicleClassCode::getAll(),
             function ($class) {
                 return [
-                    'value'      => $class,
-                    'label'      => 'Class ' . $class,
+                    'value' => $class,
+                    'label' => 'Class '.$class,
                     'attributes' => array(
-                        'id' => 'class-' . $class,
+                        'id' => 'class-'.$class,
                     ),
                 ];
             });

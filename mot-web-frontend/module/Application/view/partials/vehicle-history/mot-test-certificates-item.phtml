@@ -2,7 +2,7 @@
 use Core\Routing\MotTestRoutes;
 use DvsaMotTest\ViewModel\MotTestCertificate\MotTestCertificateTableItem;
 
-/** @var MotTestCertificateTableItem $test */
+/* @var MotTestCertificateTableItem $test */
 ?>
 
 <?php if ($test !== null): ?>
@@ -10,14 +10,14 @@ use DvsaMotTest\ViewModel\MotTestCertificate\MotTestCertificateTableItem;
         <?php echo $test->getDateOfTest(); ?>
     </td>
     <td class="layer-table__item">
-        <span class="<?php echo $test->getStatusBadge()->getCssClass();?>">
+        <span class="<?php echo $test->getStatusBadge()->getCssClass(); ?>">
             <?php echo $this->escapeHtml($test->getStatus()); ?>
         </span>
     </td>
     <td class="layer-table__item">
-        <?php echo $this->escapeHtml($test->getSiteName());?>
+        <?php echo $this->escapeHtml($test->getSiteName()); ?>
         <span class="table-summary__meta">
-            <?php echo $this->escapeHtml($test->getSiteAddress());?>
+            <?php echo $this->escapeHtml($test->getSiteAddress()); ?>
         </span>
     </td>
     <td class="layer-table__item layer-table__item--right">

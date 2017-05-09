@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommonApi\Model\ApiResponse;
@@ -7,7 +8,8 @@ use VehicleApi\Service\VehicleSearchService;
 use VehicleApi\Service\VehicleService;
 
 /**
- * Class VehicleController
+ * Class VehicleController.
+ *
  * @deprecated Use VehicleApi/VehicleController
  */
 class VehicleController extends AbstractDvsaRestfulController
@@ -27,16 +29,16 @@ class VehicleController extends AbstractDvsaRestfulController
     const SEARCH_RESULT_TOO_MANY_MATCHES = 'TOO-MANY-MATCHES';
 
     const INCORRECT_PARTIAL_VIN_ERROR_MESSAGE
-        = "Query parameter vin must be a partial VIN (last 6 characters)";
-    const VIN_REQUIRED_MESSAGE = "Query parameter vin is required";
-    const VIN_TYPE_REQUIRED_MESSAGE = "Query parameter vinType is required";
-    const REG_REQUIRED_MESSAGE = "Query parameter partial vin, then parameter reg is required";
-    const REG_REQUIRED_NO_VIN_MESSAGE = "Query parameter no vin, then parameter reg is required";
-    const INCORRECT_PARTIAL_VIN_DISPLAY_MESSAGE = "VIN is incorrect. Please enter the last six valid characters";
-    const VIN_REQUIRED_DISPLAY_MESSAGE = "You need to enter the VIN to perform the search";
-    const VIN_TYPE_REQUIRED_DISPLAY_MESSAGE = "You need to supply the VIN type to perform the search";
-    const REG_REQUIRED_DISPLAY_MESSAGE = "You need to enter registration to search on a partial VIN";
-    const REG_REQUIRED__NO_VIN_DISPLAY_MESSAGE = "You need to enter the vehicle registration mark to search without a VIN";
+        = 'Query parameter vin must be a partial VIN (last 6 characters)';
+    const VIN_REQUIRED_MESSAGE = 'Query parameter vin is required';
+    const VIN_TYPE_REQUIRED_MESSAGE = 'Query parameter vinType is required';
+    const REG_REQUIRED_MESSAGE = 'Query parameter partial vin, then parameter reg is required';
+    const REG_REQUIRED_NO_VIN_MESSAGE = 'Query parameter no vin, then parameter reg is required';
+    const INCORRECT_PARTIAL_VIN_DISPLAY_MESSAGE = 'VIN is incorrect. Please enter the last six valid characters';
+    const VIN_REQUIRED_DISPLAY_MESSAGE = 'You need to enter the VIN to perform the search';
+    const VIN_TYPE_REQUIRED_DISPLAY_MESSAGE = 'You need to supply the VIN type to perform the search';
+    const REG_REQUIRED_DISPLAY_MESSAGE = 'You need to enter registration to search on a partial VIN';
+    const REG_REQUIRED__NO_VIN_DISPLAY_MESSAGE = 'You need to enter the vehicle registration mark to search without a VIN';
 
     public function create($data)
     {
@@ -50,10 +52,10 @@ class VehicleController extends AbstractDvsaRestfulController
         $vehicle = null;
         $request = $this->getRequest();
 
-        $vin = $this->sanitize((string)$request->getQuery(self::VIN_QUERY_PARAMETER));
-        $reg = $this->sanitize((string)$request->getQuery(self::REG_QUERY_PARAMETER));
-        $vinType = (string)$request->getQuery(self::VIN_TYPE_PARAMETER);
-        $searchDvla = $request->getQuery(self::EXCLUDE_DVLA_PARAMETER) != "true";
+        $vin = $this->sanitize((string) $request->getQuery(self::VIN_QUERY_PARAMETER));
+        $reg = $this->sanitize((string) $request->getQuery(self::REG_QUERY_PARAMETER));
+        $vinType = (string) $request->getQuery(self::VIN_TYPE_PARAMETER);
+        $searchDvla = $request->getQuery(self::EXCLUDE_DVLA_PARAMETER) != 'true';
 
         if (!$vinType) {
             return $this->returnBadRequestResponseModel(
@@ -99,7 +101,7 @@ class VehicleController extends AbstractDvsaRestfulController
         if ($numberOfVehicles == 0) {
             return ApiResponse::jsonOk(
                 [
-                    'resultType' => self::SEARCH_RESULT_NO_MATCH
+                    'resultType' => self::SEARCH_RESULT_NO_MATCH,
                 ]
             );
         } else {
@@ -107,23 +109,23 @@ class VehicleController extends AbstractDvsaRestfulController
                 return ApiResponse::jsonOk(
                     [
                         'resultType' => self::SEARCH_RESULT_EXACT_MATCH,
-                        'vehicle'    => $vehiclesData[0]
+                        'vehicle' => $vehiclesData[0],
                     ]
                 );
             } else {
                 if ($numberOfVehicles <= 5) {
                     return ApiResponse::jsonOk(
                         [
-                            'resultType'  => self::SEARCH_RESULT_MULTIPLE_MATCHES,
+                            'resultType' => self::SEARCH_RESULT_MULTIPLE_MATCHES,
                             'resultCount' => $numberOfVehicles,
-                            'vehicles'    => $vehiclesData
+                            'vehicles' => $vehiclesData,
                         ]
                     );
                 } else {
                     return ApiResponse::jsonOk(
                         [
-                            'resultType'  => self::SEARCH_RESULT_TOO_MANY_MATCHES,
-                            'resultCount' => $numberOfVehicles
+                            'resultType' => self::SEARCH_RESULT_TOO_MANY_MATCHES,
+                            'resultCount' => $numberOfVehicles,
                         ]
                     );
                 }
@@ -148,7 +150,7 @@ class VehicleController extends AbstractDvsaRestfulController
     }
 
     /**
-     * Sanitize vin or reg
+     * Sanitize vin or reg.
      *
      * @param $string
      *
@@ -170,6 +172,7 @@ class VehicleController extends AbstractDvsaRestfulController
                 $array[$k] = $this->sanitize($array[$k]);
             }
         }
+
         return $array;
     }
 }

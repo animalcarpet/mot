@@ -14,9 +14,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MotChecklistPdfServiceFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

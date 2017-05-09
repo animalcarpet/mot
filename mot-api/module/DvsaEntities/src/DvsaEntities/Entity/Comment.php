@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Comment
+ * Comment.
  *
  * @ORM\Table(name="comment", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity
@@ -39,6 +39,7 @@ class Comment extends Entity
     public function setCommentAuthor(Person $commentAuthor)
     {
         $this->commentAuthor = $commentAuthor;
+
         return $this;
     }
 
@@ -52,7 +53,7 @@ class Comment extends Entity
     }
 
     /**
-     * Get Comment
+     * Get Comment.
      *
      * @return string
      */
@@ -62,14 +63,16 @@ class Comment extends Entity
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
+     *
      * @return Comment
      */
     public function setComment($comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 }
