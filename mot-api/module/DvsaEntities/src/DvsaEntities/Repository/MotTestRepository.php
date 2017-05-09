@@ -1190,32 +1190,9 @@ class MotTestRepository extends AbstractMutableRepository
      */
     protected function prepareMotTestLogResultQuery(MotTestSearchParam $searchParam)
     {
-        $useSubQuery = false;
         $subQuerySql = $this->getClassMetadata()->getTableName();
 
-        if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
-            $useSubQuery = false;
-        } else {
-            $orderBy = $searchParam->getSortColumnNameDatabase();
-            if (!empty($orderBy)) {
-                if (!is_array($orderBy)) {
-                    if ($orderBy === 'testDate' || $orderBy === 'mt.id') {
-                        $useSubQuery = true;
-                    }
-                }
-            }
-
-            // Override above to only use subquery for AE level
-            // This is only place where a real benefit has been found in testing
-            // Note: The testing was limited to hand running queries on an inactive
-            // acceptance database so god knows what to expect with an active
-            // DB with specific new indexes where tests are being created during execution.
-            if ($searchParam->getSiteId() || $searchParam->getTesterId()) {
-                $useSubQuery = false;
-            }
-        }
-
-        if ($useSubQuery) {
+        if ($this->isUsingSubQuery($searchParam)) {
             /**
              * It has been found to be more efficient to use a cut-down sub-query
              * for AE level test results with the default testDate order by clause.
@@ -1418,7 +1395,6 @@ class MotTestRepository extends AbstractMutableRepository
                 )
                 ->join('person', 'emp', 'emp.id = mt.created_by');
         }
-
         return $qb;
     }
 
@@ -1851,5 +1827,34 @@ class MotTestRepository extends AbstractMutableRepository
     protected function getVehicleIndexName()
     {
         return 'fk_mot_test_current_vehicle';
+    }
+
+    /**
+     * @param MotTestSearchParam $searchParam
+     * @return bool
+     */
+    protected function isUsingSubQuery(MotTestSearchParam $searchParam) {
+        $useSubQuery = false;
+        if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
+            $useSubQuery = false;
+        } else {
+            $orderBy = $searchParam->getSortColumnNameDatabase();
+            if (!empty($orderBy)) {
+                if (!is_array($orderBy)) {
+                    if ($orderBy === 'testDate' || $orderBy === 'mt.id') {
+                        $useSubQuery = true;
+                    }
+                }
+            }
+            // Override above to only use subquery for AE level
+            // This is only place where a real benefit has been found in testing
+            // Note: The testing was limited to hand running queries on an inactive
+            // acceptance database so god knows what to expect with an active
+            // DB with specific new indexes where tests are being created during execution.
+            if ($searchParam->getSiteId() || $searchParam->getTesterId()) {
+                $useSubQuery = false;
+            }
+        }
+        return $useSubQuery;
     }
 }

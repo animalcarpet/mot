@@ -149,7 +149,10 @@ class MotTestHistoryRepository extends MotTestRepository
         if ($searchParam->getRowCount() > 0) {
             $sql.= sprintf(' LIMIT %d', $searchParam->getRowCount());
             if ($searchParam->getStart() > 0) {
-                $sql.= sprintf(' OFFSET %d', $searchParam->getStart());
+                if ($this->isUsingSubQuery($searchParam)) {
+                    $sql.= sprintf(' OFFSET %d', 0);
+                }
+                else $sql.= sprintf(' OFFSET %d', $searchParam->getStart());
             }
         }
 
@@ -305,4 +308,5 @@ class MotTestHistoryRepository extends MotTestRepository
     {
         return false !== strpos($this->getClassMetadata()->getTableName(), self::SUFFIX_CURRENT);
     }
+
 }
