@@ -10,11 +10,7 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
-import uk.gov.dvsa.ui.pages.mot.MotTestSearchPage;
-import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
-import uk.gov.dvsa.ui.pages.mot.TestOptionsPage;
-import uk.gov.dvsa.ui.pages.mot.TestShortSummaryPage;
-import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
+import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
 import java.io.IOException;
@@ -60,14 +56,14 @@ public class VehicleReInspectionWorkflow extends BaseWorkflow {
                 StartTestConfirmationPage.class).clickStartMotTest();
     }
 
-    public TestShortSummaryPage abortActiveTestOnVtsPage(String regNum) {
+    public MotTestAbortedPage abortActiveTestOnVtsPage(String regNum) {
         PageLocator.getVehicleTestingStationPage(driver)
                 .clickOnActiveTest(regNum)
                 .clickAbortMotTestButton()
                 .selectAbortedByVeReason()
                 .clickAbortMotTestButton();
 
-        return new TestShortSummaryPage(driver);
+        return new MotTestAbortedPage(driver);
     }
 
     private void injectOpenAmCookieAndNavigateToPath(User user, String path) throws IOException {

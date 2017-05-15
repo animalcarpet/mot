@@ -3,18 +3,18 @@ package uk.gov.dvsa.ui.feature.journey.mot.reinspection;
 import org.joda.time.DateTime;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.MotTest;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.shared.role.DvsaRoles;
 import uk.gov.dvsa.domain.shared.role.RoleManager;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
-import uk.gov.dvsa.ui.pages.mot.TestShortSummaryPage;
+import uk.gov.dvsa.ui.pages.mot.MotTestAbortedPage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
 import java.io.IOException;
@@ -92,10 +92,10 @@ public class ReInspectionTests extends DslTest {
         assertThat(vehicleTestingStationPage.isActiveMotTestDisplayed(testVehicleRegistration), is(true));
 
         //And I can abort active MOT Test
-        TestShortSummaryPage testShortSummaryPage =
+        MotTestAbortedPage motTestAbortedPage =
                 vehicleReinspectionWorkflow().abortActiveTestOnVtsPage(testVehicleRegistration);
 
-        assertThat(testShortSummaryPage.isTestAbortedSuccessfully(), is(true));
+        assertThat(motTestAbortedPage.isTestAbortedSuccessfully(), is(true));
     }
 
     @Test(groups = {"BVT"}, description = "BL-101")
