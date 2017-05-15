@@ -31,22 +31,19 @@ if ($testStatus === MotTestStatusName::PASSED || $testStatus === MotTestStatusNa
     $testStatus = AbstractDvsaMotTestController::getTestStatusName($testStatus);
 }
 
-$title = 'Abort'.$testName;
-
-$this->headTitle($title);
+$title = 'Abort '.$testName;
 
 $title = 'Vehicle Testing Station';
-$this->headTitle($title);
+$this->headTitle('MOT test aborted');
 
 $this->layout()->setVariable('pageSubTitle', $title);
-$this->layout()->setVariable('pageTitle', 'MOT Test');
+$this->layout()->setVariable('pageTitle', 'MOT test aborted');
 
 ?>
 <dl>
 
     <?php if ($success): ?>
 
-        <h2 id="confirmationTitle"><?php echo $this->escapeHtml($testName); ?> successfully aborted</h2>
         <p>
             You have successfully aborted <?php echo $this->escapeHtml($testName); ?>
             <strong id="mot-test-number"><?php echo $this->escapeHtml($motTestNumber); ?></strong>

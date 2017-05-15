@@ -6,15 +6,14 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
-public class TestShortSummaryPage extends Page {
+public class AbortMotTestPage extends Page {
 
     private static final String PAGE_TITLE = "Vehicle Testing Station\n" +
-            "MOT Test";
+            "Abort MOT test";
     @FindBy(id = "sln-action-abort") private WebElement abortMotTestButton;
     @FindBy(id = "reasonForCancel-25") private WebElement abortedByVe;
-    @FindBy(id = "confirmationTitle") private WebElement confirmationMessage;
 
-    public TestShortSummaryPage(MotAppDriver driver) {
+    public AbortMotTestPage(MotAppDriver driver) {
         super(driver);
         selfVerify();
     }
@@ -24,20 +23,15 @@ public class TestShortSummaryPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public TestShortSummaryPage clickAbortMotTestButton(){
+    public MotTestAbortedPage clickAbortMotTestButton(){
         abortMotTestButton.click();
 
-        return this;
+        return new MotTestAbortedPage(driver);
     }
 
-    public TestShortSummaryPage selectAbortedByVeReason() {
+    public AbortMotTestPage selectAbortedByVeReason() {
         abortedByVe.click();
 
         return this;
     }
-
-    public boolean isTestAbortedSuccessfully() {
-        return confirmationMessage.getText().contains("MOT test successfully aborted");
-    }
 }
-

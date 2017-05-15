@@ -9,7 +9,7 @@ import uk.gov.dvsa.ui.pages.AddSiteAssessmentPage;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.RemoveARolePage;
 import uk.gov.dvsa.ui.pages.SiteAssessmentPage;
-import uk.gov.dvsa.ui.pages.mot.TestShortSummaryPage;
+import uk.gov.dvsa.ui.pages.mot.MotTestPage;
 import uk.gov.dvsa.ui.pages.profile.UserProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.vts.ChangeDetails.*;
@@ -154,9 +154,9 @@ public class VehicleTestingStationPage extends Page {
                 .contains(vehicleRegistrationNumber);
     }
 
-    public TestShortSummaryPage clickOnActiveTest(String regNum) {
+    public MotTestPage clickOnActiveTest(String regNum) {
         driver.findElement(By.linkText(regNum)).click();
-        return new TestShortSummaryPage(driver);
+        return new MotTestPage(driver);
     }
 
     public ChangeTestingFacilitiesPage clickOnChangeTestingFacilitiesLink() {
