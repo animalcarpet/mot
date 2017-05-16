@@ -25,7 +25,26 @@ with {'title' : 'There was a problem','validationMessages' : validationMessages}
     ) }}
 
 </fieldset>
-<a href="{{ urlForgottenAnswers }}" class="key-value-list__action">Forgotten the answer to your security question?</a>
+
+<div class="form-group">
+    <details>
+        <summary role="button" aria-controls="dateDetails" id="expandable-link" aria-expanded="false" tabindex="0">
+            <span class="summary">Forgotten your security questions?</span>
+        </summary>
+        <div class="panel-indent" id="dateDetails" aria-hidden="true">
+                <div class="text">
+                    <p>
+                        {% set helpdeskVariables = {
+                        'postContactText' : ' to reset your questions',
+                        'config': config,
+                        } %}
+                        {% include 'partial/gds/general/contactHelpdesk.twig' with helpdeskVariables %}
+                    </p>
+                </div>
+        </div>
+    </details>
+</div>
+
 <nav class="content-navigation">
     {{ MotFormRow(form.get('submitSecurityAnswers')) }}
     <ul class="content-navigation__secondary">
