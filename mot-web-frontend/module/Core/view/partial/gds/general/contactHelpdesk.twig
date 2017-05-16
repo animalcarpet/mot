@@ -3,7 +3,8 @@
 {% else %}
     Call
 {% endif %}
-the {{ config.name }} on <strong>{{ config.phoneNumber }}</strong>.
+the {{ config.name }} on
+<strong>{{ config.phoneNumber }}</strong>{% if postContactText is defined %}{{postContactText}}{% endif %}.
 
 <p></p>
 

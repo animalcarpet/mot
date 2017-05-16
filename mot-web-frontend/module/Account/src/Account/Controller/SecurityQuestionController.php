@@ -4,7 +4,6 @@
  *
  * @link https://github.com/dvsa/mot
  */
-
 namespace Account\Controller;
 
 use Account\AbstractClass\AbstractSecurityQuestionController;
@@ -106,8 +105,8 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
             ->setVariables([
                 'form' => $form,
                 'validationMessages' => $messages,
-                'urlForgottenAnswers' => $this->url()->fromRoute('forgotten-password/notAuthenticated'),
                 'urlBack' => $this->url()->fromRoute('forgotten-password'),
+                'config' => $this->getConfig()['helpdesk'],
             ]);
 
         return $viewModel;
