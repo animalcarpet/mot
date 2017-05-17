@@ -37,7 +37,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->service = XMock::of(
             SecurityQuestionService::class,
-            ['getQuestionNumber', 'getUserId', 'getSearchParams', 'getPerson', 'getQuestion']
+            ['getQuestionNumber', 'getPersonId', 'getSearchParams', 'getPerson', 'getQuestion']
         );
         $this->person = new Person();
         $this->question = new SecurityQuestionDto();
@@ -58,7 +58,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
             ->method('getQuestionNumber')
             ->willReturn(UserAdminSessionManager::FIRST_QUESTION);
         $this->service->expects($this->at(1))
-            ->method('getUserId')
+            ->method('getPersonId')
             ->willReturn(self::PERSON_ID);
 
         $link = $this->view->getNextPageLink($this->messenger);
@@ -72,7 +72,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
             ->method('getQuestionNumber')
             ->willReturn(UserAdminSessionManager::SECOND_QUESTION);
         $this->service->expects($this->at(1))
-            ->method('getUserId')
+            ->method('getPersonId')
             ->willReturn(self::PERSON_ID);
         $this->service->expects($this->at(2))
             ->method('getSearchParams')
@@ -84,7 +84,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
     public function testGetCurrentLink()
     {
         $this->service->expects($this->at(0))
-            ->method('getUserId')
+            ->method('getPersonId')
             ->willReturn(self::PERSON_ID);
         $this->service->expects($this->at(1))
             ->method('getQuestionNumber')
@@ -113,13 +113,13 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->question, $this->view->getQuestion());
     }
 
-    public function testGetUserId()
+    public function testGetPersonId()
     {
         $this->service->expects($this->at(0))
-            ->method('getUserId')
+            ->method('getPersonId')
             ->willReturn(self::PERSON_ID);
 
-        $this->assertEquals(self::PERSON_ID, $this->view->getUserId());
+        $this->assertEquals(self::PERSON_ID, $this->view->getPersonId());
     }
 
     public function testGetQuestionNb()

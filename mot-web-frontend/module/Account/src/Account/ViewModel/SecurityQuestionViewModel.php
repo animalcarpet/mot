@@ -30,7 +30,7 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
         if ($this->service->getQuestionNumber() == UserAdminSessionManager::FIRST_QUESTION) {
             if ($this->service->getQuestionSuccess() === true) {
                 return AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion(
-                    $this->getUserId(),
+                    $this->getPersonId(),
                     UserAdminSessionManager::SECOND_QUESTION
                 );
             }
@@ -53,7 +53,7 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
     public function getCurrentLink()
     {
         return AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion(
-            $this->getUserId(),
+            $this->getPersonId(),
             $this->getQuestionNumber()
         );
     }

@@ -39,7 +39,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->service = XMock::of(
             SecurityQuestionService::class,
-            ['getQuestionNumber', 'getUserId', 'getSearchParams', 'getPerson', 'getQuestion', 'getQuestionSuccess']
+            ['getQuestionNumber', 'getPersonId', 'getSearchParams', 'getPerson', 'getQuestion', 'getQuestionSuccess']
         );
         $this->person = new Person();
         $this->question = new SecurityQuestionDto();
@@ -63,7 +63,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
             ->method('getQuestionSuccess')
             ->willReturn(true);
         $this->service->expects($this->at(2))
-            ->method('getUserId')
+            ->method('getPersonId')
             ->willReturn(self::PERSON_ID);
 
         $link = $this->view->getNextPageLink($this->messenger);
@@ -99,7 +99,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
     public function testGetCurrentLink()
     {
         $this->service->expects($this->at(0))
-            ->method('getUserId')
+            ->method('getPersonId')
             ->willReturn(self::PERSON_ID);
         $this->service->expects($this->at(1))
             ->method('getQuestionNumber')

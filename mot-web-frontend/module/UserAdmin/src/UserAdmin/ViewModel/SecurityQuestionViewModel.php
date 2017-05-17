@@ -23,13 +23,13 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
     {
         if ($this->service->getQuestionNumber() == UserAdminSessionManager::FIRST_QUESTION) {
             return UserAdminUrlBuilderWeb::userProfileSecurityQuestion(
-                $this->getUserId(),
+                $this->getPersonId(),
                 UserAdminSessionManager::SECOND_QUESTION
             );
         }
         $flashMessenger->clearCurrentMessagesFromNamespace(FlashMessenger::NAMESPACE_ERROR);
 
-        return UserAdminUrlBuilderWeb::userProfile($this->getUserId())->toString().'?'.$this->getSearchParams();
+        return UserAdminUrlBuilderWeb::userProfile($this->getPersonId())->toString().'?'.$this->getSearchParams();
     }
 
     /**
@@ -39,6 +39,6 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
      */
     public function getCurrentLink()
     {
-        return UserAdminUrlBuilderWeb::userProfileSecurityQuestion($this->getUserId(), $this->getQuestionNumber());
+        return UserAdminUrlBuilderWeb::userProfileSecurityQuestion($this->getPersonId(), $this->getQuestionNumber());
     }
 }

@@ -211,7 +211,7 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
             SecurityQuestionService::class, $this->service->setUserAndQuestion(self::PERSON_ID, self::FIRST_QUESTION)
         );
         $this->assertSame(self::FIRST_QUESTION, $this->service->getQuestionNumber());
-        $this->assertSame(self::PERSON_ID, $this->service->getUserId());
+        $this->assertSame(self::PERSON_ID, $this->service->getPersonId());
         $this->assertSame(['First security question - your answer was ', 'correct'], $this->service->getSuccessMessage());
         $this->assertSame(['First security question - your answer is ', 'not correct'], $this->service->getErrorMessage());
         $this->assertFalse($this->service->getQuestionSuccess());
