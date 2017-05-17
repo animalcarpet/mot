@@ -575,7 +575,7 @@ class SecurityQuestionService
     /**
      * @return int
      */
-    public function getUserId()
+    public function getPersonId()
     {
         return $this->personId;
     }

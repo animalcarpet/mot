@@ -71,9 +71,9 @@ abstract class AbstractSecurityQuestionViewModel
     /**
      * @return int
      */
-    public function getUserId()
+    public function getPersonId()
     {
-        return $this->service->getUserId();
+        return $this->service->getPersonId();
     }
 
     /**

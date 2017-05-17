@@ -173,7 +173,7 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
                     ],
                     [
                         'class' => 'securityQuestionService',
-                        'method' => 'getUserId',
+                        'method' => 'getPersonId',
                         'params' => null,
                         'result' => self::PERSON_ID,
                     ],
@@ -201,7 +201,7 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
                 'mocks' => [
                     [
                         'class' => 'securityQuestionService',
-                        'method' => 'getUserId',
+                        'method' => 'getPersonId',
                         'params' => null,
                         'result' => self::PERSON_ID,
                     ],
