@@ -3,6 +3,7 @@
 namespace Account\Validator;
 
 use Account\Controller\ClaimController;
+use DvsaCommon\InputFilter\Account\SetSecurityQuestionsAndAnswersInputFilter;
 use DvsaCommon\Validator\PasswordValidator;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\Identical;
@@ -18,7 +19,6 @@ class ClaimValidator
     const MAX_PASSWORD_LENGTH = 32;
 
     // Step 2 (Set security questions) validation messages for Reset Account Security process
-    const ERR_MSG_ANSWER_EMPTY = 'enter a memorable answer';
     const ERR_MSG_ANSWER_MAX = 'must be less than %s characters long';
     const MAX_ANSWER = 70;
 
@@ -28,22 +28,11 @@ class ClaimValidator
     private $failedFields = [];
     private $fieldMessages = [];
 
-    public function validateStep($stepName, $data, $forceToResetFlag = false)
-    {
-        switch ($stepName) {
-            case ClaimController::STEP_1_NAME:
-                $validationResult = $this->validatePassword($data, $forceToResetFlag);
-                break;
-            case ClaimController::STEP_2_NAME:
-                $validationResult = $this->validateSetSecurityQuestion($data, $forceToResetFlag);
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf('Unknown step name "%s".', $stepName));
-        }
-
-        return $validationResult;
-    }
-
+    /**
+     * @param array $data
+     * @param bool $forceToResetFlag
+     * @return bool
+     */
     public function validatePassword($data, $forceToResetFlag = false)
     {
         $this->setIsValid($forceToResetFlag);
@@ -58,14 +47,20 @@ class ClaimValidator
         return $this->isValid();
     }
 
+    /**
+     * @param array $data
+     * @param bool $forceToResetFlag
+     * @return bool
+     */
     public function validateSetSecurityQuestion($data, $forceToResetFlag = false)
     {
         $this->setIsValid($forceToResetFlag);
 
-        $firstStepFilter = $this->getSecondStepInputFilter($data);
+        $filterInput = new SetSecurityQuestionsAndAnswersInputFilter();
+        $filterInput->setData($data);
 
-        if (!$firstStepFilter->isValid()) {
-            $this->addMessages($firstStepFilter->getMessages());
+        if (!$filterInput->isValid()) {
+            $this->addMessages($filterInput->getMessages());
             $this->setIsInvalid();
         }
 
@@ -147,39 +142,6 @@ class ClaimValidator
                             'options' => [
                                 'token' => 'password',
                                 'message' => self::ERR_MSG_PASSWORD_CONFIRM_MATCH,
-                            ],
-                        ],
-                    ],
-                ]
-            );
-        }
-
-        $filter->setData($data);
-
-        return $filter;
-    }
-
-    private function getSecondStepInputFilter($data)
-    {
-        $filter = new InputFilter();
-
-        foreach (['a', 'b'] as $letter) {
-            $filter->add(
-                [
-                    'name' => "answer_$letter",
-                    'required' => true,
-                    'validators' => [
-                        [
-                            'name' => 'not_empty',
-                            'options' => [
-                                'message' => self::ERR_MSG_ANSWER_EMPTY,
-                            ],
-                        ],
-                        [
-                            'name' => 'string_length',
-                            'options' => [
-                                'max' => self::MAX_ANSWER,
-                                'message' => sprintf(self::ERR_MSG_ANSWER_MAX, self::MAX_ANSWER),
                             ],
                         ],
                     ],

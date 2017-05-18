@@ -11,6 +11,7 @@ use DvsaClient\MapperFactory;
 use DvsaCommon\Domain\SecurityQuestionGroup;
 use DvsaCommon\Dto\Account\ClaimStartDto;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
+use DvsaCommon\InputFilter\Account\SetSecurityQuestionsAndAnswersInputFilter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
@@ -392,10 +393,10 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
                 'btSubmitForm' => '',
             ],
             'setSecurityQuestion' => [
-                'question_a' => self::QUESTION_1_ID,
-                'answer_a' => self::QUESTION_1_ANSWER,
-                'question_b' => self::QUESTION_2_ID,
-                'answer_b' => self::QUESTION_2_ANSWER,
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_QUESTION => self::QUESTION_1_ID,
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER => self::QUESTION_1_ANSWER,
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_QUESTION => self::QUESTION_2_ID,
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER => self::QUESTION_2_ANSWER,
                 'btSubmitForm' => '',
                 '_csrf_token' => 'F590F72E-D9FB-82FD-493E-D661EC0CF06E',
                 'submitted_step' => 'setSecurityQuestion',

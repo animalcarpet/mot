@@ -1,0 +1,43 @@
+{% include 'partial/forms/validationSummary.twig'
+with {'title' : 'There was a problem','validationMessages' : form.getMessages()} %}
+
+<div class="text">
+    <p class="lede">These are used to identify you if you need to reset your password.</p>
+</div>
+
+{{ form().openTag(form)|raw }}
+{{ csrfToken() }}
+{{ MotFormRow(form.get(constant('Account\\Form\\SetSecurityQuestionsAndAnswersForm::FIELD_NAME_STEP_NAME'))) }}
+<fieldset>
+    <legend class="form-title heading-large">First security question</legend>
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_QUESTION')
+    )) }}
+
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER')
+    )) }}
+</fieldset>
+
+<fieldset>
+    <legend class="form-title heading-large">Second security question</legend>
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_QUESTION')
+    )) }}
+
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER')
+    )) }}
+</fieldset>
+
+<nav class="content-navigation">
+    {{ MotFormRow(form.get(
+        constant('Account\\Form\\SetSecurityQuestionsAndAnswersForm::FIELD_NAME_SUBMIT')
+    )) }}
+    <ul class="content-navigation__secondary">
+        <li>
+            <a href="{{ urlBack|raw }}">Back</a>
+        </li>
+    </ul>
+</nav>
+{{ form().closeTag()|raw }}
