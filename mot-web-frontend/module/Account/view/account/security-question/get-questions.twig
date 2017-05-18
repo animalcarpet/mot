@@ -1,8 +1,5 @@
-
-{%
-include 'partial/forms/validationSummary.twig'
-with {'title' : 'There was a problem','validationMessages' : validationMessages}
-%}
+{% include 'partial/forms/validationSummary.twig'
+with {'title' : 'There was a problem','validationMessages' : validationMessages} %}
 
 {{ form().openTag(form)|raw }}
 {{ csrfToken() }}
@@ -48,7 +45,7 @@ with {'title' : 'There was a problem','validationMessages' : validationMessages}
 <nav class="content-navigation">
     {{ MotFormRow(form.get('submitSecurityAnswers')) }}
     <ul class="content-navigation__secondary">
-        <li><br>
+        <li>
             <a href="{{ urlBack|raw }}">Back</a>
         </li>
     </ul>

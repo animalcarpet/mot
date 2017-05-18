@@ -15,10 +15,10 @@ public class AccountClaimSecurityQuestionsPage extends Page {
     private static final String PAGE_TITLE = "Choose new security questions";
 
     @FindBy(id = "btSubmitForm") private WebElement submitFormButton;
-    @FindBy(id = "question_a") private WebElement questionOneDropdown;
-    @FindBy(id = "question_b") private WebElement questionTwoDropdown;
-    @FindBy(id = "answer_a") private WebElement answerOneField;
-    @FindBy(id = "answer_b") private WebElement answerTwoField;
+    @FindBy(id = "first_security_question") private WebElement questionOneDropdown;
+    @FindBy(id = "second_security_question") private WebElement questionTwoDropdown;
+    @FindBy(id = "first_memorable_answer") private WebElement answerOneField;
+    @FindBy(id = "second_memorable_answer") private WebElement answerTwoField;
 
     public AccountClaimSecurityQuestionsPage(MotAppDriver driver) {
         super(driver);

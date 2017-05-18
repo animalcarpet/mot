@@ -3,6 +3,7 @@
 namespace AccountTest\ViewModel;
 
 use Account\ViewModel\ReviewViewModel;
+use DvsaCommon\InputFilter\Account\SetSecurityQuestionsAndAnswersInputFilter;
 
 class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,10 +23,22 @@ class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($this->model->getPassword(), $testData['confirmPassword']['password']);
         $this->assertEquals($this->model->getSecurityQuestions(), $testData['securityQuestions']);
-        $this->assertEquals($this->model->getAnswerA(), $testData['setSecurityQuestion']['answer_a']);
-        $this->assertEquals($this->model->getAnswerB(), $testData['setSecurityQuestion']['answer_b']);
-        $this->assertEquals($this->model->getSecurityQuestionA(), $testData['setSecurityQuestion']['question_a']);
-        $this->assertEquals($this->model->getSecurityQuestionB(), $testData['setSecurityQuestion']['question_b']);
+        $this->assertEquals(
+            $this->model->getAnswerA(),
+            $testData['setSecurityQuestion'][SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER]
+        );
+        $this->assertEquals(
+            $this->model->getAnswerB(),
+            $testData['setSecurityQuestion'][SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER]
+        );
+        $this->assertEquals(
+            $this->model->getSecurityQuestionA(),
+            $testData['setSecurityQuestion'][SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_QUESTION]
+        );
+        $this->assertEquals(
+            $this->model->getSecurityQuestionB(),
+            $testData['setSecurityQuestion'][SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_QUESTION]
+        );
     }
 
     public function testSetSecurityQuestionDataWillReturnTheQuestionRelevantToTheUsersSelection()
@@ -60,12 +73,18 @@ class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
 
         $this->model->setData($testData);
 
-        $answerA = str_repeat('•', strlen($testData['setSecurityQuestion']['answer_a']));
+        $answerA = str_repeat(
+            '•',
+            strlen($testData['setSecurityQuestion'][SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER])
+        );
         $hiddenAnswerA = $this->model->getHiddenAnswerA();
 
         $this->assertEquals($answerA, $hiddenAnswerA);
 
-        $answerB = str_repeat('•', strlen($testData['setSecurityQuestion']['answer_b']));
+        $answerB = str_repeat(
+            '•',
+            strlen($testData['setSecurityQuestion'][SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER])
+        );
         $hiddenAnswerB = $this->model->getHiddenAnswerB();
 
         $this->assertEquals($answerB, $hiddenAnswerB);
@@ -78,10 +97,10 @@ class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
                 'password' => 'Password1',
             ],
             'setSecurityQuestion' => [
-                'question_a' => '1',
-                'question_b' => '2',
-                'answer_a' => 'test',
-                'answer_b' => 'test2',
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_QUESTION => '1',
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_QUESTION => '2',
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER => 'test',
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER => 'test2',
             ],
             'securityQuestions' => [
                 'groupA' => [

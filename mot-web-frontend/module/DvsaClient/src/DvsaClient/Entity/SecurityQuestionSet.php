@@ -23,7 +23,7 @@ class SecurityQuestionSet
     }
 
     /**
-     * @return \DvsaCommon\Dto\Security\SecurityQuestionDto[]
+     * @return SecurityQuestionDto[]
      */
     public function getGroupOne()
     {
@@ -31,7 +31,36 @@ class SecurityQuestionSet
     }
 
     /**
-     * @return \DvsaCommon\Dto\Security\SecurityQuestionDto[]
+     * @return array Pair of question ID and their corresponding Text for group one
+     */
+    public function getGroupOneQuestionList()
+    {
+        return $this->getQuestionList($this->getGroupOne());
+    }
+
+    /**
+     * @return array Pair of question ID and their corresponding Text for group tow
+     */
+    public function getGroupTwoQuestionList()
+    {
+        return $this->getQuestionList($this->getGroupTwo());
+    }
+
+    /**
+     * @param SecurityQuestionDto[] $questionGroup
+     * @return array Pair of question ID and their corresponding Text
+     */
+    private function getQuestionList(array $questionGroup)
+    {
+        $questions = [];
+        foreach ($questionGroup as $questionDto) {
+            $questions[$questionDto->getId()] = $questionDto->getText();
+        }
+        return $questions;
+    }
+
+    /**
+     * @return SecurityQuestionDto[]
      */
     public function getGroupTwo()
     {
@@ -68,8 +97,8 @@ class SecurityQuestionSet
     {
         $questions = ArrayUtils::filter(
             $securityQuestionDtos, function (SecurityQuestionDto $question) use ($group) {
-                return $question->getGroup() == $group;
-            }
+            return $question->getGroup() == $group;
+        }
         );
 
         $questions = ArrayUtils::sortBy($questions, self::$ORDER_FUNCTION_NAME);

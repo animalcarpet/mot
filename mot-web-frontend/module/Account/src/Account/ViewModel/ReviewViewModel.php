@@ -2,6 +2,7 @@
 
 namespace Account\ViewModel;
 
+use DvsaCommon\InputFilter\Account\SetSecurityQuestionsAndAnswersInputFilter;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
@@ -11,10 +12,6 @@ class ReviewViewModel
 {
     const FIELD_PASSWORD = 'password';
     const FIELD_SECURITY_QUESTIONS = 'securityQuestions';
-    const FIELD_SECURITY_QUESTION_A = 'question_a';
-    const FIELD_SECURITY_QUESTION_B = 'question_b';
-    const FIELD_SECURITY_ANSWER_A = 'answer_a';
-    const FIELD_SECURITY_ANSWER_B = 'answer_b';
     const FIELD_CONFIRM_PASSWORD = 'confirmPassword';
     const FIELD_SET_SECURITY_QUESTIONS = 'setSecurityQuestion';
     const FIELD_SECURITY_QUESTION_GROUP_A = 'groupA';
@@ -49,10 +46,20 @@ class ReviewViewModel
 
         if (isset($data[self::FIELD_SET_SECURITY_QUESTIONS])) {
             $securityQuestions = $data[self::FIELD_SET_SECURITY_QUESTIONS];
-            $this->setAnswerA(ArrayUtils::tryGet($securityQuestions, self::FIELD_SECURITY_ANSWER_A));
-            $this->setAnswerB(ArrayUtils::tryGet($securityQuestions, self::FIELD_SECURITY_ANSWER_B));
-            $this->setSecurityQuestionA(ArrayUtils::tryGet($securityQuestions, self::FIELD_SECURITY_QUESTION_A));
-            $this->setSecurityQuestionB(ArrayUtils::tryGet($securityQuestions, self::FIELD_SECURITY_QUESTION_B));
+            $this->setAnswerA(ArrayUtils::tryGet(
+                $securityQuestions, SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER
+            ));
+            $this->setAnswerB(ArrayUtils::tryGet(
+                $securityQuestions,
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER
+            ));
+            $this->setSecurityQuestionA(ArrayUtils::tryGet(
+                $securityQuestions,
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_QUESTION
+            ));
+            $this->setSecurityQuestionB(ArrayUtils::tryGet(
+                $securityQuestions,
+                SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_QUESTION));
         }
 
         return $this;

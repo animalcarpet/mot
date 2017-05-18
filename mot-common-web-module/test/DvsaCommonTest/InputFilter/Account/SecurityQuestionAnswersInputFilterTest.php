@@ -2,7 +2,7 @@
 /**
  * This file is part of the DVSA MOT Common Web project.
  *
- * @link http://gitlab.clb.npm/mot/mot
+ * @link https://github.com/dvsa/mot
  */
 
 namespace DvsaCommonTest\InputFilter\Account;
@@ -28,7 +28,7 @@ class SecurityQuestionAnswersInputFilterTest extends \PHPUnit_Framework_TestCase
             $expectedToBeValid,
             $inputFilter->isValid(),
             sprintf(
-                'Failed to assert the following data set is %s %s %s',
+                'Failed to assert the following data set is %s: %s %s',
                 $expectedToBeValid ? 'valid': 'invalid',
                 PHP_EOL,
                 print_r($data, true)

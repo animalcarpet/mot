@@ -1,5 +1,6 @@
 <?php
 
+use Account\Controller\ClaimController;
 use Account\Factory\Controller\ClaimAccountControllerFactory;
 use Account\Factory\Controller\PasswordResetControllerFactory;
 use Account\Factory\Controller\SecurityQuestionControllerFactory;
@@ -23,7 +24,7 @@ return [
                         'options' => [
                             'route' => '/claim',
                             'defaults' => [
-                                'controller' => ClaimAccountControllerFactory::class,
+                                'controller' => ClaimController::class,
                                 'action' => 'confirmPassword',
                             ],
                         ],
@@ -34,7 +35,7 @@ return [
                                 'options' => [
                                     'route' => '/confirm-email-and-password',
                                     'defaults' => [
-                                        'controller' => ClaimAccountControllerFactory::class,
+                                        'controller' => ClaimController::class,
                                         'action' => 'confirmPassword',
                                     ],
                                 ],
@@ -45,7 +46,7 @@ return [
                                 'options' => [
                                     'route' => '/set-security-question',
                                     'defaults' => [
-                                        'controller' => ClaimAccountControllerFactory::class,
+                                        'controller' => ClaimController::class,
                                         'action' => 'setSecurityQuestion',
                                     ],
                                 ],
@@ -56,7 +57,7 @@ return [
                                 'options' => [
                                     'route' => '/success',
                                     'defaults' => [
-                                        'controller' => ClaimAccountControllerFactory::class,
+                                        'controller' => ClaimController::class,
                                         'action' => 'success',
                                     ],
                                 ],
@@ -67,7 +68,7 @@ return [
                                 'options' => [
                                     'route' => '/review',
                                     'defaults' => [
-                                        'controller' => ClaimAccountControllerFactory::class,
+                                        'controller' => ClaimController::class,
                                         'action' => 'review',
                                     ],
                                 ],
@@ -78,7 +79,7 @@ return [
                                 'options' => [
                                     'route' => '/reset',
                                     'defaults' => [
-                                        'controller' => ClaimAccountControllerFactory::class,
+                                        'controller' => ClaimController::class,
                                         'action' => 'reset',
                                     ],
                                 ],
@@ -214,14 +215,14 @@ return [
             'Account\Controller\Index' => 'Account\Controller\IndexController',
         ],
         'factories' => [
-            ClaimAccountControllerFactory::class => ClaimAccountControllerFactory::class,
+            ClaimController::class => ClaimAccountControllerFactory::class,
             PasswordResetControllerFactory::class => PasswordResetControllerFactory::class,
             SecurityQuestionControllerFactory::class => SecurityQuestionControllerFactory::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__.'/../view',
+            __DIR__ . '/../view',
         ],
     ],
 ];

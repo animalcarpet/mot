@@ -28,7 +28,7 @@ class SecurityQuestionAnswersInputFilter extends InputFilter
 
     const MSG_TOO_LONG = 'answer must be shorter than %d characters';
 
-    const MSG_IS_EMPTY = 'enter your memorable answer';
+    const MSG_IS_EMPTY = 'enter an answer';
 
     const MSG_INVALID_TYPE = 'Invalid type given';
 
@@ -52,6 +52,18 @@ class SecurityQuestionAnswersInputFilter extends InputFilter
     }
 
     /**
+     * @param string $currentName
+     * @param string $newName
+     */
+    protected function renameAbstractedInput($currentName, $newName)
+    {
+        $input = $this->get($currentName);
+        $this->remove($currentName);
+        $input->setName($newName);
+        $this->add($input);
+    }
+
+    /**
      * @param string $name
      * @return Input
      */
@@ -60,7 +72,7 @@ class SecurityQuestionAnswersInputFilter extends InputFilter
         $stringLength = (new StringLength())
             ->setMax(self::MAX_LENGTH)
             ->setMessages([
-                StringLength::TOO_LONG => sprintf(self::MSG_TOO_LONG, self::MAX_LENGTH + 1),
+                StringLength::TOO_LONG => sprintf(static::MSG_TOO_LONG, self::MAX_LENGTH + 1),
                 StringLength::INVALID => self::MSG_INVALID_TYPE,
             ]);
 

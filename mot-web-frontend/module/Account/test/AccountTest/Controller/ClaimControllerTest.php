@@ -7,6 +7,7 @@ use Account\Service\ClaimAccountService;
 use Account\Validator\ClaimValidator;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use DvsaClient\Entity\SecurityQuestionSet;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
@@ -145,6 +146,13 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
             ClaimController::STEP_2_NAME => [],
         ];
 
+        $mockClaimAccountSrvConfig = [
+            'class' => 'mockClaimAccountSrv',
+            'method' => 'getGroupedAndOrderedQuestions',
+            'params' => null,
+            'result' => new SecurityQuestionSet([]),
+        ];
+
         return [
             // reset: access action
             [
@@ -183,8 +191,8 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'mocks' => [
                     [
                         'class' => 'mockClaimValidator',
-                        'method' => 'validateStep',
-                        'params' => [ClaimController::STEP_1_NAME, $postParameters],
+                        'method' => 'validatePassword',
+                        'params' => [$postParameters],
                         'result' => false,
                     ],
                 ],
@@ -203,8 +211,8 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'mocks' => [
                     [
                         'class' => 'mockClaimValidator',
-                        'method' => 'validateStep',
-                        'params' => [ClaimController::STEP_1_NAME, $postParameters],
+                        'method' => 'validatePassword',
+                        'params' => [$postParameters],
                         'result' => true,
                     ],
                 ],
@@ -222,9 +230,11 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                     [
                         'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
+                        'invocation' => $this->exactly(2),
                         'params' => [ClaimController::STEP_1_NAME],
                         'result' => false,
                     ],
+                    $mockClaimAccountSrvConfig,
                 ],
                 'expect' => [
                     'url' => AccountUrlBuilderWeb::claimEmailAndPassword(),
@@ -240,9 +250,11 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                     [
                         'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
+                        'invocation' => $this->exactly(3),
                         'params' => [ClaimController::STEP_1_NAME],
                         'result' => true,
                     ],
+                    $mockClaimAccountSrvConfig,
                 ],
                 'expect' => [
                     'viewModel' => true,
@@ -260,15 +272,11 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                     [
                         'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
+                        'invocation' => $this->exactly(1),
                         'params' => [ClaimController::STEP_1_NAME],
                         'result' => true,
                     ],
-                    [
-                        'class' => 'mockClaimValidator',
-                        'method' => 'validateStep',
-                        'params' => [ClaimController::STEP_2_NAME, $postParameters],
-                        'result' => false,
-                    ],
+                    $mockClaimAccountSrvConfig,
                 ],
                 'expect' => [
                     'viewModel' => true,
@@ -283,15 +291,10 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                     'post' => $postData,
                 ],
                 'mocks' => [
-                    [
-                        'class' => 'mockClaimValidator',
-                        'method' => 'validateStep',
-                        'params' => [ClaimController::STEP_2_NAME, $postParameters],
-                        'result' => true,
-                    ],
+                    $mockClaimAccountSrvConfig,
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::claimReview(),
+                    'url' => '/account/claim/confirm-email-and-password',
                 ],
             ],
 
@@ -398,8 +401,14 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                     ],
                     [
                         'class' => 'mockClaimValidator',
-                        'method' => 'validateStep',
-                        'invocation' => $this->any(),
+                        'method' => 'validatePassword',
+                        'invocation' => $this->once(),
+                        'result' => true,
+                    ],
+                    [
+                        'class' => 'mockClaimValidator',
+                        'method' => 'validateSetSecurityQuestion',
+                        'invocation' => $this->once(),
                         'result' => true,
                     ],
                     [

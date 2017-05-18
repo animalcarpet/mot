@@ -2,11 +2,13 @@
 
 namespace Account\Controller;
 
+use Account\Form\SetSecurityQuestionsAndAnswersForm;
 use Account\Service\ClaimAccountService;
 use Account\Validator\ClaimValidator;
 use Core\Controller\AbstractAuthActionController;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
+use DvsaCommon\InputFilter\Account\SetSecurityQuestionsAndAnswersInputFilter;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
@@ -51,7 +53,8 @@ class ClaimController extends AbstractAuthActionController
         ClaimAccountService $claimAccountService,
         ClaimValidator $claimValidator,
         MotIdentityProviderInterface $motIdentityProvider
-    ) {
+    )
+    {
         $this->claimAccountService = $claimAccountService;
         $this->claimValidator = $claimValidator;
         $this->motIdentityProvider = $motIdentityProvider;
@@ -76,7 +79,7 @@ class ClaimController extends AbstractAuthActionController
 
             $this->claimAccountService->captureStep($data);
 
-            if ($this->claimValidator->validateStep(self::STEP_1_NAME, $data)) {
+            if ($this->claimValidator->validatePassword($data)) {
                 $this->redirectToStep(self::STEP_2_NAME);
             }
         }
@@ -98,26 +101,38 @@ class ClaimController extends AbstractAuthActionController
      */
     public function setSecurityQuestionAction()
     {
-        /** @var \Zend\Http\Request $request */
+        $this->assertPreviousStepsBeenTaken(self::STEP_2_NAME);
+
+        $this->layout('layout/layout-govuk.phtml');
+        $this->layout()->setVariables([
+            'pageSubTitle' => 'Choose new security questions',
+            'pageTitle' => 'Reset your account security'
+        ]);
+
+        $form = $this->getSecurityQuestionForm();
+
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $data = $request->getPost();
 
-            $this->claimAccountService->captureStep($data);
-            if ($this->claimValidator->validateStep(self::STEP_2_NAME, $data)) {
+            $this->claimAccountService->captureStep($request->getPost());
+
+            $form->bind($request->getPost());
+
+            if ($form->isValid()) {
                 return $this->redirectToStep(self::STEP_3_NAME);
             }
+        } else {
+            $this->setSecurityQuestionFormDataFromSession($form);
         }
 
-        $stepData = $this->getStepData(self::STEP_2_NAME);
-        $stepData['summaryMessages'] = $this->getSummaryMessages();
-        $stepData['messages'] = $this->claimValidator->getMessages();
-        $stepData['questions'] = $this->claimAccountService->getSecurityQuestions();
+        $viewModel = (new ViewModel())->setTemplate('account/claim/set-security-questions.twig')
+            ->setVariables([
+                'form' => $form,
+                'urlBack' => $this->url()->fromRoute('account/claim/confirmPassword'),
+            ]);
 
-        $this->layout('layout/layout-govuk.phtml');
-
-        return new ViewModel($stepData);
+        return $viewModel;
     }
 
     /**
@@ -136,19 +151,11 @@ class ClaimController extends AbstractAuthActionController
             $data = $this->claimAccountService->getSession()->getArrayCopy();
 
             // Validate step 1 (Confirm Password)
-            $isStepOneValid = $this->claimValidator->validateStep(
-                self::STEP_1_NAME,
-                $data[self::STEP_1_NAME],
-                true
-            );
-            $messages += $this->claimValidator->getMessages();
+            $isStepOneValid = $this->claimValidator->validatePassword($data[self::STEP_1_NAME], true);
 
             // Validate step 2 (Security questions)
-            $isStepTwoValid = $this->claimValidator->validateStep(
-                self::STEP_2_NAME,
-                $data[self::STEP_2_NAME],
-                true
-            );
+            $isStepTwoValid = $this->claimValidator->validateSetSecurityQuestion($data[self::STEP_2_NAME], true);
+
             $messages += $this->claimValidator->getMessages();
 
             if ($isStepOneValid && $isStepTwoValid) {
@@ -160,8 +167,9 @@ class ClaimController extends AbstractAuthActionController
                     if (is_array($apiMessage)
                         && isset($apiMessage['displayMessage'])
                         && isset($apiMessage['step'])
-                        && (self::STEP_1_NAME == $apiMessage['step'])) {
-                        $this->flashMessenger()->addErrorMessage('New password – '.$apiMessage['displayMessage']);
+                        && (self::STEP_1_NAME == $apiMessage['step'])
+                    ) {
+                        $this->flashMessenger()->addErrorMessage('New password – ' . $apiMessage['displayMessage']);
                     }
 
                     return $this->redirectToStep(self::STEP_1_NAME);
@@ -214,7 +222,7 @@ class ClaimController extends AbstractAuthActionController
      */
     private function getStepData($stepName)
     {
-        $this->checkIfPreviousStepsBeenTaken($stepName);
+        $this->assertPreviousStepsBeenTaken($stepName);
 
         $stepDataInSession = $this->claimAccountService->getFromSession($stepName);
         $stepData = is_null($stepDataInSession) ? [] : $stepDataInSession;
@@ -228,7 +236,7 @@ class ClaimController extends AbstractAuthActionController
     /**
      * @param $requestedStep
      */
-    private function checkIfPreviousStepsBeenTaken($requestedStep)
+    private function assertPreviousStepsBeenTaken($requestedStep)
     {
         $steps = [
             self::STEP_1_NAME,
@@ -262,13 +270,13 @@ class ClaimController extends AbstractAuthActionController
     private function redirectToStep($stepName)
     {
         if ($stepName == self::STEP_2_NAME) {
-            $url = AccountUrlBuilderWeb::claimSecurityQuestions();
+            $url = $this->url()->fromRoute('account/claim/setSecurityQuestion');
         } elseif ($stepName == self::STEP_3_NAME) {
-            $url = AccountUrlBuilderWeb::claimReview();
+            $url = $this->url()->fromRoute('account/claim/review');
         } elseif ($stepName == self::STEP_4_NAME) {
             $url = $this->url()->fromRoute('account/claim/success');
         } else {
-            $url = AccountUrlBuilderWeb::claimEmailAndPassword();
+            $url = $this->url()->fromRoute('account/claim/confirmPassword');
         }
 
         return $this->redirect()->toUrl($url);
@@ -291,16 +299,16 @@ class ClaimController extends AbstractAuthActionController
             foreach ($messages as $validator => $message) {
                 switch ($fieldName) {
                     case self::PASSWORD_FIELD:
-                        $message = self::NEW_PASSWORD_ERROR_MESSAGE_FIELD_NAME.$message;
+                        $message = self::NEW_PASSWORD_ERROR_MESSAGE_FIELD_NAME . $message;
                         break;
                     case self::CONFIRM_PASSWORD_FIELD:
-                        $message = self::RETYPE_YOUR_NEW_PASSWORD_ERROR_MESSAGE__FIELD_NAME.$message;
+                        $message = self::RETYPE_YOUR_NEW_PASSWORD_ERROR_MESSAGE__FIELD_NAME . $message;
                         break;
-                    case self::FIRST_MEMORABLE_ANSWER_FIELD:
-                        $message = self::FIRST_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME.$message;
+                    case SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER:
+                        $message = self::FIRST_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME . $message;
                         break;
-                    case self::SECOND_MEMORABLE_ANSWER_FIELD:
-                        $message = self::SECOND_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME.$message;
+                    case SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER:
+                        $message = self::SECOND_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME . $message;
                         break;
                 }
                 $errorsSummary[$fieldName][$validator] = $message;
@@ -330,5 +338,44 @@ class ClaimController extends AbstractAuthActionController
         }
 
         return $stepData;
+    }
+
+    /**
+     * @return SetSecurityQuestionsAndAnswersForm
+     */
+    private function getSecurityQuestionForm()
+    {
+        $form = new SetSecurityQuestionsAndAnswersForm(
+            $this->claimAccountService->getGroupedAndOrderedQuestions(),
+            self::STEP_2_NAME
+        );
+
+        $form->setInputFilter(new SetSecurityQuestionsAndAnswersInputFilter());
+
+        return $form;
+    }
+
+    /**
+     * @param SetSecurityQuestionsAndAnswersForm $form
+     * @return bool
+     */
+    private function setSecurityQuestionFormDataFromSession(SetSecurityQuestionsAndAnswersForm $form)
+    {
+        if ($this->claimAccountService->isStepRecorded(self::STEP_2_NAME)) {
+
+            $securityQuestionStepRelevantData = array_intersect_key(
+                $this->getStepData(self::STEP_2_NAME),
+                array_flip([
+                    SetSecurityQuestionsAndAnswersForm::FIELD_NAME_STEP_NAME,
+                    SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_QUESTION,
+                    SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER,
+                    SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_QUESTION,
+                    SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER,
+                ])
+            );
+
+            $form->setData($securityQuestionStepRelevantData);
+
+        }
     }
 }

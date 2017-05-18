@@ -12,7 +12,7 @@ use DvsaCommon\InputFilter\Account\SecurityQuestionAnswersInputFilter;
 use Zend\Form\Element;
 use Zend\Form\Form;
 
-class SecurityQuestionAnswersForm extends Form
+class SecurityQuestionAnswersForm extends AbstractSecurityAnswersForm
 {
     /**
      * SecurityQuestionAnswersForm constructor.
@@ -24,12 +24,33 @@ class SecurityQuestionAnswersForm extends Form
     {
         parent::__construct('SecurityQuestionAnswersFrom');
 
-        $this->initializeInputFields($firstQuestion, $secondQuestion);
-    }
+        $this->add(
+            $this->createAnswerInputField(
+                $firstQuestion->getText(),
+                SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_ANSWER
+            )
+        );
 
-    public function setAction($url)
-    {
-        $this->setAttribute('action', $url);
+        $this->add(
+            $this->createAnswerInputField(
+                $secondQuestion->getText(),
+                SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_ANSWER
+            )
+        );
+
+        $this->add(
+            (new Element\Hidden(SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_QUESTION_ID))
+                ->setValue($firstQuestion->getId())
+        );
+
+        $this->add(
+            (new Element\Hidden(SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_QUESTION_ID))
+                ->setValue($secondQuestion->getId())
+        );
+
+        $this->add(
+            (new Element\Submit('submitSecurityAnswers'))->setAttribute('class', 'button')->setValue('Continue')
+        );
     }
 
     /**
@@ -63,52 +84,5 @@ class SecurityQuestionAnswersForm extends Form
                 return SecurityQuestionAnswersInputFilter::QUESTION_ANSWER_FIELD_PAIR_MAP[$questionFieldName];
             }
         }
-    }
-
-    private function createAnswerInputField($question, $name)
-    {
-        $answerElement = (new Element())
-            ->setName($name)
-            ->setAttribute('id', $name)
-            ->setAttributes(['autocomplete' => 'off', 'class' => 'form-control'])
-            ->setLabel($question)
-            ->setLabelAttributes(['class' => 'form-label']);
-
-        return $answerElement;
-    }
-
-    /**
-     * @param SecurityQuestionDto $firstQuestion
-     * @param SecurityQuestionDto $secondQuestion
-     */
-    protected function initializeInputFields(SecurityQuestionDto $firstQuestion, SecurityQuestionDto $secondQuestion)
-    {
-        $this->add(
-            $this->createAnswerInputField(
-                $firstQuestion->getText(),
-                SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_ANSWER
-            )
-        );
-
-        $this->add(
-            $this->createAnswerInputField(
-                $secondQuestion->getText(),
-                SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_ANSWER
-            )
-        );
-
-        $this->add(
-            (new Element\Hidden(SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_QUESTION_ID))
-                ->setValue($firstQuestion->getId())
-        );
-
-        $this->add(
-            (new Element\Hidden(SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_QUESTION_ID))
-                ->setValue($secondQuestion->getId())
-        );
-
-        $this->add(
-            (new Element\Submit('submitSecurityAnswers'))->setAttribute('class', 'button')->setValue('Continue')
-        );
     }
 }

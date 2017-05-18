@@ -6,6 +6,7 @@ use Account\Controller\ClaimController;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaClient\MapperFactory;
+use DvsaCommon\InputFilter\Account\SetSecurityQuestionsAndAnswersInputFilter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use Zend\Session\Container;
 
@@ -42,7 +43,8 @@ class ClaimAccountService
         MotFrontendIdentityInterface $identity,
         MapperFactory $mapper,
         ParamObfuscator $obfuscator
-    ) {
+    )
+    {
         $this->authService = $authService;
         $this->identity = $identity;
         $this->mapper = $mapper;
@@ -81,6 +83,12 @@ class ClaimAccountService
             ->saveOnSession(self::KEY_NAME_PIN, $claimData->getPin());
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param bool $overwrite
+     * @return $this
+     */
     public function saveOnSession($key, $value, $overwrite = true)
     {
         if ($overwrite
@@ -135,6 +143,7 @@ class ClaimAccountService
 
     /**
      * @param string $step
+     * @return bool
      */
     public function isStepRecorded($step)
     {
@@ -175,6 +184,14 @@ class ClaimAccountService
         return $result === true;
     }
 
+    /**
+     * @return \DvsaClient\Entity\SecurityQuestionSet
+     */
+    public function getGroupedAndOrderedQuestions()
+    {
+        return $this->mapper->SecurityQuestion->fetchAllGroupedAndOrdered();
+    }
+
     private function prepareDataForApi($data)
     {
         $step1Data = $data[ClaimController::STEP_1_NAME];
@@ -186,11 +203,11 @@ class ClaimAccountService
             'password' => $step1Data['password'],
             'passwordConfirmation' => $step1Data['confirm_password'],
 
-            'securityQuestionOneId' => $step2Data['question_a'],
-            'securityAnswerOne' => $step2Data['answer_a'],
+            'securityQuestionOneId' => $step2Data[SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_QUESTION],
+            'securityAnswerOne' => $step2Data[SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_FIRST_ANSWER],
 
-            'securityQuestionTwoId' => $step2Data['question_b'],
-            'securityAnswerTwo' => $step2Data['answer_b'],
+            'securityQuestionTwoId' => $step2Data[SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_QUESTION],
+            'securityAnswerTwo' => $step2Data[SetSecurityQuestionsAndAnswersInputFilter::FIELD_NAME_SECOND_ANSWER],
         ];
     }
 
