@@ -386,21 +386,6 @@ class CatalogService
     }
 
     /**
-     * @param $categoryName
-     */
-    public function getEventTypesWithOutcomesForCategory($categoryName)
-    {
-        $categories = isset($this->getData()['eventTypesWithOutcomes']) ?
-            $this->getData()['eventTypesWithOutcomes'] : null;
-
-        if (null === $categories) {
-            return;
-        }
-
-        return isset($categories[$categoryName]) ? $this->getData()['eventTypesWithOutcomes'][$categoryName] : null;
-    }
-
-    /**
      * @return array
      */
     public function getAuthForAuthorisedExaminerStatuses()

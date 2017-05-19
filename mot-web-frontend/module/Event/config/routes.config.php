@@ -42,19 +42,6 @@ return [
                     ],
                 ],
             ],
-            'event-add' => [
-                'type' => 'segment',
-                'options' => [
-                    'route' => '/event/:type/add',
-                    'constraints' => [
-                        'type' => 'AE|NT',
-                    ],
-                    'defaults' => [
-                        'controller' => EventController::class,
-                        'action' => 'create',
-                    ],
-                ],
-            ],
             'event-manual-add' => [
                 'type' => 'segment',
                 'options' => [
