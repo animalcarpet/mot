@@ -130,17 +130,6 @@ class EventController extends AbstractAuthActionController
     }
 
     /**
-     * @return Response|ViewModel
-     */
-    public function createAction()
-    {
-        $type = $this->params()->fromRoute('type');
-
-        var_dump($this->getCatalogService()->getEventTypesWithOutcomesForCategory($type));
-        die;
-    }
-
-    /**
      * This function is responsible to validate that the form is valid.
      *
      * @param EventFormDto $formModel
