@@ -14,7 +14,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrderReport\Controller\CardOrderCsv
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrderReport\Controller\CardOrderReportListController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
-use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\ForgotSecurityQuestionController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Controller\NewUserOrderCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Controller\RegisterCardInformationNewUserController;
 
@@ -242,23 +241,13 @@ return [
                             ],
                         ],
                     ],
-                    'question-one' => [
+                    'security-questions' => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/question-one',
+                            'route' => '/security-questions',
                             'defaults' => [
                                 'controller' => LostOrForgottenCardController::class,
-                                'action' => 'securityQuestionOne',
-                            ],
-                        ],
-                    ],
-                    'question-two' => [
-                        'type' => 'segment',
-                        'options' => [
-                            'route' => '/question-two',
-                            'defaults' => [
-                                'controller' => LostOrForgottenCardController::class,
-                                'action' => 'securityQuestionTwo',
+                                'action' => 'securityQuestions',
                             ],
                         ],
                     ],
@@ -269,16 +258,6 @@ return [
                             'defaults' => [
                                 'controller' => LostOrForgottenCardController::class,
                                 'action' => 'confirmation',
-                            ],
-                        ],
-                    ],
-                    'forgot-question' => [
-                        'type' => 'segment',
-                        'options' => [
-                            'route' => '/forgot-question',
-                            'defaults' => [
-                                'controller' => ForgotSecurityQuestionController::class,
-                                'action' => 'forgotQuestionAnswer',
                             ],
                         ],
                     ],

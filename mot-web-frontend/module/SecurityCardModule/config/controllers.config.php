@@ -26,8 +26,6 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Controller\CardOrderC
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrderReport\Factory\Controller\CardOrderReportListControllerFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Factory\Controller\LostOrForgottenCardControllerFactory;
-use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\ForgotSecurityQuestionController;
-use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Factory\Controller\ForgotSecurityQuestionControllerFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller\AlreadyOrderedNewCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Controller\AlreadyOrderedNewCardControllerFactory;
 
@@ -42,7 +40,6 @@ return [
         RegisterCardInformationNewUserController::class => RegisterCardInformationNewUserControllerFactory::class,
         NewUserOrderCardController::class => NewUserOrderCardControllerFactory::class,
         LostOrForgottenCardController::class => LostOrForgottenCardControllerFactory::class,
-        ForgotSecurityQuestionController::class => ForgotSecurityQuestionControllerFactory::class,
         CardOrderReportListController::class => CardOrderReportListControllerFactory::class,
         CardOrderCsvReportController::class => CardOrderCsvReportControllerFactory::class,
         RegisterCardHardStopController::class => RegisterCardHardStopControllerFactory::class,

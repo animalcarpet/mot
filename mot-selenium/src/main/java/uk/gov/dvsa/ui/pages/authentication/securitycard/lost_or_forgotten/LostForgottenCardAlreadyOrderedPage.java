@@ -15,8 +15,8 @@ public class LostForgottenCardAlreadyOrderedPage extends AbstractLostForgottenPa
         super(driver, PAGE_TITLE);
     }
 
-    public LostForgottenCardQuestionOnePage continueToSecurityQuestionOnePage() {
+    public LostForgottenCardQuestionsPage continueToSecurityQuestionOnePage() {
         continueButton.click();
-        return new LostForgottenCardQuestionOnePage(driver);
+        return new LostForgottenCardQuestionsPage(driver);
     }
 }
