@@ -23,23 +23,21 @@ class LostOrForgottenService
         $this->userAdminMapper = $userAdminMapper;
         $this->sessionService = $sessionService;
     }
-
+    
     /**
-     * @param $questionId
-     * @param $userId
-     *
-     * @return \DvsaCommon\Dto\Security\SecurityQuestionDto
-     *
+     * @param $personId
+     * @return \DvsaCommon\Dto\Security\SecurityQuestionDto[]
      * @throws \Exception
      */
-    public function getQuestionForUser($questionId, $userId)
+    public function getQuestionsForPerson($personId)
     {
         try {
-            return $this->userAdminMapper->getSecurityQuestion($questionId, $userId);
+            return $this->userAdminMapper->getSecurityQuestionsForPerson($personId);
         } catch (NotFoundException $e) {
-            throw new \Exception('Security Question '.$questionId.' not found for user '.$userId);
+            throw new \Exception('Security Questions not found for user '.$personId);
         }
     }
+
 
     /**
      * @param int    $questionId
@@ -51,6 +49,17 @@ class LostOrForgottenService
     public function getAnswerForQuestion($questionId, $userId, $answer)
     {
         return $this->userAdminMapper->checkSecurityQuestion($questionId, $userId, ['answer' => $answer]);
+    }
+
+    /**
+     * @param $personId
+     * @param array $answers
+     *
+     * @return array [questionId => validationResultBoolean, ...]
+     */
+    public function verifyAnswersForPerson($personId, array $answers)
+    {
+        return $this->userAdminMapper->checkSecurityQuestions($personId, $answers);
     }
 
     /**

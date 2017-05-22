@@ -15,7 +15,7 @@ import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.ActivateYourCardPromptPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.OrderYourCardPromptPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardAlreadyOrderedPage;
-import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionOnePage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionsPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardInformationPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorLockedAccountWarningPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
@@ -142,8 +142,8 @@ public class MotUI {
         return loginUser(user, LostForgottenCardAlreadyOrderedPage.class);
     }
 
-    public LostForgottenCardQuestionOnePage loginExpecting2faSecurityQuestionOnePage(User user) throws IOException {
-        return loginUser(user, LostForgottenCardQuestionOnePage.class);
+    public LostForgottenCardQuestionsPage loginExpecting2faSecurityQuestionOnePage(User user) throws IOException {
+        return loginUser(user, LostForgottenCardQuestionsPage.class);
     }
 
     public HardStop2faPage loginExpecting2faHardStopPage(User user) throws IOException {

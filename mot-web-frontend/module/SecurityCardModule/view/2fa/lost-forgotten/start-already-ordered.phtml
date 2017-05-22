@@ -1,18 +1,20 @@
 <?php
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
+
 $this->layout('layout/layout-govuk.phtml');
 $this->layout()->setVariables([
-    'pageTitle' => 'Sign in without your security card',
-    'pageSubTitle' => 'Sign in',
+    'pageTitle' => LostOrForgottenCardController::VIEW_ALREADY_ORDERED_PAGE_TITLE,
+    'pageSubTitle' => LostOrForgottenCardController::VIEW_ALREADY_ORDERED_PAGE_SUBTITLE,
     'hideUserNav' => true,
 ]);
-$this->headTitle('Sign in without your security card');
+$this->headTitle(LostOrForgottenCardController::VIEW_ALREADY_ORDERED_PAGE_TITLE);
 ?>
 
 <div class="grid-row">
     <div class="column-two-thirds">
         <p class="lede">You have ordered a new card.  Until you receive and activate the card, sign in with your security questions.</p>
         <nav class="content-navigation">
-            <a id="continueToQuestionOne" href="<?php echo $this->url('lost-or-forgotten-card/question-one'); ?>" class="button">Continue</a>
+            <a id="continueToQuestionOne" href="<?php echo $this->url(LostOrForgottenCardController::QUESTIONS_ROUTE); ?>" class="button">Continue</a>
             <ul class="content-navigation__secondary">
                 <li>
                     <a href="<?php echo $this->url('logout') ?>">Cancel and return to sign in</a>

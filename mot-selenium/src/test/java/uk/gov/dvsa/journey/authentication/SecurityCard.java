@@ -11,7 +11,7 @@ import uk.gov.dvsa.ui.pages.authentication.securitycard.ReviewSecurityCardAddres
 import uk.gov.dvsa.ui.pages.authentication.securitycard.card_order_report.CardOrderReportListPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardAlreadyOrderedPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardConfirmationPage;
-import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionOnePage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionsPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardSignInPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardSuccessPage;
@@ -122,20 +122,16 @@ public class SecurityCard {
                         .clickLostForgottenLink();
 
         return signInPage.continueToSecurityQuestionOnePage()
-                .enterAnswer("Blah")
-                .continueToQuestionTwoPage()
-                .enterAnswer("Blah")
+                .enterAnswers("Blah", "Blah")
                 .continueToConfirmationPage();
     }
 
     public LostForgottenCardConfirmationPage signInWithoutSecurityCardAfterOrder(User user) throws IOException {
-       LostForgottenCardQuestionOnePage questionOnePage =
-               pageNavigator.navigateToPage(user, LostForgottenCardAlreadyOrderedPage.PATH, LostForgottenCardQuestionOnePage.class);
+       LostForgottenCardQuestionsPage questionOnePage =
+               pageNavigator.navigateToPage(user, LostForgottenCardAlreadyOrderedPage.PATH, LostForgottenCardQuestionsPage.class);
 
         return questionOnePage
-                .enterAnswer("Blah")
-                .continueToQuestionTwoPage()
-                .enterAnswer("Blah")
+                .enterAnswers("Blah", "Blah")
                 .continueToConfirmationPage();
     }
 

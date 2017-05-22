@@ -4,11 +4,13 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Factory\Contr
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrderedCardCookieService;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Specification\ContainsTwoSecurityQuestionDtoSpecification;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaCommon\Configuration\MotConfig;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
@@ -51,6 +53,15 @@ class LostOrForgottenCardControllerFactory implements FactoryInterface
         /** @var AlreadyLoggedInTodayWithLostForgottenCardCookieService $cookieService */
         $cookieService = $serviceLocator->get(AlreadyLoggedInTodayWithLostForgottenCardCookieService::class);
 
+        /** @var ContainsTwoSecurityQuestionDtoSpecification $specification */
+        $specification = new ContainsTwoSecurityQuestionDtoSpecification();
+
+        /** @var MotConfig $motConfig */
+        $motConfig = $serviceLocator->get(MotConfig::class);
+
+        /** @var array $helpDeskConfigInfo */
+        $helpDeskConfigInfo = $motConfig->get('helpdesk');
+
         return new LostOrForgottenCardController(
             $request,
             $response,
@@ -59,7 +70,9 @@ class LostOrForgottenCardControllerFactory implements FactoryInterface
             $securityQuestionService,
             $securityCardService,
             $alreadyOrderedCardCookieService,
-            $cookieService
+            $cookieService,
+            $specification,
+            $helpDeskConfigInfo
         );
     }
 }

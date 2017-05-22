@@ -1,0 +1,75 @@
+<?php
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Form\LostOrForgottenSecurityQuestionForm;
+
+/* @var LostOrForgottenSecurityQuestionForm $form */
+/* @var string $backRoute */
+/* @var string $backText */
+/* @var string $phoneNumber */
+/* @var string $openingHrsWeekdays */
+/* @var string $openingHrsSaturday */
+/* @var string $openingHrsSunday */
+
+$this->layout('layout/layout-govuk.phtml');
+$this->layout()->setVariables([
+    'pageTitle' => LostOrForgottenCardController::VIEW_QUESTIONS_PAGE_TITLE,
+    'pageSubTitle' => LostOrForgottenCardController::VIEW_QUESTIONS_PAGE_SUBTITLE,
+    'hideUserNav' => true,
+]);
+$this->headTitle(LostOrForgottenCardController::VIEW_QUESTIONS_PAGE_TITLE);
+?>
+<?php echo $this->partial('zendFormErrorMessagesNew', ['form' => $form, 'useFormName' => true]); ?>
+
+<form action="<?php echo $this->url(LostOrForgottenCardController::QUESTIONS_ROUTE); ?>" method="post" autocomplete="off">
+    <?php echo $this->csrfToken(); ?>
+    <fieldset>
+        <legend class="form-title heading-large" id="question1"></legend>
+        <?php
+        echo $this->partial(
+            'partial/gds/form/control', [
+                'element' => $form->getAnswerOneField(),
+            ]
+        );
+        ?>
+    </fieldset>
+    <fieldset>
+        <legend class="form-title heading-large" id="question2"></legend>
+        <?php
+        echo $this->partial(
+            'partial/gds/form/control', [
+                'element' => $form->getAnswerTwoField(),
+            ]
+        );
+        ?>
+    </fieldset>
+    <details>
+        <summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+            <span class="summary">Forgotten your security questions?</span>
+        </summary>
+        <div class="panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
+            <p>
+                Call the DVSA helpdesk on <strong><?php echo $phoneNumber ?></strong> to reset your questions.
+            </p>
+            <p>
+                Opening hours are:
+            </p>
+            <p>
+                <ul>
+                <li><?php echo $openingHrsWeekdays; ?></li>
+                <li><?php echo $openingHrsSaturday; ?></li>
+                <li><?php echo $openingHrsSunday; ?></li>
+                </ul>
+            </p>
+        </div>
+    </details>
+
+
+    <nav class="content-navigation">
+        <input type="submit" id="submit" value="Continue" class="button">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $this->url($backRoute); ?>"><?php echo $backText ?></a>
+            </li>
+        </ul>
+    </nav>
+</form>

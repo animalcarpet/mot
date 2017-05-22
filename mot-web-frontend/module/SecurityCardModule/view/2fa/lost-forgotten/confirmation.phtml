@@ -1,9 +1,11 @@
 <?php
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
+
 $this->layout('layout/layout-govuk.phtml');
 $this->layout()->setVariables([
-    'pageTitle' => 'Sign in successful',
+    'pageTitle' => LostOrForgottenCardController::VIEW_CONFIRMATION_PAGE_TITLE,
 ]);
-$this->headTitle('Sign in successful');
+$this->headTitle(LostOrForgottenCardController::VIEW_CONFIRMATION_PAGE_TITLE);
 ?>
 <div class="banner--confirmation">
     <span class="banner__heading-large">You have signed in without your security card</span>

@@ -34,39 +34,6 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
         $this->lostAndForgottenService = new LostOrForgottenService($this->userAdminMapper, $this->sessionService);
     }
 
-    public function testGetQuestionForUserQuestionFound()
-    {
-        $userId = 10;
-        $questionId = 1;
-
-        $this->userAdminMapper
-            ->expects($this->once())
-            ->method('getSecurityQuestion')
-            ->with($questionId, $userId)
-            ->WillReturn(new SecurityQuestionDto());
-
-        $actual = $this->lostAndForgottenService->getQuestionForUser($questionId, $userId);
-
-        $this->assertInstanceOf(SecurityQuestionDto::class, $actual);
-    }
-
-    /**
-     * @expectedException \Exception
-     */
-    public function testGetQuestionForUserNoQuestionFoundExceptionThrown()
-    {
-        $userId = 10;
-        $questionId = 1;
-
-        $this->userAdminMapper
-            ->expects($this->once())
-            ->method('getSecurityQuestion')
-            ->with($questionId, $userId)
-            ->will($this->throwException(new NotFoundException('/', 'post', [], 10, 'Question not found')));
-
-        $this->lostAndForgottenService->getQuestionForUser($questionId, $userId);
-    }
-
     public function testGetAnswerForQuestionAnswerCorrect()
     {
         $userId = 10;
@@ -362,5 +329,37 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
 
         $actual = $this->lostAndForgottenService->isEnteringThroughSecurityQuestionOne();
         $this->assertFalse($actual);
+    }
+
+    public function testGetQuestionsForPerson()
+    {
+        $personId = 10;
+
+        $this->userAdminMapper
+            ->expects($this->once())
+            ->method('getSecurityQuestionsForPerson')
+            ->with($personId)
+            ->willReturn([new SecurityQuestionDto(), new SecurityQuestionDto()]);
+
+        $this->lostAndForgottenService->getQuestionsForPerson($personId);
+    }
+
+    public function testGetQuestionsForPerson_willThrowException()
+    {
+        $personId = 10;
+        $expectedException = new NotFoundException(
+            '/resource/path',
+            0,
+            new \Exception(),
+            404
+        );
+
+        $this->userAdminMapper
+            ->expects($this->once())
+            ->method('getSecurityQuestionsForPerson')
+            ->with($personId)
+            ->willReturn($this->throwException($expectedException));
+
+        $this->lostAndForgottenService->getQuestionsForPerson($personId);
     }
 }
