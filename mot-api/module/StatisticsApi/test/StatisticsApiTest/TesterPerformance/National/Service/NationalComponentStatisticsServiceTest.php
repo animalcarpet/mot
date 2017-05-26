@@ -22,6 +22,9 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     /** @var KeyValueStorageFake */
     private $storage;
 
+    /** @var TestDateTimeHolder */
+    private $dateTimeHolder;
+
     protected function setUp()
     {
         /* @var NationalComponentStatisticsRepository $repository */
@@ -103,11 +106,10 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     private function getDateTimeHolder()
     {
-        /*
-         * @todo (ABN) the logic behind it has to be studied and then convert it to a dynamically generated, relative date
-         * the solution might be something like a date 6 month ago i.e.
-         * new \DateTime(date('Y-m-d', strtotime('-6 months')))
-         */
-        return new TestDateTimeHolder(new \DateTime('2016-10-21'));
+        if (is_null($this->dateTimeHolder)) {
+            $this->dateTimeHolder =  new TestDateTimeHolder(new \DateTime());
+        }
+
+        return $this->dateTimeHolder;
     }
 }
