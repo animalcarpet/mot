@@ -11,15 +11,34 @@ use VehicleApi\Model\VehicleWeight;
 
 class VehicleWeightTest extends \PHPUnit_Framework_TestCase
 {
-    public function testHasWeighAndWeightSourceMethods()
+    /**
+     * @dataProvider vehicleWeightAndWeightSourceDataProvider
+     *
+     * @param int|null $weight
+     * @param int      $weightSource
+     * @param bool     $expected
+     */
+    public function testHasWeightAndWeightSourceMethods($weight, $weightSource, $expected)
     {
         $vehicleWeight = new VehicleWeight();
 
         $this->assertFalse($vehicleWeight->hasWeight() && $vehicleWeight->hasWeightSource());
 
-        $vehicleWeight->setWeight(0)
-            ->setWeightSource(0);
+        $vehicleWeight->setWeight($weight)->setWeightSource($weightSource);
 
-        $this->assertTrue($vehicleWeight->hasWeight() && $vehicleWeight->hasWeightSource());
+        $this->assertEquals($vehicleWeight->hasWeight() && $vehicleWeight->hasWeightSource(), $expected);
+    }
+
+    public function vehicleWeightAndWeightSourceDataProvider()
+    {
+        $validWeightSource = 2;
+
+        /* Negative weight has not been tested, as it will pass this test.
+           Negative weights are caught/tested in api-client-php (src/Request/AbstractDvlaVehicleRequest.php) */
+        return [
+            [0, $validWeightSource, false],
+            [null, $validWeightSource, false],
+            [10000, $validWeightSource, true],
+        ];
     }
 }

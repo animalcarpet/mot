@@ -112,6 +112,7 @@ class VehicleObjectsFactory
             ->setVin(self::EXAMPLE_VIN)
             ->setUnladenWeight(1000)
             ->setDesignedGrossWeight(1200)
+            ->setMassInServiceWeight(1100)
             ->setV5DocumentNumber(123456)
             ->setDvlaVehicleId(2);
 
