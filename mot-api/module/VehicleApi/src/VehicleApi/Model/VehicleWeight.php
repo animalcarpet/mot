@@ -64,7 +64,7 @@ class VehicleWeight
      */
     public function hasWeight()
     {
-        return isset($this->weight);
+        return !empty($this->weight);
     }
 
     /**

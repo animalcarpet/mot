@@ -28,8 +28,6 @@ use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\MultiCallStubBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\DvlaVehicle;
-use DvsaEntities\Entity\Make;
-use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Vehicle;
@@ -59,48 +57,54 @@ class VehicleServiceTest extends AbstractServiceTestCase
     const VEHICLE_ID = 9999;
     const VEHICLE_ID_ENC = 'jq33IixSpBsx4rglOvxByg';
 
-    /** @var MotAuthorisationServiceInterface|MockObj */
+    const SET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME = 'setMassInServiceWeight';
+    const GET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME = 'getMassInServiceWeight';
+    const SET_DESIGNED_GROSS_WEIGHT_METHOD_NAME = 'setDesignedGrossWeight';
+    const GET_DESIGNED_GROSS_WEIGHT_METHOD_NAME = 'getDesignedGrossWeight';
+
+    /** @var MotAuthorisationServiceInterface|MockObj $mockAuthService */
     private $mockAuthService;
 
-    /** @var VehicleRepository|MockObj */
+    /** @var VehicleRepository|MockObj $mockVehicleRepository */
     private $mockVehicleRepository;
 
-    /** @var VehicleV5CRepository|MockObj */
+    /** @var VehicleV5CRepository|MockObj $mockVehicleV5CRepository */
     private $mockVehicleV5CRepository;
 
-    /** @var DvlaVehicleRepository|MockObj */
+    /** @var DvlaVehicleRepository|MockObj $mockDvlaVehicleRepository */
     private $mockDvlaVehicleRepository;
 
-    /** @var DvlaVehicleImportChangesRepository|MockObj */
+    /** @var DvlaVehicleImportChangesRepository|MockObj $mockDvlaVehicleImportChangesRepository */
     private $mockDvlaVehicleImportChangesRepository;
 
-    /** @var EntityRepository */
+    /** @var EntityRepository|MockObj $mockDvlaMakeModelMapRepository */
     private $mockDvlaMakeModelMapRepository;
 
-    /** @var VehicleCatalogService|MockObj */
+    /** @var VehicleCatalogService|MockObj $mockVehicleCatalog */
     private $mockVehicleCatalog;
 
-    /** @var VehicleValidator|MockObj */
+    /** @var VehicleValidator|MockObj $mockValidator */
     private $mockValidator;
 
-    /** @var ParamObfuscator */
+    /** @var ParamObfuscator $paramObfuscator */
     private $paramObfuscator;
 
-    /** @var MotTestServiceProvider */
+    /** @var MotTestServiceProvider $motTestServiceProvider */
     private $motTestServiceProvider;
 
-    /** @var PersonRepository */
+    /** @var PersonRepository $personRepository */
     private $personRepository;
 
-    /** @var MotTestService|MockObj */
+    /** @var MotTestService|MockObj $mockMotTestService */
     private $mockMotTestService;
 
-    /** @var MotIdentityProviderInterface */
+    /** @var MotIdentityProviderInterface $motIdentityProviderInterface */
     private $motIdentityProviderInterface;
 
-    /** @var Transaction */
+    /** @var Transaction $transaction */
     private $transaction;
 
+    /** @var NewVehicleService|MockObj $mockNewVehicleService */
     private $mockNewVehicleService;
 
     public function setUp()
@@ -114,13 +118,17 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $this->mockDvlaMakeModelMapRepository = XMock::of(EntityRepository::class);
         $this->mockMotTestService = XMock::of(MotTestService::class);
         $this->motIdentityProviderInterface = XMock::of(MotIdentityProviderInterface::class);
-        $this->motIdentityProviderInterface->expects($this->any())->method('getIdentity')
+        $this->motIdentityProviderInterface
+            ->expects($this->any())
+            ->method('getIdentity')
             ->willReturn(XMock::of(Identity::class));
         $this->mockNewVehicleService = XMock::of(NewVehicleService::class);
-        $this->mockNewVehicleService->expects($this->any())
+        $this->mockNewVehicleService
+            ->expects($this->any())
             ->method('createVehicleFromDvla')
             ->willReturn($this->getNewDvlaVehicleData());
-        $this->mockNewVehicleService->expects($this->any())
+        $this->mockNewVehicleService
+            ->expects($this->any())
             ->method('createDvsaVehicle')
             ->willReturn($this->getNewDvsaVehicleData());
 
@@ -139,7 +147,8 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $id = 2;
         $entity = 'VEHICLE_ENTITY';
 
-        $this->mockVehicleRepository->expects($this->once())
+        $this->mockVehicleRepository
+            ->expects($this->once())
             ->method('get')
             ->with($id)
             ->will($this->returnValue($entity));
@@ -207,36 +216,10 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $dvlaVehicle->setMakeCode('BB');
         $dvlaVehicle->setModelCode('COOPER');
         $vehicleClassCode = VehicleClassCode::CLASS_4;
-//        $dvlaVehicle->setMassInServiceWeight(1000);
 
         $vtrCapture = ArgCapture::create();
 
-        $this->returningOn($this->mockVehicleCatalog, VOF::countryOfRegistration(3), 'getCountryOfRegistrationByCode');
-        $this->returningOn(
-            $this->mockVehicleCatalog,
-            VOF::vehicleClass(VehicleClassId::CLASS_4, VehicleClassCode::CLASS_4),
-            'getVehicleClassByCode'
-        );
-        $this->returningOn($this->mockDvlaVehicleRepository, $dvlaVehicle);
-        $this->returningOn($this->mockVehicleCatalog, VOF::bodyType(), 'findBodyTypeByCode');
-
-        $colourCode = 'R';
-        $secondaryColourCode = 'G';
-        $this->returningOn(
-            $this->mockVehicleCatalog,
-            MultiCallStubBuilder::of()
-                ->add([$colourCode, $this->anything()], VOF::colour(1, $colourCode))
-                ->add([$secondaryColourCode, $this->anything()], VOF::colour(2, $secondaryColourCode))
-                ->build(),
-            'getColourByCode'
-        );
-        $this->returningOn($this->mockVehicleCatalog, VOF::fuelType(), 'findFuelTypeByPropulsionCode');
-        $this->returningOn($this->mockVehicleCatalog, VOF::model(), 'getModelByCode');
-        $this->returningOn($this->mockVehicleCatalog, VOF::make(), 'findMakeByCode');
-
-        $this->returningOn(
-            $this->mockVehicleCatalog, VOF::weightSource(WeightSourceCode::MISW), 'getWeightSourceByCode'
-        );
+        $this->vehicleServiceMockMethods($vehicleClassCode, $dvlaVehicle);
 
         $this->mockNewVehicleService
             ->expects($this->any())
@@ -262,6 +245,70 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $this->assertEquals($dvlaVehicle->getFirstRegistrationDate(), new \DateTime($vehicleData->firstUsedDate));
         $this->assertEquals($dvlaVehicle->getCylinderCapacity(), $vehicleData->cylinderCapacity);
         $this->assertEquals($dvlaVehicle->getDvlaVehicleId(), $vehicleData->dvlaVehicleId);
+    }
+
+    /**
+     * @dataProvider weightAndVehicleClassCodeDataProvider
+     *
+     * @param string   $setWeightMethod
+     * @param int|null $weight
+     * @param string   $getWeightMethod
+     * @param string   $vehicleClassCode
+     */
+    public function testWeightIsSetCorrectlyAfterCreatingVtrAndV5CfromDvlaVehicle(
+        $setWeightMethod, $weight, $getWeightMethod, $vehicleClassCode
+    ) {
+        $dvlaVehicle = VOF::dvlaVehicle();
+        $dvlaVehicle->$setWeightMethod($weight);
+
+        $vtrCapture = ArgCapture::create();
+
+        $this->vehicleServiceMockMethods($vehicleClassCode, $dvlaVehicle);
+
+        $this->mockNewVehicleService
+            ->expects($this->any())
+            ->method('createVehicleFromDvla')
+            ->with($vtrCapture());
+
+        $this->mockNewVehicleService
+            ->expects($this->any())
+            ->method('createVehicleFromDvla')
+            ->will($this->returnCallback(
+                function ($dvlaVehicleRequest) use ($dvlaVehicle, $weight, $getWeightMethod) {
+                    if ($weight == null || $weight == 0) {
+                        $dvlaVehicleRequestJsonData =
+                            json_decode($dvlaVehicleRequest->getVehicleData()->toJson(), true);
+                        $this->assertArrayNotHasKey('weight', $dvlaVehicleRequestJsonData);
+                    } else {
+                        $this->assertEquals(
+                            $dvlaVehicle->$getWeightMethod(),
+                            $dvlaVehicleRequest->getVehicleData()->weight
+                        );
+                    }
+                }
+            ));
+
+        $this->createService()->createVtrAndV5CFromDvlaVehicle($dvlaVehicle->getId(), $vehicleClassCode);
+    }
+
+    public function weightAndVehicleClassCodeDataProvider()
+    {
+        /* If the vehicle class code of the vehicle is 3 or 4, use the Mass in Service Weight
+           If the vehicle class code of the vehicle is 5 or 7, use the Designed Gross Weight */
+        return [
+            [self::SET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME, null,
+             self::GET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME, VehicleClassCode::CLASS_3, ],
+            [self::SET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME, 0,
+             self::GET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME, VehicleClassCode::CLASS_3, ],
+            [self::SET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME, 10000,
+             self::GET_MASS_IN_SERVICE_WEIGHT_METHOD_NAME, VehicleClassCode::CLASS_3, ],
+            [self::SET_DESIGNED_GROSS_WEIGHT_METHOD_NAME, null,
+             self::GET_DESIGNED_GROSS_WEIGHT_METHOD_NAME, VehicleClassCode::CLASS_5, ],
+            [self::SET_DESIGNED_GROSS_WEIGHT_METHOD_NAME, 0,
+             self::GET_DESIGNED_GROSS_WEIGHT_METHOD_NAME, VehicleClassCode::CLASS_5, ],
+            [self::SET_DESIGNED_GROSS_WEIGHT_METHOD_NAME, 10000,
+             self::GET_DESIGNED_GROSS_WEIGHT_METHOD_NAME, VehicleClassCode::CLASS_5, ],
+        ];
     }
 
     public function testCreateVtrAndV5CfromDvlaVehicleGivenDvlaVehicleShouldCreateLinkBetweenDvlaAndVtr()
@@ -713,5 +760,42 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $dvsaVehicle = new NewDvsaVehicle($dvsaVehicleData);
 
         return $dvsaVehicle;
+    }
+
+    /**
+     * @param string      $vehicleClassCode
+     * @param DvlaVehicle $dvlaVehicle
+     */
+    protected function vehicleServiceMockMethods($vehicleClassCode, $dvlaVehicle)
+    {
+        $this->returningOn($this->mockVehicleCatalog, VOF::countryOfRegistration(3), 'getCountryOfRegistrationByCode');
+
+        $this->returningOn(
+            $this->mockVehicleCatalog,
+            VOF::vehicleClass((int) $vehicleClassCode, $vehicleClassCode),
+            'getVehicleClassByCode'
+        );
+
+        $this->returningOn($this->mockDvlaVehicleRepository, $dvlaVehicle);
+        $this->returningOn($this->mockVehicleCatalog, VOF::bodyType(), 'findBodyTypeByCode');
+
+        $colourCode = 'R';
+        $secondaryColourCode = 'G';
+        $this->returningOn(
+            $this->mockVehicleCatalog,
+            MultiCallStubBuilder::of()
+                ->add([$colourCode, $this->anything()], VOF::colour(1, $colourCode))
+                ->add([$secondaryColourCode, $this->anything()], VOF::colour(2, $secondaryColourCode))
+                ->build(),
+            'getColourByCode'
+        );
+        $this->returningOn($this->mockVehicleCatalog, VOF::fuelType(), 'findFuelTypeByPropulsionCode');
+
+        $this->returningOn($this->mockVehicleCatalog, VOF::model(), 'getModelByCode');
+        $this->returningOn($this->mockVehicleCatalog, VOF::make(), 'findMakeByCode');
+
+        $this->returningOn(
+            $this->mockVehicleCatalog, VOF::weightSource(WeightSourceCode::MISW), 'getWeightSourceByCode'
+        );
     }
 }

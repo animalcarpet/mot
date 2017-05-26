@@ -227,7 +227,7 @@ class VehicleService
      * @param $dvlaVehicleId
      * @param $vehicleClassCode
      *
-     * @return DvsaVehicle
+     * @return VehicleFromDvla
      */
     public function createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode)
     {
@@ -410,11 +410,13 @@ class VehicleService
         $weightAndSource = $this->getVehicleWeight($dvlaVehicle, $vehicleClass);
 
         if ($weightAndSource->hasWeight()) {
-            $dvlaVehicleRequest->setWeight($weightAndSource->getWeight());
-        }
 
-        if ($weightAndSource->hasWeightSource()) {
-            $dvlaVehicleRequest->setWeightSourceId($weightAndSource->getWeightSource());
+            $dvlaVehicleRequest->setWeight($weightAndSource->getWeight());
+
+            if ($weightAndSource->hasWeightSource()) {
+                $dvlaVehicleRequest->setWeightSourceId($weightAndSource->getWeightSource());
+            }
+
         }
 
         $dvlaVehicle = $this->newVehicleService->createVehicleFromDvla($dvlaVehicleRequest);
