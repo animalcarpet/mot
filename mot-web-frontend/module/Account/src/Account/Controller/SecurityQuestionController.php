@@ -53,6 +53,7 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
             'pageSubTitle' => 'Forgotten your password',
             'pageTitle' => 'Your security questions',
         ]);
+        $this->setHeadTitle('Your security questions');
 
         $verificationMessages = [];
 
