@@ -53,7 +53,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->timeoutPeriod = new TimeSpan(0, 1, 0, 0);
-        $this->dateTimeHolder = new TestDateTimeHolder(new \DateTime('2016-06-22'));
+        $this->dateTimeHolder = new TestDateTimeHolder(new \DateTime());
         $this->timeoutDateTime = $this->timeoutPeriod->addDateTime($this->dateTimeHolder->getCurrent());
         $this->year = (int) $this->dateTimeHolder->getCurrent()->sub(new \DateInterval('P1M'))->format('Y');
         $this->month = (int) $this->dateTimeHolder->getCurrent()->sub(new \DateInterval('P1M'))->format('m');
