@@ -83,7 +83,7 @@ class ResourcesOnGovUkFactoryTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     'name' => 'MOT testing guide',
-                    'url' => '/documents/manuals/tgi00000001.htm',
+                    'url' => 'https://www.gov.uk/government/publications/mot-testing-guide',
                     'help_text' => 'Guidance on how the MOT scheme is run',
                 ],
                 [

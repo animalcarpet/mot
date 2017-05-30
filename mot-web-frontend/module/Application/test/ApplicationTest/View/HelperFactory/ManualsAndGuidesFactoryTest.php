@@ -81,7 +81,7 @@ class ManualsAndGuidesFactoryTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     'name' => 'MOT testing guide',
-                    'url' => '/documents/manuals/tgi00000001.htm',
+                    'url' => 'https://www.gov.uk/government/publications/mot-testing-guide',
                 ],
                 [
                     'name' => 'In service exhaust emission standards for road vehicles: 18th edition',
