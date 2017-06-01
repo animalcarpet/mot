@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7216ea69eabac5bc69d2d559c19b84b1",
+    "content-hash": "3a4b893428e1403fbd6da91ad5f925ab",
     "packages": [
         {
             "name": "cpms/client",
@@ -978,17 +978,17 @@
         },
         {
             "name": "dvsa/dvsa-openam-client",
-            "version": "v1.9.6",
+            "version": "v1.9.7",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-openam-client.git",
-                "reference": "4863f2dc638d333e74733a030908247acb6fae12"
+                "reference": "298a4653306b4a24a4487d60e363b48bb5d7f0d9"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-openam-client-v1.9.6-acb6c9.tar",
-                "reference": "4863f2dc638d333e74733a030908247acb6fae12",
-                "shasum": "8bf5c78eb8f7fcb2b4d558ad3ae317ae44666717"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-openam-client-v1.9.7-8c1636.tar",
+                "reference": "298a4653306b4a24a4487d60e363b48bb5d7f0d9",
+                "shasum": "146441be3f5aa69f240c258752fea690ea4c0585"
             },
             "require": {
                 "php": ">=5.5",
@@ -1015,7 +1015,7 @@
                 }
             },
             "description": "JSON mapper used to map objects to/from JSON compatible arrays",
-            "time": "2017-04-24T13:03:21+00:00"
+            "time": "2017-06-01T14:59:09+00:00"
         },
         {
             "name": "dvsa/feature-toggle",

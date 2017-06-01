@@ -8,7 +8,7 @@
         "dvsa/dvsa-document-module": "dev-develop",
         "dvsa/scripts": "~2.0.3",
         "dvsa/dvsa-logger": "v1.0.2",
-        "dvsa/dvsa-openam-client": "1.9.6",
+        "dvsa/dvsa-openam-client": "1.9.7",
         "dvsa/mot-google-analytics": "^0.1",
         "maglnet/magl-markdown": "1.3.0",
         "soflomo/purifier": "0.1.1",
