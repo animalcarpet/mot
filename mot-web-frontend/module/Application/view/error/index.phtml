@@ -1,4 +1,6 @@
-<?php use DvsaCommon\Exception\UnauthorisedException;
+<?php
+use DvsaCommon\Exception\UnauthorisedException;
+use DvsaApplicationLogger\Log;
 
 if ($this->showErrorsInFrontEnd): ?>
 
@@ -12,7 +14,7 @@ if ($this->showErrorsInFrontEnd): ?>
             $file = $this->exception->getFile();
             $line = $this->exception->getLine();
             $message = $this->exception->getMessage();
-            $trace = $this->exception->getTraceAsString();
+            $trace = (new Log\FilteredStackTrace())->getTraceAsString($this->exception);
 
             if ($this->exception instanceof UnauthorisedException) {
                 $trace = $this->exception->getDebugInfo()['trace']."\n...\n".$trace;
