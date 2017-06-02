@@ -39,6 +39,7 @@ use Application\Service\ContingencySessionManager;
 use Application\View\HelperFactory\AuthorisationHelperFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Listener\RegisterCardHardStopListener;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Listener\CardPinValidationListener;
+use DvsaApplicationLogger\Log\FilteredStackTrace;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
@@ -245,7 +246,7 @@ class Module implements
             $logger->err('file: '.$exception->getFile());
             $logger->err('line: '.$exception->getLine());
             $logger->err('message: '.$exception->getMessage());
-            $logger->err('stacktrace: '.$exception->getTraceAsString());
+            $logger->err('stacktrace: '.(new FilteredStackTrace())->getTraceAsString($exception));
         }
 
         $config = $serviceManager->get('config');

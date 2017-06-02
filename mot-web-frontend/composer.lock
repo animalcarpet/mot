@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a4b893428e1403fbd6da91ad5f925ab",
+    "content-hash": "c2216cd36df68f5dd14c54e1ef7051d4",
     "packages": [
         {
             "name": "cpms/client",
@@ -812,17 +812,17 @@
         },
         {
             "name": "dvsa/dvsa-application-logger",
-            "version": "v1.4.4",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-application-logger.git",
-                "reference": "f450622667cf243b96c850813e32b12ee1c69725"
+                "reference": "7b5953cad43e65a285d259a14718ed2c99860efe"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v1.4.4-38e985.tar",
-                "reference": "f450622667cf243b96c850813e32b12ee1c69725",
-                "shasum": "8eae9288c831dd7b628db2db7b5d36894f31fec6"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v1.5.1-5b96b0.tar",
+                "reference": "7b5953cad43e65a285d259a14718ed2c99860efe",
+                "shasum": "47d46da464d0b372e3387abba2510f74ec67048d"
             },
             "require": {
                 "php": ">=5.5",
@@ -858,7 +858,7 @@
                 "logging",
                 "zf2"
             ],
-            "time": "2017-05-18T10:08:12+00:00"
+            "time": "2017-06-06T15:22:43+00:00"
         },
         {
             "name": "dvsa/dvsa-doctrine-module",
