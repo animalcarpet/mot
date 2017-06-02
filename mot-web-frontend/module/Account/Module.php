@@ -7,6 +7,8 @@
 
 namespace Account;
 
+use Account\Action\PasswordReset\AnswerSecurityQuestionsAction;
+use Account\Factory\Action\AnswerSecurityQuestionsActionFactory;
 use Account\Factory\Service\ExpiredPasswordServiceFactory;
 use Account\Service\ClaimAccountService;
 use Account\Service\ExpiredPasswordService;
@@ -42,6 +44,7 @@ class Module
                 SecurityQuestionService::class => \Account\Factory\Service\SecurityQuestionServiceFactory::class,
                 ParamObfuscatorFactory::class => ParamObfuscatorFactory::class,
                 ExpiredPasswordService::class => ExpiredPasswordServiceFactory::class,
+                AnswerSecurityQuestionsAction::class => AnswerSecurityQuestionsActionFactory::class
             ],
         ];
     }

@@ -1,23 +1,23 @@
 {% include 'partial/forms/validationSummary.twig'
-with {'title' : 'There was a problem','validationMessages' : validationMessages} %}
+with {'title' : 'There was a problem','validationMessages' : viewModel.getValidationMessages} %}
 
-{{ form().openTag(form)|raw }}
+{{ form().openTag(viewModel.form)|raw }}
 {{ csrfToken() }}
 <fieldset>
 
-    {{ MotFormRow(form.get(
+    {{ MotFormRow(viewModel.form.get(
     constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_QUESTION_ID'))
     ) }}
 
-    {{ MotFormRow(form.get(
+    {{ MotFormRow(viewModel.form.get(
     constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_ANSWER'))
     ) }}
 
-    {{ MotFormRow(form.get(
+    {{ MotFormRow(viewModel.form.get(
     constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_QUESTION_ID'))
     ) }}
 
-    {{ MotFormRow(form.get(
+    {{ MotFormRow(viewModel.form.get(
     constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_ANSWER'))
     ) }}
 
@@ -25,7 +25,7 @@ with {'title' : 'There was a problem','validationMessages' : validationMessages}
 
 <div class="form-group">
     <details>
-        <summary role="button" aria-controls="dateDetails" id="expandable-link" aria-expanded="false" tabindex="0">
+        <summary role="button" aria-controls="dateDetails" id="expandable-link" aria-expanded="false">
             <span class="summary">Forgotten your security questions?</span>
         </summary>
         <div class="panel-indent" id="dateDetails" aria-hidden="true">
@@ -33,7 +33,7 @@ with {'title' : 'There was a problem','validationMessages' : validationMessages}
                     <p>
                         {% set helpdeskVariables = {
                         'postContactText' : ' to reset your questions',
-                        'config': config,
+                        'config': viewModel.helpdeskConfig,
                         } %}
                         {% include 'partial/gds/general/contactHelpdesk.twig' with helpdeskVariables %}
                     </p>
@@ -43,11 +43,11 @@ with {'title' : 'There was a problem','validationMessages' : validationMessages}
 </div>
 
 <nav class="content-navigation">
-    {{ MotFormRow(form.get('submitSecurityAnswers')) }}
+    {{ MotFormRow(viewModel.form.get('submitSecurityAnswers')) }}
     <ul class="content-navigation__secondary">
         <li>
-            <a href="{{ urlBack|raw }}">Back</a>
+            <a href="{{ viewModel.getUrlBack|raw }}">Back</a>
         </li>
     </ul>
 </nav>
-{{ form().closeTag()|raw }}
+{{ form().closeTag(viewModel.form)|raw }}

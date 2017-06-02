@@ -7,6 +7,7 @@
 
 namespace AccountTest\Factory\Controller;
 
+use Account\Action\PasswordReset\AnswerSecurityQuestionsAction;
 use Account\Controller\SecurityQuestionController;
 use Account\Factory\Controller\SecurityQuestionControllerFactory;
 use Account\Service\SecurityQuestionService;
@@ -28,6 +29,9 @@ class SecurityQuestionControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $service = XMock::of(UserAdminSessionManager::class);
         $serviceManager->setService(UserAdminSessionManager::class, $service);
+
+        $service = XMock::of(AnswerSecurityQuestionsAction::class);
+        $serviceManager->setService(AnswerSecurityQuestionsAction::class, $service);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

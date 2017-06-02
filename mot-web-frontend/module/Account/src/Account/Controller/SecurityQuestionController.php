@@ -7,11 +7,10 @@
 namespace Account\Controller;
 
 use Account\AbstractClass\AbstractSecurityQuestionController;
-use Account\Exception\LimitReachedException;
-use Account\Form\SecurityQuestionAnswersForm;
+use Account\Action\PasswordReset\AnswerSecurityQuestionsAction;
+use Account\Service\SecurityQuestionService;
 use Account\ViewModel\SecurityQuestionViewModel;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
-use DvsaCommon\InputFilter\Account\SecurityQuestionAnswersInputFilter;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\View\Model\ViewModel;
 
@@ -22,6 +21,22 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
 {
     const PAGE_TITLE = 'Forgotten your password';
     const PAGE_SUBTITLE = 'MOT testing service';
+    const ROUTE_NOT_AUTHENTICATED = 'forgotten-password/notAuthenticated';
+    const ROUTE_CONFIRMATION_EMAIL = 'forgotten-password/confirmationEmail';
+    const ROUTE_SECURITY_QUESTIONS ='forgotten-password/security-questions';
+
+    /** @var AnswerSecurityQuestionsAction $answerSecurityQuestionsAction */
+    private $answerSecurityQuestionsAction;
+
+    public function __construct(
+        SecurityQuestionService $securityQuestionService,
+        UserAdminSessionManager $userAdminSessionManager,
+        AnswerSecurityQuestionsAction $answerSecurityQuestionsAction
+    ) {
+        parent::__construct($securityQuestionService, $userAdminSessionManager);
+
+        $this->answerSecurityQuestionsAction = $answerSecurityQuestionsAction;
+    }
 
     /**
      * This action is the end point to enter the question answer for the help desk.
@@ -55,70 +70,18 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
         ]);
         $this->setHeadTitle('Your security questions');
 
-        $verificationMessages = [];
-
         $personId = $this->params()->fromRoute('personId');
+        $action = $this->answerSecurityQuestionsAction;
 
-        $form = $this->getSecurityQuestionAnswersFormForPerson($personId);
+        $action
+            ->setFormActionUrl($this->url()->fromRoute(self::ROUTE_SECURITY_QUESTIONS, ['personId' => $personId]))
+            ->setBackUrl($this->url()->fromRoute('forgotten-password'));
 
-        $request = $this->getRequest();
+        $actionResult = $this->getRequest()->isPost() ?
+            $action->execute($personId, $this->getRequest()->getPost()) :
+            $action->executeNoAnswers($personId);
 
-        if ($request->isPost()) {
-            $form->bind($request->getPost());
-
-            if ($form->isValid()) {
-                try {
-                    $verificationResult = $this->service->verifyAnswers($personId, $form->getMappedQuestionsAndAnswers());
-
-                    if ($this->service->isVerified()) {
-                        $this->flashMessenger()->getContainer()->offsetSet(
-                            PasswordResetController::SESSION_KEY_EMAIL,
-                            $this->service->resetPersonPassword($personId)
-                        );
-
-                        return $this->redirect()->toRoute('forgotten-password/confirmationEmail');
-                    } else {
-                        foreach ($verificationResult as $failedQuestionId => $value) {
-                            $form->flagFailedAnswerVerifications($failedQuestionId);
-                        }
-
-                        if ($this->service->hasRemainingAttempts()) {
-                            if ($this->service->getRemainingAttempts() <= 1) {
-                                $verificationMessages = [[
-                                    SecurityQuestionAnswersInputFilter::MSG_LAST_ATTEMPT_WARNING,
-                                ]];
-                            }
-                        } else {
-                            throw new LimitReachedException();
-                        }
-                    }
-                } catch (LimitReachedException $e) {
-                    return $this->redirectToTheNotAuthenticate();
-                } catch (\RuntimeException $e) {
-                    return $this->redirectToTheNotAuthenticate();
-                }
-            }
-        }
-
-        $messages = $form->getMessages() + $verificationMessages;
-
-        $viewModel = (new ViewModel())->setTemplate('account/security-question/get-questions.twig')
-            ->setVariables([
-                'form' => $form,
-                'validationMessages' => $messages,
-                'urlBack' => $this->url()->fromRoute('forgotten-password'),
-                'config' => $this->getConfig()['helpdesk'],
-            ]);
-
-        return $viewModel;
-    }
-
-    /**
-     * @return \Zend\Http\Response
-     */
-    private function redirectToTheNotAuthenticate()
-    {
-        return $this->redirect()->toUrl($this->url()->fromRoute('forgotten-password/notAuthenticated'));
+        return $this->applyActionResult($actionResult);
     }
 
     /**
@@ -130,23 +93,5 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
         $personProfileUrlGenerator = $this->getServiceLocator()->get(PersonProfileUrlGenerator::class);
 
         return new SecurityQuestionViewModel($this->service, $personProfileUrlGenerator);
-    }
-
-    /**
-     * @param $personId
-     *
-     * @return SecurityQuestionAnswersForm
-     */
-    private function getSecurityQuestionAnswersFormForPerson($personId)
-    {
-        $securityQuestions = $this->service->getQuestionsForPerson($personId);
-
-        $form = new SecurityQuestionAnswersForm($securityQuestions[0], $securityQuestions[1]);
-
-        $form->setAction($this->url()->fromRoute('forgotten-password/security-questions', ['personId' => $personId]));
-
-        $form->setInputFilter(new SecurityQuestionAnswersInputFilter());
-
-        return $form;
     }
 }

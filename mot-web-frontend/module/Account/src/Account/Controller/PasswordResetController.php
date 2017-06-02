@@ -239,8 +239,9 @@ class PasswordResetController extends AbstractAuthActionController
      */
     public function confirmationAction()
     {
-        if ($this->flashMessenger()->getContainer()->offsetExists(self::SESSION_KEY_EMAIL)) {
-            $emailAddress = $this->flashMessenger()->getContainer()->offsetGet(self::SESSION_KEY_EMAIL);
+        $flashMessages = $this->flashMessenger()->getMessages(self::SESSION_KEY_EMAIL);
+        if (!empty($flashMessages)) {
+            $emailAddress = $flashMessages[0];
         } else {
             $emailAddress = $this->userAdminSessionManager->getElementOfUserAdminSession(
                 UserAdminSessionManager::EMAIL_ADDRESS
