@@ -7,6 +7,7 @@
 
 namespace AccountTest\Controller;
 
+use Account\Action\PasswordReset\AnswerSecurityQuestionsAction;
 use Account\Controller\SecurityQuestionController;
 use Account\Service\SecurityQuestionService;
 use Account\Validator\ClaimValidator;
@@ -64,7 +65,8 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
         $this->setController(
             new SecurityQuestionController(
                 $this->securityQuestionService,
-                $this->userAdminSessionManager
+                $this->userAdminSessionManager,
+                XMock::of(AnswerSecurityQuestionsAction::class)
             )
         );
 
