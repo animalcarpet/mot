@@ -92,6 +92,7 @@ class ClaimController extends AbstractAuthActionController
         $stepData = $this->getReusedPasswordError($stepData);
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Reset your account security');
 
         return new ViewModel($stepData);
     }
@@ -105,9 +106,10 @@ class ClaimController extends AbstractAuthActionController
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariables([
-            'pageSubTitle' => 'Choose new security questions',
-            'pageTitle' => 'Reset your account security'
+            'pageSubTitle' => 'Reset your account security',
+            'pageTitle' => 'Choose new security questions'
         ]);
+        $this->setHeadTitle('Choose new security questions');
 
         $form = $this->getSecurityQuestionForm();
 
@@ -193,6 +195,7 @@ class ClaimController extends AbstractAuthActionController
         $stepData['reviewViewModel'] = $reviewViewModel;
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Review your new account security');
 
         return new ViewModel($stepData);
     }
@@ -206,6 +209,7 @@ class ClaimController extends AbstractAuthActionController
         $stepData = $this->getStepData(self::STEP_3_NAME) + $sessionAsArray;
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('You have reset your account security');
 
         $vm = new ViewModel($stepData);
         $vm->setTemplate('account/claim/2fa-success');
