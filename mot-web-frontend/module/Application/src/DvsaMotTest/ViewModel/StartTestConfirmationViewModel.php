@@ -7,6 +7,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\FuelType;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
+use DvsaMotTest\Service\AuthorisedClassesService;
 
 /**
  * Class StartTestConfirmationViewModel.
@@ -91,8 +92,14 @@ class StartTestConfirmationViewModel
     /** @var bool */
     private $showTestingAdvice = false;
 
-    /** @var @var string */
+    /** @var string */
     private $testingAdviceUrl;
+
+    /** @var bool */
+    private $isPermittedToTest = true;
+
+    /** @var string */
+    private $isPermittedToTestText;
 
     /**
      * @return string
@@ -716,5 +723,56 @@ class StartTestConfirmationViewModel
     public function getTestingAdviceUrl()
     {
         return $this->testingAdviceUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPermittedToTest()
+    {
+        return $this->isPermittedToTest;
+    }
+
+    /**
+     * @param $isPermittedToTest
+     *
+     * @return $this
+     */
+    public function setIsPermittedToTest($isPermittedToTest)
+    {
+        $this->isPermittedToTest = $isPermittedToTest;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIsPermittedToTestText()
+    {
+        return $this->isPermittedToTestText;
+    }
+
+    /**
+     * @param array $combinedAuthorisedClassesForPersonAndVts
+     *
+     * @return $this
+     */
+    public function setIsPermittedToTestText(array $combinedAuthorisedClassesForPersonAndVts)
+    {
+        $inArrayPersonApprovedClasses = in_array($this->getMotTestClass(), $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_PERSON_APPROVED_CLASSES]);
+        $inArrayVtsApprovedClasses = in_array($this->getMotTestClass(), $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_VTS_APPROVED_CLASSES]);
+
+        if (!$inArrayPersonApprovedClasses && !$inArrayVtsApprovedClasses) {
+            $this->isPermittedToTestText = sprintf('This Vehicle Testing Station isn’t authorised to test class %s vehicles and you’re not qualified in this class.', $this->getMotTestClass());
+        } elseif (!$inArrayPersonApprovedClasses && $inArrayVtsApprovedClasses) {
+            $this->isPermittedToTestText = sprintf('You’re not qualified to test class %s vehicles.', $this->getMotTestClass());
+        } elseif (!$inArrayVtsApprovedClasses && $inArrayPersonApprovedClasses) {
+            $this->isPermittedToTestText = sprintf('This Vehicle Testing Station isn’t authorised to test class %s vehicles.', $this->getMotTestClass());
+        } else {
+            $this->isPermittedToTestText = '';
+        }
+
+        return $this;
     }
 }

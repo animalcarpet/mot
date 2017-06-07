@@ -18,6 +18,7 @@ class PersonParams
     const SURNAME = "surname";
     const LAST_NAME = "lastName";
     const SITE_IDS = "siteIds";
+    const QUALIFICATIONS = "qualifications";
     const AE_IDS = "aeIds";
     const ACCESS_TOKEN = "accessToken";
     const ACCOUNT_CLAIM_REQUIRED = "accountClaimRequired";
@@ -63,6 +64,7 @@ class PersonParams
             self::AUTHENTICATION_METHOD => PersonAuthType::PIN,
             self::DRIVING_LICENCE_NUMBER => $dataGeneratorHelper->drivingLicenceNumber(),
             self::DRIVING_LICENCE_REGION => LicenceCountryCode::GREAT_BRITAIN_ENGLAND_SCOTLAND_AND_WALES,
+            self::QUALIFICATIONS => null
         ];
     }
 }

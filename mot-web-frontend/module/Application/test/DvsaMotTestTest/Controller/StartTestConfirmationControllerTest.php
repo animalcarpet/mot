@@ -7,10 +7,13 @@ use Application\Helper\PrgHelper;
 use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Request\TypeConversion\DateTimeConverter;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
@@ -36,6 +39,7 @@ use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\StartTestConfirmationController;
+use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -67,6 +71,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     /** @var MotTestService $mockMotTestServiceClient */
     protected $mockMotTestServiceClient;
 
+    /** @var AuthorisedClassesService */
+    private $authorisedClassesService;
+
+    /** @var MotFrontendIdentityProviderInterface */
+    private $identityProvider;
+
     protected function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
@@ -87,11 +97,16 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->setServiceManager($serviceManager);
 
-        $this->setController(
-            new StartTestConfirmationController($this->createParamObfuscator(),
-            $this->createCountryOfRegistrationCatalog(),
-            $this->vehicleService,
-            XMock::of(StartTestChangeService::class)
+        $this->authorisedClassesService = XMock::of(AuthorisedClassesService::class);
+        $this->identityProvider = XMock::of(MotFrontendIdentityProviderInterface::class);
+
+        $this->setController(new StartTestConfirmationController(
+                $this->createParamObfuscator(),
+                $this->createCountryOfRegistrationCatalog(),
+                $this->vehicleService,
+                XMock::of(StartTestChangeService::class),
+                $this->authorisedClassesService,
+                $this->identityProvider
             )
         );
 
@@ -126,6 +141,19 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
     public function testIndexActionPostSetsErrorMessagesForInvalidTest()
     {
+        $this->identityProvider
+            ->expects($this->exactly(2))
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1))
+            );
+
+        $this->authorisedClassesService
+            ->expects($this->exactly(2))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockAuthorisedClassesForPersonAndVts());
         $errorMessage = 'You do not have permission to test this vehicle';
 
         $this->setupAuthorizationService(
@@ -189,6 +217,19 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testNoRegistrationParam($action, $params, $expect)
     {
+        $this->identityProvider
+            ->expects($this->exactly(2))
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1))
+            );
+
+        $this->authorisedClassesService
+            ->expects($this->exactly(2))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockAuthorisedClassesForPersonAndVts());
         $this->getMockDvsaVehicle();
         $mock = [
             'vehicle' => $this->getTestVehicleResult(),
@@ -229,8 +270,19 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     /**
      * @dataProvider dataProviderTestCheckEligibilityForRetest
      */
-    public function testCheckEligibilityForRetest($action, $params, array $mock, $expect)
+    public function testCheckEligibilityForRetest($action, $params, array $mock, $expect, $identityProviderInvoked = 2, $authorisedClassesServiceInvoked = 2)
     {
+        $this->identityProvider
+            ->expects($this->exactly($identityProviderInvoked))
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1)));
+        $this->authorisedClassesService
+            ->expects($this->exactly($authorisedClassesServiceInvoked))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockAuthorisedClassesForPersonAndVts());
         $this->getMockDvsaVehicle();
 
         $mock = [
@@ -334,6 +386,8 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                 'params' => $paramCommon,
                 'mock' => [],
                 'expect' => [],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'action' => self::ACTION_RETEST,
@@ -356,8 +410,19 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     /**
      * @dataProvider dataProviderTestAccess
      */
-    public function testAccess($method, $action, $permissions, $mock, $expect)
+    public function testAccess($method, $action, $permissions, $mock, $expect, $identityProviderInvoked = 2, $authorisedClassesServiceInvoked = 2)
     {
+        $this->identityProvider
+            ->expects($this->exactly($identityProviderInvoked))
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1)));
+        $this->authorisedClassesService
+            ->expects($this->exactly($authorisedClassesServiceInvoked))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockAuthorisedClassesForPersonAndVts());
         $this->getMockDvsaVehicle();
         $user = ['permissions' => $permissions];
 
@@ -415,6 +480,8 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                     'status' => self::HTTP_OK_CODE,
                     'exception' => $unauthException,
                 ],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'get', self::ACTION_RETEST, [PermissionInSystem::MOT_TEST_START], $mockGet,
@@ -426,10 +493,14 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                     'status' => self::HTTP_OK_CODE,
                     'exception' => $unauthException,
                 ],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'get', self::ACTION_NON_MOT, [PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM, PermissionInSystem::MOT_TEST_START], $mockGet,
                 'expect' => ['status' => self::HTTP_OK_CODE],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'get', self::ACTION_NON_MOT, [], [],
@@ -437,11 +508,19 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                     'status' => self::HTTP_OK_CODE,
                     'exception' => $unAuthNonMotException,
                 ],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
-            ['get', self::ACTION_TRAINING, [], $mockGet, ['status' => self::HTTP_OK_CODE]],
+            [
+                'get', self::ACTION_TRAINING, [], $mockGet, ['status' => self::HTTP_OK_CODE],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
+            ],
             [
                 'post', self::ACTION_INDEX, [PermissionInSystem::MOT_TEST_START], $mockPost,
                 ['url' => MotTestUrlBuilderWeb::options($motTestNumber)],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'post', self::ACTION_INDEX, [], [],
@@ -449,18 +528,26 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                     'status' => self::HTTP_OK_CODE,
                     'exception' => $unauthException,
                 ],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'post', self::ACTION_RETEST, [PermissionInSystem::MOT_TEST_START], $mockPost,
                 ['url' => MotTestUrlBuilderWeb::options($motTestNumber)],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'post', self::ACTION_TRAINING, [PermissionInSystem::MOT_TEST_START], $mockPost,
                 ['url' => MotTestUrlBuilderWeb::options($motTestNumber)],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
             [
                 'post', self::ACTION_INDEX, [PermissionInSystem::MOT_TEST_START], $mockCtSess + $mockPost,
                 ['url' => MotTestUrlBuilderWeb::motTest($motTestNumber)],
+                'identityProviderInvoked' => 0,
+                'authorisedClassesServiceInvoked' => 0,
             ],
         ];
     }
@@ -799,5 +886,27 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             ->expects($this->any())
             ->method('getDvsaVehicleById')
             ->willReturn($this->mockDvsaVehicleResponse());
+    }
+
+    private function mockAuthorisedClassesForPersonAndVts()
+    {
+        return [
+            'forPerson' => [
+                0 => '1',
+                1 => '2',
+                2 => '3',
+                3 => '4',
+                4 => '5',
+                5 => '7',
+            ],
+            'forVts' => [
+                0 => '1',
+                1 => '2',
+                2 => '3',
+                3 => '4',
+                4 => '5',
+                5 => '7',
+            ],
+        ];
     }
 }

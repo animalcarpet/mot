@@ -90,7 +90,12 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
             ->method('getChangeVehicleUnderTestBreadcrumbs')
             ->willReturn(['vehicle', 'change']);
 
-        $result = $step->executeGet('form-uuid-674574');
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isAuthorisedToTestClass')
+            ->willReturn(true);
+
+        $result = $step->executeGet("form-uuid-674574");
 
         /** @var MakeForm $form */
         $form = $result->getViewModel()->getForm();
@@ -126,7 +131,12 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
             ->method('getChangedValue')
             ->willReturn(['makeId' => 3]);
 
-        $result = $step->executeGet('form-uuid-674574');
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isAuthorisedToTestClass')
+            ->willReturn(true);
+
+        $result = $step->executeGet("form-uuid-674574");
 
         /** @var MakeForm $form */
         $form = $result->getViewModel()->getForm();
@@ -229,12 +239,16 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         $secondaryColour->code = 'W';
         $secondaryColour->name = 'Not Stated';
 
+        $class = new stdClass();
+        $class->code = 1;
+        $class->name =1;
+
         $std = new stdClass();
         $std->make = $make;
         $std->model = $model;
-        $std->registration = 'reg123XSW';
-        $std->vin = 'VIN98798798';
-        $std->vehicleClass = null;
+        $std->registration = "reg123XSW";
+        $std->vin = "VIN98798798";
+        $std->vehicleClass = $class;
         $std->fuelType = $fuel;
         $std->colour = $colour;
         $std->colourSecondary = $secondaryColour;

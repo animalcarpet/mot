@@ -2,19 +2,21 @@
 
 namespace DvsaMotTestTest\Controller;
 
+use Application\Factory\ApplicationWideCacheFactory;
 use Application\Service\CatalogService;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Obfuscate\EncryptionKey;
 use DvsaCommon\Obfuscate\ParamEncoder;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\Bootstrap;
-use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\StartTestConfirmationController;
-use DvsaCommon\HttpRestJson\Client;
-use Application\Factory\ApplicationWideCacheFactory;
+use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
 
 /**
@@ -30,7 +32,9 @@ class StartTestConfirmationControllerNotLoggedInTest extends AbstractDvsaMotTest
             $this->createParamObfuscator(),
             $this->createCountryOfRegistrationCatalog(),
             $vehicleService,
-            XMock::of(StartTestChangeService::class)
+            XMock::of(StartTestChangeService::class),
+            XMock::of(AuthorisedClassesService::class),
+            XMock::of(MotFrontendIdentityProviderInterface::class)
         ));
         parent::setUp();
     }

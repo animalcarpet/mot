@@ -5,10 +5,12 @@ import com.jayway.restassured.response.Response;
 import uk.gov.dvsa.domain.api.request.*;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.TestGroup;
+import uk.gov.dvsa.domain.shared.qualifications.TesterQualifications;
 import uk.gov.dvsa.framework.config.webdriver.WebDriverConfigurator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,9 +57,29 @@ public class UserService extends Service {
         return createUserAsTester(siteIdList, accountClaimRequired, null, is2Fa);
     }
 
+    protected User createUserAsTester(int siteId, boolean accountClaimRequired, boolean is2Fa, TesterQualifications qualifications) throws IOException {
+        List<Integer> siteIdList = new ArrayList<>();
+        siteIdList.add(siteId);
+
+        return createUserAsTesterWithCustomQualifications(siteIdList, accountClaimRequired, is2Fa, qualifications);
+    }
+
+    private User createUserAsTesterWithCustomQualifications(List<Integer> siteIdList, boolean accountClaimRequired, boolean is2Fa, TesterQualifications qualifications) throws IOException {
+
+        String userRequest =
+                jsonHandler.convertToString(new CreateTesterRequest(siteIdList, accountClaimRequired, null, qualifications.toJsonMap()));
+
+        Response response = motClient.createUser(userRequest, CREATE_TESTER_PATH);
+        User user = userResponse(response);
+        if(is2Fa) {
+            user.activate2faCard();
+        }
+        return user;
+    }
+
     private User createUserAsTester(List<Integer> siteIdList, boolean accountClaimRequired, TestGroup testGroup, boolean is2Fa) throws IOException {
         String userRequest =
-                jsonHandler.convertToString(new CreateTesterRequest(siteIdList, accountClaimRequired, testGroup));
+                jsonHandler.convertToString(new CreateTesterRequest(siteIdList, accountClaimRequired, testGroup, null));
 
         Response response = motClient.createUser(userRequest, CREATE_TESTER_PATH);
         User user = userResponse(response);

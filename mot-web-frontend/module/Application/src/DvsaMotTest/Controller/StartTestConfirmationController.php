@@ -7,6 +7,7 @@ use Application\Service\ContingencySessionManager;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
 use Core\Routing\MotTestRouteList;
 use Core\Routing\VehicleRoutes;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use Core\Service\RemoteAddress;
 use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
@@ -28,6 +29,7 @@ use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Helper\DvsaVehicleBuilder;
+use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use Vehicle\TestingAdvice\Assertion\ShowTestingAdviceAssertion;
@@ -82,23 +84,37 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     /** @var StartTestChangeService */
     private $startTestChangeService;
 
+    /** @var AuthorisedClassesService */
+    private $authorisedClassesService;
+
+    /** @var MotFrontendIdentityProviderInterface */
+    private $identityProvider;
+
     /**
-     * @param ParamObfuscator              $paramObfuscator
-     * @param CountryOfRegistrationCatalog $countryOfRegistrationCatalog
-     * @param VehicleService               $vehicleService
-     * @param StartTestChangeService       $startTestChangeService
+     * StartTestConfirmationController constructor.
+     *
+     * @param ParamObfuscator                      $paramObfuscator
+     * @param CountryOfRegistrationCatalog         $countryOfRegistrationCatalog
+     * @param VehicleService                       $vehicleService
+     * @param StartTestChangeService               $startTestChangeService
+     * @param AuthorisedClassesService             $authorisedClassesService
+     * @param MotFrontendIdentityProviderInterface $identityProvider
      */
     public function __construct(
         ParamObfuscator $paramObfuscator,
         CountryOfRegistrationCatalog $countryOfRegistrationCatalog,
         VehicleService $vehicleService,
-        StartTestChangeService $startTestChangeService
+        StartTestChangeService $startTestChangeService,
+        AuthorisedClassesService $authorisedClassesService,
+        MotFrontendIdentityProviderInterface $identityProvider
     ) {
         $this->paramObfuscator = $paramObfuscator;
         $this->startTestConfirmationViewModel = new StartTestConfirmationViewModel();
         $this->countryOfRegistrationCatalog = $countryOfRegistrationCatalog;
         $this->vehicleService = $vehicleService;
         $this->startTestChangeService = $startTestChangeService;
+        $this->authorisedClassesService = $authorisedClassesService;
+        $this->identityProvider = $identityProvider;
     }
 
     public function indexAction()
@@ -173,10 +189,12 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         $noRegistrationString = $this->params()->fromRoute(self::ROUTE_PARAM_NO_REG);
         $this->noRegistration = ($noRegistrationString === '1');
-        $this->startTestChangeService->saveChange(StartTestChangeService::NO_REGISTRATION, ['noRegistration' => $noRegistrationString]);
+        $this->startTestChangeService->saveChange(StartTestChangeService::NO_REGISTRATION, [StartTestChangeService::NO_REGISTRATION => $noRegistrationString]);
 
         $this->vehicleSource = $this->params()->fromRoute(self::ROUTE_PARAM_SOURCE);
-        $this->startTestChangeService->saveChange(StartTestChangeService::SOURCE, ['source' => $this->vehicleSource]);
+        $this->startTestChangeService->saveChange(StartTestChangeService::SOURCE, [StartTestChangeService::SOURCE => $this->vehicleSource]);
+
+        $this->startTestChangeService->saveChange(StartTestChangeService::NORMAL_OR_RETEST, [StartTestChangeService::NORMAL_OR_RETEST => false]);
 
         if ($this->method === MotTestTypeCode::NON_MOT_TEST) {
             $this->vtsId = null;
@@ -195,6 +213,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             throw new \Exception('VTS not found');
         }
         $this->vtsId = $currentVts->getVtsId();
+        $this->startTestChangeService->saveChange(StartTestChangeService::NORMAL_OR_RETEST, [StartTestChangeService::NORMAL_OR_RETEST => true]);
     }
 
     /**
@@ -445,6 +464,11 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
                 $this->createRefuseToTestAssertion()->isGranted($this->vtsId)
             );
 
+            if ($viewModel->getMotTestClass() != self::UNKNOWN_TEST) {
+                $viewModel->setIsPermittedToTest(
+                    $this->isAuthorisedToTestClass()
+                )->setIsPermittedToTestText($this->getCombinedAuthorisedClasses());
+            }
             $viewModel->setMotExpirationDate($viewData['checkExpiryResults']['expiryDate']);
         }
 
@@ -745,5 +769,37 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
             return false;
         }
+    }
+
+    private function getCombinedAuthorisedClasses()
+    {
+        $identity = $this->identityProvider->getIdentity();
+        $userId = $identity->getUserId();
+        $currentVts = $identity->getCurrentVts();
+
+        if (!$currentVts) {
+            throw new \Exception('VTS not found');
+        }
+
+        return $this->authorisedClassesService->getCombinedAuthorisedClassesForPersonAndVts($userId, $currentVts->getVtsId());
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    private function isAuthorisedToTestClass()
+    {
+        $isClassChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
+        $vehicleClass = $isClassChangedInSession ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS] : $this->vehicleDetails->getVehicleClass()->getCode();
+
+        $combinedAuthorisedClassesForPersonAndVts = $this->getCombinedAuthorisedClasses();
+
+        if (!in_array($vehicleClass, $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_PERSON_APPROVED_CLASSES]) || !in_array($vehicleClass, $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_VTS_APPROVED_CLASSES])) {
+            return false;
+        }
+
+        return true;
     }
 }

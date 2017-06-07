@@ -9,6 +9,7 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaMotTest\Service\StartTestChangeService;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\UpdateMakeAndModelWizard;
 
@@ -18,17 +19,21 @@ class UpdateMakeAndModelAction implements AutoWireableInterface
     private $paramObfuscator;
     private $wizard;
     private $authorisationService;
+    /** @var  StartTestChangeService */
+    private $startTestChangeService;
 
     public function __construct(
         VehicleService $vehicleService,
         ParamObfuscator $paramObfuscator,
         UpdateMakeAndModelWizard $wizard,
-        MotAuthorisationServiceInterface $authorisationService
+        MotAuthorisationServiceInterface $authorisationService,
+        StartTestChangeService $startTestChangeService
     ) {
         $this->vehicleService = $vehicleService;
         $this->paramObfuscator = $paramObfuscator;
         $this->wizard = $wizard;
         $this->authorisationService = $authorisationService;
+        $this->startTestChangeService = $startTestChangeService;
     }
 
     public function execute($stepName, $obfuscatedVehicleId, $isPost, $formUuid, array $formData, $requestUrl)
@@ -82,15 +87,15 @@ class UpdateMakeAndModelAction implements AutoWireableInterface
     private function getVehicle($vehicleId)
     {
         try {
-            $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
-        } catch (\Exception $exception) {
-            try {
+            if ($this->startTestChangeService->isDvlaVehicle()) {
                 $vehicle = $this->vehicleService->getDvlaVehicleById($vehicleId);
-            } catch (\Exception $exception) {
-                throw new \Exception(
-                    'No vehicle with id '.$vehicleId.' found'
-                );
+            } else {
+                $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
             }
+        } catch (\Exception $exception) {
+            throw new \Exception(
+                'No vehicle with id ' . $vehicleId . ' found'
+            );
         }
 
         return $vehicle;

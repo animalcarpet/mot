@@ -2,6 +2,7 @@ package uk.gov.dvsa.data;
 
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.service.UserService;
+import uk.gov.dvsa.domain.shared.qualifications.TesterQualifications;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,6 +18,12 @@ public class UserData extends UserService{
 
     public User createTester(int siteId) throws IOException {
         return createUserAsTester(siteId, true);
+    }
+
+    public User createTesterWithTestGroup1(int siteId) throws IOException {
+
+        TesterQualifications qualifications = new TesterQualifications(TesterQualifications.TesterQualificationStatus.QUALIFIED, TesterQualifications.TesterQualificationStatus.INITIAL_TRAINING_NEEDED);
+        return createUserAsTester(siteId, false, true, qualifications);
     }
 
     public User createNon2FaTester(int siteId) throws IOException {
