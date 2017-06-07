@@ -4,6 +4,7 @@ namespace DvsaMotTest\Service;
 
 use Core\Routing\MotTestRoutes;
 use Core\Routing\VehicleRoutes;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use Zend\View\Helper\Url;
 
@@ -22,6 +23,7 @@ class StartTestChangeService
     const SECONDARY_COLOUR = 'secondaryColour';
     const FUEL_TYPE = 'fuelType';
     const CYLINDER_CAPACITY = 'cylinderCapacity';
+    const NORMAL_OR_RETEST = 'normalOrRetest';
 
     const VALUE_CHANGED = true;
     const VALUE_NOT_CHANGED = false;
@@ -32,6 +34,11 @@ class StartTestChangeService
     /** @var Url */
     private $url;
 
+    /** @var AuthorisedClassesService */
+    private $authorisedClassesService;
+    /** @var MotFrontendIdentityProviderInterface */
+    private $identityProvider;
+
     /**
      * StartTestChangeService constructor.
      *
@@ -40,10 +47,14 @@ class StartTestChangeService
      */
     public function __construct(
         StartTestSessionService $startTestSessionService,
-        Url $url
+        Url $url,
+        MotFrontendIdentityProviderInterface $identityProvider,
+        AuthorisedClassesService $authorisedClassesService
     ) {
         $this->startTestSessionService = $startTestSessionService;
         $this->url = $url;
+        $this->identityProvider = $identityProvider;
+        $this->authorisedClassesService = $authorisedClassesService;
     }
 
     /**
@@ -211,6 +222,32 @@ class StartTestChangeService
     }
 
     /**
+     * @param $vehicleClass
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    public function isAuthorisedToTestClass($vehicleClass)
+    {
+        if (!$this->getChangedValue(self::NORMAL_OR_RETEST)[self::NORMAL_OR_RETEST] || $vehicleClass == null) {
+            return true;
+        }
+
+        $identity = $this->identityProvider->getIdentity();
+        $userId = $identity->getUserId();
+        $currentVts = $identity->getCurrentVts();
+
+        if (!$currentVts) {
+            throw new \Exception('VTS not found');
+        }
+
+        $combinedAuthorisedClassesForPersonAndVts = $this->authorisedClassesService->getCombinedAuthorisedClassesForPersonAndVts($userId, $currentVts->getVtsId());
+
+        return in_array($vehicleClass, $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_PERSON_APPROVED_CLASSES]) && in_array($vehicleClass, $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_VTS_APPROVED_CLASSES]);
+    }
+
+    /**
      * @return array
      */
     private function getVehicleChanges()
@@ -225,6 +262,7 @@ class StartTestChangeService
             self::NO_REGISTRATION,
             self::SOURCE,
             self::URL,
+            self::NORMAL_OR_RETEST,
         ];
     }
 }

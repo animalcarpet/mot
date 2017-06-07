@@ -2,7 +2,11 @@
 
 namespace DvsaMotTestTest\Service;
 
+use Core\Service\MotFrontendIdentityProviderInterface;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\StartTestSessionService;
 use Zend\View\Helper\Url;
@@ -15,12 +19,20 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
 
     private $url;
 
+    /** @var MotFrontendIdentityProviderInterface */
+    private $identityProvider;
+
+    /** @var AuthorisedClassesService */
+    private $authorisedClassesService;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->startTestSessionService = XMock::of(StartTestSessionService::class);
         $this->url = XMock::of(Url::class);
+        $this->authorisedClassesService = XMock::of(AuthorisedClassesService::class);
+        $this->identityProvider = XMock::of(MotFrontendIdentityProviderInterface::class);
     }
 
     /**
@@ -36,7 +48,7 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testUpdateChangedValueStatus_changesInSession_shouldThrowException()
+    public function testUpdateChangedValueStatus_changesInSession_shouldMakeTheChange()
     {
         $this->startTestSessionService
             ->expects($this->at(0))
@@ -59,6 +71,7 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
                         'noRegistration' => false,
                         'source' => false,
                         'url' => false,
+                        'normalOrRetest' => false,
                     ],
                     StartTestSessionService::USER_DATA => [
                         'noRegistration' => [
@@ -75,13 +88,21 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
                             ],
                         ],
                         'url' => 'test',
+                        'normalOrRetest' => [
+                            'normalOrRetest' => false,
+                        ],
                     ],
                 ]
             );
 
-        $this->buildService()->updateChangedValueStatus(
-                'engine', true
-            );
+        $this->startTestSessionService
+            ->expects($this->at(2))
+            ->method('load')
+            ->with(StartTestSessionService::UNIQUE_KEY)
+            ->willReturn($this->mockLoadedValues(false, false, false, 1, false, true));
+
+        $this->buildService()->updateChangedValueStatus('engine', true);
+        $this->assertTrue($this->buildService()->isValueChanged(StartTestChangeService::CHANGE_ENGINE));
     }
 
     /**
@@ -260,6 +281,138 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
+    public function testIsAuthorisedToTestClass_whenOnlyTesterCanTest_shouldReturnFalse()
+    {
+        $this->startTestSessionService
+            ->expects($this->any())
+            ->method('load')
+            ->willReturn($this->mockLoadedValues(false, false, false, 1, true));
+
+        $this->identityProvider
+            ->expects($this->once())
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1))
+            );
+
+        $this->authorisedClassesService
+            ->expects($this->exactly(1))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockCombinedAuthorisedClasses($this->allTesterApprovedClasses(), []));
+
+        $result = $this->buildService()->isAuthorisedToTestClass(2);
+        $this->assertFalse($result);
+    }
+
+    public function testIsAuthorisedToTestClass_whenOnlyVtsCanTest_shouldReturnFalse()
+    {
+        $this->startTestSessionService
+            ->expects($this->any())
+            ->method('load')
+            ->willReturn($this->mockLoadedValues(false, false, false, 1, true));
+
+        $this->identityProvider
+            ->expects($this->once())
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1))
+            );
+
+        $this->authorisedClassesService
+            ->expects($this->exactly(1))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockCombinedAuthorisedClasses([], $this->allVtsApprovedClasses()));
+
+        $result = $this->buildService()->isAuthorisedToTestClass(2);
+        $this->assertFalse($result);
+    }
+
+    public function testIsAuthorisedToTestClass_whenNeitherVtsOrTesterCanTest_shouldReturnFalse()
+    {
+        $this->startTestSessionService
+            ->expects($this->any())
+            ->method('load')
+            ->willReturn($this->mockLoadedValues(false, false, false, 1, true));
+
+        $this->identityProvider
+            ->expects($this->once())
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1))
+            );
+
+        $this->authorisedClassesService
+            ->expects($this->exactly(1))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockCombinedAuthorisedClasses([], []));
+
+        $result = $this->buildService()->isAuthorisedToTestClass(2);
+        $this->assertFalse($result);
+    }
+
+    public function testIsAuthorisedToTestClass_whenBothVtsAndTesterCanTest_shouldReturnTrue()
+    {
+        $this->startTestSessionService
+            ->expects($this->any())
+            ->method('load')
+            ->willReturn($this->mockLoadedValues(false, false, false, 1, true));
+
+        $this->identityProvider
+            ->expects($this->once())
+            ->method('getIdentity')
+            ->willReturn((new Identity())
+                ->setUserId(1)
+                ->setCurrentVts((new VehicleTestingStation())->setVtsId(1))
+            );
+
+        $this->authorisedClassesService
+            ->expects($this->exactly(1))
+            ->method('getCombinedAuthorisedClassesForPersonAndVts')
+            ->with(1, 1)
+            ->willReturn($this->mockCombinedAuthorisedClasses($this->allTesterApprovedClasses(), $this->allVtsApprovedClasses()));
+
+        $result = $this->buildService()->isAuthorisedToTestClass(2);
+        $this->assertTrue($result);
+    }
+
+    private function mockCombinedAuthorisedClasses(array $testerApprovedClasses, array $vtsApprovedClasses)
+    {
+        return [
+            AuthorisedClassesService::KEY_FOR_PERSON_APPROVED_CLASSES => $testerApprovedClasses,
+            AuthorisedClassesService::KEY_FOR_VTS_APPROVED_CLASSES => $vtsApprovedClasses,
+        ];
+    }
+
+    private function allTesterApprovedClasses()
+    {
+        return [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '7',
+        ];
+    }
+
+    private function allVtsApprovedClasses()
+    {
+        return [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '7',
+        ];
+    }
+
     private function mockVehicleChangeStatus()
     {
         return [
@@ -273,23 +426,34 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
                 'noRegistration' => false,
                 'source' => false,
                 'url' => false,
+                'normalOrRetest' => false,
             ],
         ];
     }
 
-    private function mockLoadedValues($classChanged = false, $makeChanged = false, $modelChanged = false, $source = 1)
+    /**
+     * @param bool $classChanged
+     * @param bool $makeChanged
+     * @param bool $modelChanged
+     * @param int  $source
+     * @param bool $normalOrRetest
+     *
+     * @return array
+     */
+    private function mockLoadedValues($classChanged = false, $makeChanged = false, $modelChanged = false, $source = 1, $normalOrRetest = false, $engine = false)
     {
         return [
             StartTestSessionService::VEHICLE_CHANGE_STATUS => [
                 'class' => $classChanged,
                 'colour' => false,
                 'country' => false,
-                'engine' => false,
+                'engine' => $engine,
                 'make' => $makeChanged,
                 'model' => $modelChanged,
                 'noRegistration' => false,
                 'source' => false,
                 'url' => false,
+                'normalOrRetest' => $normalOrRetest,
             ],
             StartTestSessionService::USER_DATA => [
                 'noRegistration' => [
@@ -306,6 +470,9 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
                      ],
                 ],
                 'url' => 'test',
+                'normalOrRetest' => [
+                    'normalOrRetest' => $normalOrRetest,
+                ],
             ],
         ];
     }
@@ -322,6 +489,7 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
             StartTestChangeService::NO_REGISTRATION,
             StartTestChangeService::SOURCE,
             StartTestChangeService::URL,
+            StartTestChangeService::NORMAL_OR_RETEST,
         ];
     }
 
@@ -329,7 +497,9 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
     {
         return new StartTestChangeService(
             $this->startTestSessionService,
-            $this->url
+            $this->url,
+            $this->identityProvider,
+            $this->authorisedClassesService
         );
     }
 }

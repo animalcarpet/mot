@@ -6,6 +6,7 @@ use Core\Action\RedirectToRoute;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
 use CoreTest\Service\StubCatalogService;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\CountryOfRegistrationId;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\MethodSpy;
@@ -56,6 +57,9 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
     /** @var StartTestChangeService */
     private $startTestChangeService;
 
+    /** @var  MotAuthorisationServiceInterface */
+    private $authorisationServiceInterface;
+
     public function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
@@ -64,6 +68,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicleAtVersion');
         $this->vehicleServiceGetSpy = new MethodSpy($vehicleService, 'getDvsaVehicleById');
         $this->startTestChangeService = XMock::of(StartTestChangeService::class);
+        $this->authorisationServiceInterface = XMock::of(MotAuthorisationServiceInterface::class);
 
         $this->updateCountryRegistrationProcess = new UpdateCountryOfRegistrationProcess(
             new CountryOfRegistrationCatalog(new StubCatalogService()),
@@ -373,6 +378,21 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($countryId, $data['country-of-registration']);
     }
 
+    public function testIsAuthorised_whenVehicleUnderTestContextAndUserDoesNotHavePermissionToTestClass_shouldReturnFalse() {
+        /* @var UpdateVehicleContext $updateVehicleContext */
+        $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
+
+        $updateVehicleContext->expects($this->once())
+            ->method('isUpdateVehicleDuringTest')
+            ->willReturn(true);
+        $updateVehicleContext->expects($this->once())
+            ->method('getVehicle')
+            ->willReturn($this->buildDvsaVehicle());
+        $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
+        $result = $this->updateCountryRegistrationProcess->isAuthorised($this->authorisationServiceInterface);
+        $this->assertFalse($result);
+    }
+
     private function createDvsaVehicle()
     {
         $make = new stdClass();
@@ -437,6 +457,11 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $data = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
 
         $data->countryOfRegistrationId = 321;
+
+        $class = new stdClass();
+        $class->code = 1;
+
+        $data->vehicleClass = $class;
 
         $vehicle = new DvsaVehicle($data);
 

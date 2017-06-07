@@ -99,6 +99,12 @@ if (!empty($checkExpiryResults)) {
             </ol>
         </div>
     <?php endif; ?>
+    <?php if (!$viewModel->isPermittedToTest() && !$viewModel->isTrainingTest()): ?>
+        <div class="banner--error">
+            <span class="banner__heading-large" id="not-authorised-to-test-vehicle-class">You can’t test this vehicle</span>
+            <span><?php echo $this->escapeHtml($viewModel->getIsPermittedToTestText()); ?></span>
+        </div>
+    <?php endif; ?>
     <?php if (!empty($this->layout()->flashMessenger->getErrorMessages())): ?>
     <div class="validation-summary">
         <h2 class="heading-medium">There was a problem with the information</h2>
@@ -113,12 +119,14 @@ if (!empty($checkExpiryResults)) {
     <?php endif; ?>
 
 
+    <?php if ($viewModel->isPermittedToTest()): ?>
     <?php
         echo $this->partial('partial/gds/general/system-message', [
             'messages' => $this->layout()->flashMessenger->getSuccessMessages(),
             'type' => 'success',
         ]);
     ?>
+    <?php endif; ?>
 
     <?php
         if ($isEarlierThanTestDateLimit && !$viewModel->isInProgressTestExists()): ?>
@@ -139,7 +147,7 @@ if (!empty($checkExpiryResults)) {
             <th scope="row" class="table-summary__key">Make and model</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getMakeAndModel(); ?>
-                <?php if ($viewModel->shouldShowChangeLinks()): ?>
+                <?php if ($viewModel->shouldShowChangeLinks() && $viewModel->isPermittedToTest()): ?>
                     <a href="<?php echo $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_MAKE_AND_MODEL, ['id' => $viewModel->getObfuscatedVehicleId(), 'property' => 'make']) ?>" id="change-vehicle-make" class="table-summary__action">Change<span class="visuallyhidden"> make and model</span></a>
                 <?php endif; ?>
             </td>
@@ -148,7 +156,7 @@ if (!empty($checkExpiryResults)) {
             <th scope="row" class="table-summary__key">Engine</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getEngine(); ?>
-                <?php if ($viewModel->shouldShowChangeLinks()): ?>
+                <?php if ($viewModel->shouldShowChangeLinks() && $viewModel->isPermittedToTest()): ?>
                     <a href="<?php echo $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_ENGINE, ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" id="change-vehicle-engine" class="table-summary__action">Change<span class="visuallyhidden"> engine or fuel type</span></a>
                 <?php endif; ?>
             </td>
@@ -157,7 +165,7 @@ if (!empty($checkExpiryResults)) {
             <th scope="row" class="table-summary__key">Colour</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getCompoundedColour(); ?>
-                <?php if ($viewModel->shouldShowChangeLinks()): ?>
+                <?php if ($viewModel->shouldShowChangeLinks() && $viewModel->isPermittedToTest()): ?>
                     <a href="<?php echo $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_COLOUR, ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" id="change-vehicle-colour" class="table-summary__action">Change<span class="visuallyhidden"> colour</span></a>
                 <?php endif; ?>
             </td>
@@ -190,7 +198,7 @@ if (!empty($checkExpiryResults)) {
             <th scope="row" class="table-summary__key">Country of registration</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getCountryOfRegistration(); ?>
-                <?php if ($viewModel->shouldShowChangeLinks()): ?>
+                <?php if ($viewModel->shouldShowChangeLinks() && $viewModel->isPermittedToTest()): ?>
                     <a href="<?php echo $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_COUNTRY_OF_REGISTRATION, ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" id="change-vehicle-country-of-registration" class="table-summary__action">Change<span class="visuallyhidden"> country of registration</span></a>
                 <?php endif; ?>
             </td>
@@ -253,27 +261,34 @@ if (!empty($checkExpiryResults)) {
                 <ul class="list-unstyled content-navigation__split u-clearfix">
                     <li class="content-navigation__split--left">
                         <?php if (!$viewModel->isInProgressTestExists()): ?>
-                            <?php if ($viewModel->isNormalTest() || $viewModel->isTrainingTest()): ?>
+                            <?php if ($viewModel->isNormalTest() && $viewModel->isPermittedToTest()): ?>
                                 <input type="submit" value="Confirm and start test" class="button " id="confirm_vehicle_confirmation" />
                             <?php endif; ?>
-                            <?php if ($viewModel->isNonMotTest()): ?>
+                            <?php if ($viewModel->isTrainingTest()): ?>
+                                <input type="submit" value="Confirm and start test" class="button " id="confirm_vehicle_confirmation" />
+                            <?php endif; ?>
+                            <?php if ($viewModel->isNonMotTest() && $viewModel->isPermittedToTest()): ?>
                                 <input type="submit" value="Confirm and start non-MOT test" class="button " id="confirm_vehicle_confirmation" />
                             <?php endif; ?>
-                            <?php if ($viewModel->isRetest()): ?>
+                            <?php if ($viewModel->isRetest() && $viewModel->isPermittedToTest()): ?>
                                 <input type="submit" value="Confirm and start retest" class="button " id="retest_vehicle_confirmation" />
                             <?php endif; ?>
                         <?php endif ?>
                     </li>
-                    <li class="content-navigation__split--right">
-                        <?php if ($viewModel->canRefuseToTest()):  ?>
+                    <?php if (!$viewModel->isPermittedToTest()): ?>
+                        <li class="content-navigation__split--left">
+                    <?php else: ?>
+                        <li class="content-navigation__split--right">
+                    <?php endif; ?>
+                        <?php if ($viewModel->canRefuseToTest()): ?>
                             <a class="button button--alert" id="refuse-to-test" href="
-                        <?php
-                            echo $this->url(
-                                RefuseToTestController::ROUTE_REFUSE_TO_TEST_REASON,
-                                ['testTypeCode' => $viewModel->getMethod()],
-                                ['query' => ['no-reg' => $viewModel->isNoRegistration(), 'source' => $viewModel->getSafeSource()]],
-                                true
-                            ); ?>">Refuse to test</a>
+                                <?php
+                                    echo $this->url(
+                                        RefuseToTestController::ROUTE_REFUSE_TO_TEST_REASON,
+                                        ['testTypeCode' => $viewModel->getMethod()],
+                                        ['query' => ['no-reg' => $viewModel->isNoRegistration(), 'source' => $viewModel->getSafeSource()]],
+                                        true
+                                    ); ?>">Refuse to test</a>
 
                         <?php endif ?>
                     </li>

@@ -26,6 +26,7 @@ class UpdateClassProcess implements UpdateVehicleInterface, AutoWireableInterfac
 {
     const PAGE_TITLE = 'Change MOT test class';
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's test class?";
+    const CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE = 'You’ve changed the MOT test class. This will save when you start a test';
 
     /** @var UpdateVehicleContext */
     private $context;
@@ -164,7 +165,11 @@ class UpdateClassProcess implements UpdateVehicleInterface, AutoWireableInterfac
     public function getSuccessfulEditMessage()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return 'Vehicle test class has been successfully changed';
+            if (!$this->startTestChangeService->isAuthorisedToTestClass($this->getPrePopulatedData()[UpdateClassForm::FIELD_CLASS])) {
+                return null;
+            }
+
+            return self::CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE;
         }
 
         return 'MOT test class has been successfully changed.';

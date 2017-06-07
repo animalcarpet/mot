@@ -96,15 +96,19 @@ class TesterService
             $account = new Account($data);
         }
 
+        $qualifications = $data['qualifications'] ? $data['qualifications'] : [
+            VehicleClassGroupCode::BIKES =>
+                TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
+            VehicleClassGroupCode::CARS_ETC =>
+                TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
+        ];
+
         $this->testerAuthorisationStatusService->setTesterQualificationStatus(
             $account->getPersonId(),
             ArrayUtils::tryGet(
                 $data,
                 TesterAuthorisationStatusService::CUSTOM_QUALIFICATIONS_KEY,
-                [
-                    VehicleClassGroupCode::BIKES => TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
-                    VehicleClassGroupCode::CARS_ETC => TesterAuthorisationStatusService::DEFAULT_QUALIFICATION_STATUS,
-                ]
+                $qualifications
             )
         );
 

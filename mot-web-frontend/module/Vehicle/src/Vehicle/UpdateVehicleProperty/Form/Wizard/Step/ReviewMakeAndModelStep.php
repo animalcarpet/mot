@@ -28,6 +28,7 @@ use Zend\View\Helper\Url;
 class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableInterface
 {
     const NAME = 'review-make-and-model';
+    const CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE = 'You’ve changed the make and model. This will save when you start a test';
 
     private $url;
     private $breadcrumbsBuilder;
@@ -243,7 +244,7 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
                     'property' => self::NAME,
                 ]
             );
-            $route->addSuccessMessage('Vehicle make and model has been successfully changed');
+            $route->addSuccessMessage(self::CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE);
 
             return $route;
         }

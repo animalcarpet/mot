@@ -26,6 +26,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
 {
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's country of registration?";
     const PAGE_TITLE = 'Change country of registration';
+    const CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE = 'You’ve changed the country of registration. This will save when you start a test';
 
     /** @var UpdateVehicleContext */
     private $context;
@@ -120,6 +121,10 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
 
     public function getSuccessfulEditMessage()
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return self::CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE;
+        }
+
         return 'Country of registration has been successfully changed';
     }
 
@@ -174,8 +179,25 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
         return new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL, ['id' => $this->context->getObfuscatedVehicleId()]);
     }
 
+    /**
+     * Says if the users is authorised to reach the page
+     *
+     * @param MotAuthorisationServiceInterface $authorisationService
+     *
+     * @return bool
+     */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            $vehicleClass = $this->context->getVehicle()->getVehicleClass();
+            $vehicleClassCode = $vehicleClass ? $vehicleClass->getCode() : null;
+            $isClassChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
+            $vehicleClass = $isClassChangedInSession ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS] : $vehicleClassCode;
+            if (!$this->startTestChangeService->isAuthorisedToTestClass($vehicleClass)) {
+                return false;
+            }
+        }
+
         return $authorisationService->isGranted(PermissionInSystem::VEHICLE_UPDATE);
     }
 

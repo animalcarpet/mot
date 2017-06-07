@@ -133,6 +133,10 @@ public class NormalTest {
         confirmationPage.clickStartMotTest();
     }
 
+    public TestOptionsPage confirmAndStartTestWithReturnValue() throws IOException, URISyntaxException {
+        return confirmationPage.clickStartMotTest();
+    }
+
     public void startTestConfirmationPage(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {
         confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, dvlaVehicle);
     }
@@ -158,6 +162,11 @@ public class NormalTest {
 
     public String changeClass() {
         StartTestConfirmationPage changeVehicleClass = confirmationPage.clickChangeClass().chooseClass(VehicleClass.five).submit();
+        return changeVehicleClass.getSuccessMessage();
+    }
+
+    public String changeClassToClassOne() {
+        StartTestConfirmationPage changeVehicleClass = confirmationPage.clickChangeClass().chooseClass(VehicleClass.one).submit();
         return changeVehicleClass.getSuccessMessage();
     }
 
@@ -234,6 +243,12 @@ public class NormalTest {
     public String getVehicleUnderTestBanner() {
         return confirmationPage.getVehicleUnderTestBanner();
     }
+
+    public String getNotAuthorisedToTestVehicleClassText() {
+
+        return confirmationPage.getNotAuthorisedToTestVehicleClassText();
+    }
+
     public String getNoTestClassValidation() {
         return new StartTestConfirmationPage(driver).getNoTestClassValidation();
     }

@@ -9,6 +9,7 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 
 class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
@@ -219,6 +220,91 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $fuelType->name = self::TEST_FUEL_TYPE;
         $viewModel->setEngine(new FuelType($fuelType), self::TEST_ENGINE_CAPACITY);
         $this->assertSame(self::TEST_EXPECTED_COMPOUND_ENGINE_DESCRIPTION, $viewModel->getEngine());
+    }
+
+    public function testIsPermittedToTestText_whenVtsAndTesterAreAuthorised()
+    {
+        $viewModel = $this->getViewModel();
+        $viewModel->setMotTestClass('2');
+        $viewModel->setIsPermittedToTestText($this->mockCombinedAuthorisedClasses($this->allTesterApprovedClasses(), $this->allVtsApprovedClasses()));
+        $this->assertEmpty($viewModel->getIsPermittedToTestText());
+    }
+
+    /**
+     * @dataProvider dataProviderVehicleTestClasses
+     */
+    public function testIsPermittedToTestText_whenBothVtsAndTesterAreNotAuthorised($testClass)
+    {
+        $viewModel = $this->getViewModel();
+        $viewModel->setMotTestClass($testClass[0]);
+        $viewModel->setIsPermittedToTestText($this->mockCombinedAuthorisedClasses([], []));
+        $this->assertEquals(sprintf('This Vehicle Testing Station isn’t authorised to test class %s vehicles and you’re not qualified in this class.', $testClass[0]), $viewModel->getIsPermittedToTestText());
+    }
+
+    /**
+     * @dataProvider dataProviderVehicleTestClasses
+     */
+    public function testIsPermittedToTestText_whenVtsNotPermitted($testClass)
+    {
+        $viewModel = $this->getViewModel();
+        $viewModel->setMotTestClass($testClass[0]);
+        $viewModel->setIsPermittedToTestText($this->mockCombinedAuthorisedClasses($this->allTesterApprovedClasses(), []));
+        $this->assertEquals(sprintf('This Vehicle Testing Station isn’t authorised to test class %s vehicles.', $testClass[0]), $viewModel->getIsPermittedToTestText());
+    }
+
+    /**
+     * @dataProvider dataProviderVehicleTestClasses
+     */
+    public function testIsPermittedToTestText_whenTesterNotAuthorised($testClass)
+    {
+        $viewModel = $this->getViewModel();
+        $viewModel->setMotTestClass($testClass[0]);
+        $viewModel->setIsPermittedToTestText($this->mockCombinedAuthorisedClasses([], $this->allVtsApprovedClasses()));
+        $this->assertEquals(sprintf('You’re not qualified to test class %s vehicles.', $testClass[0]), $viewModel->getIsPermittedToTestText());
+    }
+
+    public function dataProviderVehicleTestClasses()
+    {
+        return [
+            ['testClass' => ['1']],
+            ['testClass' => ['2']],
+            ['testClass' => ['3']],
+            ['testClass' => ['4']],
+            ['testClass' => ['5']],
+            ['testClass' => ['7']],
+        ];
+    }
+
+    private function mockCombinedAuthorisedClasses(array $testerApprovedClasses, array $vtsApprovedClasses)
+    {
+        return [
+            AuthorisedClassesService::KEY_FOR_PERSON_APPROVED_CLASSES => $testerApprovedClasses,
+            AuthorisedClassesService::KEY_FOR_VTS_APPROVED_CLASSES => $vtsApprovedClasses,
+        ];
+    }
+
+    private function allTesterApprovedClasses()
+    {
+        return [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '7',
+        ];
+    }
+
+    private function allVtsApprovedClasses()
+    {
+        return [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '7',
+        ];
     }
 
     private function getViewModel()

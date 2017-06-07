@@ -7,6 +7,7 @@ use Core\FormWizard\LayoutData;
 use Core\FormWizard\WizardContextInterface;
 use Core\Routing\VehicleRouteList;
 use DvsaCommon\ApiClient\Vehicle\Dictionary\MakeApiResource;
+use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
 use DvsaMotTest\Service\StartTestChangeService;
@@ -147,6 +148,15 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
         $makeId = $this->getMakeId();
 
         if ($isUpdateUnderTest) {
+            $vehicleClass = $this->context->getVehicle()->getVehicleClass();
+            $vehicleClassCode = $vehicleClass ? $vehicleClass->getCode() : null;
+            $isClassChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
+            $vehicleClass = $isClassChangedInSession ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS] : $vehicleClassCode;
+            if (!$this->startTestChangeService->isAuthorisedToTestClass($vehicleClass)) {
+                throw new UnauthorisedException(
+                    'Not authorised to make changes to this vehicle class'
+                );
+            }
             $makeIdFromSession = $this->startTestChangeService
                 ->isMakeAndModelChanged()
                 ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_MAKE)['makeId']

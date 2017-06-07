@@ -25,6 +25,8 @@ use Zend\View\Helper\Url;
 
 class UpdateEngineProcess implements UpdateVehicleInterface, AutoWireableInterface
 {
+    const CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE = 'You’ve changed the engine specification. This will save when you start a test';
+
     protected $pageSubTitle = 'Vehicle';
     protected $templatePartial = 'partials/edit-engine';
     protected $editStepMessage = 'Change engine specification';
@@ -184,7 +186,7 @@ class UpdateEngineProcess implements UpdateVehicleInterface, AutoWireableInterfa
     public function getSuccessfulEditMessage()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return 'Vehicle engine specification has been successfully changed';
+            return self::CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE;
         }
 
         return $this->successfullEditMessage;
@@ -269,6 +271,16 @@ class UpdateEngineProcess implements UpdateVehicleInterface, AutoWireableInterfa
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            $vehicleClass = $this->context->getVehicle()->getVehicleClass();
+            $vehicleClassCode = $vehicleClass ? $vehicleClass->getCode() : null;
+            $isClassChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
+            $vehicleClass = $isClassChangedInSession ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS] : $vehicleClassCode;
+            if (!$this->startTestChangeService->isAuthorisedToTestClass($vehicleClass)) {
+                return false;
+            }
+        }
+
         return $authorisationService->isGranted(PermissionInSystem::VEHICLE_UPDATE);
     }
 

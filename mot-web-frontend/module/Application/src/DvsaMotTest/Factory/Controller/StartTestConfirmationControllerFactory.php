@@ -2,9 +2,11 @@
 
 namespace DvsaMotTest\Factory\Controller;
 
+use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaMotTest\Controller\StartTestConfirmationController;
+use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -28,12 +30,16 @@ class StartTestConfirmationControllerFactory implements FactoryInterface
         $countryOfRegistrationCatalog = $serviceLocator->get(CountryOfRegistrationCatalog::class);
         $vehicleService = $serviceLocator->get(VehicleService::class);
         $startTestChangeService = $serviceLocator->get(StartTestChangeService::class);
+        $authorisedClassesService = $serviceLocator->get(AuthorisedClassesService::class);
+        $identityProvider = $serviceLocator->get(MotFrontendIdentityProviderInterface::class);
 
         return new StartTestConfirmationController(
             $paramObfuscator,
             $countryOfRegistrationCatalog,
             $vehicleService,
-            $startTestChangeService
+            $startTestChangeService,
+            $authorisedClassesService,
+            $identityProvider
         );
     }
 }

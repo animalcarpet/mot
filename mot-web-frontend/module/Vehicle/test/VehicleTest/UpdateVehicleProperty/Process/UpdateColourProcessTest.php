@@ -6,6 +6,7 @@ use Application\Service\CatalogService;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
@@ -43,6 +44,8 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
     private $tertiaryTitleBuilder;
     /** @var CatalogService | \PHPUnit_Framework_MockObject_MockObject */
     private $catalogService;
+    /** @var  MotAuthorisationServiceInterface */
+    private $authorisationServiceInterface;
 
     /** @var UpdateColourProcess */
     private $sut;
@@ -60,6 +63,7 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
         $this->tertiaryTitleBuilder = XMock::of(VehicleTertiaryTitleBuilder::class);
         $this->catalogService = XMock::of(CatalogService::class);
         $this->startTestChangeService = XMock::of(StartTestChangeService::class);
+        $this->authorisationServiceInterface = XMock::of(MotAuthorisationServiceInterface::class);
 
         $this->sut = new UpdateColourProcess(
             $this->urlHelper,
@@ -153,6 +157,12 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Continue', $viewModel->getSubmitButtonText());
     }
 
+    public function testIsAuthorised_whenVehicleUnderTestContextAndUserDoesNotHavePermissionToTestClass_shouldReturnFalse() {
+        $this->sut->setContext($this->buildContext('change-under-test'));
+        $result = $this->sut->isAuthorised($this->authorisationServiceInterface);
+        $this->assertFalse($result);
+    }
+
     private function buildContext($routeContext)
     {
         return new UpdateVehicleContext($this->buildDvsaVehicle(), 'abc', $routeContext);
@@ -165,8 +175,15 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
 
         $colour = new stdClass();
         $colour->code = self::COLOUR_CODE;
+
+        $class = new stdClass();
+        $class->code = 1;
+        $class->name = 1;
+
         //$colour->name = self::COLOUR_NAME;
         $data->colour = $colour;
+
+        $data->vehicleClass = $class;
 
         $secondaryColour = new stdClass();
         $secondaryColour->code = self::SECONDARY_COLOUR_CODE;

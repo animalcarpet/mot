@@ -35,6 +35,7 @@ public class StartTestConfirmationPage extends Page {
     @FindBy(className = "heading-medium") private WebElement noTestClassValidation;
     @FindBy(id = "validation-message--success") private WebElement changeDetailsSuccessMessage;
     @FindBy(id = "vehicle-testing-advice") private WebElement vehicleTestingAdviceUrl;
+    @FindBy(id = "not-authorised-to-test-vehicle-class") private WebElement notAuthorisedToTestVehicleClass;
 
     private By vinLocator = By.id("vehicleVINnumber");
     private By registrationLocator = By.id("vehicleRegistrationNumber");
@@ -124,5 +125,10 @@ public class StartTestConfirmationPage extends Page {
 
     public String getSuccessMessage() {
         return changeDetailsSuccessMessage.getText();
+    }
+
+    public String getNotAuthorisedToTestVehicleClassText() {
+
+        return notAuthorisedToTestVehicleClass.getText();
     }
 }

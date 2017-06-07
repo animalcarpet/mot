@@ -26,6 +26,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
 {
     const PAGE_TITLE = 'Change colour';
     const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's colour?";
+    const CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE = 'You’ve changed the colour. This will save when you start a test';
 
     private $urlHelper;
     private $vehicleService;
@@ -171,7 +172,7 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
     public function getSuccessfulEditMessage()
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            return 'Vehicle colour has been successfully changed';
+            return self::CHANGE_UNDER_TEST_SUCCESSFUL_MESSAGE;
         }
 
         return 'Colour has been successfully changed';
@@ -257,6 +258,16 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            $vehicleClass = $this->context->getVehicle()->getVehicleClass();
+            $vehicleClassCode = $vehicleClass ? $vehicleClass->getCode() : null;
+            $isClassChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
+            $vehicleClass = $isClassChangedInSession ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS] : $vehicleClassCode;
+            if (!$this->startTestChangeService->isAuthorisedToTestClass($vehicleClass)) {
+                return false;
+            }
+        }
+
         return $authorisationService->isGranted(PermissionInSystem::VEHICLE_UPDATE);
     }
 

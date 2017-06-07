@@ -6,6 +6,7 @@ use Application\Service\CatalogService;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Model\FuelType;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
@@ -48,6 +49,9 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
     /** @var StartTestChangeService */
     private $startTestChangeService;
 
+    /** @var  MotAuthorisationServiceInterface */
+    private $authorisationServiceInterface;
+
     public function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
@@ -58,6 +62,7 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         $this->tertiaryTitleBuilder = XMock::of(VehicleTertiaryTitleBuilder::class);
         $this->catalogService = XMock::of(CatalogService::class);
         $this->startTestChangeService = XMock::of(StartTestChangeService::class);
+        $this->authorisationServiceInterface = XMock::of(MotAuthorisationServiceInterface::class);
 
         $this->sut = new UpdateEngineProcess(
             $this->urlHelper,
@@ -153,6 +158,12 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Continue', $viewModel->getSubmitButtonText());
     }
 
+    public function testIsAuthorised_whenVehicleUnderTestContextAndUserDoesNotHavePermissionToTestClass_shouldReturnFalse() {
+        $this->sut->setContext($this->buildContext('change-under-test'));
+        $result = $this->sut->isAuthorised($this->authorisationServiceInterface);
+        $this->assertFalse($result);
+    }
+
     private function buildContext($routeContext)
     {
         return new UpdateVehicleContext($this->buildDvsaVehicle(), 'abc', $routeContext);
@@ -166,7 +177,9 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         $fuelType->code = self::FUEL_TYPE;
         $data->fuelType = $fuelType;
         $data->cylinderCapacity = self::VEHICLE_CAPACITY;
-        $data->vehicleClass = new stdClass();
+        $class = new stdClass();
+        $class->code = 1;
+        $data->vehicleClass = $class;
 
         $vehicle = new DvsaVehicle($data);
 
