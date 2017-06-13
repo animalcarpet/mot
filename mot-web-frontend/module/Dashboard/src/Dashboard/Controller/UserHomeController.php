@@ -204,6 +204,8 @@ class UserHomeController extends AbstractAuthActionController
         $userHomeViewModel = new UserHomeViewModel($dashboardViewModelBuilder->build());
         $userHomeViewModel->setTemplate('/dashboard/user-home/user-home-refactor.twig');
 
+        $this->setGdsDataLayerValues($userHomeViewModel);
+
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('isHomePage', true);
         $this->setHeadTitle('Your home');
@@ -528,5 +530,19 @@ class UserHomeController extends AbstractAuthActionController
     private function redirectToNewHomepage()
     {
         return $this->userHomeRefactorAction();
+    }
+
+    /**
+     * @param UserHomeViewModel $userHomeViewModel
+     */
+    private function setGdsDataLayerValues(UserHomeViewModel $userHomeViewModel) {
+        $heroActionViewModel = $userHomeViewModel->getDashboardViewModel()->getHeroActionViewModel();
+
+        $isTestingAdviceVisible = $heroActionViewModel->isHeroActionVisible()
+            && $heroActionViewModel->getTestingAdviceViewModel()->getIsTestingAdviceAvailable();
+
+        $testingAdviceString = $isTestingAdviceVisible ? "true" : "false";
+
+        $this->gtmDataLayer(['testingadvice' => $testingAdviceString]);
     }
 }
