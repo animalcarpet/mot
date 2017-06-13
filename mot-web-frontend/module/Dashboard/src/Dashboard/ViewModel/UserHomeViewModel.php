@@ -20,4 +20,12 @@ class UserHomeViewModel extends ViewModel
         $this->dashboardViewModel = $dashboardViewModel;
         parent::__construct(['dashboard' => $dashboardViewModel]);
     }
+
+    /**
+     * @return DashboardViewModel
+     */
+    public function getDashboardViewModel()
+    {
+        return $this->dashboardViewModel;
+    }
 }
