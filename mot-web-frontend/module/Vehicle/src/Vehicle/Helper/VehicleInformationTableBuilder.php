@@ -271,7 +271,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     {
         $vehicleWeight = $this->vehicle->getWeight();
 
-        if (!is_null($vehicleWeight)) {
+        if (!is_null($vehicleWeight) && is_int($vehicleWeight)) {
             $vehicleWeight = number_format($vehicleWeight).' Kg';
         }
 

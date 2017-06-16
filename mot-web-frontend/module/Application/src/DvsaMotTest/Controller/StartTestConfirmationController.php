@@ -22,6 +22,7 @@ use DvsaCommon\Enum\CountryOfRegistrationId;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
+use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
@@ -50,38 +51,55 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
     const UNKNOWN_TEST = 'Unknown';
 
-    /** @var Request */
+    /** @var Request $request */
     protected $request;
+
+    /** @var int $vehicleId */
     protected $vehicleId;
 
-    /** @var string */
+    /** @var string $obfuscatedVehicleId */
     protected $obfuscatedVehicleId;
+
+    /** @var bool $noRegistration */
     protected $noRegistration;
+
+    /** @var string $vehicleSource */
     protected $vehicleSource;
+
+    /** @var int $vtsId */
     protected $vtsId;
 
-    /** @var string mot test type */
+    /** @var string $method */
     protected $method;
+
+    /** @var array $eligibilityNotices */
     protected $eligibilityNotices;
-    /** @var AbstractVehicle */
+
+    /** @var AbstractVehicle $vehicleDetails */
     protected $vehicleDetails;
+
+    /** @var bool $inProgressTestExists */
     protected $inProgressTestExists;
 
+    /** @var bool $isEligibleForRetest */
     protected $isEligibleForRetest;
 
-    /** @var \DvsaCommon\Obfuscate\ParamObfuscator */
+    /** @var ParamObfuscator $paramObfuscator */
     protected $paramObfuscator;
 
-    /** @var PrgHelper */
+    /** @var PrgHelper $prgHelper */
     private $prgHelper;
 
-    /** @var StartTestConfirmationViewModel */
+    /** @var StartTestConfirmationViewModel $startTestConfirmationViewModel */
     private $startTestConfirmationViewModel;
 
+    /** @var CountryOfRegistrationCatalog $countryOfRegistrationCatalog */
     private $countryOfRegistrationCatalog;
 
+    /** @var VehicleService $vehicleService */
     private $vehicleService;
-    /** @var StartTestChangeService */
+
+    /** @var StartTestChangeService $startTestChangeService */
     private $startTestChangeService;
 
     /** @var AuthorisedClassesService */
@@ -405,7 +423,10 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         if ($this->vehicleDetails instanceof DvsaVehicle) {
             $viewModel->setIsMysteryShopper($this->isMysteryShopper());
 
-            if (!empty($this->vehicleDetails->getWeight())) {
+            if (
+                !empty($this->vehicleDetails->getWeight()) &&
+                VehicleClassGroup::isGroupB($this->vehicleDetails->getVehicleClass()->getCode())
+            ) {
                 $viewModel->setBrakeTestWeight($this->vehicleDetails->getWeight().' '.'kg');
             } else {
                 $viewModel->setBrakeTestWeight(self::UNKNOWN_TEST);

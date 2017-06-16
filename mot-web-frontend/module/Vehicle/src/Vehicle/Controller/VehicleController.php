@@ -13,6 +13,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
+use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
@@ -37,16 +38,40 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
     const ERR_MSG_INVALID_VEHICLE_ID = 'No Vehicle Id provided';
     const FORM_ERROR = 'Unable to find Vehicle';
     const NO_RESULT_FOUND = 'Search term(s) not found...';
+    const UNKNOWN_TEST = 'Unknown';
+    const ROUTE_PARAM_ID = 'id';
 
+    /** @var ParamObfuscator $paramObfuscator */
     protected $paramObfuscator;
+
+    /** @var VehicleService $vehicleService */
     private $vehicleService;
-    /** @var MotTestService */
+
+    /** @var MotTestService $motTestServiceClient */
     private $motTestServiceClient;
+
+    /** @var VehicleViewModelBuilder $vehicleTableBuilder */
     private $vehicleTableBuilder;
+
+    /** @var CatalogService $catalogService */
     private $catalogService;
+
+    /** @var MotAuthorisationServiceInterface $authorisationService */
     private $authorisationService;
+
+    /** @var VehicleExpiryMapper $vehicleExpiryMapper */
     private $vehicleExpiryMapper;
 
+    /**
+     * VehicleController constructor.
+     *
+     * @param ParamObfuscator                  $paramObfuscator
+     * @param VehicleService                   $vehicleService
+     * @param CatalogService                   $catalogService
+     * @param MotAuthorisationServiceInterface $authorisationService
+     * @param VehicleViewModelBuilder          $vehicleTableBuilder
+     * @param VehicleExpiryMapper              $vehicleExpiryMapper
+     */
     public function __construct(
         ParamObfuscator $paramObfuscator,
         VehicleService $vehicleService,
@@ -87,10 +112,14 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         try {
             /** @var VehicleService $vehicleService */
             $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
-            $mostRecentWeight = $this->motTestServiceClient->getVehicleTestWeight($vehicleId);
-            if ($mostRecentWeight !== 0) {
-                $vehicle->setWeight($mostRecentWeight);
+            $vehicleTestWeight = $this->motTestServiceClient->getVehicleTestWeight($vehicleId);
+
+            if (!empty($vehicleTestWeight) && VehicleClassGroup::isGroupB($vehicle->getVehicleClass()->getCode())) {
+                $vehicle->setWeight($vehicleTestWeight);
+            } else {
+                $vehicle->setWeight(self::UNKNOWN_TEST);
             }
+
             $expiryDateForVehicle = $this->vehicleExpiryMapper->getExpiryForVehicle($vehicleId);
         } catch (ValidationException $e) {
             return $this->notFoundAction();
