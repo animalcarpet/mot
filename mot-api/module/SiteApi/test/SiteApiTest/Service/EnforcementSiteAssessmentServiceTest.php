@@ -19,6 +19,7 @@ use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEventApi\Service\EventService;
+use NotificationApi\Service\UserOrganisationNotificationService;
 use SiteApi\Service\EnforcementSiteAssessmentService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -59,6 +60,8 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
     private $authService;
     /** @var EnforcementSiteAssessmentService */
     private $service;
+    /** @var UserOrganisationNotificationService|MockObj */
+    private $userOrganisationNotificationService;
 
     public function setUp()
     {
@@ -75,6 +78,7 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
         $this->eventService = XMock::of(EventService::class);
         $this->xssFilter = $this->createXssFilterMock();
         $this->identity = XMock::of(MotIdentityInterface::class);
+        $this->userOrganisationNotificationService = XMock::of(UserOrganisationNotificationService::class);
 
         $this->service = $this->createService();
     }
@@ -313,7 +317,8 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
             $this->identity,
             $this->eventService,
             $this->authService,
-            $this->xssFilter
+            $this->xssFilter,
+            $this->userOrganisationNotificationService
         );
     }
 

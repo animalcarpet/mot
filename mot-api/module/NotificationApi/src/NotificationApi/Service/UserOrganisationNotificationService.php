@@ -2,12 +2,15 @@
 
 namespace NotificationApi\Service;
 
+use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 use NotificationApi\Dto\Notification;
+use Zend\Stdlib\ArrayUtils;
 
 class UserOrganisationNotificationService
 {
@@ -19,6 +22,13 @@ class UserOrganisationNotificationService
      */
     public static $notifyIfOriginalRecieverRoleIsNotPresent = [
         RoleCode::SITE_MANAGER => RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+    ];
+
+    public static $notifyRolesForSiteAssessmentManualCreation = [
+        RoleCode::AUTHORISED_EXAMINER_DELEGATE,
+        RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+        RoleCode::SITE_MANAGER,
+        RoleCode::SITE_ADMIN
     ];
 
     /**
@@ -175,6 +185,29 @@ class UserOrganisationNotificationService
     }
 
     /**
+     * @param $siteName
+     * @param $siteNumber
+     * @param SiteBusinessRoleMap[]|null $siteBusinessRoleMap
+     * @param OrganisationBusinessRoleMap[]|null $organisationBusinessRoleMap
+     */
+    public function sendNotificationToUsersAboutSiteAssessmentCreate($siteName, $siteNumber, $siteBusinessRoleMap, $organisationBusinessRoleMap)
+    {
+        $persons = $this->getAllPersonsWithRoles(self::$notifyRolesForSiteAssessmentManualCreation, $siteBusinessRoleMap, $organisationBusinessRoleMap);
+
+        if ($persons) {
+            foreach ($persons as $person) {
+                $siteAssessmentNotification = (new Notification())->setTemplate(Notification::TEMPLATE_SITE_ASSESSMENT_CREATED)
+                    ->setRecipient($person->getId())
+                    ->addField('siteNumber', $siteNumber)
+                    ->addField('siteName', $siteName)
+                    ->toArray();
+
+                $this->notificationService->add($siteAssessmentNotification);
+            }
+        }
+    }
+
+    /**
      * @param OrganisationBusinessRoleMap[]|SiteBusinessRoleMap[] $positions
      * @param string                                              $roleCode
      * @param AuthorisationForAuthorisedExaminer                  $authorisedExaminer
@@ -246,6 +279,35 @@ class UserOrganisationNotificationService
                 return $position->getPerson();
             }
         }
+    }
+
+    /**
+     * @param array $rolesNames
+     * @param SiteBusinessRoleMap[] $siteBusinessRoleMap
+     * @param OrganisationBusinessRoleMap[] $organisationBusinessRoleMap
+     * @return Person[]
+     */
+    protected function getAllPersonsWithRoles($rolesNames, $siteBusinessRoleMap, $organisationBusinessRoleMap)
+    {
+        $filteredRoles = ArrayUtils::filter(array_merge($siteBusinessRoleMap, $organisationBusinessRoleMap), function ($position) use ($rolesNames) {
+            $businessRoleStatusCode = $position instanceof SiteBusinessRoleMap ?
+                $position->getSiteBusinessRole()->getCode() :
+                $position->getOrganisationBusinessRole()->getRole()->getCode();
+
+            return in_array($businessRoleStatusCode, $rolesNames) &&
+                $position->getBusinessRoleStatus()->getCode() == BusinessRoleStatusCode::ACTIVE;
+        });
+
+        if ($filteredRoles) {
+            $persons = null;
+            /** @var OrganisationBusinessRoleMap|SiteBusinessRoleMap $role */
+            foreach ($filteredRoles as $role) {
+                $persons[] = $role->getPerson();
+            }
+
+            return array_unique($persons, SORT_REGULAR);
+        }
+        return null;
     }
 
     /**

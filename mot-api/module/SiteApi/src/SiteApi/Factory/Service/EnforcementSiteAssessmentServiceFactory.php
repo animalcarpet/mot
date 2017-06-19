@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaEventApi\Service\EventService;
+use NotificationApi\Service\UserOrganisationNotificationService;
 use SiteApi\Service\EnforcementSiteAssessmentService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
 use Zend\ServiceManager\FactoryInterface;
@@ -27,7 +28,8 @@ class EnforcementSiteAssessmentServiceFactory implements FactoryInterface
             $serviceLocator->get(MotIdentityProviderInterface::class)->getIdentity(),
             $serviceLocator->get(EventService::class),
             $serviceLocator->get('DvsaAuthorisationService'),
-            $serviceLocator->get(XssFilter::class)
+            $serviceLocator->get(XssFilter::class),
+            $serviceLocator->get(UserOrganisationNotificationService::class)
         );
     }
 }

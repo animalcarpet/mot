@@ -18,6 +18,7 @@ use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\EventSiteMap;
 use DvsaEntities\Entity\Site;
 use DvsaEventApi\Service\EventService;
+use NotificationApi\Service\UserOrganisationNotificationService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
 use DvsaEntities\Entity\Person;
 
@@ -49,12 +50,18 @@ class EnforcementSiteAssessmentService
     private $authService;
     /** @var XssFilter */
     private $xssFilter;
+    /** @var UserOrganisationNotificationService */
+    private $notificationService;
 
     /**
-     * @param EntityManager                      $em
+     * @param EntityManager $em
      * @param EnforcementSiteAssessmentValidator $validator
      * @param $config
      * @param MotIdentityInterface $identity
+     * @param EventService $eventService
+     * @param AuthorisationServiceInterface $authService
+     * @param XssFilter $xssFilter
+     * @param UserOrganisationNotificationService $notificationService
      */
     public function __construct(
         EntityManager $em,
@@ -63,7 +70,8 @@ class EnforcementSiteAssessmentService
         MotIdentityInterface $identity,
         EventService $eventService,
         AuthorisationServiceInterface $authService,
-        XssFilter $xssFilter
+        XssFilter $xssFilter,
+        UserOrganisationNotificationService $notificationService
     ) {
         $this->em = $em;
         $this->validator = $validator;
@@ -77,6 +85,7 @@ class EnforcementSiteAssessmentService
         $this->dateTimeHolder = new DateTimeHolder();
         $this->authService = $authService;
         $this->xssFilter = $xssFilter;
+        $this->notificationService = $notificationService;
     }
 
     /**
@@ -161,6 +170,13 @@ class EnforcementSiteAssessmentService
                 $examinerName
             ),
             $riskAssessment->getVisitDate()
+        );
+
+        $this->notificationService->sendNotificationToUsersAboutSiteAssessmentCreate(
+            $site->getName(),
+            $site->getSiteNumber(),
+            $site->getPositions()->getValues(),
+            $site->getOrganisation()->getPositions()->getValues()
         );
 
         $this->em->flush();
