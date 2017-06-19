@@ -10,6 +10,7 @@ use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEventApi\Service\EventService;
+use NotificationApi\Service\UserOrganisationNotificationService;
 use SiteApi\Service\EnforcementSiteAssessmentService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
 use Zend\ServiceManager\ServiceManager;
@@ -37,6 +38,7 @@ class EnforcementSiteAssessmentServiceFactoryTest extends AbstractServiceTestCas
 
         $serviceManager->setService(EventService::class, XMock::of(EventService::class));
         $serviceManager->setService(XssFilter::class, XMock::of(XssFilter::class));
+        $serviceManager->setService(UserOrganisationNotificationService::class, XMock::of(UserOrganisationNotificationService::class));
 
         $factory = new EnforcementSiteAssessmentServiceFactory();
 
