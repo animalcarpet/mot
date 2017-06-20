@@ -55,6 +55,10 @@ public class Site {
         return vehicleTestingStationPage.isRiskAssessmentDisplayed();
     }
 
+    public boolean isDateOfAssessmentDisplayed() {
+        return vehicleTestingStationPage.isDateOfAssessmentDisplayed();
+    }
+
     public void gotoAssessment(User user, String siteId) throws IOException, URISyntaxException {
         String pageUrl = String.format(AddSiteAssessmentPage.path, siteId);
         assessmentPage = pageNavigator.navigateToPage(user, pageUrl, AddSiteAssessmentPage.class);

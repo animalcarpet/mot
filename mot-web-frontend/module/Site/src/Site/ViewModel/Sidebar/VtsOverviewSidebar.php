@@ -41,7 +41,8 @@ class VtsOverviewSidebar extends GeneralSidebar
         $hasBeenAssessed,
         RiskAssessmentScoreRagClassifier $ragClassifier,
         $activeMotTestCount,
-        ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion
+        ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion,
+        $assessmentDate
     ) {
         $this->authorisationService = $authorisationService;
         $this->featureToggles = $featureToggles;
@@ -50,11 +51,11 @@ class VtsOverviewSidebar extends GeneralSidebar
         $this->siteStatusCatalog = $siteStatusCatalog;
         $this->viewVtsTestQualityAssertion = $viewVtsTestQualityAssertion;
 
-        $this->addStatusBox($siteStatusCode, $activeMotTestCount, $ragClassifier);
+        $this->addStatusBox($siteStatusCode, $activeMotTestCount, $ragClassifier, $assessmentDate);
         $this->resolveLinks();
     }
 
-    private function addStatusBox($siteStatus, $activeMotTestCount, RiskAssessmentScoreRagClassifier $ragClassifier)
+    private function addStatusBox($siteStatus, $activeMotTestCount, RiskAssessmentScoreRagClassifier $ragClassifier, $assessmentDate)
     {
         $statusBox = new GeneralSidebarStatusBox();
         $badge = $this->badgeForVtsStatus($siteStatus);
@@ -63,7 +64,7 @@ class VtsOverviewSidebar extends GeneralSidebar
         $statusBox->addItem($statusItem);
 
         if ($this->isVtsRiskEnabled()) {
-            $scoreItem = new VtsOverviewRagStatus($ragClassifier);
+            $scoreItem = new VtsOverviewRagStatus($ragClassifier, $assessmentDate);
 
             $statusBox->addItem($scoreItem);
         }

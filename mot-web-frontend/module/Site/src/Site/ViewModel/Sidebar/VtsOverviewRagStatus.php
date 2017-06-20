@@ -9,12 +9,14 @@ use Site\Service\RiskAssessmentScoreRagClassifier;
 class VtsOverviewRagStatus extends GeneralSidebarStatusItem
 {
     private $score;
+    private $assessmentDate;
 
-    public function __construct(RiskAssessmentScoreRagClassifier $classifier)
+    public function __construct(RiskAssessmentScoreRagClassifier $classifier, $assessmentDate)
     {
         $this->score = $classifier->getScore();
+        $this->assessmentDate = $assessmentDate;
 
-        parent::__construct('risk-assessment-score', 'Risk assessment ', $classifier->getRagScore(), $this->badgeFromRagClassifier($classifier));
+        parent::__construct('risk-assessment-score', 'Site assessment ', $classifier->getRagScore(), $this->badgeFromRagClassifier($classifier));
     }
 
     public function getSecondaryText()
@@ -25,6 +27,11 @@ class VtsOverviewRagStatus extends GeneralSidebarStatusItem
     public function escapeSecondaryText()
     {
         return false;
+    }
+
+    public function getTertiaryText()
+    {
+        return $this->assessmentDate ? 'Date: '. $this->assessmentDate : null;
     }
 
     private function badgeFromRagClassifier(RiskAssessmentScoreRagClassifier $ragClassifier)
