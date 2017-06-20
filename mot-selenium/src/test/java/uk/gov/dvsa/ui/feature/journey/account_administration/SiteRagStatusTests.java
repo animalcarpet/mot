@@ -70,6 +70,8 @@ public class SiteRagStatusTests extends DslTest {
 
         //And Colour is updated correctly on the VTS OPage
         assertThat("Correct colour value is set", motUI.site.getAssessmentColour(), equalTo(aInfo.getColor()));
+
+        assertThat("Date of assessment is visible", motUI.site.isDateOfAssessmentDisplayed(), is(true));
     }
 
     @Test(groups = {"Regression"}, description = "VM-11544, Journey 1")

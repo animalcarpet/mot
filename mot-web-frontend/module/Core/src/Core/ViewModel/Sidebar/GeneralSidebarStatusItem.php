@@ -10,14 +10,16 @@ class GeneralSidebarStatusItem
     private $value;
     private $badge;
     private $secondaryText;
+    private $tertiaryText;
     private $htmlId;
 
-    public function __construct($htmlId, $key, $value, Badge $badge, $secondaryText = null)
+    public function __construct($htmlId, $key, $value, Badge $badge, $secondaryText = null, $tertiaryText = null)
     {
         $this->key = $key;
         $this->value = $value;
         $this->badge = $badge;
         $this->secondaryText = $secondaryText;
+        $this->tertiaryText = $tertiaryText;
         $this->htmlId = $htmlId;
     }
 
@@ -34,6 +36,11 @@ class GeneralSidebarStatusItem
     public function getSecondaryText()
     {
         return $this->secondaryText;
+    }
+
+    public function getTertiaryText()
+    {
+        return $this->tertiaryText;
     }
 
     public function getHtmlId()

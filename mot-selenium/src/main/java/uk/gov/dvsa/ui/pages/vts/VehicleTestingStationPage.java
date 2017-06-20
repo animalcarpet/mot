@@ -49,6 +49,7 @@ public class VehicleTestingStationPage extends Page {
     @FindBy(id = "testing-facility-optl") private WebElement onePersonTestLaneValue;
     @FindBy(id = "testing-facility-tptl") private WebElement twoPersonTestLaneValue;
     @FindBy(css = "#risk-assessment-score span.text-secondary") private WebElement riskAssesmentscore;
+    @FindBy(id = "risk-assessment-date") private WebElement riskAssesmentDate;
     @FindBy(css = "#risk-assessment-score span.badge") private WebElement riskAssesmentColor;
     @FindBy(id = SITE_ASSESSMENT_LINK_ID) private WebElement addSiteAssessmentLink;
     @FindBy(id = "risk-assessment-score") private WebElement riskAssessmentScore;
@@ -135,6 +136,10 @@ public class VehicleTestingStationPage extends Page {
 
     public boolean isPhoneNumberDisplayed() {
         return vtsPhoneNumber.isDisplayed();
+    }
+
+    public boolean isDateOfAssessmentDisplayed() {
+        return riskAssesmentDate.isDisplayed();
     }
 
     public boolean isRiskAssessmentDisplayed() {

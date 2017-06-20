@@ -18,6 +18,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Role;
+use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
@@ -202,9 +203,8 @@ class SiteController extends AbstractAuthActionController
         );
 
         $this->setHeadTitle('Vehicle Testing Station');
-
         $this->setUpIndexSidebar(
-            $site->getStatus(), $testInProgress, is_object($site->getAssessment()), $ragClassifier
+            $site->getStatus(), $testInProgress, is_object($site->getAssessment()), $ragClassifier, $this->getAssessmentDate($site)
         );
 
         $viewModel = new ViewModel(
@@ -225,7 +225,19 @@ class SiteController extends AbstractAuthActionController
         return $this->prepareViewModel($viewModel, $site->getName(), self::EDIT_SUBTITLE, $breadcrumbs);
     }
 
-    private function setUpIndexSidebar($siteStatusCode, $testsInProgress, $hasBeenAssessed, RiskAssessmentScoreRagClassifier $ragClassifier)
+    /**
+     * @param VehicleTestingStationDto $site
+     * @return null|string
+     */
+    private function getAssessmentDate(VehicleTestingStationDto $site) {
+        $assessmentDate = null;
+        if(is_object($site->getAssessment())) {
+            $assessmentDate = DateTimeDisplayFormat::dateShort(new \DateTime($site->getAssessment()->getDateOfAssessment()));
+        }
+        return $assessmentDate;
+    }
+
+    private function setUpIndexSidebar($siteStatusCode, $testsInProgress, $hasBeenAssessed, RiskAssessmentScoreRagClassifier $ragClassifier, $assessmentDate)
     {
         $vtsId = (int) $this->params()->fromRoute('id');
 
@@ -240,7 +252,8 @@ class SiteController extends AbstractAuthActionController
             $hasBeenAssessed,
             $ragClassifier,
             $activeTestsCount,
-            $this->viewVtsTestQualityAssertion
+            $this->viewVtsTestQualityAssertion,
+            $assessmentDate
         );
 
         $this->setSidebar($sidebar);

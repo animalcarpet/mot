@@ -36,6 +36,14 @@ TypeCheck::assertInstance($sidebar, GeneralSidebar::class);
                                 <?php echo $statusItem->escapeSecondaryText() ? $this->escapeHtml($statusItem->getSecondaryText()) : $statusItem->getSecondaryText(); ?>
                             </span>
                         <?php endif; ?>
+                        <?php if ($statusItem->getTertiaryText() !== null): ?>
+                            <br/>
+                            <span
+                                id="risk-assessment-date"
+                                class="text-secondary">
+                                <?php echo $statusItem->getTertiaryText(); ?>
+                            </span>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
 
