@@ -243,6 +243,10 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         $class->code = 1;
         $class->name =1;
 
+        $weightSource = new stdClass();
+        $weightSource->code = "U";
+        $weightSource->name = "unladen";
+
         $std = new stdClass();
         $std->make = $make;
         $std->model = $model;
@@ -252,6 +256,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         $std->fuelType = $fuel;
         $std->colour = $colour;
         $std->colourSecondary = $secondaryColour;
+        $std->weightSource = $weightSource;
 
         return new DvsaVehicle($std);
     }

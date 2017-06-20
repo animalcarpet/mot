@@ -203,6 +203,10 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             'isNewAtFirstReg' => false,
             'isIncognito' => true,
             'weight' => 12467,
+            'weightSource' => [
+                'code' => 'U',
+                'name' => 'unladen',
+            ],
             'version' => 2,
         ]));
     }

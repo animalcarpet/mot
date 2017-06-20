@@ -704,6 +704,10 @@ class VehicleServiceTest extends AbstractServiceTestCase
                     'manufactureDate' => new \DateTime('2000-12-12'),
                     'isNewAtFirstReg' => false,
                     'weight' => null,
+                    'weightSource' => [
+                        'code' => 'U',
+                        'name' => 'unladen',
+                    ],
                 ]
             )
         );
@@ -753,6 +757,10 @@ class VehicleServiceTest extends AbstractServiceTestCase
                     'manufactureDate' => '2001-03-02',
                     'isNewAtFirstReg' => false,
                     'weight' => null,
+                    'weightSource' => [
+                        'code' => 'U',
+                        'name' => 'unladen',
+                    ],
                 ]
             )
         );
