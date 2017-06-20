@@ -48,6 +48,10 @@ class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
             'fuelType' => [
                 'code' => FuelTypeCode::PETROL,
             ],
+            'weightSource' => [
+                'code' => 'U',
+                'name' => 'unladen',
+            ],
             'colour' => [
                 'code' => 'L',
                 'name' => 'Grey',

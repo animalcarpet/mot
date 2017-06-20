@@ -190,25 +190,36 @@ class CreateNewVehicleServiceTest extends \PHPUnit_Framework_TestCase
 
         $dvsaVehicleBuilder = new DvsaVehicleBuilder();
         $data = $dvsaVehicleBuilder->getEmptyVehicleStdClass();
+        $data->id = 1;
+
         $vehicleClassData = new \stdClass();
         $vehicleClassData->code = VehicleClassCode::CLASS_3;
         $vehicleClassData->name = VehicleClassCode::CLASS_3;
-        $data->id = 1;
         $data->vehicleClass = $vehicleClassData;
+
         $data->emptyVrmReason = 3;
+
         $colour = new \stdClass();
         $colour->code = ColourCode::BEIGE;
         $data->colour = $colour;
+
         $secondaryColour = new \stdClass();
         $secondaryColour->code = ColourCode::NOT_STATED;
         $data->colourSecondary = $secondaryColour;
+
         $fuelType = new \stdClass();
         $fuelType->code = FuelTypeCode::PETROL;
         $data->fuelType = $fuelType;
+
         $cylinderCapacity = new \stdClass();
         $cylinderCapacity->code = 1200;
         $data->cylinderCapacity = $cylinderCapacity;
+
         $data->countryOfRegistrationId = 1;
+
+        $weightSource = new \stdClass();
+        $weightSource->code = "U";
+        $data->weightSource = $weightSource;
 
         $vehicle = new DvsaVehicle($data);
 

@@ -29,6 +29,7 @@ public class Vehicle {
     private String version;
     private String vin;
     private String weight;
+    private WeightSource weightSource;
     private boolean isIncognito;
 
     public String getVersion() {
@@ -241,6 +242,15 @@ public class Vehicle {
         return this;
     }
 
+    public WeightSource getWeightSource() {
+        return weightSource;
+    }
+
+    public Vehicle setWeightSource(WeightSource weightSource) {
+        this.weightSource = weightSource;
+        return this;
+    }
+
     public String getCountryOfRegistrationId() {
         return countryOfRegistrationId;
     }
@@ -273,11 +283,12 @@ public class Vehicle {
                                      String vin,
                                      VehicleClass vehicleClass,
                                      String weight,
-                                        boolean isIncognito
+                                     boolean isIncognito
     ) {
 
         Vehicle vehicle = new Vehicle();
 
+        //@todo add weightSource if needed
         vehicle.setColour(new Colour().setName(colour).setCode(Colours.findByName(colour).getCode()))
                 .setCountryOfRegistrationId(countryOfRegistrationId)
                 .setCylinderCapacity(cylinderCapacity)
@@ -318,6 +329,7 @@ public class Vehicle {
                 ", transmissionType='" + transmissionType + '\'' +
                 ", bodyType='" + bodyType + '\'' +
                 ", weight='" + weight + '\'' +
+                ", weightSource='" + weightSource.toString() + '\'' +
                 '}';
     }
 }

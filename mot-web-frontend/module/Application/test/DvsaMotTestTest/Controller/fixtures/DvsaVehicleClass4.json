@@ -39,5 +39,9 @@
   "isNewAtFirstReg" : false,
   "isIncognito" : false,
   "weight" : 0,
+  "weightSource" : {
+    "code" : "U",
+    "name" : "unladen"
+  },
   "version" : 1
 }

@@ -23,6 +23,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -943,8 +944,13 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $vehicleClassData = new \stdClass();
         $vehicleClassData->code = $vehicleClass;
         $vehicleClassData->name = $vehicleClass;
-
         $testVehicleDetails->vehicleClass = $vehicleClassData;
+
+        $weightSource = new \stdClass();
+        $weightSource->code = WeightSourceCode::UNLADEN;
+        $weightSource->name = WeightSourceCode::UNLADEN;
+        $testVehicleDetails->weightSource = $weightSource;
+
         $testVehicleDetails->cylinderCapacity = '1700';
         $testVehicleDetails->firstUsedDate = DateTimeConverter::dateTimeToString(new \DateTime());
         $testVehicleDetails->weight = $weight;

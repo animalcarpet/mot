@@ -20,7 +20,7 @@ class DvsaVehicleBuilder
         $vehicle->colourSecondary = null;
         $vehicle->version = 10000;
         $vehicle->firstUsedDate = "2017-01-10";
-
+        $vehicle->weightSource = null;
         return $vehicle;
     }
 }

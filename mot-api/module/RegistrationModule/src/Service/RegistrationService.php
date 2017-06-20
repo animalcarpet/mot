@@ -154,7 +154,7 @@ class RegistrationService extends AbstractPersistableService
                     $openAMService
                 ) {
                     $this->logInfo(self::LOG_REG_TRANSACTION_STARTED);
-
+                    //@todo review rethrowing of exceptions
                     try {
                         $registeredPerson = $this->personService->create($data);
                         $this->logInfo(self::LOG_REG_PERSON_CREATED);
@@ -164,11 +164,11 @@ class RegistrationService extends AbstractPersistableService
                             throw new \Exception('Two users with same name registered at same time');
                         } else {
                             $this->logDebug(self::LOG_REG_PERSON_FAILED);
-                            $this->logError($e->getMessage());
+                            throw $e;
                         }
                     } catch (\Exception $e) {
                         $this->logDebug(self::LOG_REG_PERSON_FAILED);
-                        $this->logError($e->getMessage());
+                        throw $e;
                     }
 
                     try {
@@ -179,7 +179,7 @@ class RegistrationService extends AbstractPersistableService
                         $this->logInfo(self::LOG_REG_ROLE_ASSIGNED);
                     } catch (\Exception $e) {
                         $this->logDebug(self::LOG_REG_ROE_ASSIGNEMENT_FAILED);
-                        $this->logError($e->getMessage());
+                        throw $e;
                     }
 
                     try {
@@ -190,7 +190,7 @@ class RegistrationService extends AbstractPersistableService
                         $this->logInfo(self::LOG_REG_CONTACT_DETAIL);
                     } catch (\Exception $e) {
                         $this->logDebug(self::LOG_REG_CONTACT_DETAIL_FAILED);
-                        $this->logError($e->getMessage());
+                        throw $e;
                     }
 
                     try {
@@ -203,7 +203,7 @@ class RegistrationService extends AbstractPersistableService
                         $this->logInfo(self::LOG_REG_OPENAM_SYNCED);
                     } catch (\Exception $e) {
                         $this->logDebug(self::LOG_REG_OPENAM_SYNC_FAILED);
-                        $this->logError($e->getMessage());
+                        throw $e;
                     }
 
                     try {
@@ -215,7 +215,7 @@ class RegistrationService extends AbstractPersistableService
                         $this->logInfo(self::LOG_REG_EMAIL_SENT);
                     } catch (\Exception $e) {
                         $this->logDebug(self::LOG_REG_EMAIL_FAILED);
-                        $this->logError($e->getMessage());
+                        throw $e;
                     }
 
                     return $registeredPerson;
@@ -227,7 +227,16 @@ class RegistrationService extends AbstractPersistableService
             return true;
         }
 
-        $this->logError(self::LOG_REG_INVALID);
+        //log validation errors and data
+        $this->logError(
+            self::LOG_REG_INVALID . PHP_EOL .
+            PHP_EOL .
+            "Validation errros:" . PHP_EOL .
+            join(PHP_EOL, $this->registrationValidator->getMessages()) . PHP_EOL .
+            PHP_EOL .
+            "Data" . PHP_EOL .
+            print_r($data, true)
+        );
 
         return false;
     }
