@@ -140,6 +140,10 @@ class VtsOverviewSidebar extends GeneralSidebar
             $relatedLinks->addLink($this->createTestQualityInformationLink());
         }
 
+        if($this->canViewTestersAssessments()){
+            $relatedLinks->addLink($this->createTestersAssessmentLink());
+        }
+
         if (!$relatedLinks->isEmpty()) {
             $this->addItem($relatedLinks);
         }
@@ -204,5 +208,20 @@ class VtsOverviewSidebar extends GeneralSidebar
         $tqiLink = '/vehicle-testing-station/'.$this->vtsId.'/test-quality';
 
         return new GeneralSidebarLink('site-test-quality', 'Test quality information', $tqiLink);
+    }
+
+    private function canViewTestersAssessments()
+    {
+        return $this->authorisationService->isGrantedAtSite(
+            PermissionAtSite::TESTERS_ANNUAL_ASSESSMENT_VIEW,
+            $this->vtsId
+        );
+    }
+
+    private function createTestersAssessmentLink()
+    {
+        $testersAssessmentLink = '/vehicle-testing-station/' . $this->vtsId . '/testers-annual-assessment';
+
+        return new GeneralSidebarLink('testers-annual-assessment', 'Testers annual assessment', $testersAssessmentLink);
     }
 }

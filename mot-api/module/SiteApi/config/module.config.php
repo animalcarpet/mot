@@ -18,6 +18,7 @@ use SiteApi\Controller\SiteRoleController;
 use SiteApi\Controller\SiteSearchController;
 use SiteApi\Controller\SiteTestingDailyScheduleController;
 use SiteApi\Controller\SiteTestingFacilitiesController;
+use SiteApi\Controller\TestersAnnualAssessmentController;
 use SiteApi\Controller\VehicleTestingStationAuthorisedClassesController;
 use SiteApi\Factory\Controller\EnforcementSiteAssessmentControllerFactory;
 use SiteApi\Factory\Controller\EnforcementSiteAssessmentValidateControllerFactory;
@@ -298,6 +299,15 @@ return [
                                         'action' => 'summary',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    'testers-annual-assessment' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/testers-annual-assessment',
+                            'defaults' => [
+                                'controller' => TestersAnnualAssessmentController::class,
                             ],
                         ],
                     ],

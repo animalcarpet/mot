@@ -50,10 +50,10 @@ class MotTestingAnnualCertificateService implements AutoWireableInterface
         return $this->mapper->toDto($certificate);
     }
 
-    public function getListByGroup($personId, $group)
+    public function getListByGroup($personId, $group, $siteId = null)
     {
         $person = $this->personRepository->get($personId);
-        $this->assertion->assertGrantedView($person);
+        $this->assertion->assertGrantedView($person, $siteId);
         $certificates = $this->certificateRepository->findAllByGroupAndPersonId($personId, $group);
 
         return $this->mapper->manyToDto($certificates);

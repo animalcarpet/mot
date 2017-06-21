@@ -25,9 +25,9 @@ class AnnualAssessmentCertificatesMapper extends DtoMapper implements AutoWireab
         $this->serializer = $serializer;
     }
 
-    public function getAnnualAssessmentCertificates($personId, $group)
+    public function getAnnualAssessmentCertificates($personId, $group, $siteId = null)
     {
-        $result = $this->get(PersonUrlBuilder::annualAssessmentCertificates($personId, $group));
+        $result = $this->get(PersonUrlBuilder::annualAssessmentCertificates($personId, $group, $siteId));
 
         return $this->deserializer->deserializeArray($result, MotTestingAnnualCertificateDto::class);
     }

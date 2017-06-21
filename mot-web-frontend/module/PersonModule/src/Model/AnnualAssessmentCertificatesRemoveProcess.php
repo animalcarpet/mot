@@ -170,16 +170,20 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
             $this->dto->getScore().'%'
         );
 
+        $params = $this->context->getController()->params()->fromRoute() +
+            [
+                'id' => $this->context->getTargetPersonId(),
+                'group' => $this->context->getGroup(),
+            ];
+
         return new AnnualAssessmentCertificatesRemoveViewModel(
             $table,
             $this->getEditStepPageTitle(),
             $this->getPageSubTitle(),
             $this->getSubmitButtonText(),
             $this->routes->getRoute(),
-            [
-                'id' => $this->context->getTargetPersonId(),
-                'group' => $this->context->getGroup(),
-            ]
+            $params,
+            ["query" => $this->getBackToQueryParam()]
         );
     }
 
@@ -189,11 +193,13 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
     public function redirectToStartPage()
     {
         $route = $this->routes->getRoute();
+        $params = $this->context->getController()->params()->fromRoute() +
+            [
+                'id' => $this->context->getTargetPersonId(),
+                'group' => $this->context->getGroup(),
+            ];
 
-        return new RedirectToRoute($route, [
-            'id' => $this->context->getTargetPersonId(),
-            'group' => $this->context->getGroup(),
-        ]);
+        return new RedirectToRoute($route, $params, $this->getBackToQueryParam());
     }
 
     /**
@@ -215,5 +221,15 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
     {
         return sprintf('Confirm that you want to remove the Group %s annual assessment certificate',
             $this->context->getGroup());
+    }
+
+    private function getBackToQueryParam()
+    {
+        $backTo = $this->context->getController()->params()->fromQuery("backTo");
+        if ($backTo !== null) {
+            return ["backTo" => $backTo];
+        }
+
+        return [];
     }
 }

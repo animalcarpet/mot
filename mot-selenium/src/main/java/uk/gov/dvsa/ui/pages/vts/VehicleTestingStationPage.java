@@ -71,6 +71,7 @@ public class VehicleTestingStationPage extends Page {
     @FindBy(id = "site-country-change") private WebElement changeVtsCountryLink;
     @FindBy(id = "email-change") private WebElement changeVtsEmailLink;
     @FindBy(id = "phone-number-change") private WebElement changeVtsTelephoneLink;
+    @FindBy(id = "testers-annual-assessment") private WebElement testersAnnualAssessmentLink;
 
     public VehicleTestingStationPage(MotAppDriver driver) {
         super(driver);
@@ -322,6 +323,11 @@ public class VehicleTestingStationPage extends Page {
     public ChangeDetailsCountryPage clickOnChangeCountryLink() {
         changeVtsCountryLink.click();
         return new ChangeDetailsCountryPage(driver);
+    }
+
+    public TestersAnnualAssessmentPage clickOnTestersAnnualAssessmentLink() {
+        testersAnnualAssessmentLink.click();
+        return new TestersAnnualAssessmentPage(driver);
     }
 
     public ChangeDetailsEmailPage clickOnChangeEmailLink() {

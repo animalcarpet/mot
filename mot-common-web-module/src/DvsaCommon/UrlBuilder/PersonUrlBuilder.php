@@ -246,9 +246,9 @@ class PersonUrlBuilder extends AbstractUrlBuilder
         return self::byId($personId)->appendRoutesAndParams(self::MOT_TESTING_CERTIFICATE_VALIDATE);
     }
 
-    public static function annualAssessmentCertificates($personId, $group)
+    public static function annualAssessmentCertificates($personId, $group, $siteId = null)
     {
         return self::byId($personId)->appendRoutesAndParams(self::MOT_TESTING_ANNUAL_ASSESSMENT_CERTIFICATES)
-            ->routeParam('group', $group);
+            ->routeParam('group', $group)->queryParam("siteId", $siteId)->toString();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Breadcrumbs;
 
+use Core\Routing\VtsRoutes;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
@@ -42,6 +43,37 @@ class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
             $controller,
             $currentStep
         );
+    }
+
+    public function getBreadcrumbsForVtsAnnualAssessmentCertificate($personId, AbstractActionController $controller)
+    {
+        $vtsId = $controller->params()->fromRoute(self::ROUTE_VTS_ID);
+        $vts = $this->mapperFactory->Site->getById($vtsId);
+        $ae = $vts->getOrganisation();
+        $breadcrumbs = [];
+
+        $personDisplayName = "";
+        foreach ($vts->getPositions() as $position) {
+            if ($position->getPerson()->getId() == $personId) {
+                $personDisplayName = $position->getPerson()->getDisplayName();
+            }
+        }
+
+        if ($ae) {
+            $aeUrl = $controller->url()->fromRoute(self::ROUTE_AE, [self::ROUTE_PARAM_ID => $ae->getId()]);
+            $breadcrumbs += [$ae->getName() => $aeUrl];
+        }
+
+        $vtsUrl = $controller->url()->fromRoute(self::ROUTE_VTS, [self::ROUTE_PARAM_ID => $vtsId]);
+        $tasUrl = VtsRoutes::of($controller->url())->vtsTestersAnnualAssessment($vtsId);
+
+        $breadcrumbs += [
+            $vts->getName() => $vtsUrl,
+            "Testers annual assessment" => $tasUrl,
+            $personDisplayName => ""
+        ];
+
+        return $breadcrumbs;
     }
 
     public function getBreadcrumbsForQualificationDetails(

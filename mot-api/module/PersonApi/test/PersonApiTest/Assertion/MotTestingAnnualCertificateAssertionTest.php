@@ -71,6 +71,14 @@ class MotTestingAnnualCertificateAssertionTest extends \PHPUnit_Framework_TestCa
         $this->createSut()->assertGrantedView((new Person())->setId($personId));
     }
 
+    public function testAssertGrantedView_throwException_whenUserIsNotAssignedToSite()
+    {
+        $this->setExpectedException(UnauthorisedException::class);
+
+        $this->setUpBeforeAssertGrantedTest(1, false, null, []);
+        $this->createSut()->assertGrantedView((new Person())->setId(105), 111);
+    }
+
     public function dataProviderTestAssertGrantedView()
     {
         return [

@@ -26,6 +26,7 @@ use SiteApi\Factory\Service\SiteSearchServiceFactory;
 use SiteApi\Factory\Service\SiteServiceFactory;
 use SiteApi\Factory\Service\SiteSlotUsageServiceFactory;
 use SiteApi\Factory\Service\SiteTestingFacilitiesServiceFactory;
+use SiteApi\Factory\Service\TestersAnnualAssessmentServiceFactory;
 use SiteApi\Model\NominationVerifier;
 use SiteApi\Model\Operation\NominateOperation;
 use SiteApi\Service\DefaultBrakeTestsService;
@@ -46,6 +47,7 @@ use SiteApi\Service\SiteService;
 use SiteApi\Service\SiteSlotUsageService;
 use SiteApi\Service\SiteTestingDailyScheduleService;
 use SiteApi\Service\SiteTestingFacilitiesService;
+use SiteApi\Service\TestersAnnualAssessmentService;
 use SiteApi\Service\Validator\EnforcementSiteAssessmentValidator;
 use SiteApi\Service\Validator\SiteDetailsValidator;
 use SiteApi\Service\Validator\SiteTestingDailyScheduleValidator;
@@ -143,6 +145,7 @@ return [
         EnforcementSiteAssessmentService::class => EnforcementSiteAssessmentServiceFactory::class,
         EnforcementSiteAssessmentValidator::class => EnforcementSiteAssessmentValidatorFactory::class,
         MotTestLogService::class => MotTestLogServiceFactory::class,
+        TestersAnnualAssessmentService::class => TestersAnnualAssessmentServiceFactory::class
     ],
     'invokables' => [
         TestingFacilitiesValidator::class => TestingFacilitiesValidator::class,

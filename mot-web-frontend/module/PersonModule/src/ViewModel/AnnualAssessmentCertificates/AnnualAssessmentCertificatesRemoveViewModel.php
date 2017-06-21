@@ -12,6 +12,7 @@ class AnnualAssessmentCertificatesRemoveViewModel
     private $submitButtonText;
     private $backRoute;
     private $backRouteParams;
+    private $backRouteQueryParams;
 
     public function __construct(
         GdsTable $table,
@@ -19,7 +20,8 @@ class AnnualAssessmentCertificatesRemoveViewModel
         $pageSubTitle,
         $submitButtonText,
         $backRoute,
-        $backRouteParams
+        $backRouteParams,
+        array $backRouteQueryParams = []
     ) {
         $this->table = $table;
         $this->editStepPageTitle = $editStepPageTitle;
@@ -27,6 +29,7 @@ class AnnualAssessmentCertificatesRemoveViewModel
         $this->submitButtonText = $submitButtonText;
         $this->backRoute = $backRoute;
         $this->backRouteParams = $backRouteParams;
+        $this->backRouteQueryParams = $backRouteQueryParams;
     }
 
     /**
@@ -75,5 +78,13 @@ class AnnualAssessmentCertificatesRemoveViewModel
     public function getBackRouteParams()
     {
         return $this->backRouteParams;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBackRouteQueryParams()
+    {
+        return $this->backRouteQueryParams;
     }
 }

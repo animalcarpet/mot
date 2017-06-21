@@ -209,8 +209,9 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
         $params = $this->context->getController()->params()->fromRoute() + [
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             ];
+        $queryParams = $this->getBackToQueryParam();
 
-        return $this->context->getController()->url()->fromRoute($route, $params);
+        return $this->context->getController()->url()->fromRoute($route, $params, $queryParams);
     }
 
     private function getEditPageUrl()
@@ -228,7 +229,10 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
             $formUuid = $this->context->getController()->params()->fromQuery('formUuid');
         }
 
-        return $this->context->getController()->url()->fromRoute($route, $params, ['query' => ['formUuid' => $formUuid]]);
+        $paramsFromQuery = $this->getBackToQueryParam();
+        $queryParams = ['query' => array_merge($paramsFromQuery, ['formUuid' => $formUuid])];
+
+        return $this->context->getController()->url()->fromRoute($route, $params, $queryParams);
     }
 
     /**
@@ -241,7 +245,7 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             ];
 
-        return new RedirectToRoute($route, $params);
+        return new RedirectToRoute($route, $params, $this->getBackToQueryParam());
     }
 
     /**
@@ -256,7 +260,7 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
                 self::ROUTE_PARAM_CERTIFICATE_ID => $this->context->getCertificateId(),
             ];
 
-        return new RedirectToRoute($route, $params);
+        return new RedirectToRoute($route, $params, $this->getBackToQueryParam());
     }
 
     /**
@@ -366,7 +370,7 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
                 self::ROUTE_PARAM_FORM_UUID => $formUuid,
             ];
 
-        return new RedirectToRoute($route, $params);
+        return new RedirectToRoute($route, $params, $this->getBackToQueryParam());
     }
 
     /**
@@ -411,5 +415,15 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
     public function populateConfirmationPageVariables()
     {
         // TODO: Implement populateConfirmationPageVariables() method.
+    }
+
+    private function getBackToQueryParam()
+    {
+        $backTo = $this->context->getController()->params()->fromQuery("backTo");
+        if ($backTo !== null) {
+            return ["backTo" => $backTo];
+        }
+
+        return [];
     }
 }

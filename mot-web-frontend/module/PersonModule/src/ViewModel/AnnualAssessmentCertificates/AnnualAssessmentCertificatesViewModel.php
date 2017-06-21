@@ -7,7 +7,7 @@ use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 class AnnualAssessmentCertificatesViewModel
 {
     private $template = 'annual-assessment-certificates/view';
-    private $pageTitle = 'Annual assessment certificates';
+    private $pageTitle;
     private $pageSubtitle;
     private $returnUrl;
     private $returnLinkText = 'Return to %s';
@@ -25,8 +25,10 @@ class AnnualAssessmentCertificatesViewModel
     private $isUserViewingHisOwnProfile;
 
     public function __construct(
+        $pageTitle,
         $pageSubtitle,
         $returnUrl,
+        $returnLinkText,
         AnnualAssessmentCertificatesGroupViewModel $annualAssessmentCertificatesGroupAViewModel,
         $addGroupALink,
         AnnualAssessmentCertificatesGroupViewModel $annualAssessmentCertificatesGroupBViewModel,
@@ -34,8 +36,10 @@ class AnnualAssessmentCertificatesViewModel
         $isGrantedToAddCertificates,
         $isUserViewingHisOwnProfile
     ) {
+        $this->pageTitle = $pageTitle;
         $this->pageSubtitle = $pageSubtitle;
         $this->returnUrl = $returnUrl;
+        $this->returnLinkText = $returnLinkText;
         $this->annualAssessmentCertificatesGroupAViewModel = $annualAssessmentCertificatesGroupAViewModel;
         $this->addGroupALink = $addGroupALink;
         $this->annualAssessmentCertificatesGroupBViewModel = $annualAssessmentCertificatesGroupBViewModel;
@@ -66,7 +70,7 @@ class AnnualAssessmentCertificatesViewModel
 
     public function getReturnLinkText()
     {
-        return sprintf($this->returnLinkText, strtolower($this->pageSubtitle));
+        return $this->returnLinkText;
     }
 
     public function getAnnualAssessmentCertificatesGroupAViewModel()

@@ -2,6 +2,7 @@
 
 namespace PersonApi\Assertion;
 
+use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Model\DvsaRole;
 use DvsaEntities\Entity\Person;
@@ -49,9 +50,21 @@ class MotTestingAnnualCertificateAssertion implements AutoWireableInterface
         $this->assertGranted($person, PermissionInSystem::UPDATE_MOT_TESTING_ANNUAL_CERTIFICATE_FOR_USER);
     }
 
-    public function assertGrantedView(Person $person)
+    public function assertGrantedView(Person $person, $siteId = 0)
     {
-        $this->assertGranted($person, PermissionInSystem::VIEW_MOT_TESTING_ANNUAL_CERTIFICATE_FOR_USER);
+        if (!$this->isGrantedViewAtSite($person, $siteId)) {
+            $this->assertGranted($person, PermissionInSystem::VIEW_MOT_TESTING_ANNUAL_CERTIFICATE_FOR_USER);
+        }
+    }
+
+    private function isGrantedViewAtSite(Person $person, $siteId)
+    {
+        $isGrantedAtSite = false;
+        if ($this->identityProvider->getIdentity()->getUserId() !== $person->getId()) {
+            $isGrantedAtSite = $this->authorisationService->isGrantedAtSite(PermissionAtSite::VIEW_MOT_TESTING_ANNUAL_CERTIFICATE_FOR_SITE_USER, $siteId);
+        }
+
+        return ($isGrantedAtSite && $person->isTester());
     }
 
     public function assertGrantedDelete($person)

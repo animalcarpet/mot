@@ -74,12 +74,19 @@ class AnnualAssessmentCertificatesGroupViewModel
                     'certificateId' => $annualAssessmentCertificate->getId(),
                 ];
 
+            $queryParams = [];
+            $backTo = $this->context->getController()->params()->fromQuery("backTo");
+
+            if ($backTo === "vts-tester-assessments") {
+                $queryParams = ["query" => ["backTo" => "vts-tester-assessments"]];
+            }
+
             if ($canUpdate) {
                 $url = new UrlPresenterData(
                     'Change',
                     $this->routes->getEditRoute(),
                     $params,
-                    [],
+                    $queryParams,
                     'change-'.$annualAssessmentCertificate->getId()
                 );
 
@@ -91,7 +98,7 @@ class AnnualAssessmentCertificatesGroupViewModel
                     'Remove',
                     $this->routes->getRemove(),
                     $params,
-                    [],
+                    $queryParams,
                     'remove-'.$annualAssessmentCertificate->getId()
                 );
 
@@ -106,7 +113,6 @@ class AnnualAssessmentCertificatesGroupViewModel
                     self::ACTION_LINKS => $actionLinks,
                     self::DATE_AWARDED => DateTimeDisplayFormat::date($annualAssessmentCertificate->getExamDate()),
                     self::SCORE_ACHIEVED => $annualAssessmentCertificate->getScore().'%',
-                    self::ACTION_LINKS => $actionLinks,
                 ];
         }
 

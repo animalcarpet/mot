@@ -12,4 +12,6 @@ class VtsRouteList
     const VTS_USER_PROFILE_TEST_QUALITY = 'vehicle-testing-station-test-quality/user-profile-test-quality';
     const VTS_TEST_QUALITY_CSV = 'vehicle-testing-station-test-quality/csv';
     const VTS_USER_TEST_QUALITY_CSV = 'vehicle-testing-station-test-quality/user-test-quality/csv';
+    const VTS_TESTERS_ANNUAL_ASSESSMENT = 'site/testers-annual-assessment';
+    const VTS_PERSON_ANNUAL_ASSESSMENT = 'newProfileVTS/annual-assessment-certificates';
 }

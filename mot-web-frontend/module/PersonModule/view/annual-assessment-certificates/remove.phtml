@@ -1,5 +1,5 @@
 <?php
-use Dvsa\Mot\Frontend\PersonModule\src\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesRemoveViewModel;
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesRemoveViewModel;
 
 echo $this->partial('errorMessages', array('getFromFlash' => true));
 /** @var AnnualAssessmentCertificatesRemoveViewModel $viewModel */
@@ -24,7 +24,7 @@ echo $this->partial(
         <input type="submit" class="button-warning" value="<?php echo $viewModel->getSubmitButtonText() ?>" id="confirm-button">
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->url($viewModel->getBackRoute(), $viewModel->getBackRouteParams()) ?>">
+                <a href="<?php echo $this->url($viewModel->getBackRoute(), $viewModel->getBackRouteParams(), $viewModel->getBackRouteQueryParams()) ?>">
                     Cancel and return to annual assessment certificates
                 </a>
             </li>
