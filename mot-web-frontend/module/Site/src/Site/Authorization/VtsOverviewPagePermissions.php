@@ -13,6 +13,7 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaEntities\Entity\AuthorisationForTestingMot;
 
 /**
  * Class VtsOverviewPagePermissions.
@@ -109,17 +110,12 @@ class VtsOverviewPagePermissions
 
     public function canTestClass1And2()
     {
-        $roles = $this->vts->getTestClasses();
-
-        return is_array($roles) && (in_array(1, $roles) || in_array(2, $roles));
+        return VtsAuthorisationForTesting::canTestClass1Or2($this->vts->getTestClasses());
     }
 
     public function canTestAnyOfClass3AndAbove()
     {
-        $roles = $this->vts->getTestClasses();
-        $classes = [3, 4, 5, 7];
-
-        return is_array($roles) && (count(array_intersect($roles, $classes)) > 0);
+        return VtsAuthorisationForTesting::canTestAnyOfClass3AndAbove($this->vts->getTestClasses());
     }
 
     public function canChangeDefaultBrakeTests()

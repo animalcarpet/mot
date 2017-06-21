@@ -2,7 +2,7 @@
 
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesViewModel;
 
-/*
+/**
  * @var AnnualAssessmentCertificatesViewModel $viewModel
  */
 
@@ -93,7 +93,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
         <nav class="content-navigation">
             <ul class="content-navigation__secondary">
                 <li>
-                    <a href="<?php echo $viewModel->getReturnLink() ?>">
+                    <a id="return" href="<?php echo $viewModel->getReturnLink() ?>">
                         <?php echo $viewModel->getReturnLinkText() ?>
                     </a>
                 </li>

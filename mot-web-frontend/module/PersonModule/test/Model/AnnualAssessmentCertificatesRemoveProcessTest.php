@@ -16,6 +16,7 @@ use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Form\Form;
+use Zend\Mvc\Controller\Plugin\Params;
 
 class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_TestCase
 {
@@ -139,7 +140,17 @@ class AnnualAssessmentCertificatesRemoveProcessTest extends \PHPUnit_Framework_T
 
     private function createController()
     {
-        return XMock::of(RemoveAnnualAssessmentCertificatesController::class);
+        $paramsPlugin = XMock::of(Params::class);
+        $paramsPlugin
+            ->method("fromRoute")
+            ->willReturn([]);
+
+        $controller = XMock::of(RemoveAnnualAssessmentCertificatesController::class, ["params"]);
+        $controller
+            ->method("params")
+            ->willReturn($paramsPlugin);
+
+        return $controller;
     }
 
     private function createFormData()

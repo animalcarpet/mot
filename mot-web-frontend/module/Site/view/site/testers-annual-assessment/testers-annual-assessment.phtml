@@ -1,0 +1,31 @@
+<?php
+use Site\ViewModel\TestersAnnualAssessmentViewModel;
+/** @var $viewModel TestersAnnualAssessmentViewModel */
+?>
+
+<div>
+    <div class="text">
+        <p class="lede">Review the current status of your testers' annual assessments.</p>
+    </div>
+    <div>
+        <?php if($viewModel->getCanTestGroupA()) : ?>
+            <h3 class="summary-heading">Group A<span class="summary-heading__action">Class 1 and 2</span></h3>
+            <?php echo $viewModel->getTableForGroupA()->renderTable($this); ?>
+        <?php endif ;?>
+
+        <?php if($viewModel->getCanTestGroupB()) : ?>
+            <h3 class="summary-heading">Group B<span class="summary-heading__action">Class 3, 4, 5 and 7</span></h3>
+            <?php echo $viewModel->getTableForGroupB()->renderTable($this); ?>
+        <?php endif ;?>
+
+        <nav class="content-navigation">
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="<?php echo $viewModel->getBackLink(); ?> ">Return to Vehicle Testing Station</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+

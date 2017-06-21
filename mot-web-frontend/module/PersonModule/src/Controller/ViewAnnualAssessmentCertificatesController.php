@@ -4,7 +4,8 @@ namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Action\AnnualAssessmentCertificatesAction;
-use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
+use Dvsa\Mot\Frontend\PersonModule\Action\VtsTestersAnnualAssessmentCertificatesAction;
+use Dvsa\Mot\Frontend\PersonModule\Model\ViewAnnualAssessmentCertificatesFormContext;
 use Dvsa\Mot\Frontend\PersonModule\Security\AnnualAssessmentCertificatesPermissions;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -12,6 +13,8 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 class ViewAnnualAssessmentCertificatesController extends AbstractAuthActionController implements AutoWireableInterface
 {
     private $viewAction;
+
+    private $vtsTestersViewAction;
 
     /**
      * @var ContextProvider
@@ -23,10 +26,12 @@ class ViewAnnualAssessmentCertificatesController extends AbstractAuthActionContr
 
     public function __construct(
         AnnualAssessmentCertificatesAction $viewAction,
+        VtsTestersAnnualAssessmentCertificatesAction $vtsTestersViewAction,
         ContextProvider $contextProvider,
         AnnualAssessmentCertificatesPermissions $certificatesPermissions
     ) {
         $this->viewAction = $viewAction;
+        $this->vtsTestersViewAction = $vtsTestersViewAction;
         $this->contextProvider = $contextProvider;
         $this->certificatesPermissions = $certificatesPermissions;
     }
@@ -36,19 +41,19 @@ class ViewAnnualAssessmentCertificatesController extends AbstractAuthActionContr
         $context = $this->contextProvider->getContext();
         $personId = $this->getPersonId($context);
 
-        $formContext = new FormContext(
+        $formContext = new ViewAnnualAssessmentCertificatesFormContext(
             $personId,
             $this->getIdentity()->getUserId(),
-            null,
-            $this
+            $this,
+            $this->params()->fromRoute("vehicleTestingStationId")
         );
 
-        $this->certificatesPermissions->assertGrantedView(
-            $formContext->getTargetPersonId(),
-            $formContext->getLoggedInPersonId()
-        );
-
-        $actionResult = $this->viewAction->execute($formContext, $this);
+        $backTo = $this->params()->fromQuery("backTo");
+        if ($backTo === "vts-tester-assessments") {
+            $actionResult = $this->vtsTestersViewAction->execute($formContext, $this);
+        } else {
+            $actionResult = $this->viewAction->execute($formContext, $this);
+        }
 
         return $this->applyActionResult($actionResult);
     }

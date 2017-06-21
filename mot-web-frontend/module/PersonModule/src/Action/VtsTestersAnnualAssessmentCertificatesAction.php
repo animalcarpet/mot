@@ -4,8 +4,10 @@ namespace Dvsa\Mot\Frontend\PersonModule\Action;
 
 use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\PersonProfileBreadcrumbs;
+use Core\Routing\VtsRoutes;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
+use Dvsa\Mot\Frontend\PersonModule\Model\ViewAnnualAssessmentCertificatesFormContext;
 use Dvsa\Mot\Frontend\PersonModule\Routes\AnnualAssessmentCertificatesRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\AnnualAssessmentCertificatesPermissions;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
@@ -14,12 +16,12 @@ use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\Annual
 use DvsaClient\Mapper\AnnualAssessmentCertificatesMapper;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
-class AnnualAssessmentCertificatesAction implements AutoWireableInterface
+class VtsTestersAnnualAssessmentCertificatesAction implements AutoWireableInterface
 {
     private $personProfileUrlGenerator;
 
-    /** @var PersonProfileBreadcrumbs */
-    private $personProfileBreadcrumbs;
+    /** @var CertificatesBreadcrumbs */
+    private $certificatesBreadcrumbs;
 
     /** @var AnnualAssessmentCertificatesMapper */
     private $annualAssessmentCertificatesMapper;
@@ -34,47 +36,49 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
     const SUBTITLE_USER_PROFILE = 'User profile';
 
     public function __construct(
-        PersonProfileBreadcrumbs $personProfileBreadcrumbs,
+        CertificatesBreadcrumbs $certificatesBreadcrumbs,
         PersonProfileUrlGenerator $personProfileUrlGenerator,
         AnnualAssessmentCertificatesMapper $annualAssessmentCertificatesMapper,
         AnnualAssessmentCertificatesRoutes $annualAssessmentCertificatesRoutes,
         AnnualAssessmentCertificatesPermissions $certificatesPermissions
     ) {
         $this->personProfileUrlGenerator = $personProfileUrlGenerator;
-        $this->personProfileBreadcrumbs = $personProfileBreadcrumbs;
+        $this->certificatesBreadcrumbs = $certificatesBreadcrumbs;
         $this->annualAssessmentCertificatesMapper = $annualAssessmentCertificatesMapper;
         $this->annualAssessmentCertificatesRoutes = $annualAssessmentCertificatesRoutes;
         $this->certificatesPermissions = $certificatesPermissions;
     }
 
-    public function execute(FormContext $formContext, AbstractAuthActionController $controller)
+    public function execute(ViewAnnualAssessmentCertificatesFormContext $formContext, AbstractAuthActionController $controller)
     {
         return $this->buildActionResult($formContext, $controller);
     }
 
-    private function buildActionResult(FormContext $formContext, AbstractAuthActionController $controller)
+    private function buildActionResult(ViewAnnualAssessmentCertificatesFormContext $formContext, AbstractAuthActionController $controller)
     {
         $isUserViewingHisOwnProfile = $this->isUserViewingHisOwnProfile($formContext);
-        $pageSubtitle = $this->getPageSubtitle($isUserViewingHisOwnProfile);
+        $breadcrumbs = $this->certificatesBreadcrumbs->getBreadcrumbsForVtsAnnualAssessmentCertificate(
+            $formContext->getTargetPersonId(),
+            $controller
+        );
+        $addLinkQueryParams = ["backTo" => "vts-tester-assessments"];
+
 
         $vm = new AnnualAssessmentCertificatesViewModel(
-            'Annual assessment certificates',
-            $this->getPageSubtitle($isUserViewingHisOwnProfile),
-            $this->getPreviousUrl(),
-            sprintf("Return to %s", strtolower($pageSubtitle)),
+            $this->getLastBreadcrumbLabel($breadcrumbs),
+            "Annual assessment certificates",
+            VtsRoutes::of($controller->url())->vtsTestersAnnualAssessment($formContext->getSiteId(), $addLinkQueryParams),
+            sprintf("Return to %s", "testers annual assessment"),
             $this->getGroupViewModel($formContext, 'A'),
-            $this->getAddLinkForGroup($controller, 'A'),
+            $this->getAddLinkForGroup($controller, 'A', $addLinkQueryParams),
             $this->getGroupViewModel($formContext, 'B'),
-            $this->getAddLinkForGroup($controller, 'B'),
+            $this->getAddLinkForGroup($controller, 'B', $addLinkQueryParams),
             $this->certificatesPermissions->isGrantedCreate(
                 $formContext->getTargetPersonId(),
                 $formContext->getLoggedInPersonId()
             ),
             $isUserViewingHisOwnProfile
         );
-
-        $breadcrumbs = $this->personProfileBreadcrumbs->getBreadcrumbs($formContext->getTargetPersonId(), $controller,
-            'Annual assessment certificates');
 
         $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
@@ -89,15 +93,11 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
         return $actionResult;
     }
 
-    private function getPreviousUrl()
-    {
-        return $this->personProfileUrlGenerator->toPersonProfile();
-    }
-
-    private function getGroupViewModel(FormContext $context, $group)
+    private function getGroupViewModel(ViewAnnualAssessmentCertificatesFormContext $context, $group)
     {
         $personId = $context->getTargetPersonId();
-        $annualAssessmentCertificates = $this->annualAssessmentCertificatesMapper->getAnnualAssessmentCertificates($personId, $group);
+        $siteId = $context->getSiteId();
+        $annualAssessmentCertificates = $this->annualAssessmentCertificatesMapper->getAnnualAssessmentCertificates($personId, $group, $siteId);
 
         return new AnnualAssessmentCertificatesGroupViewModel(
             $annualAssessmentCertificates,
@@ -108,15 +108,21 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
         );
     }
 
-    private function getPageSubtitle($isPersonViewingItsOwnProfile)
+    /**
+     * @param array $breadcrumbs
+     * @return string
+     */
+    private function getLastBreadcrumbLabel(array $breadcrumbs)
     {
-        return $isPersonViewingItsOwnProfile ? self::SUBTITLE_YOUR_PROFILE : self::SUBTITLE_USER_PROFILE;
+        end($breadcrumbs);
+        return key($breadcrumbs);
     }
 
-    private function getAddLinkForGroup(AbstractAuthActionController $controller, $group)
+    private function getAddLinkForGroup(AbstractAuthActionController $controller, $group, array $queryParams = [])
     {
         return $controller->url()->fromRoute($this->annualAssessmentCertificatesRoutes->getAddRoute(),
-            $controller->params()->fromRoute() + ['group' => $group]
+            $controller->params()->fromRoute() + ['group' => $group],
+            ["query" => $queryParams]
         );
     }
 

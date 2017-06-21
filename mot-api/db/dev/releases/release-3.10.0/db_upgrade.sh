@@ -10,6 +10,8 @@ MYSQL_HOST=${3-"mysql"}
 
 # Add files here in intended run order for release.
 upgrade_files+=('2017-06-13-BL-5257-add-notification-template-for-site-assessment-risk-manual-creation-STORY.sql');
+upgrade_files+=('2017-06-12-BL-5272-view-testers-annual-assessments-STORY.sql');
+upgrade_files+=('2017-06-13-BL-5248-testers-annual-assessment-STORY.sql');
 
 # Necessary for first deployment.
 $(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -e "CREATE TABLE IF NOT EXISTS db_upgrade (

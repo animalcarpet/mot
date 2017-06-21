@@ -27,8 +27,9 @@ class MotTestingAnnualCertificateController extends AbstractDvsaRestfulControlle
     {
         $personId = (int) $this->params()->fromRoute('id');
         $group = $this->params()->fromRoute('group');
+        $siteId = (int) $this->params()->fromQuery('siteId');
 
-        return $this->returnDto($this->motTestingAnnualCertificateService->getListByGroup($personId, $group));
+        return $this->returnDto($this->motTestingAnnualCertificateService->getListByGroup($personId, $group, $siteId));
     }
 
     public function get($certificateId)

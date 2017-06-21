@@ -15,7 +15,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class PersonProfileBreadcrumbs implements AutoWireableInterface
 {
     private $contextProvider;
-    private $mapperFactory;
+    protected $mapperFactory;
     private $personProfileGuardBuilder;
     private $apiPersonalDetails;
 

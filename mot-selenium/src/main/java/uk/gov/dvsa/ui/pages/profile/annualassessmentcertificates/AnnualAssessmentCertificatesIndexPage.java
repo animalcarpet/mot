@@ -21,9 +21,10 @@ public class AnnualAssessmentCertificatesIndexPage extends Page {
     private WebElement messageSuccess;
     @FindBy(css = "#certificate-table-group-B tbody tr:first-child")
     private WebElement firstCertificateBRow;
+    @FindBy(id = "return")
+    private WebElement returnButton;
 
-    private static final String PAGE_TITLE = "Your profile\n" +
-            "Annual assessment certificates";
+    private static final String PAGE_TITLE = "Annual assessment certificates";
 
     public AnnualAssessmentCertificatesIndexPage(MotAppDriver driver) {
         super(driver);
@@ -110,4 +111,7 @@ public class AnnualAssessmentCertificatesIndexPage extends Page {
         return messageSuccess.getText().equals(message);
     }
 
+    public String gerReturnButtonText() {
+        return returnButton.getText();
+    }
 }

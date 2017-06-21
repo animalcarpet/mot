@@ -107,4 +107,8 @@ public class Site {
         eventsHistoryPage.fillSearchInput("Update site assessment risk score").clickApplyButton();
         return eventsHistoryPage.getEventHistoryTableSize();
     }
+
+    public VehicleTestingStationPage getVehicleTestingStationPage(){
+        return vehicleTestingStationPage;
+    }
 }

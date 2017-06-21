@@ -5,6 +5,7 @@ use Site\Controller\MotTestLogController;
 use Site\Controller\RoleController;
 use Site\Controller\SiteController;
 use Site\Controller\SiteTestingDailyScheduleController;
+use Site\Controller\TestersAnnualAssessmentController;
 use Site\Factory\Controller\MotTestLogControllerFactory;
 use Site\Factory\Controller\RoleControllerFactory;
 use Site\Factory\Controller\SiteControllerFactory;
@@ -355,6 +356,17 @@ return [
                                         'action' => 'downloadCsv',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    'testers-annual-assessment' => [
+                        'may_terminate' => true,
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/:id/testers-annual-assessment',
+                            'defaults' => [
+                                'controller' => TestersAnnualAssessmentController::class,
+                                'action' => 'testersAnnualAssessment',
                             ],
                         ],
                     ],
