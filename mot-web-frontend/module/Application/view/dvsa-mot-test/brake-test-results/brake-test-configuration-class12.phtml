@@ -5,12 +5,10 @@ use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
 /*
- * @var BrakeTestConfigurationClass1And2Helper        $configHelper
  * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest     $motTest
  * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
  * @var array                                         $brakeTestTypes
  * @var MotTestDto                                    $motTest
- * @var BrakeTestConfigurationClass1And2Helper        $configHelper
  * @var MotTestTitleModel                             $motTestTitleViewModel
  * @var string                                        $title
  * @var string                                        $vehicleWeightFront
@@ -22,8 +20,8 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
  * @var string                                        $vehicleClass
  */
 
-$this->layout()->setVariable('pageSubTitle', $motTestTitleViewModel->getTitle($motTest));
-$this->layout()->setVariable('pageTitle', $title);
+$this->layout()->setVariable('pageSubTitle', $viewModel->motTestTitleViewModel->getTitle($motTest));
+$this->layout()->setVariable('pageTitle', $viewModel->title);
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(
@@ -35,7 +33,7 @@ $this->placeholder('progressBar')->captureEnd();
 
 <?php echo $this->partial('errorMessages', ['getFromFlash' => true]); ?>
 <?php echo $this->partial('infoMessages', ['getFromFlash' => true]); ?>
-<?php echo $this->partial('vehicleSummary', ['vehicle' => $vehicle]); ?>
+<?php echo $this->partial('vehicleSummary', ['vehicle' => $viewModel->vehicle]); ?>
 
 <form method="POST">
     <?php echo $this->csrfToken() ?>
@@ -47,8 +45,8 @@ $this->placeholder('progressBar')->captureEnd();
                     [
                         'id' => 'brakeTestType',
                         'label' => 'Brake test type',
-                        'options' => $brakeTestTypes,
-                        'value' => $brakeTestType,
+                        'options' => $viewModel->brakeTestTypes,
+                        'value' => $viewModel->brakeTestType,
                         'required' => true,
                     ]
                 ); ?>
@@ -61,7 +59,7 @@ $this->placeholder('progressBar')->captureEnd();
                         [
                             'id' => 'vehicleWeightFront',
                             'name' => 'vehicleWeightFront',
-                            'value' => $vehicleWeightFront,
+                            'value' => $viewModel->vehicleWeightFront,
                             ]
                         ); ?>
 
@@ -71,7 +69,7 @@ $this->placeholder('progressBar')->captureEnd();
                         [
                             'id' => 'vehicleWeightRear',
                             'name' => 'vehicleWeightRear',
-                            'value' => $vehicleWeightRear,
+                            'value' => $viewModel->vehicleWeightRear,
                         ]
                     ); ?>
 
@@ -81,7 +79,7 @@ $this->placeholder('progressBar')->captureEnd();
                         [
                             'id' => 'riderWeight',
                             'name' => 'riderWeight',
-                            'value' => $riderWeight,
+                            'value' => $viewModel->riderWeight,
                         ]
                     ); ?>
 
@@ -95,7 +93,7 @@ $this->placeholder('progressBar')->captureEnd();
                                         'id' => 'isSidecarAttachedNo',
                                         'name' => 'isSidecarAttached',
                                         'value' => '0',
-                                        'isChecked' => !($isSidecarAttached),
+                                        'isChecked' => !($viewModel->isSidecarAttached),
                                         'label' => 'No',
                                     ]
                                 );
@@ -106,7 +104,7 @@ $this->placeholder('progressBar')->captureEnd();
                                         'id' => 'isSidecarAttachedYes',
                                         'name' => 'isSidecarAttached',
                                         'value' => '1',
-                                        'isChecked' => ($isSidecarAttached),
+                                        'isChecked' => ($viewModel->isSidecarAttached),
                                         'label' => 'Yes',
                                     ]
                                 );
@@ -120,7 +118,7 @@ $this->placeholder('progressBar')->captureEnd();
                                     [
                                         'id' => 'sidecarWeight',
                                         'name' => 'sidecarWeight',
-                                        'value' => $sidecarWeight,
+                                        'value' => $viewModel->sidecarWeight,
                                     ]
                                 ); ?>
                             </div>
@@ -133,9 +131,9 @@ $this->placeholder('progressBar')->captureEnd();
 
     <div class="row">
         <div class="col-lg-12 btn-bar">
-            <input type="hidden" id="vehicleClass" name="vehicleClass" value="<?php echo $vehicleClass ?>"/>
+            <input type="hidden" id="vehicleClass" name="vehicleClass" value="<?php echo $viewModel->vehicleClass ?>"/>
             <input type="submit" id="brake_test_results_submit" name="submit" value="Next" class="btn btn-primary"/>
-            <a id="brake_test_results_cancel" href="<?php echo $this->url('mot-test', ['motTestNumber' => $motTest->getMotTestNumber()]); ?>" class="btn btn-link">Cancel</a>
+            <a id="brake_test_results_cancel" href="<?php echo $this->url('mot-test', ['motTestNumber' => $viewModel->motTest->getMotTestNumber()]); ?>" class="btn btn-link">Cancel</a>
         </div>
     </div>
 </form>

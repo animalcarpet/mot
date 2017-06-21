@@ -28,6 +28,7 @@ use DvsaMotTest\Factory\Controller\ReplacementCertificateControllerFactory;
 use DvsaMotTest\Factory\Controller\SpecialNoticesControllerFactory;
 use DvsaMotTest\Factory\Controller\StartTestConfirmationControllerFactory;
 use DvsaMotTest\Factory\Controller\TesterMotTestLogControllerFactory;
+use DvsaMotTest\Factory\Controller\BrakeTestResultsControllerFactory;
 
 return [
     'invokables' => [
@@ -36,12 +37,12 @@ return [
         CookiesController::class => CookiesController::class,
         LocationSelectController::class => LocationSelectController::class,
         VehicleDictionaryController::class => VehicleDictionaryController::class,
-        BrakeTestResultsController::class => BrakeTestResultsController::class,
         TestItemSelectorController::class => TestItemSelectorController::class,
         MotTestApiController::class => MotTestApiController::class,
         ReinspectionReportController::class => ReinspectionReportController::class,
     ],
     'factories' => [
+        BrakeTestResultsController::class => BrakeTestResultsControllerFactory::class,
         RefuseToTestController::class => RefuseToTestControllerFactory::class,
         SpecialNoticesController::class => SpecialNoticesControllerFactory::class,
         StartTestConfirmationController::class => StartTestConfirmationControllerFactory::class,

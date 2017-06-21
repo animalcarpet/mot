@@ -9,12 +9,15 @@ use DvsaCommon\Enum\MotTestStatusName;
  */
 class InvalidTestStatus
 {
+    const ERROR_MESSAGE_TEST_ABORTED_BY_VE = "This test has been aborted by DVSA and cannot be continued";
+    const ERROR_MESSAGE_TEST_COMPLETE = "This test is completed and cannot be changed";
+
     public static function getMessage($status)
     {
         if ($status === MotTestStatusName::ABORTED_VE) {
-            return "This test has been aborted by DVSA and cannot be continued";
+            return self::ERROR_MESSAGE_TEST_ABORTED_BY_VE;
         } elseif ($status !== MotTestStatusName::ACTIVE) {
-            return "This test is completed and cannot be changed";
+            return self::ERROR_MESSAGE_TEST_COMPLETE;
         } else {
             return '';
         }

@@ -2,6 +2,9 @@
 
 namespace DvsaMotTestTest\Controller;
 
+use Core\Action\AbstractActionResult;
+use Core\Action\RedirectToRoute;
+use Core\Action\ViewActionResult;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
@@ -14,11 +17,15 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTest\Action\BrakeTestResults\SubmitBrakeTestConfigurationAction;
+use DvsaMotTest\Action\BrakeTestResults\ViewBrakeTestConfigurationAction;
 use DvsaMotTest\Controller\BrakeTestResultsController;
+use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Data\BrakeTestResultsResource;
 use DvsaMotTest\Helper\BrakeTestConfigurationContainerHelper;
 use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 use DvsaMotTestTest\TestHelper\Fixture;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Class BrakeTestResultsControllerTest.
@@ -29,9 +36,21 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     protected $mockMotTestServiceClient;
     protected $mockVehicleServiceClient;
 
+    /** @var SubmitBrakeTestConfigurationAction|MockObject $submitBrakeTestConfigurationAction */
+    private $submitBrakeTestConfigurationAction;
+
+    /** @var ViewBrakeTestConfigurationAction|MockObject $viewBrakeTestConfigurationAction */
+    private $viewBrakeTestConfigurationAction;
+
     protected function setUp()
     {
-        $this->controller = new BrakeTestResultsController();
+        $this->submitBrakeTestConfigurationAction = XMock::of(SubmitBrakeTestConfigurationAction::class);
+        $this->viewBrakeTestConfigurationAction = XMock::of(ViewBrakeTestConfigurationAction::class);
+
+        $this->controller = new BrakeTestResultsController(
+            $this->submitBrakeTestConfigurationAction,
+            $this->viewBrakeTestConfigurationAction
+        );
 
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
@@ -73,125 +92,6 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         }
 
         return $this->mockVehicleServiceClient;
-    }
-
-    /**
-     * @param      $motTestNumber
-     * @param      $vehicleClass
-     * @param      $isPost
-     * @param      $postParams
-     * @param      $expectedTemplate
-     * @param null $expectedLocation
-     *
-     * @dataProvider brakeTestConfigurationTestItems
-     *
-     * @param $motTestNumber
-     * @param $vehicleClass
-     * @param $isPost
-     * @param $postParams
-     * @param $expectedTemplate
-     * @param null $expectedLocation
-     */
-    public function testBrakeTestConfigurationGetOk(
-        $motTestNumber,
-        $vehicleClass,
-        $isPost,
-        $postParams,
-        $expectedTemplate,
-        $expectedLocation = null
-    ) {
-        if ($vehicleClass === VehicleClassCode::CLASS_4) {
-            $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
-            $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
-        } else {
-            $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass1(true));
-            $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass1(true));
-        }
-
-        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
-        $mockMotTestServiceClient
-            ->expects($this->once())
-            ->method('getMotTestByTestNumber')
-            ->with(1)
-            ->will($this->returnValue($testMotTestData));
-
-        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
-        $mockVehicleServiceClient
-            ->expects($this->once())
-            ->method('getDvsaVehicleByIdAndVersion')
-            ->with(1001, 1)
-            ->will($this->returnValue($vehicleData));
-
-        if ($isPost) {
-            $this->setPostAndPostParams($postParams);
-        }
-
-        $result = $this->getResultForAction('configureBrakeTest', ['motTestNumber' => $motTestNumber]);
-
-        if ($isPost) {
-            $this->assertRedirectLocation2($expectedLocation);
-        } else {
-            $this->assertResponseStatus(self::HTTP_OK_CODE);
-            $this->assertEquals($expectedTemplate, $result->getTemplate());
-        }
-    }
-
-    public static function brakeTestConfigurationTestItems()
-    {
-        $postParamsClass1 = [
-            'brakeTestType' => BrakeTestTypeCode::ROLLER,
-            'vehicleWeightFront' => '100',
-            'vehicleWeightRear' => '50',
-            'riderWeight' => '80',
-            'isSidecarAttached' => '1',
-            'sidecarWeight' => '40',
-        ];
-        $postParamsClass4 = [
-            'serviceBrake1TestType' => BrakeTestTypeCode::ROLLER,
-            'serviceBrake2TestType' => BrakeTestTypeCode::ROLLER,
-            'parkingBrakeTestType' => BrakeTestTypeCode::PLATE,
-            'weightType' => 'presented',
-            'vehicleWeight' => '1000',
-            'brakeLineType' => 'single',
-            'numberOfAxles' => '2',
-            'parkingBrakeNumberOfAxles' => '0',
-            'serviceBrakeIsSingleLine' => true,
-            'weightIsUnladen' => '1',
-            'isCommercialVehicle' => false,
-        ];
-
-        return [
-            [
-                'motTestNumber' => 1,
-                'vehicleClass' => VehicleClassCode::CLASS_4,
-                'isPost' => false,
-                'postParams' => null,
-                'expectedTemplate' => BrakeTestResultsController::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE,
-            ],
-            [
-                'motTestNumber' => 1,
-                'vehicleClass' => VehicleClassCode::CLASS_1,
-                'isPost' => false,
-                'postParams' => null,
-                'expectedTemplate' => BrakeTestResultsController::TEMPLATE_CONFIG_CLASS_1_2,
-            ],
-            [
-                'motTestNumber' => 1,
-                'vehicleClass' => VehicleClassCode::CLASS_1,
-                'isPost' => true,
-                'postParams' => $postParamsClass1,
-                'expectedTemplate' => null,
-                'expectedLocation' => '/mot-test/1/brake-test-results',
-            ],
-            [
-                'motTestNumber' => 1,
-                'vehicleClass' => VehicleClassCode::CLASS_4,
-                'isPost' => true,
-                'postParams' => $postParamsClass4,
-                'expectedTemplate' => null,
-                'expectedLocation' => '/mot-test/1/brake-test-results',
-            ],
-        ];
     }
 
     public function testBrakeTestResultsCanBeAccessedAuthenticatedRequest()
@@ -514,34 +414,6 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function test_configureBrakeTestAction_redirects_back_when_test_is_not_in_progress()
-    {
-        $motTestNumber = 1;
-        $data = Fixture::getMotTestDataVehicleClass4(true);
-        $data->status = 'PASSED';
-        $testMotTestData = new MotTest($data);
-
-        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
-        $mockMotTestServiceClient
-            ->expects($this->once())
-            ->method('getMotTestByTestNumber')
-            ->with(1)
-            ->will($this->returnValue($testMotTestData));
-
-        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
-
-        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
-        $mockVehicleServiceClient
-            ->expects($this->once())
-            ->method('getDvsaVehicleByIdAndVersion')
-            ->with(1001, 1)
-            ->will($this->returnValue($vehicleData));
-
-        $this->getResponseForAction('configureBrakeTest', ['motTestNumber' => $motTestNumber]);
-
-        $this->assertRedirectLocation2("/mot-test/$motTestNumber");
-    }
-
     public static function gradientTestsForClass12()
     {
         return [
@@ -693,6 +565,38 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         $this->assertRedirectLocation2("/mot-test/$motTestNumber/brake-test-summary");
     }
 
+    public function testBrakeTestConfigRedirectsWhenSubmitActionReturnsRedirectResult()
+    {
+        $motTestNumber = 8;
+        $redirectActionResult = new RedirectToRoute(MotTestController::ROUTE_MOT_TEST, ['motTestNumber' => $motTestNumber]);
+        $this->withSubmitBrakeTestConfigurationResult($redirectActionResult);
+
+        $this->routeMatch->setParam('action', 'configureBrakeTest');
+        $this->routeMatch->setParam('motTestNumber', $motTestNumber);
+
+        $this->setPostAndPostParams([]);
+        $this->controller->dispatch($this->request);
+
+        $response = $this->getController()->getResponse();
+        $this->assertResponseStatus(self::HTTP_REDIRECT_CODE, $response);
+    }
+
+    public function testBrakeTestConfigSuccessWhenSubmitActionReturnsViewResult()
+    {
+        $motTestNumber = 8;
+        $viewActionResult = new ViewActionResult();
+        $this->withViewBrakeTestConfigurationResult($viewActionResult);
+
+        $this->routeMatch->setParam('action', 'configureBrakeTest');
+        $this->routeMatch->setParam('motTestNumber', $motTestNumber);
+
+        $this->setPostAndPostParams([]);
+        $this->controller->dispatch($this->request);
+
+        $response = $this->getController()->getResponse();
+        $this->assertResponseStatus(self::HTTP_OK_CODE, $response);
+    }
+
     protected function getRestClientMockWithGetMotTest($motTestData, $minimal = false)
     {
         $motTestNumber = is_object($motTestData['data']) ? $motTestData['data']->getMotTestNumber()
@@ -716,5 +620,25 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         $serviceManager->setService(BrakeTestResultsResource::class, $mock);
 
         return $mock;
+    }
+
+    private function withSubmitBrakeTestConfigurationResult(AbstractActionResult $result)
+    {
+        $this->submitBrakeTestConfigurationAction
+            ->expects($this->any())
+            ->method('execute')
+            ->willReturn($result);
+
+        return $this;
+    }
+
+    private function withViewBrakeTestConfigurationResult(AbstractActionResult $result)
+    {
+        $this->viewBrakeTestConfigurationAction
+            ->expects($this->any())
+            ->method('execute')
+            ->willReturn($result);
+
+        return $this;
     }
 }
