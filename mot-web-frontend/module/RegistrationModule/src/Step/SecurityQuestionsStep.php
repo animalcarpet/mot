@@ -81,6 +81,8 @@ class SecurityQuestionsStep extends AbstractRegistrationStep
             $this->setAnswer1($values[SecurityQuestionsInputFilter::FIELD_ANSWER_1]);
             $this->setQuestion2($values[SecurityQuestionsInputFilter::FIELD_QUESTION_2]);
             $this->setAnswer2($values[SecurityQuestionsInputFilter::FIELD_ANSWER_2]);
+
+            $this->filter->setData($this->toArray());
         }
     }
 

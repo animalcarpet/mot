@@ -259,16 +259,16 @@ class VehicleService
     }
 
     /**
-     * @param Person          $person
-     * @param VehicleFromDvla $vehicle
-     * @param int             $vehicleClassCode
-     * @param int             $primaryColourCode
-     * @param int             $secondaryColourCode
-     * @param string          $fuelTypeCode
+     * @param Person $person
+     * @param int $vehicleId
+     * @param int $vehicleClassCode
+     * @param int $primaryColourCode
+     * @param int $secondaryColourCode
+     * @param string $fuelTypeCode
      */
     public function logDvlaVehicleImportChanges(
         Person $person,
-        VehicleFromDvla $vehicle,
+        $vehicleId,
         $vehicleClassCode,
         $primaryColourCode,
         $secondaryColourCode,
@@ -278,7 +278,7 @@ class VehicleService
 
         $importChanges = (new DvlaVehicleImportChangeLog())
             ->setTester($person)
-            ->setVehicleId($vehicle->getId())
+            ->setVehicleId($vehicleId)
             ->setVehicleClass($vehicleClass)
             ->setColour($primaryColourCode)
             ->setSecondaryColour($secondaryColourCode)
@@ -419,9 +419,7 @@ class VehicleService
 
         }
 
-        $dvlaVehicle = $this->newVehicleService->createVehicleFromDvla($dvlaVehicleRequest);
-
-        return $dvlaVehicle;
+        return $this->newVehicleService->createVehicleFromDvla($dvlaVehicleRequest);
     }
 
     /**

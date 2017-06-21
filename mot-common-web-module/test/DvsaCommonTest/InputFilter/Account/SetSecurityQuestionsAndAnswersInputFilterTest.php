@@ -9,7 +9,6 @@ namespace DvsaCommonTest\InputFilter\Account;
 
 use DvsaCommon\InputFilter\Account\SetSecurityQuestionsAndAnswersInputFilter as SSQAIF;
 use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
 
 class SetSecurityQuestionsAndAnswersInputFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,7 +42,7 @@ class SetSecurityQuestionsAndAnswersInputFilterTest extends \PHPUnit_Framework_T
      */
     public function validationRolesDataProvider()
     {
-        $standardIsEmptyMessage = [NotEmpty::IS_EMPTY => 'Value is required and can\'t be empty'];
+        $standardIsEmptyMessage = [NotEmpty::IS_EMPTY => SSQAIF::MSG_IS_EMPTY,];
 
         $conditions = [
             [

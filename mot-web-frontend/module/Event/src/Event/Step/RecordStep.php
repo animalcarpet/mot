@@ -75,6 +75,8 @@ class RecordStep extends AbstractEventStep
             $this->setDay($values[RecordInputFilter::FIELD_DAY]);
             $this->setMonth($values[RecordInputFilter::FIELD_MONTH]);
             $this->setYear($values[RecordInputFilter::FIELD_YEAR]);
+
+            $this->filter->setData($this->toArray());
         }
     }
 

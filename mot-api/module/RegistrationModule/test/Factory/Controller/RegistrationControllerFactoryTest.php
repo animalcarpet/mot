@@ -30,7 +30,7 @@ class RegistrationControllerFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         /** @var ControllerManager $plugins */
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

@@ -3,6 +3,7 @@
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommonApiTest\Controller\AbstractRestfulControllerTestCase;
+use DvsaMotApi\Service\MotTestService;
 use SiteApi\Service\SiteService;
 use Zend\Http\Header\ContentType;
 use Zend\Http\Request;
@@ -12,9 +13,12 @@ use Zend\Http\Request;
  */
 abstract class AbstractMotApiControllerTestCase extends AbstractRestfulControllerTestCase
 {
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject | MotTestService
+     */
     protected function getMockMotTestService()
     {
-        return $this->getMockServiceManagerClass('MotTestService', \DvsaMotApi\Service\MotTestService::class);
+        return $this->getMockServiceManagerClass('MotTestService', MotTestService::class);
     }
 
     protected function getMockVehicleTestingStationService()

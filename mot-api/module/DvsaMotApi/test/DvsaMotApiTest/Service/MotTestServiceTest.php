@@ -131,7 +131,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
-        $testStatus = $this->getMock('\DvsaEntities\Entity\MotTestStatus');
+        $testStatus = $this->getMockBuilder('\DvsaEntities\Entity\MotTestStatus')->disableOriginalConstructor()->getMock();
 
         $testStatus->expects($this->any())
             ->method('getName')
@@ -162,7 +162,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
-        $testStatus = $this->getMock('\DvsaEntities\Entity\MotTestStatus');
+        $testStatus = $this->getMockBuilder('\DvsaEntities\Entity\MotTestStatus')->disableOriginalConstructor()->getMock();
 
         $testStatus->expects($this->any())
             ->method('getName')
@@ -197,7 +197,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
 
-        $testStatus = $this->getMock('\DvsaEntities\Entity\MotTestStatus');
+        $testStatus = $this->getMockBuilder('\DvsaEntities\Entity\MotTestStatus')->disableOriginalConstructor()->getMock();
 
         /*
          *  isCancelled checks for:
@@ -235,7 +235,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
-        $testStatus = $this->getMock('\DvsaEntities\Entity\MotTestStatus');
+        $testStatus = $this->getMockBuilder('\DvsaEntities\Entity\MotTestStatus')->disableOriginalConstructor()->getMock();
 
         $testStatus->expects($this->any())
             ->method('getName')
@@ -637,8 +637,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
             'OdometerReadings' => (new OdometerReadingMapper())->manyToDtoFromArray($readings),
         ];
 
-        $motTestMock = $this->getMock(MotTest::class);
-        $motTestTypeMock = $this->getMock(MotTestType::class);
+        $motTestMock = $this->getMockBuilder(MotTest::class)->disableOriginalConstructor()->getMock();
+        $motTestTypeMock = $this->getMockBuilder(MotTestType::class)->disableOriginalConstructor()->getMock();
         $this->mockMethod($motTestMock, 'getVehicleTestingStation', $this->once(), $vehicleTestStation);
         $this->mockMethod($motTestMock, 'getVehicle', $this->atLeastOnce(), $vehicle);
         $this->mockMethod($motTestMock, 'getMotTestType', $this->atLeastOnce(), $motTestTypeMock);
@@ -681,8 +681,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
             'OdometerReadings' => (new OdometerReadingMapper())->manyToDtoFromArray($vehicleOdometerHistory),
         ];
 
-        $motTestMock = $this->getMock(MotTest::class);
-        $motTestTypeMock = $this->getMock(MotTestType::class);
+        $motTestMock = $this->getMockBuilder(MotTest::class)->disableOriginalConstructor()->getMock();
+        $motTestTypeMock = $this->getMockBuilder(MotTestType::class)->disableOriginalConstructor()->getMock();
         $this->mockMethod($motTestMock, 'getVehicleTestingStation', $this->once(), $vehicleTestStation);
         $this->mockMethod($motTestMock, 'getVehicle', $this->atLeastOnce(), $vehicle);
         $this->mockMethod($motTestMock, 'getMotTestType', $this->atLeastOnce(), $motTestTypeMock);

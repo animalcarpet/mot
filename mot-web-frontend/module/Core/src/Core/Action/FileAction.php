@@ -4,7 +4,7 @@ namespace Core\Action;
 
 use Core\File\FileInterface;
 
-class FileAction
+class FileAction implements ActionResultInterface
 {
     private $file;
 

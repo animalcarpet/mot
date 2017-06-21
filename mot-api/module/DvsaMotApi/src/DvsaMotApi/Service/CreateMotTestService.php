@@ -283,7 +283,7 @@ class CreateMotTestService implements TransactionAwareInterface
 
                 $this->vehicleService->logDvlaVehicleImportChanges(
                     $tester,
-                    $vehicle,
+                    $vehicleId,
                     $vehicleClassCode,
                     $primaryColourCode,
                     $secondaryColourCode,
@@ -313,7 +313,6 @@ class CreateMotTestService implements TransactionAwareInterface
             $vehicleModel,
             $vehicleId,
             $vehicleClassCode,
-            $fuelTypeCode,
             $primaryColourCode,
             $secondaryColourCode,
             $countryOfRegistrationId,

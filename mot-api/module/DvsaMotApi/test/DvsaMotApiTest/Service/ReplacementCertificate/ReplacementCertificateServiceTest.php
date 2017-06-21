@@ -207,7 +207,6 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
-        $this->certificateCreator->expects($this->any())->method('create');
         $this->certificateReplacementRepository->expects($this->any())->method('save')
             ->with($certificateReplacementCapture());
 
@@ -242,7 +241,6 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
-        $this->certificateCreator->expects($this->any())->method('create');
         $this->certificateReplacementRepository->expects($this->any())->method('save')
             ->with($certificateReplacementCapture());
 
@@ -295,7 +293,6 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
-        $this->certificateCreator->expects($this->any())->method('create');
         $this->certificateReplacementRepository->expects($this->any())->method('save')
             ->with($certificateReplacementCapture());
 

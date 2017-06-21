@@ -26,7 +26,7 @@ class AddressServiceTest extends AbstractServiceTestCase
                           ->method('find')
                           ->with(Address::class, $addressId)
                           ->will($this->returnValue($address));
-        $mockAddressMapper = $this->getMock(AddressMapper::class);
+        $mockAddressMapper = $this->getMockBuilder(AddressMapper::class)->disableOriginalConstructor()->getMock();
 
         $addressService = new AddressService(
             $mockEntityManager,
@@ -51,7 +51,7 @@ class AddressServiceTest extends AbstractServiceTestCase
         $mockEntityManager->expects($this->once())
                           ->method('find')
                           ->will($this->returnValue(null));
-        $mockAddressMapper = $this->getMock(AddressMapper::class);
+        $mockAddressMapper = $this->getMockBuilder(AddressMapper::class)->disableOriginalConstructor()->getMock();
         $addressService = new AddressService(
             $mockEntityManager,
             $mockHydrator,
@@ -63,9 +63,9 @@ class AddressServiceTest extends AbstractServiceTestCase
 
     public function testCreateAddressData()
     {
-        $mockAddress = $this->getMock(Address::class);
+        $mockAddress = $this->getMockBuilder(Address::class)->disableOriginalConstructor()->getMock();
 
-        $mockAddressValidator = $this->getMock(AddressValidator::class);
+        $mockAddressValidator = $this->getMockBuilder(AddressValidator::class)->disableOriginalConstructor()->getMock();
         $mockHydrator = $this->getMockHydrator();
 
         $mockEntityManager = $this->getMockEntityManager();
@@ -73,7 +73,7 @@ class AddressServiceTest extends AbstractServiceTestCase
             ->method('persist')
             ->with($mockAddress);
 
-        $mockAddressMapper = $this->getMock(AddressMapper::class);
+        $mockAddressMapper = $this->getMockBuilder(AddressMapper::class)->disableOriginalConstructor()->getMock();
 
         $this->setupMockForCalls($mockAddressMapper, 'mapToEntity', $mockAddress, null);
 

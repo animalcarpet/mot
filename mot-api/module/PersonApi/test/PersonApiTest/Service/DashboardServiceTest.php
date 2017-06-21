@@ -321,11 +321,6 @@ class DashboardServiceTest extends AbstractServiceTestCase
             ->method('getAmountOfOverdueSpecialNoticesForClasses')
             ->willReturn([]);
 
-        $this->notificationService
-            ->expects($this->any())
-            ->method('getAllByPersonId')
-            ->willReturn([]);
-
         $this->testerService
             ->expects($this->any())
             ->method('findInProgressDemoTestNumberForTester')

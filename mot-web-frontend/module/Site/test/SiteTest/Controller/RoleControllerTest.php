@@ -44,7 +44,7 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
         $serviceManager->setAllowOverride(true);
 
         $usernameValidatorMock = $this->createUsernameValidatorMock(true);
-        $htmlPurifier = $this->getMock('HTMLPurifier');
+        $htmlPurifier = $this->getMockBuilder('HTMLPurifier')->disableOriginalConstructor()->getMock();
 
         $this->controller = new RoleController($usernameValidatorMock, $htmlPurifier);
         $this->controller->setServiceLocator($serviceManager);
@@ -179,10 +179,6 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
     private function getPositionMapperMock()
     {
         $positionMapperMock = $this->positionMapperMock = XMock::of(SitePositionMapper::class);
-
-        $positionMapperMock->expects($this->any())
-            ->method('postJson')
-            ->with($this->siteId, $this->nomineeId, $this->roleCode);
 
         return $positionMapperMock;
     }

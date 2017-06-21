@@ -15,7 +15,7 @@ class ReplacementCertificateControllerFactoryTest extends \PHPUnit_Framework_Tes
     {
         $serviceManager = Bootstrap::getServiceManager();
 
-        $controllerManager = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $controllerManager = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $controllerManager->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

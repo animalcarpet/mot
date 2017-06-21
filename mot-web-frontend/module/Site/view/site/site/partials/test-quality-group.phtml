@@ -133,7 +133,8 @@ use Site\ViewModel\TestQuality\GroupStatisticsTable;
 <?php if ($group->hasTests()): ?>
     <div class="result__actions">
         Download Group <?php echo $group->getGroupCode(); ?> report as a
-        <a href="<?php echo $this->url(VtsRouteList::VTS_TEST_QUALITY_CSV,
+        <a id="site-tqi-csv-downaload-group-<?php echo $group->getGroupCode(); ?>"
+           href="<?php echo $this->url(VtsRouteList::VTS_TEST_QUALITY_CSV,
             [
                 'id' => $group->getSiteId(),
                 'group' => $group->getGroupCode(),

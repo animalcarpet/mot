@@ -23,7 +23,7 @@ class PasswordServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $service = XMock::of(PasswordValidator::class);
         $serviceManager->setService(PasswordValidator::class, $service);
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

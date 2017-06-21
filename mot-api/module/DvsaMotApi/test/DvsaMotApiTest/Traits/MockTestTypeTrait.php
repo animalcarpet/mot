@@ -9,7 +9,7 @@ trait MockTestTypeTrait
 {
     public function getMotTestTypeMock($testTypeCode = MotTestTypeCode::NORMAL_TEST)
     {
-        $motTestTypeMock = $this->getMock(MotTestType::class);
+        $motTestTypeMock = $this->getMockBuilder(MotTestType::class)->disableOriginalConstructor()->getMock();
         $isDemo = false;
         $isSlotConsuming = false;
         $isReinspection = false;

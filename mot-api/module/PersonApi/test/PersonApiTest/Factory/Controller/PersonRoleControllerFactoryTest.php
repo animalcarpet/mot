@@ -17,7 +17,7 @@ class PersonRoleControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $service = XMock::of(PersonRoleService::class);
         $serviceManager->setService(PersonRoleService::class, $service);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

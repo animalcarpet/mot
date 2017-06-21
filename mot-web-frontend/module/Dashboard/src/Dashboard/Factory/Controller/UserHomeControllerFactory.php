@@ -33,7 +33,6 @@ class UserHomeControllerFactory implements FactoryInterface
             $serviceLocator->get(UserAdminSessionManager::class),
             $serviceLocator->get(TesterGroupAuthorisationMapper::class),
             $serviceLocator->get('AuthorisationService'),
-            $serviceLocator->get(UserAdminSessionManager::class),
             $serviceLocator->get(ViewTradeRolesAssertion::class),
             $serviceLocator->get(TradeRolesAssociationsService::class),
             $serviceLocator->get(DashboardGuard::class)

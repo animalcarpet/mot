@@ -19,7 +19,7 @@ class AuthorisedExaminerStatusControllerFactoryTest extends \PHPUnit_Framework_T
             XMock::of(AuthorisedExaminerStatusService::class)
         );
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->willReturn($serviceManager);

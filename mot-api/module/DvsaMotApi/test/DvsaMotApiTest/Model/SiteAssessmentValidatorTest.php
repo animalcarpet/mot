@@ -373,7 +373,7 @@ class SiteAssessmentValidatorTest extends AbstractServiceTestCase
     {
         $service = $this->getMockWithDisabledConstructor(\DataCatalogApi\Service\DataCatalogService::class);
 
-        $service->expects($this->exactly(3))
+        $service->expects($this->once())
             ->method('getSiteAssessmentVisitOutcomeData')
             ->will(
                 $this->returnValue(

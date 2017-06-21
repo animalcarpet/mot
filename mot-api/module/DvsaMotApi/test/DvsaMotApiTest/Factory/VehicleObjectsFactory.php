@@ -119,55 +119,6 @@ class VehicleObjectsFactory
         return $dvlaVehicle;
     }
 
-    /**
-     * this is new vehicle model as the result of Java vehicle-service.
-     *
-     * @param int $id
-     *
-     * @return VehicleFromDvla
-     */
-    public static function dvlaImportedVehicle($id = 1)
-    {
-        $dvlaVehicleData = json_decode(
-            json_encode(
-                [
-                    'id' => 2,
-                    'amendedOn' => '2016-02-03',
-                    'registration' => 'DII4454',
-                    'vin' => '1M7GDM9AXKP042777',
-                    'emptyVrmReason' => null,
-                    'emptyVinReason' => null,
-                    'make' => 'PORSCHE',
-                    'model' => 'BOXSTER',
-                    'colour' => [
-                        'code' => 'C',
-                        'name' => 'Red',
-                    ],
-                    'colourSecondary' => [
-                        'code' => 'W',
-                        'name' => 'Not Stated',
-                    ],
-                    'vehicleClass' => ['code' => '4', 'name' => '4'],
-                    'fuelType' => [
-                        'code' => FuelTypeCode::PETROL,
-                        'name' => 'Petrol',
-                    ],
-                    'bodyType' => '2 Door Saloon',
-                    'cylinderCapacity' => 1700,
-                    'transmissionType' => 'Automatic',
-                    'firstRegistrationDate' => '2001-03-02',
-                    'firstUsedDate' => '2001-03-02',
-                    'manufactureDate' => '2001-03-02',
-                    'isNewAtFirstReg' => false,
-                    'weight' => null,
-                ]
-            )
-        );
-        $dvlaVehicle = new DvlaImportedVehicle($dvlaVehicleData);
-
-        return $dvlaVehicle;
-    }
-
     public static function modelDetail($id = 1, $name = 'Standard', $code = 'STD')
     {
         $model = new Model();

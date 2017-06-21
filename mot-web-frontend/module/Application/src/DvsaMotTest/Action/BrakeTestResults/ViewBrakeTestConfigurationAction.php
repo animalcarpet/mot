@@ -170,7 +170,7 @@ class ViewBrakeTestConfigurationAction
      * @param DvsaVehicle                         $vehicle
      * @param MotTest                             $motTest
      * @param BrakeTestConfigurationClass1And2Dto $dto
-     * @param BrakeTestResultClass1And2           $brakeTestResult
+     * @param BrakeTestResultClass1And2|null      $brakeTestResult
      *
      * @return ViewModel
      */
@@ -178,7 +178,7 @@ class ViewBrakeTestConfigurationAction
         DvsaVehicle $vehicle,
         MotTest $motTest,
         BrakeTestConfigurationClass1And2Dto $dto,
-        BrakeTestResultClass1And2 $brakeTestResult
+        BrakeTestResultClass1And2 $brakeTestResult = null
     ) {
         $brakeTestConfigurationViewModel = new ViewModel();
 

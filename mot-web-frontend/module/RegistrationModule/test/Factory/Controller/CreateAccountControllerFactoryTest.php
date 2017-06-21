@@ -31,7 +31,7 @@ class CreateAccountControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(RegistrationStepService::class, $service);
         $serviceManager->setService(RegistrationSessionService::class, XMock::of(RegistrationSessionService::class));
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

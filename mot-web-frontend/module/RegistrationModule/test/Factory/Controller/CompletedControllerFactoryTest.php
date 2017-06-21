@@ -39,7 +39,7 @@ class CompletedControllerFactoryTest extends \PHPUnit_Framework_TestCase
         ];
         $serviceManager->setService('Config', $mockConfig);
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

@@ -29,9 +29,6 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
 
     public function setUp()
     {
-        $appTestConfig = include getcwd().'/test/test.config.php';
-        Bootstrap::init($appTestConfig);
-
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->serviceManager->setAllowOverride(true);
         $this->setServiceManager($this->serviceManager);

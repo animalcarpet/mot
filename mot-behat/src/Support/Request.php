@@ -49,9 +49,9 @@ class Request
     /**
      * @return string
      */
-    public function getUri()
+    public function getUriAsSting()
     {
-        return $this->uri;
+        return (string)$this->uri;
     }
 
     /**

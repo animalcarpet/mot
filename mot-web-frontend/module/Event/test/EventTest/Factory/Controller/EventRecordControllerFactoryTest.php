@@ -21,7 +21,7 @@ class EventRecordControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(EventStepService::class, XMock::of(EventStepService::class));
         $serviceManager->setService(EventSessionService::class, XMock::of(EventSessionService::class));
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

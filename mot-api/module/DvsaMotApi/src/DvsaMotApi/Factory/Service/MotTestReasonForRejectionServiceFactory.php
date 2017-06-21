@@ -34,7 +34,7 @@ class MotTestReasonForRejectionServiceFactory implements FactoryInterface
         $motTestValidator = $serviceLocator->get('MotTestValidator');
 
         /** @var TestItemSelectorService $motTestItemSelectorService */
-        $motTestItemSelectorService = $serviceLocator->get('TestItemSelectorService');
+        $motTestItemSelectorService = $serviceLocator->get(TestItemSelectorService::class);
 
         /** @var ApiPerformMotTestAssertion $performMotTestAssertion */
         $performMotTestAssertion = $serviceLocator->get(ApiPerformMotTestAssertion::class);

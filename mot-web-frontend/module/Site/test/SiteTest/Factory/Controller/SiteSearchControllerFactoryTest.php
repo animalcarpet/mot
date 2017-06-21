@@ -23,7 +23,7 @@ class SiteSearchControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $service = XMock::of(SiteSearchService::class);
         $serviceManager->setService(SiteSearchService::class, $service);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

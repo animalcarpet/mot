@@ -48,7 +48,7 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
             ->with(Person::class)
             ->willReturn($personRepository);
 
-        $this->cache = $this->getMock(Cache::class);
+        $this->cache = $this->getMockBuilder(Cache::class)->disableOriginalConstructor()->getMock();
     }
 
     public function testItIsAZendFactory()
@@ -124,7 +124,7 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private function getServiceLocator(array $services)
     {
-        $serviceLocator = $this->getMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->getMockBuilder(ServiceLocatorInterface::class)->disableOriginalConstructor()->getMock();
 
         $serviceLocator->expects($this->any())
             ->method('get')

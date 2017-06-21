@@ -55,7 +55,7 @@ class UserProfileControllerFactoryTest extends \PHPUnit_Framework_TestCase
             XMock::of(MotConfig::class)
         );
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

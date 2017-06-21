@@ -6,13 +6,16 @@ use DataCatalogApi\Service\DataCatalogService;
 use DvsaCommon\DtoSerialization\DtoReflectiveSerializer;
 use DvsaCommon\Http\HttpStatus;
 use DvsaCommonApi\Model\ApiResponse;
+use DvsaCommonApi\Service\Exception\EmptyRequestBodyException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\UnauthenticatedException;
+use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Json\Json;
 use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\RequestInterface;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -196,6 +199,50 @@ class AbstractDvsaRestfulController extends AbstractRestfulController
         ];
 
         return new JsonModel($errors);
+    }
+
+    //TODO please, delete this after removing empty calls
+    public function processPostData(RequestInterface $request)
+    {
+        if ($this->requestHasContentType($request, self::CONTENT_TYPE_JSON)) {
+            $data = $this->decodeJsonIfNotEmpty($request->getContent());
+        } else {
+            $data = $request->getPost()->toArray();
+        }
+
+        return $this->create($data);
+    }
+
+    //TODO please, delete this after removing empty calls
+    protected function processBodyContent($request)
+    {
+        $content = $request->getContent();
+
+        // JSON content? decode and return it.
+        if ($this->requestHasContentType($request, self::CONTENT_TYPE_JSON)) {
+            return $this->decodeJsonIfNotEmpty($request->getContent());
+        }
+
+        parse_str($content, $parsedParams);
+
+        // If parse_str fails to decode, or we have a single element with empty value
+        if (!is_array($parsedParams) || empty($parsedParams)
+            || (1 == count($parsedParams) && '' === reset($parsedParams))
+        ) {
+            return $content;
+        }
+
+        return $parsedParams;
+    }
+
+    //TODO please, delete this after removing empty calls
+    private function decodeJsonIfNotEmpty($content)
+    {
+        if(!empty($content)) {
+            return Json::decode($content, $this->jsonDecodeType);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -507,11 +554,40 @@ class AbstractDvsaRestfulController extends AbstractRestfulController
         return ApiResponse::jsonOk($dtoSerializer->serialize($dto));
     }
 
+    public function assertContentNotEmpty($content)
+    {
+        if (empty($content)) {
+            throw new EmptyRequestBodyException();
+        }
+    }
+
     /**
      * @return DtoReflectiveSerializer
      */
     private function getDtoSerializer()
     {
         return $this->getServiceLocator()->get(DtoReflectiveSerializer::class);
+    }
+
+    public function getServiceLocator(){
+        // there's no "getErrorHandler" in PHP. It's returned when we set the new one...
+        /** @var callable $originalHandler */
+        $originalHandler = set_error_handler(function($severity, $message, $file, $line){});
+
+        set_error_handler(function($severity, $message, $file, $line) use ($originalHandler) {
+            if(strpos($message, "You are retrieving the service locator from") === 0){
+                // that's the error about service loactor
+                return;
+            }
+
+            // otherwise we log every other error using original handler
+            $originalHandler($severity, $message, $file, $line);
+        });
+
+        $serviceLocator = parent::getServiceLocator();
+
+        set_error_handler($originalHandler);
+
+        return $serviceLocator;
     }
 }

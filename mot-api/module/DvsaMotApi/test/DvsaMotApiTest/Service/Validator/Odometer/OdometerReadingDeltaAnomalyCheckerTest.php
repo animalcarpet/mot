@@ -84,9 +84,6 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
             ->setValue($prevValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
-        $this->configurationRepository->expects($this->any())->method('getParam')
-            ->will($this->returnValue($muchHigherLimit));
-
         $result = $this->checker->check($reading, $prevReading);
 
         $this->assertTrue(

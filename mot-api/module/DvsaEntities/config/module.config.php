@@ -1,5 +1,7 @@
 <?php
 
+use DvsaEntities\Audit\EntityAuditListener;
+use DvsaEntities\Factory\Audit\EntityAuditListenerFactory;
 use DvsaEntities\Factory\Repository\AuthForAeStatusRepositoryFactory;
 use DvsaEntities\Factory\Repository\MotTestingCertificateRepositoryFactory;
 use DvsaEntities\Factory\Repository\AuthorisationForTestingMotRepositoryFactory;
@@ -33,10 +35,8 @@ use DvsaEntities\Repository\VehicleClassRepository;
 
 return [
     'service_manager' => [
-        'invokables' => [
-            \DvsaEntities\Audit\EntityAuditListener::class => \DvsaEntities\Audit\EntityAuditListener::class,
-        ],
         'factories' => [
+            EntityAuditListener::class => EntityAuditListenerFactory::class,
             RbacRepository::class => RbacRepositoryFactory::class,
             OrganisationContactTypeRepository::class => OrganisationContactTypeRepositoryFactory::class,
             CompanyTypeRepository::class => CompanyTypeRepositoryFactory::class,
@@ -58,7 +58,7 @@ return [
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
-                    \DvsaEntities\Audit\EntityAuditListener::class,
+                    EntityAuditListener::class,
                 ],
             ],
         ],

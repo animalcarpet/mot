@@ -81,6 +81,7 @@ use DvsaMotApi\Service\S3\S3CsvStore;
 use DvsaMotApi\Service\SurveyService;
 use DvsaMotApi\Service\TesterMotTestLogService;
 use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
+use DvsaMotApi\Service\TestItemSelectorService;
 use DvsaMotApi\Service\UserService;
 use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
 use DvsaMotApi\Service\Validator\BrakeTestResultValidator;
@@ -102,7 +103,7 @@ return [
         EmergencyService::class => EmergencyServiceFactory::class,
         'EnforcementMotTestResultService' => EnforcementMotTestResultServiceFactory::class,
         'EnforcementSiteAssessmentService' => EnforcementSiteAssessmentServiceFactory::class,
-        'TestItemSelectorService' => TestItemSelectorServiceFactory::class,
+        TestItemSelectorService::class => TestItemSelectorServiceFactory::class,
         'TesterService' => TesterServiceFactory::class,
         'TesterSearchService' => TesterSearchServiceFactory::class,
         'TesterExpiryService' => TesterExpiryServiceFactory::class,

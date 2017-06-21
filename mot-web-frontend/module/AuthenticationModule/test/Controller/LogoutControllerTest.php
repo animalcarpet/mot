@@ -56,7 +56,7 @@ class LogoutControllerTest extends AbstractFrontendControllerTestCase
         $this->sessionManager = $this
             ->getMockBuilder(SessionService::class)
             ->disableOriginalConstructor()
-            ->setMethods(['load', 'save'])
+            ->setMethods(['load', 'save', 'offsetGet'])
             ->getMock();
 
         $this->controller = new LogoutController(

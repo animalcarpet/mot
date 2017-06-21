@@ -55,19 +55,30 @@ class ChainedCacheContextFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($cacheContext, $cacheContextFactory->fromResourcePath('foo'));
     }
 
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
+    // PHP 5.6 expectedException - \PHPUnit_Framework_Error
+    // PHP 7 expectedException - \TypeError
     public function testItOnlyAcceptsConditionalContextFactories()
     {
-        $factory = $this->getMock(CacheContextFactory::class);
+        try {
+            /** @var CacheContextFactory $factory */
+            $factory = $this->getMockBuilder(CacheContextFactory::class)->getMock();
 
-        new ChainedCacheContextFactory([$factory]);
+            new ChainedCacheContextFactory([$factory]);
+        }
+        catch (\PHPUnit_Framework_Error $e)
+        {
+            return;
+        }
+        catch (\TypeError $e)
+        {
+            return;
+        }
+        $this->fail("Expected Exception has not been raised.");
     }
 
     private function createAcceptingFactory($resourcePath, CacheContext $cacheContext)
     {
-        $factory = $this->getMock(ConditionalCacheContextFactory::class);
+        $factory = $this->getMockBuilder(ConditionalCacheContextFactory::class)->getMock();
 
         $factory->expects($this->any())
             ->method('accepts')
@@ -83,7 +94,7 @@ class ChainedCacheContextFactoryTest extends \PHPUnit_Framework_TestCase
 
     private function createNonAcceptingFactory()
     {
-        $factory = $this->getMock(ConditionalCacheContextFactory::class);
+        $factory = $this->getMockBuilder(ConditionalCacheContextFactory::class)->getMock();
 
         $factory->expects($this->any())
             ->method('accepts')

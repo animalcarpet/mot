@@ -120,8 +120,10 @@ public class NormalTest {
         }
     }
 
-    public void startTestConfirmationPage(User user, Vehicle vehicle) throws IOException, URISyntaxException {
+    public StartTestConfirmationPage startTestConfirmationPage(User user, Vehicle vehicle) throws IOException, URISyntaxException {
         confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, vehicle);
+
+        return confirmationPage;
     }
 
     public String startTestForVehicleUnderTest(User user, Vehicle vehicle) throws IOException, URISyntaxException {
@@ -137,8 +139,10 @@ public class NormalTest {
         return confirmationPage.clickStartMotTest();
     }
 
-    public void startTestConfirmationPage(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {
+    public StartTestConfirmationPage startTestConfirmationPage(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {
         confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, dvlaVehicle);
+
+        return confirmationPage;
     }
 
     public String startMotTestForDvlaVehicle(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {

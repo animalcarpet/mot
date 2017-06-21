@@ -35,11 +35,9 @@ class ApiAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mockLogger = $this->getMock('Zend\Log\Logger');
-        $this->mockAuthService = $this->getMock(
-            'Zend\Authentication\AuthenticationService'
-        );
-        $this->mockEvent = $this->getMock('Zend\Mvc\MvcEvent');
+        $this->mockLogger = $this->getMockBuilder('Zend\Log\Logger')->disableOriginalConstructor()->getMock();
+        $this->mockAuthService = $this->getMockBuilder('Zend\Authentication\AuthenticationService')->getMock();
+        $this->mockEvent = $this->getMockBuilder('Zend\Mvc\MvcEvent')->disableOriginalConstructor()->getMock();
         $this->mockKdd069 = $this->getMockBuilder(HistoryAuditService::class)->disableOriginalConstructor()->getMock();
     }
 

@@ -342,7 +342,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
                 ->build(),
             'getColourByCode'
         );
-        $this->returningOn($this->mockVehicleCatalog, VOF::model(), 'getModelByCode');
 
         $this->mockDvlaVehicleRepository
             ->expects($this->any())
@@ -372,7 +371,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $tester = new Person();
         $tester->setId(1);
 
-        $vehicle = VOF::dvlaImportedVehicle();
+        $vehicleId = 100002;
         $primaryColourCode = 'A';
         $secondaryColourCode = 'B';
         $fuelTypeCode = FuelTypeCode::PETROL;
@@ -396,11 +395,10 @@ class VehicleServiceTest extends AbstractServiceTestCase
         );
 
         $this->returningOn($this->mockVehicleCatalog, VOF::fuelType(), 'getFuelType');
-        $this->returningOn($this->mockVehicleCatalog, VOF::model(), 'getModelByCode');
 
         $this->createService()->logDvlaVehicleImportChanges(
             $tester,
-            $vehicle,
+            $vehicleId,
             $vehicleClassCode,
             $primaryColourCode,
             $secondaryColourCode,
@@ -410,7 +408,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
         /** @var \DvsaEntities\Entity\DvlaVehicleImportChangeLog $dvlaImportChanges */
         $dvlaImportChanges = $changesCapture->get();
 
-        $this->assertEquals($vehicle->getId(), $dvlaImportChanges->getVehicleId());
+        $this->assertEquals($vehicleId, $dvlaImportChanges->getVehicleId());
         $this->assertEquals($primaryColourCode, $dvlaImportChanges->getColour());
         $this->assertEquals($secondaryColourCode, $dvlaImportChanges->getSecondaryColour());
         $this->assertEquals($fuelTypeCode, $dvlaImportChanges->getFuelType());
@@ -577,7 +575,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
         );
         $this->returningOn($this->mockVehicleCatalog, VOF::transmissionType($transTypeId), 'getTransmissionType');
         $this->returningOn($this->mockVehicleCatalog, VOF::fuelType(), 'getFuelType');
-        $this->returningOn($this->mockVehicleCatalog, VOF::make($makeId), 'getMakeByCode');
         $this->returningOn(
             $this->mockVehicleCatalog, VOF::model($modelId, 'COPER', 'Cooper', VOF::make($makeId)),
             'findModel'

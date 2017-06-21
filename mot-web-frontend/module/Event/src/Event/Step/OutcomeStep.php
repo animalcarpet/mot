@@ -57,6 +57,8 @@ class OutcomeStep extends AbstractEventStep
         if (is_array($values) && count($values)) {
             $this->setOutcomeCode($values[OutcomeInputFilter::FIELD_OUTCOME]);
             $this->setNotes($values[OutcomeInputFilter::FIELD_NOTES]);
+
+            $this->filter->setData($this->toArray());
         }
     }
 

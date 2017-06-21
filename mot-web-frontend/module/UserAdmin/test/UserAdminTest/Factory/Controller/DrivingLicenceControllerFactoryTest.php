@@ -22,12 +22,12 @@ class DrivingLicenceControllerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $accountAdminServiceMock = $this->getMock(HelpdeskAccountAdminService::class, [], [], '', false);
-        $authorisationServiceMock = $this->getMock(MotFrontendAuthorisationServiceInterface::class, [], [], '', false);
-        $testerGroupAuthorisationMapperMock = $this->getMock(TesterGroupAuthorisationMapper::class, [], [], '', false);
-        $userAdminSessionServiceMock = $this->getMock(UserAdminSessionService::class, [], [], '', false);
-        $personRoleManagementServiceMock = $this->getMock(PersonRoleManagementService::class, [], [], '', false);
-        $contextProviderMock = $this->getMock(ContextProvider::class, [], [], '', false);
+        $accountAdminServiceMock = $this->getMockObjectGenerator()->getMock(HelpdeskAccountAdminService::class, [], [], '', false);
+        $authorisationServiceMock = $this->getMockObjectGenerator()->getMock(MotFrontendAuthorisationServiceInterface::class, [], [], '', false);
+        $testerGroupAuthorisationMapperMock = $this->getMockObjectGenerator()->getMock(TesterGroupAuthorisationMapper::class, [], [], '', false);
+        $userAdminSessionServiceMock = $this->getMockObjectGenerator()->getMock(UserAdminSessionService::class, [], [], '', false);
+        $personRoleManagementServiceMock = $this->getMockObjectGenerator()->getMock(PersonRoleManagementService::class, [], [], '', false);
+        $contextProviderMock = $this->getMockObjectGenerator()->getMock(ContextProvider::class, [], [], '', false);
 
         $serviceManager->setService(HelpdeskAccountAdminService::class, $accountAdminServiceMock);
         $serviceManager->setService('AuthorisationService', $authorisationServiceMock);
@@ -36,7 +36,7 @@ class DrivingLicenceControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(PersonRoleManagementService::class, $personRoleManagementServiceMock);
         $serviceManager->setService(ContextProvider::class, $contextProviderMock);
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
                 ->method('getServiceLocator')
                 ->will($this->returnValue($serviceManager));

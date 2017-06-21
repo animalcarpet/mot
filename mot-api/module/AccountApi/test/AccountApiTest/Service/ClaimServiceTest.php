@@ -95,7 +95,7 @@ class ClaimServiceTest extends AbstractServiceTestCase
             0
         );
 
-        $this->mockIdentityService = $this->getMock(MotIdentityProviderInterface::class);
+        $this->mockIdentityService = $this->getMockBuilder(MotIdentityProviderInterface::class)->disableOriginalConstructor()->getMock();
         $this->mockMethod($this->mockIdentityService, 'getIdentity', null, $this->getMockPerson());
 
         $this->claimValidator = new ClaimValidator(

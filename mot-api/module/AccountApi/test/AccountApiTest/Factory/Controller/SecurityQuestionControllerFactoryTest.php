@@ -24,7 +24,7 @@ class SecurityQuestionControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $personSecurityAnswerRecorder = XMock::of(PersonSecurityAnswerRecorder::class);
         $serviceManager->setService(PersonSecurityAnswerRecorder::class, $personSecurityAnswerRecorder);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

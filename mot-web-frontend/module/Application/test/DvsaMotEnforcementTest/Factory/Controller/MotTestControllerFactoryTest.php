@@ -18,7 +18,7 @@ class MotTestControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $mockServiceLocator = XMock::of(ServiceLocatorInterface::class, ['get']);
         $this->mockMethod($mockServiceLocator, 'get', $this->at(0), XMock::of(ParamObfuscator::class));
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));

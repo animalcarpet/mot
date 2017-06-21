@@ -74,7 +74,7 @@ class PersonProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getIdentity($userId)
     {
-        $identity = $this->getMock(MotIdentityInterface::class);
+        $identity = $this->getMockBuilder(MotIdentityInterface::class)->disableOriginalConstructor()->getMock();
         $identity->expects($this->any())
             ->method('getUserId')
             ->willReturn($userId);

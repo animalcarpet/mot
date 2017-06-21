@@ -7,13 +7,15 @@ class SecurityQuestionsAnswer extends MotApi
     const PATH = "/person/{user_id}/security-questions/verify";
 
     /**
+     * @param $token
      * @param array $inputData
+     * @param $userId
      * @return \Dvsa\Mot\Behat\Support\Response
      */
-    public function answerQuestions($userId, array $inputData)
+    public function answerQuestions($token, array $inputData, $userId)
     {
         return $this->sendPostRequest(
-            null,
+            $token,
             str_replace('{user_id}', $userId, self::PATH),
             [
                 'questionsAndAnswers' => $inputData

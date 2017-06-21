@@ -111,17 +111,24 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
         $this->pluginManagerMock
             ->expects($this->any())
             ->method('get')
-            ->will(
-                \PHPUnit_Framework_TestCase::returnValueMap(
-                    [
-                        ['layout', null, true, $this->layoutPluginMock],
-                        ['params', null, true, $this->paramsPluginMock],
-                        ['redirect', null, true, $this->redirectPluginMock],
-                        ['url', null, true, $this->urlPluginMock],
-                        ['flashMessenger', null, true, $this->flashMessengerPluginMock],
-                    ]
-                )
-            );
+            ->willReturnCallback(function ($arg) {
+                switch ($arg) {
+                    case 'layout':
+                        return $this->layoutPluginMock;
+                    case 'params':
+                        return $this->paramsPluginMock;
+                    case 'redirect':
+                        return $this->redirectPluginMock;
+                    case 'url':
+                        return $this->urlPluginMock;
+                    case 'flashMessenger':
+                        return $this->flashMessengerPluginMock;
+                    default:
+                        throw new \InvalidArgumentException(sprintf("Plugin '%s' not found", $arg));
+                }
+
+
+            });
         if (!is_null($this->controller)) {
             $this->controller->setPluginManager($this->pluginManagerMock);
         }
@@ -129,7 +136,12 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
 
     protected function createPluginMock($className)
     {
-        $mock = XMock::of($className);
+        $classMethods = get_class_methods($className);
+        if (!in_array("__invoke", $classMethods)) {
+            $classMethods[] = "__invoke";
+        }
+
+        $mock = XMock::of($className, $classMethods);
         $mock
             ->expects($this->any())
             ->method('__invoke')

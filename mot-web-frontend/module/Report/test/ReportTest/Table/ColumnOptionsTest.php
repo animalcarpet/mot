@@ -275,9 +275,6 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
             return self::$renderer;
         }
 
-        $appTestConfig = include getcwd().'/test/test.config.php';
-        Bootstrap::init($appTestConfig);
-
         /** @var \Zend\ServiceManager\ServiceManager $serviceManager */
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);

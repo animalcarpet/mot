@@ -44,7 +44,7 @@ class MotTestSearchControllerTest extends AbstractMotApiControllerTestCase
 
     private function getMockService()
     {
-        $mockService = $this->getMock(
+        $mockService = $this->getMockObjectGenerator()->getMock(
             ElasticSearchService::class,
             ['findTests'],
             [],

@@ -24,7 +24,7 @@ class ValidateUsernameControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $entityManager = XMock::of(EntityManager::class);
         $serviceManager->setService(EntityManager::class, $entityManager);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

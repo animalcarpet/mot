@@ -392,7 +392,7 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
             'handler' => new MockHandler([$response]),
         ]);
 
-        $mockHttpClientFactory = $this->getMock(Factory::class, ['getHttpClient']);
+        $mockHttpClientFactory = $this->getMockBuilder(Factory::class)->disableOriginalConstructor()->setMethods(['getHttpClient'])->getMock();
         $mockHttpClientFactory->method('getHttpClient')->willReturn($httpClient);
 
         return $mockHttpClientFactory;

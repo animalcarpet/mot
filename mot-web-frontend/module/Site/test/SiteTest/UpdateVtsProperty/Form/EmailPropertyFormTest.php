@@ -66,7 +66,7 @@ class EmailPropertyFormTest extends \PHPUnit_Framework_TestCase
             [
                 [EmailPropertyForm::FIELD_EMAIL => $this->createTooLongEmail()],
                 [
-                    EmailAddressValidator::INVALID_FORMAT => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG,
+                    EmailAddressValidator::LENGTH_EXCEEDED => EmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG,
                     StringLength::TOO_LONG => str_replace('%max%', EmailPropertyForm::FIELD_EMAIL_MAX_LENGTH, EmailPropertyForm::EMAIL_ADDRESS_TOO_LONG_MSG),
                 ],
             ],

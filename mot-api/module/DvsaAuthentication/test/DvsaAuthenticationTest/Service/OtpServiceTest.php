@@ -34,7 +34,7 @@ class OtpServiceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->adapter = $this->getMock(OtpServiceAdapter::class);
+        $this->adapter = $this->getMockBuilder(OtpServiceAdapter::class)->disableOriginalConstructor()->getMock();
 
         $this->otpFailedAttemptCounter = $this->getMockBuilder(OtpFailedAttemptCounter::class)
             ->disableOriginalConstructor()

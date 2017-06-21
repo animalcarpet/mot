@@ -37,12 +37,12 @@ class TokenAwareCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->hashedToken = sha1($this->token);
 
-        $this->tokenService = $this->getMock(TokenServiceInterface::class);
+        $this->tokenService = $this->getMockBuilder(TokenServiceInterface::class)->disableOriginalConstructor()->getMock();
         $this->tokenService->expects($this->any())
             ->method('getToken')
             ->willReturn($this->token);
 
-        $this->decoratedCache = $this->getMock(Cache::class);
+        $this->decoratedCache = $this->getMockBuilder(Cache::class)->disableOriginalConstructor()->getMock();
 
         $this->cache = new TokenAwareCache($this->decoratedCache, $this->tokenService);
     }

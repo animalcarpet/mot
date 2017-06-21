@@ -146,7 +146,7 @@ class UserStatsServiceTest extends AbstractServiceTestCase
             ->getMockForAbstractClass();
         $this->setupMockForCalls($mockQuery, 'getResult', $motTests);
 
-        $mockQueryBuilder = $this->getMock(QueryBuilder::class, [], [], '', false);
+        $mockQueryBuilder = $this->getMockBuilder(QueryBuilder::class, [], [], '', false)->disableOriginalConstructor()->getMock();
         $this->setupMockForCalls($mockQueryBuilder, 'getQuery', $mockQuery);
 
         /* @var MotTestRepository $mockRepository */

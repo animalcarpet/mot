@@ -86,7 +86,6 @@ class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
 
         $step->expects($this->once())->method('toArray')->willReturn([]);
         $step->expects($this->any())->method('getCleanFilterWhiteList')->willReturn([]);
-        $step->expects($this->any())->method('clean')->with([])->willReturn([]);
         $filter->expects($this->once())->method('init');
         $filter->expects($this->once())->method('setData');
         $filter->expects($this->once())->method('isValid')->willReturn(__METHOD__);

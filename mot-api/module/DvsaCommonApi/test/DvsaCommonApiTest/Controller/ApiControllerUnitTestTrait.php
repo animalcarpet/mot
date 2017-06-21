@@ -225,7 +225,7 @@ trait ApiControllerUnitTestTrait
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function createMock($classPath)
+    protected function createMock($classPath)
     {
         $serviceMock = \DvsaCommonTest\TestUtils\XMock::of($classPath);
         $this->serviceManager->setService($classPath, $serviceMock);

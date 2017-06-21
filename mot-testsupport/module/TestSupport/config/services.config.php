@@ -81,7 +81,8 @@ return [
         SiteUserDataService::class => function (ServiceLocatorInterface $sm) {
             return new SiteUserDataService(
                     $sm->get(NotificationsHelper::class),
-                    $sm->get(SitePermissionsHelper::class)
+                    $sm->get(SitePermissionsHelper::class),
+                    $sm->get(AccountService::class)
                 );
         },
         AccountDataService::class => \TestSupport\Factory\AccountDataServiceFactory::class,

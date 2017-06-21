@@ -40,11 +40,11 @@ class CachingClientTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->decoratedClient = $this->getMock(Client::class);
+        $this->decoratedClient = $this->getMockBuilder(Client::class)->getMock();
         $this->cache = $this->getMockBuilder(Cache::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->cacheContextFactory = $this->getMock(CacheContextFactory::class);
+        $this->cacheContextFactory = $this->getMockBuilder(CacheContextFactory::class)->getMock();
         $this->cacheContext = CacheContext::configured('/foo', 60, []);
 
         $this->client = new CachingClient(
@@ -71,7 +71,7 @@ class CachingClientTest extends \PHPUnit_Framework_TestCase
 
     public function testItProxiesTheSetEventManagerCallIfDecoratedClientIsEventManagerAware()
     {
-        $em = $this->getMock(EventManagerInterface::class);
+        $em = $this->getMockBuilder(EventManagerInterface::class)->getMock();
 
         $this->decoratedClient->expects($this->once())
             ->method('setEventManager')
@@ -82,7 +82,7 @@ class CachingClientTest extends \PHPUnit_Framework_TestCase
 
     public function testItProxiesTheGetEventManagerCallIfDecoratedClientIsEventManagerAware()
     {
-        $em = $this->getMock(EventManagerInterface::class);
+        $em = $this->getMockBuilder(EventManagerInterface::class)->getMock();
 
         $this->decoratedClient->expects($this->any())
             ->method('getEventManager')

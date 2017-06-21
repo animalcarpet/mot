@@ -95,11 +95,6 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
             ->willReturn($categoryDescriptions);
 
         $this
-            ->reasonForRejection
-            ->method('getLanguage')
-            ->willReturn($this->language);
-
-        $this
             ->reasonForRejectionDescription
             ->method('getLanguage')
             ->willReturn($this->language);
@@ -414,11 +409,6 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
 
     private function setLanguage($langaugeTypeCode)
     {
-        $this
-            ->testItemCategoryDescription
-            ->method('getCode')
-            ->willReturn($langaugeTypeCode);
-
         $this
             ->language
             ->method('getCode')

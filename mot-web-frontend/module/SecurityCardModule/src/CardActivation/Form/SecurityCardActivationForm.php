@@ -16,11 +16,16 @@ class SecurityCardActivationForm extends Form
     const SERIAL_NUMBER = 'serial_number';
     const PIN = 'pin';
 
+    private $pinValidationCallback;
+
     public function __construct(
         SecurityCardPinValidationCallback $pinValidationCallback = null,
         SecurityCardSerialNumberValidationCallback $serialNumberValidationCallback = null
     ) {
         parent::__construct();
+
+        $this->pinValidationCallback = $pinValidationCallback;
+
         $this->add((new Text())
             ->setName(self::SERIAL_NUMBER)
             ->setLabel('Serial number')
@@ -85,5 +90,14 @@ class SecurityCardActivationForm extends Form
     public function getPinField()
     {
         return $this->get(self::PIN);
+    }
+
+    public function setData($data)
+    {
+        if (is_array($data)) {
+            $data = array_replace([self::PIN => null, self::SERIAL_NUMBER => null], $data);
+        }
+
+        return parent::setData($data);
     }
 }

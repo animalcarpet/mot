@@ -25,7 +25,7 @@ class ManualsAndGuidesFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactoryCreatesInstance(array $config, $expectedException)
     {
         if (null !== $expectedException) {
-            $this->setExpectedException($expectedException);
+            $this->expectException($expectedException);
         }
 
         ServiceFactoryTestHelper::testCreateServiceForCM(

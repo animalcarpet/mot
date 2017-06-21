@@ -40,7 +40,7 @@ class HydratorFactoryTest extends PHPUnit_Framework_TestCase
 
     private function getServiceLocatorMock()
     {
-        $metaDataMock = $this->getMock(\Doctrine\Common\Persistence\Mapping\ClassMetadata::class);
+        $metaDataMock = $this->getMockBuilder(\Doctrine\Common\Persistence\Mapping\ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $metaDataMock->expects($this->any())
             ->method('getAssociationNames')
             ->will($this->returnValue([]));
@@ -48,7 +48,7 @@ class HydratorFactoryTest extends PHPUnit_Framework_TestCase
         $entityManagerMock->expects($this->any())
             ->method('getClassMetadata')
             ->will($this->returnValue($metaDataMock));
-        $serviceManagerMock = $this->getMock(\Zend\ServiceManager\ServiceManager::class);
+        $serviceManagerMock = $this->getMockBuilder(\Zend\ServiceManager\ServiceManager::class)->disableOriginalConstructor()->getMock();
         $serviceManagerMock->expects($this->any())
             ->method('get')
             ->with(EntityManager::class)

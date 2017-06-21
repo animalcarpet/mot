@@ -38,7 +38,7 @@ class SummaryControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ['helpdesk' => ['name' => 'something']]
         );
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

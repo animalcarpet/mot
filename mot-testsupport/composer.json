@@ -2,16 +2,19 @@
     "name": "dvsa/mot-testsupport",
     "description": "Test Support API for DVSA MOT modernisation",
     "require": {
-        "zendframework/zendframework": "~2.4.4",
-        "doctrine/doctrine-module": "~0.8",
-        "doctrine/doctrine-orm-module": "~0.9",
-        "dvsa/feature-toggle": "~1.0",
-        "aws/aws-sdk-php": "3.13.0",
-        "mot/api-client-php": "^15.0",
-        "ramsey/uuid": "^3.4"
+        "zendframework/zendframework": "~2.5.3",
+        "doctrine/doctrine-module": "~1.2.0",
+        "doctrine/doctrine-orm-module": "~1.1.1",
+        "dvsa/feature-toggle": "1.2.0",
+        "aws/aws-sdk-php": "3.26.3",
+        "mot/api-client-php": "dev-feature-support-3.9-into-master",
+        "ramsey/uuid": "~3.6.0"
     },
     "require-dev": {
-        "noiselabs/zf-debug-utils": "^0.3"
+        "noiselabs/zf-debug-utils": "^0.3.1",
+        "symfony/console" : "~2.5.4",
+        "symfony/yaml": "~2.6",
+        "zendframework/zend-view": "2.7.0"
     },
     "repositories": [
         {

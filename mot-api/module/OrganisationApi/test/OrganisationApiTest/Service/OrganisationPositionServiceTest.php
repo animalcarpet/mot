@@ -115,6 +115,7 @@ class OrganisationPositionServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testRemove_givenInvalidPosition_doNotPersistPosition()
     {
+
         list($positionId, $orgId) = [5, 4];
         $organisationPosition = $this->validOrganisationPosition($orgId);
         $this->returnsPosition($positionId, $organisationPosition);

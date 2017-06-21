@@ -47,9 +47,6 @@ class DvlaInfoMotHistoryServiceTest extends AbstractServiceTestCase
             ->method('findTestByVehicleRegistrationAndTestNumber')
         ->willThrowException(new NoResultException());
 
-        $this->mockRepository->expects($this->never())
-            ->method('findHistoricalTestsForVehicle');
-
         //when
         $this->underTest->getMotTests(self::VRM, self::TEST_NUMBER, null);
 

@@ -9,6 +9,7 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Controller\ReasonForRejectionController;
+use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\TestItemSelectorService;
 use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
 use Zend\Stdlib\Parameters;
@@ -20,9 +21,21 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
 {
     const MOT_TEST_NUMBER = '1';
 
+    /** @var  MotTestService | \PHPUnit_Framework_MockObject_MockObject */
+    private $motTestService;
+
+    /** @var  TestItemSelectorService | \PHPUnit_Framework_MockObject_MockObject */
+    private $testItemSelectorService;
+
     protected function setUp()
     {
-        $this->controller = new ReasonForRejectionController();
+        $this->motTestService = $this->getMockMotTestService();
+        $this->testItemSelectorService = $this->getMockItemSelectorService();
+
+        $this->controller = new ReasonForRejectionController(
+            $this->testItemSelectorService,
+            $this->motTestService
+        );
         parent::setUp();
     }
 
@@ -45,8 +58,7 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
         ];
 
         //  --  define mock for other services  --
-        $mockMotTestService = $this->getMockMotTestService();
-        $mockMotTestService->expects($this->any())
+        $this->motTestService->expects($this->any())
             ->method('getMotTestData')
             ->willReturn((new MotTestDto())
                 ->setVehicle($vehicle)
@@ -54,8 +66,7 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
             );
 
         //  --  define mock for tested service  --
-        $mockTestItemSelectorService = $this->getMockItemSelectorService();
-        $mockTestItemSelectorService->expects($this->once())
+        $this->testItemSelectorService->expects($this->once())
                                     ->method('searchReasonsForRejection')
                                     ->with(self::MOT_TEST_NUMBER, $searchString)
                                     ->will($this->returnValue($expectedRfrs));
@@ -83,10 +94,9 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
             (new VehicleClassDto())->setCode('1')
         );
 
-        $mockMotTestService = $this->getMockMotTestService();
-        $mockMotTestService->expects($this->any())
+        $this->motTestService->expects($this->any())
             ->method('getMotTestData')
-            ->willReturn(['vehicle' => $vehicle]);
+            ->willReturn((new MotTestDto())->setVehicle($vehicle));
 
         $result = $this->getResultForAction('get', null, ['motTestNumber' => self::MOT_TEST_NUMBER]);
 
@@ -99,28 +109,16 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
         );
     }
 
-    public function testGetMotTestService()
-    {
-        $mockMethod = XMock::invokeMethod($this->getController(), 'getMotTestService');
-
-        $mockService = $this->getMockMotTestService();
-
-        $this->assertEquals($mockService, $mockMethod);
-    }
-
-    public function testGetTestItemSelectorService()
-    {
-        $mockMethod = XMock::invokeMethod($this->getController(), 'getTestItemSelectorService');
-
-        $mockService = $this->getMockItemSelectorService();
-
-        $this->assertEquals($mockService, $mockMethod);
-    }
-
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject | TestItemSelectorService
+     */
     private function getMockItemSelectorService()
     {
-        return $this->getMockServiceManagerClass(
-            'TestItemSelectorService', TestItemSelectorService::class
-        );
+        return $this->getMockBuilder(TestItemSelectorService::class)->disableOriginalConstructor()->getMock();
+    }
+
+    protected function getMockMotTestService()
+    {
+        return $this->getMockBuilder(MotTestService::class)->disableOriginalConstructor()->getMock();
     }
 }

@@ -13,8 +13,8 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new SessionFactory();
 
-        $mockManager = $this->getMock(\Zend\Session\SessionManager::class);
-        $mockSL = $this->getMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $mockManager = $this->getMockBuilder(\Zend\Session\SessionManager::class)->disableOriginalConstructor()->getMock();
+        $mockSL = $this->getMockBuilder(\Zend\ServiceManager\ServiceLocatorInterface::class)->disableOriginalConstructor()->getMock();
         $mockSL
             ->expects($this->once())
             ->method('get')
@@ -37,7 +37,7 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new SessionFactory();
 
-        $mockSL = $this->getMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $mockSL = $this->getMockBuilder(\Zend\ServiceManager\ServiceLocatorInterface::class)->disableOriginalConstructor()->getMock();
         $mockSL
             ->expects($this->once())
             ->method('get')

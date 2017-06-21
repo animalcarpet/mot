@@ -35,7 +35,6 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
                 (new VehicleClassDto())->setCode('1')
             );
 
-        $this->setController(new TestItemSelectorController());
         parent::setUp();
     }
 
@@ -85,6 +84,14 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
                         )
                         ->setReasonsForRejection(ReasonForRejectionBuilder::create())
             );
+
+        $controller = new TestItemSelectorController(
+            $mockTestItemSelectorService,
+            $mockMotTestService
+        );
+
+        $this->setController($controller);
+        $this->setUpController($controller);
 
         //  --  define request and check  --
         if ($serviceReturn instanceof \Exception) {
@@ -161,28 +168,11 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
         ];
     }
 
-    public function testGetMotTestService()
-    {
-        $mockMethod = XMock::invokeMethod($this->getController(), 'getMotTestService');
-
-        $mockService = $this->getMockMotTestService();
-
-        $this->assertEquals($mockService, $mockMethod);
-    }
-
-    public function testGetTestItemSelectorService()
-    {
-        $mockMethod = XMock::invokeMethod($this->getController(), 'getTestItemSelectorService');
-
-        $mockService = $this->getMockItemSelectorService();
-
-        $this->assertEquals($mockService, $mockMethod);
-    }
-
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject | TestItemSelectorService
+     */
     private function getMockItemSelectorService()
     {
-        return $this->getMockServiceManagerClass(
-            'TestItemSelectorService', TestItemSelectorService::class
-        );
+        return $this->getMockBuilder(TestItemSelectorService::class)->disableOriginalConstructor()->getMock();
     }
 }

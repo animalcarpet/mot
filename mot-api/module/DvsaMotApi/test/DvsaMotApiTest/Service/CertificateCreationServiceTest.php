@@ -17,7 +17,7 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Service\Document\DocumentService;
 use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
-use DvsaMotApi\Mapper\AbstractMotTestMapper;
+use DvsaMotApi\Mapper\MotTestCertificateMapper;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestDate;
 use DvsaMotApi\Service\MotTestService;
@@ -710,7 +710,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
         ];
 
         $motTestMapperMock = $this
-            ->getMockBuilder(AbstractMotTestMapper::class)
+            ->getMockBuilder(MotTestCertificateMapper::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -827,7 +827,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
         ];
 
         $motTestMapperMock = $this
-            ->getMockBuilder(AbstractMotTestMapper::class)
+            ->getMockBuilder(MotTestCertificateMapper::class)
             ->disableOriginalConstructor()
             ->getMock();
 

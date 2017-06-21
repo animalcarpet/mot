@@ -141,10 +141,10 @@ services:
             - @dvsa.guzzle
 
     dvsa.guzzle:
-        class: Guzzle\Service\Client
+        class: GuzzleHttp\Client
         public: false
         arguments:
-            - %base_url%
+            - base_uri: %base_url%
 
     dvsa.http_client.reflective:
         class: Dvsa\Mot\Behat\Support\HttpClient\ReflectiveClient

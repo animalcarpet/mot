@@ -1,5 +1,7 @@
 package uk.gov.dvsa.ui.views.site;
 
+import com.jayway.restassured.response.Response;
+import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -54,6 +56,43 @@ public class SiteTestQualityViewTests extends DslTest {
 
         //And return link is displayed
         assertThat("Return link is displayed", siteTestQualityPage.isReturnLinkDisplayed(), is(true));
+    }
+
+    @Test(groups = {"Regression"},
+        description = "Verifies that tester can view Test Quality for site")
+    public void viewSiteTestQualityCsv() throws IOException, URISyntaxException {
+        //National stats calculations are cached
+        siteData.clearAllCachedStatistics();
+
+        //Given there are tests created for site in previous month
+        DateTime date = new DateTime(this.getFirstDayOfMonth(1));
+        motApi.createTest(tester, site.getId(),
+            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.PASSED, MILEAGE, date);
+        motApi.createTest(tester, site.getId(),
+            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.PASSED, MILEAGE, date);
+
+        //When I go to site Test Quality page
+        SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
+
+        //And return link is displayed
+
+        Response csvGroupA = frontendData.downloadFileFromFrontend(
+            siteTestQualityPage.getCsvDownloadLinkForGroupA(),
+            pageNavigator.getCurrentTokenCookie(),
+            pageNavigator.getCurrentSessionCookie()
+        );
+
+        Response csvGroupB = frontendData.downloadFileFromFrontend(
+            siteTestQualityPage.getCsvDownloadLinkForGroupB(),
+            pageNavigator.getCurrentTokenCookie(),
+            pageNavigator.getCurrentSessionCookie()
+        );
+
+        // THEN the PDF is successfully generated
+        assertThat(HttpStatus.SC_OK, is(csvGroupA.getStatusCode()));
+        assertThat("text/csv; charset=utf-8", is(csvGroupA.getContentType()));
+        assertThat(HttpStatus.SC_OK, is(csvGroupB.getStatusCode()));
+        assertThat("text/csv; charset=utf-8", is(csvGroupB.getContentType()));
     }
 
     @Test(groups = {"Regression"},

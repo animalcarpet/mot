@@ -20,7 +20,7 @@ class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $tokenService = XMock::of(SiteService::class);
         $serviceManager->setService(SiteService::class, $tokenService);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

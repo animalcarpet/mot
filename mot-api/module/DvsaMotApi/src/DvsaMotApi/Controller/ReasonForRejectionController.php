@@ -4,8 +4,11 @@ namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
+use DvsaMotApi\Service\MotTestService;
+use DvsaMotApi\Service\TestItemSelectorService;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -13,9 +16,14 @@ use Zend\View\Model\JsonModel;
  */
 class ReasonForRejectionController extends AbstractDvsaRestfulController
 {
-    public function __construct()
+    private $testItemSelectorService;
+    private $motTestService;
+
+    public function __construct(TestItemSelectorService $testItemSelectorService, MotTestService $motTestService)
     {
         $this->setIdentifierName('motTestNumber');
+        $this->testItemSelectorService = $testItemSelectorService;
+        $this->motTestService = $motTestService;
     }
 
     const QUERY_PARAM_SEARCH = 'search';
@@ -43,7 +51,7 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
 
         //  --  get mot test --
         /** @var MotTestDto $motTest */
-        $motTest = $this->getMotTestService()->getMotTestData($motTestNumber);
+        $motTest = $this->motTestService->getMotTestData($motTestNumber);
 
         $vehicleClassCode = null;
 
@@ -54,24 +62,8 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
         }
 
         //  --  get items   --
-        $data = $this->getTestItemSelectorService()->searchReasonsForRejection($vehicleClassCode, $searchString);
+        $data = $this->testItemSelectorService->searchReasonsForRejection($vehicleClassCode, $searchString);
 
         return ApiResponse::jsonOk($data + ['motTest' => $motTest]);
-    }
-
-    /**
-     * @return \DvsaMotApi\Service\TestItemSelectorService
-     */
-    private function getTestItemSelectorService()
-    {
-        return $this->getServiceLocator()->get('TestItemSelectorService');
-    }
-
-    /**
-     * @return \DvsaMotApi\Service\MotTestService
-     */
-    private function getMotTestService()
-    {
-        return $this->getServiceLocator()->get('MotTestService');
     }
 }

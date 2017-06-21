@@ -323,17 +323,6 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 'params' => [],
                 'mocks' => [
                     [
-                        'class' => 'mockClaimValidator',
-                        'method' => 'validateStep',
-                        'invocation' => $this->any(),
-                        'result' => $this->returnValueMap(
-                            [
-                                [ClaimController::STEP_1_NAME, $sessionData[ClaimController::STEP_1_NAME], true, true],
-                                [ClaimController::STEP_2_NAME, $sessionData[ClaimController::STEP_2_NAME], true, false],
-                            ]
-                        ),
-                    ],
-                    [
                         'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',
                         'invocation' => $this->any(),
@@ -358,22 +347,10 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                     ],
                     [
                         'class' => 'mockClaimValidator',
-                        'method' => 'validateStep',
-                        'invocation' => $this->any(),
-                        'result' => $this->returnValueMap(
-                            [
-                                [ClaimController::STEP_1_NAME, $sessionData[ClaimController::STEP_1_NAME], true, true],
-                                [ClaimController::STEP_2_NAME, $sessionData[ClaimController::STEP_2_NAME], true, false],
-                            ]
-                        ),
-                    ],
-                    [
-                        'class' => 'mockClaimValidator',
                         'method' => 'getMessages',
                         'invocation' => $this->any(),
                         'result' => [],
                     ],
-
                     [
                         'class' => 'mockClaimAccountSrv',
                         'method' => 'isStepRecorded',

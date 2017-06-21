@@ -284,7 +284,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             $showParkingBrakeImbalance = false;
             $showAxleTwoParkingBrakeImbalance = false;
         } else {
-            if ($motTest->getPreviousMotTest() !== null) {
+            if ($motTest->getPreviousMotTest() !== null && !is_null($motTest->getPreviousMotTest()->getBrakeTestResult())) {
                 $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove($motTest->getPreviousMotTest()->getBrakeTestResult());
             } else {
                 $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());

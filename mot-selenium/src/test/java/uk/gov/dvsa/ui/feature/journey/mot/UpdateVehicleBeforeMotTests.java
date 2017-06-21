@@ -39,6 +39,24 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle class is updated");
         assertThat(message, containsString("You’ve changed the MOT test class. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
+    }
+
+    @Test(groups = {"BVT"},
+            description = "Tester can update DVLA vehicle class and start MOT test")
+    public void testerCanUpdateVehicleClassAndStartMotTest() throws IOException, URISyntaxException {
+
+        step("Given I am logged into MOT2 as a Tester");
+        step("And I select a vehicle to start a MOT test");
+        DvlaVehicle vehicle = vehicleData.getNewDvlaVehicle(tester);
+        motUI.normalTest.startTestConfirmationPage(tester, vehicle);
+
+        step("When I update the class of a vehicle");
+        motUI.normalTest.changeClass();
+
+        step("Then I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
     }
 
     @Test(groups = {"Regression"},
@@ -54,6 +72,8 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle class is updated");
         assertThat(message, containsString("You’ve changed the MOT test class. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
     }
 
     @Test(groups = {"BVT"},
@@ -69,6 +89,8 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle colour is updated");
         assertThat(message, containsString("You’ve changed the colour. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
     }
 
     @Test(groups = {"BVT"},
@@ -84,6 +106,8 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle engine is updated");
         assertThat(message, containsString("You’ve changed the engine specification. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
     }
 
     @Test(groups = {"BVT"},
@@ -99,6 +123,9 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle make and model is updated");
         assertThat(message, containsString("You’ve changed the make and model. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
+
     }
 
         @Test(groups = {"Regression"},
@@ -114,6 +141,8 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle make and model is updated");
         assertThat(message, containsString("You’ve changed the make and model. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
     }
 
     @Test(groups = {"Regression"},
@@ -129,6 +158,9 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle make and model is updated");
         assertThat(message, containsString("You’ve changed the make and model. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.changeClass();
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
     }
 
     @Test(groups = {"BVT"},
@@ -175,6 +207,8 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then the vehicle country of registration is updated");
         assertThat(message, containsString("You’ve changed the country of registration. This will save when you start a test"));
+        step("And I can start MOT test");
+        motUI.normalTest.confirmAndStartTestWithReturnValue();
     }
 
     @Test(groups = {"BVT"}, description = "Tester without permission for a vehicle class cannot start an MOT test")

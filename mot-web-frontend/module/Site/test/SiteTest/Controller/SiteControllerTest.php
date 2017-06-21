@@ -272,29 +272,6 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
             ],
-            //  get form from session; form is valid; redirect to confirmation
-            [
-                'method' => 'post',
-                'action' => 'create',
-                'params' => [
-                    'get' => [
-                        SiteController::SESSION_KEY => self::SESSION_KEY,
-                    ],
-                ],
-                'mocks' => [
-                    [
-                        'class' => 'mockSession',
-                        'method' => 'offsetGet',
-                        'params' => [self::SESSION_KEY],
-                        'result' => $this->mockMethod($this->cloneObj($formVtsCreate), 'isValid', $this->once(), true),
-                    ],
-                ],
-                'expect' => [
-                    'url' => VehicleTestingStationUrlBuilderWeb::createConfirm()
-                        ->queryParam(SiteController::SESSION_KEY, self::SESSION_KEY),
-                ],
-            ],
-
             //  logical block :: create confirmation action
             //  form not in session; redirect ot create form
             [
@@ -554,7 +531,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
             ->willReturn($dto);
 
         $this->vehicleTestingStationMapperMock->expects($this->any())
-            ->method('getBySiteNumber')
+            ->method('getByNumber')
             ->with(self::SITE_NR)
             ->willReturn($dto);
 

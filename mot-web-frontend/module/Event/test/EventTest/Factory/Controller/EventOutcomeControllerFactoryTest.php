@@ -25,7 +25,7 @@ class EventOutcomeControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $service = XMock::of(EventStepService::class);
         $serviceManager->setService(EventStepService::class, $service);
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

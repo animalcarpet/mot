@@ -27,7 +27,9 @@ class AuthenticationListenerFactory implements FactoryInterface
         /** @var array $config */
         $config = $sl->get('config');
 
-        $whitelist = $config['dvsa_authentication']['whitelist'];
+        $whitelist = isset($config['dvsa_authentication']['whitelist'])
+            ? $config['dvsa_authentication']['whitelist']
+            : [];
 
         $historyAuditService = $sl->get(HistoryAuditService::class);
 

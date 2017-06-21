@@ -35,7 +35,7 @@ use DvsaCommon\Date\DateUtils;
 
 /**
  * Class ReplacementCertificateDraftUpdaterTest
- * Test for {@link ReplacementCertificateDraftUpdater}.
+ * Test for {@link ReplacementCertificateDraftUpdater}
  */
 class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
 {
@@ -47,7 +47,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
     private $vtsRepository;
     private $certificateChangeReasonRepository;
 
-    /** @var MotIdentityProviderInterface $motIdentityProvider */
+    /** @var  MotIdentityProviderInterface $motIdentityProvider */
     private $motIdentityProvider;
     private $replacementCertificateDraftChangeValidator;
 
@@ -64,9 +64,6 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         );
 
         $replacementChange = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED);
-
-        $this->authorizationService->expects($this->any())->method('getUserId')
-            ->will($this->returnValue(null));
 
         $this->returnsMake(VehicleObjectsFactory::make($replacementChange->getMake()));
         $this->returnsMakeById(VehicleObjectsFactory::make($replacementChange->getMake()));
@@ -90,20 +87,20 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_DVLA_CHANGE,
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm('123457'); // vrm change
@@ -124,20 +121,20 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_DVLA_CHANGE,
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
 
         $change->setVin('654321'); // vin change
         $change->setVrm($vrm);
@@ -158,20 +155,20 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_DVLA_CHANGE,
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
 
         $change->setVin('654321'); // vin change
         $change->setVrm($vrm);
@@ -192,20 +189,20 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_DVLA_CHANGE,
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm('123457'); // vrm change
@@ -226,22 +223,22 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_DVLA_CHANGE,
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setMake('18800')
-            ->setReasonForReplacement('NEW_REASON');
+            ->setMake("18800")
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm($vrm); // vrm change
@@ -262,22 +259,22 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_DVLA_CHANGE,
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setMake('18800')
-            ->setReasonForReplacement('NEW_REASON');
+            ->setMake("18800")
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm($vrm);
@@ -297,21 +294,21 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setReasonForReplacement('NEW_REASON');
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm(strrev($vrm)); // vrm change
@@ -331,21 +328,21 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setReasonForReplacement('NEW_REASON');
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm(strrev($vrm)); // vrm change
@@ -365,21 +362,21 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setReasonForReplacement('NEW_REASON');
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin(strrev($vin)); //vin change
         $change->setVrm($vrm);
@@ -399,21 +396,21 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setReasonForReplacement('NEW_REASON');
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin(strrev($vin)); //vin change
         $change->setVrm($vrm);
@@ -433,21 +430,21 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setReasonForReplacement('NEW_REASON');
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm($vrm);
@@ -468,21 +465,21 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setReasonForReplacement('NEW_REASON');
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm($vrm);
@@ -503,22 +500,22 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setMake('18800')
-            ->setReasonForReplacement('NEW_REASON');
+            ->setMake("18800")
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm($vrm); // vrm change
@@ -538,22 +535,22 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->permissionsGranted(
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
-            ->setMake('18800')
-            ->setReasonForReplacement('NEW_REASON');
+            ->setMake("18800")
+            ->setReasonForReplacement("NEW_REASON");
 
         $change->setVin($vin);
         $change->setVrm($vrm); // vrm change
@@ -574,25 +571,25 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_DVLA_CHANGE,
                 PermissionInSystem::CERTIFICATE_REPLACEMENT,
-                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS,
+                PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
             ]
         );
 
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
-        $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         // expiry date must not be set for 'isVinVrmExpiryChanged' to remain false
         $change->setMake(999 + self::ID_SEED)
             ->setModel(999 + self::ID_SEED)
             ->setCountryOfRegistration(999 + self::ID_SEED)
-            ->setVtsSiteNumber('NEW_SITE_NUMBER');
+            ->setVtsSiteNumber("NEW_SITE_NUMBER");
         $change->setVin('123457'); // vin change
         $change->setVrm($vrm);
 
@@ -619,18 +616,18 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
         $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
-        $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         // expiry date must not be set for 'isVinVrmExpiryChanged' to remain false
         $change->setMake(999 + self::ID_SEED)
             ->setModel(999 + self::ID_SEED)
             ->setCountryOfRegistration(999 + self::ID_SEED)
-            ->setVtsSiteNumber('NEW_SITE_NUMBER');
+            ->setVtsSiteNumber("NEW_SITE_NUMBER");
         $change->setVin($vin);
         $change->setVrm('123457');
 
@@ -646,8 +643,8 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->returnsOkCheckResult();
 
         $this->setExpectedException(ForbiddenException::class);
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForDifferentTester('NEW_REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForDifferentTester("NEW_REASON");
         $this->permissionsGranted(
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
@@ -657,7 +654,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
     public function testUpdate_givenPartialRights_asDifferentTester_shouldExpectReasonSet()
     {
         $draft = RCOF::replacementCertificateDraft();
-        $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForDifferentTester('HALO');
+        $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForDifferentTester("HALO");
 
         $this->returnsOkCheckResult();
         $this->userAssignedToVts(false);
@@ -673,8 +670,8 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
     {
         $this->returnsOkCheckResult();
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $this->permissionsGranted(
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
@@ -708,12 +705,12 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setRegistration('123456');
         $draft->setVrm('123456');
         $draft->setVin('123456');
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $change->setVin('123456');
         $change->setVrm('7891011');
 
@@ -730,11 +727,11 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
-        $draft->setExpiryDate(DateUtils::toDate('2014-01-01'));
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->setExpiryDate(DateUtils::toDate("2014-01-01"));
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
-        $change->setExpiryDate('2014-02-02');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
+        $change->setExpiryDate("2014-02-02");
 
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
@@ -749,17 +746,17 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin('123456');
         $draft->setVin('123456');
         $draft->setVrm('123456');
-        $draft->setExpiryDate(DateUtils::toDate('2014-01-01'));
+        $draft->setExpiryDate(DateUtils::toDate("2014-01-01"));
         $draft->isVinVrmExpiryChanged(false);
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $change->setVin('7891011');
         $change->setVrm('123456');
-        $change->setExpiryDate('2014-01-01');
+        $change->setExpiryDate("2014-01-01");
 
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
@@ -774,17 +771,17 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin('123456');
-        $draft->getMotTest()->setExpiryDate(DateUtils::toDate('2014-01-01'));
-        $draft->setExpiryDate(DateUtils::toDate('2014-01-01'));
+        $draft->getMotTest()->setExpiryDate(DateUtils::toDate("2014-01-01"));
+        $draft->setExpiryDate(DateUtils::toDate("2014-01-01"));
         $draft->setVin('123456');
         $draft->setVrm('123456');
         $draft->setVinVrmExpiryChanged(false);
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $draft->getMotTest()->getVehicle()->setRegistration('123456');
-        $change->setExpiryDate('2014-01-01');
+        $change->setExpiryDate("2014-01-01");
         $change->setVin('123456');
         $change->setVrm('123456');
 
@@ -801,14 +798,14 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin('123456');
         $draft->setMake(
             (new Make())->setId(1)->setCode('test')->setName('test2')
         );
         $draft->setMakeName(null);
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $change->setCustomMake('TOYOTA UK');
 
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
@@ -829,14 +826,14 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->getVehicle()->setVin('123456');
-        $draft->setModel((new Model())->setId(1)->setCode('T')->setName('B'));
+        $draft->setModel((new Model)->setId(1)->setCode('T')->setName('B'));
         $draft->setModelName(null);
         $draft->setMake(false);
         $draft->setMakeName('Test');
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $change->setCustomMake('TEST');
         $change->setCustomModel('SUPRA UK');
 
@@ -855,13 +852,13 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement('REASON');
-        $draft->getMotTest()->setExpiryDate(DateUtils::toDate('2013-12-01'));
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->setExpiryDate(DateUtils::toDate("2013-12-01"));
         $draft->getMotTest()->getVehicle()->setVin('123456');
         $draft->getMotTest()->getVehicle()->setRegistration('123456');
 
-        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement('NEW_REASON');
-        $change->setExpiryDate('2014-01-01');
+        $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
+        $change->setExpiryDate("2014-01-01");
         $change->setVin('123456');
         $change->setVrm('123456');
 
@@ -893,7 +890,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
     private function returnsReasonForDifferentTester(
         CertificateChangeDifferentTesterReason $reason
     ) {
-        $this->certificateChangeReasonRepository->expects($this->any())->method('getByCode')
+        $this->certificateChangeReasonRepository->expects($this->any())->method("getByCode")
             ->will($this->returnValue($reason));
     }
 
@@ -928,7 +925,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $permissions
     ) {
         $this->authorizationService->expects($this->any())
-            ->method('isGranted')
+            ->method("isGranted")
             ->will(
                 $this->returnCallback(
                     function ($arg) use (&$permissions) {

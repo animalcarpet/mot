@@ -62,7 +62,7 @@ class ServiceFactoryTestHelper
      */
     public static function testCreateServiceForCM($factoryClass, $resultClass, $injectionMap)
     {
-        $cm = new ControllerManager();
+        $cm = new ControllerManager(null);
         $sm = new ServiceManager();
         $sm->setAllowOverride(true);
         $cm->setServiceLocator($sm);

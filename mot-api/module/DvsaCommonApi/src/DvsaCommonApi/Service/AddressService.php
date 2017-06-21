@@ -7,7 +7,7 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Mapper\AddressMapper;
 use DvsaCommonApi\Service\Validator\AddressValidator;
 use DvsaEntities\Entity\Address;
-use Zend\Stdlib\Hydrator\AbstractHydrator;
+use Zend\Hydrator\AbstractHydrator;
 
 /**
  * Service to handle Address entities.

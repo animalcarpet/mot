@@ -19,7 +19,7 @@ class ClaimAccountControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $mockClaimAccountSrv = XMock::of(ClaimAccountService::class);
         $serviceManager->setService(ClaimAccountService::class, $mockClaimAccountSrv);
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

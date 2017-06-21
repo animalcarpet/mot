@@ -14,7 +14,7 @@ use DvsaEntities\Entity\OrganisationBusinessRoleMap;
  *
  * @codeCoverageIgnore
  */
-class OrganisationBusinessRoleMapRepository extends EntityRepository
+class OrganisationBusinessRoleMapRepository extends AbstractMutableRepository
 {
     public function getActiveUserRoles($personId)
     {

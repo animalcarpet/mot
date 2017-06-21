@@ -31,8 +31,8 @@ class CachedRbacRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->rbacRepository = $this->getMock(RbacRepository::class);
-        $this->cache = $this->getMock(Cache::class);
+        $this->rbacRepository = $this->getMockBuilder(RbacRepository::class)->disableOriginalConstructor()->getMock();
+        $this->cache = $this->getMockBuilder(Cache::class)->disableOriginalConstructor()->getMock();
         $this->cachedRbacRepository = new CachedRbacRepository(
             $this->rbacRepository,
             $this->cache,

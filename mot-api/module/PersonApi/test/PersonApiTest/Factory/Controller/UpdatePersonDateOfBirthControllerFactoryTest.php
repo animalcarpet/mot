@@ -17,7 +17,7 @@ class UpdatePersonDateOfBirthControllerFactoryTest extends \PHPUnit_Framework_Te
         $updatePersonDOBService = XMock::of(PersonDateOfBirthService::class);
         $serviceManager->setService(PersonDateOfBirthService::class, $updatePersonDOBService);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));
