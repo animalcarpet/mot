@@ -17,8 +17,8 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
  * @var string                                        $vehicleClass
  */
 
-$this->layout()->setVariable('pageSubTitle', $motTestTitleViewModel->getTitle($motTest));
-$this->layout()->setVariable('pageTitle', $title);
+$this->layout()->setVariable('pageSubTitle', $viewModel->motTestTitleViewModel->getTitle($motTest));
+$this->layout()->setVariable('pageTitle', $viewModel->title);
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(
@@ -33,7 +33,7 @@ $this->placeholder('progressBar')->captureEnd();
 
 <?php echo $this->partial('errorMessages', ['getFromFlash' => true]); ?>
 <?php echo $this->partial('infoMessages', ['getFromFlash' => true]); ?>
-<?php echo $this->partial('vehicleSummary', ['vehicle' => $vehicle]); ?>
+<?php echo $this->partial('vehicleSummary', ['vehicle' => $viewModel->vehicle]); ?>
 
 <form method="POST">
 <?php echo $this->csrfToken() ?>
@@ -45,8 +45,8 @@ $this->placeholder('progressBar')->captureEnd();
                 [
                     'id' => 'serviceBrake1TestType',
                     'label' => 'Service brake test type',
-                    'options' => $brakeTestTypes,
-                    'value' => $configHelper->getServiceBrakeTestType(),
+                    'options' => $viewModel->brakeTestTypes,
+                    'value' => $viewModel->brakeTestType,
                     'required' => true,
                 ]
             );
@@ -55,8 +55,8 @@ $this->placeholder('progressBar')->captureEnd();
                 [
                     'id' => 'parkingBrakeTestType',
                     'label' => 'Parking brake test type',
-                    'options' => $brakeTestTypes,
-                    'value' => $configHelper->getParkingBrakeTestType(),
+                    'options' => $viewModel->brakeTestTypes,
+                    'value' => $viewModel->configHelper->getParkingBrakeTestType(),
                     'required' => true,
                 ]
             ); ?>
@@ -65,15 +65,15 @@ $this->placeholder('progressBar')->captureEnd();
                 <fieldset>
                     <label class="form-label">
                         Vehicle weight type
-                        <?php if ($vehicleClass === VehicleClassCode::CLASS_3 || $vehicleClass === VehicleClassCode::CLASS_4) : ?>
+                        <?php if ($viewModel->vehicleClass === VehicleClassCode::CLASS_3 || $viewModel->vehicleClass === VehicleClassCode::CLASS_4) : ?>
                             <span class="help-block">If using brake test weight, check that the figure is correct against manufacturer or other reliable data.</span>
                         <?php endif; ?>
                     </label>
 
                     <div class="form-group form-group-related label-reg">
-                        <?php foreach ($weightTypes as $weightType => $weightTypeName):
+                        <?php foreach ($viewModel->weightTypes as $weightType => $weightTypeName):
                             $hasBrakeTestWeight = false;
-                            if ($configHelper->getWeightType() === $weightType && $preselectBrakeTestWeight) {
+                            if ($viewModel->configHelper->getWeightType() === $weightType && $viewModel->preselectBrakeTestWeight) {
                                 $hasBrakeTestWeight = true;
                             }
                             ?>
@@ -98,13 +98,13 @@ $this->placeholder('progressBar')->captureEnd();
                             [
                                 'id' => 'vehicleWeight',
                                 'name' => 'vehicleWeight',
-                                'value' => $configHelper->getVehicleWeight(),
+                                'value' => $viewModel->configHelper->getVehicleWeight(),
                             ]
                         ); ?>
-                        <?php if ($vehicleClass === VehicleClassCode::CLASS_7) : ?>
+                        <?php if ($viewModel->vehicleClass === VehicleClassCode::CLASS_7) : ?>
                             <label class="checkbox-inline">
                                 <input type="checkbox" id="weightIsUnladen" name="weightIsUnladen" value="1"
-                                    <?php if ($configHelper->getWeightIsUnladen()) : ?>
+                                    <?php if ($viewModel->configHelper->getWeightIsUnladen()) : ?>
                                         checked
                                     <?php endif; ?>
                                 />
@@ -119,7 +119,7 @@ $this->placeholder('progressBar')->captureEnd();
                 [
                     'label' => 'Brake line type',
                     'name' => 'brakeLineType',
-                    'value' => $configHelper->getServiceBrakeLineType(),
+                    'value' => $viewModel->configHelper->getServiceBrakeLineType(),
                     'option1' => 'Dual',
                     'option2' => 'Single',
                     'option1Value' => ConfigHelper::BRAKE_LINE_TYPE_DUAL,
@@ -127,13 +127,13 @@ $this->placeholder('progressBar')->captureEnd();
                     'fieldsetCssClass' => 'label-reg',
                 ]
             ); ?>
-            <?php if ($showVehicleType) : ?>
+            <?php if ($viewModel->showVehicleType) : ?>
                 <?php echo $this->partial(
                     'partial/forms/radioBoxDouble.phtml',
                     [
                         'label' => 'Vehicle type',
                         'name' => 'vehiclePurposeType',
-                        'value' => $configHelper->getVehiclePurposeType(),
+                        'value' => $viewModel->configHelper->getVehiclePurposeType(),
                         'option1' => 'Passenger',
                         'option2' => 'Goods',
                         'option1Value' => ConfigHelper::PURPOSE_PERSONAL,
@@ -142,14 +142,14 @@ $this->placeholder('progressBar')->captureEnd();
                     ]
                 ); ?>
             <?php endif; ?>
-            <?php switch ($vehicleClass) :
+            <?php switch ($viewModel->vehicleClass) :
                 case VehicleClassCode::CLASS_3:
                     echo $this->partial(
                         'partial/forms/radioBoxDouble.phtml',
                         [
                             'label' => 'Position of single wheel',
                             'name' => 'positionOfSingleWheel',
-                            'value' => $configHelper->getPositionOfSingleWheel(),
+                            'value' => $viewModel->configHelper->getPositionOfSingleWheel(),
                             'option1' => 'Front',
                             'option2' => 'Rear',
                             'option1Value' => ConfigHelper::LOCATION_FRONT,
@@ -162,7 +162,7 @@ $this->placeholder('progressBar')->captureEnd();
                         [
                             'label' => 'Parking brake operated on',
                             'name' => 'parkingBrakeWheelsCount',
-                            'value' => $configHelper->getParkingBrakeWheelsCount(),
+                            'value' => $viewModel->configHelper->getParkingBrakeWheelsCount(),
                             'option1' => 'One wheel',
                             'option2' => 'Two wheels',
                             'option1Value' => 1,
@@ -177,7 +177,7 @@ $this->placeholder('progressBar')->captureEnd();
                         [
                             'label' => 'Service brake controls',
                             'name' => 'serviceBrakeControlsCount',
-                            'value' => $configHelper->getServiceBrakeControlsCount(),
+                            'value' => $viewModel->configHelper->getServiceBrakeControlsCount(),
                             'option1' => 'One control',
                             'option2' => 'Two controls',
                             'option1Value' => 1,
@@ -198,7 +198,7 @@ $this->placeholder('progressBar')->captureEnd();
                                 'id' => 'numberOfAxles',
                                 'label' => 'Number of axles',
                                 'options' => [2 => '2 axles', 3 => '3 axles'],
-                                'value' => $configHelper->getNumberOfAxles(),
+                                'value' => $viewModel->configHelper->getNumberOfAxles(),
                                 'required' => true,
                             ]
                         ); ?>
@@ -211,7 +211,7 @@ $this->placeholder('progressBar')->captureEnd();
                                 'id' => 'parkingBrakeNumberOfAxles',
                                 'label' => 'Parking brake number of axles',
                                 'options' => [1 => '1 axles', 2 => '2 axles'],
-                                'value' => $configHelper->getParkingBrakeNumberOfAxles(),
+                                'value' => $viewModel->configHelper->getParkingBrakeNumberOfAxles(),
                                 'required' => true,
                             ]
                         ); ?>
@@ -225,12 +225,12 @@ $this->placeholder('progressBar')->captureEnd();
         <nav class="module-content-navigation">
             <ul class="content-navigation_secondary">
                 <li>
-                    <input type="hidden" id="vehicleClass" name="vehicleClass" value="<?php echo $vehicleClass ?>"/>
+                    <input type="hidden" id="vehicleClass" name="vehicleClass" value="<?php echo $viewModel->vehicleClass ?>"/>
                     <input type="submit" id="brake_test_results_submit" name="submit" value="Next" class="btn btn-primary"/>
                 </li>
                 <li>
                     <a id="brake_test_results_cancel"
-                       href="<?php echo $this->url('mot-test', ['motTestNumber' => $motTest->getMotTestNumber()]); ?>"
+                       href="<?php echo $this->url('mot-test', ['motTestNumber' => $viewModel->motTest->getMotTestNumber()]); ?>"
                        >Cancel</a>
                 </li>
             </ul>
@@ -240,7 +240,7 @@ $this->placeholder('progressBar')->captureEnd();
 </form>
 <script type="text/javascript">
 
-    var vehicleClass = '<?php echo(new Zend\Escaper\Escaper('UTF-8'))->escapeJs(($vehicleClass)); ?>';
+    var vehicleClass = '<?php echo(new Zend\Escaper\Escaper('UTF-8'))->escapeJs(($viewModel->vehicleClass)); ?>';
 
     function refreshVisibleItems() {
         var serviceBrakeTestType = $('#serviceBrake1TestType').val();

@@ -51,6 +51,7 @@ use DvsaMotTest\Factory\BrakeTestConfigurationContainerFactory;
 use DvsaMotTest\Factory\LocationSelectContainerFactory;
 use DvsaMotTest\Factory\Model\VehicleSearchResultFactory;
 use DvsaMotTest\Factory\Service\AuthorisedClassesServiceFactory;
+use DvsaMotTest\Factory\Service\BrakeTestConfigurationServiceFactory;
 use DvsaMotTest\Factory\Service\CertificatePrintingServiceFactory;
 use DvsaMotTest\Factory\Service\MotTestCertificatesServiceFactory;
 use DvsaMotTest\Factory\Service\VehicleSearchServiceFactory;
@@ -60,6 +61,7 @@ use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\Service\AuthorisedClassesService;
+use DvsaMotTest\Service\BrakeTestConfigurationService;
 use DvsaMotTest\Service\CertificatePrintingService;
 use DvsaMotTest\Service\VehicleSearchService;
 use Zend\Authentication\AuthenticationService;
@@ -208,6 +210,7 @@ class Module implements
                 OrganisationNameBySiteResolver::class => OrganisationNameBySiteResolverFactory::class,
                 'AuthorisationHelper' => AuthorisationHelperFactory::class,
                 OrganisationNameBySiteResolver::class => OrganisationNameBySiteResolverFactory::class,
+                BrakeTestConfigurationService::class => BrakeTestConfigurationServiceFactory::class,
             ],
             'aliases' => [
                 AuthenticationService::class => 'ZendAuthenticationService',

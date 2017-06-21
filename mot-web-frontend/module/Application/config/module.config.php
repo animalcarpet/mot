@@ -35,6 +35,10 @@ use DvsaMotTest\Service\StartTestSessionService;
 use Application\Service\CanTestWithoutOtpService;
 use Application\Factory\Service\CanTestWithoutOtpServiceFactory;
 use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
+use DvsaMotTest\Action\BrakeTestResults\SubmitBrakeTestConfigurationAction;
+use DvsaMotTest\Factory\Action\SubmitBrakeTestConfigurationActionFactory;
+use DvsaMotTest\Action\BrakeTestResults\ViewBrakeTestConfigurationAction;
+use DvsaMotTest\Factory\Action\ViewBrakeTestConfigurationActionFactory;
 
 return [
     'controllers' => require __DIR__.'/controllers.config.php',
@@ -948,7 +952,8 @@ return [
             CanTestWithoutOtpService::class => CanTestWithoutOtpServiceFactory::class,
             StartTestChangeService::class => StartTestChangeServiceFactory::class,
             StartTestSessionService::class => StartTestSessionServiceFactory::class,
-
+            SubmitBrakeTestConfigurationAction::class => SubmitBrakeTestConfigurationActionFactory::class,
+            ViewBrakeTestConfigurationAction::class => ViewBrakeTestConfigurationActionFactory::class
         ],
     ],
     'session_namespace_prefixes' => [
