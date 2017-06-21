@@ -26,7 +26,7 @@ class ReplacementCertificateDraftControllerFactoryTest extends \PHPUnit_Framewor
         $serviceManager->setService('DvsaAuthorisationService', XMock::of(AuthorisationServiceInterface::class));
         $serviceManager->setService('MotTestService', XMock::of(MotTestService::class));
 
-        $controllerManager = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $controllerManager = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $controllerManager->expects($this->any())
                          ->method('getServiceLocator')
                          ->will($this->returnValue($serviceManager));

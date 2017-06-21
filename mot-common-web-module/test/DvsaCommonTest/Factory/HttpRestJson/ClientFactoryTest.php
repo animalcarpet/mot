@@ -19,7 +19,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->services = [
-            'tokenService' => $this->getMock(TokenServiceInterface::class, ['getToken']),
+            'tokenService' => $this->getMockBuilder(TokenServiceInterface::class)->setMethods(['getToken'])->getMock(),
         ];
     }
 
@@ -50,7 +50,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         $this->services[MotConfig::class] = new MotConfig([]);
-        $this->services[Cache::class] = $this->getMock(Cache::class);;
+        $this->services[Cache::class] = $this->getMockBuilder(Cache::class)->getMock();
 
         $serviceLocator = $this->getServiceLocator($this->services);
 
@@ -64,7 +64,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private function getServiceLocator(array $services)
     {
-        $serviceLocator = $this->getMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->getMockBuilder(ServiceLocatorInterface::class)->getMock();
 
         $serviceLocator->expects($this->any())
             ->method('get')

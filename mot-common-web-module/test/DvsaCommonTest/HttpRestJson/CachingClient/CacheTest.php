@@ -20,7 +20,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->cacheBackend = $this->getMock(CacheBackend::class);
+        $this->cacheBackend = $this->getMockBuilder(CacheBackend::class)->getMock();
         $this->cache = new Cache($this->cacheBackend);
     }
 

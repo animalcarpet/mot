@@ -93,7 +93,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         $vehicleId = 1;
         $obfuscatedVehicleId = $paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
 
-        $mockSession = $this->getMock(\stdClass::class, ['offsetGet']);
+        $mockSession = $this->getMockBuilder(\stdClass::class)->disableOriginalConstructor()->setMethods(['offsetGet'])->getMock();
         $mockSession->expects($this->once())
             ->method('offsetGet')
             ->with('mot-test-refusal-'.$obfuscatedVehicleId)
@@ -129,7 +129,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
                 'documentId' => 1,
             ],
         ];
-        $mockSession = $this->getMock(\stdClass::class, ['offsetGet']);
+        $mockSession = $this->getMockBuilder(\stdClass::class)->disableOriginalConstructor()->setMethods(['offsetGet'])->getMock();
         $mockSession->expects($this->once())
             ->method('offsetGet')
             ->with('mot-test-refusal-1')

@@ -29,7 +29,7 @@ class ContactDetailsControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $service = XMock::of(RegistrationStepService::class);
         $serviceManager->setService(RegistrationStepService::class, $service);
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

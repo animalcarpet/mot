@@ -5,6 +5,7 @@ namespace DvsaMotTest\Form;
 use DvsaCommon\Validator\EmailAddressValidator;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\Input;
 use Zend\Validator\Identical;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
@@ -139,36 +140,21 @@ class EmailCertificateForm extends Form
             ],
         ]);
 
-        $inputFilter->add([
-            'name' => self::FIELD_EMAIL,
-            'required' => true,
-            'validators' => [
-                [
-                    'name' => NotEmpty::class,
-                    'options' => [
-                        'messages' => [
-                            NotEmpty::IS_EMPTY => self::MSG_EMAIL_IS_EMPTY,
-                        ],
-                    ],
-                ],
-                [
-                    'name' => StringLength::class,
-                    'options' => [
-                        'max' => self::EMAIL_MAX_LENGTH,
-                        'messages' => [
-                            StringLength::TOO_LONG => sprintf(self::MSG_EMAIL_TOO_LONG, self::EMAIL_MAX_LENGTH),
-                        ],
-                    ],
-                ],
-                [
-                    'name' => EmailAddressValidator::class,
-                    'options' => [
-                        'message' => self::MSG_EMAIL_IS_INVALID,
-                        'hostnameValidator' => (new Hostname())->useIdnCheck(false)->setMessage(self::MSG_EMAIL_IS_INVALID),
-                    ],
-                ],
-            ],
-        ]);
+        $emailNotEmptyValidator = (new NotEmpty())->setMessage(self::MSG_EMAIL_IS_EMPTY);
+        $emailLengthValidator = (new StringLength())
+            ->setMax(self::EMAIL_MAX_LENGTH)
+            ->setMessage(sprintf(self::MSG_EMAIL_TOO_LONG, self::EMAIL_MAX_LENGTH));
+        $emailAddressValidator = (new EmailAddressValidator())->setMessage(self::MSG_EMAIL_IS_INVALID);
+
+        $emailInput = new Input(self::FIELD_EMAIL);
+        $emailInput
+            ->getValidatorChain()
+            ->attach($emailNotEmptyValidator)
+            ->attach($emailLengthValidator)
+            ->attach($emailAddressValidator)
+        ;
+
+        $inputFilter->add($emailInput);
 
         return $inputFilter;
     }

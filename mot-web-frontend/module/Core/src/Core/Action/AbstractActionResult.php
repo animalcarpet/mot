@@ -4,7 +4,7 @@ namespace Core\Action;
 
 use DvsaCommon\Utility\ArrayUtils;
 
-abstract class AbstractActionResult
+abstract class AbstractActionResult implements ActionResultInterface
 {
     private $errorMessages = [];
     private $successMessages = [];

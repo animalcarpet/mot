@@ -20,7 +20,7 @@ class ResetAccountClaimByPostControllerFactoryTest extends \PHPUnit_Framework_Te
     {
         $serviceManager = new ServiceManager();
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

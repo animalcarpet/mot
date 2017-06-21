@@ -270,16 +270,6 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->with($motTest)
             ->will($this->returnValue('INCOMPLETE'));
 
-        $resultFromDefectSentenceCaseConverter = [
-            'failureText' => 'adversely affected by the operation of another lamp',
-            'testItemSelectorDescription' => 'aaa',
-        ];
-
-        $mocks[self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER]
-            ->expects($this->any())
-            ->method('formatRfrDescriptionsForTestResultsAndBasket')
-            ->will($this->returnValue($resultFromDefectSentenceCaseConverter));
-
         $motTestMapper = $this->constructMotTestMapperWithMocks($mocks);
         $this->mockClassField($motTestMapper, 'dateTimeHolder', $dateHolder);
 

@@ -58,7 +58,8 @@ module.exports = function (grunt, config) {
         grunt.config('devopenam_config', grunt.config.get('dev2_config'));
         grunt.config('vagrant_config', {
             motConfigDir: '/etc/dvsa',
-            phpRootDir: '/opt/rh/rh-php56/root',
+            phpRootDir: '/opt/rh/rh-php70/root',
+            phpConfigDir: '/etc/opt/rh/rh-php70',
             motAppDir: '/opt/dvsa',
             logDir: '/var/log',
             workspace: '/home/vagrant/mot',

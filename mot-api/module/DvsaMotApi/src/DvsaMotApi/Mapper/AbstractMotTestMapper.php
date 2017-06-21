@@ -111,8 +111,9 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     {
         /** @var CountryDto $draftCountryOfRegistration */
         $draftCountryOfRegistration = $this->getData()['countryOfRegistration'];
+
         /** @var VehicleClassDto $draftVehicleClass */
-        $draftVehicleClass = isset($this->getData()['vehicleClass']) ? $this->getData()['vehicleClass']->getCode() : null;
+        $draftVehicleClass = !empty($this->getData()['vehicleClass']) ? $this->getData()['vehicleClass']->getCode() : null;
         $draftVin = ArrayUtils::tryGet($this->getData(), 'vin');
         $draftVrm = ArrayUtils::tryGet($this->getData(), 'registration');
         $draftReasonForEmptyVin = ArrayUtils::tryGet($this->getData(), 'emptyVinReason');

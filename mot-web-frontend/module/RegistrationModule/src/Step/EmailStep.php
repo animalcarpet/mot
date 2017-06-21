@@ -52,6 +52,8 @@ class EmailStep extends AbstractRegistrationStep
         if (is_array($values) && count($values)) {
             $this->setEmailAddress($values[EmailInputFilter::FIELD_EMAIL]);
             $this->setConfirmEmailAddress($values[EmailInputFilter::FIELD_EMAIL_CONFIRM]);
+
+            $this->filter->setData($this->toArray());
         }
     }
 

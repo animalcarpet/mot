@@ -131,7 +131,6 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 $this->mockUserAdminSessionSrv,
                 XMock::of(TesterGroupAuthorisationMapper::class),
                 $this->authorisationService,
-                $this->mockUserAdminSessionSrv,
                 new ViewTradeRolesAssertion($this->authorisationService, $this->identityProvider),
                 XMock::of(TradeRolesAssociationsService::class),
                 $this->dashboardGuardMock

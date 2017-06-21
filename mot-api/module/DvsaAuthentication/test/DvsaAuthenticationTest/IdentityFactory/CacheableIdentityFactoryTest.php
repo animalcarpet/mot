@@ -40,9 +40,9 @@ class CacheableIdentityFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->decoratedIdentityFactory = $this->getMock(IdentityFactory::class);
+        $this->decoratedIdentityFactory = $this->getMockBuilder(IdentityFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->cache = $this->getMock(Cache::class);
+        $this->cache = $this->getMockBuilder(Cache::class)->disableOriginalConstructor()->getMock();
 
         $this->personRespository = $this->getMockBuilder(PersonRepository::class)
             ->disableOriginalConstructor()

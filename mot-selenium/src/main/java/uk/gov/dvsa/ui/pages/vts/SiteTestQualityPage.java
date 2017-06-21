@@ -13,6 +13,8 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.authorisedexaminer.AETestQualityInformationPage;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class SiteTestQualityPage extends Page {
     @FindBy(id="return-link")private WebElement returnLink;
     @FindBy(id="tqi-table-A")private WebElement tqiTableA;
     @FindBy(id="tqi-table-B")private WebElement tqiTableB;
+    @FindBy(id="site-tqi-csv-downaload-group-A")private WebElement tqiCsvDownloadGroupA;
+    @FindBy(id="site-tqi-csv-downaload-group-B")private WebElement tqiCsvDownloadGroupB;
 
     public SiteTestQualityPage(MotAppDriver driver) {
         super(driver);
@@ -110,5 +114,13 @@ public class SiteTestQualityPage extends Page {
     {
         returnLink.click();
         return MotPageFactory.newPage(driver, AETestQualityInformationPage.class);
+    }
+
+    public String getCsvDownloadLinkForGroupA() throws MalformedURLException {
+        return new URL(tqiCsvDownloadGroupA.getAttribute("href")).getPath();
+    }
+
+    public String getCsvDownloadLinkForGroupB() throws MalformedURLException {
+        return new URL(tqiCsvDownloadGroupB.getAttribute("href")).getPath();
     }
 }

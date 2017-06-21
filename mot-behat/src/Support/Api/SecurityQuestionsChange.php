@@ -2,20 +2,20 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
-use Dvsa\Mot\Behat\Support\Request;
-
 class SecurityQuestionsChange extends MotApi
 {
     const PATH = "/security-question/{user_id}";
 
     /**
+     * @param $token
      * @param array $inputData
+     * @param $userId
      * @return \Dvsa\Mot\Behat\Support\Response
      */
-    public function changeQuestions($userId, array $inputData)
+    public function changeQuestions($token, array $inputData, $userId)
     {
         return $this->sendPutRequest(
-            null,
+            $token,
             str_replace('{user_id}', $userId, self::PATH),
             $inputData
         );

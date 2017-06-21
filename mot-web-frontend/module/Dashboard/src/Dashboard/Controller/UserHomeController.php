@@ -92,7 +92,6 @@ class UserHomeController extends AbstractAuthActionController
         UserAdminSessionManager $userAdminSessionManager,
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
         MotAuthorisationServiceInterface $authorisationService,
-        UserAdminSessionManager $userAdminSessionManager,
         ViewTradeRolesAssertion $canViewTradeRolesAssertion,
         TradeRolesAssociationsService $tradeRolesAssociationsService,
         DashboardGuard $dashboardGuard

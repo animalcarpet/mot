@@ -36,7 +36,7 @@ class PasswordControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(PasswordService::class, $passwordService);
         $serviceManager->setService(MotConfig::class, $config);
 
-        $plugins = $this->getMock(ControllerManager::class);
+        $plugins = $this->getMockBuilder(ControllerManager::class)->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

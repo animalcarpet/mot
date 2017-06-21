@@ -136,6 +136,8 @@ class AccountSummaryStep extends AbstractRegistrationStep
      */
     public function readFromArray(array $values)
     {
+        $this->filter->setData($this->toArray());
+
         return;
     }
 

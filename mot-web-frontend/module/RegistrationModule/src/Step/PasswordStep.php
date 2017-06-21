@@ -57,6 +57,8 @@ class PasswordStep extends AbstractRegistrationStep
         if (count($values)) {
             $this->setPassword($values[PasswordInputFilter::FIELD_PASSWORD]);
             $this->setPasswordConfirm($values[PasswordInputFilter::FIELD_PASSWORD_CONFIRM]);
+
+            $this->filter->setData($this->toArray());
         }
     }
 

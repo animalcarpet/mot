@@ -78,6 +78,8 @@ class ClaimService extends AbstractService
         DateTimeHolder $dateTimeHolder,
         EntityRepository $personContactTypeRepository
     ) {
+        parent::__construct($entityManager);
+
         $this->entityManager = $entityManager;
         $this->motIdentityProvider = $motIdentityProvider;
         $this->claimValidator = $claimValidator;

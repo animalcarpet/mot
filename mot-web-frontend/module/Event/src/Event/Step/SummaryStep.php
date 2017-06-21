@@ -39,6 +39,7 @@ class SummaryStep extends AbstractEventStep
      */
     public function readFromArray(array $values)
     {
+        $this->filter->setData($this->toArray());
         return;
     }
 

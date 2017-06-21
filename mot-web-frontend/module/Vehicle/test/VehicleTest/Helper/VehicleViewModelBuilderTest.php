@@ -33,7 +33,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($urlToReturn, $route);
         });
 
-        $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
+        $authorisationService = $this->getMockBuilder(MotAuthorisationServiceInterface::class)->disableOriginalConstructor()->getMock();
 
         $helper = new VehicleViewModelBuilder(
             $url,
@@ -60,7 +60,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
 
         $params = new Parameters([]);
 
-        $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
+        $authorisationService = $this->getMockBuilder(MotAuthorisationServiceInterface::class)->disableOriginalConstructor()->getMock();
 
         $helper = new VehicleViewModelBuilder(
             $url,
@@ -144,7 +144,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
         /** @var VehicleInformationTableBuilder | \PHPUnit_Framework_MockObject_MockObject $vehicleInformationTableBuilder */
         $vehicleInformationTableBuilder = XMock::of(VehicleInformationTableBuilder::class);
 
-        $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
+        $authorisationService = $this->getMockBuilder(MotAuthorisationServiceInterface::class)->disableOriginalConstructor()->getMock();
 
         $vehicleViewModelBuilder = new VehicleViewModelBuilder($url, $vehicleInformationTableBuilder,
             new VehiclePageTitleBuilder(), new VehicleSidebarBuilder(XMock::of(Url::class), $authorisationService),

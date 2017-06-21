@@ -68,9 +68,9 @@ class EmailCertificateFormTest extends PHPUnit_Framework_TestCase
             //check if inputs are not too long
             [
                 [
-                    Form::FIELD_FIRST_NAME => 'abcdefghijabcdefghijabcdefghijabcdefghijabcdefghij',
-                    Form::FIELD_FAMILY_NAME => 'abcdefghijabcdefghijabcdefghijabcdefghijabcdefghij',
-                    Form::FIELD_EMAIL => 'abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefgh@email',
+                    Form::FIELD_FIRST_NAME => str_repeat("a", Form::FIRST_NAME_MAX_LENGTH + 1),
+                    Form::FIELD_FAMILY_NAME => str_repeat("a", Form::FAMILY_NAME_MAX_LENGTH + 1),
+                    Form::FIELD_EMAIL => str_repeat("a", Form::EMAIL_MAX_LENGTH) . '@email',
                     Form::FIELD_RETYPE_EMAIL => '',
                 ],
                 [
@@ -78,7 +78,7 @@ class EmailCertificateFormTest extends PHPUnit_Framework_TestCase
                     Form::FIELD_FAMILY_NAME => [StringLength::TOO_LONG => sprintf(Form::MSG_FAMILY_NAME_TOO_LONG, Form::FAMILY_NAME_MAX_LENGTH)],
                     Form::FIELD_EMAIL => [
                         StringLength::TOO_LONG => sprintf(Form::MSG_EMAIL_TOO_LONG, Form::EMAIL_MAX_LENGTH),
-                        EmailAddressValidator::INVALID_FORMAT => Form::MSG_EMAIL_IS_INVALID,
+                        EmailAddressValidator::LENGTH_EXCEEDED => Form::MSG_EMAIL_IS_INVALID,
                     ],
                 ],
             ],

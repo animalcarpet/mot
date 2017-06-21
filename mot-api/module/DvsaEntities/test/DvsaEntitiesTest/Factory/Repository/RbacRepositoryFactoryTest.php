@@ -20,9 +20,9 @@ class RbacRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->services = [
             EntityManager::class => $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock(),
-            Cache::class => $this->getMock(Cache::class),
-            'tokenService' => $this->getMock(TokenServiceInterface::class),
-            'config' => [],
+            Cache::class => $this->getMockBuilder(Cache::class)->disableOriginalConstructor()->getMock(),
+            'tokenService' => $this->getMockBuilder(TokenServiceInterface::class)->disableOriginalConstructor()->getMock(),
+            'config' => []
         ];
     }
 
@@ -74,7 +74,7 @@ class RbacRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private function getServiceLocator(array $services)
     {
-        $serviceLocator = $this->getMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->getMockBuilder(ServiceLocatorInterface::class)->disableOriginalConstructor()->getMock();
 
         $serviceLocator->expects($this->any())
             ->method('get')

@@ -166,7 +166,9 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
             ->setParam('action', 'apply');
         $this->request->setMethod('post');
 
-        $mockEntity = $this->getMock(\stdClass::class, ['getNumber']);
+
+        $mockEntity = $this->getMockBuilder(\stdClass::class)->setMethods(["getNumber"])->disableOriginalConstructor()
+            ->getMock();
         $mockEntity->expects($this->once())
             ->method('getNumber')
             ->will($this->returnValue(123));

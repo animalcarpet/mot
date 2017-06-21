@@ -116,7 +116,7 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
 
     protected function getMotTestFromApi($motTestNumber)
     {
-        return $this->getMotTestServiceClient()->getMotTestByTestNumber($motTestNumber);
+        return $this->getMotTestServiceClient()->getMotTestByTestNumber((string) $motTestNumber);
     }
 
     protected function getMotTestStatusFromApi($motTestNumber)

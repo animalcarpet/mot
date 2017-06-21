@@ -152,10 +152,10 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMakeModelMapByDvlaCode()
     {
-        $make = $this->getMock(Make::class);
-        $model = $this->getMock(Model::class);
+        $make = $this->getMockBuilder(Make::class)->disableOriginalConstructor()->getMock();
+        $model = $this->getMockBuilder(Model::class)->disableOriginalConstructor()->getMock();
 
-        $dvlaMakeModelMapEntity = $this->getMock(DvlaMakeModelMap::class);
+        $dvlaMakeModelMapEntity = $this->getMockBuilder(DvlaMakeModelMap::class)->disableOriginalConstructor()->getMock();
         $dvlaMakeModelMapEntity
             ->expects($this->once())
             ->method('getMake')

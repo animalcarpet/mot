@@ -70,7 +70,7 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
 
     private function createController()
     {
-        $authorisationService = Xmock::of(AbstractMotAuthorisationService::class);
+        $authorisationService = XMock::of(AbstractMotAuthorisationService::class);
         $authorisationService
             ->method('getRolesAsArray')
             ->willReturn([SiteBusinessRoleCode::TESTER]);
@@ -208,7 +208,7 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
     public function testContingencyReportGeneratesWithValidRequestData()
     {
         // pretend we generated a report
-        $theReport = $this->getMock(\DvsaCommonApi\Model\ApiResponse::class, ['getStatusCode']);
+        $theReport = $this->getMockBuilder(ApiResponse::class)->setMethods(['getStatusCode'])->disableOriginalConstructor()->getMock();
         $theReport->expects($this->once())
             ->method('getStatusCode')
             ->willReturn(self::HTTP_OK_CODE);

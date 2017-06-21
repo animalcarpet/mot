@@ -44,6 +44,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
     const VEHICLE_VERSION = 1;
 
     private $siteRepository;
+    private $mockMysteryShopperHelper;
 
     public function setUp()
     {
@@ -56,7 +57,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $captureStartDate = ArgCapture::create();
         $testStartDate = new DateTime();
 
-        $this->setupStubSiteRepository();
         $this->setupNoSiteIdsForPersonId();
 
         $this->mockMotTestRepository
@@ -75,8 +75,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
     public function testFindHistoricalTestsForVehicleSinceShouldRelaySiteIdsWhenPersonDoesNotHaveViewMsTestsPermission()
     {
         $captureSiteIds = ArgCapture::create();
-
-        $this->mockMethod($this->mockMysteryShopperHelper, 'canViewMysteryShopperTests', null, false);
 
         $this->siteRepository
             ->expects($this->any())
@@ -108,11 +106,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
 
         $this->mockMethod($this->mockMysteryShopperHelper, 'hasPermissionToViewMysteryShopperTests', null, true);
 
-        $this->siteRepository
-            ->expects($this->never())
-            ->method('findForPersonId')
-            ->with(self::PERSON_ID);
-
         $this->mockMotTestRepository
             ->expects($this->any())
             ->method('findTestsForVehicle')
@@ -132,11 +125,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $this->mockMethod($this->mockMysteryShopperHelper, 'hasPermissionToViewMysteryShopperTests', null, false);
 
         $this->setupNoSiteIdsForPersonId();
-
-        $this->siteRepository
-            ->expects($this->never())
-            ->method('findForPersonId')
-            ->with(self::PERSON_ID);
 
         $this->mockMotTestRepository
             ->expects($this->any())
@@ -165,7 +153,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
 
         $this->mockMethod($this->mockConfigurationRepository, 'getValue', null, $maxDefaultHistoryLength);
         $this->mockMethod($this->mockAuthService, 'isGranted', null, true);
-        $this->setupStubSiteRepository();
         $this->setupNoSiteIdsForPersonId();
 
         $service = $this->constructVehicleHistoryServiceWithMocks();
@@ -212,7 +199,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $now = new \DateTime();
 
         $this->mockMethod($this->mockMotTestRepository, 'findTestsForVehicle', null, $listOfMotTests);
-        $this->setupStubSiteRepository();
         $this->setupNoSiteIdsForPersonId();
 
         $service = $this->constructVehicleHistoryServiceWithMocks();
@@ -237,7 +223,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
 
         $this->mockMethod($this->mockPersonRepository, 'get', null, $this->setPersonMock());
 
-        $this->setupStubSiteRepository();
         $this->setupNoSiteIdsForPersonId();
 
         $service = $this->constructVehicleHistoryServiceWithMocks();
@@ -448,6 +433,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                 ->setVehicle($this->getVehicleWithClass(1))
                 ->setVehicleVersion(self::VEHICLE_VERSION)
                 ->setNumber(1)
+                ->setId(1)
                 ->setIssuedDate(new \DateTime()),
             (new MotTest())
                 ->setStatus($this->createMotTestStatus(MotTestStatusName::FAILED))
@@ -462,6 +448,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                 ->setVehicle($this->getVehicleWithClass(2))
                 ->setVehicleVersion(self::VEHICLE_VERSION)
                 ->setNumber(2)
+                ->setId(2)
                 ->setIssuedDate(new \DateTime()),
             (new MotTest())
                 ->setStatus($this->createMotTestStatus(MotTestStatusName::PASSED))
@@ -476,6 +463,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                         ->setId(1)
                 )
                 ->setNumber(3)
+                ->setId(3)
                 ->setIssuedDate(new \DateTime()),
             (new MotTest())
                 ->setStatus($this->createMotTestStatus(MotTestStatusName::PASSED))
@@ -490,16 +478,9 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                         ->setId(2)
                 )
                 ->setNumber(4)
+                ->setId(4)
                 ->setIssuedDate(new \DateTime()),
         ];
-    }
-
-    protected function setupStubSiteRepository()
-    {
-        $this->siteRepository
-            ->expects($this->any())
-            ->method('findForPersonId')
-            ->willReturn([]);
     }
 
     protected function setupNoSiteIdsForPersonId()

@@ -117,6 +117,7 @@ class SurveyController extends AbstractDvsaRestfulController
     public function shouldDisplaySurveyAction()
     {
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
+
         if (!isset($data['motTestId']) || !isset($data['motTestTypeCode']) || !isset($data['testerId'])) {
             return ApiResponse::jsonOk(false);
         }
@@ -142,6 +143,7 @@ class SurveyController extends AbstractDvsaRestfulController
     public function validateTokenAction()
     {
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
+
         if (!isset($data['token'])) {
             return ApiResponse::jsonError(false);
         }

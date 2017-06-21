@@ -15,7 +15,7 @@ class NationalBatchStatisticsController extends AbstractDvsaRestfulController im
         $this->service = $service;
     }
 
-    public function getList($group)
+    public function getList()
     {
         $dtos = $this->service->generateReports();
 

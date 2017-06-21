@@ -32,7 +32,6 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
 
         $step = XMock::of(SummaryStep::class);
         $step->expects($this->any())->method('load')->willReturn($step);
-        $step->expects($this->any())->method('getEventType')->willReturn('ae');
 
         $service = XMock::of(EventStepService::class);
         $service->expects($this->once())->method('injectParamsIntoSteps');
@@ -57,7 +56,6 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
         $controller->expects($this->once())->method('loadEventCategory');
         $controller->expects($this->once())->method('assertPermission');
         $controller->expects($this->once())->method('doStepLogic');
-        $controller->expects($this->never())->method('injectViewModelVariables');
         $controller->expects($this->never())->method('resetSummaryStep');
 
         $controller->indexAction();

@@ -20,14 +20,6 @@ abstract class AbstractNotificationApiControllerTestCase extends \PHPUnit_Framew
     {
         $mock = $this->createMock(NotificationService::class);
 
-        $mock->expects($this->any())->method('getAllByPersonId')->will(
-            $this->returnValue(
-                [
-                    $this->createNotification(),
-                ]
-            )
-        );
-
         $this->serviceManager->setService(NotificationService::class, $mock);
     }
 }

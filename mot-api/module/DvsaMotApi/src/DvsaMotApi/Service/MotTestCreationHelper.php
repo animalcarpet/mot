@@ -287,7 +287,6 @@ class MotTestCreationHelper
      * @param string $vehicleModel
      * @param int    $vehicleId
      * @param string $vehicleClassCode
-     * @param string $fuelTypeCode
      * @param string $primaryColourCode
      * @param string $secondaryColourCode
      * @param $updatedCountryOfRegistrationId
@@ -297,7 +296,7 @@ class MotTestCreationHelper
      *
      * @throws Exception
      */
-    public function updateVehicleIfChanged($fuelTypeCode, $cylinderCapacity, $vehicleMake, $vehicleModel, $vehicleId, $vehicleClassCode, $fuelTypeCode, $primaryColourCode, $secondaryColourCode, $updatedCountryOfRegistrationId, $motTestTypeCode)
+    public function updateVehicleIfChanged($fuelTypeCode, $cylinderCapacity, $vehicleMake, $vehicleModel, $vehicleId, $vehicleClassCode, $primaryColourCode, $secondaryColourCode, $updatedCountryOfRegistrationId, $motTestTypeCode)
     {
         $vehicle = $this->entityManager->getRepository(Vehicle::class)->get($vehicleId);
         $vehicleClass = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);

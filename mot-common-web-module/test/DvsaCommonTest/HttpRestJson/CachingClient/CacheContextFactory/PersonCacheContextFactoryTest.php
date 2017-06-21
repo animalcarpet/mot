@@ -23,7 +23,7 @@ class PersonCacheContextFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $tokenService = $this->getMock(TokenServiceInterface::class);
+        $tokenService = $this->getMockBuilder(TokenServiceInterface::class)->getMock();
         $tokenService->expects($this->any())
             ->method('getToken')
             ->willReturn(self::TOKEN);

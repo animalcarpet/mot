@@ -41,7 +41,7 @@ class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(ContextProvider::class, Xmock::of(ContextProvider::class));
         $serviceManager->setService(TesterTqiComponentsAtSiteBreadcrumbs::class, Xmock::of(TesterTqiComponentsAtSiteBreadcrumbs::class));
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

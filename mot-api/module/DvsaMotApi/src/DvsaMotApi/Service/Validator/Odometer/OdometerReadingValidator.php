@@ -7,7 +7,6 @@ use Api\Check\CheckResult;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommonApi\Service\Exception\BadRequestException;
-use ZendPdf\BinaryParser\DataSource\String;
 
 /**
  * Encapsulates all validation rules for OdometerReading.

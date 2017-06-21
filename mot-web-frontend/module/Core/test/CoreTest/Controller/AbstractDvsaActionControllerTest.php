@@ -33,7 +33,7 @@ class AbstractDvsaActionControllerTest extends \PHPUnit_Framework_TestCase
                 [self::DISABLED_FEATURE, false],
             ]));
 
-        $serviceLocator = $this->getMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->getMockBuilder(ServiceLocatorInterface::class)->disableOriginalConstructor()->getMock();
         $serviceLocator
             ->expects($this->any())
             ->method('get')

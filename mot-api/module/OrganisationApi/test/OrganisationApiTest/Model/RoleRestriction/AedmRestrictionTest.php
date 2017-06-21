@@ -34,7 +34,7 @@ class AedmRestrictionTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->authorisationService = $this->getMock(AuthorisationServiceInterface::class);
+        $this->authorisationService = $this->getMockBuilder(AuthorisationServiceInterface::class)->disableOriginalConstructor()->getMock();
         $this->roleRestriction = new AedmRestriction($this->authorisationService);
     }
     public function testItIsARoleRestriction()

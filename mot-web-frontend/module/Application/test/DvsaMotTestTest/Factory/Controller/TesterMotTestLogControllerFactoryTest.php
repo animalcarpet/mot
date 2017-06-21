@@ -29,7 +29,7 @@ class TesterMotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $featureToggles = XMock::of(FeatureToggles::class);
         $serviceManager->setService('Feature\FeatureToggles', $featureToggles);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->willReturn($serviceManager);

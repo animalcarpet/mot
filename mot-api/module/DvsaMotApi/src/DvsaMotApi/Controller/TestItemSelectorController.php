@@ -3,8 +3,10 @@
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
+use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\TestItemSelectorService;
 
 /**
@@ -12,9 +14,14 @@ use DvsaMotApi\Service\TestItemSelectorService;
  */
 class TestItemSelectorController extends AbstractDvsaRestfulController
 {
-    public function __construct()
+    private $testItemSelectorService;
+    private $motTestService;
+
+    public function __construct(TestItemSelectorService $testItemSelectorService, MotTestService $motTestService)
     {
         $this->setIdentifierName('motTestNumber');
+        $this->testItemSelectorService = $testItemSelectorService;
+        $this->motTestService = $motTestService;
     }
 
     public function get($id)
@@ -24,7 +31,7 @@ class TestItemSelectorController extends AbstractDvsaRestfulController
 
         //  --  get mot test --
         /** @var MotTestDto $motTest */
-        $motTest = $this->getMotTestService()->getMotTestData($motTestNumber);
+        $motTest = $this->motTestService->getMotTestData($motTestNumber);
 
         $vehicleClassCode = null;
         if ($motTest->getVehicle() !== null) {
@@ -34,27 +41,11 @@ class TestItemSelectorController extends AbstractDvsaRestfulController
         }
 
         //  --  get items   --
-        $items = $this->getTestItemSelectorService()->getTestItemSelectorsData($testItemSelectorId, $vehicleClassCode);
+        $items = $this->testItemSelectorService->getTestItemSelectorsData($testItemSelectorId, $vehicleClassCode);
         foreach ($items as $index => $item) {
             $items[$index] = array_merge($item, ['motTest' => $motTest]);
         }
 
         return ApiResponse::jsonOk($items);
-    }
-
-    /**
-     * @return TestItemSelectorService
-     */
-    protected function getTestItemSelectorService()
-    {
-        return $this->getServiceLocator()->get('TestItemSelectorService');
-    }
-
-    /**
-     * @return \DvsaMotApi\Service\MotTestService
-     */
-    private function getMotTestService()
-    {
-        return $this->getServiceLocator()->get('MotTestService');
     }
 }

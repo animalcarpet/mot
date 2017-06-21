@@ -25,11 +25,13 @@ use DvsaMotApi\Factory\Controller\DemoTestAssessmentControllerFactory;
 use DvsaMotApi\Factory\Controller\MotTestReasonForRejectionControllerFactory;
 use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
 use DvsaMotApi\Factory\Controller\NonMotInspectionControllerFactory;
+use DvsaMotApi\Factory\Controller\ReasonForRejectionControllerFactory;
 use DvsaMotApi\Factory\Controller\ReplacementCertificateDraftControllerFactory;
 use DvsaMotApi\Factory\Controller\SessionConfirmationControllerFactory;
 use DvsaMotApi\Factory\Controller\SurveyControllerFactory;
 use DvsaMotApi\Factory\Controller\TesterControllerFactory;
 use DvsaMotApi\Factory\Controller\TesterMotTestLogControllerFactory;
+use DvsaMotApi\Factory\Controller\TestItemSelectorControllerFactory;
 use DvsaMotApi\Factory\Controller\UserControllerFactory;
 
 return [
@@ -46,9 +48,7 @@ return [
         'DvsaMotApi\Controller\TesterExpiry' => \DvsaMotApi\Controller\TesterExpiryController::class,
         'DvsaMotApi\Controller\Vehicle' => \DvsaMotApi\Controller\VehicleController::class,
         'DvsaMotApi\Controller\TesterSearch' => \DvsaMotApi\Controller\TesterSearchController::class,
-        'DvsaMotApi\Controller\TestItemSelector' => \DvsaMotApi\Controller\TestItemSelectorController::class,
         TestItemCategoryNameController::class => TestItemCategoryNameController::class,
-        ReasonForRejectionController::class => ReasonForRejectionController::class,
         'DvsaMotApi\Controller\MotTestOdometer' => \DvsaMotApi\Controller\MotTestOdometerController::class,
         'DvsaMotApi\Controller\MotTestCompare' => \DvsaMotApi\Controller\MotTestCompareController::class,
         MotTestSearchController::class => MotTestSearchController::class,
@@ -75,5 +75,7 @@ return [
         SurveyController::class => SurveyControllerFactory::class,
         SessionConfirmationController::class => SessionConfirmationControllerFactory::class,
         NonMotInspectionController::class => NonMotInspectionControllerFactory::class,
+        'DvsaMotApi\Controller\TestItemSelector' => TestItemSelectorControllerFactory::class,
+        ReasonForRejectionController::class => ReasonForRejectionControllerFactory::class,
     ],
 ];

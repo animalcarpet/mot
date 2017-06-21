@@ -87,6 +87,8 @@ class DetailsStep extends AbstractRegistrationStep
             $this->setMonth($values[DetailsInputFilter::FIELD_MONTH]);
             $this->setYear($values[DetailsInputFilter::FIELD_YEAR]);
             $this->setDate($this->makeDate());
+
+            $this->filter->setData($this->toArray());
         }
     }
 

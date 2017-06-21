@@ -33,7 +33,7 @@ class SecurityQuestionControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $service = XMock::of(AnswerSecurityQuestionsAction::class);
         $serviceManager->setService(AnswerSecurityQuestionsAction::class, $service);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

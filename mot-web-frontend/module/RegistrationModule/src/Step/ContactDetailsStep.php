@@ -113,6 +113,8 @@ class ContactDetailsStep extends AbstractRegistrationStep
             $this->setTownOrCity($values[ContactDetailsInputFilter::FIELD_TOWN_OR_CITY]);
             $this->setPostcode(strtoupper($values[ContactDetailsInputFilter::FIELD_POSTCODE]));
             $this->setPhone($values[ContactDetailsInputFilter::FIELD_PHONE]);
+
+            $this->filter->setData($this->toArray());
         }
     }
 

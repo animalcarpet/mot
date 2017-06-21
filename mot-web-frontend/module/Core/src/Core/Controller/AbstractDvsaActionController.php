@@ -5,6 +5,7 @@ namespace Core\Controller;
 use Application\Navigation\Breadcrumbs\BreadcrumbsBuilder;
 use Core\Action\AbstractActionResult;
 use Core\Action\ActionResult;
+use Core\Action\ActionResultInterface;
 use Core\Action\ViewActionResult;
 use Core\Action\HttpResponseResult;
 use Core\Action\FileAction;
@@ -237,7 +238,11 @@ abstract class AbstractDvsaActionController extends AbstractActionController
         $this->layout()->setVariable('breadcrumbs', $breadcrumbs);
     }
 
-    public function applyActionResult(AbstractActionResult $result)
+    /**
+     * @param ActionResultInterface|AbstractActionResult $result
+     * @return array|Response|ViewModel
+     */
+    public function applyActionResult(ActionResultInterface $result)
     {
         if ($result instanceof FileAction) {
             $file = $result->getFile();
@@ -348,5 +353,27 @@ abstract class AbstractDvsaActionController extends AbstractActionController
     {
         $headTitleHelper = $this->getServiceLocator()->get('ViewHelperManager')->get('headTitle');
         $headTitleHelper($title);
+    }
+
+
+    public function getServiceLocator(){
+        // there's no "getErrorHandler" in PHP. It's returned when we set the new one...
+        $originalHandler = set_error_handler(function($severity, $message, $file, $line){});
+
+        set_error_handler(function($severity, $message, $file, $line) use ($originalHandler) {
+            if(strpos($message, "You are retrieving the service locator from") === 0){
+                // that's the error about service loactor
+                return;
+            }
+
+            // otherwise we log every other error using original handler
+            $originalHandler($severity, $message, $file, $line);
+        });
+
+        $serviceLocator = parent::getServiceLocator();
+
+        set_error_handler($originalHandler);
+
+        return $serviceLocator;
     }
 }

@@ -23,7 +23,7 @@ class RoleControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('HTMLPurifier', XMock::of(\HTMLPurifier::class));
 
         /** @var ServiceLocatorInterface|MockObject $plugins */
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->willReturn($serviceManager);

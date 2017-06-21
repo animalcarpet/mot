@@ -42,7 +42,7 @@ class MotTestResultsControllerTest extends AbstractDvsaMotTestTestCase
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->serviceManager->setAllowOverride(true);
 
-        $this->authorisationService = $this->getMock(MotFrontendAuthorisationServiceInterface::class);
+        $this->authorisationService = $this->getMockBuilder(MotFrontendAuthorisationServiceInterface::class)->disableOriginalConstructor()->getMock();
 
         $odometerViewObject = XMock::of(OdometerReadingViewObject::class);
         $this->controller = new MotTestResultsController($this->authorisationService, $odometerViewObject);

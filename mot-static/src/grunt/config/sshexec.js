@@ -57,10 +57,10 @@ module.exports = function (grunt, config) {
             port: '<%= dev2_config.port %>'
         };
 
-        var php_extension_enable = 'sudo sed -i.bak "s/^.*zend_ext/zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/';
-        var php_extension_disable = 'sudo sed -i.bak "s/.*zend_ext/;zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/';
-        var opcache_ini_file = 'opcache.ini';
-        var xdebug_ini_file = 'xdebug.ini';
+        var php_extension_enable = 'sudo sed -i.bak "s/^.*zend_ext/zend_ext/g" <%= vagrant_config.phpConfigDir %>/php.d/';
+        var php_extension_disable = 'sudo sed -i.bak "s/.*zend_ext/;zend_ext/g" <%= vagrant_config.phpConfigDir %>/php.d/';
+        var opcache_ini_file = '10-opcache.ini';
+        var xdebug_ini_file = '15-xdebug.ini';
         var testsupportConfigFile = 'mot-testsupport/global.php';
         var frontendConfigFile = 'mot-web-frontend/global.php';
         var apiConfigFile = 'mot-api/global.php';
@@ -83,6 +83,52 @@ module.exports = function (grunt, config) {
             ];
         }
 
+        function apacheClearPhpSessionsDev() {
+            return 'sudo service <%= service_config.httpdServiceName %> stop; sudo rm -f <%= vagrant_config.phpRootDir %>/var/lib/php/session/sess_*; sudo service <%= service_config.httpdServiceName %> start;';
+        }
+
+        function papplyDev() {
+            return [
+                'sudo cp /tmp/hiera/hiera.yaml /etc/puppetlabs/code/hiera.yaml',
+                'sudo /vagrant/scripts/papply'
+            ];
+        }
+
+        function testPhp(configKey) {
+            return function () {
+                var coverageOptions = grunt.config(configKey);
+
+                // No coverage options - bail out
+                if (!grunt.option('coverage')) {
+                    return coverageOptions.baseCmd;
+                }
+
+                return handleCoverageOptions(
+                    coverageOptions,
+                    grunt.option('coverage-type'),
+                    grunt.option('coverage-path')
+                );
+            }
+        }
+
+        function xdebugOn() {
+           return xdebugSwitch(1);
+        }
+
+        function xdebugOff() {
+            return xdebugSwitch(0);
+        }
+
+        function xdebugSwitch(newValue) {
+            var oldValue = newValue == 0 ? 1 : 0;
+            return xdebugSed('remote_autostart', oldValue, newValue) + ';'
+                 + xdebugSed('remote_enable',    oldValue, newValue);
+        }
+
+        function xdebugSed(key, oldValue, newValue) {
+            return 'sudo sed -i.bak "s/' + key + '=' + oldValue + '/' + key + '=' + newValue + '/g" <%= vagrant_config.phpConfigDir %>/php.d/' + xdebug_ini_file;
+        }
+
     grunt.config('sshexec', {
             options: {
                 host: dev2_ssh_options.host,
@@ -93,7 +139,7 @@ module.exports = function (grunt, config) {
                 coverage: {
                     api: {
                         defaultCoverageType: 'html',
-                        baseCmd: 'cd <%= vagrant_config.workspace %>/mot-api && source /opt/rh/rh-php56/enable && vendor/bin/phpunit',
+                        baseCmd: 'cd <%= vagrant_config.workspace %>/mot-api && vendor/bin/phpunit',
                         cloverPath: '<%= vagrant_config.workspace %>/coverage/api-coverage.xml',
                         htmlPath: '<%= vagrant_config.workspace %>/coverage/api-coverage'
                     },
@@ -120,11 +166,11 @@ module.exports = function (grunt, config) {
 
             apache_clear_php_sessions_dev: {
                 options: dev_ssh_options,
-                command: 'sudo service <%= service_config.httpdServiceName %> stop; sudo rm -f <%= vagrant_config.phpRootDir %>/var/lib/php/session/sess_*; sudo service <%= service_config.httpdServiceName %> start;'
+                command: apacheClearPhpSessionsDev()
             },
             apache_clear_php_sessions_dev2: {
                 options: dev2_ssh_options,
-                command: 'sudo service <%= service_config.httpdServiceName %> stop; sudo rm -f <%= vagrant_config.phpRootDir %>/var/lib/php/session/sess_*; sudo service <%= service_config.httpdServiceName %> start;'
+                command: apacheClearPhpSessionsDev()
             },
             apache_restart: {
                 command: restartService("<%= service_config.httpdServiceName %>")
@@ -163,17 +209,11 @@ module.exports = function (grunt, config) {
             },
             papply_dev: {
                 options: dev_ssh_options,
-                command: [
-                    'sudo cp /tmp/hiera/hiera.yaml /etc/puppetlabs/code/hiera.yaml',
-                    'sudo /vagrant/scripts/papply'
-                ]
+                command: papplyDev()
             },
             papply_dev2: {
                 options: dev2_ssh_options,
-                command: [
-                    'sudo cp /tmp/hiera/hiera.yaml /etc/puppetlabs/code/hiera.yaml',
-                    'sudo /vagrant/scripts/papply'
-                ]
+                command: papplyDev()
             },
             ft_enable_testsupport: {
                 options: dev_ssh_options,
@@ -216,68 +256,16 @@ module.exports = function (grunt, config) {
                 command: 'export dev_workspace="<%= vagrant_config.workspace %>"; <%= vagrant_config.workspace %>/Jenkins_Scripts/run_unit_tests.sh'
             },
             test_php_frontend: {
-                command: function () {
-                    var coverageOptions = grunt.config('sshexec.options.coverage.frontend');
-
-                    // No coverage options - bail out
-                    if (!grunt.option('coverage')) {
-                        return coverageOptions.baseCmd;
-                    }
-
-                    return handleCoverageOptions(
-                        coverageOptions,
-                        grunt.option('coverage-type'),
-                        grunt.option('coverage-path')
-                    );
-                }
+                command: testPhp('sshexec.options.coverage.frontend')
             },
             test_php_api: {
-                command: function () {
-                    var coverageOptions = grunt.config('sshexec.options.coverage.api');
-
-                    // No coverage options - bail out
-                    if (!grunt.option('coverage')) {
-                        return coverageOptions.baseCmd;
-                    }
-
-                    return handleCoverageOptions(
-                        coverageOptions,
-                        grunt.option('coverage-type'),
-                        grunt.option('coverage-path')
-                    );
-                }
+                command: testPhp('sshexec.options.coverage.api')
             },
             test_php_api_db_verification: {
-                command: function () {
-                    var coverageOptions = grunt.config('sshexec.options.coverage.db_verification');
-
-                    // No coverage options - bail out
-                    if (!grunt.option('coverage')) {
-                        return coverageOptions.baseCmd;
-                    }
-
-                    return handleCoverageOptions(
-                        coverageOptions,
-                        grunt.option('coverage-type'),
-                        grunt.option('coverage-path')
-                    );
-                }
+                command: testPhp('sshexec.options.coverage.db_verification')
             },
             test_php_common: {
-                command: function () {
-                    var coverageOptions = grunt.config('sshexec.options.coverage.common');
-
-                    // No coverage options - bail out
-                    if (!grunt.option('coverage')) {
-                        return coverageOptions.baseCmd;
-                    }
-
-                    return handleCoverageOptions(
-                        coverageOptions,
-                        grunt.option('coverage-type'),
-                        grunt.option('coverage-path')
-                    );
-                }
+                command: testPhp('sshexec.options.coverage.common')
             },
             test_behat: {
                 command: function () {
@@ -338,7 +326,19 @@ module.exports = function (grunt, config) {
             },
             xdebug_on_dev: {
                 options: dev_ssh_options,
-                command: 'sudo sed -i.bak "s/remote_autostart=0/remote_autostart=1/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini;sudo sed -i.bak "s/remote_enable=0/remote_enable=1/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini; '
+                command: xdebugOn()
+            },
+            xdebug_on_dev2: {
+                options: dev2_ssh_options,
+                command: xdebugOn()
+            },
+            xdebug_off_dev: {
+                options: dev_ssh_options,
+                command: xdebugOff()
+            },
+            xdebug_off_dev2: {
+                options: dev2_ssh_options,
+                command: xdebugOff()
             },
             ft2fa_off_dev: {
                 options: dev_ssh_options,
@@ -370,18 +370,6 @@ module.exports = function (grunt, config) {
                 options: dev_ssh_options,
                 command: 'sudo chmod 777 /etc/dvsa/mot-web-frontend/global.php; sudo sed -i.bak "s|.*2fa.hardstop.enabled.*false|\'2fa.hardstop.enabled\' => true|g" /etc/dvsa/mot-web-frontend/global.php'
             },
-            xdebug_on_dev2: {
-                options: dev2_ssh_options,
-                command: 'sudo sed -i.bak "s/remote_autostart=0/remote_autostart=1/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini;sudo sed -i.bak "s/remote_enable=0/remote_enable=1/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini; '
-            },
-            xdebug_off_dev: {
-                options: dev_ssh_options,
-                command: 'sudo sed -i.bak "s/remote_autostart=1/remote_autostart=0/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini;sudo sed -i.bak "s/remote_enable=1/remote_enable=0/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini; '
-            },
-            xdebug_off_dev2: {
-                options: dev2_ssh_options,
-                command: 'sudo sed -i.bak "s/remote_autostart=1/remote_autostart=0/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini;sudo sed -i.bak "s/remote_enable=1/remote_enable=0/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini; '
-            },
             xhprof_disable: {
                 command: '<%= vagrant_config.workspace %>/mot-devtools/bin/xhprof.sh disable_xhprof'
             },
@@ -389,10 +377,10 @@ module.exports = function (grunt, config) {
                 command: '<%= vagrant_config.workspace %>/mot-devtools/bin/xhprof.sh enable_xhprof'
             },
             server_mod_prod: {
-                command: ['sudo sed -i.bak "s/.*opcache.validate_timestamps=.*/opcache.validate_timestamps=0/g" <%= vagrant_config.phpRootDir %>/etc/php.d/opcache.ini']
+                command: ['sudo sed -i.bak "s/.*opcache.validate_timestamps=.*/opcache.validate_timestamps=0/g" <%= vagrant_config.phpConfigDir %>/php.d/' + opcache_ini_file]
             },
             server_mod_dev: {
-                command: ['sudo sed -i.bak "s/^opcache.validate_timestamps.*/;opcache.validate_timestamps=0/g" <%= vagrant_config.phpRootDir %>/etc/php.d/opcache.ini']
+                command: ['sudo sed -i.bak "s/^opcache.validate_timestamps.*/;opcache.validate_timestamps=0/g" <%= vagrant_config.phpConfigDir %>/php.d/' + opcache_ini_file]
             },
             trace_api_log: {
                 options: dev2_ssh_options,
@@ -563,7 +551,7 @@ module.exports = function (grunt, config) {
                 command: "sudo sh /vagrant/scripts/import-data.sh"
             },
             doctrine_proxy_gen: {
-                command: 
+                command:
                     exportAppConfigLocation + ' && ' +
                     '<%= vagrant_config.workspace %>/Jenkins_Scripts/generate-proxies.sh'
             },
@@ -584,7 +572,7 @@ module.exports = function (grunt, config) {
             zend_dev_tools_enable: {
                 options: dev_ssh_options,
                 command: [
-                    'sed "s/.*dummy_key.*//g" <%= vagrant_config.motAppDir %>/mot-web-frontend/config/autoload/zenddevelopertools.development.php > /tmp/zenddevelopertools.development.php',
+                    'sed "s/.*dummy_key.*//g" <%= vagrant_config.workspace %>/config/zend-framework/mot-web-frontend/zenddevelopertools.development.php > /tmp/zenddevelopertools.development.php',
                     'sudo cp /tmp/zenddevelopertools.development.php <%= vagrant_config.motConfigDir %>/mot-web-frontend/zenddevelopertools.development.php',
                     'rm -f /tmp/zenddevelopertools.development.php'
                 ]

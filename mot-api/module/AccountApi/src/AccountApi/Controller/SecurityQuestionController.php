@@ -114,7 +114,10 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
         }
 
         $personId = $this->params()->fromRoute('personId');
-        $questionsAndAnswers = Json::decode($this->request->getContent(), Json::TYPE_ARRAY)['questionsAndAnswers'];
+
+        $content = $this->request->getContent();
+        $this->assertContentNotEmpty($content);
+        $questionsAndAnswers = Json::decode($content, Json::TYPE_ARRAY)['questionsAndAnswers'];
 
         if (empty($questionsAndAnswers)) {
             throw new RequiredFieldException(['questionsAndAnswers']);

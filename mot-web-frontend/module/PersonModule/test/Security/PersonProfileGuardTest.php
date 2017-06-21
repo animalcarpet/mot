@@ -1339,7 +1339,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
 
     public function testExpectedToRegisterForTwoFactorAuthIfUserHasPermissionButHasNotRegisteredYet()
     {
-        $this->identity = $this->getMock(Identity::class);
+        $this->identity = $this->getMockBuilder(Identity::class)->disableOriginalConstructor()->getMock();
         $this->identity
             ->method('isSecondFactorRequired')
             ->willReturn(false);
@@ -1638,7 +1638,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     private function withSecondFactorRequiredForIdentity()
     {
         if ($this->identity === null) {
-            $this->identity = $this->getMock(Identity::class);
+            $this->identity = $this->getMockBuilder(Identity::class)->disableOriginalConstructor()->getMock();
         }
 
         $this->identity
@@ -1657,7 +1657,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     {
         if ($this->identity === null) {
             /** @var MotIdentityInterface $motIdentity */
-            $motIdentity = $this->getMock(MotIdentityInterface::class);
+            $motIdentity = $this->getMockBuilder(MotIdentityInterface::class)->disableOriginalConstructor()->getMock();
             $motIdentity
                 ->method('getUserId')
                 ->willReturn($loggedInPersonId);

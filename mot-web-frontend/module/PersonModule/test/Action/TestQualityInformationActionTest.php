@@ -107,7 +107,10 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             $this->testerTqiBreadcrumbs
         );
 
-        $url = XMock::of(Url::class);
+        $urlMethods = get_class_methods(Url::class);
+        $urlMethods[] = '__invoke';
+
+        $url = XMock::of(Url::class, $urlMethods);
         $url
             ->expects($this->any())
             ->method('__invoke')

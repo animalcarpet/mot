@@ -68,7 +68,9 @@ class SecurityQuestionsContext implements Context
     public function iConfirmMyChangesToMySecurityQuestions()
     {
         $userId = $this->userData->getCurrentLoggedUser()->getUserId();
-        $this->securityQuestionsChange->changeQuestions($userId, $this->securityQuestionData);
+        $this->securityQuestionsChange->changeQuestions(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(), $this->securityQuestionData, $userId
+        );
     }
 
     /**
@@ -93,10 +95,10 @@ class SecurityQuestionsContext implements Context
     {
         $userId = $this->userData->getLast()->getUserId();
 
-        $this->securityQuestionsAnswer->answerQuestions($userId, [
+        $this->securityQuestionsAnswer->answerQuestions($this->userData->getCurrentLoggedUser()->getAccessToken(), [
             self::SECURITY_QUESTION_ID_NAME_OF_DOG => 'blah',
-            self::SECURITY_QUESTION_ID_FIRST_KISS => 'blah'
-        ]);
+            self::SECURITY_QUESTION_ID_FIRST_KISS  => 'blah'
+        ], $userId);
     }
 
     /**
@@ -106,10 +108,10 @@ class SecurityQuestionsContext implements Context
     {
         $userId = $this->userData->getLast()->getUserId();
 
-        $this->securityQuestionsAnswer->answerQuestions($userId, [
+        $this->securityQuestionsAnswer->answerQuestions($this->userData->getCurrentLoggedUser()->getAccessToken(), [
             self::SECURITY_QUESTION_ID_NAME_OF_DOG => 'wrong!',
-            self::SECURITY_QUESTION_ID_FIRST_KISS => 'wrong!'
-        ]);
+            self::SECURITY_QUESTION_ID_FIRST_KISS  => 'wrong!'
+        ], $userId);
     }
 
     /**

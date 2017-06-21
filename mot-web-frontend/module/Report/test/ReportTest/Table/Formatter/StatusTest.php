@@ -19,7 +19,11 @@ class StatusTest extends \PHPUnit_Framework_TestCase
     public function testFormatForStatus()
     {
         /** @var PhpRenderer|MockObj $viewRendererMock */
-        $viewRendererMock = $this->getMockBuilder(PhpRenderer::class)->disableOriginalConstructor()->getMock();
+        $viewRendererMock = $this
+            ->getMockBuilder(PhpRenderer::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['partial'])
+            ->getMock();
 
         $viewRendererMock->method('partial')->with($this->anything());
 
@@ -40,7 +44,7 @@ class StatusTest extends \PHPUnit_Framework_TestCase
     public function testFormatForInvalidArgument()
     {
         /** @var PhpRenderer|MockObj $viewRendererMock */
-        $viewRendererMock = XMock::of(PhpRenderer::class);
+        $viewRendererMock = XMock::of(PhpRenderer::class, ['partial']);
 
         $viewRendererMock->expects(
             $this->any())->method('partial')->willReturnArgument('adf');

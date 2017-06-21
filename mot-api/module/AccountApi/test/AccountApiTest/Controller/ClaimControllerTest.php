@@ -46,7 +46,7 @@ class ClaimControllerTest extends AbstractRestfulControllerTestCase
     {
         $this->mockMethod($this->service, 'save', $this->once(), true);
 
-        $result = $this->getResultForAction(Request::METHOD_PUT, null, ['id' => self::PERSON_ID], null, []);
+        $result = $this->getResultForAction(Request::METHOD_PUT, null, ['id' => self::PERSON_ID], [], [], ["ss" => "aa"]);
 
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, ['data' => true], $result);
     }

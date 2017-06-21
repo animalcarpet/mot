@@ -10,6 +10,7 @@ use Zend\ServiceManager\ServiceManager;
 
 class SiteDetailsControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
+
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
@@ -17,7 +18,7 @@ class SiteDetailsControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceMock = XMock::of(SiteDetailsService::class);
         $serviceManager->setService(SiteDetailsService::class, $serviceMock);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));
@@ -28,4 +29,5 @@ class SiteDetailsControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(SiteDetailsController::class, $factoryResult);
     }
+
 }

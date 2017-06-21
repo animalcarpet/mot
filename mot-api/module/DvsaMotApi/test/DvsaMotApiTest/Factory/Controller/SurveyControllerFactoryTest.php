@@ -19,7 +19,7 @@ class SurveyControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $serviceManager->setService(SurveyService::class, $surveyServiceMock);
 
-        $controllerManager = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $controllerManager = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $controllerManager->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

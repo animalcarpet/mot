@@ -66,7 +66,7 @@ class EmailPropertyFormTest extends \PHPUnit_Framework_TestCase
             [
                 [RegisteredEmailPropertyForm::FIELD_EMAIL => $this->createTooLongEmail()],
                 [
-                    EmailAddressValidator::INVALID_FORMAT => RegisteredEmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG,
+                    EmailAddressValidator::LENGTH_EXCEEDED => RegisteredEmailPropertyForm::EMAIL_ADDRESS_INVALID_MSG,
                     StringLength::TOO_LONG => str_replace('%max%', RegisteredEmailPropertyForm::FIELD_EMAIL_MAX_LENGTH, RegisteredEmailPropertyForm::EMAIL_ADDRESS_TOO_LONG_MSG),
                 ],
             ],

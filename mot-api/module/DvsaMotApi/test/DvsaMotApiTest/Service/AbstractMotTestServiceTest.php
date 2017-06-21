@@ -202,15 +202,6 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
         $this->dateTimeHolder = new TestDateTimeHolder($currentDateTime);
 
         $this->mockMotTestTypeRepository = $this->getMockWithDisabledConstructor(MotTestTypeRepository::class);
-        $this->mockMotTestTypeRepository->expects($this->any())
-            ->method('findOneByCode')
-            ->with([MotTestTypeCode::NORMAL_TEST])
-            ->willReturn((new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST));
-
-        $this->mockMotTestTypeRepository->expects($this->any())
-            ->method('findOneByCode')
-            ->with([MotTestTypeCode::RE_TEST])
-            ->willReturn((new MotTestType())->setCode(MotTestTypeCode::RE_TEST));
 
         $motIdentity = new Identity(new Person());
         $this->mockEntityManager = $this->getMockEntityManager();

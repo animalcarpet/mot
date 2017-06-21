@@ -5,10 +5,10 @@ namespace Dvsa\Mot\Behat\Support\HttpClient;
 use Dvsa\Mot\Behat\Support\HttpClient;
 use Dvsa\Mot\Behat\Support\Request;
 use Dvsa\Mot\Behat\Support\Response;
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\ServerErrorResponseException;
-use Guzzle\Http\Message\Response as GuzzleResponse;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ServerException;
+use Psr\Http\Message\ResponseInterface as GuzzleResponse;
 
 class GuzzleHttpClient implements HttpClient
 {
@@ -35,15 +35,16 @@ class GuzzleHttpClient implements HttpClient
         $guzzleResponse = null;
 
         try {
-            $guzzleRequest = $this->client->createRequest(
+            $guzzleResponse = $this->client->request(
                 $request->getMethod(),
-                $request->getUri(),
-                $request->getHeaders(),
-                $request->getBody()
+                $request->getUriAsSting(),
+                [
+                    "headers" => $request->getHeaders(),
+                    "body" => $request->getBody()
+                ]
             );
 
-            $guzzleResponse = $guzzleRequest->send();
-        } catch (ServerErrorResponseException $e) {
+        } catch (ServerException $e) {
             $guzzleResponse = $e->getResponse();
         } catch (BadResponseException $e) {
             $guzzleResponse = $e->getResponse();
@@ -60,12 +61,13 @@ class GuzzleHttpClient implements HttpClient
      */
     private function createResponse(Request $request, GuzzleResponse $guzzleResponse)
     {
+        $bodyContents = $guzzleResponse->getBody()->getContents();
         return new Response(
             $request,
             $guzzleResponse->getStatusCode(),
-            $guzzleResponse->getHeaders()->toArray(),
-            json_decode($guzzleResponse->getBody(true), true),
-            $guzzleResponse->getBody()
+            $guzzleResponse->getHeaders(),
+            json_decode($bodyContents, true),
+            $bodyContents
         );
     }
 }

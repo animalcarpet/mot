@@ -31,9 +31,9 @@ class OtpServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->serviceLocator = $this->getServiceLocator([
             EntityManager::class => $entityManager,
-            'DvsaAuthenticationService' => $this->getMock(AuthenticationService::class),
-            'ConfigurationRepository' => $this->getMock(ConfigurationRepositoryInterface::class),
-            OpenAMClientInterface::class => $this->getMock(OpenAMClientInterface::class),
+            'DvsaAuthenticationService' => $this->getMockBuilder(AuthenticationService::class)->disableOriginalConstructor()->getMock(),
+            'ConfigurationRepository' => $this->getMockBuilder(ConfigurationRepositoryInterface::class)->disableOriginalConstructor()->getMock(),
+            OpenAMClientInterface::class => $this->getMockBuilder(OpenAMClientInterface::class)->disableOriginalConstructor()->getMock(),
         ]);
     }
 
@@ -56,7 +56,7 @@ class OtpServiceFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private function getServiceLocator(array $services)
     {
-        $serviceLocator = $this->getMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->getMockBuilder(ServiceLocatorInterface::class)->disableOriginalConstructor()->getMock();
 
         $serviceLocator->expects($this->any())
             ->method('get')

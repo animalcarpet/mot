@@ -22,9 +22,9 @@ class RoleControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $serviceManager->setService(UsernameValidator::class, $usernameValidatorMock);
 
-        $serviceManager->setService('HTMLPurifier', $this->getMock('HTMLPurifier'));
+        $serviceManager->setService('HTMLPurifier', $this->getMockBuilder('HTMLPurifier')->disableOriginalConstructor()->getMock());
 
-        $controllerManager = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $controllerManager = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $controllerManager->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));

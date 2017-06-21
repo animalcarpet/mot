@@ -8,9 +8,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaEntities\Entity\Entity;
 use DvsaEntities\Entity\Person;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Handles auditing actions:
@@ -20,13 +18,20 @@ use Zend\ServiceManager\ServiceManager;
  *
  * One lightweight class to replace usage of Gedmo library which was too heavy for such a simple task
  */
-class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterface
+class EntityAuditListener implements EventSubscriber
 {
-    /** @var ServiceLocatorInterface $sl */
-    private $sl;
-
     /** @var Person $user */
     private $user = null;
+
+    /**
+     * @var ServiceLocatorInterface
+     */
+    private $serviceLocator;
+
+    public function __construct($serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
 
     public function getSubscribedEvents()
     {
@@ -80,7 +85,8 @@ class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterfa
     {
         if (!$this->user) {
             /** @var MotIdentityInterface $identity */
-            $identity = $this->sl->get('DvsaAuthenticationService')->getIdentity();
+            $identity = $this->serviceLocator->get('DvsaAuthenticationService')->getIdentity();
+
             if (!$identity) {
                 //Assume root user?
                 $userId = 1;
@@ -91,25 +97,5 @@ class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterfa
         }
 
         return $this->user;
-    }
-
-    /**
-     * Set service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->sl = $serviceLocator;
-    }
-
-    /**
-     * Get service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->sl ?: new ServiceManager();
     }
 }

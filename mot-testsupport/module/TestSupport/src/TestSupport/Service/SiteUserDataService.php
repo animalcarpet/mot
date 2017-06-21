@@ -19,11 +19,8 @@ use Zend\View\Model\JsonModel;
  *
  * Should not be deployed in production.
  */
-class SiteUserDataService implements ServiceLocatorAwareInterface
+class SiteUserDataService
 {
-    use ServiceLocatorAwareTrait;
-    use RestClientGetterTrait;
-
     const STATUS_ID_ACCEPTED = 2;
     const SITE_POSITION_NOTIFICATION_ID = 5;
 
@@ -38,16 +35,23 @@ class SiteUserDataService implements ServiceLocatorAwareInterface
     private $sitePermissionsHelper;
 
     /**
+     * @var AccountService
+     */
+    private $accountService;
+
+    /**
      * @var AccountPerson
      */
     private $accountPerson;
 
     public function __construct(
         NotificationsHelper $notificationsHelper,
-        SitePermissionsHelper $sitePermissionsHelper
+        SitePermissionsHelper $sitePermissionsHelper,
+        AccountService $accountService
     ) {
         $this->notificationsHelper = $notificationsHelper;
         $this->sitePermissionsHelper = $sitePermissionsHelper;
+        $this->accountService = $accountService;
     }
 
     /**
@@ -63,12 +67,10 @@ class SiteUserDataService implements ServiceLocatorAwareInterface
         FieldValidation::checkForRequiredFieldsInData(['siteIds'], $data);
 
         if (!isset($data['personId'])) {
-            /** @var $accountService AccountService */
-            $accountService = $this->getServiceLocator()->get(AccountService::class);
             $dataGeneratorHelper = DataGeneratorHelper::buildForDifferentiator($data);
             $this->accountPerson = new AccountPerson($data, $dataGeneratorHelper);
 
-            $account = $accountService->createAccount(
+            $account = $this->accountService->createAccount(
                 $role,
                 $dataGeneratorHelper, $this->accountPerson
             );

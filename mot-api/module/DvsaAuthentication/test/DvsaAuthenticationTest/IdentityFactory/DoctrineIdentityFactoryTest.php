@@ -90,11 +90,6 @@ class DoctrineIdentityFactoryTest extends \PHPUnit_Framework_TestCase
             ->with('tester1')
             ->willReturn($person);
 
-        $this->personRepository->expects($this->any())
-            ->method('isEnabled')
-            ->with(FeatureToggle::TWO_FA)
-            ->willReturn(false);
-
         $identity = $this->identityFactory->create('tester1', 'abcd', '1234', $date);
 
         $this->assertFalse($identity->isSecondFactorRequired());

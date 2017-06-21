@@ -388,7 +388,7 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
 
     private function getMotTestMock($testTypeCode)
     {
-        $testMock = $this->getMock(MotTest::class);
+        $testMock = $this->getMockBuilder(MotTest::class)->disableOriginalConstructor()->getMock();
         $testTypeMock = $this->getMotTestTypeMock($testTypeCode);
         $testMock->expects($this->any())
             ->method('getMotTestType')

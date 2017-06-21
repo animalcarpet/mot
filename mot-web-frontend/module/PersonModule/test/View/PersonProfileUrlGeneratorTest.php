@@ -46,7 +46,7 @@ class PersonProfileUrlGeneratorTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         /** @var MotIdentityInterface $motIdentity */
-        $motIdentity = $this->getMock(MotIdentityInterface::class);
+        $motIdentity = $this->getMockBuilder(MotIdentityInterface::class)->disableOriginalConstructor()->getMock();
         $motIdentity
             ->method('getUserId')
             ->willReturn(self::LOGGED_IN_PERSON_ID);

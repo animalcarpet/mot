@@ -16,6 +16,7 @@ use Application\View\HelperFactory\IdentityHelperFactory;
 use Application\View\HelperFactory\LocationSelectorFactory;
 use Application\View\HelperFactory\ManualsAndGuidesFactory;
 use Application\View\HelperFactory\ResourcesOnGovUkFactory;
+use Core\View\Renderer\MotPhpRendererFactory;
 use Dvsa\Mot\Frontend\Plugin\AjaxResponsePlugin;
 use DvsaCommon\Constants\MotTestNumberConstraint;
 use DvsaCommon\Factory\AutoWire\AutoWireFactory;
@@ -35,6 +36,7 @@ use DvsaMotTest\Service\StartTestSessionService;
 use Application\Service\CanTestWithoutOtpService;
 use Application\Factory\Service\CanTestWithoutOtpServiceFactory;
 use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
+use Zend\View\Renderer\PhpRenderer;
 use DvsaMotTest\Action\BrakeTestResults\SubmitBrakeTestConfigurationAction;
 use DvsaMotTest\Factory\Action\SubmitBrakeTestConfigurationActionFactory;
 use DvsaMotTest\Action\BrakeTestResults\ViewBrakeTestConfigurationAction;
@@ -952,6 +954,7 @@ return [
             CanTestWithoutOtpService::class => CanTestWithoutOtpServiceFactory::class,
             StartTestChangeService::class => StartTestChangeServiceFactory::class,
             StartTestSessionService::class => StartTestSessionServiceFactory::class,
+            PhpRenderer::class => MotPhpRendererFactory::class,
             SubmitBrakeTestConfigurationAction::class => SubmitBrakeTestConfigurationActionFactory::class,
             ViewBrakeTestConfigurationAction::class => ViewBrakeTestConfigurationActionFactory::class
         ],

@@ -35,7 +35,7 @@ class ChangeDateOfBirthControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $contextProvider = XMock::of(ContextProvider::class);
         $serviceManager->setService(ContextProvider::class, $contextProvider);
 
-        $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
+        $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));
