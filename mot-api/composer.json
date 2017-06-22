@@ -15,7 +15,7 @@
     "dvsa/dvsa-logger": "1.2.0",
     "dvsa/dvsa-application-logger": "dev-feature-support-3.9-into-master",
     "soflomo/purifier": "0.1.1",
-    "slot-purchase/backend-api": "4.2.0",
+    "slot-purchase/backend-api": "4.2.1",
     "danielstjules/stringy": "~2.0",
     "aws/aws-sdk-php": "^3.9",
     "mot/api-client-php": "dev-feature-support-3.9-into-master",
