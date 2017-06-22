@@ -170,7 +170,6 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
      */
     public function testVerifyAnswersActionChecksRequiredFields($params, $expectedException)
     {
-        $this->markTestSkipped("fails on PHP7");
         $this->setExpectedException(
             get_class($expectedException),
             $expectedException->getMessage()

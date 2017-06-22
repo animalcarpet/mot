@@ -10,7 +10,7 @@ class MotPhpRendererFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $name, array $options = null)
     {
-        $renderer = new MotPhpRenderer();
+        $renderer = $this->getPhpRenderer();
         $renderer->setHelperPluginManager($container->get('ViewHelperManager'));
         $renderer->setResolver($container->get('ViewResolver'));
 
@@ -20,5 +20,14 @@ class MotPhpRendererFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $container)
     {
         return $this($container, PhpRenderer::class);
+    }
+
+    private function getPhpRenderer()
+    {
+        if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+            return new MotPhpRenderer();
+        } else {
+            return new PhpRenderer();
+        }
     }
 }

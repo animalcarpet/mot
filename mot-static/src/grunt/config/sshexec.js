@@ -203,6 +203,10 @@ module.exports = function (grunt, config) {
                 options: dev_ssh_options,
                 command: restartService("<%= service_config.jasperServiceName %>")
             },
+            openam_restart: {
+                options: dev2_ssh_options,
+                command: restartService("<%= service_config.jasperServiceName %>")
+            },
             mysql_restart_dev: {
                 options: dev_ssh_options,
                 command: restartService("<%= service_config.mysqlServiceName %>")

@@ -76,6 +76,7 @@ module.exports = function (grunt, config) {
 
         grunt.registerTask('dev:restart:apache', 'Restarts Apache', 'apache:restart:all');
         grunt.registerTask('dev:restart:authorisation-service', 'Restarts authorisation service', 'sshexec:authorisation_service_restart');
+        grunt.registerTask('dev:restart:openam', 'Restarts OpenAM', 'sshexec:openam_restart');
         grunt.registerTask('dev:restart:opendj', 'Restarts OpenDJ', 'sshexec:opendj_restart_dev');
         grunt.registerTask('dev:restart:jasper', 'Restarts Jasper', 'sshexec:jasper_restart');
         grunt.registerTask('dev:restart:mot-test', 'Restarts mot-test service', 'sshexec:mot_test_restart');
@@ -83,6 +84,7 @@ module.exports = function (grunt, config) {
         grunt.registerTask('dev:restart:mysql', 'Restarts Mysql', 'sshexec:mysql_restart_dev');
         grunt.registerTask('dev:restart:all', 'Restarts all known services', [
             'apache:restart:all',
+            'sshexec:openam_restart',
             'sshexec:opendj_restart_dev',
             'sshexec:mysql_restart_dev',
             'sshexec:jasper_restart',
