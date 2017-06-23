@@ -12,4 +12,5 @@ class FeatureToggle
     const TWO_FA = '2fa.enabled';
     const TWO_FA_HARD_STOP = '2fa.hardstop.enabled';
     const NEW_HOMEPAGE = 'new_homepage';
+    const VEHICLE_WEIGHT_FROM_VEHICLE = 'vehicle_weight_from_vehicle';
 }
