@@ -796,9 +796,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
         );
         $this->returningOn($this->mockVehicleCatalog, VOF::fuelType(), 'findFuelTypeByPropulsionCode');
 
-        $this->returningOn($this->mockVehicleCatalog, VOF::model(), 'getModelByCode');
-        $this->returningOn($this->mockVehicleCatalog, VOF::make(), 'findMakeByCode');
-
         $this->returningOn(
             $this->mockVehicleCatalog, VOF::weightSource(WeightSourceCode::MISW), 'getWeightSourceByCode'
         );
