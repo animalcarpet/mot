@@ -19,6 +19,7 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
 
 $this->layout()->setVariable('pageSubTitle', $viewModel->motTestTitleViewModel->getTitle($motTest));
 $this->layout()->setVariable('pageTitle', $viewModel->title);
+$this->headTitle($viewModel->title);
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(
