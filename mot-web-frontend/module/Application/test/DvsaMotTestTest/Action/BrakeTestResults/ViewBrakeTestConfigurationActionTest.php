@@ -261,7 +261,7 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         ];
     }
 
-    public function testIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithSiteDefaults()
+    public function testGroupBIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithSiteDefaults()
     {
         $this->withoutBrakeTestResult();
 
@@ -298,6 +298,29 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
 
         $this->assertEquals($actionResult->getViewModel()->configHelper->getParkingBrakeTestType(),
             'DefaultParkingBrakeTestTypeCode');
+    }
+
+    public function testGroupAIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithMapperDefaults()
+    {
+        $this->withoutBrakeTestResult();
+
+        $this->withSite();
+
+        $vehicleClass = 1;
+        $this->mockMethods($vehicleClass);
+
+        $action = $this->buildAction();
+
+        /** @var ViewActionResult $actionResult */
+        $actionResult = $action->execute(1);
+
+        // @see BrakeTestConfigurationClass1And2Mapper::mapToDefaultDto
+
+        $this->assertEquals(BrakeTestTypeCode::ROLLER, $actionResult->getViewModel()->brakeTestType);
+        $this->assertEquals('', $actionResult->getViewModel()->vehicleWeightFront);
+        $this->assertEquals('', $actionResult->getViewModel()->vehicleWeightRear);
+        $this->assertEquals('', $actionResult->getViewModel()->riderWeight);
+        $this->assertEquals('', $actionResult->getViewModel()->sidecarWeight);
     }
 
     private function withoutBrakeTestResult()
