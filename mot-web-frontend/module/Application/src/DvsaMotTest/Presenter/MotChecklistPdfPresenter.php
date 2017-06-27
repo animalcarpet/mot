@@ -82,13 +82,13 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
         if (!is_null($firstUseDate)) {
             $firstUseDate = new DateTime($this->vehicle->getFirstUsedDate());
         }
-        $site = $this->motTest->getSiteId();
+        $site = $this->motTest->getSite();
 
         $fields = [
             new MotChecklistPdfField(mb_substr($this->identity->getDisplayName(), 0, static::TESTER_NAME_LENGTH), 365, 768, static::FONT_SIZE_8),
             new MotChecklistPdfField(DateTimeDisplayFormat::dateShort($startDate), 330, $this->firstLineY, static::FONT_SIZE_8),
             new MotChecklistPdfField(DateTimeDisplayFormat::time($startDate), 412, $this->firstLineY, static::FONT_SIZE_8),
-            new MotChecklistPdfField(!is_null($site) ? $site['siteNumber'] : '', 496, $this->firstLineY, static::FONT_SIZE_8),
+            new MotChecklistPdfField(!is_null($site) ? $site->getNumber() : '', 496, $this->firstLineY, static::FONT_SIZE_8),
             new MotChecklistPdfField($this->vehicle->getRegistration(), $this->firstColumnX, $this->secondLineY, static::FONT_SIZE_9),
             new MotChecklistPdfField($this->vehicle->getVin(), $this->secondColumnX, $this->secondLineY, static::FONT_SIZE_9),
             new MotChecklistPdfField(mb_substr($this->vehicle->getMakeName(), 0, static::NORMAL_BOX_LENGTH), $this->thirdColumnX, $this->secondLineY, static::FONT_SIZE_9),
