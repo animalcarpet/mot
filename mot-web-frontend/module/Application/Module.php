@@ -67,6 +67,7 @@ use DvsaMotTest\Service\VehicleSearchService;
 use Zend\Authentication\AuthenticationService;
 use Zend\EventManager\EventInterface;
 use Zend\Http\Request as HttpRequest;
+use Zend\Http\Response;
 use Zend\Log\Logger;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
@@ -74,6 +75,7 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\View\Http\RouteNotFoundStrategy;
 
 /**
  * Class Module.
@@ -234,8 +236,8 @@ class Module implements
 
         $serviceManager = $e->getApplication()->getServiceManager();
 
-        /** @var $viewManager \Zend\Mvc\View\Console\ViewManager */
-        $viewManager = $serviceManager->get('viewManager');
+        /** @var $routeNotFoundStrategy RouteNotFoundStrategy */
+        $routeNotFoundStrategy = $serviceManager->get('HttpRouteNotFoundStrategy');
 
         $eid = false;
 
@@ -258,14 +260,14 @@ class Module implements
         $viewModel->setVariables(['showErrorsInFrontEnd' => $config['showErrorsInFrontEnd'], 'errorId' => $eid]);
 
         if ($exception instanceof FeatureNotAvailableException) {
-            $e->getResponse()->setStatusCode(404);
-            $viewManager->getRouteNotFoundStrategy()->prepareNotFoundViewModel($e);
+            $e->getResponse()->setStatusCode(Response::STATUS_CODE_404);
+            $routeNotFoundStrategy->prepareNotFoundViewModel($e);
         }
 
         if ($exception instanceof GeneralRestException) {
             $e->getResponse()->setStatusCode($exception->getCode());
             if ($exception instanceof NotFoundException) {
-                $viewManager->getRouteNotFoundStrategy()->prepareNotFoundViewModel($e);
+                $routeNotFoundStrategy->prepareNotFoundViewModel($e);
             }
         } elseif ($exception instanceof UnauthorisedException) {
             $viewModel->setTemplate('error/permission-error.phtml');

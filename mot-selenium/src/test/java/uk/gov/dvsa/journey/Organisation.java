@@ -6,6 +6,9 @@ import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.ui.pages.AreaOfficerAuthorisedExaminerViewPage;
 import uk.gov.dvsa.ui.pages.authorisedexaminer.Aep.CreateAepPage;
 import uk.gov.dvsa.ui.pages.authorisedexaminer.Aep.ReviewCreateAepPage;
+import uk.gov.dvsa.ui.pages.authorisedexaminer.AuthorisedExaminerViewPage;
+import uk.gov.dvsa.ui.pages.error.PageNotFoundPage;
+import uk.gov.dvsa.ui.pages.error.YouDontHavePremissionPage;
 
 import java.io.IOException;
 
@@ -32,5 +35,21 @@ public class Organisation {
                 .clickRemoveAep()
                 .removePrincipal()
                 .getValidationMessage();
+    }
+
+    public PageNotFoundPage goToNonexistentAe(User user) throws IOException {
+        return pageNavigator.navigateToPage(
+            user,
+            String.format(AuthorisedExaminerViewPage.PATH, 999999991),
+            PageNotFoundPage.class
+        );
+    }
+
+    public YouDontHavePremissionPage goToAeWithoutPermission(User user, String aeId) throws IOException {
+        return pageNavigator.navigateToPage(
+            user,
+            String.format(AuthorisedExaminerViewPage.PATH, aeId),
+            YouDontHavePremissionPage.class
+        );
     }
 }
