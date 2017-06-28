@@ -13,6 +13,7 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommonTest\Bootstrap;
@@ -399,6 +400,44 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
             ->method('getMotTestByTestNumber')
             ->with(1)
             ->will($this->returnValue($testMotTestData));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
+
+        $response = $this->getResponseForAction('displayBrakeTestSummary', ['motTestNumber' => '1']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testDisplayBrakeTestSummary_returnsViewModelForGroupBDuringRetest_WhenPreviousMotTestDoesNotHaveBrakeTestResult()
+    {
+        $previousMotTest = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+        $previousMotTestData = $previousMotTest->getData();
+        $previousMotTestData->brakeTestResult = null;
+        $previousMotTest = new MotTest($previousMotTestData);
+
+        $motTest = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+        $motTestData = $motTest->getData();
+        $motTestData->testTypeCode = MotTestTypeCode::RE_TEST;
+        $motTest = new MotTest($motTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->at(0))
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->willReturn($motTest);
+
+        $mockMotTestServiceClient
+            ->expects($this->at(1))
+            ->method('getMotTestByTestNumber')
+            ->willReturn($previousMotTest);
 
         $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
 
