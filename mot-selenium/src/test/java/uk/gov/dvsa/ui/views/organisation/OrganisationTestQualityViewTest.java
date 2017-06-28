@@ -1,6 +1,5 @@
 package uk.gov.dvsa.ui.views.organisation;
 
-import org.joda.time.DateTime;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -33,12 +32,12 @@ public class OrganisationTestQualityViewTest extends DslTest {
 
         //When i will go by pages AE -> AE TQI -> VTS TQI -> AE TQI -> AE
         AuthorisedExaminerViewPage authorisedExaminerViewPage = aeViewPage
-                .clickTestQualityInformationLink()
+                .clickServiceReportsLink()
                 .clickViewButton()
                 .clickReturnButtonToAEPage()
                 .clickReturnButton();
 
         //Then on AE Page will be "test quality information" link visible
-        Assert.assertTrue(authorisedExaminerViewPage.isTestQualityInformationLinkDisplayed());
+        Assert.assertTrue(authorisedExaminerViewPage.isServiceReportsLinkDisplayed());
     }
 }

@@ -38,6 +38,8 @@ class TestQualityInformationController extends AbstractDvsaMotTestController imp
 
         $this->authService->assertGrantedAtOrganisation(PermissionAtOrganisation::AE_VIEW_TEST_QUALITY, $organisationId);
 
+        $this->setHeadTitle(TestQualityInformationAction::PAGE_TITLE);
+
         return $this->applyActionResult(
             $this->testQualityInformationAction->execute($organisationId, $page)
         );

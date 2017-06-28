@@ -37,19 +37,21 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
      * @param $rowsTotalCount
      * @param $pageNr
      */
-    public function testCreateTable($rowsCount, $rowsTotalCount, $pageNr)
+    public function testCreateTable($rowsCount, $rowsTotalCount, $pageNr, $shouldShowTable)
     {
         $this->testQualityInformationViewModel = new TestQualityInformationViewModel(
             $this->buildAuthorisedExaminerSitePerformanceDto($rowsTotalCount),
             self::RETURN_URL,
             $this->riskAssessmentScoreRagClassifier,
-            $this->buildSearchParams($pageNr)
+            $this->buildSearchParams($pageNr),
+            $rowsTotalCount
         );
 
         $table = $this->testQualityInformationViewModel->getTable();
 
         $this->assertEquals($rowsTotalCount, $table->getRowsTotalCount());
         $this->assertEquals($rowsCount, sizeof($table->getData()));
+        $this->assertSame($shouldShowTable, $this->testQualityInformationViewModel->aeHasAssociatedSites());
         $this->assertEquals(TestQualityInformationAction::TABLE_MAX_ROW_COUNT, $table->getSearchParams()->getRowsCount());
         $this->assertEquals($pageNr, $table->getSearchParams()->getPageNr());
     }
@@ -61,11 +63,19 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
                 'rowsCount' => 5,
                 'rowsTotalCount' => 5,
                 'pageNr' => 1,
+                'shouldShowTable' => true,
             ],
             [
                 'rowsCount' => 10,
                 'rowsTotalCount' => 23,
                 'pageNr' => 2,
+                'shouldShowTable' => true,
+            ],
+            [
+                'rowsCount' => 0,
+                'rowsTotalCount' => 0,
+                'pageNr' => 1,
+                'shouldShowTable' => false,
             ],
         ];
     }

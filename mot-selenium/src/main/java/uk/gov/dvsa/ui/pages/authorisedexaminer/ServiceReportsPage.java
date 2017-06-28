@@ -8,7 +8,7 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.vts.SiteTestQualityPage;
 
-public class AETestQualityInformationPage extends Page {
+public class ServiceReportsPage extends Page {
     public static final String PATH = "/authorised-examiner/%s/test-quality-information";
     private static final String PAGE_TITLE = "Vehicle testing stations";
 
@@ -16,7 +16,7 @@ public class AETestQualityInformationPage extends Page {
     @FindBy(id="return-link") private WebElement returnLink;
 
 
-    public AETestQualityInformationPage(MotAppDriver driver) {
+    public ServiceReportsPage(MotAppDriver driver) {
         super(driver);
     }
 

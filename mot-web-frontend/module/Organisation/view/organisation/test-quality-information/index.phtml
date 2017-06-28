@@ -2,14 +2,18 @@
 
 use Organisation\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
 
-/*
+/**
  * @var TestQualityInformationViewModel $viewModel
  */
 ?>
 
 <?php
-    echo $viewModel->getTable()->renderTable($this);
-    echo $viewModel->getTable()->renderFooter($this);
+    if($viewModel->aeHasAssociatedSites()){
+        echo $viewModel->getTable()->renderTable($this);
+        echo $viewModel->getTable()->renderFooter($this);
+    } else {
+        echo "There are currently no sites associated to this authorised examiner";
+    }
 ?>
 
 <nav class="content-navigation">
