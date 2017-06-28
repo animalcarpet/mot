@@ -11,7 +11,7 @@ import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.authorisedexaminer.AETestQualityInformationPage;
+import uk.gov.dvsa.ui.pages.authorisedexaminer.ServiceReportsPage;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -110,10 +110,10 @@ public class SiteTestQualityPage extends Page {
         return dateFormat.print(dateTime);
     }
 
-    public AETestQualityInformationPage clickReturnButtonToAEPage()
+    public ServiceReportsPage clickReturnButtonToAEPage()
     {
         returnLink.click();
-        return MotPageFactory.newPage(driver, AETestQualityInformationPage.class);
+        return MotPageFactory.newPage(driver, ServiceReportsPage.class);
     }
 
     public String getCsvDownloadLinkForGroupA() throws MalformedURLException {

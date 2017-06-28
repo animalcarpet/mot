@@ -39,20 +39,26 @@ class TestQualityInformationViewModel
 
     /** @var RiskAssessmentScoreRagClassifier $ragClassifier */
     private $ragClassifier;
+    private $siteCount;
 
-    /*
-     * @param  AuthorisedExaminerSitesPerformanceDto[]  $authorisedExaminerSitePerformanceDto
-     * @param   string                                  $returnLink
+    /**
+     * @param AuthorisedExaminerSitesPerformanceDto $authorisedExaminerSitePerformanceDto
+     * @param   string $returnLink
+     * @param RiskAssessmentScoreRagClassifier $ragClassifier
+     * @param SearchParamsDto $searchParams
+     * @param $siteCount
      */
     public function __construct(
         AuthorisedExaminerSitesPerformanceDto $authorisedExaminerSitePerformanceDto,
         $returnLink,
         RiskAssessmentScoreRagClassifier $ragClassifier,
-        SearchParamsDto $searchParams
+        SearchParamsDto $searchParams,
+        $siteCount
     ) {
         $this->returnLink = $returnLink;
         $this->ragClassifier = $ragClassifier;
         $this->setTable($authorisedExaminerSitePerformanceDto, $searchParams);
+        $this->siteCount = (int) $siteCount;
     }
 
     public function getReturnLink()
@@ -159,5 +165,10 @@ class TestQualityInformationViewModel
                 ],
             ],
         ];
+    }
+
+    public function aeHasAssociatedSites()
+    {
+        return $this->siteCount > 0;
     }
 }

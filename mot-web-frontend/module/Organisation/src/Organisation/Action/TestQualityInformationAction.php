@@ -2,12 +2,14 @@
 
 namespace Organisation\Action;
 
+use Core\Action\ActionResult;
 use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Routing\AeRoutes;
 use DvsaClient\Mapper\OrganisationMapper;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\AuthorisedExaminerSitePerformanceApiResource;
 use DvsaCommon\Configuration\MotConfig;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Search\SearchParamsDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Organisation\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
@@ -16,8 +18,7 @@ use Zend\View\Helper\Url;
 
 class TestQualityInformationAction implements AutoWireableInterface
 {
-    const PAGE_SUBTITLE = 'Test quality information';
-    const PAGE_TITLE = 'Vehicle testing stations';
+    const PAGE_TITLE = 'Service reports';
     const NO_SITES = 'No active site associations';
     const TABLE_MAX_ROW_COUNT = 10;
 
@@ -58,7 +59,8 @@ class TestQualityInformationAction implements AutoWireableInterface
      */
     public function execute($organisationId, $page)
     {
-        $breadcrumbs = $this->prepareBreadcrumbsResult($organisationId, $this->url);
+        $organisation = $this->organisationMapper->getAuthorisedExaminer($organisationId);
+        $breadcrumbs = $this->prepareBreadcrumbsResult($organisation, $this->url);
 
         if ($page > 0) {
             $orgSitePerformance = $this->orgSitePerformanceApiResource->getData($organisationId, $page, self::TABLE_MAX_ROW_COUNT);
@@ -74,39 +76,46 @@ class TestQualityInformationAction implements AutoWireableInterface
                     $orgSitePerformance,
                     $this->getOrganisationLink(),
                     $riskAssessmentScoreRagClassifier,
-                    $this->searchParams
+                    $this->searchParams,
+                    $orgSitePerformance->getSiteTotalCount()
                 ),
                 $breadcrumbs,
-                $orgSitePerformance->getSiteTotalCount()
+                $organisation->getName()
             );
         } else {
             return new NotFoundActionResult();
         }
     }
 
-    /*
-     * @return ActionResult
+    /**
+     * @param TestQualityInformationViewModel $vm
+     * @param array $breadcrumbs
+     * @param string $organisationName
+     * @return ViewActionResult
      */
-    private function buildActionResult(TestQualityInformationViewModel $vm, array $breadcrumbs, $orgSiteCount)
+    private function buildActionResult(
+        TestQualityInformationViewModel $vm,
+        array $breadcrumbs,
+        $organisationName
+    )
     {
         $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
-        $actionResult->layout()->setPageSubTitle(self::PAGE_SUBTITLE);
+        $actionResult->layout()->setPageSubTitle($organisationName);
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');
         $actionResult->layout()->setBreadcrumbs($breadcrumbs);
-        $actionResult->layout()->setPageTitle($orgSiteCount ? self::PAGE_TITLE : self::NO_SITES);
+        $actionResult->layout()->setPageTitle(self::PAGE_TITLE);
 
         return $actionResult;
     }
 
-    private function prepareBreadcrumbsResult($organisationId, $urlPlugin)
+    private function prepareBreadcrumbsResult(OrganisationDto $organisation, $urlPlugin)
     {
-        $this->setOrganisationLink(AeRoutes::of($urlPlugin)->ae($organisationId));
-        $organisationName = $this->organisationMapper->getAuthorisedExaminer($organisationId)->getName();
+        $this->setOrganisationLink(AeRoutes::of($urlPlugin)->ae($organisation->getId()));
 
         return [
-            $organisationName => $this->getOrganisationLink(),
-            self::PAGE_SUBTITLE => '',
+            $organisation->getName() => $this->getOrganisationLink(),
+            self::PAGE_TITLE => '',
         ];
     }
 

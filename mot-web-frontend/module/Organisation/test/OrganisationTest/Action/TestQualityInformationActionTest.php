@@ -41,7 +41,7 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
 
     private $breadcrumbs = [
         self::ORGANISATION_NAME => self::LINK,
-        TestQualityInformationAction::PAGE_SUBTITLE => '',
+        TestQualityInformationAction::PAGE_TITLE => '',
     ];
 
     protected function setUp()
@@ -114,7 +114,6 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
 
         $this->assertNotNull($vm);
 
-        $this->assertSame(TestQualityInformationAction::NO_SITES, $result->layout()->getPageTitle());
         $this->assertNotNull($result->layout()->getPageSubTitle());
         $this->assertNotNull($result->layout()->getTemplate());
 

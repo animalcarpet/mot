@@ -228,8 +228,8 @@ class AeOverviewSidebar extends GeneralSidebar
 
         if ($this->authorisationForView->canViewAETestQualityInformation()) {
             $this->getRelatedLinks()->addLink(
-                new GeneralSidebarLink('test-quality-information',
-                    'Test quality information',
+                new GeneralSidebarLink('service-reports',
+                    'Service reports',
                     $this->url->fromRoute(AeRouteList::AE_TEST_QUALITY, ['id' => $this->organisation->getId()])
                 )
             );

@@ -20,7 +20,7 @@ class SiteTestQualityViewModel
 {
     const POSSIBLE_MONTHS_COUNT = 12;
     const RETURN_TO_VTS = 'Return to vehicle testing station';
-    const RETURN_TO_AE_TQI = 'Return to vehicle testing stations';
+    const RETURN_TO_AE_TQI = 'Return to Service reports';
 
     /** @var GroupStatisticsTable */
     private $a;
