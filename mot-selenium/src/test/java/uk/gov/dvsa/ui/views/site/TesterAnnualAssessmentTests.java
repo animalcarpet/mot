@@ -60,7 +60,7 @@ public class TesterAnnualAssessmentTests extends DslTest {
     public void viewTesterAnnualAssessments() throws IOException, URISyntaxException {
         String certificateForGroupANumber = "123456789";
         String certificateForGroupAScore = "50";
-        String dateAwarded = new DateTime().minusDays(1).toString("dd MMMM yyyy");
+        String dateAwarded = new DateTime().minusDays(1).toString("d MMMM yyyy");
 
         annualAssessmentCertificatesData.createAnnualAssessmentCertificateForGroupA(tester, certificateForGroupANumber, dateAwarded, certificateForGroupAScore);
         annualAssessmentCertificatesData.createAnnualAssessmentCertificateForGroupB(tester, "123412341", new DateTime().toString(), "55");
