@@ -606,18 +606,23 @@ class SiteRepository extends AbstractMutableRepository
     public function getSitesTestQualityForOrganisationId($aeId, $offset, $itemsPerPage)
     {
         $queryBuilder = $this->createQueryBuilder('site')
-            ->select('site, lastSiteAssessment, siteContacts')
+            ->select('site, siteRiskAssessments, siteContacts')
+            ->innerJoin("site.associationsWithAe", "associationsWithAe")
             ->leftJoin('site.lastSiteAssessment', 'lastSiteAssessment')
+            ->leftJoin('site.siteRiskAssessments', 'siteRiskAssessments',  Join::WITH, "(siteRiskAssessments.visitDate >= associationsWithAe.startDate AND (siteRiskAssessments.visitDate <= associationsWithAe.endDate OR associationsWithAe.endDate IS NULL))")
             ->leftJoin('site.contacts', 'siteContacts')
             ->leftJoin('siteContacts.contactDetail', 'contactDetail')
             ->leftJoin('contactDetail.address', 'address')
             ->where('site.organisation = :ORG_ID')
-            ->addOrderBy('lastSiteAssessment.siteAssessmentScore', 'DESC')
+            ->orderBy('lastSiteAssessment.siteAssessmentScore', 'DESC')
             ->addOrderBy('site.name', 'ASC')
+            ->addOrderBy('siteRiskAssessments.visitDate', 'DESC')
+            ->addOrderBy('siteRiskAssessments.id', 'DESC')
             ->setMaxResults((int) $itemsPerPage)
             ->setFirstResult((int) $offset)
-            ->setParameter('ORG_ID', (int) $aeId);
+            ->setParameter('ORG_ID', (int) $aeId)
+        ;
 
-        return $queryBuilder->getQuery()->getResult();
+        return  $queryBuilder->getQuery()->getResult();
     }
 }

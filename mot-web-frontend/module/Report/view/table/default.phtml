@@ -15,7 +15,7 @@ if (empty($data)) {
 }
 ?>
 
-<table class="result-table" id="<?php echo $table->getTableOptions()->getTableId() ?>">
+<table class="<?php echo $table->getTableOptions()->getTableClass(); ?>" id="<?php echo $table->getTableOptions()->getTableId() ?>">
     <thead>
         <tr>
             <?php
@@ -23,9 +23,13 @@ if (empty($data)) {
             foreach ($columns as $col):
                 $escTitle = $this->escapeHtml($col->getTitle());
                 $escSortCssClass = $col->getSortCssClass();
+                $escThColspan = $col->getThColspan();
                 $escThCssClass = $col->getThClass();
                 ?>
-                <th scope="col" class="<?php echo $escThCssClass; ?>">
+                <th scope="col" class="<?php echo $escThCssClass; ?>"
+                    <?php if (!empty($escThColspan)): ?>
+                        colspan="<?php echo $escThColspan; ?>"
+                    <?php endif; ?>>
                     <?php if (!empty($col->getSortBy())): ?>
                         <a href="<?php echo $col->getUrl($this); ?>" class="<?php echo $escSortCssClass; ?>">
                             <?php echo $escTitle; ?>
@@ -36,6 +40,27 @@ if (empty($data)) {
                 </th>
             <?php endforeach; ?>
         </tr>
+
+        <?php if ($table->getTableOptions()->hasMetaTitle()): ?>
+            <tr class="meta-row">
+                <?php
+                /** @var ColumnOptions $col */
+                foreach ($columns as $col):
+                    $escSubTitle = $this->escapeHtml($col->getSubTitle());
+                    $escThSubTitleColspan = $col->getThSubTitleColspan();
+                    ?>
+                    <?php if (isset($escSubTitle) || isset($escThSubTitleColspan)): ?>
+                        <th scope="col" colspan="<?php echo $escThSubTitleColspan; ?>">
+                            <?php if (isset($escSubTitle)): ?>
+                            <span class="table-default__meta">
+                                <?php echo $escSubTitle; ?>
+                            </span>
+                            <?php  endif; ?>
+                        </th>
+                <?php endif;
+                endforeach; ?>
+            </tr>
+        <?php endif; ?>
     </thead>
 
     <tbody>

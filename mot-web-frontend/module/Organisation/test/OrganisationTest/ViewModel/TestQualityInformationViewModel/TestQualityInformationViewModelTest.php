@@ -5,6 +5,7 @@ namespace OrganisationTest\ViewModel\TestQualityInformationViewModel;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\AuthorisedExaminerSitesPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
+use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\RiskAssessmentDto;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Dto\Contact\AddressDto;
 use DvsaCommon\Dto\Search\SearchParamsDto;
@@ -54,6 +55,7 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
         $this->assertSame($shouldShowTable, $this->testQualityInformationViewModel->aeHasAssociatedSites());
         $this->assertEquals(TestQualityInformationAction::TABLE_MAX_ROW_COUNT, $table->getSearchParams()->getRowsCount());
         $this->assertEquals($pageNr, $table->getSearchParams()->getPageNr());
+        $this->assertTrue($table->getTableOptions()->hasMetaTitle());
     }
 
     public function dataProviderTableValues()
@@ -127,7 +129,7 @@ class TestQualityInformationViewModelTest extends AbstractFrontendControllerTest
             ->setAddress($address)
             ->setName('SiteName')
             ->setNumber('SiteNumber')
-            ->setRiskAssessmentScore(1.3);
+            ->setCurrentRiskAssessment((new RiskAssessmentDto())->setScore(1.3));
     }
 
     public function buildSearchParams($pageNr = 1)

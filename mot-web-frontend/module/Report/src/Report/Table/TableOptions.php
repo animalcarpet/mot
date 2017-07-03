@@ -18,6 +18,10 @@ class TableOptions extends AbstractOptions
      */
     private $tableId = 'dataTable';
     /**
+     * @var string
+     */
+    private $tableClass = 'result-table';
+    /**
      * @var array
      */
     private $itemsPerPageOptions = [10, 25, 50];
@@ -29,6 +33,10 @@ class TableOptions extends AbstractOptions
      * @var string
      */
     private $footerViewScript = 'table/footer';
+    /**
+     * @var bool
+     */
+    private $hasMetaTitle = false;
     /**
      * the text that will replace the "[...]", in:
      * Showing 1 – 20 of 40 [...].
@@ -147,5 +155,37 @@ class TableOptions extends AbstractOptions
         $this->tableId = $tableId;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableClass()
+    {
+        return $this->tableClass;
+    }
+
+    /**
+     * @param string $tableClass
+     *
+     * @return TableOptions
+     */
+    public function setTableClass($tableClass)
+    {
+        $this->tableClass = $tableClass;
+
+        return $this;
+    }
+
+    public function setHasMetaTitle($hasMetaTitle)
+    {
+        $this->hasMetaTitle = $hasMetaTitle;
+
+        return $this;
+    }
+
+    public function hasMetaTitle()
+    {
+        return $this->hasMetaTitle;
     }
 }

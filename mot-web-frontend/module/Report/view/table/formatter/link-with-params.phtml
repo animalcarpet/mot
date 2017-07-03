@@ -5,11 +5,12 @@
  * @var string $queryParams
  * @var string $value
  * @var string $id
+ * @var string $fieldClass
  */
 
 /** backward compatibility :/ */
 $id = $id ? $id : $value;
 ?>
-<a href="<?php echo $this->url($root, $params, $queryParams); ?>" id="<?php echo $id; ?>">
+<a href="<?php echo $this->url($root, $params, $queryParams); ?>" id="<?php echo $id; ?>" class="<?php echo $fieldClass ?>">
     <?php echo $this->escapeHtml($value); ?>
 </a>

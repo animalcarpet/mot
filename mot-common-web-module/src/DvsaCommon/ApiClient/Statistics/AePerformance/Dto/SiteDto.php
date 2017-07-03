@@ -13,8 +13,10 @@ class SiteDto implements ReflectiveDtoInterface
     protected $name;
     /** @var  string */
     protected $number;
-    /** @var  float */
-    protected $riskAssessmentScore;
+    /** @var  RiskAssessmentDto */
+    protected $currentRiskAssessment;
+    /** @var  RiskAssessmentDto */
+    protected $previousRiskAssessment;
     /** @var  AddressDto */
     protected $address;
 
@@ -73,20 +75,38 @@ class SiteDto implements ReflectiveDtoInterface
     }
 
     /**
-     * @return float
+     * @return RiskAssessmentDto
      */
-    public function getRiskAssessmentScore()
+    public function getCurrentRiskAssessment()
     {
-        return $this->riskAssessmentScore;
+        return $this->currentRiskAssessment;
     }
 
     /**
-     * @param float $riskAssessmentScore
+     * @param \DvsaCommon\ApiClient\Statistics\AePerformance\Dto\RiskAssessmentDto $riskAssessment
      * @return SiteDto
      */
-    public function setRiskAssessmentScore($riskAssessmentScore)
+    public function setCurrentRiskAssessment(RiskAssessmentDto $riskAssessment = null)
     {
-        $this->riskAssessmentScore = $riskAssessmentScore;
+        $this->currentRiskAssessment = $riskAssessment;
+        return $this;
+    }
+
+    /**
+     * @return RiskAssessmentDto
+     */
+    public function getPreviousRiskAssessment()
+    {
+        return $this->previousRiskAssessment;
+    }
+
+    /**
+     * @param \DvsaCommon\ApiClient\Statistics\AePerformance\Dto\RiskAssessmentDto $riskAssessment
+     * @return SiteDto
+     */
+    public function setPreviousRiskAssessment(RiskAssessmentDto $riskAssessment = null)
+    {
+        $this->previousRiskAssessment = $riskAssessment;
         return $this;
     }
 

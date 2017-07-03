@@ -33,7 +33,7 @@ public class OrganisationTestQualityViewTest extends DslTest {
         //When i will go by pages AE -> AE TQI -> VTS TQI -> AE TQI -> AE
         AuthorisedExaminerViewPage authorisedExaminerViewPage = aeViewPage
                 .clickServiceReportsLink()
-                .clickViewButton()
+                .clickViewTQIButton(site.getId())
                 .clickReturnButtonToAEPage()
                 .clickReturnButton();
 

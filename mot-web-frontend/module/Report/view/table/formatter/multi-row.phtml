@@ -1,0 +1,9 @@
+<?php $counter = 0; ?>
+<span class="<?php echo $this->fieldClass; ?>">
+    <?php foreach ($this->values as $value):
+        echo $this->escape ? $this->escapeHtml($value) : $value;
+        if ($this->valuesCount > ++$counter) {
+            echo "<br>";
+        }
+    endforeach; ?>
+</span>

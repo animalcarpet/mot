@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.pages.authorisedexaminer;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
@@ -14,6 +15,7 @@ public class ServiceReportsPage extends Page {
 
     @FindBy(id="View") private WebElement viewLink;
     @FindBy(id="return-link") private WebElement returnLink;
+    private final String viewTQILinkId = "TQI_%s";
 
 
     public ServiceReportsPage(MotAppDriver driver) {
@@ -24,9 +26,9 @@ public class ServiceReportsPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public SiteTestQualityPage clickViewButton()
+    public SiteTestQualityPage clickViewTQIButton(int siteId)
     {
-        viewLink.click();
+        driver.findElement(By.id(String.format(viewTQILinkId, siteId))).click();
         return MotPageFactory.newPage(driver, SiteTestQualityPage.class);
     }
 

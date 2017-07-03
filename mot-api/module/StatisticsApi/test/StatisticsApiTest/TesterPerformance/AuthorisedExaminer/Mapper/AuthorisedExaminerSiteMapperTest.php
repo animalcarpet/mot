@@ -43,7 +43,9 @@ class AuthorisedExaminerSiteMapperTest extends \PHPUnit_Framework_TestCase
             ->setLastSiteAssessment((new EnforcementSiteAssessment())->setSiteAssessmentScore(100.03))
             ->setContact(
                 $contactDetail, $siteContactType->setCode(SiteContactTypeCode::BUSINESS)
-            );
+            )
+            ->addRiskAssessment((new EnforcementSiteAssessment())->setSiteAssessmentScore(100.03))
+        ;
 
         return $siteEntity;
     }
@@ -51,12 +53,16 @@ class AuthorisedExaminerSiteMapperTest extends \PHPUnit_Framework_TestCase
     private function assertDtoFieldsEqualsEntityFields(Site $siteEntity, SiteDto $siteDto)
     {
         $address = $siteEntity->getBusinessContact()->getDetails()->getAddress();
+        /** @var EnforcementSiteAssessment $currentRiskAssessment */
+        $currentRiskAssessment = $siteEntity->getRiskAssessments()->get(0);
         $this->assertEquals(
             [
                 $siteEntity->getName(),
                 $siteEntity->getSiteNumber(),
                 $siteEntity->getId(),
                 $siteEntity->getLastSiteAssessment()->getSiteAssessmentScore(),
+                $currentRiskAssessment->getSiteAssessmentScore(),
+                $currentRiskAssessment->getVisitDate(),
                 $address->getAddressLine1(),
                 $address->getAddressLine2(),
                 $address->getAddressLine3(),
@@ -69,7 +75,9 @@ class AuthorisedExaminerSiteMapperTest extends \PHPUnit_Framework_TestCase
                 $siteDto->getName(),
                 $siteDto->getNumber(),
                 $siteDto->getId(),
-                $siteDto->getRiskAssessmentScore(),
+                $siteDto->getCurrentRiskAssessment()->getScore(),
+                $siteDto->getCurrentRiskAssessment()->getScore(),
+                $siteDto->getCurrentRiskAssessment()->getDate(),
                 $siteDto->getAddress()->getAddressLine1(),
                 $siteDto->getAddress()->getAddressLine2(),
                 $siteDto->getAddress()->getAddressLine3(),
