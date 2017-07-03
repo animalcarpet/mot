@@ -33,31 +33,3 @@ Feature: VTS
       | user                  |
       | an Area Office User 2 |
       | a DVLA Operative      |
-
-
-  Scenario Outline: As a DVSA User I can add rag status to site
-    Given there is a site associated with Authorised Examiner with following data:
-      | siteName         | aeName       | startDate                  |
-      | VTS              | Organisation | first day of 15 months ago |
-    And I am logged in as a Scheme Manager
-    When I attempt to add risk assessment to site with data:
-    | siteAssessmentScore   | aeRepresentativesFullName   | aeRepresentativesRole   | aeRepresentativesUserId   | testerUserId   | dvsaExaminersUserId   | dateOfAssessment   |
-    | <siteAssessmentScore> | <aeRepresentativesFullName> | <aeRepresentativesRole> | <aeRepresentativesUserId> | <testerUserId> | <dvsaExaminersUserId> | <dateOfAssessment> |
-    Then risk assessment is added to site
-    Examples:
-      | siteAssessmentScore | aeRepresentativesFullName | aeRepresentativesRole | aeRepresentativesUserId | testerUserId | dvsaExaminersUserId | dateOfAssessment           |
-      | 0.01                | John Kowalsky             | Boss                  |                         | tester       | dvsaExaminer        | first day of 14 months ago |
-      | 50                  | John Kowalsky             | Boss                  |                         | tester       |                     | first day of 12 months ago |
-      | 999.99              |                           | Boss                  |  ae                     | tester       | dvsaExaminer        | first day of 1 months ago  |
-      | 549.00              | John Kowalsky             | Boss                  |  ae                     | tester       | dvsaExaminer        | today                      |
-
-  Scenario Outline: I cannot add rag status to site with invalid data
-    Given I am logged in as a Scheme Manager
-    When I attempt to add risk assessment to site with invalid data:
-      | siteAssessmentScore   | aeRepresentativesFullName   | aeRepresentativesRole   | aeRepresentativesUserId   | testerUserId   | dvsaExaminersUserId   | dateOfAssessment   |
-      | <siteAssessmentScore> | <aeRepresentativesFullName> | <aeRepresentativesRole> | <aeRepresentativesUserId> | <testerUserId> | <dvsaExaminersUserId> | <dateOfAssessment> |
-    Then risk assessment is not added to site
-    Examples:
-      | siteAssessmentScore | aeRepresentativesFullName | aeRepresentativesRole | aeRepresentativesUserId | testerUserId | dvsaExaminersUserId | dateOfAssessment           |
-      | 02.03               |                           |                       |  ae                     |              | dvsaExaminer        | first day of 1 months ago  |
-      |                     |                           |                       |                         | tester       | dvsaExaminer        | 2011-09-01                 |
