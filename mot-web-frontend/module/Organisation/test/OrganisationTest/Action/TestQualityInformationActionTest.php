@@ -8,6 +8,7 @@ use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use DvsaClient\Mapper\OrganisationMapper;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\AuthorisedExaminerSitesPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
+use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\RiskAssessmentDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\AuthorisedExaminerSitePerformanceApiResource;
 use DvsaCommon\Dto\Contact\AddressDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
@@ -170,7 +171,7 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
             ->setAddress($address)
             ->setName('SiteName')
             ->setNumber('SiteNumber')
-            ->setRiskAssessmentScore(1.3);
+            ->setCurrentRiskAssessment((new RiskAssessmentDto())->setScore(1.3));
 
         $authorisedExaminerSitePerformanceDto
             ->setSites([$siteDto])

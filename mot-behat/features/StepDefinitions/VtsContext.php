@@ -297,6 +297,9 @@ class VtsContext implements Context
             $data["dvsaExaminersUserId"] = $examiner->getUsername();
         }
 
+        $dateOfAssessment = (new \DateTime($data["dateOfAssessment"]))->format("Y-m-d");
+        $data["dateOfAssessment"] = $dateOfAssessment;
+
         return $data;
     }
 
@@ -397,16 +400,47 @@ class VtsContext implements Context
      */
     public function iAttemptToAddRiskAssessmentToSiteWithData(TableNode $table)
     {
-        $hash = $table->getColumnsHash();
-
-        if (count($hash) !== 1) {
-            throw new \InvalidArgumentException(sprintf('Expected a single record but got: %d', count($hash)));
+        $rows = $table->getColumnsHash();
+        foreach ($rows as $row) {
+            $this->addRiskAssessment("VTS", "Organisation", $row, false);
         }
+    }
 
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData("VTS", "Organisation", $hash[0]);
+    /**
+     * @When I attempt to add risk assessment to :site site with data:
+     */
+    public function iAttemptToAddRiskAssessmentToCurrentSiteWithData(SiteDto $site, TableNode $table)
+    {
+        $dataGeneratorHelper = $this->testSupportHelper->getDataGeneratorHelper();
+        $suffixLength = 12;
+
+        $siteName = $site->getName();
+        $aeName = $site->getOrganisation()->getName();
+        $aedm = $this->userData->getAedmByAeId($site->getOrganisation()->getId());
+        $tester = $this->userData->createTesterAssignedWitSite($site->getId(), $dataGeneratorHelper->generateRandomString($suffixLength));
+        $examiner = $this->userData->createVehicleExaminer($dataGeneratorHelper->generateRandomString($suffixLength));
+
+        $default = [
+            "aeRepresentativesUserId" => $aedm->getUsername(),
+            "aeRepresentativesRole" => "Boss",
+            "aeRepresentativesFullName" => "Agent Smith",
+            "testerUserId" =>  $tester->getUsername(),
+            "dvsaExaminersUserId" =>$examiner->getUsername()
+        ];
+
+        $rows = $table->getColumnsHash();
+        foreach ($rows as $row) {
+            $row = array_replace($default, $row);
+            $this->addRiskAssessment($siteName, $aeName, $row, false);
+        }
+    }
+
+    private function addRiskAssessment($siteName, $aeName, array $data, $linkAeWithSite = true)
+    {
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $data, $linkAeWithSite);
         $response = $this->vehicleTestingStation->addRiskAssessment(
             $this->userData->getCurrentLoggedUser()->getAccessToken(),
-            $this->siteData->get("VTS")->getId(),
+            $this->siteData->get($siteName)->getId(),
             $this->riskAssessmentData
         );
 
@@ -440,7 +474,7 @@ class VtsContext implements Context
             "aeRepresentativesUserId" => "",
             "testerUserId" => "tester",
             "dvsaExaminersUserId" => "dvsaExaminer",
-            "dateOfAssessment" => "2015-09-01",
+            "dateOfAssessment" => (new \DateTime("first day of 5 months ago"))->format("Y-m-d"),
         ];
     }
 }

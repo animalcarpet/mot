@@ -19,10 +19,19 @@ class ColumnOptions extends AbstractOptions
      * @var string
      */
     private $field;
+
+    /**
+     * @var string
+     */
+    private $fieldClass = null;
     /**
      * @var string
      */
     private $title;
+    /**
+     * @var string
+     */
+    private $subTitle;
     /**
      * @var bool
      */
@@ -35,6 +44,14 @@ class ColumnOptions extends AbstractOptions
      * @var callable
      */
     private $formatter;
+    /**
+     * @var string
+     */
+    private $thColspan = '';
+    /**
+     * @var string
+     */
+    private $thSubTitleColspan = null;
     /**
      * @var string
      */
@@ -99,6 +116,26 @@ class ColumnOptions extends AbstractOptions
     /**
      * @return string
      */
+    public function getFieldClass()
+    {
+        return $this->fieldClass;
+    }
+
+    /**
+     * @param string $fieldClass
+     *
+     * @return $this
+     */
+    public function setFieldClass($fieldClass)
+    {
+        $this->fieldClass = $fieldClass;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
@@ -112,6 +149,26 @@ class ColumnOptions extends AbstractOptions
     public function setTitle($title)
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubTitle()
+    {
+        return $this->subTitle;
+    }
+
+    /**
+     * @param string $subTitle
+     *
+     * @return $this
+     */
+    public function setSubTitle($subTitle)
+    {
+        $this->subTitle = $subTitle;
 
         return $this;
     }
@@ -212,6 +269,46 @@ class ColumnOptions extends AbstractOptions
     public function setTdClass($tdClass)
     {
         $this->tdClass = $tdClass;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThColspan()
+    {
+        return $this->thColspan;
+    }
+
+    /**
+     * @param string $thColspan
+     *
+     * @return $this
+     */
+    public function setThColspan($thColspan)
+    {
+        $this->thColspan = $thColspan;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThSubTitleColspan()
+    {
+        return $this->thSubTitleColspan;
+    }
+
+    /**
+     * @param string $thSubTitleColspan
+     *
+     * @return $this
+     */
+    public function setThSubTitleColspan($thSubTitleColspan)
+    {
+        $this->thSubTitleColspan = $thSubTitleColspan;
 
         return $this;
     }

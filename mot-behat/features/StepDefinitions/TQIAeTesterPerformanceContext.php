@@ -5,7 +5,7 @@ use Behat\Gherkin\Node\TableNode;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
-use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\AuthorisedExaminerSitesPerformanceDto;
+use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\AuthorisedExaminerSitePerformanceApiResource;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use PHPUnit_Framework_Assert as PHPUnit;
@@ -43,13 +43,42 @@ class TQIAeTesterPerformanceContext implements Context
 
     /**
      * @param array $expected
-     * @param AuthorisedExaminerSitesPerformanceDto[] $actual
+     * @param SiteDto[] $actual
      */
     private function assertAuthorisedExaminerSitePerformance(array $expected, array $actual)
     {
         foreach ($actual as $site) {
             if ($expected[SiteParams::SITE_NAME] === $site->getName()) {
-                PHPUnit::assertEquals($expected["riskScore"], $site->getRiskAssessmentScore());
+                if (empty($expected["currentRiskScore"])) {
+                    PHPUnit::assertNull($site->getCurrentRiskAssessment());
+                } else {
+                    PHPUnit::assertEquals($expected["currentRiskScore"], $site->getCurrentRiskAssessment()->getScore());
+                }
+
+                if (empty($expected["currentAssessmentDate"])) {
+                    PHPUnit::assertNull($site->getCurrentRiskAssessment());
+                } else {
+                    PHPUnit::assertEquals(
+                        (new \DateTime($expected["currentAssessmentDate"]))->format("Y-m-d"),
+                        $site->getCurrentRiskAssessment()->getDate()->format("Y-m-d")
+                    );
+                }
+
+                if (empty($expected["previousRiskScore"])) {
+                    PHPUnit::assertNull($site->getPreviousRiskAssessment());
+                } else {
+                    PHPUnit::assertEquals($expected["previousRiskScore"], $site->getPreviousRiskAssessment()->getScore());
+                }
+
+                if (empty($expected["previousAssessmentDate"])) {
+                    PHPUnit::assertNull($site->getPreviousRiskAssessment());
+                } else {
+                    PHPUnit::assertEquals(
+                        (new \DateTime($expected["previousAssessmentDate"]))->format("Y-m-d"),
+                        $site->getPreviousRiskAssessment()->getDate()->format("Y-m-d")
+                    );
+                }
+
                 return;
             }
         }

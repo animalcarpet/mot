@@ -29,5 +29,14 @@ class TableOptionsTest extends \PHPUnit_Framework_TestCase
         $value = 'path to script';
         $tableOptions->setFooterViewScript($value);
         $this->assertEquals($value, $tableOptions->getFooterViewScript());
+
+        //  --  test get|set table class --
+        $value = 'table class';
+        $tableOptions->setTableClass($value);
+        $this->assertEquals($value, $tableOptions->getTableClass());
+
+        //  --  test get|set has meta title  --
+        $tableOptions->setHasMetaTitle(true);
+        $this->assertTrue($tableOptions->hasMetaTitle());
     }
 }

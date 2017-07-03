@@ -75,14 +75,55 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
             ['sortable', null, false],
             ['formatter', new Formatter\Bold()],
             ['sortBy', 'testSortBy'],
-            ['thClass', 'testThClass'],
-            ['tdClass', 'testTdClass'],
+            ['fieldClass', 'testFieldClass'],
+            ['subTitle', 'testSubTitle'],
             ['escapeHtml', false, false],
             [
                 'property' => 'sub',
                 'value' => $sub,
                 'expect' => [new ColumnOptions($sub[0]), new ColumnOptions($sub[1])],
             ],
+        ];
+    }
+
+
+    /**
+     * @param string $property
+     * @param mixed  $value
+     * @param mixed  $expect
+     *
+     * @dataProvider dataProviderTestGetSetThTdValues
+     */
+    public function testGetSetThTdValues($property, $value, $expect = null)
+    {
+        $method = ucfirst($property);
+
+        //  logical block: set value and check set method
+        $result = $this->columnOptions->{'set'.$method}($value);
+        $this->assertInstanceOf(ColumnOptions::class, $result);
+
+        //  logical block: check get method
+        $expect = ($expect === null ? $value : $expect);
+        $method = (is_bool($expect) ? 'is' : 'get').$method;
+        $this->assertEquals($expect, $this->columnOptions->{$method}());
+    }
+
+    public function dataProviderTestGetSetThTdValues()
+    {
+        $sub = [
+            ['field' => 'testSubField1'],
+            ['field' => 'testSubField2'],
+        ];
+
+        return [
+            [
+                'property' => 'field',
+                'value' => 'testField',
+            ],
+            ['thClass', 'testThClass'],
+            ['tdClass', 'testTdClass'],
+            ['thColspan', 'testThColspan'],
+            ['thSubTitleColspan', 'testSubTitleColspan'],
         ];
     }
 

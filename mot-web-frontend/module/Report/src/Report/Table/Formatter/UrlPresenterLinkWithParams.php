@@ -24,6 +24,7 @@ class UrlPresenterLinkWithParams implements FormatterInterface
     public static function format(array $data, ColumnOptions $column, PhpRenderer $view)
     {
         $field = $data[$column->getField()];
+        $fieldClass = $column->getFieldClass();
 
         if (is_array($field)) {
             $fields = $field;
@@ -33,13 +34,13 @@ class UrlPresenterLinkWithParams implements FormatterInterface
 
         $links = [];
         foreach ($fields as $urlPresenterData) {
-            $links[] = static::getLink($view, $urlPresenterData);
+            $links[] = static::getLink($view, $urlPresenterData, $fieldClass);
         }
 
         return implode(' ', $links);
     }
 
-    private static function getLink(PhpRenderer $view, UrlPresenterData $field)
+    private static function getLink(PhpRenderer $view, UrlPresenterData $field, $fieldClass)
     {
         return $view->partial(
             'table/formatter/link-with-params', [
@@ -48,6 +49,7 @@ class UrlPresenterLinkWithParams implements FormatterInterface
                 'queryParams' => $field->getQueryParams(),
                 'value' => $field->getValue(),
                 'id' => $field->getId(),
+                'fieldClass' => $fieldClass,
             ]
         );
     }
