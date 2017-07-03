@@ -257,7 +257,7 @@ class VtsContext implements Context
         $this->resultContext = $response->getBody()->getData();
     }
 
-    private function prepareRiskAssessmentData($siteName, $aeName, array $data, $linkAeWithSite = true)
+    private function prepareRiskAssessmentData($siteName, $aeName, array $data)
     {
         $site = $this->siteData->tryGet($siteName);
 
@@ -276,10 +276,6 @@ class VtsContext implements Context
 
         $aedm = $this->userData->getAedmByAeId($ae->getId());
         $aedmUsername = $aedm->getUsername();
-
-        if ($linkAeWithSite) {
-            $this->authorisedExaminerData->linkAuthorisedExaminerWithSite($ae, $site);
-        }
 
         if (!empty($data["aeRepresentativesUserId"])) {
             $data["aeRepresentativesUserId"] = $aedmUsername;
@@ -304,12 +300,12 @@ class VtsContext implements Context
     }
 
     /**
-     * @Then risk assessment is added to site
+     * @Then risk assessment is added to :site site
      */
-    public function riskAssessmentIsAddedToSite()
+    public function riskAssessmentIsAddedToSite(SiteDto $site)
     {
         $user = $this->userData->getCurrentLoggedUser();
-        $response = $this->vehicleTestingStation->getRiskAssessment($user->getAccessToken(), $this->siteData->get("VTS")->getId());
+        $response = $this->vehicleTestingStation->getRiskAssessment($user->getAccessToken(), $site->getId());
         $riskAssessment = $response->getBody()->toArray()["data"];
 
         PHPUnit::assertEquals($this->riskAssessmentData["siteAssessmentScore"], $riskAssessment["siteAssessmentScore"]);
@@ -334,9 +330,9 @@ class VtsContext implements Context
     }
 
     /**
-     * @When I attempt to add risk assessment to site with invalid data:
+     * @When I attempt to add risk assessment to :site site with invalid data:
      */
-    public function iAttemptToAddRiskAssessmentToSiteWithInvalidData(TableNode $table)
+    public function iAttemptToAddRiskAssessmentToSiteWithInvalidData(SiteDto $site, TableNode $table)
     {
         $hash = $table->getColumnsHash();
 
@@ -344,12 +340,12 @@ class VtsContext implements Context
             throw new \InvalidArgumentException(sprintf('Expected a single record but got: %d', count($hash)));
         }
 
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData("VTS", "Organisation", $hash[0]);
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData($site->getName(), $site->getOrganisation()->getName(), $hash[0]);
 
         try {
             $response = $this->vehicleTestingStation->addRiskAssessment(
                 $this->userData->getCurrentLoggedUser()->getAccessToken(),
-                $this->siteData->get("VTS")->getId(),
+                $site->getId(),
                 $this->riskAssessmentData
             );
 
@@ -363,14 +359,14 @@ class VtsContext implements Context
     }
 
     /**
-     * @Then risk assessment is not added to site
+     * @Then risk assessment is not added to :site site
      */
-    public function riskAssessmentIsNotAddedToSite()
+    public function riskAssessmentIsNotAddedToSite(SiteDto $site)
     {
         try {
             $response = $this->vehicleTestingStation->getRiskAssessment(
                 $this->userData->getCurrentLoggedUser()->getAccessToken(),
-                $this->siteData->get("VTS")->getId()
+                $site->getId()
             );
 
         } catch (UnexpectedResponseStatusCodeException $exception) {
@@ -380,6 +376,7 @@ class VtsContext implements Context
         PHPUnit::assertTrue(isset($exception), "Exception not thrown");
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_404, $response->getStatusCode());
+        PHPUnit::assertContains("No assessment found", $exception->getMessage());
     }
 
     /**
@@ -393,17 +390,6 @@ class VtsContext implements Context
         }
 
         $this->siteData->updateSiteClasses($site->getId(), $classes);
-    }
-
-    /**
-     * @When /^I attempt to add risk assessment to site with data:$/
-     */
-    public function iAttemptToAddRiskAssessmentToSiteWithData(TableNode $table)
-    {
-        $rows = $table->getColumnsHash();
-        foreach ($rows as $row) {
-            $this->addRiskAssessment("VTS", "Organisation", $row, false);
-        }
     }
 
     /**
@@ -431,13 +417,13 @@ class VtsContext implements Context
         $rows = $table->getColumnsHash();
         foreach ($rows as $row) {
             $row = array_replace($default, $row);
-            $this->addRiskAssessment($siteName, $aeName, $row, false);
+            $this->addRiskAssessment($siteName, $aeName, $row);
         }
     }
 
-    private function addRiskAssessment($siteName, $aeName, array $data, $linkAeWithSite = true)
+    private function addRiskAssessment($siteName, $aeName, array $data)
     {
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $data, $linkAeWithSite);
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $data);
         $response = $this->vehicleTestingStation->addRiskAssessment(
             $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $this->siteData->get($siteName)->getId(),
@@ -445,36 +431,5 @@ class VtsContext implements Context
         );
 
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
-    }
-
-    /**
-     * @When I add risk assessment with score :score to site :site on :ae
-     */
-    public function iAddRiskAssessmentWithScoreToSiteOn($score, SiteDto $site, OrganisationDto $ae)
-    {
-        $hash = ["siteAssessmentScore" => $score] + $this->getRiskAssessmentDefaults();
-
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData($site->getName(), $ae->getName(), $hash, false);
-
-        $response = $this->vehicleTestingStation->addRiskAssessment(
-            $this->userData->getCurrentLoggedUser()->getAccessToken(),
-            $site->getId(),
-            $this->riskAssessmentData
-        );
-
-        PHPUnit::assertEquals(200, $response->getStatusCode());
-    }
-
-    private function getRiskAssessmentDefaults()
-    {
-        return [
-            "siteAssessmentScore" => 200,
-            "aeRepresentativesFullName" => "John Kowalsky",
-            "aeRepresentativesRole" => "Boss",
-            "aeRepresentativesUserId" => "",
-            "testerUserId" => "tester",
-            "dvsaExaminersUserId" => "dvsaExaminer",
-            "dateOfAssessment" => (new \DateTime("first day of 5 months ago"))->format("Y-m-d"),
-        ];
     }
 }

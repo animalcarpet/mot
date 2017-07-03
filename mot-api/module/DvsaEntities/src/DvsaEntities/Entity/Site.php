@@ -839,6 +839,9 @@ class Site extends Entity
         return $this;
     }
 
+    /**
+     * @return ArrayCollection|OrganisationSiteMap[]
+     */
     public function getAssociationWithAe()
     {
         return $this->associationsWithAe;

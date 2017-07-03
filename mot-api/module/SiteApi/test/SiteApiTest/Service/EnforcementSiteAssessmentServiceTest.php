@@ -2,6 +2,7 @@
 
 namespace SiteApiTest\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\PermissionAtSite;
@@ -11,10 +12,12 @@ use DvsaCommon\Enum\EventTypeCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
+use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\Organisation;
+use DvsaEntities\Entity\OrganisationSiteMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Repository\PersonRepository;
@@ -225,6 +228,70 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
         $this->service->createRiskAssessment($this->createDto());
     }
 
+
+    public function testCreateRiskAssessmentSetsNewLastAssessmentWhenSiteLastAssessmentDoesNotExist()
+    {
+        $site = new Site();
+        $site->setPositions(new ArrayCollection());
+        $site->setOrganisation(new Organisation());
+
+        $this->mockMethod(
+            $this->entityManager,
+            'find',
+            null,
+            $site,
+            [Site::class, self::SITE_ID]
+        );
+
+        $this->prepareMocksForCorrectFullData();
+        $entityManagerSpy = new MethodSpy($this->entityManager,"persist");
+
+        $dto = $this->createDto(0, true);
+        $this->service = $this->createService();
+        $this->service->createRiskAssessment($dto);
+
+        $siteAssessment = $this->extractEnforcementSiteAssessmentFromEntityManagerSpy($entityManagerSpy);
+        $site = $this->extractSiteFromEntityManagerSpy($entityManagerSpy);
+
+        $this->assertSame($siteAssessment, $site->getLastSiteAssessment());
+    }
+
+    public function testCreateRiskAssessmentDoesNotSetOutdatedAssessmentAsLast()
+    {
+        //there is a site with last site assessment created today
+        $date = new \DateTime();
+        $organisationSiteMap = new OrganisationSiteMap();
+        $organisationSiteMap->setStartDate($date);
+
+        $siteAssessment = $this->createAssessmentEntity(56, $date->format("Y-m-d"));
+        $site = new Site();
+        $site->setPositions(new ArrayCollection());
+        $site->setOrganisation(new Organisation());
+        $site->getAssociationWithAe()->add($organisationSiteMap);
+        $site->setLastSiteAssessment($siteAssessment);
+
+        $this->mockMethod(
+            $this->entityManager,
+            'find',
+            null,
+            $site,
+            [Site::class, self::SITE_ID]
+        );
+
+        $this->prepareMocksForCorrectFullData();
+        $entityManagerSpy = new MethodSpy($this->entityManager,"persist");
+
+        //when I try add new assessment with visit date before current visit date
+        $dto = $this->createDto(0, true);
+        $this->service = $this->createService();
+        $this->service->createRiskAssessment($dto);
+
+        $site = $this->extractSiteFromEntityManagerSpy($entityManagerSpy);
+
+        //then the last assessment is not changed
+        $this->assertSame($siteAssessment, $site->getLastSiteAssessment());
+    }
+
     public function testCreateRiskAssessmentForAuthorisedUserWithCorrectData()
     {
         $this->mockAssertGrantedAtSite(
@@ -279,6 +346,42 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
     }
 
     /**
+     * @param MethodSpy $entityManagerSpy
+     * @return EnforcementSiteAssessment
+     */
+    private function extractEnforcementSiteAssessmentFromEntityManagerSpy(MethodSpy $entityManagerSpy)
+    {
+        $entityManagerInvocations = $entityManagerSpy->getInvocations();
+        foreach ($entityManagerInvocations as $invocationObject) {
+            foreach ($invocationObject->parameters as $parameter) {
+                if ($parameter instanceof EnforcementSiteAssessment) {
+                    return $parameter;
+                }
+            }
+        }
+
+        throw new \LogicException(sprintf("Object '%s' not found", EnforcementSiteAssessment::class));
+    }
+
+    /**
+     * @param MethodSpy $entityManagerSpy
+     * @return Site
+     */
+    private function extractSiteFromEntityManagerSpy(MethodSpy $entityManagerSpy)
+    {
+        $entityManagerInvocations = $entityManagerSpy->getInvocations();
+        foreach ($entityManagerInvocations as $invocationObject) {
+            foreach ($invocationObject->parameters as $parameter) {
+                if ($parameter instanceof Site) {
+                    return $parameter;
+                }
+            }
+        }
+
+        throw new \LogicException(sprintf("Object '%s' not found", Site::class));
+    }
+
+    /**
      * @return EnforcementSiteAssessmentDto
      */
     private function createDto($score = 0, $userIsNotAssessor = false)
@@ -323,11 +426,11 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @return MockObj
+     * @return MockObj|EnforcementSiteAssessment
      *
      * @throws \Exception
      */
-    private function createAssessmentEntity($score = 0)
+    private function createAssessmentEntity($score = 0, $dateOfAssessment= self::DATE_OF_ASSESSMENT)
     {
         $assessment = new EnforcementSiteAssessment();
         $assessment
@@ -345,7 +448,7 @@ class EnforcementSiteAssessmentServiceTest extends AbstractServiceTestCase
                 $this->createAeRepresentativePersonEntity()
             )
             ->setSiteAssessmentScore($score)
-            ->setVisitDate(DateUtils::toDate(self::DATE_OF_ASSESSMENT))
+            ->setVisitDate(DateUtils::toDate($dateOfAssessment))
         ;
 
         return $assessment;

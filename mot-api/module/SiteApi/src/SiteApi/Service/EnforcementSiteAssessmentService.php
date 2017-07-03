@@ -16,6 +16,7 @@ use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\EventSiteMap;
+use DvsaEntities\Entity\OrganisationSiteMap;
 use DvsaEntities\Entity\Site;
 use DvsaEventApi\Service\EventService;
 use NotificationApi\Service\UserOrganisationNotificationService;
@@ -144,7 +145,10 @@ class EnforcementSiteAssessmentService
 
         $site = $this->getSiteById($dto->getSiteId());
 
-        $site->setLastSiteAssessment($riskAssessment);
+
+        if ($this->isLatestAssessment($riskAssessment, $site)) {
+            $site->setLastSiteAssessment($riskAssessment);
+        }
 
         $riskAssessment->setSite($site);
         $riskAssessment->setAeOrganisationId($site->getOrganisation()->getId());
@@ -182,6 +186,23 @@ class EnforcementSiteAssessmentService
         $this->em->flush();
 
         return $riskAssessment->getId();
+    }
+
+    /**
+     * @param EnforcementSiteAssessment $riskAssessment
+     * @param Site $site
+     * @return bool
+     */
+    private function isLatestAssessment($riskAssessment, $site){
+        /** @var OrganisationSiteMap $lastAssociation */
+        $lastAssociation = empty($site->getAssociationWithAe()) ? null : $site->getAssociationWithAe()->last();
+        $dateOfAssociation = empty($lastAssociation) ? null : $lastAssociation->getStartDate();
+        $lastAssessmentDate = empty($site->getLastSiteAssessment()) ? null : $site->getLastSiteAssessment()->getVisitDate();
+
+        return (
+            $riskAssessment->getVisitDate() >= $lastAssessmentDate &&
+            ($riskAssessment->getVisitDate() >= $dateOfAssociation || $dateOfAssociation === null)
+        );
     }
 
     /**
