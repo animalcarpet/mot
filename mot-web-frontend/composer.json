@@ -10,12 +10,12 @@
         "dvsa/mot-google-analytics": "^0.1",
         "maglnet/magl-markdown": "~1.5.0",
         "dvsa/web-frontend-assets": "1.1.4",
-        "dvsa/dvsa-application-logger": "dev-feature-support-3.9-into-master",
+        "dvsa/dvsa-application-logger": "1.5.2",
         "dvsa/dvsa-doctrine-module": "1.2.0",
         "zendframework/zendpdf": "2.0.2",
         "zf-commons/zfc-twig": "^1.2.2",
         "noiselabs/zf-debug-utils": "^0.3.1",
-        "mot/api-client-php": "dev-feature-support-3.9-into-master",
+        "mot/api-client-php": "16.0.0",
         "cpms/cpms-queues": "1.10.0-p",
         "cpms/cpms-notifications": "4.1.1-p",
         "cpms/client": "1.22.2-p",
@@ -23,7 +23,7 @@
         "soflomo/purifier": "~0.1.1",
         "dvsa/dvsa-document-module": "1.4.0",
         "slot-purchase/web-frontend": "3.9.1",
-        "dvsa/dvsa-openam-client": "dev-feature-support-3.9-into-master",
+        "dvsa/dvsa-openam-client": "1.11.0",
         "zendframework/zend-view": "2.7.0"
     },
     "autoload" : {
