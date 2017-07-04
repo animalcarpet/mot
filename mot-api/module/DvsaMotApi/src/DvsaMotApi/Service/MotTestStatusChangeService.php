@@ -9,6 +9,9 @@ namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
+use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -16,6 +19,7 @@ use DvsaCommon\Auth\Assertion\AbandonVehicleTestAssertion;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Network;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Domain\MotTestType as MotTestTypeConst;
@@ -26,6 +30,8 @@ use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Exception\UnauthorisedException;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use DvsaCommon\Mapper\BrakeTestWeightSourceMapper;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaCommon\Utility\ArrayUtils;
@@ -41,10 +47,12 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
+use DvsaEntities\Entity\WeightSource;
 use DvsaEntities\Repository\EnforcementFullPartialRetestRepository;
 use DvsaEntities\Repository\MotTestReasonForCancelRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestStatusRepository;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Generator\MotTestNumberGenerator;
 use DvsaMotApi\Service\Helper\MotTestCloneHelper;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
@@ -55,7 +63,7 @@ use OrganisationApi\Service\OrganisationService;
 /**
  * Class MotTestStatusChangeService.
  */
-class MotTestStatusChangeService implements TransactionAwareInterface
+class MotTestStatusChangeService implements TransactionAwareInterface, AutoWireableInterface
 {
     use TransactionAwareTrait;
 
@@ -215,20 +223,31 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     private $rfrDescriptions = [];
 
     /**
-     * @param AuthorisationServiceInterface          $authService
-     * @param MotTestValidator                       $motTestValidator
-     * @param MotTestStatusChangeValidator           $motTestStatusChangeValidator
-     * @param OtpService                             $otpService
-     * @param OrganisationService                    $organisationService
-     * @param MotTestMapper                          $motTestMapper
-     * @param MotTestRepository                      $motTestRepository
-     * @param MotTestReasonForCancelRepository       $reasonForCancelRepository
+     * @var VehicleService
+     */
+    private $vehicleService;
+    /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
+
+    /**
+     * @param AuthorisationServiceInterface $authService
+     * @param MotTestValidator $motTestValidator
+     * @param MotTestStatusChangeValidator $motTestStatusChangeValidator
+     * @param OtpService $otpService
+     * @param OrganisationService $organisationService
+     * @param MotTestMapper $motTestMapper
+     * @param MotTestRepository $motTestRepository
+     * @param MotTestReasonForCancelRepository $reasonForCancelRepository
      * @param EnforcementFullPartialRetestRepository $fullPartialRetestRepository
-     * @param MotTestDateHelperService               $motTestDateHelper
-     * @param EntityManager                          $entityManager
-     * @param MotIdentityProviderInterface           $motIdentityProvider
-     * @param ApiPerformMotTestAssertion             $performMotTestAssertion
-     * @param XssFilter                              $xssFilter
+     * @param MotTestDateHelperService $motTestDateHelper
+     * @param EntityManager $entityManager
+     * @param MotIdentityProviderInterface $motIdentityProvider
+     * @param ApiPerformMotTestAssertion $performMotTestAssertion
+     * @param XssFilter $xssFilter
+     * @param VehicleService $vehicleService
+     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
@@ -244,7 +263,9 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         EntityManager $entityManager,
         MotIdentityProviderInterface $motIdentityProvider,
         ApiPerformMotTestAssertion $performMotTestAssertion,
-        XssFilter $xssFilter
+        XssFilter $xssFilter,
+        VehicleService $vehicleService,
+        FeatureToggles $featureToggles
     ) {
         $this->authService = $authService;
         $this->motTestValidator = $motTestValidator;
@@ -261,6 +282,8 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         $this->motIdentityProvider = $motIdentityProvider;
         $this->performMotTestAssertion = $performMotTestAssertion;
         $this->xssFilter = $xssFilter;
+        $this->vehicleService = $vehicleService;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -548,15 +571,58 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         }
 
         // -- vehicle weight --
-        if ($this->shouldAmendVehicleWeight($motTest)) {
-            $brakeTestVehicleWeight = $motTest->getBrakeTestResultClass3AndAbove()->getVehicleWeight();
-            if (!$motTest->getMotTestType()->getIsDemo()) {
-                $motTest->setVehicleWeightSource($motTest->getBrakeTestResultClass3AndAbove()->getWeightType());
-                $motTest->setVehicleWeight($brakeTestVehicleWeight);
+        if (!$motTest->getMotTestType()->getIsDemo()) {
+            if ($this->shouldAmendVehicleWeightInMotTest($motTest)) {
+                $motTest = $this->updateMotTestVehicleWeight($motTest);
+            }
+
+            if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+                if ($this->shouldAmendVehicleWeightInVehicle($motTest)) {
+                    $vehicle = $this->updateVehicleVehicleWeight($motTest);
+
+                    $motTest->setVehicleVersion($vehicle->getVersion());
+                }
             }
         }
 
         return $newStatus;
+    }
+
+    /**
+     * @param MotTest $motTest
+     * @return MotTest
+     */
+    private function updateMotTestVehicleWeight(MotTest $motTest)
+    {
+        $brakeTestResult = $motTest->getBrakeTestResultClass3AndAbove();
+        $motTest->setVehicleWeightSource($brakeTestResult->getWeightType());
+        $motTest->setVehicleWeight($brakeTestResult->getVehicleWeight());
+
+        return $motTest;
+    }
+
+    /**
+     * @param MotTest $motTest
+     * @return \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle
+     */
+    private function updateVehicleVehicleWeight(MotTest $motTest)
+    {
+        $vehicleUpdateRequest = new UpdateDvsaVehicleRequest();
+
+        $brakeTestResult = $motTest->getBrakeTestResultClass3AndAbove();
+        $weightSource = (new BrakeTestWeightSourceMapper())->mapOfficialWeightSourceToVehicleWeightSource(
+            $motTest->getVehicle()->getVehicleClass()->getCode(),
+            $brakeTestResult->getWeightType()->getCode()
+        );
+
+        $vehicleUpdateRequest->setWeightSourceCode($weightSource)
+            ->setWeight($brakeTestResult->getVehicleWeight());
+
+        return $this->vehicleService->updateDvsaVehicleAtVersion(
+            $motTest->getVehicle()->getId(),
+            $motTest->getVehicleVersion(),
+            $vehicleUpdateRequest
+        );
     }
 
     private function createPassedMotTestWithoutPrs(MotTest $motTest)
@@ -620,7 +686,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
      *
      * @return bool
      */
-    private function shouldAmendVehicleWeight(MotTest $motTest)
+    private function shouldAmendVehicleWeightInMotTest(MotTest $motTest)
     {
         $brakeTestResult = $motTest->getBrakeTestResultClass3AndAbove();
         if (!$brakeTestResult || $brakeTestResult->getVehicleWeight() === null) {
@@ -628,6 +694,27 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         }
 
         return $this->hasVsiWeight($motTest, $brakeTestResult) || $this->hasDgwWeight($motTest, $brakeTestResult);
+    }
+
+    /**
+     * Check if Vehicle weight changed and weight source is official
+     * @param MotTest $motTest
+     *
+     * @return bool
+     */
+    private function shouldAmendVehicleWeightInVehicle(MotTest $motTest)
+    {
+        $brakeTestResult = $motTest->getBrakeTestResultClass3AndAbove();
+        if (!$brakeTestResult || $brakeTestResult->getVehicleWeight() === null) {
+            return false;
+        }
+
+        $isOfficial = (new BrakeTestWeightSourceMapper())->isOfficialWeightSource(
+            $motTest->getVehicle()->getVehicleClass()->getCode(),
+            $brakeTestResult->getWeightType()->getCode()
+        );
+
+        return $isOfficial && $brakeTestResult->getVehicleWeight() != $motTest->getVehicle()->getWeight();
     }
 
     /**

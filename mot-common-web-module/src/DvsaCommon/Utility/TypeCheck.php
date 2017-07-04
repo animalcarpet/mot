@@ -170,4 +170,11 @@ class TypeCheck
             throw new \InvalidArgumentException('Unexpected argument value');
         }
     }
+
+    public static function assertString($value)
+    {
+        if(!is_string($value)) {
+            throw new \InvalidArgumentException('Expected string');
+        }
+    }
 }
