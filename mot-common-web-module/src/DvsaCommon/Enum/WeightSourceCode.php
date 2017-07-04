@@ -20,6 +20,10 @@ class WeightSourceCode
     const MISW = 'MISW';
     const MOTORCYCLE = 'M';
     const UNLADEN = 'U';
+    const ORD_MISW = 'ORD34';
+    const ORD_DGW_MAM = 'ORD5';
+    const ORD_DGW = 'ORD7';
+    const MAM = 'MAM';
 
     /**
      * @return array of values for the type WeightSourceCode
@@ -37,6 +41,10 @@ class WeightSourceCode
             self::MISW,
             self::MOTORCYCLE,
             self::UNLADEN,
+            self::ORD_MISW,
+            self::ORD_DGW_MAM,
+            self::ORD_DGW,
+            self::MAM,
         ];
     }
 

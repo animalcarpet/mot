@@ -337,7 +337,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param string $chassisNumber
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setChassisNumber($chassisNumber)
     {
@@ -349,7 +349,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param Colour $colour
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setColour($colour)
     {
@@ -361,7 +361,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param CountryOfRegistration $countryOfRegistration
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setCountryOfRegistration($countryOfRegistration)
     {
@@ -373,7 +373,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param string $engineNumber
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setEngineNumber($engineNumber)
     {
@@ -385,7 +385,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param \DateTime $firstRegistrationDate
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setFirstRegistrationDate($firstRegistrationDate)
     {
@@ -397,7 +397,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param \DateTime $firstUsedDate
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setFirstUsedDate($firstUsedDate)
     {
@@ -409,7 +409,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param bool $isDamaged
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setIsDamaged($isDamaged)
     {
@@ -421,7 +421,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param bool $isDestroyed
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setIsDestroyed($isDestroyed)
     {
@@ -433,7 +433,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param int $dvla_vehicle_id
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setDvlaVehicleId($dvla_vehicle_id)
     {
@@ -445,7 +445,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param bool $isIncognito
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setIsIncognito($isIncognito)
     {
@@ -457,7 +457,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param bool $newAtFirstReg
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setNewAtFirstReg($newAtFirstReg)
     {
@@ -469,7 +469,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param \DateTime $manufactureDate
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setManufactureDate($manufactureDate)
     {
@@ -481,7 +481,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param ModelDetail $modelDetail
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setModelDetail($modelDetail)
     {
@@ -493,7 +493,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param string $registration
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setRegistration($registration)
     {
@@ -505,7 +505,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param string $registrationCollapsed
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setRegistrationCollapsed($registrationCollapsed)
     {
@@ -517,7 +517,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param Colour $secondaryColour
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setSecondaryColour($secondaryColour)
     {
@@ -529,7 +529,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param string $vin
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setVin($vin)
     {
@@ -541,7 +541,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param string $vinCollapsed
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setVinCollapsed($vinCollapsed)
     {
@@ -553,7 +553,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param int $weight
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setWeight($weight)
     {
@@ -565,7 +565,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param WeightSource $weightSource
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setWeightSource($weightSource)
     {
@@ -577,7 +577,7 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     /**
      * @param int $year
      *
-     * @return VehicleAbstract
+     * @return Vehicle
      */
     public function setYear($year)
     {

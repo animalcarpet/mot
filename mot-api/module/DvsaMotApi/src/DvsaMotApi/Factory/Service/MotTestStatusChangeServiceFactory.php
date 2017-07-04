@@ -8,6 +8,7 @@
 namespace DvsaMotApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthentication\Service\OtpService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
@@ -15,6 +16,7 @@ use DvsaCommonApi\Filter\XssFilter;
 use DvsaEntities\Entity\EnforcementFullPartialRetest;
 use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestStatusChangeService;
 use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
@@ -51,7 +53,9 @@ class MotTestStatusChangeServiceFactory implements FactoryInterface
             $entityManager,
             $serviceLocator->get(MotIdentityProviderInterface::class),
             $serviceLocator->get(ApiPerformMotTestAssertion::class),
-            $serviceLocator->get(XssFilter::class)
+            $serviceLocator->get(XssFilter::class),
+            $serviceLocator->get(VehicleService::class),
+            $serviceLocator->get('Feature\FeatureToggles')
         );
     }
 }
