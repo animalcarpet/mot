@@ -9,6 +9,7 @@ use DvsaCommon\Enum\SiteTypeCode;
 use DvsaEntities\Entity\AuthorisationForTestingMotAtSite;
 use DvsaEntities\Entity\BrakeTestType;
 use DvsaEntities\Entity\BusinessRoleStatus;
+use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\FacilityType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
@@ -55,6 +56,33 @@ class VtsMapperTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->mapper->manyToDto([self::getVtsEntity()]);
         $this->assertInstanceOf(VehicleTestingStationDto::class, $result[0]);
+    }
+
+    public function testToDtoWithLatestAssessments_MultipleAssessments() {
+        $site = self::getVtsEntity();
+        $assessment = self::getTestAssessment();
+
+        $result = $this->mapper->toDtoWithLatestAssessments($site, [$assessment, $assessment]);
+
+        $this->assertInstanceOf(VehicleTestingStationDto::class, $result);
+        $this->assertEquals(
+            $assessment->getExaminer()->getFirstName(),
+            $result->getCurrentAssessment()->getDvsaExaminersFullName()
+        );
+        $this->assertEquals(
+            $assessment->getExaminer()->getFirstName(),
+            $result->getPreviousAssessment()->getDvsaExaminersFullName()
+        );
+    }
+
+    public function testToDtoWithLatestAssessments_NoAssessments() {
+        $site = self::getVtsEntity();
+
+        $result = $this->mapper->toDtoWithLatestAssessments($site, []);
+
+        $this->assertInstanceOf(VehicleTestingStationDto::class, $result);
+        $this->assertNull($result->getPreviousAssessment());
+        $this->assertNull($result->getCurrentAssessment());
     }
 
     public static function getVtsEntity()
@@ -112,5 +140,28 @@ class VtsMapperTest extends \PHPUnit_Framework_TestCase
             ->setPositions([$position1]);
 
         return $site;
+    }
+
+    /**
+     * @return EnforcementSiteAssessment
+     */
+    public static function getTestAssessment() {
+        $siteAssessment = new EnforcementSiteAssessment();
+        $siteAssessment
+            ->setId(1234)
+            ->setTester(
+                (new Person())
+                    ->setFirstName('tester')
+            )
+            ->setRepresentative(
+                (new Person())
+                    ->setFirstName('ae representative')
+            )
+            ->setExaminer(
+                (new Person())
+                    ->setFirstName('DVSA examiner')
+            );
+
+        return $siteAssessment;
     }
 }

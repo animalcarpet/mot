@@ -17,11 +17,13 @@ use DvsaEntities\Repository\FacilityTypeRepository;
 use DvsaEntities\Repository\NonWorkingDayCountryRepository;
 use DvsaEntities\Repository\SiteContactTypeRepository;
 use DvsaEntities\Repository\SiteRepository;
+use DvsaEntities\Repository\SiteRiskAssessmentRepository;
 use DvsaEntities\Repository\SiteTestingDailyScheduleRepository;
 use DvsaEntities\Repository\SiteTypeRepository;
 use DvsaEntities\Repository\VehicleClassRepository;
 use DvsaEventApi\Service\EventService;
 use SiteApi\Factory\Service\SiteServiceFactory;
+use SiteApi\Service\EnforcementSiteAssessmentService;
 use SiteApi\Service\SiteService;
 use SiteApi\Service\Validator\SiteDetailsValidator;
 use SiteApi\Service\Validator\SiteValidator;
@@ -53,25 +55,27 @@ class SiteServiceFactoryTest extends AbstractServiceTestCase
         $serviceManager->setService(XssFilter::class, XMock::of(XssFilter::class));
         $serviceManager->setService(Hydrator::class, XMock::of(Hydrator::class));
         $serviceManager->setService(SiteValidator::class, XMock::of(SiteValidator::class));
+        $serviceManager->setService(EnforcementSiteAssessmentService::class, XMock::of(EnforcementSiteAssessmentService::class));
 
-        $this->mockMethod($entityManager, 'getRepository', $this->at(0), XMock::of(SiteTypeRepository::class));
-        $this->mockMethod($entityManager, 'getRepository', $this->at(1), XMock::of(SiteRepository::class));
-        $this->mockMethod($entityManager, 'getRepository', $this->at(2), XMock::of(SiteContactTypeRepository::class));
-        $this->mockMethod($entityManager, 'getRepository', $this->at(3), XMock::of(BrakeTestTypeRepository::class));
-        $this->mockMethod($entityManager, 'getRepository', $this->at(4), XMock::of(FacilityTypeRepository::class));
-        $this->mockMethod($entityManager, 'getRepository', $this->at(5), XMock::of(VehicleClassRepository::class));
+        $this->mockMethod($entityManager, 'getRepository', $this->at(0), XMock::of(SiteRiskAssessmentRepository::class));
+        $this->mockMethod($entityManager, 'getRepository', $this->at(1), XMock::of(SiteTypeRepository::class));
+        $this->mockMethod($entityManager, 'getRepository', $this->at(2), XMock::of(SiteRepository::class));
+        $this->mockMethod($entityManager, 'getRepository', $this->at(3), XMock::of(SiteContactTypeRepository::class));
+        $this->mockMethod($entityManager, 'getRepository', $this->at(4), XMock::of(BrakeTestTypeRepository::class));
+        $this->mockMethod($entityManager, 'getRepository', $this->at(5), XMock::of(FacilityTypeRepository::class));
+        $this->mockMethod($entityManager, 'getRepository', $this->at(6), XMock::of(VehicleClassRepository::class));
 
         $mockAuthForTestAtSiteStatusRepo = XMock::of(AuthorisationForTestingMotAtSiteStatusRepository::class);
-        $this->mockMethod($entityManager, 'getRepository', $this->at(6), $mockAuthForTestAtSiteStatusRepo);
+        $this->mockMethod($entityManager, 'getRepository', $this->at(7), $mockAuthForTestAtSiteStatusRepo);
 
         $mockSiteTestDailyScheduleRepo = XMock::of(SiteTestingDailyScheduleRepository::class);
-        $this->mockMethod($entityManager, 'getRepository', $this->at(7), $mockSiteTestDailyScheduleRepo);
+        $this->mockMethod($entityManager, 'getRepository', $this->at(8), $mockSiteTestDailyScheduleRepo);
 
         $mockNonWorkDayCountryRepo = XMock::of(NonWorkingDayCountryRepository::class);
-        $this->mockMethod($entityManager, 'getRepository', $this->at(8), $mockNonWorkDayCountryRepo);
+        $this->mockMethod($entityManager, 'getRepository', $this->at(9), $mockNonWorkDayCountryRepo);
 
         $siteStatusRepository = XMock::of(SiteStatusRepository::class);
-        $this->mockMethod($entityManager, 'getRepository', $this->at(9), $siteStatusRepository);
+        $this->mockMethod($entityManager, 'getRepository', $this->at(10), $siteStatusRepository);
 
         $factory = new SiteServiceFactory();
 

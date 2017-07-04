@@ -28,6 +28,7 @@ use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
+use Organisation\Presenter\StatusPresenter;
 use Site\Action\SiteTestQualityAction;
 use Site\Action\UserTestQualityAction;
 use Site\Authorization\VtsOverviewPagePermissions;
@@ -178,7 +179,7 @@ class SiteController extends AbstractAuthActionController
         }
         $refSession->url = false;
 
-        $assessmentDto = $site->getAssessment();
+        $assessmentDto = $site->getCurrentAssessment();
         if ($assessmentDto instanceof EnforcementSiteAssessmentDto) {
             $riskAssessmentScore = $assessmentDto->getSiteAssessmentScore();
         } else {
@@ -204,7 +205,7 @@ class SiteController extends AbstractAuthActionController
 
         $this->setHeadTitle('Vehicle Testing Station');
         $this->setUpIndexSidebar(
-            $site->getStatus(), $testInProgress, is_object($site->getAssessment()), $ragClassifier, $this->getAssessmentDate($site)
+            $site->getStatus(), $testInProgress, is_object($site->getCurrentAssessment()), $ragClassifier, $this->getAssessmentDate($site)
         );
 
         $viewModel = new ViewModel(
@@ -216,6 +217,7 @@ class SiteController extends AbstractAuthActionController
                 'ragClassifier' => $ragClassifier,
                 'isVtsRiskEnabled' => $this->isFeatureEnabled(FeatureToggle::VTS_RISK_SCORE),
                 'businessRoleCatalog' => $this->businessRoleCatalog,
+                'statusPresenter' => new StatusPresenter(),
             ]
         );
 
@@ -231,8 +233,8 @@ class SiteController extends AbstractAuthActionController
      */
     private function getAssessmentDate(VehicleTestingStationDto $site) {
         $assessmentDate = null;
-        if(is_object($site->getAssessment())) {
-            $assessmentDate = DateTimeDisplayFormat::dateShort(new \DateTime($site->getAssessment()->getDateOfAssessment()));
+        if(is_object($site->getCurrentAssessment())) {
+            $assessmentDate = DateTimeDisplayFormat::dateShort(new \DateTime($site->getCurrentAssessment()->getDateOfAssessment()));
         }
         return $assessmentDate;
     }
@@ -615,7 +617,7 @@ class SiteController extends AbstractAuthActionController
 
         $vtsDto = $this->mapper->Site->getById($siteId);
         /** @var EnforcementSiteAssessmentDto $assessmentDto */
-        $assessmentDto = $vtsDto->getAssessment();
+        $assessmentDto = $vtsDto->getCurrentAssessment();
 
         if (!$assessmentDto) {
             return $this->createHttpNotFoundModel($this->getResponse());

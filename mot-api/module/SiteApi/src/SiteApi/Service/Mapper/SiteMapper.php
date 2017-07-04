@@ -5,7 +5,6 @@ namespace SiteApi\Service\Mapper;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
-use DvsaCommon\Dto\Site\SiteAssessmentDto;
 use DvsaCommon\Dto\Site\SiteCommentDto;
 use DvsaCommon\Dto\Site\SiteContactDto;
 use DvsaCommon\Dto\Site\SiteDto;
@@ -65,7 +64,7 @@ class SiteMapper extends AbstractApiMapper
             ->setContacts($this->mapContacts($site->getContacts()))
 
             ->setOrganisation($this->mapOrganisation($site->getOrganisation()))
-            ->setAssessment($this->mapAssessment($site->getLastSiteAssessment()));
+            ->setCurrentAssessment($this->mapAssessment($site->getLastSiteAssessment()));
 
         return $dto;
     }
@@ -158,9 +157,9 @@ class SiteMapper extends AbstractApiMapper
     /**
      * @param EnforcementSiteAssessment $assessment
      *
-     * @return SiteAssessmentDto
+     * @return EnforcementSiteAssessmentDto
      */
-    private function mapAssessment($assessment)
+    protected function mapAssessment($assessment)
     {
         if (!($assessment instanceof EnforcementSiteAssessment)) {
             return null;

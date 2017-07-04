@@ -189,6 +189,8 @@ class EnforcementSiteAssessmentService
     }
 
     /**
+     * Compare dates only. Time is irrelevant.
+     *
      * @param EnforcementSiteAssessment $riskAssessment
      * @param Site $site
      * @return bool
@@ -196,8 +198,20 @@ class EnforcementSiteAssessmentService
     private function isLatestAssessment($riskAssessment, $site){
         /** @var OrganisationSiteMap $lastAssociation */
         $lastAssociation = empty($site->getAssociationWithAe()) ? null : $site->getAssociationWithAe()->last();
-        $dateOfAssociation = empty($lastAssociation) ? null : $lastAssociation->getStartDate();
-        $lastAssessmentDate = empty($site->getLastSiteAssessment()) ? null : $site->getLastSiteAssessment()->getVisitDate();
+        $dateOfAssociation = null;
+        if (!empty($lastAssociation)) {
+            $dateOfAssociation = $lastAssociation->getStartDate();
+            $dateOfAssociation->setTime(0,0,0);
+        }
+
+        $lastAssessmentDate = null;
+        if (! empty($site->getLastSiteAssessment())) {
+            $lastAssessmentDate =  $site->getLastSiteAssessment()->getVisitDate();
+            $lastAssessmentDate->setTime(0,0,0);
+        }
+
+        $riskAssessmentVisitDate = $riskAssessment->getVisitDate();
+        $riskAssessmentVisitDate->setTime(0,0,0);
 
         return (
             $riskAssessment->getVisitDate() >= $lastAssessmentDate &&

@@ -6,7 +6,6 @@ use DvsaCommon\Dto\AbstractDataTransferObject;
 use DvsaCommon\Dto\Common\CommentDto;
 use DvsaCommon\Dto\CommonTrait\CommonIdentityDtoTrait;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
-use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommon\Dto\Organisation\OrganisationSiteLinkDto;
 use DvsaCommon\Utility\ArrayUtils;
 
@@ -30,8 +29,11 @@ class SiteDto extends AbstractDataTransferObject
     /** @var  OrganisationDto */
     private $organisation;
 
-    /** @var  SiteAssessmentDto */
-    private $assessment;
+    /** @var  EnforcementSiteAssessmentDto */
+    private $currentAssessment;
+
+    /** @var  EnforcementSiteAssessmentDto */
+    private $previousAssessment;
 
     /** @var  string */
     private $latitude;
@@ -174,22 +176,41 @@ class SiteDto extends AbstractDataTransferObject
     }
 
     /**
-     * @return SiteAssessmentDto
+     * @return EnforcementSiteAssessmentDto
      */
-    public function getAssessment()
+    public function getCurrentAssessment()
     {
-        return $this->assessment;
+        return $this->currentAssessment;
     }
 
     /**
-     * @param SiteAssessmentDto $assessment
+     * @param EnforcementSiteAssessmentDto $currentAssessment
      *
      * @return $this
      */
-    public function setAssessment($assessment)
+    public function setCurrentAssessment($currentAssessment)
     {
-        $this->assessment = $assessment;
+        $this->currentAssessment = $currentAssessment;
         return $this;
+    }
+
+    /**
+     * @param EnforcementSiteAssessmentDto $previousAssessment
+     *
+     * @return $this
+     */
+    public function setPreviousAssessment($previousAssessment)
+    {
+        $this->previousAssessment = $previousAssessment;
+        return $this;
+    }
+
+    /**
+     * @return EnforcementSiteAssessmentDto
+     */
+    public function getPreviousAssessment()
+    {
+        return $this->previousAssessment;
     }
 
     public function getLatitude()

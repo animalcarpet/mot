@@ -52,6 +52,26 @@ class VtsMapper extends SiteMapper
     }
 
     /**
+     * @param Entity\Site $vts
+     * @param Entity\EnforcementSiteAssessment[] $assessments
+     *
+     * @return VehicleTestingStationDto
+     */
+    public function toDtoWithLatestAssessments($vts, $assessments)
+    {
+        $vtsDto = $this->toDto($vts);
+        $vtsDto->setCurrentAssessment(null); // clear previously set assessment
+
+        if (array_key_exists(0, (array) $assessments)) {
+            $vtsDto->setCurrentAssessment($this->mapAssessment($assessments[0]));
+        }
+        if (array_key_exists(1, (array) $assessments)) {
+            $vtsDto->setPreviousAssessment($this->mapAssessment($assessments[1]));
+        }
+        return $vtsDto;
+    }
+
+    /**
      * @param BrakeTestType $typeData
      *
      * @return BrakeTestTypeDto|null

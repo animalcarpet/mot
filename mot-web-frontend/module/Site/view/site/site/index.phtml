@@ -1,20 +1,19 @@
 <?php
 
-use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\MotTestController;
 use Site\ViewModel\MotTest\MotTestInProgressViewModel;
-use Site\Service\RiskAssessmentScoreRagClassifier;
 
-/*
+/**
  * @var \Site\ViewModel\SiteViewModel $viewModel
  * @var string $searchString
  * @var string $escRefPage
  * @var \DvsaCommon\Dto\Site\SiteDto $site
- * @var RiskAssessmentScoreRagClassifier $ragClassifier
+ * @var \Site\Service\RiskAssessmentScoreRagClassifier $ragClassifier
+ * @var \Organisation\Presenter\StatusPresenter $statusPresenter
  * @var string $isVtsRiskEnabled
  * @var BusinessRoleCatalog $businessRoleCatalog
  */
@@ -117,6 +116,34 @@ echo $this->partial(
             </td>
         </tr>
     <?php endforeach; ?>
+    </tbody>
+</table>
+
+<h3 class="summary-heading">Site assessment</h3>
+
+<table class="table-summary">
+    <tbody>
+    <?php
+    echo $this->partial(
+        'partials/site-assessment-row',
+        [
+            'assessment' => $viewModel->getCurrentAssessment(),
+            'ragClassifier' => $ragClassifier,
+            'statusPresenter' => $statusPresenter,
+            'rowTitle' => 'Current'
+        ]
+    );
+    echo $this->partial(
+        'partials/site-assessment-row',
+        [
+            'assessment' => $viewModel->getPreviousAssessment(),
+            'ragClassifier' => $ragClassifier,
+            'statusPresenter' => $statusPresenter,
+            'rowTitle' => 'Previous'
+        ]
+    );
+    ?>
+
     </tbody>
 </table>
 
