@@ -26,7 +26,9 @@ use DvsaCommonApi\Service\Validator\AddressValidator;
 use DvsaCommonApi\Service\Validator\ContactDetailsValidator;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\FacilityType;
+use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\PhoneContactType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
@@ -40,13 +42,13 @@ use DvsaEntities\Repository\NonWorkingDayCountryRepository;
 use DvsaEntities\Repository\PhoneContactTypeRepository;
 use DvsaEntities\Repository\SiteContactTypeRepository;
 use DvsaEntities\Repository\SiteRepository;
+use DvsaEntities\Repository\SiteRiskAssessmentRepository;
 use DvsaEntities\Repository\SiteTestingDailyScheduleRepository;
 use DvsaEntities\Repository\SiteTypeRepository;
 use DvsaEntities\Repository\VehicleClassRepository;
 use DvsaEventApi\Service\EventService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapMapper;
-use SiteApi\Service\Mapper\SiteMapper;
 use SiteApi\Service\Mapper\VtsMapper;
 use SiteApi\Service\SiteService;
 use DvsaCommon\Auth\Assertion\UpdateVtsAssertion;
@@ -67,6 +69,8 @@ class SiteServiceTest extends AbstractServiceTestCase
     private $repository;
     /** @var SiteTypeRepository|MockObj */
     private $siteTypeRepository;
+    /** @var SiteRiskAssessmentRepository|MockObj */
+    private $siteRiskAssessmentRepository;
     /** @var BrakeTestTypeRepository|MockObj */
     private $brakeTestTypeRepo;
     /** @var SiteContactTypeRepository */
@@ -98,6 +102,7 @@ class SiteServiceTest extends AbstractServiceTestCase
     {
         $this->repository = $this->getMockWithDisabledConstructor(SiteRepository::class);
         $this->siteTypeRepository = $this->getMockWithDisabledConstructor(SiteTypeRepository::class);
+        $this->siteRiskAssessmentRepository = $this->getMockWithDisabledConstructor(SiteRiskAssessmentRepository::class);
         $this->mockSiteContactTypeRepo();
         $this->brakeTestTypeRepo = $this->getMockWithDisabledConstructor(BrakeTestTypeRepository::class);
         $this->facilityTypeRepository = $this->getMockWithDisabledConstructor(FacilityTypeRepository::class);
@@ -130,6 +135,7 @@ class SiteServiceTest extends AbstractServiceTestCase
             $this->mockIdentity,
             $this->createContactDetailsService(),
             $this->eventService,
+            $this->siteRiskAssessmentRepository,
             $this->siteTypeRepository,
             $this->repository,
             $this->siteContactTypeRepository,
@@ -173,18 +179,19 @@ class SiteServiceTest extends AbstractServiceTestCase
     /**
      * @dataProvider dataProviderTestMethodsPermissionsAndResults
      */
-    public function testGetDataMethodsPermissionsAndResults($method, $params, $repo, $permissions, $expect)
+    public function testGetDataMethodsPermissionsAndResults($method, $params, $repositories, $permissions, $expect)
     {
         /** @var Site $result */
         $result = null;
+        if ($repositories !== null) {
+            foreach($repositories as $repo) {
+                $result = $repo['result'];
 
-        if ($repo !== null) {
-            $result = $repo['result'];
-
-            $this->repository->expects($this->once())
-                ->method($repo['method'])
-                ->withConsecutive($repo['params'])
-                ->willReturn($result);
+                $this->repository->expects($this->once())
+                    ->method($repo['method'])
+                    ->withConsecutive($repo['params'])
+                    ->willReturn($result);
+            }
         }
 
         //  --  check permission    --
@@ -212,9 +219,10 @@ class SiteServiceTest extends AbstractServiceTestCase
     public function dataProviderTestMethodsPermissionsAndResults()
     {
         $siteEntity = $this->getSiteEntity();
+        $assessments = [$this->getTestAssessment()];
 
-        $siteDto = (new SiteMapper())->toDto($siteEntity);
         $vtsDto = (new VtsMapper())->toDto($siteEntity);
+        $vtsDtoWithAssessments = (new VtsMapper())->toDtoWithLatestAssessments($siteEntity, $assessments);
 
         $unauthException = [
             'class' => UnauthorisedException::class,
@@ -239,11 +247,11 @@ class SiteServiceTest extends AbstractServiceTestCase
                     'siteNumber' => self::SITE_NR,
                     'isNeedDto' => false,
                 ],
-                'repo' => [
+                'repositories' => [[
                     'method' => 'findOneBy',
                     'result' => null,
                     'params' => [['siteNumber' => self::SITE_NR]],
-                ],
+                ]],
                 'permissions' => null,
                 'expect' => [
                     'exception' => $notFoundExceptionByNr,
@@ -255,11 +263,11 @@ class SiteServiceTest extends AbstractServiceTestCase
                     'siteNumber' => self::SITE_NR,
                     'isNeedDto' => false,
                 ],
-                'repo' => [
+                'repositories' => [[
                     'method' => 'findOneBy',
                     'result' => $siteEntity,
                     'params' => [['siteNumber' => self::SITE_NR]],
-                ],
+                ]],
                 'permission' => [],
                 'expect' => [
                     'exception' => $unauthException,
@@ -271,11 +279,11 @@ class SiteServiceTest extends AbstractServiceTestCase
                     'siteNumber' => self::SITE_NR,
                     'isNeedDto' => true,
                 ],
-                'repo' => [
+                'repositories' => [[
                     'method' => 'findOneBy',
                     'result' => $siteEntity,
                     'params' => [['siteNumber' => self::SITE_NR]],
-                ],
+                ]],
                 'permissions' => [PermissionAtSite::VEHICLE_TESTING_STATION_READ],
                 'expect' => [
                     'result' => $vtsDto,
@@ -289,7 +297,7 @@ class SiteServiceTest extends AbstractServiceTestCase
                     'siteId' => self::SITE_ID,
                     'isNeedDto' => false,
                 ],
-                'repo' => null,
+                'repositories' => null,
                 'permission' => [],
                 'expect' => [
                     'exception' => $unauthException,
@@ -301,11 +309,11 @@ class SiteServiceTest extends AbstractServiceTestCase
                     'siteId' => self::SITE_ID,
                     'isNeedDto' => false,
                 ],
-                'repo' => [
+                'repositories' => [[
                     'method' => 'find',
                     'result' => null,
                     'params' => [self::SITE_ID],
-                ],
+                ]],
                 'permissions' => [PermissionAtSite::VEHICLE_TESTING_STATION_READ],
                 'expect' => [
                     'exception' => $notFoundExceptionById,
@@ -317,14 +325,18 @@ class SiteServiceTest extends AbstractServiceTestCase
                     'siteId' => self::SITE_ID,
                     'isNeedDto' => true,
                 ],
-                'repo' => [
+                'repositories' => [[
                     'method' => 'find',
                     'result' => $siteEntity,
                     'params' => [self::SITE_ID],
-                ],
+                ], [
+                    'method' => 'getLatestAssessmentsForSite',
+                    'result' => $assessments,
+                    'params' => [self::SITE_ID, 2],
+                ]],
                 'permissions' => [PermissionAtSite::VEHICLE_TESTING_STATION_READ],
                 'expect' => [
-                    'result' => $vtsDto,
+                    'result' => $vtsDtoWithAssessments,
                 ],
             ],
         ];
@@ -444,5 +456,28 @@ class SiteServiceTest extends AbstractServiceTestCase
             ->will($this->returnArgument(0));
 
         return $xssFilterMock;
+    }
+
+    /**
+     * @return EnforcementSiteAssessment
+     */
+    public function getTestAssessment() {
+        $siteAssessment = new EnforcementSiteAssessment();
+        $siteAssessment
+            ->setId(1234)
+            ->setTester(
+                (new Person())
+                    ->setFirstName('tester')
+            )
+            ->setRepresentative(
+                (new Person())
+                    ->setFirstName('ae representative')
+            )
+            ->setExaminer(
+                (new Person())
+                    ->setFirstName('DVSA examiner')
+            );
+
+        return $siteAssessment;
     }
 }

@@ -11,6 +11,7 @@ use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\ContactDetailsService;
 use DvsaEntities\Entity\AuthorisationForTestingMotAtSiteStatus;
 use DvsaEntities\Entity\BrakeTestType;
+use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\FacilityType;
 use DvsaEntities\Entity\NonWorkingDayCountry;
 use DvsaEntities\Entity\Site;
@@ -18,6 +19,7 @@ use DvsaEntities\Entity\SiteContactType;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Entity\SiteType;
 use DvsaEntities\Entity\VehicleClass;
+use DvsaEntities\Repository\SiteRiskAssessmentRepository;
 use DvsaEventApi\Service\EventService;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapMapper;
 use SiteApi\Service\SiteService;
@@ -48,6 +50,7 @@ class SiteServiceFactory implements FactoryInterface
             $serviceLocator->get(MotIdentityProviderInterface::class)->getIdentity(),
             $serviceLocator->get(ContactDetailsService::class),
             $serviceLocator->get(EventService::class),
+            $entityManager->getRepository(EnforcementSiteAssessment::class),
             $entityManager->getRepository(SiteType::class),
             $entityManager->getRepository(Site::class),
             $entityManager->getRepository(SiteContactType::class),

@@ -609,7 +609,7 @@ class SiteRepository extends AbstractMutableRepository
             ->select('site, siteRiskAssessments, siteContacts')
             ->innerJoin("site.associationsWithAe", "associationsWithAe")
             ->leftJoin('site.lastSiteAssessment', 'lastSiteAssessment')
-            ->leftJoin('site.siteRiskAssessments', 'siteRiskAssessments',  Join::WITH, "(siteRiskAssessments.visitDate >= associationsWithAe.startDate AND (siteRiskAssessments.visitDate <= associationsWithAe.endDate OR associationsWithAe.endDate IS NULL))")
+            ->leftJoin('site.siteRiskAssessments', 'siteRiskAssessments',  Join::WITH, "(DATE(siteRiskAssessments.visitDate) >= DATE(associationsWithAe.startDate) AND (DATE(siteRiskAssessments.visitDate) <= DATE(associationsWithAe.endDate) OR associationsWithAe.endDate IS NULL))")
             ->leftJoin('site.contacts', 'siteContacts')
             ->leftJoin('siteContacts.contactDetail', 'contactDetail')
             ->leftJoin('contactDetail.address', 'address')

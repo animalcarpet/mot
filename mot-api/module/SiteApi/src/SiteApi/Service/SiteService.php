@@ -44,6 +44,7 @@ use DvsaEntities\Repository\FacilityTypeRepository;
 use DvsaEntities\Repository\NonWorkingDayCountryRepository;
 use DvsaEntities\Repository\SiteContactTypeRepository;
 use DvsaEntities\Repository\SiteRepository;
+use DvsaEntities\Repository\SiteRiskAssessmentRepository;
 use DvsaEntities\Repository\SiteStatusRepository;
 use DvsaEntities\Repository\SiteTestingDailyScheduleRepository;
 use DvsaEntities\Repository\SiteTypeRepository;
@@ -82,6 +83,8 @@ class SiteService extends AbstractService
     private $repository;
     /** @var SiteTypeRepository */
     private $siteTypeRepository;
+    /** @var SiteRiskAssessmentRepository */
+    private $siteRiskAssessmentRepository;
     /** @var BrakeTestTypeRepository */
     private $brakeTestTypeRepository;
     /** @var SiteContactTypeRepository */
@@ -115,6 +118,7 @@ class SiteService extends AbstractService
      * @param MotIdentityInterface                             $motIdentity
      * @param ContactDetailsService                            $contactService
      * @param EventService                                     $eventService
+     * @param SiteRiskAssessmentRepository                     $siteRiskAssessmentRepository
      * @param SiteTypeRepository                               $siteTypeRepository
      * @param SiteRepository                                   $repository
      * @param SiteContactTypeRepository                        $siteContactTypeRepository
@@ -137,6 +141,7 @@ class SiteService extends AbstractService
         MotIdentityInterface $motIdentity,
         ContactDetailsService $contactService,
         EventService $eventService,
+        SiteRiskAssessmentRepository $siteRiskAssessmentRepository,
         SiteTypeRepository $siteTypeRepository,
         SiteRepository $repository,
         SiteContactTypeRepository $siteContactTypeRepository,
@@ -161,6 +166,7 @@ class SiteService extends AbstractService
         $this->eventService = $eventService;
 
         $this->repository = $repository;
+        $this->siteRiskAssessmentRepository = $siteRiskAssessmentRepository;
         $this->siteTypeRepository = $siteTypeRepository;
         $this->brakeTestTypeRepository = $brakeTestTypeRepository;
         $this->siteContactTypeRepository = $siteContactTypeRepository;
@@ -416,7 +422,11 @@ class SiteService extends AbstractService
             throw new NotFoundException('Site', $id);
         }
 
-        return $this->vtsMapper->toDto($site);
+        $lastAssessment = $site->getLastSiteAssessment();
+        $organisationId = (!empty($lastAssessment)) ? $lastAssessment->getAeOrganisationId() : null;
+        $siteAssessments = $this->siteRiskAssessmentRepository->getLatestAssessmentsForSite($id, $organisationId, 2);
+
+        return $this->vtsMapper->toDtoWithLatestAssessments($site, $siteAssessments);
     }
 
     /**

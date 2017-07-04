@@ -11,6 +11,7 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\Time;
 use DvsaCommon\Dto\Equipment\EquipmentDto;
 use DvsaCommon\Dto\MotTesting\MotTestInProgressDto;
+use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
 use DvsaCommon\Dto\Site\SiteTestingDailyScheduleDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -147,6 +148,18 @@ class SiteViewModel
         }
 
         return 'England';
+    }
+
+    public function getCurrentAssessment()
+    {
+        return (empty($this->site->getCurrentAssessment()))
+            ? (new EnforcementSiteAssessmentDto())->setSiteAssessmentScore(0)
+            : $this->site->getCurrentAssessment();
+    }
+
+    public function getPreviousAssessment()
+    {
+        return $this->site->getPreviousAssessment();
     }
 
     public function displayWeekday(SiteTestingDailyScheduleDto $schedule)

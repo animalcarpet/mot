@@ -1,0 +1,37 @@
+<?php
+use DvsaCommon\Date\DateTimeDisplayFormat;
+use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
+use Organisation\Presenter\StatusPresenter;
+use Site\Service\RiskAssessmentScoreRagClassifier;
+
+/**
+ * @var $assessment EnforcementSiteAssessmentDto
+ * @var $ragClassifier RiskAssessmentScoreRagClassifier
+ * @var $statusPresenter StatusPresenter
+ * @var $rowTitle string
+ * */
+
+if (isset($assessment) && isset($ragClassifier) && isset($statusPresenter)):
+    $ragClassifier->setScore($assessment->getSiteAssessmentScore()) ?>
+    <tr>
+        <th class="table-summary__key"><?php echo $rowTitle?></th>
+        <td class="table-summary__value">
+
+            <?php $riskScoreField = sprintf(
+                '<span class="%s">%s</span>',
+                $statusPresenter->getStatusFields($ragClassifier->getRagScore())->getSidebarBadgeCssClass(),
+                $ragClassifier->getRagScore()
+            ) ?>
+
+            <?php echo $riskScoreField ?>
+            <span class="text-secondary text-secondary--spaced-8">
+                Score: <?php echo $this->escapeHtml($assessment->getSiteAssessmentScore()) ?>
+            </span>
+            <?php if (!empty($assessment->getDateOfAssessment())): ?>
+                <span class="text-secondary">
+                    Date: <?php echo DateTimeDisplayFormat::date(new DateTime($assessment->getDateOfAssessment())) ?>
+                </span>
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endif; ?>
