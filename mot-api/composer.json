@@ -10,15 +10,15 @@
     "dvsa/dvsa-doctrine-module": "1.2.0",
     "dvsa/dvsa-document-module": "1.4.0",
     "dvsa/feature-toggle": "1.2.0",
-    "dvsa/dvsa-openam-client" : "dev-feature-support-3.9-into-master",
+    "dvsa/dvsa-openam-client" : "1.11.0",
     "dvsa/scripts": "2.0.3",
     "dvsa/dvsa-logger": "1.2.0",
-    "dvsa/dvsa-application-logger": "dev-feature-support-3.9-into-master",
+    "dvsa/dvsa-application-logger": "1.5.2",
     "soflomo/purifier": "0.1.1",
     "slot-purchase/backend-api": "4.2.1",
     "danielstjules/stringy": "~2.0",
     "aws/aws-sdk-php": "^3.9",
-    "mot/api-client-php": "dev-feature-support-3.9-into-master",
+    "mot/api-client-php": "16.0.0",
     "noiselabs/zf-debug-utils": "^0.3"
   },
   "autoload" : {

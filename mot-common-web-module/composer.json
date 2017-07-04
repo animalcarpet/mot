@@ -1,12 +1,11 @@
 {
     "name": "dvsa/mot-common-web-module",
-    "minimum-stability": "dev",
     "require": {
         "zendframework/zendframework": "~2.5.3",
         "dvsa/dvsa-document-module": "1.4.0",
         "dvsa/feature-toggle": "1.2.0",
         "dvsa/dvsa-doctrine-module": "1.2.0",
-        "dvsa/dvsa-application-logger": "dev-feature-support-3.9-into-master"
+        "dvsa/dvsa-application-logger": "1.5.2"
     },
     "repositories": [
         {
