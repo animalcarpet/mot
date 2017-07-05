@@ -192,7 +192,7 @@ public class ConductMotTests extends DslTest {
         motUI.retest.verifyRetestIsSuccessful();
     }
 
-    @Test(groups = {"Regression"} )
+    @Test(groups = {"Regression"}, enabled = false)
     public void abortReTestAsTester() throws URISyntaxException, IOException {
         //Given I have a vehicle with a failed MOT test
         motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
