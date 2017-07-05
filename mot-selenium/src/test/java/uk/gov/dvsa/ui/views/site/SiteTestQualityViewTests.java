@@ -59,7 +59,7 @@ public class SiteTestQualityViewTests extends DslTest {
     }
 
     @Test(groups = {"Regression"},
-        description = "Verifies that tester can view Test Quality for site")
+        description = "Verifies that tester can view Test Quality for site", enabled = false)
     public void viewSiteTestQualityCsv() throws IOException, URISyntaxException {
         //National stats calculations are cached
         siteData.clearAllCachedStatistics();
