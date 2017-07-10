@@ -194,6 +194,9 @@ class SiteServiceTest extends AbstractServiceTestCase
             }
         }
 
+        $this->siteRiskAssessmentRepository->expects($this->any())->method('getLatestAssessmentsForSite')
+            ->willReturn([$this->getTestAssessment()]);
+
         //  --  check permission    --
         if ($permissions !== null) {
             $siteId = ArrayUtils::tryGet($params, 'siteId');
@@ -238,6 +241,8 @@ class SiteServiceTest extends AbstractServiceTestCase
             'class' => NotFoundException::class,
             'message' => 'Site '.self::SITE_NR.' not found',
         ];
+
+        $siteDtoClone = clone $siteEntity;
 
         return [
             //  --  getVehicleTestingStationDataBySiteNumber method --
@@ -327,12 +332,8 @@ class SiteServiceTest extends AbstractServiceTestCase
                 ],
                 'repositories' => [[
                     'method' => 'find',
-                    'result' => $siteEntity,
+                    'result' => $siteDtoClone->setLastSiteAssessment($this->getTestAssessment()),
                     'params' => [self::SITE_ID],
-                ], [
-                    'method' => 'getLatestAssessmentsForSite',
-                    'result' => $assessments,
-                    'params' => [self::SITE_ID, 2],
                 ]],
                 'permissions' => [PermissionAtSite::VEHICLE_TESTING_STATION_READ],
                 'expect' => [
