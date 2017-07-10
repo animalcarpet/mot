@@ -144,15 +144,16 @@ class MotTestContext implements Context, SnippetAcceptingContext
         try {
             $this->iStartMotTest($testClass);
         } catch (UnexpectedResponseStatusCodeException $exception) {
-
         }
 
-        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertTrue(isset($exception), 'Exception not thrown');
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**
      * @Given I am a Tester performing an MOT Test on a Class :testClass Vehicle
+     *
+     * @param int $testClass
      */
     public function iAmATesterPerformingAnMotTestOnAClassVehicle($testClass)
     {
@@ -168,11 +169,13 @@ class MotTestContext implements Context, SnippetAcceptingContext
     /**
      * @Given there is a Mot test with :testType type in progress
      * @Given there is a Mot test in progress
+     *
+     * @param string $testType
      */
     public function thereIsAMotTestWithTypeInProgress($testType = MotTestTypeCode::NORMAL_TEST)
     {
         $this->motTestData->create(
-            $this->userData->createTester("Mike Tyson"),
+            $this->userData->createTester('Mike Tyson'),
             $this->vehicleData->create(),
             $this->siteData->get(),
             $testType
@@ -185,7 +188,6 @@ class MotTestContext implements Context, SnippetAcceptingContext
     public function theTesterPassesTheMotTest()
     {
         $this->motTestData->passMotTest($this->motTestData->getLast());
-
     }
 
     /**
@@ -196,10 +198,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
         try {
             $this->motTestData->passMotTest($this->motTestData->getLast());
         } catch (UnexpectedResponseStatusCodeException $exception) {
-
         }
 
-        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertTrue(isset($exception), 'Exception not thrown');
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
@@ -220,10 +221,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
         try {
             $this->motTestData->failMotTest($this->motTestData->getAll()->last());
         } catch (UnexpectedResponseStatusCodeException $exception) {
-
         }
-            PHPUnit::assertTrue(isset($exception), "Exception not thrown");
-            PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
+        PHPUnit::assertTrue(isset($exception), 'Exception not thrown');
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**
@@ -237,7 +237,6 @@ class MotTestContext implements Context, SnippetAcceptingContext
         try {
             $this->motTestData->passMotTest($mot);
         } catch (\Exception $e) {
-
         }
 
         PHPUnit::assertEquals('MS', $mot->getTestType()->getCode());
@@ -259,10 +258,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
         try {
             $this->theTesterAbortsTheMotTest();
         } catch (UnexpectedResponseStatusCodeException $exception) {
-
         }
 
-        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertTrue(isset($exception), 'Exception not thrown');
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
@@ -283,10 +281,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
         try {
             $this->theUserAbortsTheMotTest();
         } catch (UnexpectedResponseStatusCodeException $exception) {
-
         }
 
-        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertTrue(isset($exception), 'Exception not thrown');
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
@@ -315,7 +312,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      *
      * @param string $vehicleClassCode
      */
-    function iCanCompleteDemoTestForVehicleClass($vehicleClassCode = VehicleClassCode::CLASS_4)
+    public function iCanCompleteDemoTestForVehicleClass($vehicleClassCode = VehicleClassCode::CLASS_4)
     {
         $this->motTestData->createPassedMotTest(
             $this->userData->getCurrentLoggedUser(),
@@ -330,7 +327,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iPerformDemotests($testCount)
     {
-        for($i = 0; $i < $testCount; $i++) {
+        for ($i = 0; $i < $testCount; ++$i) {
             $this->iCanCompleteDemoTestForVehicleClass();
         }
     }
@@ -361,7 +358,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iPassNormalTests($testCount)
     {
-        for($i = 0; $i < $testCount; $i++) {
+        for ($i = 0; $i < $testCount; ++$i) {
             $this->IPassMotTestWithAClassVehicle();
         }
     }
@@ -402,7 +399,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iFailNormalTests($testCount = 1)
     {
-        for($i = 0; $i < $testCount; $i++) {
+        for ($i = 0; $i < $testCount; ++$i) {
             $this->IFailMotTestWithAClassVehicle(VehicleClassCode::CLASS_4);
         }
     }
@@ -412,7 +409,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iPerformRetests($testCount)
     {
-        for($i = 0; $i < $testCount; $i++) {
+        for ($i = 0; $i < $testCount; ++$i) {
             $this->iFailNormalTests();
 
             $this->motTestData->createCompletedMotTest(
@@ -429,7 +426,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iStartAndAbortTests($testCount)
     {
-        for($i = 0; $i < $testCount; $i++) {
+        for ($i = 0; $i < $testCount; ++$i) {
             $this->motTestData->createAbandonedMotTest(
                 $this->userData->getCurrentLoggedUser(),
                 $this->siteData->get(),
@@ -468,7 +465,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
     {
         $vts = $this->siteData->get($vtsName);
 
-        $tester = $this->userData->createTesterAssignedWitSite($vts->getId(), "another tester");
+        $tester = $this->userData->createTesterAssignedWitSite($vts->getId(), 'another tester');
 
         $this->passMotTestOnAMaskedVehicle($tester, $vts);
     }
@@ -561,7 +558,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
     {
         try {
             $body = $this->motTestData->getLastResponse()->getBody();
-            PHPUnit::assertThat($body->offsetExists("data"), PHPUnit::isEmpty(), 'MOT Test number returned in response message');
+            PHPUnit::assertThat($body->offsetExists('data'), PHPUnit::isEmpty(), 'MOT Test number returned in response message');
         } catch (\LogicException $e) {
         }
     }
@@ -601,30 +598,29 @@ class MotTestContext implements Context, SnippetAcceptingContext
      * @Given /^I have created (.*) mot tests$/
      * @Given I have created :number mot tests for :siteName site
      *
-     * @param int $number
+     * @param int    $number
      * @param string $siteName
      */
     public function ICreateMotTests($number = 1, $siteName = SiteData::DEFAULT_NAME)
     {
         $motTestParams = [];
-        if(!empty($siteName)) {
+        if (!empty($siteName)) {
             $site = $this->siteData->get($siteName);
             $motTestParams[MotTestParams::VEHICLE_TESTING_STATION_ID] = $site->getId();
         }
 
         $user = $this->userData->getCurrentLoggedUser();
-        for ($i=0; $i < $number; $i++) {
+        for ($i = 0; $i < $number; ++$i) {
             $this->motTestData->createAbortedMotTest($user, $this->siteData->get($siteName), $this->vehicleData->create());
         }
     }
 
     /**
      * @Given /^I attempt to create a MOT Test on a vehicle without a manufactured date and first used date$/
-     *
      */
     public function IAttemptToCreateAnMOTTestOnAVehicleWithoutAManufacturerAndFirstUsedDate()
     {
-        $vehicleData =  [
+        $vehicleData = [
             VehicleParams::DATE_OF_FIRST_USE => null,
             VehicleParams::MANUFACTURE_DATE => null,
         ];
@@ -640,7 +636,6 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
     /**
      * @Then /^MOT test should be created successfully$/
-     *
      */
     public function MOTTestShouldBeCreatedSuccessfully()
     {
@@ -662,7 +657,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
                 $this->vehicleData->getLast()
             );
 
-            $number--;
+            --$number;
         }
     }
 
@@ -680,7 +675,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
                 $this->vehicleData->getLast()
             );
 
-            $number--;
+            --$number;
         }
     }
 
@@ -711,7 +706,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
             VehicleParams::MAKE => $row['make_id'],
             VehicleParams::MAKE_OTHER => $row['make_other'],
             VehicleParams::MODEL => null,
-            VehicleParams::MODEL_OTHER => $row['model_other']
+            VehicleParams::MODEL_OTHER => $row['model_other'],
         ];
 
         $tester = $this->userData->createTesterAssignedWitSite($this->siteData->get()->getId(), 'Vehicle Constructor');
@@ -830,7 +825,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
             }
         }
 
-        usort($this->motTests, function($a, $b) {
+        usort($this->motTests, function ($a, $b) {
             return $a[MotTestParams::ID] < $b[MotTestParams::ID];
         });
 
@@ -844,7 +839,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
     public function refreshMotTests()
     {
-        $this->motTests=[];
+        $this->motTests = [];
+
         return $this->getMotTests();
     }
 
@@ -875,13 +871,13 @@ class MotTestContext implements Context, SnippetAcceptingContext
             $response = $this->motTestData->getNormalMotTestLastResponse();
         }
 
-        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertTrue(isset($exception), 'Exception not thrown');
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
         PHPUnit::assertSame(HttpResponse::STATUS_CODE_403, $response->getStatusCode());
 
-        $expectedError = sprintf("Your Site is not authorised to test class %s vehicles", $vehicleClass);
-        $apiErrors = $response->getBody()->offsetGet("errors")->toArray();
-        $error = array_shift($apiErrors)["message"];
+        $expectedError = sprintf('Your Site is not authorised to test class %s vehicles', $vehicleClass);
+        $apiErrors = $response->getBody()->offsetGet('errors')->toArray();
+        $error = array_shift($apiErrors)['message'];
 
         PHPUnit::assertSame($expectedError, $error);
     }
@@ -947,8 +943,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
     public function iPerformTestOnTheVtsWhenItsLinkedToAe($aeName, $time)
     {
         $ae = $this->authorisedExaminerData->create($aeName);
-        $site = $this->siteData->createUnassociatedSite([SiteParams::NAME => "some site"]);
-        $tester = $this->userData->createTesterAssignedWitSite($site->getId(), "John Kowalsky");
+        $site = $this->siteData->createUnassociatedSite([SiteParams::NAME => 'some site']);
+        $tester = $this->userData->createTesterAssignedWitSite($site->getId(), 'John Kowalsky');
         $vehicle = $this->vehicleData->createByUser($tester->getAccessToken());
 
         $this->authorisedExaminerData->linkAuthorisedExaminerWithSite($ae, $site);
@@ -956,7 +952,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->motTestData->createPassedMotTest($tester, $site, $vehicle);
 
         //When we assign VTS back to first AE, we don't want to unlink them after test
-        if($time != 'second') {
+        if ($time != 'second') {
             $this->authorisedExaminerData->unlinkSiteFromAuthorisedExaminer($ae, $site);
         }
     }
@@ -969,12 +965,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
         try {
             $this->iStartMotTest();
         } catch (UnexpectedResponseStatusCodeException $exception) {
-
         }
 
         $actualStatusCode = $this->motTestData->getLastResponse()->getStatusCode();
 
-        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertTrue(isset($exception), 'Exception not thrown');
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_403, $actualStatusCode);
     }

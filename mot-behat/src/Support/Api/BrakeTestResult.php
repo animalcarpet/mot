@@ -8,7 +8,6 @@ use Dvsa\Mot\Behat\Support\Response;
 class BrakeTestResult extends MotApi
 {
     const PATH = 'mot-test/{mot_test_number}/brake-test-result';
-    const VEHICLE_WEIGHT = 100;
 
     public function addBrakeTestRollerClass3To7($token, $motNumber)
     {
@@ -281,7 +280,7 @@ class BrakeTestResult extends MotApi
           'serviceBrake2TestType' => null,
           'serviceBrakeControlsCount' => 0,
           'serviceBrakeIsSingleLine' => false,
-          'vehicleWeight' => self::VEHICLE_WEIGHT,
+          'vehicleWeight' => 100,
           'weightIsUnladen' => false,
           'weightType' => 'VSI',
         ];

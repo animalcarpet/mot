@@ -1,12 +1,11 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\Vehicle;
+use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
-
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class VehicleContext implements Context
@@ -22,8 +21,7 @@ class VehicleContext implements Context
         SiteData $siteData,
         VehicleData $vehicleData,
         UserData $userData
-    )
-    {
+    ) {
         $this->siteData = $siteData;
         $this->vehicleData = $vehicleData;
         $this->userData = $userData;
@@ -44,9 +42,19 @@ class VehicleContext implements Context
      */
     public function vehicleWeightIsUpdated()
     {
-        $vehicle = $this->vehicleData->getAll()->last();
-        $vehicleDetails = $this->vehicleData->getVehicleDetails($vehicle->getId(), $this->userData->getCurrentLoggedUser()->getUsername());
-        PHPUnit::assertSame(BrakeTestResult::VEHICLE_WEIGHT, $vehicleDetails->getWeight());
+        $vehicleId = $this->vehicleData->getAll()->last()->getId();
+        $vehicleDetails = $this->vehicleData->getVehicleDetails($vehicleId, $this->userData->getCurrentLoggedUser()->getUsername());
+        PHPUnit::assertNotEquals(VehicleParams::WEIGHT_VALUE, $vehicleDetails->getWeight());
+    }
+
+    /**
+     * @Then vehicle weight source is updated
+     */
+    public function vehicleWeightSourceIsUpdated()
+    {
+        $vehicleId = $this->vehicleData->getAll()->last()->getId();
+        $vehicleDetails = $this->vehicleData->getVehicleDetails($vehicleId, $this->userData->getCurrentLoggedUser()->getUsername());
+        PHPUnit::assertNotEquals(VehicleParams::WEIGHT_SOURCE_VALUE, $vehicleDetails->getWeightSource());
     }
 
     /**
@@ -54,8 +62,8 @@ class VehicleContext implements Context
      */
     public function vehicleWeightIsNotUpdated()
     {
-        $vehicle = $this->vehicleData->getAll()->last();
-        $vehicleDetails = $this->vehicleData->getVehicleDetails($vehicle->getId(), $this->userData->getCurrentLoggedUser()->getUsername());
+        $vehicleId = $this->vehicleData->getAll()->last()->getId();
+        $vehicleDetails = $this->vehicleData->getVehicleDetails($vehicleId, $this->userData->getCurrentLoggedUser()->getUsername());
         PHPUnit::assertSame(null, $vehicleDetails->getWeight());
     }
 

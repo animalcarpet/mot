@@ -49,6 +49,13 @@ class Class3To7BrakeTestResultsBuilder
         return $this;
     }
 
+    public function withVehicleWeightSource($weightSource)
+    {
+        $this->data['weightType'] = $weightSource;
+
+        return $this;
+    }
+
     public function withAllEqualServiceBrakeEffort($effort)
     {
         $this->data['serviceBrake1Data']['effortNearsideAxle1'] = $effort;
