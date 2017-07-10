@@ -94,3 +94,12 @@ Feature: MOT Test
     When the Tester adds a Class 3-7 Plate Brake Test
     And the Tester Passes the Mot Test
     Then vehicle weight is not updated
+
+  @brake-test
+  Scenario: If vehicle weight source (type) is "official" and vehicle weight and vehicle weight source has changed,
+  update vehicle weight and vehicle weight source on vehicle record
+    Given I am a Tester performing an MOT Test on a Class 4 Vehicle
+    When I submit brake test results with vehicle weight of 1200 and vehicle weight source of MISW
+    And the Tester Passes the Mot Test
+    Then vehicle weight is updated
+    And vehicle weight source is updated

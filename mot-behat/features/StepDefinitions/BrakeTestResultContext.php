@@ -160,8 +160,6 @@ class BrakeTestResultContext implements Context
         $this->odometerReadingData->addMeterReading($mot, 1000, MeterReadingParams::KM);
         PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->odometerReadingData->getLastResponse()->getStatusCode());
 
-        // efficiency = ((effortNearsideAxle1 + effortOffsideAxle1 + effortNearsideAxle2 + effortOffsideAxle2) / vehicleWeight) * 100
-
         $brakeTestResultBuilder = (new Class3To7BrakeTestResultsBuilder())
             ->withVehicleWeight(1000)
             ->withAllEqualServiceBrakeEffort(70)
@@ -184,12 +182,34 @@ class BrakeTestResultContext implements Context
         $this->odometerReadingData->addMeterReading($mot, 1000, MeterReadingParams::KM);
         PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->odometerReadingData->getLastResponse()->getStatusCode());
 
-        // efficiency = ((effortNearsideAxle1 + effortOffsideAxle1 + effortNearsideAxle2 + effortOffsideAxle2) / vehicleWeight) * 100
-
         $brakeTestResultBuilder = (new Class3To7BrakeTestResultsBuilder())
             ->withVehicleWeight(1000)
             ->withAllEqualServiceBrakeEffort(70)
             ->withAllEqualServiceBrakeWheelLocks(true);
+
+        $this->brakeTestResult->addClass3To7BrakeTestResult(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $mot->getMotTestNumber(),
+            $brakeTestResultBuilder
+        );
+    }
+
+    /**
+     * @When I submit brake test results with vehicle weight of :vehicleWeight and vehicle weight source of :vehicleWeightSource
+     *
+     * @param int    $vehicleWeight
+     * @param string $vehicleWeightSource
+     */
+    public function iSubmitBrakeTestResultsWithVehicleWeightOfAndVehicleWeightSourceOf($vehicleWeight, $vehicleWeightSource)
+    {
+        $mot = $this->motTestData->getLast();
+
+        $this->odometerReadingData->addMeterReading($mot, 1000, MeterReadingParams::KM);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->odometerReadingData->getLastResponse()->getStatusCode());
+
+        $brakeTestResultBuilder = (new Class3To7BrakeTestResultsBuilder())
+            ->withVehicleWeight($vehicleWeight)
+            ->withVehicleWeightSource($vehicleWeightSource);
 
         $this->brakeTestResult->addClass3To7BrakeTestResult(
             $this->userData->getCurrentLoggedUser()->getAccessToken(),
@@ -813,5 +833,4 @@ class BrakeTestResultContext implements Context
                 throw new InvalidArgumentException;
         }
     }
-
 }

@@ -36,15 +36,18 @@ class VehicleMapper extends AbstractVehicleMapper
         if (!is_null($vehicle->getEmptyVinReason())) {
             $dto->setEmptyVinReason($vehicle->getEmptyVinReason()->getCode());
         }
-        //  ----  entity specific ----
+
         $dto->setYear($vehicle->getYear());
         $dto->setChassisNumber($vehicle->getChassisNumber());
 
         $dto->setWeight($vehicle->getWeight());
 
+        if (!is_null($vehicle->getWeightSource())) {
+            $dto->setWeightSource($vehicle->getWeightSource()->getCode());
+        }
+
         $dto->setAmendedOn(DateTimeApiFormat::date($vehicle->getLastAmendedOn()));
 
-        //  --  country of reg  --
         $dto->setCountryOfRegistration(
             (new CountryOfRegistrationMapper())->toDto($vehicle->getCountryOfRegistration())
         );
@@ -52,7 +55,6 @@ class VehicleMapper extends AbstractVehicleMapper
         $dto->setMakeName($vehicle->getMakeName());
         $dto->setModelName($vehicle->getModelName());
 
-        //  --  transmision type   --
         $transmissionTypeDto = new VehicleParamDto();
 
         $param = $vehicle->getTransmissionType();
@@ -65,7 +67,6 @@ class VehicleMapper extends AbstractVehicleMapper
 
         $dto->setTransmissionType($transmissionTypeDto);
 
-        //  --  Vehicle Class   --
         $classDto = new VehicleClassDto();
 
         $class = $vehicle->getVehicleClass();
@@ -79,7 +80,6 @@ class VehicleMapper extends AbstractVehicleMapper
 
         $dto->setVehicleClass($classDto);
 
-        //  --  Colours --
         $colourMapper = new ColourMapper();
         $dto->setColour($colourMapper->toDto($vehicle->getColour()));
         $dto->setColourSecondary($colourMapper->toDto($vehicle->getSecondaryColour()));
