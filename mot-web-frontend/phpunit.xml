@@ -7,6 +7,7 @@
         processIsolation            = "false"
         stopOnFailure               = "false"
         syntaxCheck                 = "false"
+        failOnWarning               = "true"
         bootstrap                   = "test/init.php">
     <testsuites>
         <testsuite name="WebFrontend">
