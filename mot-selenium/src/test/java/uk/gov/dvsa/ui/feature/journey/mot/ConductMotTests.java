@@ -192,7 +192,7 @@ public class ConductMotTests extends DslTest {
         motUI.retest.verifyRetestIsSuccessful();
     }
 
-    @Test(groups = {"Regression"}, enabled = false)
+    @Test(groups = {"Regression"})
     public void abortReTestAsTester() throws URISyntaxException, IOException {
         //Given I have a vehicle with a failed MOT test
         motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
@@ -204,7 +204,7 @@ public class ConductMotTests extends DslTest {
         assertThat("Retest is aborted and VT30 is produced", motUI.retest.verifyRetestAbortIsSuccessful(), is(true));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"BVT"}, enabled = false)
     public void printInspectionSheetSuccessfully() throws IOException, URISyntaxException {
         // GIVEN I start a new MOT test
         TestOptionsPage testStartedPage = vehicleReinspectionWorkflow().startMotTestAsATester(tester, vehicle);
