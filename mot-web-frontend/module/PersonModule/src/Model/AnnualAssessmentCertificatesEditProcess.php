@@ -209,7 +209,8 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
         $params = $this->context->getController()->params()->fromRoute() + [
                 self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             ];
-        $queryParams = $this->getBackToQueryParam();
+
+        $queryParams = ["query" => $this->getBackToQueryParam()];
 
         return $this->context->getController()->url()->fromRoute($route, $params, $queryParams);
     }
@@ -420,10 +421,9 @@ class AnnualAssessmentCertificatesEditProcess implements TwoStepProcessInterface
     private function getBackToQueryParam()
     {
         $backTo = $this->context->getController()->params()->fromQuery("backTo");
-        if ($backTo !== null) {
-            return ["backTo" => $backTo];
-        }
 
-        return [];
+        return [
+            "backTo" => $backTo
+        ];
     }
 }

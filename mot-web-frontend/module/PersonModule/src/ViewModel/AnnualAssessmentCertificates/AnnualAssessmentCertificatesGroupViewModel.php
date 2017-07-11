@@ -74,12 +74,10 @@ class AnnualAssessmentCertificatesGroupViewModel
                     'certificateId' => $annualAssessmentCertificate->getId(),
                 ];
 
-            $queryParams = [];
             $backTo = $this->context->getController()->params()->fromQuery("backTo");
-
-            if ($backTo === "vts-tester-assessments") {
-                $queryParams = ["query" => ["backTo" => "vts-tester-assessments"]];
-            }
+            $queryParams = ["query" => [
+                "backTo" => $backTo
+            ]];
 
             if ($canUpdate) {
                 $url = new UrlPresenterData(

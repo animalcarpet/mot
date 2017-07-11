@@ -49,20 +49,33 @@ class VtsTestersAnnualAssessmentCertificatesAction implements AutoWireableInterf
         $this->certificatesPermissions = $certificatesPermissions;
     }
 
-    public function execute(ViewAnnualAssessmentCertificatesFormContext $formContext, AbstractAuthActionController $controller)
+    /**
+     * @param ViewAnnualAssessmentCertificatesFormContext $formContext
+     * @param AbstractAuthActionController $controller
+     * @param string $backTo
+     * @return ViewActionResult
+     */
+    public function execute(ViewAnnualAssessmentCertificatesFormContext $formContext, AbstractAuthActionController $controller, $backTo)
     {
-        return $this->buildActionResult($formContext, $controller);
+        return $this->buildActionResult($formContext, $controller, $backTo);
     }
 
-    private function buildActionResult(ViewAnnualAssessmentCertificatesFormContext $formContext, AbstractAuthActionController $controller)
+    /**
+     * @param ViewAnnualAssessmentCertificatesFormContext $formContext
+     * @param AbstractAuthActionController $controller
+     * @param string $backTo
+     * @return ViewActionResult
+     */
+    private function buildActionResult(ViewAnnualAssessmentCertificatesFormContext $formContext, AbstractAuthActionController $controller, $backTo)
     {
         $isUserViewingHisOwnProfile = $this->isUserViewingHisOwnProfile($formContext);
         $breadcrumbs = $this->certificatesBreadcrumbs->getBreadcrumbsForVtsAnnualAssessmentCertificate(
             $formContext->getTargetPersonId(),
             $controller
         );
-        $addLinkQueryParams = ["backTo" => "vts-tester-assessments"];
-
+        $addLinkQueryParams = [
+            "backTo" => $backTo
+        ];
 
         $vm = new AnnualAssessmentCertificatesViewModel(
             $this->getLastBreadcrumbLabel($breadcrumbs),

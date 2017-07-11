@@ -2,7 +2,6 @@
 namespace Site\ViewModel;
 
 
-use Core\Routing\VtsRoutes;
 use Report\Table\Table;
 use Zend\View\Helper\Url;
 
@@ -24,6 +23,12 @@ class TestersAnnualAssessmentViewModel
 
     /** @var bool */
     private $canTestGroupB = false;
+
+    /** @var Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url */
+    private $backLink;
+
+    /** @var  string */
+    private $backLinkText;
 
     public function __construct(Url $urlHelper)
     {
@@ -84,9 +89,40 @@ class TestersAnnualAssessmentViewModel
         return $this;
     }
 
+    /**
+     * @return Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url
+     */
     public function getBackLink()
     {
-        return VtsRoutes::of($this->urlHelper)->vts($this->vtsId);
+        return $this->backLink;
+    }
+
+    /**
+     * @param Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url $backLink
+     * @return TestersAnnualAssessmentViewModel
+     */
+    public function setBackLink($backLink)
+    {
+        $this->backLink = $backLink;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackLinkText()
+    {
+        return $this->backLinkText;
+    }
+
+    /**
+     * @param string $backLinkText
+     * @return TestersAnnualAssessmentViewModel
+     */
+    public function setBackLinkText($backLinkText)
+    {
+        $this->backLinkText = $backLinkText;
+        return $this;
     }
 
     /**

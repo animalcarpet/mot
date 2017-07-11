@@ -35,9 +35,10 @@ class TestersAnnualAssessmentTable implements AutoWireableInterface
      * @param GroupAssessmentListItem[] $assessments
      * @param string $groupName
      * @param int $siteId
+     * @param string $backTo
      * @return Table
      */
-    public function getTableWithAssessments($assessments, $groupName, $siteId)
+    public function getTableWithAssessments($assessments, $groupName, $siteId, $backTo)
     {
         $table = new Table();
         $rows = [];
@@ -52,7 +53,7 @@ class TestersAnnualAssessmentTable implements AutoWireableInterface
                 ),
                 self::FIELD_USERNAME => $testerAnnualAssessmentRow->getUsername(),
                 self::FIELD_DATE_AWARDED => $date ? $date : "No assessment recorded",
-                self::FIELD_VIEW_LINK => $this->generateUrlToPersonAssessmentView($siteId, $testerAnnualAssessmentRow),
+                self::FIELD_VIEW_LINK => $this->generateUrlToPersonAssessmentView($siteId, $testerAnnualAssessmentRow, $backTo),
             ];
         }
 
@@ -108,9 +109,10 @@ class TestersAnnualAssessmentTable implements AutoWireableInterface
     /**
      * @param int $siteId
      * @param GroupAssessmentListItem $testerAnnualAssessmentRow
+     * @param string $backTo
      * @return UrlPresenterData
      */
-    private function generateUrlToPersonAssessmentView($siteId, GroupAssessmentListItem $testerAnnualAssessmentRow)
+    private function generateUrlToPersonAssessmentView($siteId, GroupAssessmentListItem $testerAnnualAssessmentRow, $backTo)
     {
         return new UrlPresenterData(
             'View',
@@ -119,8 +121,8 @@ class TestersAnnualAssessmentTable implements AutoWireableInterface
                 'vehicleTestingStationId' => $siteId,
                 'id' => $testerAnnualAssessmentRow->getUserId(),
             ],
-            ['query' =>
-                ['backTo' => 'vts-tester-assessments']
+            [
+                'query' => ['backTo' => $backTo]
             ],
             'view-' . $testerAnnualAssessmentRow->getUserId()
         );

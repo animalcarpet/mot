@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
+use Core\BackLink\BackLinkQueryParam;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Action\AnnualAssessmentCertificatesAction;
 use Dvsa\Mot\Frontend\PersonModule\Action\VtsTestersAnnualAssessmentCertificatesAction;
@@ -49,8 +50,9 @@ class ViewAnnualAssessmentCertificatesController extends AbstractAuthActionContr
         );
 
         $backTo = $this->params()->fromQuery("backTo");
-        if ($backTo === "vts-tester-assessments") {
-            $actionResult = $this->vtsTestersViewAction->execute($formContext, $this);
+
+        if ($backTo === BackLinkQueryParam::VTS_TESTER_ASSESSMENTS || $backTo === BackLinkQueryParam::SERVICE_REPORTS) {
+            $actionResult = $this->vtsTestersViewAction->execute($formContext, $this, $backTo);
         } else {
             $actionResult = $this->viewAction->execute($formContext, $this);
         }
