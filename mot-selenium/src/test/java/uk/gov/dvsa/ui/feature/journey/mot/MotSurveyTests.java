@@ -39,7 +39,8 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1529"},
-            description = "Verifies that user can navigate back from survey page to login page")
+            description = "Verifies that user can navigate back from survey page to login page",
+            enabled = false)
     public void backwardNavigationFromSurveyPageToLoginPage() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).clickFinishButton(TestCompletePage.class);
