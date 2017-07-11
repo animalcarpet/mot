@@ -2,6 +2,7 @@
 
 namespace Site\ViewModel\Sidebar;
 
+use Core\BackLink\BackLinkQueryParam;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Core\ViewModel\Sidebar\GeneralSidebar;
 use Core\ViewModel\Sidebar\GeneralSidebarLink;
@@ -220,7 +221,7 @@ class VtsOverviewSidebar extends GeneralSidebar
 
     private function createTestersAssessmentLink()
     {
-        $testersAssessmentLink = '/vehicle-testing-station/' . $this->vtsId . '/testers-annual-assessment';
+        $testersAssessmentLink = '/vehicle-testing-station/' . $this->vtsId . '/testers-annual-assessment?backTo=' . BackLinkQueryParam::VTS_TESTER_ASSESSMENTS;
 
         return new GeneralSidebarLink('testers-annual-assessment', 'Testers annual assessment', $testersAssessmentLink);
     }

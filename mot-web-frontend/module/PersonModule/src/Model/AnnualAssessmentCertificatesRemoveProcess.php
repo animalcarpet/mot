@@ -226,10 +226,9 @@ class AnnualAssessmentCertificatesRemoveProcess implements SingleStepProcessInte
     private function getBackToQueryParam()
     {
         $backTo = $this->context->getController()->params()->fromQuery("backTo");
-        if ($backTo !== null) {
-            return ["backTo" => $backTo];
-        }
 
-        return [];
+        return [
+            "backTo" => $backTo
+        ];
     }
 }

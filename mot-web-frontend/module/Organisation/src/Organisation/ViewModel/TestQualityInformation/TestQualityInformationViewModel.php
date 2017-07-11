@@ -2,6 +2,7 @@
 
 namespace Organisation\ViewModel\TestQualityInformation;
 
+use Core\BackLink\BackLinkQueryParam;
 use Core\Formatting\RiskScoreAssessmentFormatter;
 use Core\Routing\VtsRouteList;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\AuthorisedExaminerSitesPerformanceDto;
@@ -36,6 +37,8 @@ class TestQualityInformationViewModel
     const VTS_ADDRESS = 'Vts Address';
     const VTS_TEST_QUALITY_INFORMATION_LINK = 'Vts test quality information link';
     const VTS_TEST_QUALITY_INFORMATION_LINK_TEXT = 'Test quality information';
+    const VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK = 'Testers annual assessments link';
+    const VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK_TEXT = 'Testers annual assessments';
 
     const NUMERIC_CLASS = 'numeric';
     const TABULAR_CLASS = 'tabular';
@@ -44,6 +47,7 @@ class TestQualityInformationViewModel
     const SCORE = "Score: %d";
     const DATE = "Date: %s";
     const TEST_QUALITY_INFORMATION_LINK_ID = "TQI_%d";
+    const TESTERS_ANNUAL_ASSESSMENTS_LINK_ID = "TAA_%d";
 
     private $returnLink;
     /** @var Table */
@@ -124,7 +128,7 @@ class TestQualityInformationViewModel
         return $description;
     }
 
-    /*
+    /**
      * @param  AuthorisedExaminerSitesPerformanceDto  $authorisedExaminerSitePerformanceDto
      */
     private function setTable(AuthorisedExaminerSitesPerformanceDto $authorisedExaminerSitePerformanceDto, SearchParamsDto $searchParams)
@@ -152,6 +156,13 @@ class TestQualityInformationViewModel
                         ],
                         sprintf(self::TEST_QUALITY_INFORMATION_LINK_ID, $site->getId())
                     ),
+                    self::VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK => new UrlPresenterData(
+                        self::VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK_TEXT,
+                        VtsRouteList::VTS_TESTERS_ANNUAL_ASSESSMENT,
+                        ['id' => $site->getId()],
+                        ['query' => ['backTo' => BackLinkQueryParam::SERVICE_REPORTS]],
+                        sprintf(self::TESTERS_ANNUAL_ASSESSMENTS_LINK_ID, $site->getId())
+                    )
                 ];
         }
 
@@ -206,6 +217,11 @@ class TestQualityInformationViewModel
                         'formatter' => UrlPresenterLinkWithParams::class,
                         'fieldClass' => 'inline-link',
                     ],
+                    [
+                        'field' => self::VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK,
+                        'formatter' => UrlPresenterLinkWithParams::class,
+                        'fieldClass' => 'inline-link',
+                    ]
                 ],
             ],
             [

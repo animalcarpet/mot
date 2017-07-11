@@ -3,6 +3,9 @@
 namespace Site\Action;
 
 use Core\Action\ViewActionResult;
+use Core\BackLink\BackLinkQueryParam;
+use Core\Routing\AeRoutes;
+use Core\Routing\VtsRoutes;
 use DvsaClient\MapperFactory;
 use DvsaCommon\ApiClient\Site\Dto\TestersAnnualAssessmentDto;
 use DvsaCommon\ApiClient\Site\TestersAnnualAssessmentApiResource;
@@ -20,6 +23,8 @@ class TestersAnnualAssessmentAction implements AutoWireableInterface
 {
     const PAGE_SUB_TITLE = 'Vehicle Testing Station';
     const PAGE_TITLE = 'Tester annual assessments';
+    const BACK_LINK_VTS_TEXT = 'Return to Vehicle Testing Station';
+    const BACK_LINK_SERVICE_REPORTS_TEXT = 'Return to service reports';
 
     private $testersAnnualAssessmentApiResource;
     private $urlHelper;
@@ -49,31 +54,33 @@ class TestersAnnualAssessmentAction implements AutoWireableInterface
 
     /**
      * @param $siteId
+     * @param string $backTo
      * @return ViewActionResult
      */
-    public function annualAssessmentCertificatesAction($siteId)
+    public function annualAssessmentCertificatesAction($siteId, $backTo)
     {
         $this->authorisationService->assertGrantedAtSite(PermissionAtSite::TESTERS_ANNUAL_ASSESSMENT_VIEW, $siteId);
 
         $assessmentDto = $this->testersAnnualAssessmentApiResource->getTestersAnnualAssessmentForSite($siteId);
         $site = $this->mapper->Site->getById($siteId);
 
-        return $this->buildActionResult($assessmentDto, $site);
+        return $this->buildActionResult($assessmentDto, $site, $backTo);
     }
 
     /**
      * @param TestersAnnualAssessmentDto $assessmentDto
      * @param VehicleTestingStationDto $siteDto
+     * @param string $backTo
      * @return ViewActionResult
      */
-    private function buildActionResult(TestersAnnualAssessmentDto $assessmentDto, VehicleTestingStationDto $siteDto)
+    private function buildActionResult(TestersAnnualAssessmentDto $assessmentDto, VehicleTestingStationDto $siteDto, $backTo)
     {
         $actionResult = new ViewActionResult();
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');
         $actionResult->layout()->setPageSubTitle(self::PAGE_SUB_TITLE);
         $actionResult->layout()->setPageTitle(self::PAGE_TITLE);
         $actionResult->layout()->setBreadcrumbs($this->buildBreadcrumbs($siteDto));
-        $actionResult->setViewModel($this->buildViewModel($assessmentDto, $siteDto));
+        $actionResult->setViewModel($this->buildViewModel($assessmentDto, $siteDto, $backTo));
 
         return $actionResult;
     }
@@ -90,25 +97,34 @@ class TestersAnnualAssessmentAction implements AutoWireableInterface
     /**
      * @param TestersAnnualAssessmentDto $assessmentDto
      * @param VehicleTestingStationDto $siteDto
+     * @param string $backTo
      * @return TestersAnnualAssessmentViewModel
      */
-    private function buildViewModel(TestersAnnualAssessmentDto $assessmentDto, VehicleTestingStationDto $siteDto)
+    private function buildViewModel(TestersAnnualAssessmentDto $assessmentDto, VehicleTestingStationDto $siteDto, $backTo)
     {
         $testersAnnualAssessmentViewModel = new TestersAnnualAssessmentViewModel($this->urlHelper);
         $testersAnnualAssessmentViewModel->setVtsId($siteDto->getId());
 
         if(VtsAuthorisationForTesting::canTestClass1Or2($siteDto->getTestClasses())){
             $tableForGroupA = $this->testersAnnualAssessmentTable
-                ->getTableWithAssessments($assessmentDto->getGroupAAssessments(), 'a', $siteDto->getId());
+                ->getTableWithAssessments($assessmentDto->getGroupAAssessments(), 'a', $siteDto->getId(), $backTo);
             $testersAnnualAssessmentViewModel->setCanTestGroupA(true);
             $testersAnnualAssessmentViewModel->setTableForGroupA($tableForGroupA);
         }
 
         if(VtsAuthorisationForTesting::canTestAnyOfClass3AndAbove($siteDto->getTestClasses())){
             $tableForGroupB = $this->testersAnnualAssessmentTable
-                ->getTableWithAssessments($assessmentDto->getGroupBAssessments(), 'b', $siteDto->getId());
+                ->getTableWithAssessments($assessmentDto->getGroupBAssessments(), 'b', $siteDto->getId(), $backTo);
             $testersAnnualAssessmentViewModel->setCanTestGroupB(true);
             $testersAnnualAssessmentViewModel->setTableForGroupB($tableForGroupB);
+        }
+
+        if ($backTo === BackLinkQueryParam::SERVICE_REPORTS) {
+            $testersAnnualAssessmentViewModel->setBackLink(AeRoutes::of($this->urlHelper)->aeServiceReports($siteDto->getOrganisation()->getId()));
+            $testersAnnualAssessmentViewModel->setBackLinkText(self::BACK_LINK_SERVICE_REPORTS_TEXT);
+        } else {
+            $testersAnnualAssessmentViewModel->setBackLink(VtsRoutes::of($this->urlHelper)->vts($siteDto->getId()));
+            $testersAnnualAssessmentViewModel->setBackLinkText(self::BACK_LINK_VTS_TEXT);
         }
 
         return $testersAnnualAssessmentViewModel;

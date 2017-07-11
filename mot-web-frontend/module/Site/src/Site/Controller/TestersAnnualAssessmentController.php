@@ -18,9 +18,10 @@ class TestersAnnualAssessmentController extends AbstractDvsaActionController imp
     public function testersAnnualAssessmentAction()
     {
         $this->setHeadTitle("Tester annual assessments");
+        $backTo = $this->params()->fromQuery("backTo");
 
         return $this->applyActionResult(
-            $this->testersAnnualAssessmentAction->annualAssessmentCertificatesAction($this->params('id'))
+            $this->testersAnnualAssessmentAction->annualAssessmentCertificatesAction($this->params('id'), $backTo)
         );
     }
 }
