@@ -185,6 +185,9 @@ if ($dateLinks->findOneBy('active', true)) {
                             ?>
                         </fieldset>
                     </div>
+                    <?php if ($viewModel->hasBackToParam()): ?>
+                        <input type="hidden" name="backTo" value="<?php echo $viewModel->getBackToParam() ?>">
+                    <?php endif; ?>
                 </div>
 
                 <span class="filter__help">For example, <strong>21 11 2014</strong></span>
@@ -203,7 +206,7 @@ if ($dateLinks->findOneBy('active', true)) {
         'partial/gds/form/control-navigation-secondary',
         [
             'navigation' => [
-                'Return to Vehicle Testing Station' => VehicleTestingStationUrlBuilderWeb::byId($site->getId()),
+                $viewModel->getBackLinkText() => $viewModel->getBackLinkUrl(),
             ],
         ]
     ); ?>

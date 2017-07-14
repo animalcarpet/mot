@@ -64,4 +64,11 @@ class AeRoutes extends AbstractRoutes
             ['id' => $id]
         );
     }
+
+    public function aeTestQuality($id)
+    {
+        return $this->url(
+            AeRouteList::AE_TEST_QUALITY, ['id' => $id]
+        );
+    }
 }

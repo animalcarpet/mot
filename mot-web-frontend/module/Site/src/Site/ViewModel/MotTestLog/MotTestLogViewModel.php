@@ -2,15 +2,19 @@
 
 namespace Site\ViewModel\MotTestLog;
 
+use Core\Routing\AeRoutes;
+use Core\Routing\VtsRoutes;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Site\MotTestLogSummaryDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
+use Organisation\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
 use Report\Filter\FilterBuilder;
 use Report\Table\Formatter\SubRow;
 use Report\Table\Table;
 use Site\ViewModel\MotTestLog\Formatter\VehicleModelSubRow;
 use Zend\Stdlib\Parameters;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class MotTestLogViewModel
 {
@@ -49,13 +53,25 @@ class MotTestLogViewModel
     private $filterBuilder;
 
     /**
+     * @var Parameters
+     */
+    private $queryParams;
+
+    /**
+     * @var Url
+     */
+    private $urlHelper;
+
+    /**
      * @param \DvsaCommon\Dto\Site\SiteDto              $org
      * @param \DvsaCommon\Dto\Site\MotTestLogSummaryDto $logData
+     * @param Url $urlHelper
      */
-    public function __construct(SiteDto $org, MotTestLogSummaryDto $logData)
+    public function __construct(SiteDto $org, MotTestLogSummaryDto $logData, Url $urlHelper)
     {
         $this->setSite($org);
         $this->setMotTestLogSummary($logData);
+        $this->urlHelper = $urlHelper;
         $this->setFormModel(new MotTestLogFormViewModel());
 
         $this->defineTable();
@@ -70,8 +86,10 @@ class MotTestLogViewModel
     public function parseData(Parameters $paramData)
     {
         if ($paramData->count() > 0) {
+            $this->queryParams = $paramData;
             $this->getFormModel()->parseData($paramData);
             $this->getFilterBuilder()->setQueryParams($paramData);
+            $this->getFilterBuilder()->setBackToParam($this->getBackToParam());
         }
     }
 
@@ -319,5 +337,37 @@ class MotTestLogViewModel
         );
 
         $this->parseData($defValues);
+    }
+
+    public function getBackLinkText()
+    {
+        if ($this->getBackToParam() === TestQualityInformationViewModel::BACK_TO_SERVICE_REPORT_QUERY_PARAM) {
+            return 'Return to service reports';
+        } else {
+            return 'Return to Vehicle Testing Station';
+        }
+    }
+
+    public function getBackLinkUrl()
+    {
+        if ($this->getBackToParam() === TestQualityInformationViewModel::BACK_TO_SERVICE_REPORT_QUERY_PARAM) {
+            return AeRoutes::of($this->urlHelper)->aeTestQuality($this->Site->getOrganisation()->getId());
+        } else {
+            return VtsRoutes::of($this->urlHelper)->vts($this->Site->getId());
+        }
+    }
+
+    public function getBackToParam()
+    {
+        if ($this->hasBackToParam()) {
+            return $this->queryParams->get("backTo");
+        }
+
+        return null;
+    }
+
+    public function hasBackToParam()
+    {
+        return ($this->queryParams !== null && $this->queryParams->get("backTo") !== null);
     }
 }
