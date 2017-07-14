@@ -84,6 +84,11 @@ class VtsRoutes extends AbstractRoutes
         return $this->url(VtsRouteList::VTS_TESTERS_ANNUAL_ASSESSMENT, ["id" => $vtsId], ["query" => $queryParams]);
     }
 
+    public function vtsTestLogs($vtsId, array $queryParams = [])
+    {
+        return $this->url(VtsRouteList::VTS_TEST_LOGS, ["id" => $vtsId], ["query" => $queryParams]);
+    }
+
     /**
      * @param Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url $object
      *

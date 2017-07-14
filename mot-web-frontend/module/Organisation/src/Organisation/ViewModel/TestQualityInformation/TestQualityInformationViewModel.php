@@ -7,7 +7,6 @@ use Core\Formatting\RiskScoreAssessmentFormatter;
 use Core\Routing\VtsRouteList;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\AuthorisedExaminerSitesPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\RiskAssessmentDto;
-use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Search\SearchParamsDto;
 use Organisation\Presenter\StatusPresenter;
@@ -37,6 +36,8 @@ class TestQualityInformationViewModel
     const VTS_ADDRESS = 'Vts Address';
     const VTS_TEST_QUALITY_INFORMATION_LINK = 'Vts test quality information link';
     const VTS_TEST_QUALITY_INFORMATION_LINK_TEXT = 'Test quality information';
+    const VTS_TEST_LOGS_LINK = 'Test logs link';
+    const VTS_TEST_LOGS_LINK_TEXT = 'Test logs';
     const VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK = 'Testers annual assessments link';
     const VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK_TEXT = 'Testers annual assessments';
 
@@ -47,6 +48,9 @@ class TestQualityInformationViewModel
     const SCORE = "Score: %d";
     const DATE = "Date: %s";
     const TEST_QUALITY_INFORMATION_LINK_ID = "TQI_%d";
+    const TEST_TEST_LOGS_LINK_ID = "test_logs_%d";
+
+    const BACK_TO_SERVICE_REPORT_QUERY_PARAM = "serviceReports";
     const TESTERS_ANNUAL_ASSESSMENTS_LINK_ID = "TAA_%d";
 
     private $returnLink;
@@ -138,6 +142,32 @@ class TestQualityInformationViewModel
             $currentRagScore = $this->getCurrentRagScore($site->getCurrentRiskAssessment());
             $previousRagScore = $this->getPreviousRagScore($site->getPreviousRiskAssessment() ,$site->getCurrentRiskAssessment());
 
+            $tqiUrl = new UrlPresenterData(
+                self::VTS_TEST_QUALITY_INFORMATION_LINK_TEXT,
+                VtsRouteList::VTS_TEST_QUALITY,
+                ['id' => $site->getId()],
+                ['query' => ['returnToAETQI' => true],
+                ],
+                sprintf(self::TEST_QUALITY_INFORMATION_LINK_ID, $site->getId())
+            );
+
+            $testLogsUrl = new UrlPresenterData(
+                self::VTS_TEST_LOGS_LINK_TEXT,
+                VtsRouteList::VTS_TEST_LOGS,
+                ['id' => $site->getId()],
+                ['query' => ['backTo' => "serviceReports"],
+                ],
+                sprintf(self::TEST_TEST_LOGS_LINK_ID, $site->getId())
+            );
+
+            $annualAssessmentsUrl = new UrlPresenterData(
+                self::VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK_TEXT,
+                VtsRouteList::VTS_TESTERS_ANNUAL_ASSESSMENT,
+                ['id' => $site->getId()],
+                ['query' => ['backTo' => BackLinkQueryParam::SERVICE_REPORTS]],
+                sprintf(self::TESTERS_ANNUAL_ASSESSMENTS_LINK_ID, $site->getId())
+            );
+
             $rows[] =
                 [
                     self::VTS_NAME => $site->getName(),
@@ -148,21 +178,7 @@ class TestQualityInformationViewModel
                     self::VTS_CURRENT_STATUS => (new StatusPresenter())->getStatusFields($this->ragClassifier->setScore($currentRagScore)->getRagScore()),
                     self::VTS_PREV_ASSESSMENT => $this->getAssessmentDescription($previousRagScore, $this->getRagDate($site->getPreviousRiskAssessment())),
                     self::VTS_PREV_STATUS => isset($previousRagScore) ? (new StatusPresenter())->getStatusFields($this->ragClassifier->setScore($previousRagScore)->getRagScore()) : null,
-                    self::VTS_TEST_QUALITY_INFORMATION_LINK => new UrlPresenterData(
-                        self::VTS_TEST_QUALITY_INFORMATION_LINK_TEXT,
-                        VtsRouteList::VTS_TEST_QUALITY,
-                        ['id' => $site->getId()],
-                        ['query' => ['returnToAETQI' => true],
-                        ],
-                        sprintf(self::TEST_QUALITY_INFORMATION_LINK_ID, $site->getId())
-                    ),
-                    self::VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK => new UrlPresenterData(
-                        self::VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK_TEXT,
-                        VtsRouteList::VTS_TESTERS_ANNUAL_ASSESSMENT,
-                        ['id' => $site->getId()],
-                        ['query' => ['backTo' => BackLinkQueryParam::SERVICE_REPORTS]],
-                        sprintf(self::TESTERS_ANNUAL_ASSESSMENTS_LINK_ID, $site->getId())
-                    )
+                    self::VTS_TEST_QUALITY_INFORMATION_LINK => [$testLogsUrl, $tqiUrl, $annualAssessmentsUrl]
                 ];
         }
 
@@ -211,6 +227,11 @@ class TestQualityInformationViewModel
                         'field' => self::VTS_ADDRESS,
                         'escapeHtml' => false,
                         'formatter' => SubRow::class,
+                    ],
+                    [
+                        'field' => self::VTS_TEST_LOGS_LINK,
+                        'formatter' => UrlPresenterLinkWithParams::class,
+                        'fieldClass' => 'inline-link',
                     ],
                     [
                         'field' => self::VTS_TEST_QUALITY_INFORMATION_LINK,

@@ -26,6 +26,8 @@ class FilterBuilder
      */
     private $queryParams;
 
+    private $backTo;
+
     public function setQueryParams(Parameters $params)
     {
         $this->queryParams = $params;
@@ -56,6 +58,11 @@ class FilterBuilder
         return $this->options;
     }
 
+    public function setBackToParam($backTo)
+    {
+        $this->backTo = $backTo;
+    }
+
     /**
      * Build time period navigation.
      *
@@ -81,8 +88,12 @@ class FilterBuilder
 
             $urlParams = [
                 SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $dateFrom,
-                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $dateTo,
+                SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM => $dateTo
             ];
+
+            if (!empty($this->backTo)) {
+                $urlParams["backTo"] = $this->backTo;
+            }
 
             $uri = $phpRenderer->url(null, [], ['query' => $urlParams], true);
 

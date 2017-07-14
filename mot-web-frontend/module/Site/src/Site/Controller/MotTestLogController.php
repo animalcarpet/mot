@@ -98,7 +98,7 @@ class MotTestLogController extends AbstractAuthActionController
         $site = $this->getSite($siteId);
         $motTestLogs = $this->getLogSummary($siteId);
 
-        $viewModel = new MotTestLogViewModel($site, $motTestLogs);
+        $viewModel = new MotTestLogViewModel($site, $motTestLogs, $this->url());
         $viewModel->parseData($this->request->getQuery());
 
         $formModel = $viewModel->getFormModel();
