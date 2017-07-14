@@ -421,6 +421,18 @@ class VtsContext implements Context
         }
     }
 
+    /**
+     * @When I attempt to add risk assessment with data:
+     */
+    public function iAttemptToAddRiskAssessmentToWithData(TableNode $table)
+    {
+        $rows = $table->getColumnsHash();
+        foreach ($rows as $row) {
+            $site = $this->siteData->get($row["siteName"]);
+            $this->iAttemptToAddRiskAssessmentToCurrentSiteWithData($site,$table);
+        }
+    }
+
     private function addRiskAssessment($siteName, $aeName, array $data)
     {
         $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $data);
@@ -431,5 +443,13 @@ class VtsContext implements Context
         );
 
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    }
+
+    /**
+     * @Given every site has created risk assessments
+     */
+    public function everySiteHasCreatedRiskAssessments()
+    {
+        $sites = $this->siteData->getAll();
     }
 }

@@ -53,20 +53,18 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
     }
 
     /**
-     * @param Site[] $sites
+     * @param array  $sites
      * @param int    $siteCount
      *
      * @return AuthorisedExaminerSitesPerformanceDto
      */
-    protected function returnDto($sites, $siteCount)
+    protected function returnDto(array $sites, $siteCount)
     {
         $sitesPerformanceDto = new AuthorisedExaminerSitesPerformanceDto();
         $sitesPerformanceDto->setSiteTotalCount($siteCount);
 
         if (is_array($sites)) {
             $sitesDtos = [];
-            TypeCheck::assertCollectionOfClass($sites, Site::class);
-
             foreach ($sites as $site) {
                 $sitesDtos[] = $this->authorisedExaminerSiteMapper->toDto($site);
             }

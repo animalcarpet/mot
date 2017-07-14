@@ -4,80 +4,87 @@ namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\AuthorisedExaminer\Ma
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Mapper\AuthorisedExaminerSiteMapper;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
-use DvsaCommon\Enum\SiteContactTypeCode;
-use DvsaEntities\Entity\Address;
-use DvsaEntities\Entity\ContactDetail;
-use DvsaEntities\Entity\EnforcementSiteAssessment;
-use DvsaEntities\Entity\Site;
-use DvsaEntities\Entity\SiteContactType;
 
 class AuthorisedExaminerSiteMapperTest extends \PHPUnit_Framework_TestCase
 {
     public function testDtoMapping()
     {
-        $siteEntity = $this->getSiteEntity();
+        $sites = $this->getSites();
 
         $mapper = new AuthorisedExaminerSiteMapper();
-        $siteDto = $mapper->toDto($siteEntity);
-        $this->assertDtoFieldsEqualsEntityFields($siteEntity, $siteDto);
+
+        foreach ($sites as $site) {
+            $siteDto = $mapper->toDto($site);
+            $this->assertDtoFieldsEqualsEntityFields($site, $siteDto);
+        }
     }
 
-    private function getSiteEntity()
+    protected function getSites()
     {
-        $siteEntity = new Site();
-        $contactDetail = new ContactDetail();
-        $address = new Address();
-        $siteContactType = new SiteContactType();
-        $contactDetail->setAddress($address
-            ->setAddressLine1('address1')
-            ->setAddressLine2('address2')
-            ->setAddressLine3('address3')
-            ->setCountry('country')
-            ->setPostcode('postcode')
-            ->setTown('town')
+        $keys = [
+            "id", "name", "site_number",
+            "current_visit_date", "current_score",
+            "previous_visit_date", "previous_score",
+            "address_line_1", "address_line_2", "address_line_3", "address_line_4", "town", "postcode", "country"
+        ];
+
+        $site1 = array_combine($keys,
+            [
+                1, "name 1", "number 1",
+                "20017-07-01", 90,
+                "2017-05-05", 144,
+                "address line 1", "address line 2", "address line 3", "address line 4", "Bristol", "BL 10NS", "GB"
+            ]
         );
 
-        $siteEntity->setName('siteName')
-            ->setId(1)
-            ->setSiteNumber('siteNumber')
-            ->setLastSiteAssessment((new EnforcementSiteAssessment())->setSiteAssessmentScore(100.03))
-            ->setContact(
-                $contactDetail, $siteContactType->setCode(SiteContactTypeCode::BUSINESS)
-            )
-            ->addRiskAssessment((new EnforcementSiteAssessment())->setSiteAssessmentScore(100.03))
-        ;
+        $site2 = array_combine($keys,
+            [
+                2, "name 2", "number 2",
+                "20017-07-01", 90,
+                null, null,
+                "address line 1", "address line 2", "address line 3", "address line 4", "Bristol", "BL 10NS", "GB"
+            ]
+        );
 
-        return $siteEntity;
+        $site3 = array_combine($keys,
+            [
+                3, "name 3", "number 3",
+                null, null,
+                null, null,
+                "address line 1", "address line 2", "address line 3", "address line 4", "Bristol", "BL 10NS", "GB"
+            ]
+        );
+
+        return [$site1, $site2, $site3];
     }
 
-    private function assertDtoFieldsEqualsEntityFields(Site $siteEntity, SiteDto $siteDto)
+    private function assertDtoFieldsEqualsEntityFields(array $site, SiteDto $siteDto)
     {
-        $address = $siteEntity->getBusinessContact()->getDetails()->getAddress();
-        /** @var EnforcementSiteAssessment $currentRiskAssessment */
-        $currentRiskAssessment = $siteEntity->getRiskAssessments()->get(0);
         $this->assertEquals(
             [
-                $siteEntity->getName(),
-                $siteEntity->getSiteNumber(),
-                $siteEntity->getId(),
-                $siteEntity->getLastSiteAssessment()->getSiteAssessmentScore(),
-                $currentRiskAssessment->getSiteAssessmentScore(),
-                $currentRiskAssessment->getVisitDate(),
-                $address->getAddressLine1(),
-                $address->getAddressLine2(),
-                $address->getAddressLine3(),
-                $address->getAddressLine4(),
-                $address->getCountry(),
-                $address->getTown(),
-                $address->getPostcode(),
+                $site["name"],
+                $site["site_number"],
+                $site["id"],
+                $site["current_score"],
+                ($site["current_visit_date"] !== null)? new \DateTime($site["current_visit_date"]): null,
+                $site["previous_score"],
+                ($site["previous_visit_date"] !== null)? new \DateTime($site["previous_visit_date"]): null,
+                $site["address_line_1"],
+                $site["address_line_2"],
+                $site["address_line_3"],
+                $site["address_line_4"],
+                $site["country"],
+                $site["town"],
+                $site["postcode"],
             ],
             [
                 $siteDto->getName(),
                 $siteDto->getNumber(),
                 $siteDto->getId(),
-                $siteDto->getCurrentRiskAssessment()->getScore(),
-                $siteDto->getCurrentRiskAssessment()->getScore(),
-                $siteDto->getCurrentRiskAssessment()->getDate(),
+                ($siteDto->getCurrentRiskAssessment())? $siteDto->getCurrentRiskAssessment()->getScore() : null,
+                ($siteDto->getCurrentRiskAssessment())? $siteDto->getCurrentRiskAssessment()->getDate() : null,
+                ($siteDto->getPreviousRiskAssessment())? $siteDto->getPreviousRiskAssessment()->getScore() : null,
+                ($siteDto->getPreviousRiskAssessment())? $siteDto->getPreviousRiskAssessment()->getDate() : null,
                 $siteDto->getAddress()->getAddressLine1(),
                 $siteDto->getAddress()->getAddressLine2(),
                 $siteDto->getAddress()->getAddressLine3(),

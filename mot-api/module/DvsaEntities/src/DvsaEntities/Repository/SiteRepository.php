@@ -601,28 +601,68 @@ class SiteRepository extends AbstractMutableRepository
      * @param int $offset
      * @param int $itemsPerPage
      *
-     * @return Site[]
+     * @return array
      */
     public function getSitesTestQualityForOrganisationId($aeId, $offset, $itemsPerPage)
     {
-        $queryBuilder = $this->createQueryBuilder('site')
-            ->select('site, siteRiskAssessments, siteContacts')
-            ->innerJoin("site.associationsWithAe", "associationsWithAe")
-            ->leftJoin('site.lastSiteAssessment', 'lastSiteAssessment')
-            ->leftJoin('site.siteRiskAssessments', 'siteRiskAssessments',  Join::WITH, "(DATE(siteRiskAssessments.visitDate) >= DATE(associationsWithAe.startDate) AND (DATE(siteRiskAssessments.visitDate) <= DATE(associationsWithAe.endDate) OR associationsWithAe.endDate IS NULL))")
-            ->leftJoin('site.contacts', 'siteContacts')
-            ->leftJoin('siteContacts.contactDetail', 'contactDetail')
-            ->leftJoin('contactDetail.address', 'address')
-            ->where('site.organisation = :ORG_ID')
-            ->orderBy('lastSiteAssessment.siteAssessmentScore', 'DESC')
-            ->addOrderBy('site.name', 'ASC')
-            ->addOrderBy('siteRiskAssessments.visitDate', 'DESC')
-            ->addOrderBy('siteRiskAssessments.id', 'DESC')
-            ->setMaxResults((int) $itemsPerPage)
-            ->setFirstResult((int) $offset)
-            ->setParameter('ORG_ID', (int) $aeId)
-        ;
+        $sql =
+         'SELECT site.id, site.name, site.site_number,
+            current.visit_date AS current_visit_date, current.site_assessment_score AS current_score,
+            previous.visit_date AS previous_visit_date, previous.site_assessment_score AS previous_score,
+            address.address_line_1, address.address_line_2, address.address_line_3, address.address_line_4,
+            address.town, address.postcode, address.country
+          FROM site
+          JOIN organisation_site_map osm ON (site.id = osm.site_id AND osm.organisation_id = :AE_ID AND osm.end_date IS NULL)
+          LEFT JOIN site_contact_detail_map scdm ON site.id = scdm.site_id
+          LEFT JOIN contact_detail cd ON scdm.contact_detail_id = cd.id
+          LEFT JOIN address ON cd.address_id = address.id
 
-        return  $queryBuilder->getQuery()->getResult();
+          LEFT JOIN (
+            SELECT * FROM (
+  	          SELECT site_id, visit_date, site_assessment_score, @currcount := IF(@currvalue = site_id, @currcount + 1, 1) AS rank,
+                @currvalue := site_id as site_id_current,
+                @sequence := @sequence+1
+
+              FROM (
+                SELECT esa.site_id, esa.visit_date, esa.site_assessment_score
+                FROM enforcement_site_assessment as esa
+                JOIN organisation_site_map osm ON (esa.site_id = osm.site_id AND osm.organisation_id = :AE_ID AND osm.end_date IS NULL)
+                WHERE DATE(esa.visit_date) >= DATE(osm.start_date)
+                GROUP BY esa.site_id, visit_date
+                ORDER BY esa.site_id ASC , esa.visit_date DESC, esa.id DESC
+              ) tmp,
+              (SELECT @currvalue := NULL, @sequence:=0, @currcount:=NULL) counter
+            ) esa
+            WHERE rank = 1
+          ) current ON site.id = current.site_id
+
+          LEFT JOIN (
+            SELECT * FROM (
+  	          SELECT site_id, visit_date, site_assessment_score, @currcount2 := IF(@currvalue2 = site_id, @currcount2 + 1, 1) AS rank,
+                @currvalue2 := site_id as site_id_current,
+                @sequence2 := @sequence2+1
+
+              FROM (
+                SELECT esa.site_id, esa.visit_date, esa.site_assessment_score
+                FROM enforcement_site_assessment as esa
+                JOIN organisation_site_map osm ON (esa.site_id = osm.site_id AND osm.organisation_id = :AE_ID AND osm.end_date IS NULL)
+                WHERE DATE(esa.visit_date) >= DATE(osm.start_date)
+                GROUP BY esa.site_id, visit_date
+                ORDER BY esa.site_id ASC , esa.visit_date DESC, esa.id DESC
+              ) tmp,
+              (SELECT @currvalue2 := NULL, @sequence2:=0, @currcount2:=NULL) counter
+            ) esa
+            WHERE rank = 2
+          ) previous ON site.id = previous.site_id
+          ORDER BY current_score DESC, name ASC
+          LIMIT :LIMIT OFFSET :OFFSET';
+
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue("AE_ID", $aeId);
+        $stmt->bindValue("OFFSET", $offset, \PDO::PARAM_INT);
+        $stmt->bindValue("LIMIT", $itemsPerPage, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 }

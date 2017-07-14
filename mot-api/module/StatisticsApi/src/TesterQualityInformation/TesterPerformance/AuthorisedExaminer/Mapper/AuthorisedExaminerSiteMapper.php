@@ -5,64 +5,61 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\RiskAssessmentDto;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaEntities\Entity\EnforcementSiteAssessment;
-use DvsaEntities\Entity\Site;
-use DvsaEntities\Mapper\AddressMapper;
+use DvsaCommon\Dto\Contact\AddressDto;
 
 class AuthorisedExaminerSiteMapper implements AutoWireableInterface
 {
-    const CURRENT_ASSESSMENT_INDEX = 0;
-    const PREVIOUS_ASSESSMENT_INDEX = 1;
-
     /**
-     * @var AddressMapper
-     */
-    private $addressMapper;
-
-    public function __construct()
-    {
-        $this->addressMapper = new AddressMapper();
-    }
-
-    /**
-     * @param Site $site
+     * @param array $site
      *
      * @return SiteDto
      */
-    public function toDto(Site $site)
+    public function toDto(array $site)
     {
-        $siteAddress = $site->getAddress();
+        $addressDto = new AddressDto();
+        $addressDto
+            ->setTown($site["town"])
+            ->setPostcode($site["postcode"])
+            ->setCountry($site["country"])
+            ->setAddressLine1($site["address_line_1"])
+            ->setAddressLine2($site["address_line_2"])
+            ->setAddressLine3($site["address_line_3"])
+            ->setAddressLine4($site["address_line_4"])
+            ;
+
         $siteDto = (new SiteDto())
-            ->setId($site->getId())
-            ->setName($site->getName())
-            ->setNumber($site->getSiteNumber())
+            ->setId($site["id"])
+            ->setName($site["name"])
+            ->setNumber($site["site_number"])
             ->setCurrentRiskAssessment($this->extractCurrentAssessment($site))
             ->setPreviousRiskAssessment($this->extractPreviousAssessment($site))
-            ->setAddress($this->addressMapper->toDto($siteAddress));
+            ->setAddress($addressDto);
 
         return $siteDto;
     }
 
-    private function extractCurrentAssessment(Site $site)
+    private function extractCurrentAssessment(array $site)
     {
-        return $this->extractAssessment($site, self::CURRENT_ASSESSMENT_INDEX);
-    }
-
-    private function extractPreviousAssessment(Site $site)
-    {
-        return $this->extractAssessment($site, self::PREVIOUS_ASSESSMENT_INDEX);
-    }
-
-    private function extractAssessment(Site $site, $index)
-    {
-        $riskAssessmentDto = null;
-        if ($site->getRiskAssessments()->offsetExists($index)) {
-            /** @var EnforcementSiteAssessment $assessment */
-            $assessment = $site->getRiskAssessments()->get($index);
-            $riskAssessmentDto = new RiskAssessmentDto();
-            $riskAssessmentDto->setScore($assessment->getSiteAssessmentScore());
-            $riskAssessmentDto->setDate($assessment->getVisitDate());
+        if ($site["current_score"] === null) {
+            return null;
         }
+
+        $riskAssessmentDto = new RiskAssessmentDto();
+        $riskAssessmentDto->setScore($site["current_score"]);
+        $riskAssessmentDto->setDate(new \DateTime($site["current_visit_date"]));
+
+        return $riskAssessmentDto;
+    }
+
+    private function extractPreviousAssessment(array $site)
+    {
+        if ($site["previous_score"] === null) {
+            return null;
+        }
+
+        $riskAssessmentDto = new RiskAssessmentDto();
+        $riskAssessmentDto->setScore($site["previous_score"]);
+        $riskAssessmentDto->setDate(new \DateTime($site["previous_visit_date"]));
 
         return $riskAssessmentDto;
     }

@@ -47,32 +47,15 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
     {
         $this->siteRepository->expects($this->once())
             ->method('getSitesTestQualityForOrganisationId')
-            ->willReturn([
-                $this->getSiteEntity(),
-                $this->getSiteEntity(),
-            ]);
+            ->willReturn($this->getSites());
 
         $this->organisationRepository->expects($this->once())
             ->method('getOrganisationSiteCount')
-            ->willReturn(2);
+            ->willReturn(3);
 
         $dtos = $this->authorisedExaminerStatisticService->getListForPage(self::AE_ID, 1, 10);
-        $this->assertEquals(2, $dtos->getSiteTotalCount());
-        $this->assertEquals(2, count($dtos->getSites()));
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testExceptionIsThrownForWrongEntity()
-    {
-        $this->siteRepository->expects($this->once())
-            ->method('getSitesTestQualityForOrganisationId')
-            ->willReturn([
-                new Organisation(),
-            ]);
-
-        $this->authorisedExaminerStatisticService->getListForPage(self::AE_ID, 1, 10);
+        $this->assertEquals(3, $dtos->getSiteTotalCount());
+        $this->assertEquals(3, count($dtos->getSites()));
     }
 
     /**
@@ -105,29 +88,42 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
         $this->assertEquals(0, count($dto->getSites()));
     }
 
-    private function getSiteEntity()
+    protected function getSites()
     {
-        $siteEntity = new Site();
-        $contactDetail = new ContactDetail();
-        $address = new Address();
-        $siteContactType = new SiteContactType();
-        $contactDetail->setAddress($address
-            ->setAddressLine1('address1')
-            ->setAddressLine2('address2')
-            ->setAddressLine3('address3')
-            ->setCountry('country')
-            ->setPostcode('postcode')
-            ->setTown('town')
+        $keys = [
+            "id", "name", "site_number",
+            "current_visit_date", "current_score",
+            "previous_visit_date", "previous_score",
+            "address_line_1", "address_line_2", "address_line_3", "address_line_4", "town", "postcode", "country"
+        ];
+
+        $site1 = array_combine($keys,
+            [
+                1, "name 1", "number 1",
+                "20017-07-01", 90,
+                "2017-05-05", 144,
+                "address line 1", "address line 2", "address line 3", "address line 4", "Bristol", "BL 10NS", "GB"
+            ]
         );
 
-        $siteEntity->setName('siteName')
-            ->setId(1)
-            ->setSiteNumber('siteNumber')
-            ->setLastSiteAssessment((new EnforcementSiteAssessment())->setSiteAssessmentScore(100.03))
-            ->setContact(
-                $contactDetail, $siteContactType->setCode(SiteContactTypeCode::BUSINESS)
-            );
+        $site2 = array_combine($keys,
+            [
+                2, "name 2", "number 2",
+                "20017-07-01", 90,
+                null, null,
+                "address line 1", "address line 2", "address line 3", "address line 4", "Bristol", "BL 10NS", "GB"
+            ]
+        );
 
-        return $siteEntity;
+        $site3 = array_combine($keys,
+            [
+                3, "name 3", "number 3",
+                null, null,
+                null, null,
+                "address line 1", "address line 2", "address line 3", "address line 4", "Bristol", "BL 10NS", "GB"
+            ]
+        );
+
+        return [$site1, $site2, $site3];
     }
 }
