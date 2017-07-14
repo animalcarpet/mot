@@ -45,7 +45,7 @@ Feature: Person
     And I perform <demoTests> demotests
     And I start and abort <abortedTests> tests
     And I get my person stats
-    Then person stats show <conductedTests> conducted tests <passedNormalTests> passed tests and <resultFailedTests> failed tests
+    Then person day stats show <conductedTests> conducted tests <passedNormalTests> passed tests and <resultFailedTests> failed tests
 
     Examples:
       | passedNormalTests | failedNormalTests | retests | demoTests | abortedTests | resultFailedTests | conductedTests |
@@ -55,3 +55,24 @@ Feature: Person
       #creating retest implies failing mot test before doing retest, so in that case we have 3 initial tests
       | 1                 | 1                 | 1       | 0         | 0            | 2                 | 3              |
       | 0                 | 0                 | 0       | 0         | 1            | 0                 | 0              |
+
+
+
+  Scenario Outline: Tester performance dashboard monthly stats are calculated
+    Given I am logged in as a Tester
+    When I pass <passedNormalTests> normal tests
+    And I fail <failedNormalTests> normal tests
+    And I perform <retests> retests
+    And I perform <demoTests> demotests
+    And I start and abort <abortedTests> tests
+    And I get my person stats
+    Then person month stats show <conductedTests> conducted tests <passedNormalTests> passed tests and <resultFailedTests> failed tests and <failRagePercent> fail rate
+
+    Examples:
+      | passedNormalTests | failedNormalTests | retests | demoTests | abortedTests | resultFailedTests | conductedTests | failRagePercent |
+      | 0                 | 0                 | 0       | 1         | 0            | 0                 | 0              | 0               |
+      | 1                 | 1                 | 0       | 0         | 0            | 1                 | 2              | 50              |
+      | 0                 | 1                 | 0       | 0         | 0            | 1                 | 1              | 100             |
+      #creating retest implies failing mot test before doing retest, so in that case we have 3 initial tests
+      | 0                 | 0                 | 0       | 0         | 1            | 0                 | 0              | 0               |
+      | 3                 | 1                 | 1       | 0         | 0            | 2                 | 5              | 40              |

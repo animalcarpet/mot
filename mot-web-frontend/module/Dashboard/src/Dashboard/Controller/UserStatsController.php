@@ -3,38 +3,30 @@
 namespace Dashboard\Controller;
 
 use Core\Controller\AbstractAuthActionController;
-use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\Date\DateUtils;
-use DvsaCommon\UrlBuilder\DashboardUrlBuilder;
+use Dashboard\Action\UserStatsAction;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 /**
  * Class UserStatsController.
  */
-class UserStatsController extends AbstractAuthActionController
+class UserStatsController extends AbstractAuthActionController implements AutoWireableInterface
 {
     const ROUTE_USER_STATS = 'user-home/stats';
+
+    private $action;
+
+    public function __construct(
+        UserStatsAction $action
+    ) {
+        $this->action = $action;
+    }
 
     public function showAction()
     {
         $userId = $this->getIdentity()->getUserId();
-        $path = DashboardUrlBuilder::userStats($userId)->toString();
-        $data = $this->getRestClient()->get($path)['data'];
 
-        $averageTestTime = DateUtils::convertSecondsToDateInterval($data['averageTime'])->format('%hh %Im %Ss');
-
-        $currentDate = DateTimeDisplayFormat::nowAsDate();
-
-        return [
-            'currentDate' => $currentDate,
-            'today' => [
-                'total' => $data['total'],
-                'passed' => $data['numberOfPasses'],
-                'failed' => $data['numberOfFails'],
-            ],
-            'currentMonth' => [
-                'averageTime' => $averageTestTime,
-                'failRate' => number_format($data['failRate'], 2),
-            ],
-        ];
+        return $this->applyActionResult(
+            $this->action->execute($userId)
+        );
     }
 }

@@ -23,6 +23,11 @@ class MotTestRoutes extends AbstractRoutes
         return new self($object);
     }
 
+    public function motTestLogs()
+    {
+        return $this->url(MotTestRouteList::MOT_TEST_LOGS);
+    }
+
     public function motTest($motTestNumber)
     {
         return $this->url(MotTestRouteList::MOT_TEST, ['motTestNumber' => $motTestNumber]);

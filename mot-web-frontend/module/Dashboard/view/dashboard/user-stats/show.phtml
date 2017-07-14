@@ -1,75 +1,107 @@
 <?php
 
+use Core\Routing\MotTestRoutes;
+use Core\Routing\ProfileRoutes;
 use Dashboard\Controller\UserHomeController;
+use Dashboard\ViewModel\UserStatsViewModel;
 
-$sectionName = $this->identityHelper()->getDisplayName();
-$taskName = 'Performance dashboard';
+/**
+ * @var UserStatsViewModel $viewModel
+ */
 
-$this->headTitle($taskName);
-$this->layout()->setVariable('pageSubTitle', $sectionName);
-$this->layout()->setVariable('pageTitle', $taskName);
+$dayStats = $viewModel->getDayStats();
+$monthStats = $viewModel->getMonthStats();
+
 ?>
-<div class="row">
-    <div class="col-sm-12">
-        <p>
-            This dashboard shows information based on all initial MOT tests you have carried out.
-        </p>
-    </div>
-</div>
-<hr class="hr-thin">
-<div class="row module-present-data">
-    <div class="col-sm-4">
-        <h3>Today's summary</h3>
-        <a id="test-log-link" href="<?php echo \DvsaCommon\UrlBuilder\UrlBuilderWeb::motTestLogs(); ?>">Test logs</a>
-    </div>
-    <div class="col-sm-8">
-        <div class="row">
-            <div class="col-sm-3 stat head-space">
-                <span class="stat-number" id="today-total-vehicles-tested"><?php echo $this->escapeHtml($today['total']); ?></span>
-                <time class="stat-period">Tests Conducted</time>
-            </div>
-            <div class="col-sm-3 stat head-space">
-                <span class="stat-number" id="today-number-passed"><?php echo $this->escapeHtml($today['passed']); ?></span>
-                <time class="stat-period">Passed</time>
-            </div>
-            <div class="col-sm-3 stat head-space">
-                <span class="stat-number" id="today-number-failed"><?php echo $this->escapeHtml($today['failed']); ?></span>
-                <time class="stat-period">Failed</time>
-            </div>
-        </div>
-    </div>
-</div>
-<hr class="hr-thin">
 
-<div class="row module-present-data">
-    <div class="col-sm-4">
-        <h3>Average test time</h3>
-        <p>The average time it takes you to complete an MOT test</p>
-    </div>
-    <div class="col-sm-8 stat head-space">
-        <span class="stat-number" id="current-month-average-time"><?php echo $this->escapeHtml($currentMonth['averageTime']); ?></span>
-        <time class="stat-period">1 to <?php echo $this->escapeHtml($currentDate); ?></time>
-        <!--
-        First of the month?
-        <time class="stat-period">1 July 2014</time>
-        -->
-    </div>
+<div class="text">
+    <p class="lede">Information on tests you've done today and in the month to date.</p>
+    <h2 class="heading-medium">
+        Today's summary
+        <span class="heading-meta"><?php echo $viewModel->getCurrentDateAsDayMonth(); ?></span>
+    </h2>
 </div>
-<hr class="hr-thin">
-<div class="row module-present-data">
-    <div class="col-sm-4">
-        <h3>Fail rate</h3>
-        <p>The percentage rate of MOT tests you have failed</p>
-    </div>
-    <div class="col-sm-8 stat head-space">
-        <span class="stat-number" id="current-month-fail-rate"><?php echo $this->escapeHtml($currentMonth['failRate']); ?>%</span>
-        <time class="stat-period">1 to <?php echo $this->escapeHtml($currentDate); ?></time>
-        <!--
-        First of the month?
-        <time class="stat-period">1 July 2014</time>
-        -->
-    </div>
+
+<div class="grid-row">
+    <?php echo $this->partial('partials/table-field', [
+        'id' => 'today-total-vehicles-tested',
+        'value' => $dayStats->getTotal(),
+        'label' => 'tests done',
+    ]);
+    echo $this->partial('partials/table-field', [
+        'id' => 'today-number-passed',
+        'value' => $dayStats->getNumberOfPasses(),
+        'label' => 'tests passed',
+    ]);
+    echo $this->partial('partials/table-field', [
+        'id' => 'today-number-failed',
+        'value' => $dayStats->getNumberOfFails(),
+        'label' => 'tests failed',
+    ]); ?>
 </div>
-<hr class="hr-thin">
-<a id="back-to-home-link" href="<?php echo $this->url(UserHomeController::ROUTE); ?>">Back to home</a>
+
+<div class="text">
+    <h2 class="heading-medium">
+        Month to date
+        <span class="heading-meta">
+            <?php echo $viewModel->getFirstOfThisMonthAsDayMonth(); ?> to <?php echo $viewModel->getCurrentDateAsDayMonth(); ?>
+        </span>
+    </h2>
+</div>
+
+<div class="grid-row u-space-b30">
+    <?php echo $this->partial('partials/table-field', [
+        'id' => 'current-month-total-vehicles-tested',
+        'value' => $monthStats->getTotalTestsCount(),
+        'label' => 'tests done',
+    ]);
+    echo $this->partial('partials/table-field', [
+        'id' => 'current-month-number-passed',
+        'value' => $monthStats->getPassedTestsCount(),
+        'label' => 'tests passed',
+    ]);
+    echo $this->partial('partials/table-field', [
+        'id' => 'current-month-number-failed',
+        'value' => $monthStats->getFailedTestsCount(),
+        'label' => 'tests failed',
+    ]);
+    echo $this->partial('partials/table-field', [
+        'id' => 'current-month-average-time',
+        'value' => $viewModel->getMonthlyAverageTimeAsString() . 'm',
+        'label' => 'average test time',
+    ]);
+    echo $this->partial('partials/table-field', [
+        'id' => 'current-month-fail-rate',
+        'value' => $viewModel->getAndConvertPercentFailed(),
+        'label' => 'fail rate',
+    ]); ?>
+</div>
+
+<div class="text">
+    <p>
+        <a href="<?php echo MotTestRoutes::of($this)->motTestLogs() ?>" id="test-log-link" class="big-link">Test logs</a>
+    </p>
+    <p>
+        See information on all tests you've done, including vehicle details.
+    </p>
+</div>
+
+<div class="text">
+    <p>
+        <a href="<?php echo ProfileRoutes::of($this)->yourProfileTqi($viewModel->getPreviousMonth(), $viewModel->getPreviousYear()) ?>" id="tqi-link" class="big-link">
+            Test quality information
+        </a>
+    </p>
+    <p>
+        See more performance information on tests you've done, including your failure rate by category.
+    </p>
+</div>
+
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a  id="back-to-home-link" href="<?php echo $this->url(UserHomeController::ROUTE); ?>">Back to home</a>
+        </li>
+    </ul>
+</nav>
 

@@ -1,15 +1,15 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
-use Dvsa\Mot\Behat\Support\Api\CustomerService;
 use Dvsa\Mot\Behat\Support\Api\Notification;
 use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Tester;
-use Dvsa\Mot\Behat\Support\Api\Vts;
+use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Response;
+use DvsaCommon\ApiClient\Person\PerformanceDashboardStats\Dto\PerformanceDashboardStatsDto;
+use DvsaCommon\ApiClient\Person\PerformanceDashboardStats\PerformanceDashboardStatsApiResource;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
@@ -55,7 +55,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     private $ae;
 
     /**
-     * @var Response
+     * @var PerformanceDashboardStatsDto
      */
     private $personStats;
 
@@ -67,6 +67,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
     private $motTestData;
 
+    private $apiResourceHelper;
+
     public function __construct(
         TestSupportHelper $testSupportHelper,
         Session $session,
@@ -76,7 +78,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         AuthorisedExaminerData $authorisedExaminerData,
         SiteData $siteData,
         UserData $userData,
-        MotTestData $motTestData
+        MotTestData $motTestData,
+        ApiResourceHelper $apiResourceHelper
     ) {
         $this->testSupportHelper = $testSupportHelper;
         $this->session = $session;
@@ -86,6 +89,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->siteData = $siteData;
         $this->userData = $userData;
         $this->motTestData = $motTestData;
+        $this->apiResourceHelper = $apiResourceHelper;
     }
 
     /**
@@ -277,22 +281,36 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     public function iGetMyPersonalStats()
     {
         $user = $this->userData->getCurrentLoggedUser();
-        $this->personStats = $this->person->getPersonStats(
-            $user->getAccessToken(),
-            $user->getUserId()
-        );
+
+        /** @var PerformanceDashboardStatsApiResource $apiResource */
+        $apiResource = $this->apiResourceHelper->create(PerformanceDashboardStatsApiResource::class);
+        $this->personStats = $apiResource->getStats($user->getUserId());
     }
 
     /**
-     * @Then person stats show :conductedTests conducted tests :passedNormalTests passed tests and :failedNormalTests failed tests
+     * @Then person day stats show :conductedTests conducted tests :passedNormalTests passed tests and :failedNormalTests failed tests
      */
-    public function personStatsShowCorrectTestCount($conductedTests, $passedNormalTests, $failedNormalTests)
+    public function personDayStatsShowCorrectTestCount($conductedTests, $passedNormalTests, $failedNormalTests)
     {
-        $data = $this->personStats->getBody()->getData();
+        $data = $this->personStats->getDayStats();
 
-        PHPUnit::assertEquals($conductedTests, $data["total"]);
-        PHPUnit::assertEquals($passedNormalTests, $data["numberOfPasses"]);
-        PHPUnit::assertEquals($failedNormalTests, $data["numberOfFails"]);
+        PHPUnit::assertEquals($conductedTests, $data->getTotal());
+        PHPUnit::assertEquals($passedNormalTests, $data->getNumberOfPasses());
+        PHPUnit::assertEquals($failedNormalTests, $data->getNumberOfFails());
+    }
+
+
+    /**
+     * @Then person month stats show :conductedTests conducted tests :passedNormalTests passed tests and :failedNormalTests failed tests and :failRage fail rate
+     */
+    public function personMonthStatsShowCorrectTestCount($conductedTests, $passedNormalTests, $failedNormalTests, $failRage)
+    {
+        $data = $this->personStats->getMonthStats();
+
+        PHPUnit::assertEquals($conductedTests, $data->getTotalTestsCount());
+        PHPUnit::assertEquals($passedNormalTests, $data->getPassedTestsCount());
+        PHPUnit::assertEquals($failedNormalTests, $data->getFailedTestsCount());
+        PHPUnit::assertEquals($failRage, $data->getFailRate());
     }
 
     /**

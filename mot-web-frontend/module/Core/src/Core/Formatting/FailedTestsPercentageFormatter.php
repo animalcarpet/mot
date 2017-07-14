@@ -1,8 +1,8 @@
 <?php
 
-namespace Dvsa\Mot\Frontend\TestQualityInformation\Formatting;
+namespace Core\Formatting;
 
-class TqiFailedTestsPercentageFormatter
+class FailedTestsPercentageFormatter
 {
     public function format($value)
     {

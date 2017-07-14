@@ -2,8 +2,8 @@
 
 namespace PersonApi\Controller;
 
+use DvsaCommon\ApiClient\Person\PerformanceDashboardStats\Dto\PerformanceDashboardStatsDto;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaCommonApi\Model\ApiResponse;
 use PersonApi\Service\UserStatsService;
 
 /**
@@ -23,11 +23,13 @@ class UserStatsController extends AbstractDvsaRestfulController
 
     public function get($id)
     {
-        $dayStats = $this->userStatsService->getUserDayStatsByPersonId($id)->toArray();
-        $monthStats = $this->userStatsService->getUserCurrentMonthStatsByPersonId($id)->toArray();
+        $dayStats = $this->userStatsService->getUserDayStatsByPersonId($id);
+        $monthStats = $this->userStatsService->getUserCurrentMonthStatsByPersonId($id);
 
-        $result = array_merge($dayStats, $monthStats);
+        $stats = (new PerformanceDashboardStatsDto())
+            ->setDayStats($dayStats)
+            ->setMonthStats($monthStats);
 
-        return ApiResponse::jsonOk($result);
+        return $this->returnDto($stats);
     }
 }

@@ -5,6 +5,8 @@ namespace PersonApiTest\Service;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use DvsaCommon\ApiClient\Person\PerformanceDashboardStats\Dto\DayPerformanceDashboardStatsDto;
+use DvsaCommon\ApiClient\Person\PerformanceDashboardStats\Dto\MonthPerformanceDashboardStatsDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -62,15 +64,10 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $result = $this->statsService->getUserDayStatsByPersonId($this->personId);
 
         //then
-        $this->assertEquals(get_class($result), DayStats::class);
-        $this->assertEquals(
-            $result->toArray(),
-            [
-                'total' => 3,
-                'numberOfPasses' => 1,
-                'numberOfFails' => 2,
-            ]
-        );
+        $this->assertEquals(DayPerformanceDashboardStatsDto::class, get_class($result));
+        $this->assertEquals(2, $result->getNumberOfFails());
+        $this->assertEquals(3, $result->getTotal());
+        $this->assertEquals(1, $result->getNumberOfPasses());
     }
 
     public function testGetUserCurrentMonthStatsByPersonId()
@@ -87,14 +84,12 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $result = $this->statsService->getUserCurrentMonthStatsByPersonId($this->personId);
 
         //then
-        $this->assertEquals(get_class($result), MonthStats::class);
-        $this->assertEquals(
-            $result->toArray(),
-            [
-                'averageTime' => 4800,
-                'failRate' => (float) 100 * 2 / 3,
-            ]
-        );
+        $this->assertEquals(MonthPerformanceDashboardStatsDto::class, get_class($result));
+        $this->assertEquals(2, $result->getFailedTestsCount());
+        $this->assertEquals(1, $result->getPassedTestsCount());
+        $this->assertEquals(3, $result->getTotalTestsCount());
+        $this->assertEquals(4800, $result->getAverageTime()->getTotalSeconds());
+        $this->assertEquals((float) 100 * 2 / 3, $result->getFailRate());
     }
 
     /**

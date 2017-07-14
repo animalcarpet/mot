@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cca0ba9d52c073a097817f25a45f6d62",
-    "content-hash": "3eabf0a342b828eb3edff81a3a353fce",
+    "content-hash": "3c9aa49d17688fdd76ac60fc94b4a869",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1387,17 +1386,17 @@
         },
         {
             "name": "dvsa/web-frontend-assets",
-            "version": "v1.1.4",
+            "version": "v1.1.6",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/web-frontend-assets.git",
-                "reference": "92e867232cdfaa2a3e2623862c5b47f2194ec668"
+                "reference": "a3653d236f21c53a8efd9afcb10f48230303d796"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v1.1.4-f99938.tar",
-                "reference": "92e867232cdfaa2a3e2623862c5b47f2194ec668",
-                "shasum": "d54b2d5a4024724d030032e09056d826e99fbd09"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v1.1.6-55714a.tar",
+                "reference": "a3653d236f21c53a8efd9afcb10f48230303d796",
+                "shasum": "17975ffd7ab85a90b3f76e455d7f56e70bec3627"
             },
             "type": "library",
             "authors": [
@@ -1406,7 +1405,7 @@
                     "email": ""
                 }
             ],
-            "time": "2017-06-28 08:59:03"
+            "time": "2017-07-07 14:51:22"
         },
         {
             "name": "erusev/parsedown",
