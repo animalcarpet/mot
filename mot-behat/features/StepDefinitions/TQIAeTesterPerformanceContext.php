@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
@@ -13,11 +14,13 @@ use PHPUnit_Framework_Assert as PHPUnit;
 class TQIAeTesterPerformanceContext implements Context
 {
     private $userData;
+    private $siteData;
     private $apiResourceHelper;
 
-    public function __construct(UserData $userData, ApiResourceHelper $apiResourceHelper)
+    public function __construct(UserData $userData, SiteData $siteData, ApiResourceHelper $apiResourceHelper)
     {
         $this->userData = $userData;
+        $this->siteData = $siteData;
         $this->apiResourceHelper = $apiResourceHelper;
     }
 
@@ -26,19 +29,43 @@ class TQIAeTesterPerformanceContext implements Context
      */
     public function beingLogInAsAnAedmInICanViewAuthorisedExaminerStatisticsWithData(OrganisationDto $ae, TableNode $table)
     {
+        $stats = $this->retrieveAeStats($ae);
+        $sites = $stats->getSites();
+
+        $rows = $table->getColumnsHash();
+
+        PHPUnit::assertEquals(count($rows), count($sites), "Expected number of sites does not match actual number of sites");
+
+        foreach ($rows as $i => $row) {
+            $this->assertAuthorisedExaminerSitePerformance($row, $sites);
+        }
+    }
+
+    /**
+     * @Then being log in as an aedm in :ae I can view authorised examiner statistics on page :page with data:
+     */
+    public function beingLogInAsAnAedmInICanViewAuthorisedExaminerStatisticsOnPageWithData(OrganisationDto $ae, $page, TableNode $table)
+    {
+        $stats = $this->retrieveAeStats($ae, $page, 2);
+        $sites = $stats->getSites();
+
+        $rows = $table->getColumnsHash();
+
+        PHPUnit::assertEquals(count($rows), count($sites), "Expected number of sites does not match actual number of sites");
+
+        foreach ($rows as $i => $row) {
+            $this->assertAuthorisedExaminerSitePerformance($row, $sites);
+        }
+    }
+
+    private function retrieveAeStats(OrganisationDto $ae, $page = null, $itemPerPage = null)
+    {
         $aedm = $this->userData->getAedmByAeId($ae->getId());
         $this->userData->setCurrentLoggedUser($aedm);
 
         /** @var AuthorisedExaminerSitePerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(AuthorisedExaminerSitePerformanceApiResource::class);
-        $stats = $apiResource->getData($ae->getId(), null, null);
-
-        $rows = $table->getColumnsHash();
-        $sites = $stats->getSites();
-
-        foreach ($rows as $i => $row) {
-            $this->assertAuthorisedExaminerSitePerformance($row, $sites);
-        }
+        return $apiResource->getData($ae->getId(), $page, $itemPerPage);
     }
 
     /**

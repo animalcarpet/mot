@@ -171,7 +171,7 @@ class VtsService
             $stmt->bindValue(3, ArrayUtils::tryGet($data, 'siteName', $dataGenerator->siteName()));
             $stmt->bindValue(4, self::STATUS_APPROVED);
             $stmt->bindValue(5, $data['startDate']);
-            $stmt->bindValue(6, date('Y-m-d H:i:s', strtotime('+6 months')));
+            $stmt->bindValue(6, null);
             $stmt->execute();
         }
 
