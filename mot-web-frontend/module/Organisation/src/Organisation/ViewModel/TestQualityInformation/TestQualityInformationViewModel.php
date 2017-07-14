@@ -52,6 +52,7 @@ class TestQualityInformationViewModel
 
     const BACK_TO_SERVICE_REPORT_QUERY_PARAM = "serviceReports";
     const TESTERS_ANNUAL_ASSESSMENTS_LINK_ID = "TAA_%d";
+    const SITE_LINK_ID = "site_%d";
 
     private $returnLink;
     /** @var Table */
@@ -168,9 +169,17 @@ class TestQualityInformationViewModel
                 sprintf(self::TESTERS_ANNUAL_ASSESSMENTS_LINK_ID, $site->getId())
             );
 
+            $vtsName = new UrlPresenterData(
+                $site->getName(),
+                VtsRouteList::VTS,
+                ['id' => $site->getId()],
+                [],
+                sprintf(self::SITE_LINK_ID, $site->getId())
+            );
+
             $rows[] =
                 [
-                    self::VTS_NAME => $site->getName(),
+                    self::VTS_NAME => $vtsName,
                     self::VTS_ADDRESS => $site->getAddress()->getFullAddressString(),
                     self::VTS_NUMBER => $site->getNumber(),
                     self::VTS_ID => $site->getId(),
@@ -222,6 +231,7 @@ class TestQualityInformationViewModel
                 'sub' => [
                     [
                         'field' => self::VTS_NAME,
+                        'formatter' => UrlPresenterLinkWithParams::class,
                     ],
                     [
                         'field' => self::VTS_ADDRESS,
