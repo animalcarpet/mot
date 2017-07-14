@@ -9,7 +9,7 @@ if ($this->showErrorsInFrontEnd): ?>
 
     <?php if (isset($this->display_exceptions) && $this->display_exceptions): ?>
 
-        <?php if (isset($this->exception) && $this->exception instanceof Exception):
+        <?php if (isset($this->exception) && $this->exception instanceof \Throwable):
 
             $file = $this->exception->getFile();
             $line = $this->exception->getLine();

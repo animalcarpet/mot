@@ -230,8 +230,6 @@ class Module implements
     {
         $this->verifyIsError($e);
 
-        $error = $e->getError();
-
         $exception = $e->getParam('exception');
 
         $serviceManager = $e->getApplication()->getServiceManager();
@@ -239,25 +237,13 @@ class Module implements
         /** @var $routeNotFoundStrategy RouteNotFoundStrategy */
         $routeNotFoundStrategy = $serviceManager->get('HttpRouteNotFoundStrategy');
 
-        $eid = false;
-
         /** @var $logger \Zend\Log\Logger */
         $logger = $serviceManager->get('Application/Logger');
-        if ($exception) {
-            $eid = uniqid();
-            $logger->err('error id: '.$eid);
-            $logger->err('error: '.$error);
-            $logger->err('class: '.get_class($exception));
-            $logger->err('file: '.$exception->getFile());
-            $logger->err('line: '.$exception->getLine());
-            $logger->err('message: '.$exception->getMessage());
-            $logger->err('stacktrace: '.(new FilteredStackTrace())->getTraceAsString($exception));
-        }
 
         $config = $serviceManager->get('config');
 
         $viewModel = $e->getResult();
-        $viewModel->setVariables(['showErrorsInFrontEnd' => $config['showErrorsInFrontEnd'], 'errorId' => $eid]);
+        $viewModel->setVariables(['showErrorsInFrontEnd' => $config['showErrorsInFrontEnd'], 'errorId' => $logger->getCorrelationId()]);
 
         if ($exception instanceof FeatureNotAvailableException) {
             $e->getResponse()->setStatusCode(Response::STATUS_CODE_404);
