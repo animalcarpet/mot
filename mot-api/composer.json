@@ -13,7 +13,7 @@
     "dvsa/dvsa-openam-client" : "1.11.0",
     "dvsa/scripts": "2.0.3",
     "dvsa/dvsa-logger": "1.2.0",
-    "dvsa/dvsa-application-logger": "1.5.2",
+    "dvsa/dvsa-application-logger": "2.0.0",
     "soflomo/purifier": "0.1.1",
     "slot-purchase/backend-api": "4.2.1",
     "danielstjules/stringy": "~2.0",
