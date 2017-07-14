@@ -16,7 +16,6 @@ return [
     'controllers' => [
         'invokables' => [
             MyApplicationsController::class => MyApplicationsController::class,
-            UserStatsController::class => UserStatsController::class,
         ],
         'factories' => [
             UserHomeControllerFactory::class => UserHomeControllerFactory::class,

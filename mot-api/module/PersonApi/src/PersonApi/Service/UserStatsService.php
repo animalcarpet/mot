@@ -4,15 +4,16 @@ namespace PersonApi\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use DvsaCommon\ApiClient\Person\PerformanceDashboardStats\Dto\DayPerformanceDashboardStatsDto;
+use DvsaCommon\ApiClient\Person\PerformanceDashboardStats\Dto\MonthPerformanceDashboardStatsDto;
 use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
-use UserApi\Dashboard\Dto\DayStats;
-use UserApi\Dashboard\Dto\MonthStats;
 
 /**
  * Service to gather a tester's statistics.
@@ -39,7 +40,7 @@ class UserStatsService extends AbstractService
     /**
      * @param $personId
      *
-     * @return DayStats
+     * @return DayPerformanceDashboardStatsDto
      */
     public function getUserDayStatsByPersonId($personId)
     {
@@ -58,7 +59,7 @@ class UserStatsService extends AbstractService
     /**
      * @param $personId
      *
-     * @return MonthStats
+     * @return MonthPerformanceDashboardStatsDto
      */
     public function getUserCurrentMonthStatsByPersonId($personId)
     {
@@ -128,7 +129,7 @@ class UserStatsService extends AbstractService
     /**
      * @param MotTest[] $motTests
      *
-     * @return DayStats
+     * @return DayPerformanceDashboardStatsDto
      */
     private function calculateDayStats($motTests)
     {
@@ -153,7 +154,10 @@ class UserStatsService extends AbstractService
         //PRS comes as pair of tests so counting array is not enough
         $total = $passCount + $failCount;
 
-        $result = new DayStats($total, $passCount, $failCount);
+        $result = (new DayPerformanceDashboardStatsDto())
+            ->setTotal($total)
+            ->setNumberOfPasses($passCount)
+            ->setNumberOfFails($failCount);
 
         return $result;
     }
@@ -161,7 +165,7 @@ class UserStatsService extends AbstractService
     /**
      * @param MotTest[] $motTests
      *
-     * @return MonthStats
+     * @return MonthPerformanceDashboardStatsDto
      */
     private function calculateMonthStats($motTests)
     {
@@ -169,7 +173,7 @@ class UserStatsService extends AbstractService
         $sumOfTestTimes = 0;
         $failCount = 0;
         $failRate = 0;
-        $averageTestTime = 0;
+        $averageTestTime = new TimeSpan(0,0,0,0);
 
         foreach ($motTests as $motTest) {
             $testTime = DateUtils::getTimeDifferenceInSeconds($motTest->getCompletedDate(), $motTest->getStartedDate());
@@ -198,10 +202,15 @@ class UserStatsService extends AbstractService
         }
 
         if ($total) {
-            $averageTestTime = $sumOfTestTimes / $total;
+            $averageTestTime = new TimeSpan(0,0,0, (int)($sumOfTestTimes / $total));
         }
 
-        $monthStats = new MonthStats($averageTestTime, $failRate);
+        $monthStats = (new MonthPerformanceDashboardStatsDto())
+            ->setPassedTestsCount($passCount)
+            ->setFailedTestsCount($failCount)
+            ->setAverageTime($averageTestTime)
+            ->setFailRate($failRate)
+            ->setTotalTestsCount($total);
 
         return $monthStats;
     }

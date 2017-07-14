@@ -9,7 +9,7 @@
         "dvsa/dvsa-logger": "1.2.0",
         "dvsa/mot-google-analytics": "^0.1",
         "maglnet/magl-markdown": "~1.5.0",
-        "dvsa/web-frontend-assets": "1.1.4",
+        "dvsa/web-frontend-assets": "1.1.6",
         "dvsa/dvsa-application-logger": "2.0.0",
         "dvsa/dvsa-doctrine-module": "1.2.0",
         "zendframework/zendpdf": "2.0.2",

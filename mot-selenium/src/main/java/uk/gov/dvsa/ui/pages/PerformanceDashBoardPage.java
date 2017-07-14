@@ -8,7 +8,7 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 public class PerformanceDashBoardPage extends Page {
 
     public static final String PATH = "/stats";
-    private static final String PAGE_TITLE = "Performance dashboard";
+    private static final String PAGE_TITLE = "Your performance dashboard";
 
     @FindBy (id = "today-total-vehicles-tested") private WebElement testConductedLabel;
     @FindBy (id = "today-number-passed") private WebElement passedTestLabel;

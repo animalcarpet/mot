@@ -2,8 +2,8 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation;
 
+use Core\Formatting\FailedTestsPercentageFormatter;
 use Core\Formatting\VehicleAgeFormatter;
-use Dvsa\Mot\Frontend\TestQualityInformation\Formatting\TqiFailedTestsPercentageFormatter;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Contact\AddressDto;
 
@@ -78,7 +78,7 @@ class SiteRowViewModel
 
     public function getTestsFailedPercentage()
     {
-        $percentageFormatter = new TqiFailedTestsPercentageFormatter();
+        $percentageFormatter = new FailedTestsPercentageFormatter();
 
         return $percentageFormatter->format($this->testsFailedPercentage);
     }
