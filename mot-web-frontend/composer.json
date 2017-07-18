@@ -22,7 +22,7 @@
         "cpms/cpms-forms": "1.22.2-p",
         "soflomo/purifier": "~0.1.1",
         "dvsa/dvsa-document-module": "1.4.0",
-        "slot-purchase/web-frontend": "3.9.2",
+        "slot-purchase/web-frontend": "3.9.3",
         "dvsa/dvsa-openam-client": "1.11.0",
         "zendframework/zend-view": "2.7.0"
     },
