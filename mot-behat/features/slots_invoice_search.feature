@@ -3,8 +3,7 @@ Feature: Search for payment by Invoice reference
   I want to search for a payment with an invoice reference
   So that I can see the slot transaction details associated with the payment
 
-  @quarantine
-  @slots
+  @slot
   @create-default-ae("halfords")
   Scenario: Finance User search for payment with a valid invoice reference
     Given I am logged in as a Finance User
@@ -12,7 +11,7 @@ Feature: Search for payment by Invoice reference
     When I search for the payment with a valid invoice
     Then I should receive invoice details
 
-  @slots
+  @slot
   Scenario: Finance User search for payment with an invalid invoice reference
     Given I am logged in as a Finance User
     When I search for the payment with an invalid invoice

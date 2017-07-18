@@ -1,5 +1,6 @@
 parameters:
     base_url: http://mot-api
+    frontend_url: https://dev.motdev.org.uk/
 
 services:
     dvsa.api:
@@ -158,6 +159,8 @@ services:
     dvsa.direct_debit:
         class: Dvsa\Mot\Behat\Support\Api\DirectDebit
         parent: dvsa.rest
+        arguments:
+            - %frontend_url%
 
     dvsa.slot_report:
         class: Dvsa\Mot\Behat\Support\Api\SlotReport

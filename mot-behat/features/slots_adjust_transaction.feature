@@ -4,7 +4,7 @@ Feature: Manual Adjustment of transaction
   When a payment previously input by Finance is discovered to contain an error
   So that the right customer gets the right payment, product or amount
 
-  @slots
+  @slot
   @create-default-ae("Kwikfit")
   Scenario: Manual Adjustment when a transaction is allocated to an Incorrect Authorised Examiner
     Given I am logged in as a Finance User
@@ -12,7 +12,7 @@ Feature: Manual Adjustment of transaction
     When I adjust the transaction to the correct Authorised Examiner "Kwikfit"
     Then The transaction should be adjusted
 
-  @slots
+  @slot
   Scenario Outline: Manual Adjustment when a transaction is created with Incorrect Data
     Given I am logged in as a Finance User
     And A slot transaction exist
@@ -25,7 +25,7 @@ Feature: Manual Adjustment of transaction
     | accountName  | James    | wrongData |
     | amount       | 410.00   | wrongData |
 
-  @slots
+  @slot
   @sip
   Scenario Outline: List of amendment reasons by type
     Given I am logged in as a Finance User

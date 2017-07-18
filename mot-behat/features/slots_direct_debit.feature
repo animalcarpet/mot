@@ -4,7 +4,8 @@ Feature: Cancel a Direct Debit Mandate
   So that I can use alternative method to pay or run down the slot balance if it is too high
 
   @dd
-  @slots
+  @slot
+  @quarantine
   Scenario Outline: Allowing an Authorised Examiner to Cancel a Direct Debit Mandate
     Given I am logged in as an AEDM of "<organisation>"
     And I have an active direct debit mandate set up for <slots> slots in "<organisation>" on <dayOfMonth>
@@ -16,7 +17,8 @@ Feature: Cancel a Direct Debit Mandate
       | Big Wheels   | 50    | 5          |
 
   @dd
-  @slots
+  @slot
+  @quarantine
   @create-default-site("Popular Garage", "Hot Wheels")
   Scenario Outline: No other user is authorised to Cancel Direct Debit
     Given "Hot Wheels" has active direct debit mandate set up for "25" slots on "20"
@@ -29,15 +31,16 @@ Feature: Cancel a Direct Debit Mandate
       | areaOffice |
       | tester     |
 
-  @slots
+  @slot
   @dd
+  @quarantine
   @create-default-ae("kwikfit")
   Scenario: Authorised Examiner attempts to cancel direct debit when no direct debit exists
     Given I am logged in as an Authorised Examiner
     When I request to cancel the direct debit for "kwikfit"
     Then My direct debit should not be canceled
 
-  @slots
+  @slot
   @dd
   @create-default-ae("Crazy Wheels")
   Scenario Outline: Authorised Examiner is not allowed to set up direct debit for more than 75000 slots

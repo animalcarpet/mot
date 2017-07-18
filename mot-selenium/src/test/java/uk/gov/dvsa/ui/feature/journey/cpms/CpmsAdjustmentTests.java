@@ -32,7 +32,7 @@ public class CpmsAdjustmentTests extends DslTest {
         return cardPaymentConfirmationPage;
     }
 
-    @Test(enabled = false, groups = {"Regression"}, description = "SPMS-255 Finance user refunds slots", dataProvider = "createFinanceUserAndAe")
+    @Test(groups = {"Regression"}, description = "SPMS-255 Finance user refunds slots", dataProvider = "createFinanceUserAndAe")
     public void userRefundsSlots(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
         //Given I am on Slot refund page as a Finance user with a valid payment
         SlotRefundPage slotRefundPage =

@@ -23,7 +23,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
     private User aedm;
     private User financeUser;
 
-    @Test (enabled = false, groups = {"Regression"}, description = "SPMS-37 Purchase slots by card successfully", dataProvider = "createAedmAndAe")
+    @Test (groups = {"Regression"}, description = "SPMS-37 Purchase slots by card successfully", dataProvider = "createAedmAndAe")
     public void purchaseSlotsByCardSuccessfully(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
       //Given I am on Buy test slots page as an Aedm
       BuyTestSlotsPage buyTestSlotsPage = pageNavigator
@@ -43,7 +43,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
               cardPaymentConfirmationPage.getPaymentStatusMessage(), containsString("Payment has been successful"));   
     }
     
-    @Test (enabled = false, groups = {"Regression"}, description = "SPMS-264 Finance user processes Card payment", dataProvider = "createFinanceUserAndAe")
+    @Test (groups = {"Regression"}, description = "SPMS-264 Finance user processes Card payment", dataProvider = "createFinanceUserAndAe")
     public void financeUserProcessesCardPayment(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
       //Given I am on Choose payment type page as a Finance user
         ChoosePaymentTypePage choosePaymentTypePage = pageNavigator
@@ -51,10 +51,19 @@ public class CpmsPurchaseSlotsTests extends DslTest {
                 .clickBuySlotsLinkAsFinanceUser();
       
      //When I submit the card payment request with required slots & valid card details
-      CardPaymentConfirmationPage cardPaymentConfirmationPage = choosePaymentTypePage.selectCardPaymentTypeAndSubmit()
-                                                      .enterSlotsRequired(100).clickCalculateCostButton().clickContinueToPay()
-                                                      .enterCardDetails().clickContinueButton().enterCardHolderName()
-                                                      .clickContinueButton().clickMakePaymentButtonAsFinance();
+        BuyTestSlotsPage buyTestSlotsPage = choosePaymentTypePage.selectCardPaymentTypeAndSubmit();
+        BuyTestSlotsPage enterSlotsPage = buyTestSlotsPage.enterSlotsRequired(100);
+        OrderSummaryPage orderSummaryPage = enterSlotsPage.clickCalculateCostButton();
+        CardDetailsPage cardDetailsPage = orderSummaryPage.clickContinueToPay();
+
+        PaymentConfirmationPage paymentConfirmationPage = cardDetailsPage.enterCardDetails().clickContinueButton().enterCardHolderName().enterCardHolderName().clickContinueButton();
+        CardPaymentConfirmationPage cardPaymentConfirmationPage = paymentConfirmationPage.clickMakePaymentButtonAsFinance();
+
+
+//      CardPaymentConfirmationPage cardPaymentConfirmationPage = choosePaymentTypePage.selectCardPaymentTypeAndSubmit()
+//                                                      .enterSlotsRequired(100).clickCalculateCostButton().clickContinueToPay()
+//                                                      .enterCardDetails().clickContinueButton().enterCardHolderName()
+//                                                      .clickContinueButton().clickMakePaymentButtonAsFinance();
       
       //Then the payment should be successful
       assertThat("Verifying payment successful message is displayed",
@@ -63,7 +72,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
               cardPaymentConfirmationPage.getPaymentStatusMessage(), containsString("Payment has been successful"));
     }
 
-    @Test(enabled = false, groups = {"Regression", "SPMS-77"}, dataProvider = "createAedmAndAe")
+    @Test(groups = {"Regression", "SPMS-77"}, dataProvider = "createAedmAndAe")
     public void financeUserSearchForPaymentByInvoiceReference(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
         //Given I bought slots with card as an Aedm
         CardPaymentConfirmationPage cardPaymentConfirmationPage = purchaseSlotsAsAedmWithCard(pageNavigator
@@ -80,7 +89,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
         verifyTransactionDetails(referenceSearchPage.chooseInvoiceReference().searchForReference(invoiceReference).chooseReference(invoiceReference));
     }
 
-    @Test(enabled = false, groups = {"Regression", "SPMS-199"}, dataProvider = "createAedmAndAe")
+    @Test(groups = {"Regression", "SPMS-199"}, dataProvider = "createAedmAndAe")
     public void financeUserSearchForPaymentByPaymentReference(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
         //Given I bought slots with card as an Aedm
         CardPaymentConfirmationPage cardPaymentConfirmationPage = purchaseSlotsAsAedmWithCard(pageNavigator
@@ -97,7 +106,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
         verifyTransactionDetails(referenceSearchPage.choosePaymentReference().searchForReference(paymentReference).chooseReference(paymentReference));
     }
 
-    @Test(enabled = false, groups = {"Regression", "SPMS-47"}, dataProvider = "createAedmAndAe")
+    @Test(groups = {"Regression", "SPMS-47"}, dataProvider = "createAedmAndAe")
     public void paymentInvoiceDetailsVerificationTest(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
         //Given I am on Buy test slots page as an Aedm
         BuyTestSlotsPage buyTestSlotsPage = pageNavigator
@@ -118,7 +127,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
                 Matchers.is("Order details"));
     }
 
-    @Test(enabled = false, groups = {"Regression", "SPMS-88"}, dataProvider = "createAedmAndAe")
+    @Test(groups = {"Regression", "SPMS-88"}, dataProvider = "createAedmAndAe")
     public void purchaseSlotsUserCancelsPaymentTest(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
         //Given I am on Buy test slots page as an Aedm
         BuyTestSlotsPage buyTestSlotsPage = pageNavigator

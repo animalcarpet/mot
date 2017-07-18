@@ -18,7 +18,7 @@ Feature: Refresh payments as a CRON job
 #  | P      | 20      |
 #  | S      | 50      |
   @quarantine
-  @slots
+  @slot
   @sip
   Scenario: Cron user updates the payment status on given transaction
     Given I am logged in as a Finance User

@@ -102,6 +102,12 @@ class AEService
             ->setPhones([$phones])
             ->setEmails([$email]);
 
+        $correspondanceContact = (new OrganisationContactDto())
+            ->setType(OrganisationContactTypeCode::CORRESPONDENCE)
+            ->setAddress($address)
+            ->setPhones([$phones])
+            ->setEmails([$email]);
+
         $authForAeDto = new AuthorisedExaminerAuthorisationDto();
         $authForAeDto->setAssignedAreaOffice($data['areaOfficeSiteNumber']);
 
@@ -111,7 +117,7 @@ class AEService
             ->setOrganisationType(OrganisationType::AUTHORISED_EXAMINER)
             ->setSlotBalance(ArrayUtils::tryGet($data, 'slots', 1001))
             ->setCompanyType(CompanyTypeCode::SOLE_TRADER)
-            ->setContacts([$contact]);
+            ->setContacts([$contact, $correspondanceContact]);
     }
 
     /**
