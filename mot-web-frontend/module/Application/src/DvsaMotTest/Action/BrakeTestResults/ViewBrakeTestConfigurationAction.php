@@ -14,6 +14,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
@@ -29,6 +30,7 @@ use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommon\UrlBuilder\UrlBuilder;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Helper\BrakeTestConfigurationContainerHelper;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass1And2Mapper;
@@ -50,8 +52,8 @@ class ViewBrakeTestConfigurationAction
     const VEHICLE_WEIGHT_TYPE__BRAKE_TEST_WEIGHT = 'Brake test weight (from manufacturer or other reliable data)';
     const VEHICLE_WEIGHT_TYPE__PRESENTED_WEIGHT = 'Presented weight (measured during ATL brake test)';
     const VEHICLE_WEIGHT_TYPE__NOT_KNOWN = 'Not known';
-    const VEHICLE_WEIGHT_TYPE__DGW_MAM = 'DGW (design gross weight from manufacturers plate) or MAM (maximum authorised mass)';
-    const VEHICLE_WEIGHT_TYPE__CALCULATED_WEIGHT = 'Calculated weight (see the MOT inspection manual for the calculation)';
+    const VEHICLE_WEIGHT_TYPE__DGW_MAM = 'DGW (design gross weight from manufacturers plate) or MAM (maximum authorised mass from manufacturers plate)';
+    const VEHICLE_WEIGHT_TYPE__CALCULATED_WEIGHT = 'Calculated weight (unladen weight + (number of passenger seats excluding driver x 63.5))';
     const VEHICLE_WEIGHT_TYPE__DGW = 'DGW (design gross weight from manufacturers plate)';
 
     /** @var WebPerformMotTestAssertion */
@@ -78,17 +80,24 @@ class ViewBrakeTestConfigurationAction
     /** @var array */
     private $previousData = [];
 
+    /** @var BrakeTestConfigurationClass3AndAboveMapper */
+    private $brakeTestConfigurationClass3AndAboveMapper;
+
+    /** @var FeatureToggles */
+    private $featureToggles;
+
     /**
      * ConfigureBrakeTestAction constructor.
      *
-     * @param WebPerformMotTestAssertion            $webPerformMotTestAssertion
-     * @param ContingencySessionManager             $contingencySessionManager
-     * @param CatalogService                        $catalogService
-     * @param Client                                $restClient
+     * @param WebPerformMotTestAssertion $webPerformMotTestAssertion
+     * @param ContingencySessionManager $contingencySessionManager
+     * @param CatalogService $catalogService
+     * @param Client $restClient
      * @param BrakeTestConfigurationContainerHelper $brakeTestConfigurationContainerHelper
-     * @param VehicleService                        $vehicleService
-     * @param MotTestService                        $motTestService
-     * @param BrakeTestConfigurationService         $brakeTestConfigurationService
+     * @param VehicleService $vehicleService
+     * @param MotTestService $motTestService
+     * @param BrakeTestConfigurationService $brakeTestConfigurationService
+     * @param BrakeTestConfigurationClass3AndAboveMapper $brakeTestConfigurationClass3AndAboveMapper
      */
     public function __construct(
         WebPerformMotTestAssertion $webPerformMotTestAssertion,
@@ -98,7 +107,9 @@ class ViewBrakeTestConfigurationAction
         BrakeTestConfigurationContainerHelper $brakeTestConfigurationContainerHelper,
         VehicleService $vehicleService,
         MotTestService $motTestService,
-        BrakeTestConfigurationService $brakeTestConfigurationService
+        BrakeTestConfigurationService $brakeTestConfigurationService,
+        BrakeTestConfigurationClass3AndAboveMapper $brakeTestConfigurationClass3AndAboveMapper,
+        FeatureToggles $featureToggles
     ) {
         $this->webPerformMotTestAssertion = $webPerformMotTestAssertion;
         $this->contingencySessionManager = $contingencySessionManager;
@@ -108,6 +119,8 @@ class ViewBrakeTestConfigurationAction
         $this->vehicleService = $vehicleService;
         $this->motTestService = $motTestService;
         $this->brakeTestConfigurationService = $brakeTestConfigurationService;
+        $this->brakeTestConfigurationClass3AndAboveMapper = $brakeTestConfigurationClass3AndAboveMapper;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -133,7 +146,7 @@ class ViewBrakeTestConfigurationAction
     {
         $actionResult = new ViewActionResult();
         $motTest = $this->getMotTest($motTestNumber, $actionResult);
-
+        //Todo: $motTest can be null here in case of erros -> handle this
         $this->webPerformMotTestAssertion->assertGranted($motTest);
 
         if ($motTest->getStatus() !== MotTestStatusName::ACTIVE) {
@@ -149,7 +162,7 @@ class ViewBrakeTestConfigurationAction
             $dto = $configDtoMapper->mapToDto($this->previousData);
             $this->addErrorMessages($actionResult, $this->previousActionResult->getErrorMessages());
         } else {
-            $dto = $this->createDtoFromMotTest($motTest, $configDtoMapper, $vehicle->getVehicleClass()->getCode());
+            $dto = $this->createDtoFromMotTest($motTest, $configDtoMapper, $vehicle);
 
             if (!$isGroupA && $brakeTestResult) {
                 $dto = $this->updateDtoWithGroupBBrakeTestResult($dto, $brakeTestResult);
@@ -212,10 +225,7 @@ class ViewBrakeTestConfigurationAction
         $hasCorrectParkingBrakeTestType =
             in_array($configHelper->getParkingBrakeTestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
 
-        $preselectBrakeTestWeight = (
-            ($configHelper->getVehicleWeight() || $motTest->getPreviousTestVehicleWight()) &&
-            ($hasCorrectServiceBrakeTestType || $hasCorrectParkingBrakeTestType)
-        );
+        $preselectBrakeTestWeight = $this->isVehicleWeightTypeOptionPreselected($motTest, $configHelper, $hasCorrectServiceBrakeTestType, $hasCorrectParkingBrakeTestType);
 
         $this->setViewModelDataForBothClasses($brakeTestConfigurationViewModel, $motTest, $vehicle);
         $this->setViewModelDataForGroupB($brakeTestConfigurationViewModel, $vehicle, $configHelper, $preselectBrakeTestWeight);
@@ -271,20 +281,20 @@ class ViewBrakeTestConfigurationAction
     }
 
     /**
-     * @param MotTest                               $motTest
+     * @param MotTest $motTest
      * @param BrakeTestConfigurationMapperInterface $configDtoMapper
-     * @param string                                $vehicleClassCode
+     * @param DvsaVehicle $vehicle
      *
      * @return BrakeTestConfigurationClass1And2Dto|BrakeTestConfigurationClass3AndAboveDto
      */
-    private function createDtoFromMotTest(MotTest $motTest, BrakeTestConfigurationMapperInterface $configDtoMapper, $vehicleClassCode)
+    private function createDtoFromMotTest(MotTest $motTest, BrakeTestConfigurationMapperInterface $configDtoMapper, DvsaVehicle $vehicle)
     {
         /** @var BrakeTestConfigurationClass3AndAboveDto | BrakeTestConfigurationClass1And2Dto $dto */
-        $dto = $configDtoMapper->mapToDefaultDto($motTest);
+        $dto = $configDtoMapper->mapToDefaultDto($motTest, $vehicle);
 
         if ($this->canOverwriteWithVtsDefaultSettings($motTest)) {
             // Overwrite the brakeTestTypes with defaults from site info
-            $this->populateBrakeTestTypeWithSiteDefaults($dto, $motTest, $vehicleClassCode);
+            $this->populateBrakeTestTypeWithSiteDefaults($dto, $motTest, $vehicle->getVehicleClass()->getCode());
         }
 
         return $dto;
@@ -294,7 +304,7 @@ class ViewBrakeTestConfigurationAction
      * @param int                  $motTestNumber
      * @param AbstractActionResult $actionResult
      *
-     * @return MotTest
+     * @return MotTest|null
      */
     private function getMotTest($motTestNumber, $actionResult)
     {
@@ -484,7 +494,7 @@ class ViewBrakeTestConfigurationAction
         if ($isVehicleBikeType) {
             return new BrakeTestConfigurationClass1And2Mapper();
         } else {
-            return new BrakeTestConfigurationClass3AndAboveMapper();
+            return $this->brakeTestConfigurationClass3AndAboveMapper;
         }
     }
 
@@ -568,5 +578,44 @@ class ViewBrakeTestConfigurationAction
     protected function getVehicleClassCodeFromMotTest(DvsaVehicle $vehicle)
     {
         return $vehicle->getVehicleClass()->getCode();
+    }
+
+    /**
+     * @param MotTest $motTest
+     * @param BrakeTestConfigurationClass3AndAboveHelper $configHelper
+     * @param bool $hasCorrectServiceBrakeTestType
+     * @param bool $hasCorrectParkingBrakeTestType
+     * @return bool
+     */
+    private function isVehicleWeightTypeOptionPreselected(
+        MotTest $motTest,
+        BrakeTestConfigurationClass3AndAboveHelper $configHelper,
+        $hasCorrectServiceBrakeTestType,
+        $hasCorrectParkingBrakeTestType
+    )
+    {
+        $preselectBrakeTestWeight = (
+            $this->isVehicleWeightPresent($motTest, $configHelper) &&
+            ($hasCorrectServiceBrakeTestType || $hasCorrectParkingBrakeTestType)
+        );
+        return $preselectBrakeTestWeight;
+    }
+
+    /**
+     * @param MotTest $motTest
+     * @param BrakeTestConfigurationClass3AndAboveHelper $configHelper
+     * @return bool
+     */
+    private function isVehicleWeightPresent(MotTest $motTest, BrakeTestConfigurationClass3AndAboveHelper $configHelper)
+    {
+        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)){
+            // we don't depend on getPreviousTestVehicleWight() anymore
+            // the vehicleWeight may not be populated here if it does not come from official weightSource
+            // @see OfficialWeightSourceForVehicle
+            return !empty($configHelper->getVehicleWeight());
+        }
+
+        // to be removed when FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE become true by default
+        return $configHelper->getVehicleWeight() || $motTest->getPreviousTestVehicleWight();
     }
 }

@@ -35,6 +35,7 @@ use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\StartTestSessionService;
 use Application\Service\CanTestWithoutOtpService;
 use Application\Factory\Service\CanTestWithoutOtpServiceFactory;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
 use Zend\View\Renderer\PhpRenderer;
 use DvsaMotTest\Action\BrakeTestResults\SubmitBrakeTestConfigurationAction;
@@ -948,6 +949,9 @@ return [
         ],
         'aliases' => [
             'translator' => 'MvcTranslator',
+        ],
+        'invokables' => [
+            OfficialWeightSourceForVehicle::class => OfficialWeightSourceForVehicle::class
         ],
         'factories' => [
             MotChecklistPdfService::class => MotChecklistPdfServiceFactory::class,

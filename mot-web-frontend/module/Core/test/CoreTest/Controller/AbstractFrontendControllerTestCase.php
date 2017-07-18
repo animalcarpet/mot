@@ -17,7 +17,6 @@ use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Model\ListOfRolesAndPermissions;
 use DvsaCommon\Model\PersonAuthorization;
 use DvsaFeature\FeatureToggles;
-use Dvsa\Mot\ApiClient\HttpClient\Factory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use Dvsa\OpenAM\OpenAMClient;

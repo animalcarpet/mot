@@ -7,11 +7,14 @@ use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Model\VehicleClassGroup;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Model\MotChecklistPdfField;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 
 class MotChecklistPdfPresenter implements AutoWireableInterface
 {
@@ -33,6 +36,7 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
      * @var MotTest
      */
     protected $motTest;
+
     /**
      * @var MotFrontendIdentityInterface
      */
@@ -42,6 +46,25 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
      * @var DvsaVehicle
      */
     protected $vehicle;
+
+    /**
+     * @var OfficialWeightSourceForVehicle
+     */
+    protected $officialVehicleWeightSourceSpec;
+
+    /**
+     * @var  FeatureToggles
+     */
+    protected $featureToggles;
+
+    public function __construct(
+        FeatureToggles $featureToggles,
+        OfficialWeightSourceForVehicle $officialVehicleWeightSourceSpec
+    )
+    {
+        $this->featureToggles = $featureToggles;
+        $this->officialVehicleWeightSourceSpec = $officialVehicleWeightSourceSpec;
+    }
 
     /**
      * @return string
@@ -98,7 +121,8 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
         ];
 
         if (!$this->isClass1or2Vehicle()) {
-            $fields[] = new MotChecklistPdfField($this->pickVehicleWeight(), $this->fourthColumnX, $this->thirdLineY, static::FONT_SIZE_9);
+            $fields[] = new MotChecklistPdfField($this->pickVehicleWeight(),
+                $this->fourthColumnX, $this->thirdLineY, static::FONT_SIZE_9);
         }
 
         return $fields;
@@ -110,6 +134,31 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
     }
 
     public function pickVehicleWeight()
+    {
+        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)){
+            return $this->checkVehicleWeightIsAppropriateAndDisplay();
+        }
+        else{
+            return $this->displayVehicleWeightWithoutCheckingIfAppropriate();
+        }
+    }
+
+    private function checkVehicleWeightIsAppropriateAndDisplay()
+    {
+        $vehicleWeight = '';
+        $vehicleClass = $this->vehicle->getVehicleClass()->getCode();
+
+        if(VehicleClassGroup::isGroupA($vehicleClass)){
+            return $vehicleWeight;
+        }
+
+        if(!$this->officialVehicleWeightSourceSpec->isSatisfiedBy($this->vehicle)){
+            return $vehicleWeight;
+        }
+        return $this->vehicle->getWeight();
+    }
+
+    private function displayVehicleWeightWithoutCheckingIfAppropriate()
     {
         $vehicleWeight = '';
 
@@ -123,7 +172,6 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
                 $vehicleWeight = $this->motTest->getPreviousTestVehicleWight();
             }
         }
-
         return $vehicleWeight;
     }
 }

@@ -15,9 +15,12 @@ use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\StartTestConfirmationController;
 use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
+
 
 /**
  * Class StartTestConfirmationControllerTest.
@@ -34,7 +37,9 @@ class StartTestConfirmationControllerNotLoggedInTest extends AbstractDvsaMotTest
             $vehicleService,
             XMock::of(StartTestChangeService::class),
             XMock::of(AuthorisedClassesService::class),
-            XMock::of(MotFrontendIdentityProviderInterface::class)
+            XMock::of(MotFrontendIdentityProviderInterface::class),
+            XMock::of(OfficialWeightSourceForVehicle::class),
+            Xmock::of(FeatureToggles::class)
         ));
         parent::setUp();
     }

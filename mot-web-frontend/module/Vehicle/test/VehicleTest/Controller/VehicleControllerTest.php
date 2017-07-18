@@ -17,7 +17,10 @@ use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTestTest\Controller\AbstractDvsaMotTestTestCase;
 use PHPUnit_Framework_Constraint_IsAnything;
 use Vehicle\Controller\VehicleController;
@@ -51,6 +54,12 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
     /** @var ParamObfuscator|MockObj $paramObfuscator */
     private $paramObfuscator;
 
+    /** @var FeatureToggles|MockObj */
+    private $featureToggles;
+
+    /** @var OfficialWeightSourceForVehicle|MockObj */
+    private $officialWeightSourceForVehicle;
+
     protected function setUp()
     {
         $serviceManager = Bootstrap::getServiceManager();
@@ -80,6 +89,10 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
             ->will($this->returnSelf());
 
         $this->paramObfuscator = $this->createParamObfuscatorMock(self::$obfuscationMap);
+
+        $this->featureToggles = XMock::of(FeatureToggles::class);
+        $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
+
         $this->setController(
             new VehicleController(
                 $this->paramObfuscator,
@@ -87,7 +100,9 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
                 XMock::of(CatalogService::class),
                 XMock::of(MotAuthorisationServiceInterface::class),
                 $mockVehicleViewModelBuilder,
-                XMock::of(VehicleExpiryMapper::class)
+                XMock::of(VehicleExpiryMapper::class),
+                $this->officialWeightSourceForVehicle,
+                $this->featureToggles
             )
         );
         $this->getController()->setServiceLocator($serviceManager);
@@ -130,6 +145,120 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
+     * @dataProvider dataProviderTestVehicleWeightIsDisplayedCorrectlyWithFTOn
+     *
+     * @param array $vehicleClassDp
+     * @param array $weightSourceDp
+     * @param int $weightDp
+     * @param bool $isSatisfied
+     */
+    public function testVehicleWeightIsDisplayedCorrectlyWithFTOn($vehicleClassDp, $weightSourceDp, $weightDp, $isSatisfied, $featureToggleStatus)
+    {
+        $this->withFeatureToggle($featureToggleStatus);
+
+        $vehicle = $this->mockDvsaVehicle($vehicleClassDp, $weightSourceDp, $weightDp);
+
+        $this->mockVehicleService
+            ->expects($this->any())
+            ->method('getDvsaVehicleById')
+            ->willReturn(new DvsaVehicle($vehicle));
+
+        $this->officialWeightSourceForVehicle
+            ->expects(true == $featureToggleStatus ? $this->once() : $this->never())
+            ->method('isSatisfiedBy')
+            ->willReturn($isSatisfied);
+
+        $obfuscatedVehicleId = $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, self::VEHICLE_ID);
+
+        $this->getResultForAction2(
+            Request::METHOD_GET,
+            self::ACTION_INDEX,
+            [
+                VehicleController::ROUTE_PARAM_ID => $obfuscatedVehicleId,
+            ]
+        );
+
+        $this->assertEquals($vehicle->weight, $weightDp);
+    }
+
+
+    public function dataProviderTestVehicleWeightIsDisplayedCorrectlyWithFTOn()
+    {
+        return [
+            //acceptable weight source for given class
+            [
+                ['name' => '4', 'code' => '4'],
+                ['name' => 'vsi', 'code' => 'VSI'],
+                1000,
+                true,
+                true,
+            ],
+            [
+                ['name' => '5', 'code' => '5'],
+                ['name' => 'ord_dgw_mam', 'code' => 'ORD_DGW_MAM'],
+                1000,
+                true,
+                true,
+            ],
+            [
+                ['name' => '7', 'code' => '7'],
+                ['name' => 'ord_dgw', 'code' => 'ORD_DGW'],
+                1000,
+                true,
+                true,
+            ],
+
+            //unacceptable weight source for given class
+            [
+                ['name' => '4', 'code' => '4'],
+                ['name' => 'dgw', 'code' => 'DGW'],
+                'Unknown',
+                false,
+                true,
+            ],
+            [
+                ['name' => '5', 'code' => '5'],
+                ['name' => 'misw', 'code' => 'MISW'],
+                'Unknown',
+                false,
+                true,
+            ],
+            [
+                ['name' => '7', 'code' => '7'],
+                ['name' => 'ord_dgw_mam', 'code' => 'ORD_DGW_MAM'],
+                'Unknown',
+                false,
+                true,
+            ]
+        ];
+    }
+
+    /**
+     * @param $vehicleClassDp
+     * @param $weightSourceDp
+     * @param $weightDp
+     * @return DvsaVehicle $vehicle
+     */
+    private function mockDvsaVehicle($vehicleClassDp, $weightSourceDp, $weightDp)
+    {
+        $dvsaVehicleBuilder = new DvsaVehicleBuilder();
+        $data = $dvsaVehicleBuilder->getEmptyVehicleStdClass();
+
+        $vehicleClass = new \stdClass();
+        $vehicleClass->name = $vehicleClassDp['name'];
+        $vehicleClass->code = $vehicleClassDp['code'];
+        $data->vehicleClass = $vehicleClass;
+
+        $weightSource = new \stdClass();
+        $weightSource->name = $weightSourceDp['name'];
+        $weightSource->code = $weightSourceDp['code'];
+        $data->weightSource = $weightSource;
+
+        $data->weight = $weightDp;
+        return $data;
+    }
+
+    /**
      * @return array
      */
     public function dataProviderTestCanAccessHasRight()
@@ -159,6 +288,7 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses($weight, $vehicleClass, $expectedWeight)
     {
+        $this->withFeatureToggle(false);
         $mockDvsaVehicle = XMock::of(DvsaVehicle::class);
 
         $this->mockVehicleService
@@ -233,16 +363,31 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->mockMethod(
             $mockParamObfuscator, 'obfuscateEntry', null, function ($entryKey, $id) use ($map) {
-                return $map[$id];
-            }
+            return $map[$id];
+        }
         );
 
         $this->mockMethod(
             $mockParamObfuscator, 'deobfuscateEntry', null, function ($entryKey, $obfuscatedId) use ($toId) {
-                return $toId[$obfuscatedId];
-            }
+            return $toId[$obfuscatedId];
+        }
         );
 
         return $mockParamObfuscator;
+    }
+
+    /**
+     * @param bool $isFeatureToggleEnabled
+     *
+     * @return $this
+     */
+    private function withFeatureToggle($isFeatureToggleEnabled)
+    {
+        $this->featureToggles
+            ->expects($this->once())
+            ->method('isEnabled')
+            ->willReturn($isFeatureToggleEnabled);
+
+        return $this;
     }
 }

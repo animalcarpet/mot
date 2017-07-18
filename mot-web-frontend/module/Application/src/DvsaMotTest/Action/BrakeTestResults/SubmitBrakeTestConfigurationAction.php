@@ -36,6 +36,9 @@ class SubmitBrakeTestConfigurationAction
     /** @var BrakeTestConfigurationService $brakeTestConfigurationService */
     private $brakeTestConfigurationService;
 
+    /** @var BrakeTestConfigurationClass3AndAboveMapper */
+    private $brakeTestConfigurationClass3AndAboveMapper;
+
     /**
      * @param WebPerformMotTestAssertion                 $webPerformMotTestAssertion
      * @param BrakeTestConfigurationContainerHelper      $brakeTestConfigurationContainerHelper
@@ -48,13 +51,15 @@ class SubmitBrakeTestConfigurationAction
         BrakeTestConfigurationContainerHelper $brakeTestConfigurationContainerHelper,
         VehicleService $vehicleService,
         MotTestService $motTestService,
-        BrakeTestConfigurationService $brakeTestConfigurationService
+        BrakeTestConfigurationService $brakeTestConfigurationService,
+        BrakeTestConfigurationClass3AndAboveMapper $brakeTestConfigurationClass3AndAboveMapper
     ) {
         $this->webPerformMotTestAssertion = $webPerformMotTestAssertion;
         $this->brakeTestConfigurationContainerHelper = $brakeTestConfigurationContainerHelper;
         $this->vehicleService = $vehicleService;
         $this->motTestService = $motTestService;
         $this->brakeTestConfigurationService = $brakeTestConfigurationService;
+        $this->brakeTestConfigurationClass3AndAboveMapper = $brakeTestConfigurationClass3AndAboveMapper;
     }
 
     /**
@@ -133,7 +138,7 @@ class SubmitBrakeTestConfigurationAction
         if ($isGroupA) {
             return new BrakeTestConfigurationClass1And2Mapper();
         } else {
-            return new BrakeTestConfigurationClass3AndAboveMapper();
+            return $this->brakeTestConfigurationClass3AndAboveMapper;
         }
     }
 
