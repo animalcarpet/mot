@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "32645e322223325319ec7059aee6655b",
+    "content-hash": "bac18b6cccbf6d0bc6ae6df0e4988125",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3852,17 +3852,17 @@
         },
         {
             "name": "slot-purchase/web-frontend",
-            "version": "v3.9.2",
+            "version": "v3.9.3",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/slot-purchase-web-frontend.git",
-                "reference": "d1eded915a6e9927fa0605f321a9de886817fed1"
+                "reference": "67154398a5b8c5211b98dd59044b0cccd32af6cf"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/slot-purchase-web-frontend-v3.9.2-432721.tar",
-                "reference": "d1eded915a6e9927fa0605f321a9de886817fed1",
-                "shasum": "96bfbff14f3ea2c8d94c8c05bfbcf6c7da0e96d8"
+                "url": "https://packages.motdev.org.uk//dist/slot-purchase-web-frontend-v3.9.3-00a4be.tar",
+                "reference": "67154398a5b8c5211b98dd59044b0cccd32af6cf",
+                "shasum": "9fd4f4790faed3ceb547f972288a121acf53b4e3"
             },
             "require": {
                 "cpms/client": "1.22.3-p",
@@ -3915,7 +3915,7 @@
                 "proprietary"
             ],
             "description": "Slot Purchase Frontend",
-            "time": "2017-07-18T09:33:53+00:00"
+            "time": "2017-07-18T15:55:33+00:00"
         },
         {
             "name": "soflomo/purifier",
