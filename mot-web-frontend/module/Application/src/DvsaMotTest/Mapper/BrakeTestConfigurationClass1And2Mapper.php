@@ -2,6 +2,7 @@
 
 namespace DvsaMotTest\Mapper;
 
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
@@ -44,10 +45,11 @@ class BrakeTestConfigurationClass1And2Mapper implements BrakeTestConfigurationMa
 
     /**
      * @param MotTest $motTest
+     * @param DvsaVehicle $vehicle
      *
      * @return BrakeTestConfigurationDtoInterface
      */
-    public function mapToDefaultDto(MotTest $motTest)
+    public function mapToDefaultDto(MotTest $motTest, DvsaVehicle $vehicle = null)
     {
         $dto = new BrakeTestConfigurationClass1And2Dto();
 

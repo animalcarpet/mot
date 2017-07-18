@@ -12,11 +12,14 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Action\BrakeTestResults\SubmitBrakeTestConfigurationAction;
 use DvsaMotTest\Controller\BrakeTestResultsController;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Helper\BrakeTestConfigurationContainerHelper;
+use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
 use DvsaMotTest\Service\BrakeTestConfigurationService;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
@@ -30,6 +33,15 @@ class SubmitBrakeTestConfigurationActionTest extends TestCase
     /** @var stdClass $motTestData */
     private $motTestData;
 
+    /** @var FeatureToggles|MockObject */
+    private $featureToggles;
+
+    /** @var OfficialWeightSourceForVehicle|MockObject */
+    private $officialWeightSourceForVehicle;
+
+    /** @var BrakeTestConfigurationClass3AndAboveMapper */
+    private $brakeTestConfigurationClass3AndAboveMapper;
+
     public function setUp()
     {
         $this->brakeTestConfigurationService = XMock::of(BrakeTestConfigurationService::class);
@@ -39,6 +51,14 @@ class SubmitBrakeTestConfigurationActionTest extends TestCase
         $this->motTestData->vehicleId = 1;
         $this->motTestData->vehicleVersion = 1;
         $this->motTestData->status = MotTestStatusName::ACTIVE;
+
+        $this->featureToggles = XMock::of(FeatureToggles::class);
+        $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
+
+        $this->brakeTestConfigurationClass3AndAboveMapper = new BrakeTestConfigurationClass3AndAboveMapper(
+            $this->featureToggles,
+            $this->officialWeightSourceForVehicle
+        );
     }
 
     public function testRedirectToResultsOnSuccess()
@@ -153,7 +173,8 @@ class SubmitBrakeTestConfigurationActionTest extends TestCase
             XMock::of(BrakeTestConfigurationContainerHelper::class),
             $vehicleService,
             $motTestService,
-            $this->brakeTestConfigurationService
+            $this->brakeTestConfigurationService,
+            $this->brakeTestConfigurationClass3AndAboveMapper
         );
 
         return $action;

@@ -2,6 +2,7 @@
 
 namespace DvsaMotTest\Mapper;
 
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
 
@@ -15,7 +16,7 @@ interface BrakeTestConfigurationMapperInterface
      *
      * @return BrakeTestConfigurationDtoInterface
      */
-    public function mapToDefaultDto(MotTest $motTest);
+    public function mapToDefaultDto(MotTest $motTest, DvsaVehicle $vehicle = null);
 
     /**
      * @param array $data

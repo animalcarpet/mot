@@ -2,26 +2,47 @@
 
 namespace DvsaMotTestTest\Mapper;
 
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
+use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTestTest\TestHelper\Fixture;
+use PHPUnit_Framework_MockObject_Matcher_InvokedRecorder;
 use PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Tests for BrakeTestConfigurationClass3AndAboveMapper.
  */
 class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_TestCase
 {
+    const DEFAULT_VEHICLE_WEIGHT = '1111.0';
+
     /** @var BrakeTestConfigurationClass3AndAboveMapper */
     private $mapper;
+    /** @var FeatureToggles|MockObject */
+    private $featureToggles;
+    /** @var OfficialWeightSourceForVehicle|MockObject */
+    private $officialWeightSourceForVehicle;
+    /** @var DvsaVehicle|MockObject*/
+    private $dvsaVehicle;
 
     public function setup()
     {
-        $this->mapper = new BrakeTestConfigurationClass3AndAboveMapper();
+        $this->featureToggles = XMock::of(FeatureToggles::class);
+        $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
+        $this->mapper = new BrakeTestConfigurationClass3AndAboveMapper(
+            $this->featureToggles,
+            $this->officialWeightSourceForVehicle
+        );
+        $this->dvsaVehicle = XMock::of(DvsaVehicle::class);
     }
 
     public function testMapToDto()
@@ -55,9 +76,27 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $this->mapper->mapToDto(null);
     }
 
-    public function testMapToDefaultDto_withMotTestWithoutBrakeTestResult()
+    /**
+     * @param $toggleValue
+     * @param $toggleInvocations
+     * @param $specValue
+     * @param $specInvocations
+     * @param $expectedVehicleWeight
+     *
+     * @dataProvider testMapToDefaultDto_withMotTestWithoutBrakeTestResultDP
+     */
+    public function testMapToDefaultDto_withMotTestWithoutBrakeTestResult(
+        $toggleValue,
+        $toggleInvocations,
+        $specValue,
+        $specInvocations,
+        $expectedVehicleWeight
+    )
     {
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $this->withFeatureToggle($toggleValue, $toggleInvocations);
+        $this->withOfficialWeightSourceSpec($specValue, $specInvocations);
+        $this->withDvsaVehicle(self::DEFAULT_VEHICLE_WEIGHT);
         /*
          * this is the case when a new MOT Test does not have brake test submitted
          * vehicle weight should be empty in the dto because there is no source of brake tests
@@ -69,11 +108,22 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
 
         $motTest = new MotTest($motTestData);
         $expected = $this->getDefaultDto()
-                        ->setVehicleWeight('1111.0'); // vehicle weight from previous mot test (see fixture file)
+                        ->setVehicleWeight($expectedVehicleWeight); // vehicle weight from previous mot test (see fixture file)
 
-        $actual = $this->mapper->mapToDefaultDto($motTest);
+        $actual = $this->mapper->mapToDefaultDto($motTest, $this->dvsaVehicle);
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testMapToDefaultDto_withMotTestWithoutBrakeTestResultDP()
+    {
+        return [
+            // ftValue, ftIC, specValue, specIC, expectedWeight
+            [true, 1, true, 1, self::DEFAULT_VEHICLE_WEIGHT],
+            [true, 1, false, 1, ''],
+            [false, 1, false, 0, self::DEFAULT_VEHICLE_WEIGHT],
+            [false, 1, false, 0, self::DEFAULT_VEHICLE_WEIGHT],
+        ];
     }
 
     public function testMapToDefaultDto_withMotTestContainingDefaultBreakTestValues()
@@ -260,5 +310,56 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
             ->setNumberOfAxles(2)
             ->setParkingBrakeNumberOfAxles(1)
             ->setVehicleWeight('');
+    }
+
+    /**
+     * @param $returnValue
+     * @param int $invocationCount
+     */
+    private function withFeatureToggle($returnValue, $invocationCount = 1)
+    {
+        $this->featureToggles
+            ->expects($this->convertInvocationCount($invocationCount))
+            ->method('isEnabled')
+            ->with(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)
+            ->willReturn($returnValue);
+    }
+
+    /**
+     * @param $returnValue
+     * @param int $invocationCount
+     */
+    private function withOfficialWeightSourceSpec($returnValue, $invocationCount = 1)
+    {
+        $this->officialWeightSourceForVehicle
+            ->expects($this->convertInvocationCount($invocationCount))
+            ->method('isSatisfiedBy')
+            ->willReturn($returnValue);
+    }
+
+    /**
+     * @param $count
+     * @return PHPUnit_Framework_MockObject_Matcher_InvokedRecorder
+     */
+    private function convertInvocationCount($count)
+    {
+        switch((int)$count){
+            case 0:
+                return $this->never();
+            case 1:
+                return $this->once();
+            case 2:
+                return $this->exactly(2);
+            default:
+                return $this->any();
+        }
+    }
+
+    private function withDvsaVehicle($returnValue)
+    {
+        $this->dvsaVehicle
+            ->expects($this->any())
+            ->method('getWeight')
+            ->willReturn($returnValue);
     }
 }

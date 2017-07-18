@@ -3,7 +3,9 @@
 namespace DvsaMotTest\Mapper;
 
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
 use DvsaCommon\Enum\BrakeTestTypeCode;
@@ -12,6 +14,8 @@ use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
+use DvsaFeature\FeatureToggles;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 
 /**
  * Maps form data to BrakeTestConfigurationClass3AndAboveDto.
@@ -21,6 +25,22 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
     const BRAKE_LINE_TYPE_SINGLE = 'single';
     const VEHICLE_PURPOSE_TYPE_COMMERCIAL = 'commercial';
     const LOCATION_FRONT = 'front';
+
+    /** @var FeatureToggles $featureToggles */
+    private $featureToggles;
+
+    /** @var OfficialWeightSourceForVehicle */
+    private $officialWeightSourceForVehicleSpec;
+
+    /**
+     * @param FeatureToggles $featureToggles
+     * @param OfficialWeightSourceForVehicle $officialWeightSourceForVehicleSpec
+     */
+    public function __construct(FeatureToggles $featureToggles, OfficialWeightSourceForVehicle $officialWeightSourceForVehicleSpec )
+    {
+        $this->featureToggles = $featureToggles;
+        $this->officialWeightSourceForVehicleSpec = $officialWeightSourceForVehicleSpec;
+    }
 
     /**
      * @param array $data
@@ -55,10 +75,11 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
 
     /**
      * @param MotTest $motTest
+     * @param DvsaVehicle $vehicle
      *
      * @return BrakeTestConfigurationClass3AndAboveDto
      */
-    public function mapToDefaultDto(MotTest $motTest)
+    public function mapToDefaultDto(MotTest $motTest, DvsaVehicle $vehicle = null)
     {
         $dto = new BrakeTestConfigurationClass3AndAboveDto();
 
@@ -74,7 +95,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrakeControlsCount(1);
         $dto->setNumberOfAxles(2);
         $dto->setParkingBrakeNumberOfAxles(1);
-        $dto->setVehicleWeight($this->getDefaultVehicleWeight($motTest));
+        $dto->setVehicleWeight($this->getDefaultVehicleWeight($motTest, $vehicle));
 
         // the defaults for brake test type from VTS will be populated in controller (BrakeTestResultsController)
         // because MotTest response obj don't have access to VTS data as it was before with DTO
@@ -103,27 +124,63 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
 
     /**
      * @param MotTest $motTest
+     * @param DvsaVehicle $vehicle
      *
      * @return int|string
      */
-    private function getDefaultVehicleWeight(MotTest $motTest)
+    private function getDefaultVehicleWeight(MotTest $motTest, DvsaVehicle $vehicle = null)
     {
-        $vehicleWeight = '';
+        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+            return $this->getDefaultVehicleWeightFromVehicle($vehicle);
+        }
+        else {
+            return $this->getDefaultVehicleWeightFromBrakeTestResult($motTest);
+        }
+    }
+
+    /**
+     * Gets default vehicle weight form MotTest's brakeTestResult object
+     *
+     * @deprecated To be removed/replaced with getDefaultVehicleWeightFromVehicle() when feature toggle is ON
+     *
+     * @param MotTest $motTest
+     * @return int|string
+     */
+    private function getDefaultVehicleWeightFromBrakeTestResult(MotTest $motTest)
+    {
         $vehicleClass = $motTest->getVehicleClass();
         $brakeTestResult = $motTest->getBrakeTestResult();
 
         if (VehicleClassGroup::isGroupA($vehicleClass)) {
-            return $vehicleWeight;
+            return '';
         }
 
         if ($brakeTestResult !== null) {
             $brakeTestResultClass3AndAbove = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
-            $vehicleWeight = $brakeTestResultClass3AndAbove->getVehicleWeight();
+            return $brakeTestResultClass3AndAbove->getVehicleWeight();
         } else {
-            $vehicleWeight = $motTest->getPreviousTestVehicleWight();
+            return $motTest->getPreviousTestVehicleWight();
+        }
+    }
+
+    /**
+     * Sets default vehicle weight from DvsaVehicle object if it contains
+     * an official weightSource type for a given vehicle class.
+     * Otherwise sets it to blank.
+     *
+     * @see OfficialWeightSourceForVehicle
+     * @see BL-5219
+     *
+     * @param DvsaVehicle $vehicle
+     * @return int|null|string
+     */
+    private function getDefaultVehicleWeightFromVehicle(DvsaVehicle $vehicle)
+    {
+        if($this->officialWeightSourceForVehicleSpec->isSatisfiedBy($vehicle)){
+            return $vehicle->getWeight();
         }
 
-        return $vehicleWeight;
+        return '';
     }
 
     /**
@@ -133,10 +190,15 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
      */
     private function getVehicleWeightType(MotTest $motTest)
     {
+        //Todo: logic of this method needs to be verified
         $vehicleClass = $motTest->getVehicleClass();
 
         if (is_null($vehicleClass)) {
             return WeightSourceCode::VSI;
+        }
+
+        if($vehicleClass == VehicleClassCode::CLASS_5){
+            return WeightSourceCode::DGW_MAM;
         }
 
         $brakeResult = $motTest->getBrakeTestResult();

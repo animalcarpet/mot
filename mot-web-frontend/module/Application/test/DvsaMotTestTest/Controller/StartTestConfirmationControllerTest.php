@@ -20,6 +20,7 @@ use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -38,10 +39,12 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\StartTestConfirmationController;
 use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\PhpEnvironment\Request;
@@ -82,6 +85,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     /** @var MotFrontendIdentityProviderInterface */
     private $identityProvider;
 
+    /** @var OfficialWeightSourceForVehicle|\PHPUnit_Framework_MockObject_MockObject $officialVehicleWeightSourceSpec */
+    private $officialVehicleWeightSourceSpec;
+
+    /** @var FeatureToggles|\PHPUnit_Framework_MockObject_MockObject $featureToggles */
+    private $featureToggles;
+
     protected function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
@@ -105,6 +114,10 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $this->authorisedClassesService = XMock::of(AuthorisedClassesService::class);
         $this->identityProvider = XMock::of(MotFrontendIdentityProviderInterface::class);
 
+        $this->officialVehicleWeightSourceSpec = XMock::of(OfficialWeightSourceForVehicle::class);
+
+        $this->featureToggles = XMock::of(FeatureToggles::class);
+
         $this->setController(
             new StartTestConfirmationController(
                 $this->createParamObfuscator(),
@@ -112,7 +125,9 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                 $this->vehicleService,
                 XMock::of(StartTestChangeService::class),
                 $this->authorisedClassesService,
-                $this->identityProvider
+                $this->identityProvider,
+                $this->officialVehicleWeightSourceSpec,
+                $this->featureToggles
             )
         );
 
@@ -193,11 +208,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     /**
      * @dataProvider dataProviderTestVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses
      *
-     * @param int        $weight
-     * @param string     $vehicleClass
+     * @param int $weight
+     * @param string $vehicleClass
+     * @param boolean $isFeatureToggleEnabled
      * @param int|string $expectedWeight
      */
-    public function testVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses($weight, $vehicleClass, $expectedWeight)
+    public function testVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses($weight, $vehicleClass, $isFeatureToggleEnabled, $expectedWeight)
     {
         $this->mockGetIdentity();
         $this->mockGetCombinedAuthorisedClassesForPersonAndVts();
@@ -210,6 +226,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             ->method('getVehicleTestWeight')
             ->with(self::VEHICLE_ID)
             ->willReturn($weight);
+
+        $this->featureToggles
+            ->expects($this->any())
+            ->method('isDisabled')
+            ->with(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)
+            ->willReturn($isFeatureToggleEnabled);
 
         $resultOfIndexGetAction = $this->getResultForAction2(
             Request::METHOD_GET,
@@ -231,14 +253,28 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     public function dataProviderTestVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses()
     {
         return [
-            [0, VehicleClassCode::CLASS_1, self::UNKNOWN_TEST],
-            [1000, VehicleClassCode::CLASS_1, self::UNKNOWN_TEST],
-            [0, VehicleClassCode::CLASS_2, self::UNKNOWN_TEST],
-            [1000, VehicleClassCode::CLASS_2, self::UNKNOWN_TEST],
-            [0, VehicleClassCode::CLASS_3, self::UNKNOWN_TEST],
-            [1000, VehicleClassCode::CLASS_3, '1000 kg'],
-            [0, VehicleClassCode::CLASS_5, self::UNKNOWN_TEST],
-            [1000, VehicleClassCode::CLASS_5, '1000 kg'],
+            [0, VehicleClassCode::CLASS_1, false, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_1, false, self::UNKNOWN_TEST],
+            [0, VehicleClassCode::CLASS_2, false, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_2, false, self::UNKNOWN_TEST],
+            [0, VehicleClassCode::CLASS_3, false, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_3, false, '1000 kg'],
+            [0, VehicleClassCode::CLASS_5, false, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_5, false, '1000 kg'],
+            [0, VehicleClassCode::CLASS_7, false, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_7, false, '1000 kg'],
+
+            [0, VehicleClassCode::CLASS_1, true, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_1, true, self::UNKNOWN_TEST],
+            [0, VehicleClassCode::CLASS_2, true, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_2, true, self::UNKNOWN_TEST],
+            [0, VehicleClassCode::CLASS_3, true, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_3, true, '1000 kg'],
+            [0, VehicleClassCode::CLASS_5, true, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_5, true, '1000 kg'],
+            [0, VehicleClassCode::CLASS_7, true, self::UNKNOWN_TEST],
+            [1000, VehicleClassCode::CLASS_7, true, '1000 kg'],
+            // Todo: add more cases for official/not official weight soruce ?!
         ];
     }
 
@@ -904,24 +940,26 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * @param int    $weight
+     * @param int $weight
      * @param string $vehicleClass
+     * @param string $vehicleWeightSource
      */
-    private function getMockDvsaVehicle($weight = 1000, $vehicleClass = VehicleClassCode::CLASS_3)
+    private function getMockDvsaVehicle($weight = 1000, $vehicleClass = VehicleClassCode::CLASS_3, $vehicleWeightSource = WeightSourceCode::VSI)
     {
         $this->vehicleService
             ->expects($this->any())
             ->method('getDvsaVehicleById')
-            ->willReturn($this->mockDvsaVehicleResponse($weight, $vehicleClass));
+            ->willReturn($this->mockDvsaVehicleResponse($weight, $vehicleClass, $vehicleWeightSource));
     }
 
     /**
-     * @param int    $weight
+     * @param int $weight
      * @param string $vehicleClass
+     * @param string $vehicleWeightSource
      *
      * @return DvsaVehicle
      */
-    private function mockDvsaVehicleResponse($weight = 1000, $vehicleClass = VehicleClassCode::CLASS_3)
+    private function mockDvsaVehicleResponse($weight = 1000, $vehicleClass = VehicleClassCode::CLASS_3, $vehicleWeightSource = WeightSourceCode::VSI)
     {
         $testVehicleDetails = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $testVehicleDetails->id = '1';
@@ -947,8 +985,8 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $testVehicleDetails->vehicleClass = $vehicleClassData;
 
         $weightSource = new \stdClass();
-        $weightSource->code = WeightSourceCode::UNLADEN;
-        $weightSource->name = WeightSourceCode::UNLADEN;
+        $weightSource->code = $vehicleWeightSource;
+        $weightSource->name = $vehicleWeightSource;
         $testVehicleDetails->weightSource = $weightSource;
 
         $testVehicleDetails->cylinderCapacity = '1700';

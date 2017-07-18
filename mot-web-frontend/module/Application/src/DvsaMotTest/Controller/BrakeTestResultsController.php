@@ -52,12 +52,17 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
     /** @var ViewBrakeTestConfigurationAction $viewBrakeTestConfigurationAction */
     private $viewBrakeTestConfigurationAction;
 
+    /** @var BrakeTestConfigurationClass3AndAboveMapper */
+    private $brakeTestConfigurationClass3AndAboveMapper;
+
     public function __construct(
         SubmitBrakeTestConfigurationAction $submitBrakeTestConfigurationAction,
-        ViewBrakeTestConfigurationAction $viewBrakeTestConfigurationAction
+        ViewBrakeTestConfigurationAction $viewBrakeTestConfigurationAction,
+        BrakeTestConfigurationClass3AndAboveMapper $brakeTestConfigurationClass3AndAboveMapper
     ) {
         $this->submitBrakeTestConfigurationAction = $submitBrakeTestConfigurationAction;
         $this->viewBrakeTestConfigurationAction = $viewBrakeTestConfigurationAction;
+        $this->brakeTestConfigurationClass3AndAboveMapper = $brakeTestConfigurationClass3AndAboveMapper;
     }
 
     public function configureBrakeTestAction()
@@ -136,7 +141,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         $queryData = $brakeTestConfigurationContainer->fetchConfig();
 
         /** @var BrakeTestConfigurationClass3AndAboveDto $configDto */
-        $configDto = (new BrakeTestConfigurationClass3AndAboveMapper())->mapToDto($queryData);
+        $configDto = $this->brakeTestConfigurationClass3AndAboveMapper->mapToDto($queryData);
 
         if ($request->isPost()) {
             $brakeTestResult = new BrakeTestResultClass3AndAboveViewModel(

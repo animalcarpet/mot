@@ -5,6 +5,7 @@ namespace DvsaMotTest\Factory\Service;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Configuration\MotConfig;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Pdf\Templating\ZendPdf\ZendPdfTemplate;
 use DvsaMotTest\Presenter\MotChecklistPdfPresenter;

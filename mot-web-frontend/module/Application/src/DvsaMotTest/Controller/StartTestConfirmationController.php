@@ -15,6 +15,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\Assertion\RefuseToTestAssertion;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\ColourCode;
@@ -28,10 +29,12 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Helper\DvsaVehicleBuilder;
 use DvsaMotTest\Service\AuthorisedClassesService;
 use DvsaMotTest\Service\StartTestChangeService;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use Vehicle\TestingAdvice\Assertion\ShowTestingAdviceAssertion;
 use Zend\Http\Request;
@@ -75,7 +78,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     /** @var array $eligibilityNotices */
     protected $eligibilityNotices;
 
-    /** @var AbstractVehicle $vehicleDetails */
+    /** @var DvlaVehicle|DvsaVehicle $vehicleDetails */
     protected $vehicleDetails;
 
     /** @var bool $inProgressTestExists */
@@ -108,15 +111,23 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     /** @var MotFrontendIdentityProviderInterface */
     private $identityProvider;
 
+    /** @var OfficialWeightSourceForVehicle */
+    private $officialWeightSourceForVehicleSpec;
+
+    /** @var FeatureToggles */
+    private $featureToggles;
+
     /**
      * StartTestConfirmationController constructor.
      *
-     * @param ParamObfuscator                      $paramObfuscator
-     * @param CountryOfRegistrationCatalog         $countryOfRegistrationCatalog
-     * @param VehicleService                       $vehicleService
-     * @param StartTestChangeService               $startTestChangeService
-     * @param AuthorisedClassesService             $authorisedClassesService
+     * @param ParamObfuscator $paramObfuscator
+     * @param CountryOfRegistrationCatalog $countryOfRegistrationCatalog
+     * @param VehicleService $vehicleService
+     * @param StartTestChangeService $startTestChangeService
+     * @param AuthorisedClassesService $authorisedClassesService
      * @param MotFrontendIdentityProviderInterface $identityProvider
+     * @param OfficialWeightSourceForVehicle $officialWeightSourceForVehicleSpec
+     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         ParamObfuscator $paramObfuscator,
@@ -124,7 +135,9 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         VehicleService $vehicleService,
         StartTestChangeService $startTestChangeService,
         AuthorisedClassesService $authorisedClassesService,
-        MotFrontendIdentityProviderInterface $identityProvider
+        MotFrontendIdentityProviderInterface $identityProvider,
+        OfficialWeightSourceForVehicle $officialWeightSourceForVehicleSpec,
+        FeatureToggles $featureToggles
     ) {
         $this->paramObfuscator = $paramObfuscator;
         $this->startTestConfirmationViewModel = new StartTestConfirmationViewModel();
@@ -133,6 +146,8 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $this->startTestChangeService = $startTestChangeService;
         $this->authorisedClassesService = $authorisedClassesService;
         $this->identityProvider = $identityProvider;
+        $this->officialWeightSourceForVehicleSpec = $officialWeightSourceForVehicleSpec;
+        $this->featureToggles = $featureToggles;
     }
 
     public function indexAction()
@@ -420,26 +435,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
                     : $this->vehicleDetails->getColourSecondary())
             ->setFirstUsedDate($this->vehicleDetails->getFirstUsedDate());
 
-        if ($this->vehicleDetails instanceof DvsaVehicle) {
-            $viewModel->setIsMysteryShopper($this->isMysteryShopper());
-
-            if (
-                !empty($this->vehicleDetails->getWeight()) &&
-                VehicleClassGroup::isGroupB($this->vehicleDetails->getVehicleClass()->getCode())
-            ) {
-                $viewModel->setBrakeTestWeight($this->vehicleDetails->getWeight().' '.'kg');
-            } else {
-                $viewModel->setBrakeTestWeight(self::UNKNOWN_TEST);
-            }
-            if (!empty($this->vehicleDetails->getVehicleClass()) && !empty($this->vehicleDetails->getVehicleClass()->getCode())) {
-                $viewModel->setMotTestClass($this->vehicleDetails->getVehicleClass()->getName());
-            } else {
-                $viewModel->setMotTestClass(self::UNKNOWN_TEST);
-            }
-        } else {
-            $viewModel->setBrakeTestWeight(self::UNKNOWN_TEST);
-            $viewModel->setMotTestClass(self::UNKNOWN_TEST);
-        }
+        $this->populateViewModelWithVehicleData($viewModel);
 
         if ($this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS)) {
             $viewModel->setMotTestClass($this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS]);
@@ -584,11 +580,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             if ($this->isVehicleSource($source)) {
                 $this->vehicleDetails = $this->getVehicleServiceClient()->getDvlaVehicleById((int) $this->vehicleId);
             } else {
-                $this->vehicleDetails = $this->getVehicleServiceClient()->getDvsaVehicleById((int) $this->vehicleId);
-
-                if ($this->vehicleDetails !== null) {
-                    $this->vehicleDetails->setWeight($this->getMotTestServiceClient()->getVehicleTestWeight((int) $this->vehicleId));
-                }
+                $this->fetchDvsaVehicleDetails((int) $this->vehicleId);
             }
         }
 
@@ -823,4 +815,106 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         return true;
     }
+
+    /**
+     * @param StartTestConfirmationViewModel $viewModel
+     */
+    protected function populateViewModelWithVehicleData(StartTestConfirmationViewModel $viewModel)
+    {
+        if (!$this->vehicleDetails instanceof DvsaVehicle) {
+            $viewModel->setBrakeTestWeight(self::UNKNOWN_TEST);
+            $viewModel->setMotTestClass(self::UNKNOWN_TEST);
+
+            return;
+        }
+
+        $viewModel->setIsMysteryShopper($this->isMysteryShopper());
+
+        $this->populateVehicleWeight($viewModel);
+        $this->populateVehicleClass($viewModel);
+    }
+
+    /**
+     * @param StartTestConfirmationViewModel $viewModel
+     */
+    protected function populateVehicleWeight(StartTestConfirmationViewModel $viewModel)
+    {
+        if ($this->canDisplayVehicleWeight()) {
+            $viewModel->setBrakeTestWeight($this->vehicleDetails->getWeight() . ' ' . 'kg');
+        } else {
+            $viewModel->setBrakeTestWeight(self::UNKNOWN_TEST);
+        }
+    }
+
+    /**
+     * @param StartTestConfirmationViewModel $viewModel
+     */
+    protected function populateVehicleClass(StartTestConfirmationViewModel $viewModel)
+    {
+        if ($this->canDisplayVehicleClass()) {
+            $viewModel->setMotTestClass($this->vehicleDetails->getVehicleClass()->getName());
+        } else {
+            $viewModel->setMotTestClass(self::UNKNOWN_TEST);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function canDisplayVehicleWeight()
+    {
+        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE))
+        {
+            return
+                !empty($this->vehicleDetails->getWeight()) &&
+                VehicleClassGroup::isGroupB($this->vehicleDetails->getVehicleClass()->getCode()) &&
+                $this->officialWeightSourceForVehicleSpec->isSatisfiedBy($this->vehicleDetails);
+        }
+        else
+        {
+            return
+                !empty($this->vehicleDetails->getWeight()) &&
+                VehicleClassGroup::isGroupB($this->vehicleDetails->getVehicleClass()->getCode());
+        }
+
+    }
+
+    /**
+     * @return bool
+     */
+    protected function canDisplayVehicleClass()
+    {
+        return
+            !empty($this->vehicleDetails->getVehicleClass()) &&
+            !empty($this->vehicleDetails->getVehicleClass()->getCode());
+    }
+
+    /**
+     * @param int $vehicleId
+     */
+    private function fetchDvsaVehicleDetails($vehicleId)
+    {
+        $this->vehicleDetails = $this->getVehicleServiceClient()->getDvsaVehicleById($vehicleId);
+
+        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)){
+            // we don't need overwrite the vehicle weight from mot_test_current table anymore
+            return;
+        }
+
+        // To be removed after feature toggle clean up
+        $this->overwriteDvsaVehicleWeightFromMotTestData($vehicleId);
+    }
+
+    /**
+     * @param $vehicleId
+     * @deprecated this method should be removed when FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE will be enabled by default
+     */
+    private function overwriteDvsaVehicleWeightFromMotTestData($vehicleId)
+    {
+        if ($this->vehicleDetails !== null) {
+            $this->vehicleDetails->setWeight($this->getMotTestServiceClient()->getVehicleTestWeight($vehicleId));
+        }
+    }
+
+
 }

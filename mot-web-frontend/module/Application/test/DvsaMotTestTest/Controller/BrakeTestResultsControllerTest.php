@@ -18,15 +18,19 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Action\BrakeTestResults\SubmitBrakeTestConfigurationAction;
 use DvsaMotTest\Action\BrakeTestResults\ViewBrakeTestConfigurationAction;
 use DvsaMotTest\Controller\BrakeTestResultsController;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Data\BrakeTestResultsResource;
 use DvsaMotTest\Helper\BrakeTestConfigurationContainerHelper;
+use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
 use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
+use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Zend\Log\Filter\Mock;
 
 /**
  * Class BrakeTestResultsControllerTest.
@@ -43,14 +47,30 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     /** @var ViewBrakeTestConfigurationAction|MockObject $viewBrakeTestConfigurationAction */
     private $viewBrakeTestConfigurationAction;
 
+    /** @var FeatureToggles|MockObject */
+    private $featureToggles;
+
+    /** @var OfficialWeightSourceForVehicle|MockObject */
+    private $officialWeightSourceForVehicle;
+
+    /** @var BrakeTestConfigurationClass3AndAboveMapper  */
+    private $brakeTestConfigurationClass3AndAboveMapper;
+
     protected function setUp()
     {
         $this->submitBrakeTestConfigurationAction = XMock::of(SubmitBrakeTestConfigurationAction::class);
         $this->viewBrakeTestConfigurationAction = XMock::of(ViewBrakeTestConfigurationAction::class);
+        $this->featureToggles = XMock::of(FeatureToggles::class);
+        $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
+        $this->brakeTestConfigurationClass3AndAboveMapper = new BrakeTestConfigurationClass3AndAboveMapper(
+            $this->featureToggles,
+            $this->officialWeightSourceForVehicle
+        );
 
         $this->controller = new BrakeTestResultsController(
             $this->submitBrakeTestConfigurationAction,
-            $this->viewBrakeTestConfigurationAction
+            $this->viewBrakeTestConfigurationAction,
+            $this->brakeTestConfigurationClass3AndAboveMapper
         );
 
         $serviceManager = Bootstrap::getServiceManager();
