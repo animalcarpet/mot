@@ -2,20 +2,29 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
+use Dvsa\Mot\Behat\Support\HttpClient;
+
 class DirectDebit extends MotApi
 {
-    const DIRECT_DEBIT_MANDATE_SETUP    = '/slots/direct-debit';
-    const DIRECT_DEBIT_MANDATE          = '/slots/direct-debit/%d';
+    const DIRECT_DEBIT_MANDATE_SETUP = '/slots/direct-debit';
+    const DIRECT_DEBIT_MANDATE = '/slots/direct-debit/%d';
     const DIRECT_DEBIT_MANDATE_COMPLETE = '/slots/direct-debit/%s/complete';
+
+    private $frontendUrl;
+
+    public function __construct(HttpClient $client, $frontendUrl)
+    {
+        parent::__construct($client);
+        $this->frontendUrl = $frontendUrl;
+    }
 
     public function setUpDirectDebitMandate($token, $orgId, $slots, $collectionDay, $amount)
     {
-
         $params = [
-            'organisation'   => $orgId,
-            'amount'         => $amount,
-            'redirect_uri'   => 'http://mot-web-frontend.mot.gov.uk',
-            'slots'          => $slots,
+            'organisation' => $orgId,
+            'amount' => $amount,
+            'redirect_uri' => 'http://'.$this->frontendUrl,
+            'slots' => $slots,
             'collection_day' => $collectionDay,
         ];
 
@@ -24,9 +33,9 @@ class DirectDebit extends MotApi
 
     public function completeMandateSetup($token, $orgId, $reference)
     {
-        $path  = sprintf(self::DIRECT_DEBIT_MANDATE_COMPLETE, $orgId);
+        $path = sprintf(self::DIRECT_DEBIT_MANDATE_COMPLETE, $orgId);
         $param = [
-            'mandate_reference' => $reference
+            'mandate_reference' => $reference,
         ];
 
         return $this->sendRequest($token, 'PUT', $path, $param);
@@ -39,7 +48,7 @@ class DirectDebit extends MotApi
         return $this->sendRequest($token, 'GET', $path);
     }
 
-    public function cancelDirectDebit($token, $orgId, $mandateReference)
+    public function cancelDirectDebit($token, $orgId)
     {
         $path = sprintf(self::DIRECT_DEBIT_MANDATE, $orgId);
 

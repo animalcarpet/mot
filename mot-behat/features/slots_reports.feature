@@ -4,7 +4,7 @@ Feature: Generate financial reports
   So that I can keep a track of historical financial information
 
   @quarantine
-  @slots
+  @slot
   @report
   Scenario Outline: Request to generate slot usage report
     Given I am logged in as a Finance User
@@ -20,7 +20,7 @@ Feature: Generate financial reports
     | allPayments      | 3DaysAgo   | today     |
 
   @quarantine
-  @slots
+  @slot
   @report
   Scenario Outline: Get the status report generation
     Given I am logged in as a Finance User

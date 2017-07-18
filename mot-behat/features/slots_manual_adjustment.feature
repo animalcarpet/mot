@@ -6,7 +6,7 @@ Feature: Manual Adjustment
   Background:
     Given I am logged in as a Finance User
 
-  @slots
+  @slot
   @manual-adjustments
   Scenario Outline: Submit a valid manual slot adjustment
     Given An AE has a slot balance of <initialBalance>
@@ -19,7 +19,7 @@ Feature: Manual Adjustment
       | -10           | negative | 50            | -60            |
       | 30            | negative | 20            | 10             |
 
-  @slots
+  @slot
   @manual-adjustments
   Scenario Outline: Submit a manual adjustment with an invalid number of slots
     Given An AE requires a manual slot balance adjustment
@@ -32,14 +32,14 @@ Feature: Manual Adjustment
       | negative | -1              |
       | positive | -1              |
 
-  @slots
+  @slot
   @manual-adjustments
   Scenario: Submit a top-up adjustment with negative type
     Given An AE requires a manual slot balance adjustment
     When I submit a top-up manual adjustment with negative type
     Then I should see the validation error "you can't choose Top-up when removing slots"
 
-  @slots
+  @slot
   @manual-adjustments
   Scenario: Submit a manual adjustment with no reason
     Given An AE requires a manual slot balance adjustment

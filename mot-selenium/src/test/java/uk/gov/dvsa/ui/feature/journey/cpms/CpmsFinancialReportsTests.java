@@ -21,7 +21,7 @@ public class CpmsFinancialReportsTests extends DslTest {
         financeUser = motApi.user.createAFinanceUser("Finance", false);
     }
     
-    @Test (enabled = false, groups = {"Regression"}, description = "SPMS-272 User requests Slot Balance report")
+    @Test (groups = {"Regression"}, description = "SPMS-272 User requests Slot Balance report")
     public void userGeneratesReportSuccessfully() throws Exception {
         //Given I am logged as a Finance user and I am on Generate report page
         GenerateReportPage generateReportPage = pageNavigator.navigateToPage(financeUser, GenerateReportPage.PATH, GenerateReportPage.class);

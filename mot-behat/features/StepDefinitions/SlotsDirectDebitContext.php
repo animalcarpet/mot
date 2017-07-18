@@ -1,9 +1,7 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\DirectDebit;
-use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Response;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use Dvsa\Mot\Behat\Support\Data\UserData;
@@ -24,7 +22,7 @@ class SlotsDirectDebitContext implements Context
     private $responseReceived;
 
     /**
-     * @var  string
+     * @var string
      */
     private $mandateReference;
 
@@ -60,10 +58,9 @@ class SlotsDirectDebitContext implements Context
     private function setUpDirectDebitMandate($token, $orgId, $slots, $day)
     {
         $mandateResponse = $this->directDebit->getActiveMandate($token, $orgId);
-        $mandateBody     = $mandateResponse->getBody();
+        $mandateBody = $mandateResponse->getBody();
 
         if (empty($mandateBody['data']['mandate_id'])) {
-
             $this->responseReceived = $this->directDebit->setUpDirectDebitMandate(
                 $token,
                 $orgId,
@@ -92,7 +89,7 @@ class SlotsDirectDebitContext implements Context
     {
         $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $mandateResponse = $this->directDebit->getActiveMandate($token, $ae->getId());
-        $mandateBody     = $mandateResponse->getBody();
+        $mandateBody = $mandateResponse->getBody();
 
         if (isset($mandateBody['data']['mandate_id'])) {
             $this->mandateReference = $mandateBody['data']['mandate_id'];
@@ -115,8 +112,7 @@ class SlotsDirectDebitContext implements Context
         $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->responseReceived = $this->directDebit->cancelDirectDebit(
             $token,
-            $ae->getId(),
-            $this->mandateReference
+            $ae->getId()
         );
     }
 
@@ -158,16 +154,15 @@ class SlotsDirectDebitContext implements Context
      */
     public function iSetupDirectDebitOfSlotsForAsdaOnDayOfTheMonth($numberOfSlots, OrganisationDto $ae, $dayOfMonth)
     {
-        $token           = $this->userData->getCurrentLoggedUser()->getAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $mandateResponse = $this->directDebit->getActiveMandate($token, $ae->getId());
-        $mandateBody     = $mandateResponse->getBody();
+        $mandateBody = $mandateResponse->getBody();
 
         if (isset($mandateBody['data']['mandate_id'])) {
             //Cancel existing mandate
             $this->directDebit->cancelDirectDebit(
                 $token,
-                $ae->getId(),
-                $mandateBody['data']['mandate_id']
+                $ae->getId()
             );
         }
 

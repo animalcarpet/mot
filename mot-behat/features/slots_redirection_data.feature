@@ -4,7 +4,7 @@ Feature: Obtain payment gateway redirection data
   So that I can buy slots by credit / debit card
 
   @quarantine
-  @slots
+  @slot
   @card
   @create-default-ae("kwikfit")
   Scenario Outline: Finance User initiates a request to make a card payment
