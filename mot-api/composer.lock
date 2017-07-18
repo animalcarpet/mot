@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "229bbf46ed789a5f211baf6fdf08b249",
+    "content-hash": "61b75dd91618f0304092ac5248fd22b0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -163,11 +163,17 @@
         },
         {
             "name": "cpms/client",
-            "version": "1.25.3-p",
+            "version": "1.25.4-p",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-client.git",
-                "reference": "468be281f253062982da6b37e0a1978d43efdba5"
+                "reference": "eb729526731a0109e0a50c2f77ec7f896d52816a"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-client-1.25.4-p-2ddf2a.tar",
+                "reference": "eb729526731a0109e0a50c2f77ec7f896d52816a",
+                "shasum": "6ed6df8a08b87fa2a175a0bab1fdb7a1ae739c54"
             },
             "require": {
                 "cpms/cpms-notifications": "4.1.1-p",
@@ -198,7 +204,7 @@
                 "proprietary"
             ],
             "description": "CPMS Common Client Module",
-            "time": "2017-06-21T13:11:08+00:00"
+            "time": "2017-07-17T07:21:49+00:00"
         },
         {
             "name": "cpms/cpms-notifications",
@@ -207,6 +213,12 @@
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-notifications.git",
                 "reference": "1032f110431d07c981ab17c9dcdd8e65f1f47139"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-notifications-4.1.1-p-cb97b6.tar",
+                "reference": "1032f110431d07c981ab17c9dcdd8e65f1f47139",
+                "shasum": "b2f5d6181afda3f3a5b96f61ae5f7286e2d4536c"
             },
             "require": {
                 "cpms/cpms-queues": "1.10.0-p",
@@ -241,6 +253,12 @@
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
                 "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-queues-1.10.0-p-767e96.tar",
+                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8",
+                "shasum": "4b3538efa34d9d645472a2fc5bdd2eed7578bd80"
+            },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
                 "ganbarodigital/php-reflection": "^2.16",
@@ -270,14 +288,20 @@
         },
         {
             "name": "cpms/shared-reports",
-            "version": "v1.22.3-p",
+            "version": "v1.22.4-p",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/shared-reports.git",
-                "reference": "c40d39c4d2c575ba37edcb58e1b94e716e883ce3"
+                "reference": "3eab31ee9e63bc659d2e48aeb37a642e1c2935fc"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-shared-reports-v1.22.4-p-7fc4aa.tar",
+                "reference": "3eab31ee9e63bc659d2e48aeb37a642e1c2935fc",
+                "shasum": "c68873808b0562a1f8858bf03c3e6b59b1c9c69d"
             },
             "require": {
-                "cpms/client": "1.25.3-p",
+                "cpms/client": "1.25.4-p",
                 "php": ">=5.5",
                 "zendframework/zendframework": "~2.5.3"
             },
@@ -306,7 +330,7 @@
                 "proprietary"
             ],
             "description": "Shared module for displaying reports",
-            "time": "2017-06-21T14:06:54+00:00"
+            "time": "2017-07-18T09:09:36+00:00"
         },
         {
             "name": "danielstjules/stringy",
@@ -3660,22 +3684,22 @@
         },
         {
             "name": "slot-purchase/backend-api",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/slot-purchase-backend-api.git",
-                "reference": "df22f1a555ddc7f9b24d43edbcbc20381cda9eb5"
+                "reference": "c8234997947973611047f024f7061f16dba19f24"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v5.0.0-e77d94.tar",
-                "reference": "df22f1a555ddc7f9b24d43edbcbc20381cda9eb5",
-                "shasum": "a1f8831ac232adeb486ac43aedf70fec7861eb96"
+                "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v5.0.1-381950.tar",
+                "reference": "c8234997947973611047f024f7061f16dba19f24",
+                "shasum": "80975547fed08fc2ee31ee80b0a67d774a8b4307"
             },
             "require": {
-                "cpms/client": "1.25.3-p",
+                "cpms/client": "1.25.4-p",
                 "cpms/cpms-notifications": "4.1.1-p",
-                "cpms/shared-reports": "1.22.3-p",
+                "cpms/shared-reports": "1.22.4-p",
                 "doctrine/doctrine-module": "~1.2",
                 "doctrine/doctrine-orm-module": "~1.1.1",
                 "gedmo/doctrine-extensions": "2.3.*",
@@ -3744,7 +3768,7 @@
                 "proprietary"
             ],
             "description": "API for slot purchasing and related features",
-            "time": "2017-07-17T14:16:24+00:00"
+            "time": "2017-07-18T09:24:31+00:00"
         },
         {
             "name": "soflomo/purifier",
