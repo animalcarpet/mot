@@ -159,6 +159,10 @@ class SiteViewModel
 
     public function getPreviousAssessment()
     {
+        if (empty($this->site->getPreviousAssessment()) && !(empty($this->site->getCurrentAssessment()))) {
+            return (new EnforcementSiteAssessmentDto())->setSiteAssessmentScore(0);
+        }
+
         return $this->site->getPreviousAssessment();
     }
 
