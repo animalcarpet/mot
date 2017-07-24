@@ -36,19 +36,30 @@ class SiteRiskAssessmentRepository extends EntityRepository
      * @return array
      * @throws NotFoundException
      */
-    public function getLatestAssessmentsForSite($siteId, $organisationId, $limit){
-        $dateOfLastLinkToOtherAeQueryBuilder = $this
+    public function getLatestAssessmentsForSite($siteId, $organisationId, $limit)
+    {
+        $maxAssessmentDateForSameSiteDifferentOrganisation = $this
             ->getEntityManager()
             ->createQueryBuilder()
-            ->select("DATE(COALESCE(MAX(osm.startDate), 0))")
+            ->select('COALESCE(MAX(osm2.startDate), 0)')
+            ->from(OrganisationSiteMap::class, "osm2")
+            ->andWhere("osm2.site = :siteId")
+            ->andWhere("osm2.organisation <> :organisationId");
+
+        $maxAssessmentDate = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('DATE(MIN(osm.startDate))')
             ->from(OrganisationSiteMap::class, "osm")
             ->andWhere("osm.site = :siteId")
-            ->setParameter('siteId', $siteId);
+            ->andWhere("osm.organisation = :organisationId")
+            ->andWhere('osm.endDate IS NULL OR 
+                osm.startDate > (' . $maxAssessmentDateForSameSiteDifferentOrganisation->getDQL() . ' )');
 
         $queryBuilder = $this->createQueryBuilder('a') // assessment
             ->innerJoin('a.site', 's')
             ->where('a.aeOrganisationId = s.organisation')
-            ->andWhere('a.visitDate >= (' . $dateOfLastLinkToOtherAeQueryBuilder->getDQL() .')')
+            ->andWhere('a.visitDate >= (' . $maxAssessmentDate->getDQL() .')')
             ->orWhere('s.organisation is NULL AND 
                 a.aeOrganisationId = :organisationId')
             ->andWhere('a.site = :siteId')
@@ -61,5 +72,6 @@ class SiteRiskAssessmentRepository extends EntityRepository
         } catch (\Exception $e) {
             throw new NotFoundException('No assessments found for site '.$siteId);
         }
+
     }
 }

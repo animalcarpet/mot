@@ -625,9 +625,24 @@ class SiteRepository extends AbstractMutableRepository
 
               FROM (
                 SELECT esa.site_id, esa.visit_date, esa.site_assessment_score
-                FROM enforcement_site_assessment as esa
-                JOIN organisation_site_map osm ON (esa.site_id = osm.site_id AND osm.organisation_id = :AE_ID AND osm.end_date IS NULL)
-                WHERE DATE(esa.visit_date) >= DATE(osm.start_date)
+                FROM enforcement_site_assessment esa
+                WHERE esa.visit_date >= (
+                	SELECT DATE(MIN(orsm.start_date))
+                	FROM organisation_site_map orsm 
+                	WHERE (
+                    	esa.site_id = orsm.site_id
+                        AND orsm.organisation_id = :AE_ID
+                        AND (
+                          orsm.end_date IS NULL
+                          OR orsm.start_date > (
+                            SELECT COALESCE(MAX(osm2.start_date), 0)
+                            FROM organisation_site_map osm2
+                            WHERE esa.site_id = osm2.site_id
+                            AND osm2.organisation_id <> :AE_ID
+                          )
+                       )
+                    )
+                )
                 GROUP BY esa.site_id, visit_date
                 ORDER BY esa.site_id ASC , esa.visit_date DESC, esa.id DESC
               ) tmp,
@@ -644,9 +659,24 @@ class SiteRepository extends AbstractMutableRepository
 
               FROM (
                 SELECT esa.site_id, esa.visit_date, esa.site_assessment_score
-                FROM enforcement_site_assessment as esa
-                JOIN organisation_site_map osm ON (esa.site_id = osm.site_id AND osm.organisation_id = :AE_ID AND osm.end_date IS NULL)
-                WHERE DATE(esa.visit_date) >= DATE(osm.start_date)
+                FROM enforcement_site_assessment esa
+                WHERE esa.visit_date >= (
+                	SELECT DATE(MIN(orsm.start_date))
+                	FROM organisation_site_map orsm 
+                	WHERE (
+                    	esa.site_id = orsm.site_id
+                        AND orsm.organisation_id = :AE_ID
+                        AND (
+                          orsm.end_date IS NULL
+                          OR orsm.start_date > (
+                            SELECT COALESCE(MAX(osm2.start_date), 0)
+                            FROM organisation_site_map osm2
+                            WHERE esa.site_id = osm2.site_id
+                            AND osm2.organisation_id <> :AE_ID
+                          )
+                       )
+                    )
+                )
                 GROUP BY esa.site_id, visit_date
                 ORDER BY esa.site_id ASC , esa.visit_date DESC, esa.id DESC
               ) tmp,
