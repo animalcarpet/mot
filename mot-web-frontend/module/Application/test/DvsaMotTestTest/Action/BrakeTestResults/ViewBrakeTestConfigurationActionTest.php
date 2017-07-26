@@ -27,6 +27,7 @@ use DvsaMotTest\Action\BrakeTestResults\ViewBrakeTestConfigurationAction;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Helper\BrakeTestConfigurationContainerHelper;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
+use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper;
 use DvsaMotTest\Service\BrakeTestConfigurationService;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
@@ -34,10 +35,15 @@ use PHPUnit_Framework_MockObject_Matcher_InvokedRecorder;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
+use Zend\View\Helper\ViewModel;
 
 class ViewBrakeTestConfigurationActionTest extends TestCase
 {
     const FORM_VALIDATION_ERROR = 'Error: Form validation error';
+    const DEFAULT_SERVICE_BRAKE_TEST_TYPE = 'DefaultServiceBrakeTestType';
+    const DEFAULT_SERVICE_BRAKE_TEST_TYPE_CODE = 'DefaultServiceBrakeTestTypeCode';
+    const DEFAULT_PARKING_BRAKE_TEST_TYPE = 'DefaultParkingBrakeTestType';
+    const DEFAULT_PARKING_BRAKE_TEST_TYPE_CODE = 'DefaultParkingBrakeTestTypeCode';
 
     /**
      * @var stdClass
@@ -65,7 +71,7 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
     private $mockCatalogService;
 
     /**
-     * @var Client
+     * @var Client|MockObject
      */
     private $mockRestClient;
 
@@ -443,30 +449,22 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         ];
     }
 
-    public function testGroupBIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithSiteDefaults()
+    /**
+     * @dataProvider vehicleClassGroupADP
+     * @param $vehicleClass
+     */
+    public function testGroupAIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithSiteDefaults($vehicleClass)
     {
         $this->withoutBrakeTestResult();
-
         $this->withSite();
-
-        $this->mockMethods();
+        $this->mockMethods($vehicleClass);
 
         $this->mockRestClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('get')
             ->will($this->returnValue(
                 [
-                    'data' => (new VehicleTestingStationDto())
-                            ->setDefaultServiceBrakeTestClass3AndAbove(
-                                (new BrakeTestTypeDto())
-                                    ->setName('DefaultServiceBrakeTestType')
-                                    ->setCode('DefaultServiceBrakeTestTypeCode')
-                            )
-                            ->setDefaultParkingBrakeTestClass3AndAbove(
-                                (new BrakeTestTypeDto())
-                                    ->setName('DefaultParkingBrakeTestType')
-                                    ->setCode('DefaultParkingBrakeTestTypeCode')
-                            ),
+                    'data' => $this->createVtsDto()
                 ]
             ));
 
@@ -475,20 +473,60 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         /** @var ViewActionResult $actionResult */
         $actionResult = $action->execute(1);
 
-        $this->assertEquals($actionResult->getViewModel()->configHelper->getServiceBrakeTestType(),
-            'DefaultServiceBrakeTestTypeCode');
+        $viewModel = $actionResult->getViewModel();
 
-        $this->assertEquals($actionResult->getViewModel()->configHelper->getParkingBrakeTestType(),
-            'DefaultParkingBrakeTestTypeCode');
+        $this->assertEquals(
+            $viewModel->brakeTestType,
+            self::DEFAULT_SERVICE_BRAKE_TEST_TYPE_CODE
+        );
     }
 
-    public function testGroupAIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithMapperDefaults()
+    /**
+     * @dataProvider vehicleClassGroupBDP
+     * @param $vehicleClass
+     */
+    public function testGroupBIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithSiteDefaults($vehicleClass)
     {
         $this->withoutBrakeTestResult();
-
         $this->withSite();
+        $this->mockMethods($vehicleClass);
 
-        $vehicleClass = 1;
+        $this->mockRestClient
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue(
+                [
+                    'data' => $this->createVtsDto()
+                ]
+            ));
+
+        $action = $this->buildAction();
+
+        /** @var ViewActionResult $actionResult */
+        $actionResult = $action->execute(1);
+
+        /** @var BrakeTestConfigurationClass3AndAboveHelper $configHelper */
+        $configHelper = $actionResult->getViewModel()->configHelper;
+
+        $this->assertEquals(
+            $configHelper->getServiceBrakeTestType(),
+            self::DEFAULT_SERVICE_BRAKE_TEST_TYPE_CODE
+        );
+
+        $this->assertEquals(
+            $configHelper->getParkingBrakeTestType(),
+            self::DEFAULT_PARKING_BRAKE_TEST_TYPE_CODE
+        );
+    }
+
+    /**
+     * @dataProvider vehicleClassGroupADP
+     * @param $vehicleClass
+     */
+    public function testGroupAIfNoBrakeTestResultsThenPopulateBrakeTestTypesInDtoWithMapperDefaults($vehicleClass)
+    {
+        $this->withoutBrakeTestResult();
+        $this->withSite();
         $this->mockMethods($vehicleClass);
 
         $action = $this->buildAction();
@@ -498,11 +536,31 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
 
         // @see BrakeTestConfigurationClass1And2Mapper::mapToDefaultDto
 
-        $this->assertEquals(BrakeTestTypeCode::ROLLER, $actionResult->getViewModel()->brakeTestType);
-        $this->assertEquals('', $actionResult->getViewModel()->vehicleWeightFront);
-        $this->assertEquals('', $actionResult->getViewModel()->vehicleWeightRear);
-        $this->assertEquals('', $actionResult->getViewModel()->riderWeight);
-        $this->assertEquals('', $actionResult->getViewModel()->sidecarWeight);
+        $viewModel = $actionResult->getViewModel();
+
+        $this->assertEquals(BrakeTestTypeCode::ROLLER, $viewModel->brakeTestType);
+        $this->assertEquals('', $viewModel->vehicleWeightFront);
+        $this->assertEquals('', $viewModel->vehicleWeightRear);
+        $this->assertEquals('', $viewModel->riderWeight);
+        $this->assertEquals('', $viewModel->sidecarWeight);
+    }
+
+    public function vehicleClassGroupADP()
+    {
+        return [
+            [1],
+            [2]
+        ];
+    }
+
+    public function vehicleClassGroupBDP()
+    {
+        return [
+            [3],
+            [4],
+            [5],
+            [7],
+        ];
     }
 
     private function withoutBrakeTestResult()
@@ -669,5 +727,45 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
             [false, 0, false, 0],
             [false, 0, false, 0],
         ];
+    }
+
+    /**
+     * @param string $serviceBrakeTestType
+     * @param string $serviceBrakeTestTypeCode
+     * @param string $parkingBrakeTestType
+     * @param string $parkingBrakeTestTypeCode
+     * @return VehicleTestingStationDto
+     */
+    private function createVtsDto(
+        $serviceBrakeTestType = self::DEFAULT_SERVICE_BRAKE_TEST_TYPE,
+        $serviceBrakeTestTypeCode = self::DEFAULT_SERVICE_BRAKE_TEST_TYPE_CODE,
+        $parkingBrakeTestType = self::DEFAULT_PARKING_BRAKE_TEST_TYPE,
+        $parkingBrakeTestTypeCode = self::DEFAULT_PARKING_BRAKE_TEST_TYPE_CODE
+    )
+    {
+        $dto = (new VehicleTestingStationDto())
+            ->setDefaultBrakeTestClass1And2(
+                $this->createBrakeTestTypeDto($serviceBrakeTestType, $serviceBrakeTestTypeCode)
+            )
+            ->setDefaultServiceBrakeTestClass3AndAbove(
+                $this->createBrakeTestTypeDto($serviceBrakeTestType, $serviceBrakeTestTypeCode)
+            )
+            ->setDefaultParkingBrakeTestClass3AndAbove(
+                $this->createBrakeTestTypeDto($parkingBrakeTestType, $parkingBrakeTestTypeCode)
+            );
+
+        return $dto;
+    }
+
+    /**
+     * @param $serviceBrakeTestType
+     * @param $serviceBrakeTestTypeCode
+     * @return BrakeTestTypeDto
+     */
+    private function createBrakeTestTypeDto($serviceBrakeTestType, $serviceBrakeTestTypeCode)
+    {
+        return (new BrakeTestTypeDto())
+            ->setName($serviceBrakeTestType)
+            ->setCode($serviceBrakeTestTypeCode);
     }
 }

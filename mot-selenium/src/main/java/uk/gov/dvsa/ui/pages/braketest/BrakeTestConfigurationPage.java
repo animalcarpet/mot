@@ -68,6 +68,18 @@ public class BrakeTestConfigurationPage extends Page {
         return new BrakeTestResultsPage(driver);
     }
 
+    public String getSelectedBrakeTestType() {
+        return FormDataHelper.getSelectedTextFromDropdown(brakeTestType);
+    }
+
+    public String getSelectedParkingBrakeTestType() {
+        return FormDataHelper.getSelectedTextFromDropdown(parkingBrakeTestType);
+    }
+
+    public String getSelectedServiceBrakeTestType() {
+        return FormDataHelper.getSelectedTextFromDropdown(serviceBrakeTestType);
+    }
+
     private void fillBrakeTestType() {
         FormDataHelper.selectFromDropDownByValue(serviceBrakeTestType, BrakeTestType.ROLLER.getValue());
         FormDataHelper.selectFromDropDownByValue(parkingBrakeTestType, BrakeTestType.ROLLER.getValue());

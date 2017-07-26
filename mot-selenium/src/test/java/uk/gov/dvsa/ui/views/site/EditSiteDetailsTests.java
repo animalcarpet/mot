@@ -1,16 +1,20 @@
 package uk.gov.dvsa.ui.views.site;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.site.Status;
 import uk.gov.dvsa.domain.model.site.Type;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
+import uk.gov.dvsa.helper.enums.BrakeTestConstants;
 import uk.gov.dvsa.helper.enums.TimeFinder;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.vts.ChangeTestingFacilitiesPage;
 import uk.gov.dvsa.ui.pages.vts.ConfirmChangeDetails.ConfirmChangeDetailsClassesPage;
 import uk.gov.dvsa.ui.pages.vts.ConfirmTestFacilitiesPage;
@@ -32,9 +36,29 @@ public class EditSiteDetailsTests extends DslTest {
     private String onePersonTestLane;
     private String twoPersonTestLane;
     private Site site;
+    private Site site2;
     private User areaOfficeUser;
     private User siteManager;
+    private User siteManager2;
+    private User tester;
+    private User tester2;
+    private Vehicle vehicleClassA;
+    private Vehicle vehicleClassB;
     private String newSiteName = "Tested Garage";
+
+    private BrakeTestConstants.BrakeTestType defaultBrakeTestType = Gradient;
+    private BrakeTestConstants.BrakeTestType defaultServiceBrakeTestType = Plate;
+    private BrakeTestConstants.BrakeTestType defaultParkingBrakeTestType = Decelerometer;
+
+    @BeforeClass(alwaysRun = true)
+    public void setUpClass() throws IOException {
+        site2 = siteData.createSite();
+        siteManager2 = motApi.user.createSiteManager(site2.getId(), false);
+        tester = motApi.user.createTester(site2.getId());
+        tester2 = motApi.user.createTester(site2.getId());
+        vehicleClassA = vehicleData.getNewVehicle(tester,VehicleClass.one);
+        vehicleClassB = vehicleData.getNewVehicle(tester2,VehicleClass.four);
+    }
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
@@ -174,25 +198,46 @@ public class EditSiteDetailsTests extends DslTest {
                 "Sunday hours are not correct");
     }
 
-    @Test(groups = {"Regression"})
+    @Test(groups = {"Regression"}, priority = 0)
     public void changeSiteDetailsDefaultTestSettings() throws IOException {
         step("Given I am logged in as Site Manager & I navigate to the vehicle testing station page");
-        VehicleTestingStationPage vehicleTestingStationPage = pageNavigator.goToVtsPage(siteManager, String.valueOf(site.getId()));
+        VehicleTestingStationPage vehicleTestingStationPage = pageNavigator.goToVtsPage(siteManager2, String.valueOf(site2.getId()));
 
         step("When I navigate to the change default test settings page and I change the default brake test settings");
         VehicleTestingStationPage changeDetailsDefaultTestSettings =
                 vehicleTestingStationPage.clickOnChangeDefaultTestSettingsLink()
-                        .changeDefaultTestSettingsClass1And2(Gradient)
-                        .changeDefaultTestSettingsClass3AndAbove(Roller, Plate)
+                        .changeDefaultTestSettingsClass1And2(defaultBrakeTestType)
+                        .changeDefaultTestSettingsClass3AndAbove(defaultServiceBrakeTestType, defaultParkingBrakeTestType)
                         .clickSaveTestDefaultsButton();
 
         step("Then my changes are displayed on the testing station page");
-        Assert.assertTrue(changeDetailsDefaultTestSettings.getDefaultBrakeTestClass1And2().equals("Gradient"),
+        Assert.assertEquals(changeDetailsDefaultTestSettings.getDefaultBrakeTestClass1And2(), defaultBrakeTestType.getDescription(),
                 "Class 1 & 2 Brake Defaults are not correct");
-        Assert.assertTrue(changeDetailsDefaultTestSettings.getDefaultServiceBrakeTestClass3AndAbove().equals("Roller"),
+        Assert.assertEquals(changeDetailsDefaultTestSettings.getDefaultServiceBrakeTestClass3AndAbove(), defaultServiceBrakeTestType.getDescription(),
                 "Class 3 & Above Service Brake Defaults are not correct");
-        Assert.assertTrue(changeDetailsDefaultTestSettings.getDefaultParkingBrakeTestClass3AndAbove().equals("Plate"),
+        Assert.assertEquals(changeDetailsDefaultTestSettings.getDefaultParkingBrakeTestClass3AndAbove(), defaultParkingBrakeTestType.getDescription(),
                 "Class 3 & Above Parking Brake Defaults are not correct");
+    }
+
+    @Test(groups = {"Regression"}, priority = 1)
+    public void siteDefaultTestSettingsUsedInMotBrakeTestConfigurationPageForClassA() throws IOException, URISyntaxException {
+        BrakeTestConfigurationPage brakeTestConfigurationPage = pageNavigator.gotoBrakeTestConfigurationPage(tester, vehicleClassA);
+
+        String actualBrakeTestType = brakeTestConfigurationPage.getSelectedBrakeTestType();
+
+        Assert.assertEquals(actualBrakeTestType, defaultBrakeTestType.getDescription());
+    }
+
+
+    @Test(groups = {"Regression"}, priority = 2)
+    public void siteDefaultTestSettingsUsedInMotBrakeTestConfigurationPageForClassB() throws IOException, URISyntaxException {
+        BrakeTestConfigurationPage brakeTestConfigurationPage = pageNavigator.gotoBrakeTestConfigurationPage(tester2, vehicleClassB);
+
+        String actualParkingBrakeTestType = brakeTestConfigurationPage.getSelectedParkingBrakeTestType();
+        String actualServiceBrakeTestType = brakeTestConfigurationPage.getSelectedServiceBrakeTestType();
+
+        Assert.assertEquals(actualParkingBrakeTestType, defaultParkingBrakeTestType.getDescription());
+        Assert.assertEquals(actualServiceBrakeTestType, defaultServiceBrakeTestType.getDescription());
     }
 
     private String generateTestLaneNumber() {
