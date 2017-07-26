@@ -28,39 +28,37 @@ class GotoUrlValidatorServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getValidDomains
+     * @dataProvider getValidUrls
      */
-    public function testIsValid($domain)
+    public function testIsValid($url)
     {
-        $this->assertTrue($this->gotoUrlValidatorService->isValid($domain));
+        $this->assertTrue($this->gotoUrlValidatorService->isValid($url));
     }
 
     /**
-     * @dataProvider getInvalidDomains
+     * @dataProvider getInvalidUrls
      */
-    public function testIsInvalid($domain)
+    public function testIsInvalid($url)
     {
-        $this->assertFalse($this->gotoUrlValidatorService->isValid($domain));
+        $this->assertFalse($this->gotoUrlValidatorService->isValid($url));
     }
 
-    public function getValidDomains()
+    public function getValidUrls()
     {
         return [
-            [
-                'http://mysite.mot.gov.uk',
-                'http://mot.gov.uk',
-                'http://mot-web-frontend.mot.gov.uk',
-            ],
+            ['http://mysite.mot.gov.uk'],
+            ['http://mot.gov.uk'],
+            ['http://mot-web-frontend.mot.gov.uk']
         ];
     }
 
-    public function getInvalidDomains()
+    public function getInvalidUrls()
     {
         return [
-            [
-                'http://invalid1.mot.com',
-                'http://invalid2.mot-web-frontend.gov',
-            ],
+            ['http://invalid1.mot.com'],
+            ['http://invalid2.mot-web-frontend.gov'],
+            ['http://mot.gov.uk/login'],
+            ['http://mot.gov.uk/logout']
         ];
     }
 }
