@@ -270,7 +270,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         new Select(odometerUnit).selectByValue(unit.getValue());
     }
 
-    private BrakeTestConfigurationPage clickAddBrakeTest() {
+    public BrakeTestConfigurationPage clickAddBrakeTest() {
         addBrakeTest.click();
         return PageLocator.getBrakeTestConfigurationPage(driver);
     }

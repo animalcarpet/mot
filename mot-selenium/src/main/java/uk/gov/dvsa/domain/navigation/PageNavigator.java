@@ -16,6 +16,7 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.*;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
+import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.dvsa.ManageRolesPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
@@ -104,6 +105,12 @@ public class PageNavigator {
                 StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
         return new TestResultsEntryNewPage(driver);
+    }
+
+    public BrakeTestConfigurationPage gotoBrakeTestConfigurationPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
+        injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
+
+        return gotoTestResultsEntryNewPage(user, vehicle).clickAddBrakeTest();
     }
 
     public DefectsPage gotoDefectsPageWithDefect(User user, Vehicle vehicle, Defect defect) throws URISyntaxException, IOException {

@@ -47,7 +47,7 @@ $this->placeholder('progressBar')->captureEnd();
                     'id' => 'serviceBrake1TestType',
                     'label' => 'Service brake test type',
                     'options' => $viewModel->brakeTestTypes,
-                    'value' => $viewModel->brakeTestType,
+                    'value' => $viewModel->configHelper->getServiceBrakeTestType(),
                     'required' => true,
                 ]
             );
