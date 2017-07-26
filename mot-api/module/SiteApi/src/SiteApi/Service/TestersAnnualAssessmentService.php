@@ -12,19 +12,16 @@ use SiteApi\Mapper\TestersAnnualAssessmentMapper;
 class TestersAnnualAssessmentService implements AutoWireableInterface
 {
     private $siteBusinessRoleMapRepository;
-    private $siteService;
     private $testersAnnualAssessmentMapper;
     private $authorisationService;
 
     public function __construct(
         SiteBusinessRoleMapRepository $siteBusinessRoleMapRepository,
-        SiteService $siteService,
         TestersAnnualAssessmentMapper $testersAnnualAssessmentMapper,
         AuthorisationServiceInterface $authorisationService
     )
     {
         $this->siteBusinessRoleMapRepository = $siteBusinessRoleMapRepository;
-        $this->siteService = $siteService;
         $this->testersAnnualAssessmentMapper = $testersAnnualAssessmentMapper;
         $this->authorisationService = $authorisationService;
     }
