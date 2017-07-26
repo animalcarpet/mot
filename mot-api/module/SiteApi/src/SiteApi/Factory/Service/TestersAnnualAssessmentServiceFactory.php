@@ -7,7 +7,6 @@ namespace SiteApi\Factory\Service;
 use Doctrine\ORM\EntityManager;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 use SiteApi\Mapper\TestersAnnualAssessmentMapper;
-use SiteApi\Service\SiteService;
 use SiteApi\Service\TestersAnnualAssessmentService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -25,7 +24,6 @@ class TestersAnnualAssessmentServiceFactory implements FactoryInterface
 
         return new TestersAnnualAssessmentService(
             $em->getRepository(SiteBusinessRoleMap::class),
-            $serviceLocator->get(SiteService::class),
             $serviceLocator->get(TestersAnnualAssessmentMapper::class),
             $serviceLocator->get('DvsaAuthorisationService')
         );

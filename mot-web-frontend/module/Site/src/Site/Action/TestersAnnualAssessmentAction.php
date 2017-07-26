@@ -6,7 +6,7 @@ use Core\Action\ViewActionResult;
 use Core\BackLink\BackLinkQueryParam;
 use Core\Routing\AeRoutes;
 use Core\Routing\VtsRoutes;
-use DvsaClient\MapperFactory;
+use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\ApiClient\Site\Dto\TestersAnnualAssessmentDto;
 use DvsaCommon\ApiClient\Site\TestersAnnualAssessmentApiResource;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -28,28 +28,25 @@ class TestersAnnualAssessmentAction implements AutoWireableInterface
 
     private $testersAnnualAssessmentApiResource;
     private $urlHelper;
-    private $mapperFactory;
     private $authorisationService;
     private $siteBreadcrumbsBuilder;
     private $testersAnnualAssessmentTable;
-    private $mapper;
+    private $siteMapper;
 
     public function __construct(
         TestersAnnualAssessmentApiResource $testersAnnualAssessmentApiResource,
         Url $urlHelper,
-        MapperFactory $mapperFactory,
+        SiteMapper $siteMapper,
         MotAuthorisationServiceInterface $authorisationService,
-        MapperFactory $mapper,
         SiteBreadcrumbsBuilder $siteBreadcrumbsBuilder
     )
     {
         $this->testersAnnualAssessmentApiResource = $testersAnnualAssessmentApiResource;
         $this->urlHelper = $urlHelper;
-        $this->mapperFactory = $mapperFactory;
+        $this->siteMapper = $siteMapper;
         $this->authorisationService = $authorisationService;
         $this->siteBreadcrumbsBuilder = $siteBreadcrumbsBuilder;
         $this->testersAnnualAssessmentTable = new TestersAnnualAssessmentTable();
-        $this->mapper = $mapper;
     }
 
     /**
@@ -62,7 +59,7 @@ class TestersAnnualAssessmentAction implements AutoWireableInterface
         $this->authorisationService->assertGrantedAtSite(PermissionAtSite::TESTERS_ANNUAL_ASSESSMENT_VIEW, $siteId);
 
         $assessmentDto = $this->testersAnnualAssessmentApiResource->getTestersAnnualAssessmentForSite($siteId);
-        $site = $this->mapper->Site->getById($siteId);
+        $site = $this->siteMapper->getById($siteId);
 
         return $this->buildActionResult($assessmentDto, $site, $backTo);
     }
