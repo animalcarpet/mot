@@ -33,6 +33,11 @@ class GotoUrlValidatorService
      */
     public function isValid($url)
     {
+        return $this->isDomainValid($url) && $this->isPathValid($url);
+    }
+
+    private function isDomainValid($url)
+    {
         $domain = parse_url($url, PHP_URL_HOST);
         $whiteListedDomains = $this->getDomainWhiteList();
 
@@ -50,6 +55,14 @@ class GotoUrlValidatorService
         }
 
         return false;
+    }
+
+    private function isPathValid($url)
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+        $blackListedPaths = ['/login', '/logout'];
+
+        return !in_array($path, $blackListedPaths);
     }
 
     /**
