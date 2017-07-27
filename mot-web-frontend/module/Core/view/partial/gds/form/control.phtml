@@ -32,6 +32,7 @@ if ($element instanceof Select) {
 
             return $option;
         });
+    $params['newStyle'] = $element->getAttribute('newStyle');
 }
 
 if ($element->hasAttribute('group') && $element->getAttribute('group') === true):

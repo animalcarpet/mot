@@ -11,14 +11,40 @@
         </legend>
 
         <?php $lastOption = count($options) - 1 ?>
-        <?php foreach ($options as $k => $option): ?>
-            <?php if ($k == $lastOption && isset($splitLastOption) && $splitLastOption): ?>
-                <p class="form-block">or</p>
-            <?php endif; ?>
-            <?php echo $this->partial(
-                'partial/gds/form/control-radio',
-                $option
-            ); ?>
-        <?php endforeach; ?>
+
+        <?php if (!empty($newStyle) && $newStyle === true): ?>
+
+            <?php foreach ($options as $option): ?>
+                <div class="multiple-choice">
+                    <input type="radio"
+                           value="<?php echo $this->escapeHtmlAttr($option['value']); ?>"
+                           name="<?php echo $this->escapeHtmlAttr($option['inputName']); ?>"
+                           id="<?php echo $this->escapeHtmlAttr($option['attributes']['id']); ?>"
+                        <?php echo ($option['checked'] === true) ? ' checked="checked"' : '' ?>>
+                    <label
+                        for="<?php echo $this->escapeHtmlAttr($option['attributes']['id']); ?>"
+                        <?php if (!empty($dataTarget)): ?>
+                            data-target="<?php echo $this->escapeHtmlAttr($dataTarget); ?>"
+                        <?php endif; ?>>
+
+                        <?php echo $this->escapeHtml($option['key']); ?>
+
+                    </label>
+                </div>
+            <?php endforeach; ?>
+
+        <?php else : ?>
+
+            <?php foreach ($options as $k => $option): ?>
+                <?php if ($k == $lastOption && isset($splitLastOption) && $splitLastOption): ?>
+                    <p class="form-block">or</p>
+                <?php endif; ?>
+                <?php echo $this->partial(
+                    'partial/gds/form/control-radio',
+                    $option
+                ); ?>
+            <?php endforeach; ?>
+
+        <?php endif; ?>
     </fieldset>
 </div>
