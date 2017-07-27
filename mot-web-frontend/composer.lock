@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8671923983ac5387553d18bccc326142",
+    "content-hash": "2299c6761963ee1cdd4e2af243ec1476",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -123,7 +123,13 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-client.git",
-                "reference": "a01162b54d2e2f0abaef5f84ba997c5f4fd78430"
+                "reference": "44035ce941be95d8e563f5408ada64411aef0a7d"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-client-1.22.3-p-a0eb87.tar",
+                "reference": "44035ce941be95d8e563f5408ada64411aef0a7d",
+                "shasum": "368345a533affdbd17a1701f43b29700cf1c0688"
             },
             "require": {
                 "zendframework/zendframework": "~2.5.3"
@@ -249,7 +255,13 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
-                "reference": "6e24328972b88d22c24afc0097155c872992fbd7"
+                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-queues-1.10.0-p-767e96.tar",
+                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8",
+                "shasum": "4b3538efa34d9d645472a2fc5bdd2eed7578bd80"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -1060,17 +1072,17 @@
         },
         {
             "name": "dvsa/dvsa-application-logger",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-application-logger.git",
-                "reference": "453bed073c38ffa54293a7f330e4e393d587049d"
+                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.0-073697.tar",
-                "reference": "453bed073c38ffa54293a7f330e4e393d587049d",
-                "shasum": "87ab44c0d9751b6c83924b18dfd585f74df538f4"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.1-88e1fe.tar",
+                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12",
+                "shasum": "dacba534ca9ff8eae87f3a3edd839fc6427afde1"
             },
             "require": {
                 "php": ">=5.5",
@@ -1106,7 +1118,7 @@
                 "logging",
                 "zf2"
             ],
-            "time": "2017-07-14T10:17:00+00:00"
+            "time": "2017-08-10T10:21:32+00:00"
         },
         {
             "name": "dvsa/dvsa-doctrine-module",
@@ -7975,7 +7987,7 @@
                 "tool",
                 "zf2"
             ],
-            "time": "2015-10-21 07:40:59"
+            "time": "2015-10-21T07:40:59+00:00"
         }
     ],
     "aliases": [],
