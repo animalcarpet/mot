@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "70ffa83b7da69d3c0f336ec4b26db206",
+    "content-hash": "2223a383412e789b706bb8ddf7eb5b19",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -251,6 +251,12 @@
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
                 "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-queues-1.10.0-p-767e96.tar",
+                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8",
+                "shasum": "4b3538efa34d9d645472a2fc5bdd2eed7578bd80"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -1162,17 +1168,17 @@
         },
         {
             "name": "dvsa/dvsa-application-logger",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-application-logger.git",
-                "reference": "453bed073c38ffa54293a7f330e4e393d587049d"
+                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.0-073697.tar",
-                "reference": "453bed073c38ffa54293a7f330e4e393d587049d",
-                "shasum": "87ab44c0d9751b6c83924b18dfd585f74df538f4"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.1-88e1fe.tar",
+                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12",
+                "shasum": "dacba534ca9ff8eae87f3a3edd839fc6427afde1"
             },
             "require": {
                 "php": ">=5.5",
@@ -1208,7 +1214,7 @@
                 "logging",
                 "zf2"
             ],
-            "time": "2017-07-14T10:17:00+00:00"
+            "time": "2017-08-10T10:21:32+00:00"
         },
         {
             "name": "dvsa/dvsa-doctrine-module",
