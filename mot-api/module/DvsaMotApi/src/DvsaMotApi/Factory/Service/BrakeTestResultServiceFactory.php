@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaEntities\Entity\BrakeTestType;
 use DvsaEntities\Entity\WeightSource;
+use DvsaEntities\Repository\WeightSourceRepository;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
 use DvsaMotApi\Service\BrakeTestResultService;
@@ -46,7 +47,8 @@ class BrakeTestResultServiceFactory implements FactoryInterface
             $authService,
             $motTestValidator,
             $motTestReasonForRejectionService,
-            $performMotTestAssertion
+            $performMotTestAssertion,
+            $weightSourceRepository
         );
     }
 }

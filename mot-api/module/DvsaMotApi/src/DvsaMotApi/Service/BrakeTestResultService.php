@@ -10,6 +10,7 @@ use DvsaCommon\Domain\BrakeTestTypeConfiguration;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Mapper\BrakeTestWeightSourceMapper;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Service\AbstractService;
@@ -21,6 +22,7 @@ use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestReasonForRejectionComment;
 use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\Vehicle;
+use DvsaEntities\Repository\WeightSourceRepository;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator;
@@ -92,6 +94,8 @@ class BrakeTestResultService extends AbstractService
             BrakeTestTypeCode::PLATE,
         ];
 
+    private $weightSourceRepository;
+
     public function __construct(
         EntityManager $entityManager,
         BrakeTestResultValidator $brakeTestResultValidator,
@@ -104,7 +108,8 @@ class BrakeTestResultService extends AbstractService
         AuthorisationServiceInterface $authService,
         MotTestValidator $motTestValidator,
         MotTestReasonForRejectionService $motTestReasonForRejectionService,
-        ApiPerformMotTestAssertion $performMotTestAssertion
+        ApiPerformMotTestAssertion $performMotTestAssertion,
+        WeightSourceRepository $weightSourceRepository
     ) {
         parent::__construct($entityManager);
         $this->brakeTestResultValidator = $brakeTestResultValidator;
@@ -118,6 +123,7 @@ class BrakeTestResultService extends AbstractService
         $this->motTestValidator = $motTestValidator;
         $this->motTestReasonForRejectionService = $motTestReasonForRejectionService;
         $this->performMotTestAssertion = $performMotTestAssertion;
+        $this->weightSourceRepository = $weightSourceRepository;
     }
 
     public function createBrakeTestResult(MotTest $motTest, $brakeTestResultData)
@@ -260,6 +266,8 @@ class BrakeTestResultService extends AbstractService
         $this->brakeTestResultValidator->validateBrakeTestResultClass3AndAbove($brakeTestResult, $vehicle);
 
         $brakeTestResult = $this->brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $vehicle);
+
+        $brakeTestResult = $this->mapVehicleWeightSource($brakeTestResult, $vehicle);
 
         $summary = new BrakeTestResultSubmissionSummary();
         $summary->brakeTestResultClass3AndAbove = $brakeTestResult;
@@ -541,5 +549,37 @@ class BrakeTestResultService extends AbstractService
         }
 
         return null;
+    }
+
+    /**
+     * Map vehicle weight source if vehicle weight changed and new weight is from official source
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
+     * @param Vehicle $vehicle
+     * @return BrakeTestResultClass3AndAbove
+     */
+    private function mapVehicleWeightSource(BrakeTestResultClass3AndAbove $brakeTestResult, Vehicle $vehicle)
+    {
+        $currentVehicleWeight = $brakeTestResult->getVehicleWeight();
+        $oldVehicleWeight = $vehicle->getWeight();
+
+        if($currentVehicleWeight == $oldVehicleWeight) {
+            return $brakeTestResult;
+        }
+
+        $weightSource = $brakeTestResult->getWeightType();
+
+        $mapper = new BrakeTestWeightSourceMapper();
+
+        if($mapper->isOfficialWeightSource($vehicle->getVehicleClass()->getCode(), $weightSource->getCode())) {
+            $newWeightSourceCode = $mapper->mapOfficialWeightSourceToVehicleWeightSource(
+                $vehicle->getVehicleClass()->getCode(),
+                $brakeTestResult->getWeightType()->getCode()
+            );
+            $weightSource = $this->weightSourceRepository->getByCode($newWeightSourceCode);
+        }
+
+        $brakeTestResult->setWeightType($weightSource);
+
+        return $brakeTestResult;
     }
 }

@@ -10,19 +10,23 @@ class BrakeTestWeightSourceMapper
     //we only map Group B (class 3 and above)
     private $weightSourcesToBeMapped = [
         VehicleClassCode::CLASS_3 => [
+            WeightSourceCode::ORD_MISW,
             WeightSourceCode::MISW,
             WeightSourceCode::VSI,
         ],
         VehicleClassCode::CLASS_4 => [
+            WeightSourceCode::ORD_MISW,
             WeightSourceCode::MISW,
             WeightSourceCode::VSI,
         ],
         VehicleClassCode::CLASS_5 => [
+            WeightSourceCode::ORD_DGW_MAM,
             WeightSourceCode::DGW,
             WeightSourceCode::DGW_MAM,
             WeightSourceCode::VSI,
         ],
         VehicleClassCode::CLASS_7 => [
+            WeightSourceCode::ORD_DGW,
             WeightSourceCode::DGW,
             WeightSourceCode::VSI,
         ],

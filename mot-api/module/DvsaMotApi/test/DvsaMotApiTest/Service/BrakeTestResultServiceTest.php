@@ -5,6 +5,8 @@ namespace DvsaMotApiTest\Service;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\Enum\WeightSourceCode;
+use DvsaCommon\Mapper\BrakeTestWeightSourceMapper;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -22,6 +24,9 @@ use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
+use DvsaEntities\Entity\WeightSource;
+use DvsaEntities\Repository\MotTestRepository;
+use DvsaEntities\Repository\WeightSourceRepository;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass12Test;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass3AndAboveTest;
 use DvsaEntitiesTest\Entity\BrakeTestTypeFactory;
@@ -47,6 +52,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
     const MOCK_MOT_TEST_VALIDATOR = 'mockMotTestValidator';
     const MOCK_REASON_FOR_REJECTION = 'mockReasonForRejection';
     const MOCK_PERFORM_MOT_TEST_ASSERTION = 'mockPerformMotTestAssertion';
+    const MOCK_WEIGHT_SOURCE_REPOSITORY = 'mockWeightSourceRepository';
 
     const TYPE_TEST_CLASS_1_2 = true;
     const TYPE_TEST_CLASS_ABOVE_3 = false;
@@ -323,6 +329,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                     $mocks[self::MOCK_MOT_TEST_VALIDATOR],
                     $mocks[self::MOCK_REASON_FOR_REJECTION],
                     $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION],
+                    $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY]
                 ]
             )
             ->setMethods(['createBrakeTestResult'])
@@ -414,6 +421,89 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $this->assertEquals($expectedResult, $resultExtract);
     }
 
+    public function dataProviderTestCreateBrakeTestResultWeightSourceIsMappedAndSavedWhenWeightChanges()
+    {
+        return [
+            //Vehicle weight changed with official source - do mapping
+            [VehicleClassCode::CLASS_3, 200, WeightSourceCode::VSI, WeightSourceCode::ORD_MISW],
+            [VehicleClassCode::CLASS_4, 200, WeightSourceCode::VSI, WeightSourceCode::ORD_MISW],
+            [VehicleClassCode::CLASS_5, 200, WeightSourceCode::VSI, WeightSourceCode::ORD_DGW_MAM],
+            [VehicleClassCode::CLASS_7, 200, WeightSourceCode::VSI, WeightSourceCode::ORD_DGW],
+            //Vehicle weight changed with not official source - no mapping
+            [VehicleClassCode::CLASS_3, 200, WeightSourceCode::PRESENTED, WeightSourceCode::PRESENTED],
+            [VehicleClassCode::CLASS_4, 200, WeightSourceCode::PRESENTED, WeightSourceCode::PRESENTED],
+            [VehicleClassCode::CLASS_5, 200, WeightSourceCode::CALCULATED, WeightSourceCode::CALCULATED],
+            [VehicleClassCode::CLASS_7, 200, WeightSourceCode::PRESENTED, WeightSourceCode::PRESENTED],
+            //Vehicle weight hasn't changed - don't update weight source
+            [VehicleClassCode::CLASS_3, null, WeightSourceCode::VSI, WeightSourceCode::VSI],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderTestCreateBrakeTestResultWeightSourceIsMappedAndSavedWhenWeightChanges
+     * @param $vehicleClass
+     * @param $brakeTestVehicleWeight
+     * @param $inputWeightSource
+     * @param $outputWeightSource
+     */
+    public function testCreateBrakeTestResultWeightSourceIsMappedAndSavedWhenWeightChanges(
+        $vehicleClass,
+        $brakeTestVehicleWeight,
+        $inputWeightSource,
+        $outputWeightSource
+    )
+    {
+        $mocks = $this->getMocksForBrakeTestResultService();
+
+        $motTest = $this->getTestMotTest($vehicleClass);
+        $data = BrakeTestResultClass3AndAboveTest::getTestData();
+        $brakeTestResultPrototype = new BrakeTestResultClass3AndAbove();
+        $brakeTestResult = $this->getTestBrakeTestResultClassAbove3WithEntities();
+        $brakeTestResult
+            ->setServiceBrake1TestType(BrakeTestTypeFactory::roller())
+            ->setParkingBrakeTestType(BrakeTestTypeFactory::roller());
+        $brakeTestResult->setVehicleWeight($brakeTestVehicleWeight);
+        $brakeTestResult->setWeightType(
+            (new WeightSource())->setCode($inputWeightSource)
+        );
+
+        $this->setupMockForSingleCall(
+            $mocks[self::MOCK_MAPPER_CLASS_ABOVE_3],
+            'mapToObject',
+            $brakeTestResultPrototype,
+            $data
+        );
+
+        $this->setupMockForSingleCall(
+            $mocks[self::MOCK_CALCULATOR_CLASS_ABOVE_3],
+            'calculateBrakeTestResult',
+            $brakeTestResult,
+            $brakeTestResultPrototype
+        );
+
+        $mockWeightSourceRepository = XMock::of(WeightSourceRepository::class);
+        $mockWeightSourceRepository->expects($this->any())
+            ->method("getByCode")
+            ->willReturnCallback(function($code) {
+                return (new WeightSource())->setCode($code);
+            });
+
+        $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY] = $mockWeightSourceRepository;
+        $brakeTestResultsService = $this->constructBrakeTestResultServiceWithMocks($mocks);
+
+        $summary = $brakeTestResultsService->createBrakeTestResult($motTest, $data);
+        /** @var BrakeTestResultClass3AndAbove $brakeTestResultInSummary */
+        $brakeTestResultInSummary = $summary->brakeTestResultClass3AndAbove;
+
+        $this->assertEquals($brakeTestVehicleWeight, $brakeTestResultInSummary->getVehicleWeight());
+        $this->assertEquals($outputWeightSource, $brakeTestResultInSummary->getWeightType()->getCode());
+    }
+
+    public function testCreateBrakeTestResultVehicleWeightIsMappedOnlyWhenSourceIsOfficial()
+    {
+
+    }
+
     private function getMocksForBrakeTestResultService()
     {
         $mockBrakeTestResultValidator = $this->getMockWithDisabledConstructor(
@@ -445,6 +535,8 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             ApiPerformMotTestAssertion::class
         );
 
+        $mockWeightSourceRepository = XMock::of(WeightSourceRepository::class);
+
         return [
             self::MOCK_CALCULATOR_CLASS_ABOVE_3 => $mockBrakeTestResultCalculator,
             self::MOCK_CALCULATOR_CLASS_1_2 => $mockBrakeTestResultClass12Calculator,
@@ -457,6 +549,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             self::MOCK_MOT_TEST_VALIDATOR => $mockTestValidator,
             self::MOCK_REASON_FOR_REJECTION => $mockReasonForRejectionSrvc,
             self::MOCK_PERFORM_MOT_TEST_ASSERTION => $mockPerformMotTestAssertion,
+            self::MOCK_WEIGHT_SOURCE_REPOSITORY => $mockWeightSourceRepository,
         ];
     }
 
@@ -510,7 +603,8 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             $this->getMockAuthorizationService(),
             $mocks[self::MOCK_MOT_TEST_VALIDATOR],
             $mocks[self::MOCK_REASON_FOR_REJECTION],
-            $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION]
+            $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION],
+            $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY]
         );
     }
 
