@@ -17,11 +17,24 @@
     <div class="form-group {% if viewModel.form.classRadioGroup.messages is not empty %} {{ 'has-error' }} {% endif %}" id="radio-group">
         <label id="class-group-label" for="class-radio-group" class="form-label">
             {{ viewModel.form.classRadioGroup.label }}
+
         </label>
         {% if viewModel.form.classRadioGroup.messages is not empty %}
             <span class="validation-message">{{ viewModel.form.classRadioGroup.messages[0]|raw }}</span>
         {% endif %}
-        {{ formElement(viewModel.form.classRadioGroup) }}
+
+        {% for option in viewModel.form.classRadioGroup.valueoptions %}
+            <div class="multiple-choice">
+                <input type="radio"
+                       value="{{ option['value'] }}"
+                       name="class"
+                       id="{{ option['attributes']['id'] }}"
+                       {% if 'checked' in option  %} {{ ' checked="checked"' }} {% endif %}>
+                <label for="{{ option['attributes']['id'] }}">
+                    {{ option['key'] }}
+                </label>
+            </div>
+        {% endfor %}
     </div>
 
 

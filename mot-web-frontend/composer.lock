@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bac18b6cccbf6d0bc6ae6df0e4988125",
+    "content-hash": "8ce77bc3864a172fb1d7ebf2e43c7bd0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -205,7 +205,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-notifications.git",
-                "reference": "192cd4cad91b9d4865b60f2ea3660dccd9459901"
+                "reference": "1032f110431d07c981ab17c9dcdd8e65f1f47139"
             },
             "require": {
                 "cpms/cpms-queues": "1.10.0-p",
@@ -238,7 +238,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
-                "reference": "6e24328972b88d22c24afc0097155c872992fbd7"
+                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -3852,17 +3852,17 @@
         },
         {
             "name": "slot-purchase/web-frontend",
-            "version": "v3.9.3",
+            "version": "v3.9.4",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/slot-purchase-web-frontend.git",
-                "reference": "67154398a5b8c5211b98dd59044b0cccd32af6cf"
+                "reference": "96eb844b702f9e723311794aa5c25b8c36ba6063"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/slot-purchase-web-frontend-v3.9.3-00a4be.tar",
-                "reference": "67154398a5b8c5211b98dd59044b0cccd32af6cf",
-                "shasum": "9fd4f4790faed3ceb547f972288a121acf53b4e3"
+                "url": "https://packages.motdev.org.uk//dist/slot-purchase-web-frontend-v3.9.4-55ed35.tar",
+                "reference": "96eb844b702f9e723311794aa5c25b8c36ba6063",
+                "shasum": "502dc930362dc17efac24a2d7c9c659454cb1aac"
             },
             "require": {
                 "cpms/client": "1.22.3-p",
@@ -3915,7 +3915,7 @@
                 "proprietary"
             ],
             "description": "Slot Purchase Frontend",
-            "time": "2017-07-18T15:55:33+00:00"
+            "time": "2017-07-27T13:28:28+00:00"
         },
         {
             "name": "soflomo/purifier",

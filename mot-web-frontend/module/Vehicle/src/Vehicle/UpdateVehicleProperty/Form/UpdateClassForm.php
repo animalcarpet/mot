@@ -39,13 +39,14 @@ class UpdateClassForm extends Form
                 'inputName' => self::FIELD_CLASS,
                 'key' => 'Class '.$classCode,
                 'attributes' => [
-                    'id' => 'class-'.$classCode,
+                    'id' => 'class'.$classCode,
                 ],
             ];
         }
 
         $class->setValueOptions($valueOptions);
         $class->setAttribute('group', true);
+        $class->setAttribute('newStyle', true);
 
         return $class;
     }
