@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ce77bc3864a172fb1d7ebf2e43c7bd0",
+    "content-hash": "8671923983ac5387553d18bccc326142",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -155,11 +155,17 @@
         },
         {
             "name": "cpms/cpms-forms",
-            "version": "v1.22.2-p",
+            "version": "v1.22.3-p",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-forms.git",
-                "reference": "19b73eb0691ff8b28a24ded20de8814fbc9d93de"
+                "reference": "a146e2859172c1658697888dd9b5335e98a8de86"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-forms-v1.22.3-p-0f861c.tar",
+                "reference": "a146e2859172c1658697888dd9b5335e98a8de86",
+                "shasum": "027f13f795ac082a4cf59ce16ea0a4646c09f199"
             },
             "require": {
                 "cpms/client": "1.22.3-p",
@@ -167,8 +173,7 @@
                 "zendframework/zendframework": "~2.5.3"
             },
             "require-dev": {
-                "cpms/common": "1.22-p",
-                "cpms/payment-test": "1.22-p",
+                "cpms/payment-test": "1.22.1-p",
                 "phpunit/phpunit": "~5.7.19"
             },
             "type": "library",
@@ -197,15 +202,21 @@
                 }
             ],
             "description": "Module that provides re-usable HTML Forms that can be used by scheme to process payments.",
-            "time": "2017-07-18T09:14:32+00:00"
+            "time": "2017-07-24T13:27:58+00:00"
         },
         {
             "name": "cpms/cpms-notifications",
-            "version": "4.1.1-p",
+            "version": "4.1.2-p",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-notifications.git",
-                "reference": "1032f110431d07c981ab17c9dcdd8e65f1f47139"
+                "reference": "be38508db370b7e024057bcb97b1831c50b31e8c"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-notifications-4.1.2-p-40d857.tar",
+                "reference": "be38508db370b7e024057bcb97b1831c50b31e8c",
+                "shasum": "4bc8d0bd2724a4de31824d390576782da9c92795"
             },
             "require": {
                 "cpms/cpms-queues": "1.10.0-p",
@@ -230,7 +241,7 @@
                     "email": "stuart.herbert@bjss.com"
                 }
             ],
-            "time": "2017-06-02T09:34:04+00:00"
+            "time": "2017-07-14T08:08:48+00:00"
         },
         {
             "name": "cpms/cpms-queues",
@@ -238,7 +249,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
-                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
+                "reference": "6e24328972b88d22c24afc0097155c872992fbd7"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -3852,23 +3863,21 @@
         },
         {
             "name": "slot-purchase/web-frontend",
-            "version": "v3.9.4",
+            "version": "v3.9.5",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/slot-purchase-web-frontend.git",
-                "reference": "96eb844b702f9e723311794aa5c25b8c36ba6063"
+                "reference": "d661de0f5a3b017d9f426f0e1ea14c492ce7151f"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/slot-purchase-web-frontend-v3.9.4-55ed35.tar",
-                "reference": "96eb844b702f9e723311794aa5c25b8c36ba6063",
-                "shasum": "502dc930362dc17efac24a2d7c9c659454cb1aac"
+                "url": "https://packages.motdev.org.uk//dist/slot-purchase-web-frontend-v3.9.5-c8a40e.tar",
+                "reference": "d661de0f5a3b017d9f426f0e1ea14c492ce7151f",
+                "shasum": "71064e41fd31a4671d5d61e79bad7d937d91e09b"
             },
             "require": {
-                "cpms/client": "1.22.3-p",
-                "cpms/cpms-forms": "1.22.2-p",
-                "cpms/cpms-notifications": "4.1.1-p",
-                "cpms/cpms-queues": "1.10.0-p",
+                "cpms/cpms-forms": "1.22.3-p",
+                "cpms/cpms-notifications": "4.1.2-p",
                 "dvsa/dvsa-document-module": "1.4.0",
                 "zendframework/zendframework": "~2.5.3"
             },
@@ -3915,7 +3924,7 @@
                 "proprietary"
             ],
             "description": "Slot Purchase Frontend",
-            "time": "2017-07-27T13:28:28+00:00"
+            "time": "2017-07-28T08:35:58+00:00"
         },
         {
             "name": "soflomo/purifier",
