@@ -55,9 +55,9 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->timeoutPeriod = new TimeSpan(0, 1, 0, 0);
         $this->dateTimeHolder = new TestDateTimeHolder(new \DateTime());
         $this->timeoutDateTime = $this->timeoutPeriod->addDateTime($this->dateTimeHolder->getCurrent());
-        $this->year = (int) $this->dateTimeHolder->getCurrent()->sub(new \DateInterval('P1M'))->format('Y');
-        $this->month = (int) $this->dateTimeHolder->getCurrent()->sub(new \DateInterval('P1M'))->format('m');
-
+        $this->year = (int) $this->dateTimeHolder->getCurrent()->modify("first day of last month")->format('Y');
+        $this->month = (int) $this->dateTimeHolder->getCurrent()->modify("first day of last month")->format('m');
+        
         $this->repository = XMock::of(NationalStatisticsRepository::class);
 
         $this->repoStatisticsSpy = new MethodSpy($this->repository, 'getStatistics');
