@@ -15,7 +15,7 @@
     "dvsa/dvsa-logger": "1.2.0",
     "dvsa/dvsa-application-logger": "2.0.0",
     "soflomo/purifier": "0.1.1",
-    "slot-purchase/backend-api": "5.0.1",
+    "slot-purchase/backend-api": "5.0.2",
     "danielstjules/stringy": "~2.0",
     "aws/aws-sdk-php": "^3.9",
     "mot/api-client-php": "16.0.0",
@@ -81,22 +81,6 @@
     {
       "type": "composer",
       "url": "https://packages.motdev.org.uk"
-    },
-    {
-      "type": "git",
-      "url":  "git@gitlab.motdev.org.uk:cpms/cpms-client.git"
-    },
-    {
-      "type": "git",
-      "url":  "git@gitlab.motdev.org.uk:cpms/shared-reports.git"
-    },
-    {
-      "type": "git",
-      "url":  "git@gitlab.motdev.org.uk:cpms/cpms-notifications.git"
-    },
-    {
-      "type": "git",
-      "url":  "git@gitlab.motdev.org.uk:cpms/cpms-queues.git"
     }
   ]
 }
