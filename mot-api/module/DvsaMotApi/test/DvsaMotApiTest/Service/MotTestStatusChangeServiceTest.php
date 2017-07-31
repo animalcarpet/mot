@@ -24,6 +24,7 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaCommonTest\Date\InvalidTestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
@@ -744,7 +745,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
                 )
             );
 
-        self::addBrakeTestResultWithUpdatableVehicleWeight($motTest, $oldWeight, $newWeight, WeightSourceFactory::vsi());
+        $this->addBrakeTestResultClass3AndAboveWithUpdatableVehicleWeight($motTest, $oldWeight, $newWeight, WeightSourceFactory::vsi());
         $this->motTestResolvesTo($motTest);
 
         $this->enableFeatureToggle();
@@ -762,25 +763,51 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     {
         return [
             //feature toggle ON
-            [Vehicle::VEHICLE_CLASS_1, WeightSourceFactory::vsi(), false, false, true],
-            [Vehicle::VEHICLE_CLASS_2, WeightSourceFactory::vsi(), false, false, true],
+            // New logic: copy vehicle's weight/weightSource from brakeTestResult to MotTest regardless of weightSource (for class 3+)
             [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::vsi(), true, true, true],
             [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::vsi(), true, true, true],
-            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::vsi(), false, true, true],
-            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::vsi(), false, true, true],
-            [Vehicle::VEHICLE_CLASS_1, WeightSourceFactory::dgw(), false, false, true],
-            [Vehicle::VEHICLE_CLASS_2, WeightSourceFactory::dgw(), false, false, true],
-            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::dgw(), false, false, true],
-            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::dgw(), false, false, true],
+            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::vsi(), true, true, true],
+            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::vsi(), true, true, true],
+
+            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::presented(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::presented(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::presented(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::presented(), true, false, true],
+
+            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::calculated(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::calculated(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::calculated(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::calculated(), true, false, true],
+
+            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::mam(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::mam(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::mam(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::mam(), true, false, true],
+
+            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::dgw(), true, false, true],
+            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::dgw(), true, false, true],
             [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::dgw(), true, true, true],
             [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::dgw(), true, true, true],
+
             //feature toggle OFF
+            // Old login: copy vehicle's weight/weightSource from brakeTestResult to MotTest record only if it's VSI/DGW source (for class3+)
             [Vehicle::VEHICLE_CLASS_1, WeightSourceFactory::vsi(), false, false, false],
             [Vehicle::VEHICLE_CLASS_2, WeightSourceFactory::vsi(), false, false, false],
             [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::vsi(), true, false, false],
             [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::vsi(), true, false, false],
             [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::vsi(), false, false, false],
             [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::vsi(), false, false, false],
+
+            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::presented(), false, false, false],
+            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::presented(), false, false, false],
+            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::presented(), false, false, false],
+            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::presented(), false, false, false],
+
+            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::calculated(), false, false, false],
+            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::calculated(), false, false, false],
+            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::calculated(), false, false, false],
+            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::calculated(), false, false, false],
+
             [Vehicle::VEHICLE_CLASS_1, WeightSourceFactory::dgw(), false, false, false],
             [Vehicle::VEHICLE_CLASS_2, WeightSourceFactory::dgw(), false, false, false],
             [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::dgw(), false, false, false],
@@ -793,7 +820,12 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     /**
      * @param $class
      * @param $weightType
-     * @param $isUpdated
+     * @param $isMotTestUpdated
+     * @param $isVehicleUpdated
+     * @param $isFeatureEnabled
+     * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
+     * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
+     * @throws \DvsaCommon\Date\Exception\NonexistentDateTimeException
      *
      * @dataProvider dataProviderShouldUpdateVehicleWeightOnlyForCertainClassAndWeightType
      */
@@ -825,7 +857,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
                     )
             );
 
-        self::addBrakeTestResultWithUpdatableVehicleWeight($motTest, $oldWeight, $newWeight, $weightType);
+        $this->addBrakeTestResultClass3AndAboveWithUpdatableVehicleWeight($motTest, $oldWeight, $newWeight, $weightType);
         $this->motTestResolvesTo($motTest);
 
         if($isVehicleUpdated) {
@@ -834,7 +866,9 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
 
         $this->createService()->updateStatus($motTestId, $data);
 
-        $this->assertEquals($isMotTestUpdated, $newWeight === $motTest->getVehicleWeight());
+        $hasVehicleWeightChangedInMotTest = $newWeight === $motTest->getVehicleWeight();
+
+        $this->assertEquals($isMotTestUpdated, $hasVehicleWeightChangedInMotTest);
     }
 
     private function helperGivenConfirmRequestByAnotherUserShouldThrowError($status)
@@ -1004,7 +1038,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $motTest->getVehicleTestingStation()->setSiteTestingSchedule($weekOpeningHours);
     }
 
-    private static function addBrakeTestResultWithUpdatableVehicleWeight(MotTest $motTest, $oldWeight, $newWeight, $newWeightType)
+    private function addBrakeTestResultClass3AndAboveWithUpdatableVehicleWeight(MotTest $motTest, $oldWeight, $newWeight, $newWeightType)
     {
         $brakeTestResult = (new BrakeTestResultClass3AndAbove())
             ->setWeightType($newWeightType)

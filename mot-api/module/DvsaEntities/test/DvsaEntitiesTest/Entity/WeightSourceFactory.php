@@ -45,4 +45,21 @@ class WeightSourceFactory
     {
         return self::type(WeightSourceCode::DGW);
     }
+
+    /**
+     * @return WeightSource
+     */
+    public static function calculated()
+    {
+        return self::type(WeightSourceCode::CALCULATED);
+    }
+
+    /**
+     * @return WeightSource
+     */
+    public static function mam()
+    {
+        return self::type(WeightSourceCode::MAM);
+    }
+
 }

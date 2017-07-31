@@ -570,18 +570,21 @@ class MotTestStatusChangeService implements TransactionAwareInterface, AutoWirea
             $motTest->setPrsMotTest($passedMotTest);
         }
 
-        // -- vehicle weight --
-        if (!$motTest->getMotTestType()->getIsDemo()) {
-            if ($this->shouldAmendVehicleWeightInMotTest($motTest)) {
-                $motTest = $this->updateMotTestVehicleWeight($motTest);
-            }
+        if ($motTest->getMotTestType()->getIsDemo()) {
+            // end processing for demo tests
+            return $newStatus;
+        }
 
-            if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
-                if ($this->shouldAmendVehicleWeightInVehicle($motTest)) {
-                    $vehicle = $this->updateVehicleVehicleWeight($motTest);
+        // For non-demo tests: update vehicle weight when appropriate
+        if ($this->shouldAmendVehicleWeightInMotTest($motTest)) {
+            $motTest = $this->updateMotTestVehicleWeight($motTest);
+        }
 
-                    $motTest->setVehicleVersion($vehicle->getVersion());
-                }
+        if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+            if ($this->shouldAmendVehicleWeightInVehicle($motTest)) {
+                $vehicle = $this->updateVehicleVehicleWeight($motTest);
+
+                $motTest->setVehicleVersion($vehicle->getVersion());
             }
         }
 
@@ -693,6 +696,13 @@ class MotTestStatusChangeService implements TransactionAwareInterface, AutoWirea
             return false;
         }
 
+        if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+            // we copy all values from BrakeTestResults table to mot_test_current
+            // there is additional mapping logic on saving actual weightSource on saving brakeTestResults
+            return true;
+        }
+
+        // this should be removed when feature toggle will be ON by default
         return $this->hasVsiWeight($motTest, $brakeTestResult) || $this->hasDgwWeight($motTest, $brakeTestResult);
     }
 
