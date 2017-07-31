@@ -50,7 +50,6 @@ class TestQualityInformationViewModel
     const TEST_QUALITY_INFORMATION_LINK_ID = "TQI_%d";
     const TEST_TEST_LOGS_LINK_ID = "test_logs_%d";
 
-    const BACK_TO_SERVICE_REPORT_QUERY_PARAM = "serviceReports";
     const TESTERS_ANNUAL_ASSESSMENTS_LINK_ID = "TAA_%d";
     const SITE_LINK_ID = "site_%d";
 
@@ -147,7 +146,7 @@ class TestQualityInformationViewModel
                 self::VTS_TEST_QUALITY_INFORMATION_LINK_TEXT,
                 VtsRouteList::VTS_TEST_QUALITY,
                 ['id' => $site->getId()],
-                ['query' => ['returnToAETQI' => true],
+                ['query' => [BackLinkQueryParam::RETURN_TO_AE_TQI => true],
                 ],
                 sprintf(self::TEST_QUALITY_INFORMATION_LINK_ID, $site->getId())
             );
@@ -156,7 +155,7 @@ class TestQualityInformationViewModel
                 self::VTS_TEST_LOGS_LINK_TEXT,
                 VtsRouteList::VTS_TEST_LOGS,
                 ['id' => $site->getId()],
-                ['query' => ['backTo' => "serviceReports"],
+                ['query' => [BackLinkQueryParam::PARAM_BACK_TO => BackLinkQueryParam::SERVICE_REPORTS],
                 ],
                 sprintf(self::TEST_TEST_LOGS_LINK_ID, $site->getId())
             );
@@ -165,7 +164,7 @@ class TestQualityInformationViewModel
                 self::VTS_TESTERS_ANNUAL_ASSESSMENTS_LINK_TEXT,
                 VtsRouteList::VTS_TESTERS_ANNUAL_ASSESSMENT,
                 ['id' => $site->getId()],
-                ['query' => ['backTo' => BackLinkQueryParam::SERVICE_REPORTS]],
+                ['query' => [BackLinkQueryParam::PARAM_BACK_TO => BackLinkQueryParam::SERVICE_REPORTS]],
                 sprintf(self::TESTERS_ANNUAL_ASSESSMENTS_LINK_ID, $site->getId())
             );
 
@@ -173,7 +172,7 @@ class TestQualityInformationViewModel
                 $site->getName(),
                 VtsRouteList::VTS,
                 ['id' => $site->getId()],
-                [],
+                ['query' => [BackLinkQueryParam::PARAM_BACK_TO => BackLinkQueryParam::SERVICE_REPORTS]],
                 sprintf(self::SITE_LINK_ID, $site->getId())
             );
 

@@ -5,6 +5,7 @@ namespace Site\Action;
 use Core\Action\ViewActionResult;
 use Core\Action\FileAction;
 use Core\Action\NotFoundActionResult;
+use Core\BackLink\BackLinkQueryParam;
 use Core\Routing\ProfileRoutes;
 use Core\Routing\VtsRouteList;
 use Core\Routing\VtsRoutes;
@@ -91,7 +92,7 @@ class UserTestQualityAction implements AutoWireableInterface
         } else {
             $query = [];
             if ($isReturnToAETQI) {
-                $query['returnToAETQI'] = true;
+                $query[BackLinkQueryParam::RETURN_TO_AE_TQI] = true;
             }
 
             $returnLink = VtsRoutes::of($urlPlugin)->vtsTestQuality($siteId, $month, $year, $query);

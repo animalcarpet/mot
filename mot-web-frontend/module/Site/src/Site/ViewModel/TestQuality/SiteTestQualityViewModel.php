@@ -2,6 +2,7 @@
 
 namespace Site\ViewModel\TestQuality;
 
+use Core\BackLink\BackLinkQueryParam;
 use Core\Routing\AeRouteList;
 use Core\Routing\VtsRouteList;
 use DateTime;
@@ -149,7 +150,7 @@ class SiteTestQualityViewModel
         if ($this->isReturnLinkToAETQI) {
             return [
                 'query' => [
-                    'returnToAETQI' => true,
+                    BackLinkQueryParam::RETURN_TO_AE_TQI => true,
                 ],
             ];
         } else {

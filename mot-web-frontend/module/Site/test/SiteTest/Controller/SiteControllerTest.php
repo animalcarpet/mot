@@ -37,6 +37,7 @@ use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Site\Form\VtsCreateForm;
 use Site\Form\VtsUpdateTestingFacilitiesForm;
+use Site\Service\SiteBreadcrumbsBuilder;
 use Site\ViewModel\VehicleTestingStation\VtsFormViewModel;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -96,12 +97,16 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
 
         /** @var BusinessRoleCatalog|\PHPUnit_Framework_MockObject_MockObject $businessRoleCatalog */
         $businessRoleCatalog = XMock::of(BusinessRoleCatalog::class);
+        $siteBreadcrumbsBuilder = XMock::of(SiteBreadcrumbsBuilder::class);
+        $siteBreadcrumbsBuilder->method('getVtsBreadcrumb')->willReturn([]);
+        $siteBreadcrumbsBuilder->method('getAeBreadcrumb')->willReturn([]);
 
         $this->setController(
             new SiteController(
                 $this->auth, $this->mapper, $this->identity, $this->catalog, $this->mockSession, $businessRoleCatalog,
                 $this->mockSiteTestQualityAction, $this->mockUserTestQualityAction, $this->mockViewVtsTestQualityAssertion,
-                XMock::of(ContextProvider::class), XMock::of(TesterTqiComponentsAtSiteBreadcrumbs::class)
+                XMock::of(ContextProvider::class), XMock::of(TesterTqiComponentsAtSiteBreadcrumbs::class),
+                $siteBreadcrumbsBuilder
             )
         );
 

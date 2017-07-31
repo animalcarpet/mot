@@ -15,6 +15,7 @@ use Site\Action\SiteTestQualityAction;
 use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Site\Factory\Controller\SiteControllerFactory;
+use Site\Service\SiteBreadcrumbsBuilder;
 use Zend\ServiceManager\ServiceManager;
 use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSiteBreadcrumbs;
 
@@ -37,9 +38,10 @@ class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(EnumCatalog::class, $enumCatalog);
         $serviceManager->setService(SiteTestQualityAction::class, XMock::of(SiteTestQualityAction::class));
         $serviceManager->setService(ViewVtsTestQualityAssertion::class, XMock::of(ViewVtsTestQualityAssertion::class));
-        $serviceManager->setService(UserTestQualityAction::class, Xmock::of(UserTestQualityAction::class));
-        $serviceManager->setService(ContextProvider::class, Xmock::of(ContextProvider::class));
-        $serviceManager->setService(TesterTqiComponentsAtSiteBreadcrumbs::class, Xmock::of(TesterTqiComponentsAtSiteBreadcrumbs::class));
+        $serviceManager->setService(UserTestQualityAction::class, XMock::of(UserTestQualityAction::class));
+        $serviceManager->setService(ContextProvider::class, XMock::of(ContextProvider::class));
+        $serviceManager->setService(TesterTqiComponentsAtSiteBreadcrumbs::class, XMock::of(TesterTqiComponentsAtSiteBreadcrumbs::class));
+        $serviceManager->setService(SiteBreadcrumbsBuilder::class, XMock::of(SiteBreadcrumbsBuilder::class));
 
         $plugins = $this->getMockBuilder('Zend\Mvc\Controller\ControllerManager')->disableOriginalConstructor()->getMock();
         $plugins->expects($this->any())

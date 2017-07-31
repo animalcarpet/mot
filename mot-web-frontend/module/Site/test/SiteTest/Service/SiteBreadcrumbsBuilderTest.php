@@ -36,7 +36,7 @@ class SiteBreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->url->method('__invoke')->willReturn('vtsurl');
         $site = new SiteDto();
         $site->setName(self::TEST_VTS_NAME);
-        $breadcrumbs = $this->siteBreadcrumbsBuilder->buildBreadcrumbs($site);
+        $breadcrumbs = $this->siteBreadcrumbsBuilder->buildBreadcrumbs($site, true);
         $this->assertSame([self::TEST_VTS_NAME => 'vtsurl'], $breadcrumbs);
     }
 
@@ -45,7 +45,7 @@ class SiteBreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
         $site = new SiteDto();
         $site->setOrganisation((new OrganisationDto())->setName(self::TEST_AE_NAME));
         $site->setName(self::TEST_VTS_NAME);
-        $breadcrumbs = $this->siteBreadcrumbsBuilder->buildBreadcrumbs($site);
+        $breadcrumbs = $this->siteBreadcrumbsBuilder->buildBreadcrumbs($site, false);
         $this->assertSame([self::TEST_VTS_NAME => null], $breadcrumbs);
     }
 
@@ -72,7 +72,7 @@ class SiteBreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
         $site = new SiteDto();
         $site->setOrganisation((new OrganisationDto())->setName(self::TEST_AE_NAME)->setId(self::ORGANISATION_ID));
         $site->setName(self::TEST_VTS_NAME);
-        $breadcrumbs = $this->siteBreadcrumbsBuilder->buildBreadcrumbs($site);
+        $breadcrumbs = $this->siteBreadcrumbsBuilder->buildBreadcrumbs($site, false);
         $this->assertSame([
             self::TEST_AE_NAME => null,
             self::TEST_VTS_NAME => null,

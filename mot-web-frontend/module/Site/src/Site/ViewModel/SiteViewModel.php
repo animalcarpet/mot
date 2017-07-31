@@ -3,6 +3,7 @@
 namespace Site\ViewModel;
 
 use Core\Formatting\AddressFormatter;
+use Core\Routing\AeRouteList;
 use Core\Routing\VtsRoutes;
 use Core\ViewModel\Equipment\EquipmentViewModel;
 use Core\ViewModel\Gds\Table\GdsTable;
@@ -30,9 +31,6 @@ use Zend\Mvc\Controller\Plugin\Url;
  */
 class SiteViewModel
 {
-    const LIMIT_GREEN_THRESHOLD = 324.1;
-    const LIMIT_AMBER_THRESHOLD = 459.2;
-
     /**
      * @var VehicleTestingStationDto
      */
@@ -54,14 +52,16 @@ class SiteViewModel
      * @var Url
      */
     private $urlHelper;
+    private $backTo;
 
     /**
-     * @param VehicleTestingStationDto   $site
-     * @param EquipmentDto[]             $equipments
-     * @param MotTestInProgressDto[]     $testsInProgress
+     * @param VehicleTestingStationDto $site
+     * @param EquipmentDto[] $equipments
+     * @param MotTestInProgressDto[] $testsInProgress
      * @param VtsOverviewPagePermissions $permissions
-     * @param array                      $equipmentModelStatusMap
-     * @param Url                        $urlHelper
+     * @param array $equipmentModelStatusMap
+     * @param Url $urlHelper
+     * @param string $backTo
      */
     public function __construct(
         VehicleTestingStationDto $site,
@@ -69,7 +69,8 @@ class SiteViewModel
         $testsInProgress,
         VtsOverviewPagePermissions $permissions,
         $equipmentModelStatusMap,
-        Url $urlHelper
+        Url $urlHelper,
+        string $backTo
     ) {
         $this->site = $site;
         $this->permissions = $permissions;
@@ -77,6 +78,7 @@ class SiteViewModel
 
         $this->setupEquipment($equipments, $equipmentModelStatusMap);
         $this->wrapTestsInProgress($testsInProgress);
+        $this->backTo = $backTo;
     }
 
     /**
@@ -104,6 +106,12 @@ class SiteViewModel
         foreach ($testsInProgress as $testInProgress) {
             $this->testsInProgress[] = new MotTestInProgressViewModel($testInProgress);
         }
+    }
+
+    public function userCameFromServiceReports():bool
+    {
+        return ($this->backTo == 'service-reports')
+            && (!is_null($this->site->getOrganisation()));
     }
 
     /**
@@ -276,5 +284,10 @@ class SiteViewModel
         }
 
         return $table;
+    }
+
+    public function getBackToServiceReportsLink():string
+    {
+        return $this->urlHelper->fromRoute(AeRouteList::AE_TEST_QUALITY, ['id' => $this->site->getOrganisation()->getId()]);
     }
 }

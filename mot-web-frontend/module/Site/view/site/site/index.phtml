@@ -1,5 +1,6 @@
 <?php
 
+use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
@@ -11,7 +12,7 @@ use Site\ViewModel\MotTest\MotTestInProgressViewModel;
  * @var \Site\ViewModel\SiteViewModel $viewModel
  * @var string $searchString
  * @var string $escRefPage
- * @var \DvsaCommon\Dto\Site\SiteDto $site
+ * @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site
  * @var \Site\Service\RiskAssessmentScoreRagClassifier $ragClassifier
  * @var \Organisation\Presenter\StatusPresenter $statusPresenter
  * @var string $isVtsRiskEnabled
@@ -306,7 +307,15 @@ echo $this->partial(
 
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
-        <?php if ($permission->canSearchVts()) : ?>
+
+        <?php
+        if($viewModel->userCameFromServiceReports()): ?>
+            <li>
+                <a id="return-to-service-reports" class="btn-link" href="<?php echo $viewModel->getBackToServiceReportsLink(); ?>">
+                    Return to service reports
+                </a>
+            </li>
+        <?php elseif ($permission->canSearchVts()) : ?>
             <li>
                 <?php
                 if (!empty($searchString)) {

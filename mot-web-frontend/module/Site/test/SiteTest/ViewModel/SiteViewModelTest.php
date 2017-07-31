@@ -6,9 +6,12 @@ use DvsaClient\Entity\SiteDailyOpeningHours;
 use DvsaCommon\Dto\Equipment\EquipmentDto;
 use DvsaCommon\Dto\Equipment\EquipmentModelDto;
 use DvsaCommon\Dto\MotTesting\MotTestInProgressDto;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
+use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Site\SiteTestingDailyScheduleDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommonTest\TestUtils\XMock;
+use PHPUnit_Framework_MockObject_MockObject;
 use Site\Authorization\VtsOverviewPagePermissions;
 use Site\ViewModel\SiteViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
@@ -25,11 +28,12 @@ class SiteViewModelTest extends \PHPUnit_Framework_TestCase
      * @var VtsOverviewPagePermissions|MockObject
      */
     private $permissions;
+    /** @var  VehicleTestingStationDto */
     private $site;
     private $equipments;
     private $tests;
     private $model;
-    /** @var Url */
+    /** @var Url | PHPUnit_Framework_MockObject_MockObject */
     private $urlHelper;
 
     public function SetUp()
@@ -44,15 +48,15 @@ class SiteViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetterSetter()
     {
-        $model = new SiteViewModel($this->site, $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper);
+        $model = new SiteViewModel($this->site, $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper, '');
 
         $this->assertEquals($this->site, $model->getSite());
         $this->assertEquals($this->permissions, $model->getPermissions());
         $this->assertEquals('England', $model->getCountryToggle());
 
-        $model = new SiteViewModel($this->site->setIsScottishBankHoliday(true), $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper);
+        $model = new SiteViewModel($this->site->setIsScottishBankHoliday(true), $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper, '');
         $this->assertEquals('Scotland', $model->getCountryToggle());
-        $model = new SiteViewModel($this->site->setIsDualLanguage(true), $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper);
+        $model = new SiteViewModel($this->site->setIsDualLanguage(true), $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper, '');
         $this->assertEquals('Wales', $model->getCountryToggle());
 
         $this->assertEquals(
@@ -66,5 +70,26 @@ class SiteViewModelTest extends \PHPUnit_Framework_TestCase
                 (new SiteTestingDailyScheduleDto())->setOpenTime(null)->setCloseTime(null)
             )
         );
+    }
+
+    public function testServiceReportsLink()
+    {
+        $model = new SiteViewModel(
+            $this->site->setOrganisation(new OrganisationDto()),
+            $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper, 'service-reports'
+        );
+        $this->urlHelper->expects($this->once())->method('fromRoute')->willReturn('service_reports');
+
+        $this->assertTrue($model->userCameFromServiceReports());
+        $this->assertEquals('service_reports', $model->getBackToServiceReportsLink());
+    }
+
+    public function testLackOfServiceReportsLink()
+    {
+        $model = new SiteViewModel(
+            $this->site, $this->equipments, $this->tests, $this->permissions, $this->model, $this->urlHelper, 'whatever'
+        );
+
+        $this->assertFalse($model->userCameFromServiceReports());
     }
 }

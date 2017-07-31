@@ -2,13 +2,13 @@
 
 namespace Site\ViewModel\MotTestLog;
 
+use Core\BackLink\BackLinkQueryParam;
 use Core\Routing\AeRoutes;
 use Core\Routing\VtsRoutes;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Site\MotTestLogSummaryDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
-use Organisation\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
 use Report\Filter\FilterBuilder;
 use Report\Table\Formatter\SubRow;
 use Report\Table\Table;
@@ -341,7 +341,7 @@ class MotTestLogViewModel
 
     public function getBackLinkText()
     {
-        if ($this->getBackToParam() === TestQualityInformationViewModel::BACK_TO_SERVICE_REPORT_QUERY_PARAM) {
+        if ($this->getBackToParam() === BackLinkQueryParam::SERVICE_REPORTS) {
             return 'Return to service reports';
         } else {
             return 'Return to Vehicle Testing Station';
@@ -350,7 +350,7 @@ class MotTestLogViewModel
 
     public function getBackLinkUrl()
     {
-        if ($this->getBackToParam() === TestQualityInformationViewModel::BACK_TO_SERVICE_REPORT_QUERY_PARAM) {
+        if ($this->getBackToParam() === BackLinkQueryParam::SERVICE_REPORTS) {
             return AeRoutes::of($this->urlHelper)->aeTestQuality($this->Site->getOrganisation()->getId());
         } else {
             return VtsRoutes::of($this->urlHelper)->vts($this->Site->getId());
@@ -360,7 +360,7 @@ class MotTestLogViewModel
     public function getBackToParam()
     {
         if ($this->hasBackToParam()) {
-            return $this->queryParams->get("backTo");
+            return $this->queryParams->get(BackLinkQueryParam::PARAM_BACK_TO);
         }
 
         return null;
@@ -368,6 +368,6 @@ class MotTestLogViewModel
 
     public function hasBackToParam()
     {
-        return ($this->queryParams !== null && $this->queryParams->get("backTo") !== null);
+        return ($this->queryParams !== null && $this->queryParams->get(BackLinkQueryParam::PARAM_BACK_TO) !== null);
     }
 }

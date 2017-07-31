@@ -10,6 +10,7 @@ use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use Site\Action\SiteTestQualityAction;
 use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
+use Site\Service\SiteBreadcrumbsBuilder;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container;
@@ -42,7 +43,8 @@ class SiteControllerFactory implements FactoryInterface
             $serviceLocator->get(UserTestQualityAction::class),
             $serviceLocator->get(ViewVtsTestQualityAssertion::class),
             $serviceLocator->get(ContextProvider::class),
-            $serviceLocator->get(TesterTqiComponentsAtSiteBreadcrumbs::class)
+            $serviceLocator->get(TesterTqiComponentsAtSiteBreadcrumbs::class),
+            $serviceLocator->get(SiteBreadcrumbsBuilder::class)
         );
     }
 }
