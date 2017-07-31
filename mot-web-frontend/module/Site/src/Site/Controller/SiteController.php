@@ -3,6 +3,7 @@
 namespace Site\Controller;
 
 use Application\Service\CatalogService;
+use Core\BackLink\BackLinkQueryParam;
 use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Core\Controller\AbstractAuthActionController;
 use Core\Routing\VtsRouteList;
@@ -36,6 +37,7 @@ use Site\Form\VtsCreateForm;
 use Site\Form\VtsSiteAssessmentForm;
 use Site\Form\VtsUpdateTestingFacilitiesForm;
 use Site\Service\RiskAssessmentScoreRagClassifier;
+use Site\Service\SiteBreadcrumbsBuilder;
 use Site\ViewModel\Sidebar\VtsOverviewSidebar;
 use Site\ViewModel\SiteViewModel;
 use Site\ViewModel\VehicleTestingStation\VtsFormViewModel;
@@ -108,6 +110,8 @@ class SiteController extends AbstractAuthActionController
 
     private $testerTqiComponentsAtSiteBreadcrumbs;
 
+    private $siteBreadcrumbsBuilder;
+
     public function __construct(
         MotFrontendAuthorisationServiceInterface $auth,
         MapperFactory $mapper,
@@ -119,7 +123,8 @@ class SiteController extends AbstractAuthActionController
         UserTestQualityAction $userTestQualityAction,
         ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion,
         ContextProvider $contextProvider,
-        TesterTqiComponentsAtSiteBreadcrumbs $testerTqiComponentsAtSiteBreadcrumbs
+        TesterTqiComponentsAtSiteBreadcrumbs $testerTqiComponentsAtSiteBreadcrumbs,
+        SiteBreadcrumbsBuilder $siteBreadcrumbsBuilder
     ) {
         $this->auth = $auth;
         $this->mapper = $mapper;
@@ -132,6 +137,7 @@ class SiteController extends AbstractAuthActionController
         $this->viewVtsTestQualityAssertion = $viewVtsTestQualityAssertion;
         $this->contextProvider = $contextProvider;
         $this->testerTqiComponentsAtSiteBreadcrumbs = $testerTqiComponentsAtSiteBreadcrumbs;
+        $this->siteBreadcrumbsBuilder = $siteBreadcrumbsBuilder;
     }
 
     /**
@@ -144,6 +150,7 @@ class SiteController extends AbstractAuthActionController
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
         $vtsId = $this->params()->fromRoute('id', null);
+        $backTo = $this->params()->fromQuery(BackLinkQueryParam::PARAM_BACK_TO, '');
 
         // Store url for back URL in following pages
         $refBack = new Container(self::REFERER);
@@ -168,7 +175,7 @@ class SiteController extends AbstractAuthActionController
         $equipmentModelStatusMap = $this->catalog->getEquipmentModelStatuses();
         $siteStatusMap = $this->catalog->getSiteStatus();
 
-        $view = new SiteViewModel($site, $equipment, $testInProgress, $permissions, $equipmentModelStatusMap, $this->url());
+        $view = new SiteViewModel($site, $equipment, $testInProgress, $permissions, $equipmentModelStatusMap, $this->url(), $backTo);
 
         // Get ref page
         $refSession = new Container('referralSession');
@@ -221,8 +228,10 @@ class SiteController extends AbstractAuthActionController
             ]
         );
 
-        $breadcrumbs = [];
-        $breadcrumbs = $this->prependBreadcrumbsWithAeLink($site, $breadcrumbs);
+        $breadcrumbs =
+            $this->siteBreadcrumbsBuilder->getAeBreadcrumb($site)
+            + ($view->userCameFromServiceReports() ? ['Service reports' => $view->getBackToServiceReportsLink()] : [])
+            + $this->siteBreadcrumbsBuilder->getVtsBreadcrumb($site, false);
 
         return $this->prepareViewModel($viewModel, $site->getName(), self::EDIT_SUBTITLE, $breadcrumbs);
     }
@@ -813,7 +822,7 @@ class SiteController extends AbstractAuthActionController
      *
      * @return array
      */
-    private function prependBreadcrumbsWithAeLink(SiteDto $site, &$breadcrumbs)
+    private function prependBreadcrumbsWithAeLink(SiteDto $site, $breadcrumbs)
     {
         $org = $site->getOrganisation();
 
@@ -841,7 +850,7 @@ class SiteController extends AbstractAuthActionController
         $id = $this->params('id');
         $month = $this->params('month');
         $year = $this->params('year');
-        $isReturnToAETQI = (bool) $this->params()->fromQuery('returnToAETQI');
+        $isReturnToAETQI = (bool) $this->params()->fromQuery(BackLinkQueryParam::RETURN_TO_AE_TQI);
 
         return $this->applyActionResult(
             $this->siteTestQualityAction->execute($id, $month, $year, $isReturnToAETQI, $this->buildBreadcrumbs($id), $this->url(), $this->params()->fromRoute(), $this->params()->fromQuery())
@@ -850,7 +859,7 @@ class SiteController extends AbstractAuthActionController
 
     public function userTestQualityAction()
     {
-        $isReturnToAETQI = (bool) $this->params()->fromQuery('returnToAETQI');
+        $isReturnToAETQI = (bool) $this->params()->fromQuery(BackLinkQueryParam::RETURN_TO_AE_TQI);
 
         $group = $this->params('group');
         $month = $this->params('month');

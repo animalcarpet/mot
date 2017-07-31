@@ -25,36 +25,29 @@ class SiteBreadcrumbsBuilder implements AutoWireableInterface
         $this->auth = $auth;
     }
 
-    public function buildBreadcrumbs(SiteDto $siteDto)
+    public function buildBreadcrumbs(SiteDto $siteDto, bool $linkToSite)
     {
-        $breadcrumbs = [
-            $siteDto->getName() => VtsRoutes::of($this->urlHelper)->vts($siteDto->getId()),
-        ];
-        $breadcrumbs = $this->prependBreadcrumbsWithAeLink($siteDto, $breadcrumbs);
-
-        return $breadcrumbs;
+        return $this->getAeBreadcrumb($siteDto) + $this->getVtsBreadcrumb($siteDto, $linkToSite);
     }
 
-    /**
-     * @param SiteDto $site
-     * @param array   $breadcrumbs
-     *
-     * @return array
-     */
-    private function prependBreadcrumbsWithAeLink(SiteDto $site, &$breadcrumbs)
+    public function getAeBreadcrumb(SiteDto $site):array
     {
         $org = $site->getOrganisation();
 
-        if ($org) {
-            $canVisitAePage = $this->canAccessAePage($org->getId());
-
-            if ($canVisitAePage) {
-                $aeBreadcrumb = [$org->getName() => AeRoutes::of($this->urlHelper)->ae($org->getId())];
-                $breadcrumbs = $aeBreadcrumb + $breadcrumbs;
+        if (!is_null($org)) {
+            if ($this->canAccessAePage($org->getId())) {
+                return [$org->getName() => AeRoutes::of($this->urlHelper)->ae($org->getId())];
             }
         }
 
-        return $breadcrumbs;
+        return [];
+    }
+
+    public function getVtsBreadcrumb(SiteDto $site, $linkToSite)
+    {
+        $vtsLink = VtsRoutes::of($this->urlHelper)->vts($site->getId());
+
+        return [$site->getName() => $linkToSite ? $vtsLink : null];
     }
 
     /**

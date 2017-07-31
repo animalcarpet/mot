@@ -88,7 +88,7 @@ class TestersAnnualAssessmentAction implements AutoWireableInterface
      */
     private function buildBreadcrumbs(VehicleTestingStationDto $siteDto)
     {
-        return $this->siteBreadcrumbsBuilder->buildBreadcrumbs($siteDto) + [self::PAGE_TITLE => null];
+        return $this->siteBreadcrumbsBuilder->buildBreadcrumbs($siteDto, true) + [self::PAGE_TITLE => null];
     }
 
     /**
