@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Constants\BrakeTestConfigurationClass1And2;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Domain\BrakeTestTypeConfiguration;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -23,6 +24,7 @@ use DvsaEntities\Entity\MotTestReasonForRejectionComment;
 use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\WeightSourceRepository;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator;
@@ -95,6 +97,10 @@ class BrakeTestResultService extends AbstractService
         ];
 
     private $weightSourceRepository;
+    /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
 
     public function __construct(
         EntityManager $entityManager,
@@ -109,7 +115,8 @@ class BrakeTestResultService extends AbstractService
         MotTestValidator $motTestValidator,
         MotTestReasonForRejectionService $motTestReasonForRejectionService,
         ApiPerformMotTestAssertion $performMotTestAssertion,
-        WeightSourceRepository $weightSourceRepository
+        WeightSourceRepository $weightSourceRepository,
+        FeatureToggles $featureToggles
     ) {
         parent::__construct($entityManager);
         $this->brakeTestResultValidator = $brakeTestResultValidator;
@@ -124,6 +131,7 @@ class BrakeTestResultService extends AbstractService
         $this->motTestReasonForRejectionService = $motTestReasonForRejectionService;
         $this->performMotTestAssertion = $performMotTestAssertion;
         $this->weightSourceRepository = $weightSourceRepository;
+        $this->featureToggles = $featureToggles;
     }
 
     public function createBrakeTestResult(MotTest $motTest, $brakeTestResultData)
@@ -267,7 +275,9 @@ class BrakeTestResultService extends AbstractService
 
         $brakeTestResult = $this->brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $vehicle);
 
-        $brakeTestResult = $this->mapVehicleWeightSource($brakeTestResult, $vehicle);
+        if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+            $brakeTestResult = $this->mapVehicleWeightSource($brakeTestResult, $vehicle);
+        }
 
         $summary = new BrakeTestResultSubmissionSummary();
         $summary->brakeTestResultClass3AndAbove = $brakeTestResult;
@@ -562,7 +572,7 @@ class BrakeTestResultService extends AbstractService
         $currentVehicleWeight = $brakeTestResult->getVehicleWeight();
         $oldVehicleWeight = $vehicle->getWeight();
 
-        if($currentVehicleWeight == $oldVehicleWeight) {
+        if(is_null($currentVehicleWeight) || $currentVehicleWeight == $oldVehicleWeight) {
             return $brakeTestResult;
         }
 

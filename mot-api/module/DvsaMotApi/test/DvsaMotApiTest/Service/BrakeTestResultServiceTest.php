@@ -30,6 +30,7 @@ use DvsaEntities\Repository\WeightSourceRepository;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass12Test;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass3AndAboveTest;
 use DvsaEntitiesTest\Entity\BrakeTestTypeFactory;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\BrakeTestResultService;
 use DvsaMotApi\Service\Model\BrakeTestResultSubmissionSummary;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
@@ -53,6 +54,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
     const MOCK_REASON_FOR_REJECTION = 'mockReasonForRejection';
     const MOCK_PERFORM_MOT_TEST_ASSERTION = 'mockPerformMotTestAssertion';
     const MOCK_WEIGHT_SOURCE_REPOSITORY = 'mockWeightSourceRepository';
+    const MOCK_FEATURE_TOGGLES = "mockFeatureToggles";
 
     const TYPE_TEST_CLASS_1_2 = true;
     const TYPE_TEST_CLASS_ABOVE_3 = false;
@@ -329,7 +331,8 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                     $mocks[self::MOCK_MOT_TEST_VALIDATOR],
                     $mocks[self::MOCK_REASON_FOR_REJECTION],
                     $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION],
-                    $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY]
+                    $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY],
+                    $mocks[self::MOCK_FEATURE_TOGGLES]
                 ]
             )
             ->setMethods(['createBrakeTestResult'])
@@ -537,6 +540,11 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
 
         $mockWeightSourceRepository = XMock::of(WeightSourceRepository::class);
 
+        $mockFeatureToggles = XMock::of(FeatureToggles::class);
+        $mockFeatureToggles->expects($this->any())
+            ->method("isEnabled")
+            ->willReturn(true);
+
         return [
             self::MOCK_CALCULATOR_CLASS_ABOVE_3 => $mockBrakeTestResultCalculator,
             self::MOCK_CALCULATOR_CLASS_1_2 => $mockBrakeTestResultClass12Calculator,
@@ -550,6 +558,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             self::MOCK_REASON_FOR_REJECTION => $mockReasonForRejectionSrvc,
             self::MOCK_PERFORM_MOT_TEST_ASSERTION => $mockPerformMotTestAssertion,
             self::MOCK_WEIGHT_SOURCE_REPOSITORY => $mockWeightSourceRepository,
+            self::MOCK_FEATURE_TOGGLES => $mockFeatureToggles,
         ];
     }
 
@@ -604,7 +613,8 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             $mocks[self::MOCK_MOT_TEST_VALIDATOR],
             $mocks[self::MOCK_REASON_FOR_REJECTION],
             $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION],
-            $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY]
+            $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY],
+            $mocks[self::MOCK_FEATURE_TOGGLES]
         );
     }
 
