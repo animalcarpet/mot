@@ -7,6 +7,7 @@ use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaEntities\Entity\BrakeTestType;
 use DvsaEntities\Entity\WeightSource;
 use DvsaEntities\Repository\WeightSourceRepository;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
 use DvsaMotApi\Service\BrakeTestResultService;
@@ -34,6 +35,7 @@ class BrakeTestResultServiceFactory implements FactoryInterface
         $motTestValidator = $serviceLocator->get('MotTestValidator');
         $motTestReasonForRejectionService = $serviceLocator->get(MotTestReasonForRejectionService::class);
         $performMotTestAssertion = $serviceLocator->get(ApiPerformMotTestAssertion::class);
+        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
 
         return new BrakeTestResultService(
             $em,
@@ -48,7 +50,8 @@ class BrakeTestResultServiceFactory implements FactoryInterface
             $motTestValidator,
             $motTestReasonForRejectionService,
             $performMotTestAssertion,
-            $weightSourceRepository
+            $weightSourceRepository,
+            $featureToggles
         );
     }
 }
