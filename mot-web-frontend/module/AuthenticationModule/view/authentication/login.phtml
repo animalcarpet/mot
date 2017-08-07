@@ -2,9 +2,9 @@
 use Csrf\CsrfConstants;
 use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
 
-$this->headScript()->appendFile('/assets/javascripts/authentication.js');
 /**
- * @var LoginForm
+ * @var $form LoginForm
+ * @var
  * @var bool      $authError
  * @var bool      $twoFaEnabled
  */
@@ -28,20 +28,24 @@ $this->headTitle('Sign in');
             </div>
         <?php endif; ?>
     <div class="column-half">
-        <form id="Login" name="Login" action="<?php echo $this->url('login'); ?>" method="post">
+        <form id="Login" name="Login" action="<?php echo $this->url('login'); ?>" method="post" autocomplete="new-password">
             <fieldset>
                 <legend class="form-title heading-large">Sign in</legend>
+                <input type="text" id="IDToken1" name="IDToken1" value="" class="form-control
+                form-control-1-2" tabindex="-1" style="width: 1px; position: absolute; left: -9999px;">
+                <input type="password" id="IDToken2" name="IDToken2" autocomplete="off" value="" class="form-control
+                form-control-1-2" tabindex="-1" style="width: 1px; position: absolute; left: -9999px;">
                 <?php
                     echo $this->partial(
                         'partial/gds/form/control',
                         [
-                            'element' => $form->getUsernameField(),
+                            'element' => $usernameField,
                         ]
                     );
                     echo $this->partial(
                         'partial/gds/form/control',
                         [
-                            'element' => $form->getPasswordField(),
+                            'element' => $passwordField,
                         ]
                     );
                 ?>

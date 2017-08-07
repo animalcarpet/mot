@@ -15,6 +15,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Authn\AuthenticationResultCode;
 use Zend\Authentication\AuthenticationService;
+use Zend\Form\ElementInterface;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
@@ -143,9 +144,12 @@ class SecurityController extends AbstractDvsaActionController
             }
         } else {
             $goto = $this->gotoService->encodeGoto($rawGoto);
+            $loginForm = new LoginForm();
             $viewVars = [
                 'gotoUrl' => $goto,
-                'form' => new LoginForm(),
+                'usernameField' => $this->hashFormField($loginForm->getUsernameField()),
+                'passwordField' => $this->hashFormField($loginForm->getPasswordField()),
+                'form' => $loginForm,
             ];
 
             return $this->buildLoginPageViewModel($viewVars);
@@ -163,11 +167,12 @@ class SecurityController extends AbstractDvsaActionController
         }
         $request = $this->request;
         $loginForm = new LoginForm();
-        $postArray = $request->getPost()->toArray();
-        $loginForm->setData($postArray);
+        $loginForm->setData($this->filterPostArrayForForm());
         if (false === $loginForm->isValid()) {
             $loginForm->resetPassword();
             $viewVars = [
+                'usernameField' => $this->hashFormField($loginForm->getUsernameField()),
+                'passwordField' => $this->hashFormField($loginForm->getPasswordField()),
                 'form' => $loginForm,
                 'gotoUrl' => $request->getPost(self::PARAM_GOTO),
             ];
@@ -215,6 +220,8 @@ class SecurityController extends AbstractDvsaActionController
         ) {
             $loginForm->resetPassword();
             $viewVars = [
+                'usernameField' => $this->hashFormField($loginForm->getUsernameField()),
+                'passwordField' => $this->hashFormField($loginForm->getPasswordField()),
                 'form' => $loginForm,
                 'gotoUrl' => $this->request->getPost(self::PARAM_GOTO),
                 'authError' => true,
@@ -224,5 +231,32 @@ class SecurityController extends AbstractDvsaActionController
         }
 
         return $this->accountLocketViewModelBuilder->createFromAuthenticationResponse($result);
+    }
+
+    private function filterPostArrayForForm()
+    {
+        $postArray = $this->request->getPost()->toArray();
+        $filteredArray = [];
+
+        foreach ($postArray as $key => $value) {
+            if (substr($key, 0, 5) === LoginForm::USERNAME) {
+                $filteredArray[LoginForm::USERNAME] = $value;
+            }
+            if (substr($key, 0, 5) === LoginForm::PASSWORD) {
+                $filteredArray[LoginForm::PASSWORD] = $value;
+            }
+        }
+
+        return $filteredArray;
+    }
+
+    private function hashFormField(ElementInterface $formField)
+    {
+        $hash = hash('crc32', ''.microtime(true));
+
+        $formField->setName($formField->getName().$hash);
+        $formField->setAttribute('id', $formField->getName());
+
+        return $formField;
     }
 }
