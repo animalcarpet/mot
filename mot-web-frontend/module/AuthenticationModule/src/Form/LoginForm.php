@@ -10,8 +10,8 @@ use Zend\InputFilter\InputFilter;
 
 class LoginForm extends Form
 {
-    const USERNAME = 'IDToken1';
-    const PASSWORD = 'IDToken2';
+    const USERNAME = '_tid1';
+    const PASSWORD = '_tid2';
 
     const MSG_AUTH_FAIL = 'There was a problem with your User ID or password';
 
@@ -27,6 +27,7 @@ class LoginForm extends Form
             ->setAttribute('divModifier', 'form-group')
             ->setAttribute('inputModifier', '1-2')
             ->setAttribute('type', 'text')
+            ->setAttribute('autocomplete', 'off')
         );
         $this->add((new Text())
             ->setName(self::PASSWORD)
@@ -37,6 +38,7 @@ class LoginForm extends Form
             ->setAttribute('divModifier', 'form-group')
             ->setAttribute('inputModifier', '1-2')
             ->setAttribute('type', 'password')
+            ->setAttribute('autocomplete', 'new-password')
         );
 
         $filter = new InputFilter();

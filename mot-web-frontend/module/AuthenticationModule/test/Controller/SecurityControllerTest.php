@@ -11,6 +11,7 @@ use Core\Action\RedirectToUrl;
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\SecurityController;
+use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\IdentitySessionState;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\WebLoginResult;
@@ -259,7 +260,7 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
     public function withValidPOST()
     {
         $this->request->setMethod('POST');
-        $this->request->setPost(new Parameters(['IDToken1' => 'username', 'IDToken2' => 'password']));
+        $this->request->setPost(new Parameters([LoginForm::USERNAME.'739187391' => 'username', LoginForm::PASSWORD.'739187391' => 'password']));
     }
 
     public function withInvalidPOST()

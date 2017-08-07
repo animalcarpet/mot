@@ -25,7 +25,7 @@ if ($gtmData) {
         <br>
 
         <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
-        <form id="Login" name="Login" method="post" action="<?php echo $this->url(RegisteredCardController::ROUTE); ?>" >
+        <form id="Login" name="Login" method="post" action="<?php echo $this->url(RegisteredCardController::ROUTE); ?>" autocomplete="new-password" >
             <?php echo $this->csrfToken(); ?>
             <fieldset>
                 <?php
