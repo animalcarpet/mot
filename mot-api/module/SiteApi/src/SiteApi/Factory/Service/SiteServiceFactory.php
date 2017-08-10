@@ -19,7 +19,6 @@ use DvsaEntities\Entity\SiteContactType;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Entity\SiteType;
 use DvsaEntities\Entity\VehicleClass;
-use DvsaEntities\Repository\SiteRiskAssessmentRepository;
 use DvsaEventApi\Service\EventService;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapMapper;
 use SiteApi\Service\SiteService;

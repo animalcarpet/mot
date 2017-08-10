@@ -8,11 +8,10 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\PaginationCalculator;
-use DvsaCommon\Utility\TypeCheck;
 use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaEntities\Entity\Site;
 use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\SiteRepository;
+use DvsaEntities\Repository\SiteRiskAssessmentRepository;
 
 class AuthorisedExaminerStatisticsService implements AutoWireableInterface
 {
@@ -20,9 +19,11 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
     private $authorisationService;
     private $authorisedExaminerSiteMapper;
     private $organisationRepository;
+    private $siteRiskAssessmentRepository;
 
     public function __construct(
         SiteRepository $siteRepository,
+        SiteRiskAssessmentRepository $siteRiskAssessmentRepository,
         OrganisationRepository $organisationRepository,
         MotAuthorisationServiceInterface $authorisationService,
         AuthorisedExaminerSiteMapper $authorisedExaminerSiteMapper
@@ -31,6 +32,7 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
         $this->organisationRepository = $organisationRepository;
         $this->authorisedExaminerSiteMapper = $authorisedExaminerSiteMapper;
         $this->siteRepository = $siteRepository;
+        $this->siteRiskAssessmentRepository = $siteRiskAssessmentRepository;
     }
 
     /**
@@ -47,7 +49,8 @@ class AuthorisedExaminerStatisticsService implements AutoWireableInterface
         $offset = PaginationCalculator::calculateItemOffsetFromPageNumber($page, $limit);
         $siteCount = $this->organisationRepository->getOrganisationSiteCount($aeId);
         $this->throw404IfPageIsOutOfBounds($offset, $siteCount);
-        $sites = $this->siteRepository->getSitesTestQualityForOrganisationId($aeId, $offset, $limit);
+        $sites = $this->siteRepository->getSitesForOrganisationTestQualityInformation($aeId, $offset, $limit);
+        $sites = $this->siteRiskAssessmentRepository->getLastAssessmentsForMultipleSites($sites, $aeId);
 
         return $this->returnDto($sites, $siteCount);
     }
