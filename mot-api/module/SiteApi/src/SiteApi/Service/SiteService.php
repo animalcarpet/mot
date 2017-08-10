@@ -422,9 +422,8 @@ class SiteService extends AbstractService
             throw new NotFoundException('Site', $id);
         }
 
-        $lastAssessment = $site->getLastSiteAssessment();
-        $organisationId = (!empty($lastAssessment)) ? $lastAssessment->getAeOrganisationId() : null;
-        $siteAssessments = $this->siteRiskAssessmentRepository->getLatestAssessmentsForSite($id, $organisationId, 2);
+        $organisationId = $site->getOrganisation()->getId();
+        $siteAssessments = $this->siteRiskAssessmentRepository->getLastAssessmentsForSite($id, $organisationId);
 
         return $this->vtsMapper->toDtoWithLatestAssessments($site, $siteAssessments);
     }

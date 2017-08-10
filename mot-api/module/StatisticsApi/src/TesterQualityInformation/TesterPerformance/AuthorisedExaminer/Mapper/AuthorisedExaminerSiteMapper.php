@@ -6,6 +6,7 @@ use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\RiskAssessmentDto;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Dto\Contact\AddressDto;
+use DvsaEntities\Entity\EnforcementSiteAssessment;
 
 class AuthorisedExaminerSiteMapper implements AutoWireableInterface
 {
@@ -40,26 +41,30 @@ class AuthorisedExaminerSiteMapper implements AutoWireableInterface
 
     private function extractCurrentAssessment(array $site)
     {
-        if ($site["current_score"] === null) {
+        if ($site["current_assessment"] === null) {
             return null;
         }
 
+        /** @var EnforcementSiteAssessment $currentAssessment */
+        $currentAssessment = $site['current_assessment'];
         $riskAssessmentDto = new RiskAssessmentDto();
-        $riskAssessmentDto->setScore($site["current_score"]);
-        $riskAssessmentDto->setDate(new \DateTime($site["current_visit_date"]));
+        $riskAssessmentDto->setScore($currentAssessment->getSiteAssessmentScore());
+        $riskAssessmentDto->setDate($currentAssessment->getVisitDate());
 
         return $riskAssessmentDto;
     }
 
     private function extractPreviousAssessment(array $site)
     {
-        if ($site["previous_score"] === null) {
+        if ($site["previous_assessment"] === null) {
             return null;
         }
 
+        /** @var EnforcementSiteAssessment $previousAssessment */
+        $previousAssessment = $site['previous_assessment'];
         $riskAssessmentDto = new RiskAssessmentDto();
-        $riskAssessmentDto->setScore($site["previous_score"]);
-        $riskAssessmentDto->setDate(new \DateTime($site["previous_visit_date"]));
+        $riskAssessmentDto->setScore($previousAssessment->getSiteAssessmentScore());
+        $riskAssessmentDto->setDate($previousAssessment->getVisitDate());
 
         return $riskAssessmentDto;
     }

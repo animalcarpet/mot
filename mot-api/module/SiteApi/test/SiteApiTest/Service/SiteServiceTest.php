@@ -28,6 +28,7 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\EnforcementSiteAssessment;
 use DvsaEntities\Entity\FacilityType;
+use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\PhoneContactType;
 use DvsaEntities\Entity\Site;
@@ -61,6 +62,7 @@ use DvsaEntities\Repository\SiteStatusRepository;
 class SiteServiceTest extends AbstractServiceTestCase
 {
     const SITE_ID = 99999;
+    const ORG_ID = 123;
     const SITE_NR = 'V12345';
 
     /** @var SiteService */
@@ -194,7 +196,7 @@ class SiteServiceTest extends AbstractServiceTestCase
             }
         }
 
-        $this->siteRiskAssessmentRepository->expects($this->any())->method('getLatestAssessmentsForSite')
+        $this->siteRiskAssessmentRepository->expects($this->any())->method('getLastAssessmentsForSite')
             ->willReturn([$this->getTestAssessment()]);
 
         //  --  check permission    --
@@ -345,11 +347,15 @@ class SiteServiceTest extends AbstractServiceTestCase
 
     public function getSiteEntity()
     {
+        $organizationEntity = new Organisation();
+        $organizationEntity->setId(self::ORG_ID);
+
         $siteEntity = new Site();
         $siteEntity
             ->setId(self::SITE_ID)
             ->setSiteNumber(self::SITE_NR)
-            ->setType((new SiteType())->setId(1));
+            ->setType((new SiteType())->setId(1))
+            ->setOrganisation($organizationEntity);
 
         return $siteEntity;
     }

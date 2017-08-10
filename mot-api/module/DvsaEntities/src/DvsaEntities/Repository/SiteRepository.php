@@ -603,88 +603,21 @@ class SiteRepository extends AbstractMutableRepository
      *
      * @return array
      */
-    public function getSitesTestQualityForOrganisationId($aeId, $offset, $itemsPerPage)
+    public function getSitesForOrganisationTestQualityInformation($aeId, $offset, $itemsPerPage)
     {
         $sql =
          'SELECT site.id, site.name, site.site_number,
-            current.visit_date AS current_visit_date, current.site_assessment_score AS current_score,
-            previous.visit_date AS previous_visit_date, previous.site_assessment_score AS previous_score,
+            esa.visit_date AS current_visit_date, esa.site_assessment_score AS current_score,
             address.address_line_1, address.address_line_2, address.address_line_3, address.address_line_4,
             address.town, address.postcode, address.country
           FROM site
           JOIN organisation_site_map osm ON (site.id = osm.site_id AND osm.organisation_id = :AE_ID AND osm.end_date IS NULL)
+          LEFT JOIN  enforcement_site_assessment esa on esa.id = 
+              (SELECT id FROM enforcement_site_assessment ea WHERE site_id = site.id AND ae_organisation_id = osm.organisation_id ORDER BY visit_date DESC, id DESC LIMIT 1)
           LEFT JOIN site_contact_detail_map scdm ON site.id = scdm.site_id
           LEFT JOIN contact_detail cd ON scdm.contact_detail_id = cd.id
           LEFT JOIN address ON cd.address_id = address.id
-
-          LEFT JOIN (
-            SELECT * FROM (
-  	          SELECT site_id, visit_date, site_assessment_score, @currcount := IF(@currvalue = site_id, @currcount + 1, 1) AS rank,
-                @currvalue := site_id as site_id_current,
-                @sequence := @sequence+1
-
-              FROM (
-                SELECT esa.site_id, esa.visit_date, esa.site_assessment_score
-                FROM enforcement_site_assessment esa
-                WHERE esa.visit_date >= (
-                	SELECT DATE(MIN(orsm.start_date))
-                	FROM organisation_site_map orsm 
-                	WHERE (
-                    	esa.site_id = orsm.site_id
-                        AND orsm.organisation_id = :AE_ID
-                        AND (
-                          orsm.end_date IS NULL
-                          OR orsm.start_date > (
-                            SELECT COALESCE(MAX(osm2.start_date), 0)
-                            FROM organisation_site_map osm2
-                            WHERE esa.site_id = osm2.site_id
-                            AND osm2.organisation_id <> :AE_ID
-                          )
-                       )
-                    )
-                )
-                GROUP BY esa.site_id, visit_date
-                ORDER BY esa.site_id ASC , esa.visit_date DESC, esa.id DESC
-              ) tmp,
-              (SELECT @currvalue := NULL, @sequence:=0, @currcount:=NULL) counter
-            ) esa
-            WHERE rank = 1
-          ) current ON site.id = current.site_id
-
-          LEFT JOIN (
-            SELECT * FROM (
-  	          SELECT site_id, visit_date, site_assessment_score, @currcount2 := IF(@currvalue2 = site_id, @currcount2 + 1, 1) AS rank,
-                @currvalue2 := site_id as site_id_current,
-                @sequence2 := @sequence2+1
-
-              FROM (
-                SELECT esa.site_id, esa.visit_date, esa.site_assessment_score
-                FROM enforcement_site_assessment esa
-                WHERE esa.visit_date >= (
-                	SELECT DATE(MIN(orsm.start_date))
-                	FROM organisation_site_map orsm 
-                	WHERE (
-                    	esa.site_id = orsm.site_id
-                        AND orsm.organisation_id = :AE_ID
-                        AND (
-                          orsm.end_date IS NULL
-                          OR orsm.start_date > (
-                            SELECT COALESCE(MAX(osm2.start_date), 0)
-                            FROM organisation_site_map osm2
-                            WHERE esa.site_id = osm2.site_id
-                            AND osm2.organisation_id <> :AE_ID
-                          )
-                       )
-                    )
-                )
-                GROUP BY esa.site_id, visit_date
-                ORDER BY esa.site_id ASC , esa.visit_date DESC, esa.id DESC
-              ) tmp,
-              (SELECT @currvalue2 := NULL, @sequence2:=0, @currcount2:=NULL) counter
-            ) esa
-            WHERE rank = 2
-          ) previous ON site.id = previous.site_id
-          ORDER BY current_score DESC, name ASC
+          group by site.id ORDER BY current_score DESC, name ASC
           LIMIT :LIMIT OFFSET :OFFSET';
 
         $stmt = $this->_em->getConnection()->prepare($sql);
