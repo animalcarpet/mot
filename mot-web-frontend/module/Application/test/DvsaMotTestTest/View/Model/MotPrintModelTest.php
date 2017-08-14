@@ -115,6 +115,10 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider typeProvider
+     *
+     * @param MotTestTypeDto $type
+     * @param bool $isReinspection
+     * @param bool $isAppeal
      */
     public function testNonStandardTypes($type, $isReinspection, $isAppeal)
     {
@@ -138,12 +142,20 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @param MotTestTypeDto|null $testType
+     * @param string $status
+     * @param int|null $prsMotTestNumber
+     *
+     * @return array
+     */
     private function getMotTestDataDto($testType = null, $status = MotTestStatusName::PASSED, $prsMotTestNumber = null)
     {
         if ($testType === null) {
             $testType = (new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST);
         }
 
+        /** @var DvsaVehicle $vehicle */
         $vehicle = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
         if ($prsMotTestNumber === 1 && $status === MotTestStatusname::FAILED) {
@@ -174,10 +186,16 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
 
         return [
             'motDetails' => $motDetails,
-            'vehicle' => $vehicle,
+            'vehicleRegistration' => $vehicle->getRegistration(),
         ];
     }
 
+    /**
+     * @param \stdClass|string $motTestData
+     * @param string $testTypeCode
+     *
+     * @return \stdClass|string
+     */
     private function getMotTestNonStandardTypes($motTestData, $testTypeCode)
     {
         $motTestData->testTypeCode = $testTypeCode;
@@ -185,6 +203,11 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
         return $motTestData;
     }
 
+    /**
+     * @param \stdClass|string $motTestData
+     *
+     * @return \stdClass|string
+     */
     private function getMotTestDataClass4NonMotTest($motTestData)
     {
         $motTestData->status = MotTestStatusName::PASSED;
@@ -193,6 +216,11 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
         return $motTestData;
     }
 
+    /**
+     * @param \stdClass|string $motTestData
+     *
+     * @return \stdClass|string
+     */
     private function getMotTestDataClass4ReTest($motTestData)
     {
         $motTestData->testTypeCode = MotTestTypeCode::RE_TEST;
@@ -200,6 +228,11 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
         return $motTestData;
     }
 
+    /**
+     * @param \stdClass|string $motTestData
+     *
+     * @return \stdClass|string
+     */
     private function getMotTestDataClass4Failed($motTestData)
     {
         $motTestData->status = MotTestStatusName::FAILED;
@@ -207,6 +240,11 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
         return $motTestData;
     }
 
+    /**
+     * @param \stdClass|string $motTestData
+     *
+     * @return \stdClass|string
+     */
     private function getMotTestDataClass4WithPrs($motTestData)
     {
         $motTestData->prsMotTestNumber = '999999991234';
@@ -215,6 +253,11 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
         return $motTestData;
     }
 
+    /**
+     * @param \stdClass|string $motTestData
+     *
+     * @return \stdClass|string
+     */
     private function getMotTestDataClass4WithPrsFailed($motTestData)
     {
         $motTestData->prsMotTestNumber = '999999991234';

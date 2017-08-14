@@ -3,6 +3,7 @@
 namespace DvsaMotTest\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Enum\MotTestStatusName;

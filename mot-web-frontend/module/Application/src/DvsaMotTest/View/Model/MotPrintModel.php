@@ -2,13 +2,13 @@
 
 namespace DvsaMotTest\View\Model;
 
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
+use DvsaMotTest\Dto\MotPrintModelDto;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -18,14 +18,30 @@ class MotPrintModel extends ViewModel
 {
     const DUPLICATE_DOCUMENT_AVAILABLE = 'Duplicate document available';
 
+    /**
+     * @param MotPrintModelDto $params
+     *
+     * @return MotPrintModel
+     */
+    public static function fromDto(MotPrintModelDto $params)
+    {
+        $variables = [
+            'motDetails' => $params->getMotDetails(),
+            'motTestNumber' => $params->getMotTestNumber(),
+            'vehicleRegistration' => $params->getVehicleRegistration(),
+            'isDuplicate' => $params->isDuplicate(),
+        ];
+
+        return new static($variables);
+    }
+
     public function __construct($variables = null, $options = null)
     {
         $code = $prsMotTestNumber = null;
 
         /** @var MotTest $motDetails */
         $motDetails = $variables['motDetails'];
-        /** @var DvsaVehicle $vehicle */
-        $vehicle = $variables['vehicle'];
+
         $motTestNumber = $motDetails->getMotTestNumber();
 
         if ($motDetails !== null) {
@@ -90,7 +106,6 @@ class MotPrintModel extends ViewModel
             'isDuplicate' => $isDuplicate,
             'isDemoMotTest' => $isDemoMotTest,
             'title' => $title,
-            'vehicleRegistration' => $vehicle->getRegistration(),
             'printRoute' => $printUrl->toString(),
             'vtsId' => $vtsId,
         ];

@@ -28,6 +28,7 @@ import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,6 +223,29 @@ public class ConductMotTests extends DslTest {
         // THEN the PDF is successfully generated
         assertThat(HttpStatus.SC_OK, is(pdfResponse.getStatusCode()));
         assertThat("application/pdf", is(pdfResponse.getContentType()));
+    }
+
+    @Test (groups = {"Regression", "BL-5610"})
+    public void canPrintCertificateWhenUsingBackNavigationFromTestResultPage() throws IOException, URISyntaxException {
+        /* After going back from the Test Result page, and clicking the Reprint certificate button,
+           the selfVerify() method will then verify the Duplicate Document Available page is displayed. */
+
+        // Given I am on the Test Results Entry Page
+        TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
+
+        // When I complete all test details with passing data
+        testResultsEntryPage.completeTestDetailsWithPassValues(false);
+
+        // When I complete the test Successfully
+        testResultsEntryPage.clickReviewTestButton().clickFinishButton(TestCompletePage.class);
+
+        // When I go back to the test result page
+        URL testCompletePageUrl = new URL(pageNavigator.getDriver().getCurrentUrl());
+        String motTestNumber = testCompletePageUrl.getPath().split("/")[2];
+        TestSummaryPage testSummaryPage = pageNavigator.goToTestSummaryPage(tester, motTestNumber);
+
+        // And I click the Reprint certificate button
+        testSummaryPage.clickReprintCertificateButton();
     }
 
     @Test(groups = {"regression"}, description = "Tester print a VIS after starting a MOT Test")

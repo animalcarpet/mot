@@ -27,6 +27,7 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilderWeb;
 use DvsaCommon\Utility\AddressUtils;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\Dto\MotPrintModelDto;
 use DvsaMotTest\Form\VrmUpdateForm;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
@@ -209,7 +210,6 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             $countryOfRegistration->setName($draft['countryOfRegistration']['name']);
 
             $draft['vts']['address'] = AddressUtils::stringify($draft['vts']['address']);
-            //$motTest->setVehicleTestingStation($draft['vts']);
         }
 
         $this->odometerViewObject->setValue($draft['odometerReading']['value']);
@@ -249,28 +249,32 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     }
 
     /**
-     * @return \Zend\Http\Response
+     * @return MotPrintModel
+     *
+     * @throws NotFoundException
      */
     public function finishAction()
     {
         $this->assertGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
 
         $motTestNumber = $this->params('motTestNumber');
-        $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
-        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+        /** @var MotTest $motDetails */
+        $motDetails = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
-        $modelPrintViewModel = new MotPrintModel(
-            [
-                'motDetails' => $motTest,
-                'motTestNumber' => $motTestNumber,
-                'vehicle' => $vehicle,
-            ]
-        );
+        if (is_null($motDetails)) {
+            throw new NotFoundException('', '', [], 404, "MOT details not found");
+        }
 
-        $modelPrintViewModel->setTemplate(self::TEMPLATE_REPLACEMENT_CERTIFICATE_FINISH);
+        /** @var string $vehicleRegistration */
+        $vehicleRegistration = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motDetails->getVehicleId(), $motDetails->getVehicleVersion())->getRegistration();
 
-        return $modelPrintViewModel;
+        $motPrintModelDto = new MotPrintModelDto($motDetails, $motTestNumber, $vehicleRegistration);
+        $motPrintModel = MotPrintModel::fromDto($motPrintModelDto);
+
+        $motPrintModel->setTemplate(self::TEMPLATE_REPLACEMENT_CERTIFICATE_FINISH);
+
+        return $motPrintModel;
     }
 
     public function otherVehicleAction()
