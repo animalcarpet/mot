@@ -9,7 +9,6 @@ namespace DvsaMotTest\Controller;
 
 use Application\Helper\PrgHelper;
 use Application\Service\ContingencySessionManager;
-use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\MotTestResultsController;
@@ -44,6 +43,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Validation\ValidationException;
 use DvsaCommon\Validation\ValidationResult;
 use DvsaCommonApi\Service\Exception\UnauthenticatedException;
+use DvsaMotTest\Dto\MotPrintModelDto;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
 use DvsaMotTest\View\Model\MotPrintModel;
@@ -58,9 +58,6 @@ use Zend\View\Model\ViewModel;
  */
 class MotTestController extends AbstractDvsaMotTestController
 {
-    const DATE_FORMAT = 'j F Y';
-    const DATETIME_FORMAT = 'd M Y H:i';
-
     const ODOMETER_VALUE_REQUIRED_MESSAGE = 'Odometer value must be entered to update odometer reading';
     const ODOMETER_FORM_ERROR_MESSAGE = 'The odometer reading should be a valid number between 0 and 999999';
     const TEST_DOCUMENT_VT30 = 'VT30';
@@ -71,17 +68,13 @@ class MotTestController extends AbstractDvsaMotTestController
 
     const ERROR_NO_SITE_FOR_NON_MOT_TEST = 'Uh oh, no site for non-mot test';
 
-    /**
-     * @var MotAuthorisationServiceInterface
-     */
+    /** @var MotAuthorisationServiceInterface $authorisationService */
     private $authorisationService;
 
     /** @var EventManager $eventManager */
     private $eventManager;
 
-    /**
-     * @var OdometerReadingViewObject
-     */
+    /** @var OdometerReadingViewObject $odometerViewObject */
     private $odometerViewObject;
 
     /** @var MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource */
@@ -118,14 +111,6 @@ class MotTestController extends AbstractDvsaMotTestController
                 'motTestNumber' => $motTestNumber,
             ]
         );
-    }
-
-    /**
-     * @return WebPerformMotTestAssertion
-     */
-    private function getPerformMotTestAssertion()
-    {
-        return $this->getServiceLocator()->get(WebPerformMotTestAssertion::class);
     }
 
     public function updateOdometerAction()
@@ -355,7 +340,7 @@ class MotTestController extends AbstractDvsaMotTestController
      * the site id (if an existing one) os recorded or, if an offsite inspection was
      * performed, that a new site and comment record are recorded.
      *
-     * @return \Zend\Http\Response
+     * @return ViewModel
      */
     public function displayTestSummaryAction()
     {
@@ -684,17 +669,24 @@ class MotTestController extends AbstractDvsaMotTestController
         return $response;
     }
 
+    /**
+     * @return MotPrintModel
+     *
+     * @throws NotFoundException
+     */
     public function testResultAction()
     {
-        $motTestNumber = $this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = $this->params()->fromRoute('motTestNumber');
 
-        /**
-         * @var MotTest
-         */
-        $motDetails = $this->tryGetMotTestOrAddErrorMessages();
+        /** @var MotTest $motDetails */
+        $motDetails = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
-        /** @var DvsaVehicle $vehicle */
-        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motDetails->getVehicleId(), $motDetails->getVehicleVersion());
+        if (is_null($motDetails)) {
+            throw new NotFoundException('', '', [], 404, "MOT details not found");
+        }
+
+        /** @var string $vehicleRegistration */
+        $vehicleRegistration = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motDetails->getVehicleId(), $motDetails->getVehicleVersion())->getRegistration();
 
         $this->addTestNumberAndTypeToGtmDataLayer($motTestNumber, $motDetails->getTestTypeCode());
 
@@ -708,41 +700,43 @@ class MotTestController extends AbstractDvsaMotTestController
 
         $this->layout()->setVariable('hideChangeSiteLink', true);
 
-        $model = new MotPrintModel(
-            [
-                'motDetails' => $motDetails,
-                'motTestNumber' => $motTestNumber,
-                'isDuplicate' => false,
-                'vehicle' => $vehicle,
-            ]
-        );
+        $motPrintModelDto = new MotPrintModelDto($motDetails, $motTestNumber, $vehicleRegistration, false);
+        $motPrintModel = MotPrintModel::fromDto($motPrintModelDto);
 
-        $model->setTemplate('dvsa-mot-test/mot-test/print-test-result');
+        $motPrintModel->setTemplate('dvsa-mot-test/mot-test/print-test-result');
 
-        return $model;
+        return $motPrintModel;
     }
 
+    /**
+     * @return MotPrintModel
+     *
+     * @throws NotFoundException
+     */
     public function printDuplicateCertificateResultAction()
     {
         $this->getAuthorizationService()->assertGranted(PermissionInSystem::CERTIFICATE_READ);
 
-        $motTestNumber = $this->params()->fromRoute('motTestNumber', 0);
+        $motTestNumber = $this->params()->fromRoute('motTestNumber');
 
+        /** @var MotTest $motDetails */
         $motDetails = $this->tryGetMotTestOrAddErrorMessages();
+
+        if (is_null($motDetails)) {
+            throw new NotFoundException('', '', [], 404, "MOT details not found");
+        }
+
+        /** @var string $vehicleRegistration */
+        $vehicleRegistration = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motDetails->getVehicleId(), $motDetails->getVehicleVersion())->getRegistration();
 
         $this->layout()->setVariable('hideChangeSiteLink', true);
 
-        $viewModel = new MotPrintModel(
-            [
-                'motDetails' => $motDetails,
-                'motTestNumber' => $motTestNumber,
-                'isDuplicate' => true,
-            ]
-        );
+        $motPrintModelDto = new MotPrintModelDto($motDetails, $motTestNumber, $vehicleRegistration, true);
+        $motPrintModel = MotPrintModel::fromDto($motPrintModelDto);
 
-        $viewModel->setTemplate('dvsa-mot-test/mot-test/print-test-result');
+        $motPrintModel->setTemplate('dvsa-mot-test/mot-test/print-test-result');
 
-        return $viewModel;
+        return $motPrintModel;
     }
 
     protected function assertCanAbortTest(MotTest $motTest)
@@ -785,7 +779,7 @@ class MotTestController extends AbstractDvsaMotTestController
      * Respond to /mot-test/:test_id/review-to-abort
      * Renders the dvsa-mot-test/mot-test/short-summary.phtml.
      *
-     * @return \Zend\Http\Response
+     * @return ViewModel
      */
     public function shortSummaryAction()
     {
@@ -813,7 +807,7 @@ class MotTestController extends AbstractDvsaMotTestController
      * Respond to /mot-test/:test_id/reason-for-aborting
      * Renders the dvsa-mot-test/mot-test/reason-for-aborting-mot-test.phtml.
      *
-     * @return \Zend\Http\Response
+     * @return ViewModel
      */
     public function reasonForAbortingMotTestAction()
     {
@@ -879,7 +873,7 @@ class MotTestController extends AbstractDvsaMotTestController
      *          & /mot-test/:test_id/abort-fail
      * Renders the dvsa-mot-test/mot-test/aborted-mot-test.phtml.
      *
-     * @return \Zend\Http\Response
+     * @return ViewModel
      */
     public function abortedMotTestAction()
     {
@@ -903,21 +897,6 @@ class MotTestController extends AbstractDvsaMotTestController
     private function canTestWithoutOtp()
     {
         return $this->getAuthorizationService()->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP);
-    }
-
-    /**
-     * @param $motTestNumber
-     *
-     * @return Response redirection
-     */
-    private function redirectToSelectLocation($motTestNumber)
-    {
-        $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
-        $route = $routeMatch->getMatchedRouteName();
-        $container = $this->getServiceLocator()->get('LocationSelectContainerHelper');
-        $container->persistConfig(['route' => $route, 'params' => ['motTestNumber' => $motTestNumber]]);
-
-        return $this->redirect()->toRoute('location-select');
     }
 
     private function assertUserOwnsTheMotTest(MotTest $motTest)
@@ -999,21 +978,6 @@ class MotTestController extends AbstractDvsaMotTestController
         }
 
         return $ipAddress;
-    }
-
-    /**
-     * @param string $template
-     * @param array  $variables
-     *
-     * @return ViewModel
-     */
-    private function createViewModel($template, array $variables)
-    {
-        $viewModel = new ViewModel();
-        $viewModel->setTemplate($template);
-        $viewModel->setVariables($variables);
-
-        return $viewModel;
     }
 
     /**

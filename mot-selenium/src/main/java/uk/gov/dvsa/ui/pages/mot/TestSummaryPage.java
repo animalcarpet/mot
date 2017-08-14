@@ -9,13 +9,16 @@ import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.mot.certificates.DuplicateDocumentAvailablePage;
 
 public class TestSummaryPage extends Page {
 
     public static String PATH = "/mot-test/%s/test-summary";
+
     private static final String PAGE_TITLE = "MOT test summary";
     private static final String PAGE_TITLE_REINSPECTION = "MOT testing\nMOT reinspection summary";
     private static final String PAGE_TITLE_RE_TEST = "MOT testing\nMOT re-test summary";
+    private static final String PAGE_TITLE_REPRINT_CERTIFICATE = "MOT testing\nMOT test result";
     private static final String VALID_PIN = "123456";
 
     @FindBy(id = "confirm_test_result") private WebElement finishTestButton;
@@ -26,7 +29,8 @@ public class TestSummaryPage extends Page {
     @FindBy(id = "cancel_test_result") private WebElement backToResultsEntryLink;
     @FindBy(id = "siteidentry") private WebElement siteIdInput;
     @FindBy(css = ".validation-summary li") private WebElement validationMessage;
-    private By siteIdTextBox = By.id("siteidentry");
+    @FindBy(id = "reprint-certificate") private WebElement reprintCertificateButton;
+
     private By expiryDate = By.id("expiryDate");
     private By declarationElement = By.id("declarationStatement");
     private String defect = "//*[@class='col-lg-12']//li[contains(text(),'%s')]";
@@ -38,7 +42,8 @@ public class TestSummaryPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_REINSPECTION, PAGE_TITLE_RE_TEST);
+        return PageInteractionHelper.verifyTitle(this.getTitle(),
+                PAGE_TITLE, PAGE_TITLE_REINSPECTION, PAGE_TITLE_RE_TEST, PAGE_TITLE_REPRINT_CERTIFICATE);
     }
 
     public TestSummaryPage fillSiteIdInput(String siteId) {
@@ -62,6 +67,12 @@ public class TestSummaryPage extends Page {
 
     public void clickStartReinspectionButton() {
         startReinspectionButton.click();
+    }
+
+    public DuplicateDocumentAvailablePage clickReprintCertificateButton() {
+        reprintCertificateButton.click();
+
+        return new DuplicateDocumentAvailablePage(driver);
     }
 
     public String getDeclarationText() {

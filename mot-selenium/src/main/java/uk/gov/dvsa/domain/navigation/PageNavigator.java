@@ -247,18 +247,11 @@ public class PageNavigator {
                 StartTestConfirmationPage.class).refuseToTestVehicle();
     }
 
-    public RegisterCardPage goToRegisterCardPage(User user) throws IOException
-    {
-        injectOpenAmCookieAndNavigateToPath(user, RegisterCardPage.PATH);
-        return new RegisterCardPage(driver);
-    }
-
     public SiteTestQualityPage gotoSiteTestQualityPage(User user, Site site) throws IOException {
         String path = String.format(SiteTestQualityPage.PATH, site.getId());
         injectOpenAmCookieAndNavigateToPath(user, path);
-        SiteTestQualityPage siteTestQualityPage = PageLocator.getSiteTestQualityPage(driver);
 
-        return siteTestQualityPage;
+        return PageLocator.getSiteTestQualityPage(driver);
     }
 
     public VehicleTestingAdvicePage gotoVehicleTestingAdvicePage() throws IOException {
@@ -304,6 +297,12 @@ public class PageNavigator {
         TestSummaryPage testSummaryPage = testResultsEntryPage.completeTestDetailsWithPassValues(false).clickReviewTestButton();
 
         return testSummaryPage;
+    }
+
+    public TestSummaryPage goToTestSummaryPage(User tester, String testNumber) throws URISyntaxException, IOException {
+        navigateToPage(tester, String.format(TestSummaryPage.PATH, testNumber), TestSummaryPage.class);
+
+        return new TestSummaryPage(driver);
     }
 
     private TestResultsEntryPageInterface getTestResultsEntryPage(User tester, Vehicle vehicle) throws URISyntaxException, IOException {
