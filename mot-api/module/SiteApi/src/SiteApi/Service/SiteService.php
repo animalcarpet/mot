@@ -33,6 +33,7 @@ use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\EventSiteMap;
 use DvsaEntities\Entity\FacilityType;
 use DvsaEntities\Entity\NonWorkingDayCountry;
+use DvsaEntities\Entity\OrganisationSiteMap;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
 use DvsaEntities\Entity\SiteFacility;
@@ -422,7 +423,13 @@ class SiteService extends AbstractService
             throw new NotFoundException('Site', $id);
         }
 
-        $organisationId = $site->getOrganisation()->getId();
+        /** @var OrganisationSiteMap $lastAssociation */
+        $lastAssociation = empty($site->getAssociationWithAe()) ? null : $site->getAssociationWithAe()->last();
+        $organisationId = null;
+        if (!empty($lastAssociation)) {
+            $organisationId = $lastAssociation->getOrganisation() ? $lastAssociation->getOrganisation()->getId() : null;
+        }
+
         $siteAssessments = $this->siteRiskAssessmentRepository->getLastAssessmentsForSite($id, $organisationId);
 
         return $this->vtsMapper->toDtoWithLatestAssessments($site, $siteAssessments);
