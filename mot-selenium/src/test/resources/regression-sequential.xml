@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Sequential Regression Tests" parallel="false">
+    <listeners>
+        <listener class-name="uk.gov.dvsa.framework.listeners.FeatureToggleAnnotationTransformer"/>
+    </listeners>
+    <test name="Sequential Regression test suite">
+        <groups>
+            <run>
+                <include name="RegressionSequential"/>
+            </run>
+        </groups>
+        <packages>
+            <package name=".*"/>
+        </packages>
+    </test>
+</suite>

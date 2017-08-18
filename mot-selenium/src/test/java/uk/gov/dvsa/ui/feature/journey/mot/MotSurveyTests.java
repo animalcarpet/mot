@@ -38,9 +38,8 @@ public class MotSurveyTests extends DslTest {
         areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficerOne");
     }
 
-    @Test(groups = {"Regression", "BL-1529"},
-            description = "Verifies that user can navigate back from survey page to login page",
-            enabled = false)
+    @Test(groups = {"RegressionSequential", "BL-1529"},
+            description = "Verifies that user can navigate back from survey page to login page")
     public void backwardNavigationFromSurveyPageToLoginPage() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).clickFinishButton(TestCompletePage.class);
