@@ -235,7 +235,7 @@ class BrakeTestConfigurationClass3AndAboveDto extends AbstractDataTransferObject
     }
 
     /**
-     * @param string $vehicleWeight
+     * @param int $vehicleWeight
      *
      * @return $this
      */
@@ -246,7 +246,7 @@ class BrakeTestConfigurationClass3AndAboveDto extends AbstractDataTransferObject
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getVehicleWeight()
     {

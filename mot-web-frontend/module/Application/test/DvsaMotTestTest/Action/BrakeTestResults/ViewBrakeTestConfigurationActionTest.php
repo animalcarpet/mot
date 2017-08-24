@@ -10,6 +10,7 @@ use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Resource\Item\VehicleClass;
+use Dvsa\Mot\ApiClient\Resource\Item\WeightSource;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Constants\FeatureToggle;
@@ -19,6 +20,8 @@ use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommonTest\TestUtils\XMock;
@@ -44,6 +47,7 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
     const DEFAULT_SERVICE_BRAKE_TEST_TYPE_CODE = 'DefaultServiceBrakeTestTypeCode';
     const DEFAULT_PARKING_BRAKE_TEST_TYPE = 'DefaultParkingBrakeTestType';
     const DEFAULT_PARKING_BRAKE_TEST_TYPE_CODE = 'DefaultParkingBrakeTestTypeCode';
+    const VEHICLE_WEIGHT = 1111;
 
     /**
      * @var stdClass
@@ -213,25 +217,25 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
             ['2', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, true, 0, true, 0],
             ['2', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, false, 0, true, 0],
 
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, true, 1],
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, false, 1],
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, true, 0],
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, false, 0],
+            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
+            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
+            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
+            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
 
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, true, 1],
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, false, 1],
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, true, 0],
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, false, 0],
+            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
+            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
+            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
+            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
 
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, true, 1],
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, false, 1],
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, true, 0],
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, false, 0],
+            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
+            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
+            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
+            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
 
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, true, 1],
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 2, false, 1],
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, true, 0],
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 2, false, 0],
+            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
+            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
+            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
+            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
         ];
     }
 
@@ -301,25 +305,25 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
     {
         return [
             // vehicleClass, ftValue, ftIC, specValue, specIC
-            [3, true, 2, true, 1],
-            [3, true, 2, false, 1],
-            [3, false, 2, false, 0],
-            [3, false, 2, false, 0],
+            [3, true, 3, true, 1],
+            [3, true, 3, false, 1],
+            [3, false, 3, false, 0],
+            [3, false, 3, false, 0],
 
-            [4, true, 2, true, 1],
-            [4, true, 2, false, 1],
-            [4, false, 2, false, 0],
-            [4, false, 2, false, 0],
+            [4, true, 3, true, 1],
+            [4, true, 3, false, 1],
+            [4, false, 3, false, 0],
+            [4, false, 3, false, 0],
 
-            [5, true, 2, true, 1],
-            [5, true, 2, false, 1],
-            [5, false, 2, false, 0],
-            [5, false, 2, false, 0],
+            [5, true, 3, true, 1],
+            [5, true, 3, false, 1],
+            [5, false, 3, false, 0],
+            [5, false, 3, false, 0],
 
-            [7, true, 2, true, 1],
-            [7, true, 2, false, 1],
-            [7, false, 2, false, 0],
-            [7, false, 2, false, 0],
+            [7, true, 3, true, 1],
+            [7, true, 3, false, 1],
+            [7, false, 3, false, 0],
+            [7, false, 3, false, 0],
         ];
     }
 
@@ -332,7 +336,7 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
             [
                 'serviceBrake1TestType' => 'ROLLR',
                 'parkingBrakeTestType' => 'ROLLR',
-                'vehicleWeight' => '',
+                'vehicleWeight' => null,
                 'brakeLineType' => 'dual',
                 'numberOfAxles' => '2',
                 'parkingBrakeNumberOfAxles' => '1',
@@ -413,39 +417,195 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         return [
             //$toggleValue $toggleInvocations $specValue $specInvocations $vehicleWeight $previousTestVehicleWeight $serviceBrake1TestType $parkingBrakeTestType $expected
             // FT = false => specification not used => old logic
-            [false, 2, true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [false, 2, true, 0, 10000, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
-            [false, 2, true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::DECELEROMETER, true],
-            [false, 2, true, 0, 10000, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [false, 2, true, 0, 10000, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [false, 2, true, 0, null, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
-            [false, 2, true, 0, null, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [false, 2, true, 0, null, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [false, 2, true, 0, null, null, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
+            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
+            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::DECELEROMETER, true],
+            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+            [false, 3, true, 0, 10000, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
+            [false, 3, true, 0, null, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
+            [false, 3, true, 0, null, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
+            [false, 3, true, 0, null, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+            [false, 3, true, 0, null, null, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+        ];
+    }
 
-            // FT = true, Spec = true
-            [true, 2, true, 1, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [true, 2, true, 1, 10000, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
-            [true, 2, true, 1, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::DECELEROMETER, true],
-            [true, 2, true, 1, 10000, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [true, 2, true, 1, 10000, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            // $expected value on next two cases changed to false becasue we don't rely on $motTest->getPreviousTestVehicleWight() anymore when FT is on
-            // @see isVehicleWeightPresent() @ ViewBrakeTestConfigurationAction
-            [true, 2, true, 1, null, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, false],
-            [true, 2, true, 1, null, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, false],
-            [true, 2, true, 1, null, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [true, 2, true, 1, null, null, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+    /**
+     * @param $vehicleClass
+     * @param $vehicleWeightExists
+     * @param $vehicleWeightType
+     * @param $brakeTestResultWeightType
+     * @param $expectedSelectedWeightType
+     * @dataProvider dataProviderTestGroupBCorrectWeightTypeIsSelected
+     */
+    public function testGroupBCorrectWeightTypeIsSelected(
+        $vehicleClass,
+        $vehicleWeightExists,
+        $vehicleWeightType,
+        $brakeTestResultWeightType,
+        $expectedSelectedWeightType
+    )
+    {
+        //for testing which Weight Source is selected on list we use the real OfficalWeightSource classifier
+        //it makes those classes coupled but we can check that when logic of this class changes, wrong value will be
+        //selected in action
+        $this->withRealOfficialWeightSourceForVehicle();
 
-            // FT = true, Spec = false
-            [true, 2, false, 1, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [true, 2, false, 1, 10000, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
-            [true, 2, false, 1, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::DECELEROMETER, true],
-            [true, 2, false, 1, 10000, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [true, 2, false, 1, 10000, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [true, 2, false, 1, null, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, false],
-            [true, 2, false, 1, null, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, false],
-            [true, 2, false, 1, null, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [true, 2, false, 1, null, null, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+        $this->withFeatureToggle(true, 3);
+        $this->mockMethods($vehicleClass);
+
+        if($brakeTestResultWeightType == null) {
+            $this->withEmptyBrakeTestResult();
+            //site is needed to load defaults when there's no BrakeTestResult
+            $this->withSite();
+        } else {
+            $this->withBrakeTestServiceBrake1TestType(BrakeTestTypeCode::PLATE);
+            $this->withBrakeTestParkinbgBrakeTestType(BrakeTestTypeCode::PLATE);
+            $this->withBrakeTestWeightType($brakeTestResultWeightType);
+        }
+
+        if($vehicleWeightExists) {
+            $this->withVehicleWeight(self::VEHICLE_WEIGHT);
+        }
+
+        if($vehicleWeightType != null) {
+            $this->withVehicleWeightType($vehicleWeightType);
+        }
+
+        $action = $this->buildAction();
+
+        $actionResult = $action->execute(1);
+
+        $actualPreselectValue = $actionResult->getViewModel()->getVariable('selectedWeightType');
+        $this->assertEquals($expectedSelectedWeightType, $actualPreselectValue);
+    }
+
+    public function dataProviderTestGroupBCorrectWeightTypeIsSelected()
+    {
+        return [
+            //EDIT PAGE - brake test results exist, we select anything is picked if it matches list for given class
+            //class 3
+            [VehicleClassCode::CLASS_3, false, null, WeightSourceCode::VSI, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_3, false, null, WeightSourceCode::MISW, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_3, false, null, WeightSourceCode::ORD_MISW, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_3, false, null, WeightSourceCode::PRESENTED, WeightSourceCode::PRESENTED],
+            [VehicleClassCode::CLASS_3, false, null, WeightSourceCode::NOT_APPLICABLE, WeightSourceCode::NOT_APPLICABLE],
+            //class 4
+            [VehicleClassCode::CLASS_4, false, null, WeightSourceCode::VSI, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_4, false, null, WeightSourceCode::MISW, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_4, false, null, WeightSourceCode::ORD_MISW, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_4, false, null, WeightSourceCode::PRESENTED, WeightSourceCode::PRESENTED],
+            [VehicleClassCode::CLASS_4, false, null, WeightSourceCode::NOT_APPLICABLE, WeightSourceCode::NOT_APPLICABLE],
+            //class 5
+            [VehicleClassCode::CLASS_5, false, null, WeightSourceCode::DGW, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, false, null, WeightSourceCode::DGW_MAM, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, false, null, WeightSourceCode::VSI, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, false, null, WeightSourceCode::ORD_DGW_MAM, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, false, null, WeightSourceCode::CALCULATED, WeightSourceCode::CALCULATED],
+            //class 7
+            [VehicleClassCode::CLASS_7, false, null, WeightSourceCode::DGW, WeightSourceCode::DGW],
+            [VehicleClassCode::CLASS_7, false, null, WeightSourceCode::VSI, WeightSourceCode::DGW],
+            [VehicleClassCode::CLASS_7, false, null, WeightSourceCode::ORD_DGW, WeightSourceCode::DGW],
+            [VehicleClassCode::CLASS_7, false, null, WeightSourceCode::PRESENTED, WeightSourceCode::PRESENTED],
+
+            //CREATE PAGE - brake test result doesn't exist, Vehicle Weight Source is set but Vehicle Weight is empty => we select nothing
+            //TODO before merge, maybe remove checking all possible WeightSourceCodes for null being selected, as we just need one to confirm this case is working
+            //class 3
+            [VehicleClassCode::CLASS_3, false, WeightSourceCode::VSI, null, null],
+            [VehicleClassCode::CLASS_3, false, WeightSourceCode::MISW, null, null],
+            [VehicleClassCode::CLASS_3, false, WeightSourceCode::ORD_MISW, null, null],
+            [VehicleClassCode::CLASS_3, false, WeightSourceCode::PRESENTED, null, null],
+            [VehicleClassCode::CLASS_3, false, WeightSourceCode::NOT_APPLICABLE, null, null],
+            //class 4
+            [VehicleClassCode::CLASS_4, false, WeightSourceCode::VSI, null, null],
+            [VehicleClassCode::CLASS_4, false, WeightSourceCode::MISW, null, null],
+            [VehicleClassCode::CLASS_4, false, WeightSourceCode::ORD_MISW, null, null],
+            [VehicleClassCode::CLASS_4, false, WeightSourceCode::PRESENTED, null, null],
+            [VehicleClassCode::CLASS_4, false, WeightSourceCode::NOT_APPLICABLE, null, null],
+            //class 5
+            [VehicleClassCode::CLASS_5, false, WeightSourceCode::DGW, null, null],
+            [VehicleClassCode::CLASS_5, false, WeightSourceCode::DGW_MAM, null, null],
+            [VehicleClassCode::CLASS_5, false, WeightSourceCode::VSI, null, null],
+            [VehicleClassCode::CLASS_5, false, WeightSourceCode::ORD_DGW_MAM, null, null],
+            [VehicleClassCode::CLASS_5, false, WeightSourceCode::CALCULATED, null, null],
+            //class 7
+            [VehicleClassCode::CLASS_7, false, WeightSourceCode::DGW, null, null],
+            [VehicleClassCode::CLASS_7, false, WeightSourceCode::VSI, null, null],
+            [VehicleClassCode::CLASS_7, false, WeightSourceCode::ORD_DGW, null, null],
+            [VehicleClassCode::CLASS_7, false, WeightSourceCode::PRESENTED, null, null],
+
+            //CREATE PAGE - brake test result doesn't exist, we select first value only when Weight Source is official
+            //tests that ORD's in BrakeTestResult are being mapped to the first option in view
+            [VehicleClassCode::CLASS_3, true, WeightSourceCode::VSI, null, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_4, true, WeightSourceCode::MISW, null, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_3, true, WeightSourceCode::ORD_MISW, null, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_3, true, WeightSourceCode::PRESENTED, null, null],
+            [VehicleClassCode::CLASS_3, true, WeightSourceCode::NOT_APPLICABLE, null, null],
+            //class 4
+            [VehicleClassCode::CLASS_4, true, WeightSourceCode::VSI, null, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_4, true, WeightSourceCode::MISW, null, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_4, true, WeightSourceCode::ORD_MISW, null, WeightSourceCode::VSI],
+            [VehicleClassCode::CLASS_4, true, WeightSourceCode::PRESENTED, null, null],
+            [VehicleClassCode::CLASS_4, true, WeightSourceCode::NOT_APPLICABLE, null, null],
+            //class 5
+            [VehicleClassCode::CLASS_5, true, WeightSourceCode::DGW, null, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, true, WeightSourceCode::DGW_MAM, null, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, true, WeightSourceCode::VSI, null, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, true, WeightSourceCode::ORD_DGW_MAM, null, WeightSourceCode::DGW_MAM],
+            [VehicleClassCode::CLASS_5, true, WeightSourceCode::CALCULATED, null, null],
+            //class 7
+            [VehicleClassCode::CLASS_7, true, WeightSourceCode::DGW, null, WeightSourceCode::DGW],
+            [VehicleClassCode::CLASS_7, true, WeightSourceCode::VSI, null, WeightSourceCode::DGW],
+            [VehicleClassCode::CLASS_7, true, WeightSourceCode::ORD_DGW, null, WeightSourceCode::DGW],
+            [VehicleClassCode::CLASS_7, true, WeightSourceCode::PRESENTED, null, null],
+        ];
+    }
+
+    /**
+     * @param $vehicleWeightType
+     * @param $vehicleWeight
+     * @dataProvider dataProviderTestGroupBCorrectWeightTypeIsSelectedWhenSubmitValidationDidNotPass
+     */
+    public function testGroupBCorrectWeightTypeIsSelectedWhenSubmitValidationDidNotPass(
+        $vehicleWeightType,
+        $vehicleWeight,
+        $expectedSelectedVehicleWeightType
+    )
+    {
+        //for testing which Weight Source is selected on list we use the real OfficalWeightSource classifier
+        //it makes those classes coupled but we can check that when logic of this class changes, wrong value will be
+        //selected in action
+        $this->withRealOfficialWeightSourceForVehicle();
+
+        $this->withFeatureToggle(true, 3);
+        $this->mockMethods();
+
+        $action = $this->buildAction();
+
+        $previousData['vehicleWeight'] = $vehicleWeight;
+        $previousData['weightType'] = $vehicleWeightType;
+        $action->setPreviousActionResult(new ViewActionResult(), $previousData);
+
+        $actionResult = $action->execute(1);
+
+        $actualPreselectValue = $actionResult->getViewModel()->getVariable('selectedWeightType');
+        $this->assertEquals($expectedSelectedVehicleWeightType, $actualPreselectValue);
+    }
+
+    //logic of this preselection is not different between classes, we test only for default class (4)
+    public function dataProviderTestGroupBCorrectWeightTypeIsSelectedWhenSubmitValidationDidNotPass()
+    {
+        return [
+            //invalid weight, but this is after submit validation fails, so we select whatever was picked
+            [WeightSourceCode::VSI, null, WeightSourceCode::VSI],
+            [WeightSourceCode::VSI, "", WeightSourceCode::VSI],
+            [WeightSourceCode::VSI, "blablabla", WeightSourceCode::VSI],
+            //check every possible Weight Type is retained
+            [WeightSourceCode::MISW, "", WeightSourceCode::VSI],
+            [WeightSourceCode::ORD_MISW, "", WeightSourceCode::VSI],
+            [WeightSourceCode::PRESENTED, "", WeightSourceCode::PRESENTED],
+            [WeightSourceCode::NOT_APPLICABLE, "", WeightSourceCode::NOT_APPLICABLE],
+            //valid weight
+            [WeightSourceCode::VSI, "1234", WeightSourceCode::VSI],
         ];
     }
 
@@ -621,14 +781,19 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
     }
 
     /**
-     * @param int    $vehicleWeight
-     * @param int    $previousTestVehicleWeight
+     * @param int $vehicleWeight
+     * @param int $previousTestVehicleWeight
      * @param string $serviceBrake1TestType
      * @param string $parkingBrakeTestType
      *
      * @return $this
      */
-    private function withBrakeTestResults($vehicleWeight, $previousTestVehicleWeight, $serviceBrake1TestType, $parkingBrakeTestType)
+    private function withBrakeTestResults(
+        $vehicleWeight,
+        $previousTestVehicleWeight,
+        $serviceBrake1TestType,
+        $parkingBrakeTestType
+    )
     {
         $this->motTestData->brakeTestResult->vehicleWeight = $vehicleWeight;
         $this->motTestData->brakeTestResult->previousTestVehicleWeight = $previousTestVehicleWeight;
@@ -636,6 +801,16 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         $this->motTestData->brakeTestResult->parkingBrakeTestType = $parkingBrakeTestType;
 
         return $this;
+    }
+
+    private function withBrakeTestWeightType(string $weightType)
+    {
+        $this->motTestData->brakeTestResult->weightType = $weightType;
+    }
+
+    private function withEmptyBrakeTestResult()
+    {
+        $this->motTestData->brakeTestResult = null;
     }
 
     /**
@@ -767,5 +942,43 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         return (new BrakeTestTypeDto())
             ->setName($serviceBrakeTestType)
             ->setCode($serviceBrakeTestTypeCode);
+    }
+
+    private function withBrakeTestServiceBrake1TestType($brakeTestTypeCode)
+    {
+        $this->motTestData->brakeTestResult->serviceBrake1TestType = $brakeTestTypeCode;
+    }
+
+    private function withBrakeTestParkinbgBrakeTestType($brakeTestTypeCode)
+    {
+        $this->motTestData->brakeTestResult->parkingBrakeTestType = $brakeTestTypeCode;
+    }
+
+    private function withVehicleWeight($vehicleWeight)
+    {
+        $this->mockDvsaVehicle->expects($this->any())
+            ->method("getWeight")
+            ->willReturn($vehicleWeight);
+    }
+
+    private function withVehicleWeightType($weightSourceCode)
+    {
+        $data = new stdClass();
+        $data->code = $weightSourceCode;
+        $weightSource = new WeightSource($data);
+
+        $this->mockDvsaVehicle->expects($this->any())
+            ->method("getWeightSource")
+            ->willReturn($weightSource);
+    }
+
+    private function withRealOfficialWeightSourceForVehicle()
+    {
+        $this->officialWeightSourceForVehicle = new OfficialWeightSourceForVehicle();
+
+        $this->brakeTestConfigurationClass3AndAboveMapper = new BrakeTestConfigurationClass3AndAboveMapper(
+            $this->featureToggles,
+            $this->officialWeightSourceForVehicle
+        );
     }
 }

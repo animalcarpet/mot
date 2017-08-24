@@ -2,10 +2,13 @@
 
 namespace DvsaMotTest\Model;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Domain\BrakeTestTypeConfiguration;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface as ConfigDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
+use DvsaCommon\Mapper\BrakeTestWeightSourceMapper;
+use DvsaFeature\FeatureToggles;
 
 /**
  * Class BrakeTestConfigurationClass3AndAboveHelper.
@@ -24,10 +27,17 @@ class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurati
     const PURPOSE_COMMERCIAL = 'commercial';
     const PURPOSE_PERSONAL = 'personal';
 
+    private $vehicleClass;
+
     /**
      * @var BrakeTestConfigurationClass3AndAboveDto
      */
     private $configDto;
+
+    /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
 
     public function __construct(ConfigDto $configDto = null)
     {
@@ -250,5 +260,55 @@ class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurati
                 BrakeTestTypeCode::PLATE,
             ]
         );
+    }
+
+    public function isSelectedWeightType($weightType)
+    {
+        if(empty($this->featureToggles) || !$this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+            return $weightType == $this->configDto->getWeightType();
+        }
+
+        if(empty($weightType) || empty($this->configDto->getWeightType())) {
+            return false;
+        }
+
+        $brakeTestWeightSourceMapper = new BrakeTestWeightSourceMapper();
+
+        $isCheckedWeightTypeOfficial = $brakeTestWeightSourceMapper->isOfficialWeightSource(
+            $this->getVehicleClass(),
+            $weightType
+        );
+
+        $isDtoWeightTypeOfficial = $brakeTestWeightSourceMapper->isOfficialWeightSource(
+            $this->getVehicleClass(),
+            $this->configDto->getWeightType()
+        );
+
+        return $weightType == $this->configDto->getWeightType() || ($isCheckedWeightTypeOfficial && $isDtoWeightTypeOfficial);
+    }
+
+    /**
+     * @return string
+     */
+    public function getVehicleClass()
+    {
+        return $this->vehicleClass;
+    }
+
+    /**
+     * @param string $vehicleClass
+     */
+    public function setVehicleClass($vehicleClass)
+    {
+        $this->vehicleClass = $vehicleClass;
+    }
+
+    /**
+     * We inject feature toggles through setter, so we don't need to modify way this helper is constructed
+     * @param FeatureToggles $featureToggles
+     */
+    public function setFeatureToggles($featureToggles)
+    {
+        $this->featureToggles = $featureToggles;
     }
 }

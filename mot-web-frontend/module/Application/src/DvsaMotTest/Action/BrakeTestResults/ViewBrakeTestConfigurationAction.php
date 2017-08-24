@@ -8,6 +8,7 @@ use Core\Action\AbstractActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResult;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
@@ -98,6 +99,7 @@ class ViewBrakeTestConfigurationAction
      * @param MotTestService $motTestService
      * @param BrakeTestConfigurationService $brakeTestConfigurationService
      * @param BrakeTestConfigurationClass3AndAboveMapper $brakeTestConfigurationClass3AndAboveMapper
+     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         WebPerformMotTestAssertion $webPerformMotTestAssertion,
@@ -154,6 +156,7 @@ class ViewBrakeTestConfigurationAction
         }
 
         $vehicle = $this->getVehicleFromVehicleService($motTest);
+
         $isGroupA = VehicleClassGroup::isGroupA($vehicle->getVehicleClass()->getCode());
         $brakeTestResult = $this->getBrakeTestResultFromMotTest($motTest, $isGroupA);
         $configDtoMapper = $this->getBrakeTestMapperService($isGroupA);
@@ -171,7 +174,7 @@ class ViewBrakeTestConfigurationAction
 
         $brakeTestConfigurationViewModel = $isGroupA ?
             $this->buildViewModelForGroupAVehicle($vehicle, $motTest, $dto, $brakeTestResult) :
-            $this->buildViewModelForGroupBVehicle($vehicle, $motTest, $dto);
+            $this->buildViewModelForGroupBVehicle($vehicle, $motTest, $dto, $brakeTestResult);
 
         $actionResult->setViewModel($brakeTestConfigurationViewModel);
         $actionResult->setTemplate($brakeTestConfigurationViewModel->getTemplate());
@@ -205,30 +208,63 @@ class ViewBrakeTestConfigurationAction
     }
 
     /**
-     * @param DvsaVehicle                             $vehicle
-     * @param MotTest                                 $motTest
+     * @param DvsaVehicle $vehicle
+     * @param MotTest $motTest
      * @param BrakeTestConfigurationClass3AndAboveDto $dto
-     *
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
      * @return ViewModel
      */
     private function buildViewModelForGroupBVehicle(
         DvsaVehicle $vehicle,
         MotTest $motTest,
-        BrakeTestConfigurationClass3AndAboveDto $dto
+        BrakeTestConfigurationClass3AndAboveDto $dto,
+        BrakeTestResultClass3AndAbove $brakeTestResult=null
     ) {
         $brakeTestConfigurationViewModel = new ViewModel();
 
         $configHelper = new BrakeTestConfigurationClass3AndAboveHelper($dto);
+        $configHelper->setVehicleClass($vehicle->getVehicleClass()->getCode());
+        $configHelper->setFeatureToggles($this->featureToggles);
 
         $hasCorrectServiceBrakeTestType =
             in_array($configHelper->getServiceBrakeTestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
         $hasCorrectParkingBrakeTestType =
             in_array($configHelper->getParkingBrakeTestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
 
-        $preselectBrakeTestWeight = $this->isVehicleWeightTypeOptionPreselected($motTest, $configHelper, $hasCorrectServiceBrakeTestType, $hasCorrectParkingBrakeTestType);
+        $weightTypes = $this->getGroupBWeightTypes($vehicle->getVehicleClass()->getCode());
+
+        $isWeightTypePreselected = $this->isVehicleWeightTypeOptionPreselected(
+            $motTest,
+            $configHelper,
+            $hasCorrectServiceBrakeTestType,
+            $hasCorrectParkingBrakeTestType,
+            $brakeTestResult
+        );
 
         $this->setViewModelDataForBothClasses($brakeTestConfigurationViewModel, $motTest, $vehicle);
-        $this->setViewModelDataForGroupB($brakeTestConfigurationViewModel, $vehicle, $configHelper, $preselectBrakeTestWeight);
+
+        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+            if($isWeightTypePreselected) {
+                $selectedWeightType = $this->selectVehicleWeightType($weightTypes, $configHelper);
+            } else {
+                $selectedWeightType = null;
+            }
+
+            $this->setViewModelDataForGroupBWithFeatureToggleOn(
+                $brakeTestConfigurationViewModel,
+                $vehicle,
+                $configHelper,
+                $weightTypes,
+                $selectedWeightType
+            );
+        } else {
+            $this->setViewModelDataForGroupB(
+                $brakeTestConfigurationViewModel,
+                $vehicle,
+                $configHelper,
+                $isWeightTypePreselected
+            );
+        }
         $brakeTestConfigurationViewModel->setTemplate(self::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE);
 
         return $brakeTestConfigurationViewModel;
@@ -426,13 +462,40 @@ class ViewBrakeTestConfigurationAction
         DvsaVehicle $vehicle,
         BrakeTestConfigurationClass3AndAboveHelper $configHelper,
         $preselectBrakeTestWeight
+    )
+    {
+        $brakeTestConfigurationViewModel->setVariables(
+            [
+                'configHelper'             => $configHelper,
+                'showVehicleType'          => $this->displayConfigurationVehicleType($vehicle),
+                'weightTypes'              => $this->getGroupBWeightTypes($vehicle->getVehicleClass()->getCode()),
+                'preselectBrakeTestWeight' => $preselectBrakeTestWeight,
+                'isFeatureToggleOn' => $this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE),
+            ]
+        );
+    }
+
+    /**
+     * @param ViewModel                                  $brakeTestConfigurationViewModel
+     * @param DvsaVehicle                                $vehicle
+     * @param BrakeTestConfigurationClass3AndAboveHelper $configHelper
+     * @param array                                      $weightTypes
+     * @param string                                     $selectedWeightType
+     */
+    private function setViewModelDataForGroupBWithFeatureToggleOn(
+        ViewModel $brakeTestConfigurationViewModel,
+        DvsaVehicle $vehicle,
+        BrakeTestConfigurationClass3AndAboveHelper $configHelper,
+        array $weightTypes,
+        $selectedWeightType
     ) {
         $brakeTestConfigurationViewModel->setVariables(
             [
                 'configHelper' => $configHelper,
                 'showVehicleType' => $this->displayConfigurationVehicleType($vehicle),
-                'weightTypes' => $this->getGroupBWeightTypes($vehicle->getVehicleClass()->getCode()),
-                'preselectBrakeTestWeight' => $preselectBrakeTestWeight,
+                'weightTypes' => $weightTypes,
+                'selectedWeightType' => $selectedWeightType,
+                'isFeatureToggleOn' => $this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE),
             ]
         );
     }
@@ -585,19 +648,38 @@ class ViewBrakeTestConfigurationAction
      * @param BrakeTestConfigurationClass3AndAboveHelper $configHelper
      * @param bool $hasCorrectServiceBrakeTestType
      * @param bool $hasCorrectParkingBrakeTestType
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
      * @return bool
      */
     private function isVehicleWeightTypeOptionPreselected(
         MotTest $motTest,
         BrakeTestConfigurationClass3AndAboveHelper $configHelper,
         $hasCorrectServiceBrakeTestType,
-        $hasCorrectParkingBrakeTestType
+        $hasCorrectParkingBrakeTestType,
+        BrakeTestResultClass3AndAbove $brakeTestResult=null
     )
     {
-        $preselectBrakeTestWeight = (
-            $this->isVehicleWeightPresent($motTest, $configHelper) &&
-            ($hasCorrectServiceBrakeTestType || $hasCorrectParkingBrakeTestType)
-        );
+        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+            $preselectBrakeTestWeight = (
+                //validation error - we always preselect
+                $this->hasPreviousActionResult() ||
+                (
+                //create page - we preselect value when weight is present
+                    (
+                        (empty($brakeTestResult) && $this->isVehicleWeightPresent($motTest, $configHelper)) ||
+                //edit page - we preselect value, because it already was picked
+                        (!empty($brakeTestResult) && $brakeTestResult->getWeightType())
+                    ) &&
+                    ($hasCorrectServiceBrakeTestType || $hasCorrectParkingBrakeTestType)
+                )
+            );
+        } else {
+            $preselectBrakeTestWeight = (
+                $this->isVehicleWeightPresent($motTest, $configHelper) &&
+                ($hasCorrectServiceBrakeTestType || $hasCorrectParkingBrakeTestType)
+            );
+        }
+
         return $preselectBrakeTestWeight;
     }
 
@@ -617,5 +699,21 @@ class ViewBrakeTestConfigurationAction
 
         // to be removed when FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE become true by default
         return $configHelper->getVehicleWeight() || $motTest->getPreviousTestVehicleWight();
+    }
+
+    /**
+     * @param $weightTypes
+     * @param BrakeTestConfigurationClass3AndAboveHelper $configHelper
+     * @return null|string
+     */
+    private function selectVehicleWeightType($weightTypes, $configHelper)
+    {
+        foreach($weightTypes as $code => $name) {
+            if($configHelper->isSelectedWeightType($code)) {
+                return $code;
+            }
+        }
+
+        return null;
     }
 }
