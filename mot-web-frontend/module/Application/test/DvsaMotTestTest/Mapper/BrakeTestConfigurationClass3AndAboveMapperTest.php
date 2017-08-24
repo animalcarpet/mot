@@ -23,7 +23,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObject;
  */
 class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_TestCase
 {
-    const DEFAULT_VEHICLE_WEIGHT = '1111.0';
+    const DEFAULT_VEHICLE_WEIGHT = '1111';
 
     /** @var BrakeTestConfigurationClass3AndAboveMapper */
     private $mapper;
@@ -110,6 +110,11 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $expected = $this->getDefaultDto()
                         ->setVehicleWeight($expectedVehicleWeight); // vehicle weight from previous mot test (see fixture file)
 
+        //with new Brake Test Weight logic we don't populate default value (VSI for class 3,4) when Vehicle has no weight
+        if($toggleValue == true) {
+            $expected->setWeightType(null);
+        }
+
         $actual = $this->mapper->mapToDefaultDto($motTest, $this->dvsaVehicle);
 
         $this->assertEquals($expected, $actual);
@@ -119,10 +124,10 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
     {
         return [
             // ftValue, ftIC, specValue, specIC, expectedWeight
-            [true, 1, true, 1, self::DEFAULT_VEHICLE_WEIGHT],
-            [true, 1, false, 1, ''],
-            [false, 1, false, 0, self::DEFAULT_VEHICLE_WEIGHT],
-            [false, 1, false, 0, self::DEFAULT_VEHICLE_WEIGHT],
+            [true, 2, true, 1, self::DEFAULT_VEHICLE_WEIGHT],
+            [true, 2, false, 1, null],
+            [false, 2, false, 0, self::DEFAULT_VEHICLE_WEIGHT],
+            [false, 2, false, 0, self::DEFAULT_VEHICLE_WEIGHT],
         ];
     }
 
@@ -162,7 +167,7 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
 
     public function testShouldReturnWeightTypeDGWForVehicleClass7AndWeightGreaterThan0()
     {
-        $vehicleWeight = 3000;
+        $vehicleWeight = '3000';
 
         $expected = $this->getDefaultDto()->setVehicleWeight($vehicleWeight)->setWeightType(WeightSourceCode::DGW);
 
@@ -185,7 +190,7 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $vehicleWeight = 0;
 
         $expected = $this->getDefaultDto()
-            ->setVehicleWeight('0')
+            ->setVehicleWeight(0)
             ->setWeightType(WeightSourceCode::VSI);
 
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);

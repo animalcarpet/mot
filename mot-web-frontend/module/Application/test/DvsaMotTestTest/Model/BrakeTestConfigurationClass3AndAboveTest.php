@@ -6,6 +6,8 @@ use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
+use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 
 /**
  * Class BrakeTestConfigurationClass3AndAboveTest.
@@ -177,5 +179,94 @@ class BrakeTestConfigurationClass3AndAboveTest extends \PHPUnit_Framework_TestCa
         $dto->setParkingBrakeNumberOfAxles($testCase['parkingBrakeNumberOfAxles']);
 
         return $dto;
+    }
+
+    /**
+     * @dataProvider dataProviderTestIsSelectedWeightTypeMapsOfficialWeightSources
+     * @param array $correctWeightSourcesInDto
+     * @param string $weightSourceOnList
+     * @param string $vehicleClassCode
+     * @throws \Exception
+     * @internal param string $correctWeightSourceInDto
+     */
+    public function testIsSelectedWeightTypeMapsOfficialWeightSources(
+        $correctWeightSourcesInDto,
+        $weightSourceOnList,
+        $vehicleClassCode
+    )
+    {
+        foreach($correctWeightSourcesInDto as $weightSource) {
+            $this->checkOnlyCorrectWeightSourceIsPassingCondition(
+                $weightSource,
+                $weightSourceOnList,
+                $vehicleClassCode,
+                true
+            );
+        }
+
+        //dataProvider gives us list of correct Weight Sources,
+        //we create list of incorrect values by subtracting correct from all
+        $incorrectWeightSources = array_diff(WeightSourceCode::getAll(), $correctWeightSourcesInDto);
+        foreach($incorrectWeightSources as $weightSource) {
+            $this->checkOnlyCorrectWeightSourceIsPassingCondition(
+                $weightSource,
+                $weightSourceOnList,
+                $vehicleClassCode,
+                false
+            );
+        }
+    }
+
+    private function checkOnlyCorrectWeightSourceIsPassingCondition(
+        $weightSourceInDto,
+        $weightSourceOnList,
+        $vehicleClassCode,
+        $expectedResult
+    )
+    {
+        $dto = new BrakeTestConfigurationClass3AndAboveDto();
+        $dto->setWeightType($weightSourceInDto);
+
+        $configurationHelper = new BrakeTestConfigurationClass3AndAboveHelper($dto);
+        $configurationHelper->setVehicleClass($vehicleClassCode);
+
+        /** @var FeatureToggles | \PHPUnit_Framework_MockObject_MockObject $featureTogglesMock */
+        $featureTogglesMock = XMock::of(FeatureToggles::class);
+        $featureTogglesMock->expects($this->any())
+            ->method("isEnabled")
+            ->willReturn(true);
+        $configurationHelper->setFeatureToggles($featureTogglesMock);
+
+        $this->assertEquals($expectedResult, $configurationHelper->isSelectedWeightType($weightSourceOnList));
+    }
+
+    public function dataProviderTestIsSelectedWeightTypeMapsOfficialWeightSources()
+    {
+        return [
+            //class 3
+            [
+                [WeightSourceCode::VSI, WeightSourceCode::ORD_MISW, WeightSourceCode::MISW],
+                WeightSourceCode::VSI,
+                VehicleClassCode::CLASS_3
+            ],
+            //class 4
+            [
+                [WeightSourceCode::VSI, WeightSourceCode::ORD_MISW, WeightSourceCode::MISW],
+                WeightSourceCode::VSI,
+                VehicleClassCode::CLASS_4
+            ],
+            //class 5
+            [
+                [WeightSourceCode::ORD_DGW_MAM, WeightSourceCode::DGW, WeightSourceCode::DGW_MAM, WeightSourceCode::VSI],
+                WeightSourceCode::VSI,
+                VehicleClassCode::CLASS_5
+            ],
+            //class 7
+            [
+                [WeightSourceCode::ORD_DGW, WeightSourceCode::DGW, WeightSourceCode::VSI],
+                WeightSourceCode::VSI,
+                VehicleClassCode::CLASS_7
+            ],
+        ];
     }
 }

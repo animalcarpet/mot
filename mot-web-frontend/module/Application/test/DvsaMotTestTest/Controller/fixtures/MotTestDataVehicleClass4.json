@@ -157,5 +157,5 @@
   "odometerUnit" : "mi",
   "odometerResultType" : "OK",
   "vehicleWeight": 1800,
-  "previousTestVehicleWeight": 1111.0
+  "previousTestVehicleWeight": 1111
 }

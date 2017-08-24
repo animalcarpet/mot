@@ -57,7 +57,9 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrake2TestType($this->setServiceBrake2TestType($data));
         $dto->setParkingBrakeTestType(ArrayUtils::tryGet($data, 'parkingBrakeTestType'));
         $dto->setWeightType(ArrayUtils::tryGet($data, 'weightType'));
+
         $dto->setVehicleWeight(ArrayUtils::tryGet($data, 'vehicleWeight'));
+
         $dto->setWeightIsUnladen(ArrayUtils::tryGet($data, 'weightIsUnladen') === '1');
         $dto->setServiceBrakeIsSingleLine(ArrayUtils::tryGet($data, 'brakeLineType') === self::BRAKE_LINE_TYPE_SINGLE);
         $dto->setIsCommercialVehicle(
@@ -86,7 +88,13 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrake1TestType(BrakeTestTypeCode::ROLLER);
         $dto->setServiceBrake2TestType(null);
         $dto->setParkingBrakeTestType(BrakeTestTypeCode::ROLLER);
-        $dto->setWeightType($this->getVehicleWeightType($motTest));
+
+        if($this->isFeatureToggleOn()) {
+            $dto->setWeightType($vehicle->getWeightSource() != null ? $vehicle->getWeightSource()->getCode() : null );
+        } else {
+            $dto->setWeightType($this->getVehicleWeightType($motTest));
+        }
+
         $dto->setWeightIsUnladen(false);
         $dto->setServiceBrakeIsSingleLine(false);
         $dto->setIsCommercialVehicle(false);
@@ -95,6 +103,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrakeControlsCount(1);
         $dto->setNumberOfAxles(2);
         $dto->setParkingBrakeNumberOfAxles(1);
+
         $dto->setVehicleWeight($this->getDefaultVehicleWeight($motTest, $vehicle));
 
         // the defaults for brake test type from VTS will be populated in controller (BrakeTestResultsController)
@@ -130,7 +139,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
      */
     private function getDefaultVehicleWeight(MotTest $motTest, DvsaVehicle $vehicle = null)
     {
-        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+        if($this->isFeatureToggleOn()) {
             return $this->getDefaultVehicleWeightFromVehicle($vehicle);
         }
         else {
@@ -180,7 +189,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
             return $vehicle->getWeight();
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -218,5 +227,10 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         }
 
         return WeightSourceCode::VSI;
+    }
+
+    private function isFeatureToggleOn()
+    {
+        return $this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE);
     }
 }

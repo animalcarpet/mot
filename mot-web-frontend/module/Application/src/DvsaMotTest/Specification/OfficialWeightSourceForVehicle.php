@@ -85,9 +85,7 @@ class OfficialWeightSourceForVehicle implements SpecificationInterface
 
         return
             !empty($classObj) &&
-            $classObj instanceof VehicleClass &&
-            !empty($classObj->getCode()) &&
-            !empty($classObj->getName());
+            !empty($classObj->getCode());
     }
 
     /**
@@ -100,9 +98,7 @@ class OfficialWeightSourceForVehicle implements SpecificationInterface
 
         return
             !empty($sourceObj) &&
-            $sourceObj instanceof WeightSource &&
-            !empty($sourceObj->getCode()) &&
-            !empty($sourceObj->getName());
+            !empty($sourceObj->getCode());
     }
 
     /**
