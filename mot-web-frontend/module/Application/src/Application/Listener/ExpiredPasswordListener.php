@@ -18,6 +18,7 @@ use Zend\Mvc\MvcEvent;
 class ExpiredPasswordListener
 {
     const CLAIM_ACCOUNT_SUCCESS_ROUTE = 'account/claim/success';
+    const LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE = 'lost-or-forgotten-card';
 
     /**
      * @var MotIdentityProviderInterface
@@ -121,6 +122,10 @@ class ExpiredPasswordListener
             ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/change-password/confirmation',
             'survey',
             'cookies',
+            self::LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE,
+            self::LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE . '/security-questions',
+            self::LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE . '/confirmation',
+            self::LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE . '/already-ordered',
         ];
     }
 }
