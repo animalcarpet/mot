@@ -2,6 +2,8 @@
 
 namespace PersonApiTest\Service;
 
+use Dvsa\Mot\AuditApi\Service\HistoryAuditService;
+use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use NotificationApi\Service\NotificationService;
@@ -15,6 +17,9 @@ use DvsaCommon\Database\Transaction;
 
 class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
 {
+    const DEFAULT_USER_ID = 1010;
+    const DEFAULT_USERNAME = 'tester1';
+
     /** @var NotificationService | \PHPUnit_Framework_MockObject_MockObject */
     private $notificationService;
 
@@ -28,25 +33,52 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $service;
 
+    /**
+     * @var PersonRepository | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $personRepository;
+
+    /**
+     * @var HistoryAuditService | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $historyAuditService;
+
+    /**
+     * @var NotificationRepository | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $notificationRepository;
+
+    /**
+     * @var PasswordDetailRepository | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $passwordDetailRepository;
+
+    /**
+     * @var Transaction | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $transaction;
+
     public function setup()
     {
-        $this->user = new Person();
-        $this->user->setId(1010);
+        $this->withUser(self::DEFAULT_USER_ID);
 
         $this->notificationService = XMock::of(NotificationService::class);
+        $this->personRepository = XMock::of(PersonRepository::class);
+        $this->historyAuditService = Xmock::of(HistoryAuditService::class);
+        $this->notificationRepository = XMock::of(NotificationRepository::class);
 
-        $personRepository = XMock::of(PersonRepository::class);
-        $personRepository
-            ->expects($this->any())
-            ->method('get')
-            ->willReturn($this->user);
+        $this->withPersonRepository();
+
+        $this->passwordDetailRepository = XMock::of(PasswordDetailRepository::class);
+        $this->transaction = XMock::of(Transaction::class);
 
         $this->service = new PasswordExpiryNotificationService(
             $this->notificationService,
-            XMock::of(NotificationRepository::class),
-            $personRepository,
-            XMock::of(PasswordDetailRepository::class),
-            XMock::of(Transaction::class)
+            $this->notificationRepository,
+            $this->personRepository,
+            $this->passwordDetailRepository,
+            $this->transaction,
+            $this->historyAuditService
         );
     }
 
@@ -69,6 +101,29 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
             [2],
             [3],
             [7],
+        ];
+    }
+
+    /**
+     * @dataProvider removeDataProvider
+     */
+    public function testRemovalOfNotifications($notificationsToRemove)
+    {
+        $this->withNotificationRepository($notificationsToRemove);
+        $this->withHistoryAuditService();
+
+        $this->service->remove(self::DEFAULT_USERNAME);
+    }
+
+    public function removeDataProvider()
+    {
+        $notification = new Notification();
+
+        return [
+            [ [] ],
+            [ [$notification] ],
+            [ [$notification, $notification] ],
+            [ [$notification, $notification, $notification] ],
         ];
     }
 
@@ -96,5 +151,56 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
         }
 
         return sprintf(PasswordExpiryNotificationService::EXPIRY_IN_XX_DAYS, $day);
+    }
+
+    private function withHistoryAuditService()
+    {
+        $this->historyAuditService
+            ->expects($this->once())
+            ->method('setUser')
+            ->with($this->user);
+
+        $this->historyAuditService
+            ->expects($this->once())
+            ->method('execute');
+    }
+
+    private function withPersonRepository()
+    {
+        $this->personRepository
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($this->user);
+
+        $this->personRepository
+            ->expects($this->any())
+            ->method('getByIdentifier')
+            ->willReturn($this->user);
+    }
+
+    private function withUser($userId)
+    {
+        $this->user = new Person();
+        $this->user->setId($userId);
+    }
+
+    private function withNotificationRepository(array $notificationsToReturn = [])
+    {
+        $this->notificationRepository
+            ->expects($this->any())
+            ->method('findAllByTemplateId')
+            ->with($this->user->getId(), Notification::TEMPLATE_PASSWORD_EXPIRY)
+            ->willReturn($notificationsToReturn);
+
+        $notificationCount = count($notificationsToReturn);
+        $shouldFlush = $notificationCount > 0;
+
+        $this->notificationRepository
+            ->expects( true === $shouldFlush ? $this->once() : $this->never() )
+            ->method('flush');
+
+        $this->notificationRepository
+            ->expects($this->exactly($notificationCount))
+            ->method('remove');
     }
 }

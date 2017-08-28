@@ -2,6 +2,7 @@
 
 namespace PersonApi\Service;
 
+use Dvsa\Mot\AuditApi\Service\HistoryAuditService;
 use DvsaEntities\Entity\PasswordDetail;
 use NotificationApi\Service\NotificationService;
 use NotificationApi\Dto\Notification;
@@ -15,28 +16,41 @@ class PasswordExpiryNotificationService
     const EXPIRY_DAY_TOMORROW = 'tomorrow';
     const EXPIRY_IN_XX_DAYS = 'in %d days';
 
+    /** @var NotificationService */
     private $notificationService;
+    /** @var NotificationRepository */
     private $notificationRepository;
+    /** @var PersonRepository */
     private $personRepository;
+    /** @var PasswordDetailRepository */
+    private $passwordDetail;
+    /** @var Transaction */
     private $transaction;
+    /** @var HistoryAuditService */
+    private $historyAuditService;
 
     public function __construct(
         NotificationService $notificationService,
         NotificationRepository $notificationRepository,
         PersonRepository $personRepository,
         PasswordDetailRepository $passwordDetailRepository,
-        Transaction $transaction
+        Transaction $transaction,
+        HistoryAuditService $historyAuditService
     ) {
         $this->notificationService = $notificationService;
         $this->notificationRepository = $notificationRepository;
         $this->personRepository = $personRepository;
         $this->passwordDetail = $passwordDetailRepository;
         $this->transaction = $transaction;
+        $this->historyAuditService = $historyAuditService;
     }
 
     /**
      * @param int $personId
      * @param int $day
+     *
+     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     * @throws \Exception
      *
      * @return int
      */
@@ -96,6 +110,12 @@ class PasswordExpiryNotificationService
     {
         $person = $this->personRepository->getByIdentifier($login);
         $notifications = $this->notificationRepository->findAllByTemplateId($person->getId(), Notification::TEMPLATE_PASSWORD_EXPIRY);
+
+        // ensure that mysql session variable @app_user_id is set for the sql triggers to execute successfully
+        // this notification removal is being executed by user who is not logged in therefore ApiAuthenticationListener is not triggered
+        $this->historyAuditService->setUser($person);
+        $this->historyAuditService->execute();
+
         foreach ($notifications as $notification) {
             $this->notificationRepository->remove($notification);
         }

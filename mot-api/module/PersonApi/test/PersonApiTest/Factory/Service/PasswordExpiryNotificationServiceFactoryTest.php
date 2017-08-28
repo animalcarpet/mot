@@ -2,6 +2,7 @@
 
 namespace PersonApiTest\Factory\Service;
 
+use Dvsa\Mot\AuditApi\Service\HistoryAuditService;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use PersonApi\Service\PasswordExpiryNotificationService;
@@ -45,9 +46,14 @@ class PasswordExpiryNotificationServiceFactoryTest extends \PHPUnit_Framework_Te
             ->disableOriginalConstructor()
             ->getMock();
 
+        $historyAuditService = $this->getMockBuilder(HistoryAuditService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $serviceManager->setService(NotificationService::class, XMock::of(NotificationService::class));
         $serviceManager->setService(EntityManager::class, $entityManager);
         $serviceManager->setService('Feature\FeatureToggles', $featureToggles);
+        $serviceManager->setService(HistoryAuditService::class, $historyAuditService);
 
         // Create the factory
         $factory = new PasswordExpiryNotificationServiceFactory();
