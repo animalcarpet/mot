@@ -520,6 +520,21 @@ class MotTestStatusChangeService implements TransactionAwareInterface, AutoWirea
         $this->removeMotTestReasonsForRejectionMarkedForRepair($motTest);
         $this->setMotTestCompletedDate($motTest);
 
+        if (!$motTest->getMotTestType()->getIsDemo()) {
+            // For non-demo tests: update vehicle weight when appropriate
+            if ($this->shouldAmendVehicleWeightInMotTest($motTest)) {
+                $motTest = $this->updateMotTestVehicleWeight($motTest);
+            }
+
+            if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
+                if ($this->shouldAmendVehicleWeightInVehicle($motTest)) {
+                    $vehicle = $this->updateVehicleVehicleWeight($motTest);
+
+                    $motTest->setVehicleVersion($vehicle->getVersion());
+                }
+            }
+        }
+
         //  --  create ReasonForRejection RRS MOT test clone    --
         if (
             $isTestPassed
@@ -568,24 +583,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface, AutoWirea
             $this->motTestRepository->save($passedMotTest);
 
             $motTest->setPrsMotTest($passedMotTest);
-        }
-
-        if ($motTest->getMotTestType()->getIsDemo()) {
-            // end processing for demo tests
-            return $newStatus;
-        }
-
-        // For non-demo tests: update vehicle weight when appropriate
-        if ($this->shouldAmendVehicleWeightInMotTest($motTest)) {
-            $motTest = $this->updateMotTestVehicleWeight($motTest);
-        }
-
-        if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
-            if ($this->shouldAmendVehicleWeightInVehicle($motTest)) {
-                $vehicle = $this->updateVehicleVehicleWeight($motTest);
-
-                $motTest->setVehicleVersion($vehicle->getVersion());
-            }
         }
 
         return $newStatus;
