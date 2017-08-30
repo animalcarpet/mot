@@ -9,12 +9,11 @@ class NationalComponentStatisticApiResource extends AbstractApiResource implemen
 {
     /**
      * @param $group
-     * @param $month
-     * @param $year
+     * @param $monthRange
      * @return NationalComponentStatisticsDto
      */
-    public function getForDate($group, $month, $year)
+    public function getForDate($group, $monthRange)
     {
-        return $this->getSingle(NationalComponentStatisticsDto::class, sprintf('statistic/component-fail-rate/national/group/%s/%s/%s', $group, $year, $month));
+        return $this->getSingle(NationalComponentStatisticsDto::class, sprintf('statistic/component-fail-rate/national/group/%s/%s', $group, $monthRange));
     }
 }

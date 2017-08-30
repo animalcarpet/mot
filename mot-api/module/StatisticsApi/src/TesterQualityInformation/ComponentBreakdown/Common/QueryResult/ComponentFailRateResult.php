@@ -7,6 +7,7 @@ class ComponentFailRateResult
     private $testItemCategoryName;
     private $testItemCategoryId;
     private $failedCount;
+    private $testerId;
 
     public function getTestItemCategoryName()
     {
@@ -42,5 +43,17 @@ class ComponentFailRateResult
         $this->failedCount = (int) $failedCount;
 
         return $this;
+    }
+
+    public function setTesterId($id)
+    {
+        $this->testerId = $id;
+
+        return $this;
+    }
+
+    public function getTesterId()
+    {
+        return $this->testerId;
     }
 }

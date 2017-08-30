@@ -1,5 +1,6 @@
 <?php
 
+use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use TestSupport\Controller;
 use TestSupport\Controller\GdsSurveyController;
 use TestSupport\Controller\VehicleTestingAdviceController;
@@ -47,7 +48,6 @@ return [
             Controller\SiteRoleController::class => Controller\SiteRoleController::class,
             Controller\TwoFactorAuthCardController::class => Controller\TwoFactorAuthCardController::class,
             Controller\QualificationDetailsController::class => Controller\QualificationDetailsController::class,
-            Controller\StatisticsAmazonCacheController::class => Controller\StatisticsAmazonCacheController::class,
             Controller\ClaimAccountController::class => Controller\ClaimAccountController::class,
             Controller\CatUserController::class => Controller\CatUserController::class,
             Controller\SiteRoleNominationController::class => Controller\SiteRoleNominationController::class,
@@ -55,6 +55,9 @@ return [
             Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
             GdsSurveyController::class => GdsSurveyController::class,
             VehicleTestingAdviceController::class => VehicleTestingAdviceController::class,
+        ],
+        'abstract_factories' => [
+            AutoWireFactory::class,
         ],
     ],
     'router' => [
@@ -417,8 +420,31 @@ return [
                         'options' => [
                             'route' => '/clear-statistics-amazon-cache',
                             'defaults' => [
-                                'controller' => Controller\StatisticsAmazonCacheController::class,
-                                'action' => 'removeAll',
+                                'controller' => Controller\StatisticsCacheController::class,
+                                'action' => 'removeAllAmazonCache',
+                            ],
+                        ],
+                    ],
+                    'clearStatisticsDbCache' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/clear-statistics-db-cache',
+                            'defaults' => [
+                                'controller' => Controller\StatisticsCacheController::class,
+                                'action' => 'removeAllDbCache',
+                            ],
+                        ],
+                    ],
+                    'generateStatisticsDbCache' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/generate-statistics-db-cache/:monthsAgo',
+                            'constraints' => [
+                                'monthsAgo' => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => Controller\StatisticsCacheController::class,
+                                'action' => 'generateDbCache',
                             ],
                         ],
                     ],

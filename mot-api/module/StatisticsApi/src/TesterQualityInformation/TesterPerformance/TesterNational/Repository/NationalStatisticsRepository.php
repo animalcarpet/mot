@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Repository;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository\AbstractStatisticsRepository;
+use DvsaCommon\Date\LastMonthsDateRange;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\QueryResult\NationalStatisticsResult;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -12,7 +13,7 @@ use DvsaCommon\Model\ReasonForRejection;
 
 class NationalStatisticsRepository extends AbstractStatisticsRepository implements AutoWireableInterface
 {
-    public function getStatistics($year, $month)
+    public function getStatistics(LastMonthsDateRange $lastMonthsDateRange)
     {
         $rsm = $this->getResultSetMapping()
             ->addScalarResult('totalACount', 'totalACount')
@@ -24,7 +25,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
             ->addScalarResult('totalBTestTime', 'totalBTestTime')
             ->addScalarResult('totalBVehicleAgeInMonths', 'totalBVehicleAgeInMonths');
 
-        $this->setDaysConfiguration($year, $month);
+        $this->setMonthsRangeConfiguration($lastMonthsDateRange);
 
         $query = $this->getNativeQuery($this->getSqlForStatistics(), $rsm)
             ->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST)

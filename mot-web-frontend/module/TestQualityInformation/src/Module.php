@@ -7,10 +7,18 @@
  */
 
 namespace Dvsa\Mot\Frontend\TestQualityInformation;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
 /**
- * Class Module.
+ * TestQualityInformation Module.
  */
-class Module
+class Module implements ConfigProviderInterface
 {
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return include __DIR__.'/../config/module.config.php';
+    }
 }

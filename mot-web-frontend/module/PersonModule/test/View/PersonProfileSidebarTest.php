@@ -12,7 +12,6 @@ use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileSidebar;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
-use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Model\TesterGroupAuthorisationStatus;
 use DvsaCommonTest\TestUtils\XMock;
@@ -23,7 +22,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     const PERSON_ID = 1;
     const CURRENT_URL = '/profile/1';
     const TEST_LOG_URL = 'test-log-url';
-    const TEST_QUALITY_URL = 'test-quality-information/%s';
+    const TEST_QUALITY_URL = 'test-quality-information';
 
     /** @var PersonProfileSidebar */
     private $sut;
@@ -89,28 +88,20 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
 
     public function testTestQualityLinkIsDisplayed()
     {
-        $expectedLink =
-            sprintf(
-            self::TEST_QUALITY_URL,
-                DateUtils::subtractCalendarMonths(
-                    DateUtils::toUserTz(DateUtils::firstOfThisMonth()), 1)
-                    ->format('m/Y')
-            );
-
         $this->personProfileGuardMock->expects($this->any())
             ->method('canViewTestQuality')
             ->willReturn(true);
 
         $this->urlPluginMock->expects($this->any())
             ->method('fromRoute')
-            ->willReturn($expectedLink);
+            ->willReturn(self::TEST_QUALITY_URL);
 
         $sut = $this->createPersonProfileSidebar();
 
         /** @var GeneralSidebarLinkList $relatedLinks */
         $relatedLinks = $sut->getSidebarItems()[2];
 
-        $this->assertSame($relatedLinks->getLinks()[0]->getUrl(), self::CURRENT_URL.'/'.$expectedLink);
+        $this->assertSame($relatedLinks->getLinks()[0]->getUrl(), self::CURRENT_URL.'/'.self::TEST_QUALITY_URL);
     }
 
     public function testTestQualityLinkIsNotDisplayedWhenUserIsNotAllowed()

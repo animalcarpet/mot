@@ -20,10 +20,9 @@ class TesterAtSiteComponentStatisticsController extends AbstractDvsaRestfulContr
     {
         $siteId = $this->params()->fromRoute('siteId');
         $group = $this->params()->fromRoute('group');
-        $year = (int) $this->params()->fromRoute('year');
-        $month = (int) $this->params()->fromRoute('month');
+        $monthRange = (int) $this->params()->fromRoute('monthRange');
 
-        $componentStatisticsDto = $this->service->get($siteId, $testerId, $group, $year, $month);
+        $componentStatisticsDto = $this->service->get($siteId, $testerId, $group, $monthRange);
 
         return $this->returnDto($componentStatisticsDto);
     }

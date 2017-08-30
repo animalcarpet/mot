@@ -20,14 +20,14 @@ class NationalTesterPerformanceStatisticsStorage
     }
 
     /**
-     * @param $year
-     * @param $month
-     *
+     * @param int $year
+     * @param int $month
+     * @param int $numberOfMonths
      * @return ReportDtoInterface
      */
-    public function get($year, $month)
+    public function get(int $year, int $month, int $numberOfMonths)
     {
-        $key = $this->keyGenerator->generateForNationalTesterStatistics($year, $month);
+        $key = $this->keyGenerator->generateForNationalTesterStatistics($year, $month, $numberOfMonths);
 
         /** @var ReportDtoInterface $reportDto */
         $reportDto = $this->storage->getAsDto($key, NationalPerformanceReportDto::class);
@@ -35,9 +35,9 @@ class NationalTesterPerformanceStatisticsStorage
         return $reportDto;
     }
 
-    public function store($year, $month, NationalPerformanceReportDto $data)
+    public function store(int $year, int $month, int $monthRange, NationalPerformanceReportDto $data)
     {
-        $key = $this->keyGenerator->generateForNationalTesterStatistics($year, $month);
+        $key = $this->keyGenerator->generateForNationalTesterStatistics($year, $month, $monthRange);
 
         $this->storage->storeDto($key, $data);
     }

@@ -3,25 +3,24 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Task;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Service\NationalComponentStatisticsService;
-use DvsaCommon\Date\Month;
 
-class NationalComponentBreakdownBatchTask extends AbstractBatchTask
+class NationalComponentBreakdownBatchTask
 {
     private $service;
     private $vehicleGroup;
+    private $monthRange;
 
-    public function __construct($vehicleGroup, Month $month, NationalComponentStatisticsService $service)
+    public function __construct($vehicleGroup, int $monthRange, NationalComponentStatisticsService $service)
     {
-        parent::__construct($month);
         $this->service = $service;
         $this->vehicleGroup = $vehicleGroup;
+        $this->monthRange = $monthRange;
     }
 
     public function execute()
     {
         $this->service->get(
-            $this->getMonth()->getYear(),
-            $this->getMonth()->getMonth(),
+            $this->monthRange,
             $this->vehicleGroup
         );
     }
@@ -29,10 +28,31 @@ class NationalComponentBreakdownBatchTask extends AbstractBatchTask
     public function getName()
     {
         return sprintf(
-            'National component breakdown batch task (Vehicle Group %s)- %s/%s',
+            'National component breakdown batch task (Vehicle Group %s) - %s',
             $this->vehicleGroup,
-            $this->getMonth()->getYear(),
-            $this->getMonth()->getMonth()
+            $this->monthRange
         );
     }
+
+    public function getMonthRange()
+    {
+        return $this->monthRange;
+    }
+
+    /**
+     * @param NationalComponentBreakdownBatchTask[] $tasks
+     *
+     * @return NationalComponentBreakdownBatchTask[]
+     */
+    public static function sortTaskByMonthRange(array $tasks)
+    {
+        $taskComparator = function (NationalComponentBreakdownBatchTask $taskA, NationalComponentBreakdownBatchTask $taskB) {
+            return $taskA->getMonthRange() <=> $taskB->getMonthRange();
+        };
+
+        usort($tasks, $taskComparator);
+
+        return $tasks;
+    }
+
 }

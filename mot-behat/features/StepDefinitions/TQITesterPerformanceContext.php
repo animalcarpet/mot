@@ -2,7 +2,6 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Generator\TesterPerformanceMotTestGenerator;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
@@ -46,9 +45,10 @@ class TQITesterPerformanceContext implements Context
     }
 
     /** @BeforeScenario @test-quality-information */
-    public function clearAmazonCache(BeforeScenarioScope $scope)
+    public function clearCache(BeforeScenarioScope $scope)
     {
         $this->testSupportHelper->getStatisticsAmazonCacheService()->removeAll();
+        $this->testSupportHelper->getMotService()->removeAllTestStatistics();
     }
 
     /**
@@ -84,16 +84,26 @@ class TQITesterPerformanceContext implements Context
         $motTestGenerator->generate($site, $tester);
     }
 
-    /**
-     * @Then I should be able to see the tester performance statistics performed :months months ago at site :site
-     */
-    public function iShouldBeAbleToSeeTheTesterPerformanceStatisticsPerformedMonthsAgoAtSite($months, SiteDto $site)
+    /** @Given Test Quality Cache is updated between :startMonthAgo and :endMonthsAgo months ago */
+    public function testQualityCacheUpdate($startMonthAgo, $endMonthsAgo)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
+        $this->testSupportHelper->getMotService()->removeAllTestStatistics();
+        $areaOfficeUser = $this->userData->createAreaOffice1User();
 
+        for ($i = $startMonthAgo; $i <= $endMonthsAgo; $i++)
+        {
+            $this->motTestData->generateTQIReport($areaOfficeUser, $i);
+        }
+    }
+
+    /**
+     * @Then I should be able to see the tester performance statistics performed last :months months at site :site
+     */
+    public function iShouldBeAbleToSeeTheTesterPerformanceStatisticsPerformedLastMonthsAtSite($months, SiteDto $site)
+    {
         /** @var SitePerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(SitePerformanceApiResource::class);
-        $actualStats = $apiResource->getForDate($site->getId(), $date->format("m"), $date->format("Y"));
+        $actualStats = $apiResource->getForMonthRange($site->getId(), $months);
 
         $testerPerformanceCalculator = new TesterPerformanceCalculator($this->motTestData->getAll());
         $expectedStats = $testerPerformanceCalculator->calculateTesterPerformanceStatisticsForSite($site->getId(), $months);
@@ -102,53 +112,51 @@ class TQITesterPerformanceContext implements Context
     }
 
     /**
-     * @Then I should be able to see national tester performance statistics for performed :months months ago
+     * @Then I should be able to see national tester performance statistics for last :months months
      */
-    public function iShouldBeAbleToSeeNationalTesterPerformanceStatisticsForPerformedMonthsAgo($months)
+    public function iShouldBeAbleToSeeNationalTesterPerformanceStatisticsForLastMonths($months)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
+        $date = new \DateTime();
 
         $month = (int)$date->format("m");
         $year = (int)$date->format("Y");
 
         /** @var NationalPerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(NationalPerformanceApiResource::class);
-        $actualStats = $apiResource->getForDate($date->format("m"), $date->format("Y"));
+        $actualStats = $apiResource->getForMonths($months);
 
         PHPUnit::assertEquals($month, $actualStats->getMonth());
         PHPUnit::assertEquals($year, $actualStats->getYear());
+        PHPUnit::assertEquals($months, $actualStats->getMonthRange());
     }
 
     /**
-     * @Then there is no tester performance statistics performed :months months ago at site :site
+     * @Then there is no tester performance statistics performed in last :months months at site :site
      */
-    public function thereIsNoTesterPerformanceStatisticsPerformedMonthsAgoAtSite($months, SiteDto $site)
+    public function thereIsNoTesterPerformanceStatisticsPerformedInLastMonthsAtSite($months, SiteDto $site)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
-
         /** @var SitePerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(SitePerformanceApiResource::class);
-        $actualStats = $apiResource->getForDate($site->getId(), $date->format("m"), $date->format("Y"));
+        $actualStats = $apiResource->getForMonthRange($site->getId(), $months);
 
         PHPUnit::assertTrue(empty($actualStats->getA()->getStatistics()));
         PHPUnit::assertTrue(empty($actualStats->getB()->getStatistics()));
     }
 
     /**
-     * @Then I should be able to see the tester performance statistics performed :months months ago
+     * @Then I should be able to see the tester performance statistics performed :monthsRange months ago
      */
-    public function iShouldBeAbleToSeeTheTesterPerformanceStatisticsPerformedMonthsAgo($months)
+    public function iShouldBeAbleToSeeTheTesterPerformanceStatisticsPerformedMonthsAgo($monthsRange)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var TesterPerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(TesterPerformanceApiResource::class);
-        $actualStats = $apiResource->get($this->userData->getCurrentLoggedUser()->getUserId(), $date->format("m"), $date->format("Y"));
+        $actualStats = $apiResource->get($this->userData->getCurrentLoggedUser()->getUserId(), $monthsRange);
 
         $testerPerformanceCalculator = new TesterPerformanceCalculator($this->motTestData->getAll());
         $expectedStats = $testerPerformanceCalculator->calculateTesterPerformanceStatisticsForTester(
             $this->userData->getCurrentLoggedUser()->getUserId(),
-            $months
+            $monthsRange
         );
 
         PHPUnit::assertEquals($expectedStats, $actualStats);
@@ -159,13 +167,25 @@ class TQITesterPerformanceContext implements Context
      */
     public function thereIsNoTesterPerformanceStatisticsPerformedMonthsAgo($months)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
-
         /** @var TesterPerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(TesterPerformanceApiResource::class);
-        $actualStats = $apiResource->get($this->userData->getCurrentLoggedUser()->getUserId(), $date->format("m"), $date->format("Y"));
+        $actualStats = $apiResource->get($this->userData->getCurrentLoggedUser()->getUserId(), $months);
 
         PHPUnit::assertNull($actualStats->getGroupAPerformance());
         PHPUnit::assertNull($actualStats->getGroupBPerformance());
+    }
+
+    /**
+         * @Then there are tester performance statistics performed in last :months months at site :site and contains statistics for :testersCount tester for both groups
+         * @Then there are tester performance statistics performed in last :months months at site :site and contains statistics for :testersCount testers for both groups
+     */
+    public function thereIsTesterPerformanceStatisticsPerformedInLastMonthsAtSiteForTesterCount($months, SiteDto $site, $testersCount)
+    {
+    /** @var SitePerformanceApiResource $apiResource */
+    $apiResource = $this->apiResourceHelper->create(SitePerformanceApiResource::class);
+    $actualStats = $apiResource->getForMonthRange($site->getId(), $months);
+
+            PHPUnit::assertEquals($testersCount, count($actualStats->getA()->getStatistics()));
+            PHPUnit::assertEquals($testersCount, count($actualStats->getB()->getStatistics()));
     }
 }

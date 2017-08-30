@@ -96,13 +96,14 @@ public class SiteTestQualityViewTests extends DslTest {
     }
 
     @Test(groups = {"Regression"},
-        description = "Verifies that tester can view Test Quality for site with a link to 12 months ago and correct data")
-    public void checkDataForTwelveMonthsAgo() throws IOException, URISyntaxException {
+        description = "Verifies that tester can view Test Quality for site for lst 3 months with correct data")
+    public void checkDataForLast3Months() throws IOException, URISyntaxException {
         //National stats calculations are cached
         siteData.clearAllCachedStatistics();
 
         //Given there are tests created for site in 12 months ago
-        DateTime date = new DateTime(this.getFirstDayOfMonth(12));
+        int monthRange = 3;
+        DateTime date = new DateTime(this.getFirstDayOfMonth(monthRange));
         motApi.createTest(tester, site.getId(),
             vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, MILEAGE, date);
         motApi.createTest(tester, site.getId(),
@@ -110,11 +111,8 @@ public class SiteTestQualityViewTests extends DslTest {
 
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site)
-            .chooseMonth(date)
-            .waitUntilPageTertiaryTitleWillShowDate(date);
-
-        //Then there no exist link for previous month (13 months ago)
-        assertThat("Return link is displayed", siteTestQualityPage.isThirteenMonthsAgoLinkPresent(), is(false));
+            .choose3MonthRange()
+            .waitUntilPageTertiaryTitleWillShowTitleForRange(monthRange);
 
         //And tester statistics are displayed
         assertThat("Group A table is displayed", siteTestQualityPage.isTableForGroupADisplayed(), is(true));

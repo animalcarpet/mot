@@ -1,0 +1,16 @@
+<?php
+
+use Site\ViewModel\TestQuality\GroupStatisticsTable;
+
+/* @var GroupStatisticsTable $group */
+/* @var array $queryParams */
+
+echo $this->partial('tqi/partial/group-header', [
+    'group' => $group->getAverageGroupStatisticsHeader(),
+    'queryParams' => $queryParams,
+]);
+
+echo $this->partial('site/site/test-quality-information/group-tester-table', [
+    'group' => $group,
+    'queryParams' => $queryParams,
+]);

@@ -18,9 +18,8 @@ class TesterAggregatedStatisticsController extends AbstractDvsaRestfulController
     public function get($id)
     {
         $testerId = (int) $this->params()->fromRoute('id');
-        $year = (int) $this->params()->fromRoute('year');
-        $month = (int) $this->params()->fromRoute('month');
+        $monthRange = (int) $this->params()->fromRoute('monthRange');
 
-        return $this->returnDto($this->service->getForTester($testerId, $year, $month));
+        return $this->returnDto($this->service->getForTester($testerId, $monthRange));
     }
 }

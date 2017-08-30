@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\Site\Service;
 
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SiteGroupPerformanceDto;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterStatisticsRepository;
@@ -10,16 +11,20 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
+use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
+use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
+use PHPUnit_Framework_MockObject_MockObject;
 
 class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 {
+    const NUMBER_OF_LAST_MONTHS = 1;
+    private $lastMonthsDateRange;
     /** @var TesterStatisticsService */
     private $service;
 
@@ -33,7 +38,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     /** @var AuthorisationServiceMock */
     private $authorisationService;
 
-    /** @var ViewTesterTestQualityAssertion */
+    /** @var ViewTesterTestQualityAssertion | PHPUnit_Framework_MockObject_MockObject */
     private $viewTesterTestQualityAssertion;
 
     /** @var TesterGroupAuthorisationMapper */
@@ -55,11 +60,15 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getAuthorisation')
             ->willReturn(new TesterAuthorisation());
 
+        $this->lastMonthsDateRange = new LastMonthsDateRange(new TestDateTimeHolder(new \DateTime()));
+        $this->lastMonthsDateRange->setNumberOfMonths(self::NUMBER_OF_LAST_MONTHS);
+
         $this->service = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Service\TesterStatisticsService(
             $this->repository,
             $this->authorisationService,
             $this->viewTesterTestQualityAssertion,
-            $this->testerGroupAuthorisationMapper
+            $this->testerGroupAuthorisationMapper,
+            new TestDateTimeHolder(new \DateTime())
         );
     }
 
@@ -72,7 +81,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService->clearAll();
 
         // WHEN I query for statistics
-        $this->service->getForSite($this->siteId, $this->getYear(), $this->getPrevMonth());
+        $this->service->getForSite($this->siteId, self::NUMBER_OF_LAST_MONTHS);
         // THEN an exception is thrown
     }
 
@@ -86,23 +95,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method('assertGranted')
             ->willThrowException(new \DvsaCommon\Exception\UnauthorisedException(''));
 
-        $this->service->getForTester($this->testerId, $this->getYear(), $this->getPrevMonth());
-    }
-
-    /**
-     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
-     */
-    public function testGetForSiteThrowsExceptionForInvalidParameters()
-    {
-        $this->service->getForSite($this->siteId, $this->getYear() + 12, $this->getPrevMonth());
-    }
-
-    /**
-     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
-     */
-    public function testGetForTesterThrowsExceptionForInvalidParameters()
-    {
-        $this->service->getForTester($this->testerId, $this->getYear() + 2, $this->getPrevMonth());
+        $this->service->getForTester($this->testerId, self::NUMBER_OF_LAST_MONTHS);
     }
 
     /**
@@ -116,7 +109,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getForSite')
             ->willReturn($results);
 
-        $dto = $this->service->getForSite($this->siteId, $this->getYear(), $this->getPrevMonth());
+        $dto = $this->service->getForSite($this->siteId, self::NUMBER_OF_LAST_MONTHS);
         $this->assertInstanceOf(SitePerformanceDto::class, $dto);
 
         if (empty($results)) {
@@ -143,9 +136,30 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(($testerPerformanceResult->getFailedCount() / $testerPerformanceResult->getTotalCount()) * 100, $statistics->getPercentageFailed());
             $this->assertEquals($testerPerformanceResult->getAverageVehicleAgeInMonths(), $statistics->getAverageVehicleAgeInMonths());
             $this->assertEquals($testerPerformanceResult->getIsAverageVehicleAgeAvailable(), $statistics->getIsAverageVehicleAgeAvailable());
+            $this->assertEquals($testerPerformanceResult->getFirstName(), $statistics->getFirstName());
+            $this->assertEquals($testerPerformanceResult->getMiddleName(), $statistics->getMiddleName());
+            $this->assertEquals($testerPerformanceResult->getFamilyName(), $statistics->getFamilyName());
 
             $this->assertEmptySiteStatistics($dto->getB());
         }
+    }
+
+    public function testGetForSiteIsCalledWithCorrectDateRange()
+    {
+
+        $this
+            ->repository
+            ->method('getForSite')
+            ->willReturn([]);
+        $spy = new MethodSpy($this->repository, 'getForSite');
+
+        $monthRange = 3;
+        $this->service->getForSite($this->siteId, $monthRange);
+        $params = $spy->paramsForLastInvocation();
+        /** @var LastMonthsDateRange $dateRange */
+        $dateRange = $params[1];
+        $this->assertEquals($monthRange, $dateRange->getNumberOfMonths());
+
     }
 
     private function assertEmptySiteStatistics(SiteGroupPerformanceDto $siteGroupPerformanceDto)
@@ -170,13 +184,14 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getForTester')
             ->willReturn($results);
 
-        $dto = $this->service->getForTester($this->siteId, $this->getYear(), $this->getPrevMonth());
+        $dto = $this->service->getForTester($this->siteId, self::NUMBER_OF_LAST_MONTHS);
         $this->assertInstanceOf(TesterPerformanceDto::class, $dto);
 
         if (empty($results)) {
             $this->assertNull($dto->getGroupAPerformance());
             $this->assertNull($dto->getGroupBPerformance());
         } else {
+            /** @var TesterPerformanceResult $testerPerformanceResult */
             $testerPerformanceResult = array_shift($results);
 
             $this->assertEquals($testerPerformanceResult->getUsername(), $dto->getGroupAPerformance()->getUsername());
@@ -194,6 +209,9 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     public function dataProviderDbResults()
     {
         $results[] = (new TesterPerformanceResult())
+            ->setFirstName("firsName")
+            ->setMiddleName("middleName")
+            ->setFamilyName("familyName")
             ->setUsername('tester')
             ->setPersonId(198)
             ->setTotalCount(10)
@@ -207,20 +225,5 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             [$results],
             [[]],
         ];
-    }
-
-    private function getFirstOfCurrentMonth()
-    {
-        return DateUtils::firstOfThisMonth();
-    }
-
-    private function getPrevMonth()
-    {
-        return (int) $this->getFirstOfCurrentMonth()->sub(new \DateInterval('P1M'))->format('m');
-    }
-
-    private function getYear()
-    {
-        return (int) $this->getFirstOfCurrentMonth()->sub(new \DateInterval('P1M'))->format('Y');
     }
 }

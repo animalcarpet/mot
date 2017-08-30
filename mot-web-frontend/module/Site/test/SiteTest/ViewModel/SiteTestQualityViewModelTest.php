@@ -11,9 +11,9 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
-use DvsaCommonTest\TestUtils\XMock;
+use DvsaCommonTest\Date\TestDateTimeHolder;
+use Site\Form\TQIMonthRangeForm;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
-use Site\ViewModel\TestQuality\TestQualityMonthFilter;
 
 class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,37 +21,21 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
 
     const RETURN_LINK = '/vehicle-testing-station/1';
     const POSSIBLE_MONTHS_COUNT = 10;
-    const CSV_FILE_SIZE_GROUP_A = 1001;
-    const CSV_FILE_SIZE_GROUP_B = 1002;
     const IS_RETURN_TO_AE_TQI = false;
 
     /** @var SiteTestQualityViewModel */
     private $siteTestQualityViewModel;
 
-    /** @var TestQualityMonthFilter $testQualityInformationMonthFilter */
-    private $testQualityInformationMonthFilter;
-
     public function setUp()
     {
-        $date = new DateTime();
-
-        $this->testQualityInformationMonthFilter = XMock::of(TestQualityMonthFilter::class);
-        $this->testQualityInformationMonthFilter->method('setStartMonth')
-            ->willReturn($this->testQualityInformationMonthFilter);
-        $this->testQualityInformationMonthFilter->method('setNumberOfMonthsBack')
-            ->willReturn($this->testQualityInformationMonthFilter);
-        $this->testQualityInformationMonthFilter->method('setViewedMonth')
-            ->willReturn($this->testQualityInformationMonthFilter);
-
         $this->siteTestQualityViewModel = new SiteTestQualityViewModel(
             self::buildSitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
-            $date,
-            self::CSV_FILE_SIZE_GROUP_A,
-            self::CSV_FILE_SIZE_GROUP_B,
             self::IS_RETURN_TO_AE_TQI,
-            $this->testQualityInformationMonthFilter
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new DateTime('2015-02-15')),
+            1
         );
     }
 
@@ -161,16 +145,14 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function testTablePopulatesWithNoTestersData()
     {
-        $date = new DateTime();
         $this->siteTestQualityViewModel = new SiteTestQualityViewModel(
             self::buildEmptySitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
-            $date,
-            self::CSV_FILE_SIZE_GROUP_A,
-            self::CSV_FILE_SIZE_GROUP_B,
             self::IS_RETURN_TO_AE_TQI,
-            $this->testQualityInformationMonthFilter
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new DateTime('2015-02-15')),
+            1
         );
 
         $this->assertFalse($this->siteTestQualityViewModel->getA()->hasTests());
@@ -190,16 +172,14 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnLinkToAETQI()
     {
-        $date = new DateTime();
         $this->siteTestQualityViewModel = new SiteTestQualityViewModel(
             self::buildEmptySitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
-            $date,
-            self::CSV_FILE_SIZE_GROUP_A,
-            self::CSV_FILE_SIZE_GROUP_B,
             true,
-            $this->testQualityInformationMonthFilter
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new DateTime('2015-02-15')),
+            1
         );
 
         $this->assertEquals($this->siteTestQualityViewModel->getReturnLink()->getValue(), SiteTestQualityViewModel::RETURN_TO_AE_TQI);
@@ -207,16 +187,14 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnLinkToVts()
     {
-        $date = new DateTime();
         $this->siteTestQualityViewModel = new SiteTestQualityViewModel(
             self::buildEmptySitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
-            $date,
-            self::CSV_FILE_SIZE_GROUP_A,
-            self::CSV_FILE_SIZE_GROUP_B,
             false,
-            $this->testQualityInformationMonthFilter
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new DateTime('2015-02-15')),
+            1
         );
 
         $this->assertEquals($this->siteTestQualityViewModel->getReturnLink()->getValue(), SiteTestQualityViewModel::RETURN_TO_VTS);

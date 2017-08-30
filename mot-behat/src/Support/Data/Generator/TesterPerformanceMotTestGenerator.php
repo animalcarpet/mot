@@ -78,4 +78,9 @@ class TesterPerformanceMotTestGenerator
         );
         $this->motTestData->createPassedMotTest($tester, $site, $vehicle, MotTestTypeCode::MYSTERY_SHOPPER);
     }
+
+    public function generateTQIMysqlReport(AuthenticatedUser $tester, $monthsAgo = 1)
+    {
+        $this->motTestData->generateTQIReport($tester, $monthsAgo);
+    }
 }

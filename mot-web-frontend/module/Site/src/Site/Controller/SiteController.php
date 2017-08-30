@@ -847,13 +847,15 @@ class SiteController extends AbstractAuthActionController
 
     public function testQualityAction()
     {
-        $id = $this->params('id');
-        $month = $this->params('month');
-        $year = $this->params('year');
+        $id = (int) $this->params('id');
+        $monthRange = (int) $this->params()->fromQuery('monthRange', 1);
         $isReturnToAETQI = (bool) $this->params()->fromQuery(BackLinkQueryParam::RETURN_TO_AE_TQI);
 
         return $this->applyActionResult(
-            $this->siteTestQualityAction->execute($id, $month, $year, $isReturnToAETQI, $this->buildBreadcrumbs($id), $this->url(), $this->params()->fromRoute(), $this->params()->fromQuery())
+            $this->siteTestQualityAction->execute(
+                $id, $monthRange, $isReturnToAETQI,
+                $this->buildBreadcrumbs($id)
+            )
         );
     }
 
@@ -862,21 +864,20 @@ class SiteController extends AbstractAuthActionController
         $isReturnToAETQI = (bool) $this->params()->fromQuery(BackLinkQueryParam::RETURN_TO_AE_TQI);
 
         $group = $this->params('group');
-        $month = $this->params('month');
-        $year = $this->params('year');
+        $monthRange = (int) $this->params()->fromQuery('monthRange', 1);
 
-        if ($this->contextProvider->isYourProfileContext()) {
+        if ($this->contextProvider->isYourProfileContext() || $this->contextProvider->isPerformanceDashboardContext()) {
             $vtsId = $this->params('site');
             $userId = $this->identity->getIdentity()->getUserId();
-            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $month, $year);
+            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $monthRange);
         } elseif ($this->contextProvider->isUserSearchContext()) {
             $vtsId = $this->params('site');
             $userId = $this->params('id');
-            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $month, $year);
+            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $monthRange);
         } elseif ($this->getEvent()->getRouteMatch()->getMatchedRouteName() === VtsRouteList::VTS_USER_PROFILE_TEST_QUALITY) {
             $vtsId = $this->params('id');
             $userId = $this->params('userId');
-            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $month, $year);
+            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $monthRange);
         } else {
             $vtsId = $this->params('id');
             $userId = $this->params('userId');
@@ -884,7 +885,7 @@ class SiteController extends AbstractAuthActionController
         }
 
         return $this->applyActionResult(
-            $this->userTestQualityAction->execute($vtsId, $userId, $month, $year, $group, $breadcrumbs, $isReturnToAETQI, $this->url())
+            $this->userTestQualityAction->execute($vtsId, $userId, $monthRange, $group, $breadcrumbs, $isReturnToAETQI, $this->url())
         );
     }
 
@@ -908,19 +909,6 @@ class SiteController extends AbstractAuthActionController
         $year = $this->params('year');
 
         $csv = $this->siteTestQualityAction->getCsv($id, $month, $year, $group);
-
-        return $this->applyActionResult($csv);
-    }
-
-    public function userTestQualityCsvAction()
-    {
-        $siteId = $this->params('id');
-        $userId = $this->params('userId');
-        $group = $this->params('group');
-        $month = $this->params('month');
-        $year = $this->params('year');
-
-        $csv = $this->userTestQualityAction->getCsv($siteId, $userId, $month, $year, $group);
 
         return $this->applyActionResult($csv);
     }

@@ -4,7 +4,6 @@ package uk.gov.dvsa.ui.pages.vts;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
@@ -16,9 +15,9 @@ public class UserTestQualityPage extends Page {
     private static final String PAGE_TITLE = "Test Quality information";
 
     @FindBy(id="return-link")private WebElement returnLink;
-    @FindBy(id="tester-test-count")private WebElement testerTestCount;
-    @FindBy(id="tester-failure-percentage")private WebElement testerFailurePercentage;
-    @FindBy(id="tester-average-duration")private WebElement testerAverageDuration;
+    @FindBy(id="test-count")private WebElement testerTestCount;
+    @FindBy(id="failure-percentage")private WebElement testerFailurePercentage;
+    @FindBy(id="average-duration")private WebElement testerAverageDuration;
 
     public UserTestQualityPage(MotAppDriver driver) {
         super(driver);

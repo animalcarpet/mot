@@ -8,16 +8,14 @@ import uk.gov.dvsa.ui.pages.Page;
 
 public class AggregatedComponentBreakdownPage extends Page {
 
-    @FindBy(css = ".content-header__tertiary")
-    private WebElement secondaryTitle;
     @FindBy(id = "return-link")
     private WebElement returnLink;
-    @FindBy(id = "tester-test-count")
+    @FindBy(id = "test-count")
     private WebElement testCount;
     @FindBy(id = "tqi-table-B")
     private WebElement tqiTableB;
 
-    private static final String SECONDARY_PAGE_TITLE = "Failures by category at all associated sites";
+    private static final String PAGE_TITLE = "Test quality information";
 
     public AggregatedComponentBreakdownPage(MotAppDriver driver) {
         super(driver);
@@ -26,11 +24,7 @@ public class AggregatedComponentBreakdownPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getSecondaryTitle(), SECONDARY_PAGE_TITLE);
-    }
-
-    private String getSecondaryTitle() {
-        return secondaryTitle.getText();
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
     public Integer getTestCount() {

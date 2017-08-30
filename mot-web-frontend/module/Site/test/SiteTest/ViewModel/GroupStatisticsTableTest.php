@@ -38,7 +38,7 @@ class GroupStatisticsTableTest extends \PHPUnit_Framework_TestCase
             $dateTime,
             1000
         );
-        $this->assertEquals($expectedSiteAverage, $table->getAverageVehicleAge());
+        $this->assertEquals($expectedSiteAverage, $table->getAverageGroupStatisticsHeader()->getAverageVehicleAge());
         $this->assertEquals($expectedNationalAverage, $table->getNationalStatistic()->getAverageVehicleAge());
     }
 
@@ -91,14 +91,14 @@ class GroupStatisticsTableTest extends \PHPUnit_Framework_TestCase
             [
                 self::buildEmptySitePerformanceDto(),
                 self::buildNationalStatisticsPerformanceDto(),
-                GroupStatisticsTable::TEXT_NOT_AVAILABLE,
+                null,
                 '',
             ],
             [
                 self::buildNotEmptySiteDto(),
                 $nationalWithTestsOnlyWithoutManufactureDate,
                 VehicleAgeFormatter::calculateVehicleAge(self::AVERAGE_VEHICLE_AGE_SITE),
-                GroupStatisticsTable::TEXT_NOT_AVAILABLE,
+                ''
             ],
             [
                 self::buildNotEmptySiteDto(),

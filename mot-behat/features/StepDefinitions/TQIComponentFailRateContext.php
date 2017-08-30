@@ -1,7 +1,6 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Generator\ComponentBreakdownMotTestGenerator;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
@@ -59,11 +58,9 @@ class TQIComponentFailRateContext implements Context
      */
     public function iShouldBeAbleToSeeComponentFailRateStatisticsPerformedMonthsAgoAtSiteForTesterAndGroup($months, SiteDto $site, AuthenticatedUser $tester, $group)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
-
         /** @var ComponentFailRateApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
-        $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
+        $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $months);
 
         $calculator = new ComponentBreakdownCalculator($this->motTestData->getAll());
         $expectedComponentBreakdown = $calculator->calculateStatisticsForSite($site->getId(), $tester->getUserId(), $months, $group);
@@ -106,11 +103,9 @@ class TQIComponentFailRateContext implements Context
      */
     public function thereIsNoComponentFailRateStatisticsPerformedMonthsAgoAtSiteForTesterAndGroup($months, SiteDto $site, AuthenticatedUser $tester, $group)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
-
         /** @var ComponentFailRateApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
-        $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
+        $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $months);
 
         PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
         $this->assertEmptyComponentBreakdown($componentBreakdown);
@@ -140,52 +135,12 @@ class TQIComponentFailRateContext implements Context
      */
     public function iShouldBeAbleToSeeNationalFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, $group)
     {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
-
-        $month = (int)$date->format("m");
-        $year = (int)$date->format("Y");
-
         /** @var NationalComponentStatisticApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(NationalComponentStatisticApiResource::class);
-        $nationalComponentStatistics = $apiResource->getForDate($group, $month, $year);
+        $nationalComponentStatistics = $apiResource->getForDate($group, $months);
 
         PHPUnit::assertEquals($group, $nationalComponentStatistics->getGroup());
-        PHPUnit::assertEquals($month, $nationalComponentStatistics->getMonth());
-        PHPUnit::assertEquals($year, $nationalComponentStatistics->getYear());
-    }
-
-    /**
-     * @Then I should be able to see component fail rate statistics performed :months months ago for tester :tester and group :group
-     */
-    public function iShouldBeAbleToSeeComponentFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, AuthenticatedUser $tester, $group)
-    {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
-
-        /** @var ComponentFailRateApiResource $apiResource */
-        $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
-        $componentBreakdown = $apiResource->getForTester($tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
-
-        $calculator = new ComponentBreakdownCalculator($this->motTestData->getAll());
-        $expectedComponentBreakdown = $calculator->calculateStatisticsForAllSites($tester->getUserId(), $months, $group);
-
-        PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
-        $this->assertComponents($expectedComponentBreakdown->getComponents(), $componentBreakdown->getComponents());
-        PHPUnit::assertEquals($expectedComponentBreakdown->getGroupPerformance(), $componentBreakdown->getGroupPerformance());
-    }
-
-    /**
-     * @Then there is no component fail rate statistics performed :months months ago for tester :tester and group :group
-     */
-    public function thereIsNoComponentFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, AuthenticatedUser $tester, $group)
-    {
-        $date = new \DateTime(sprintf("first day of %s months ago", $months));
-
-        /** @var ComponentFailRateApiResource $apiResource */
-        $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
-        $componentBreakdown = $apiResource->getForTester($tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
-
-        PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
-        $this->assertEmptyComponentBreakdown($componentBreakdown);
+        PHPUnit::assertEquals($months, $nationalComponentStatistics->getMonthRange());
     }
 }
 

@@ -85,6 +85,17 @@ class SiteRowViewModel
 
     public function getTqiComponentsAtSiteUrl()
     {
+
         return $this->tqiComponentsAtSiteUrl;
+    }
+
+    public function isAverageVehicleAgeAvailable()
+    {
+        return $this->isAverageVehicleAgeAvailable;
+    }
+
+    public function isAverageTestTime()
+    {
+        return $this->getTestsDone() > 0;
     }
 }

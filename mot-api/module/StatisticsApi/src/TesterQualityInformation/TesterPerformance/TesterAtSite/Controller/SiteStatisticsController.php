@@ -17,10 +17,9 @@ class SiteStatisticsController extends AbstractDvsaRestfulController implements 
 
     public function get($siteId)
     {
-        $year = (int) $this->params()->fromRoute('year');
-        $month = (int) $this->params()->fromRoute('month');
+        $monthRange = (int) $this->params()->fromRoute('monthRange');
 
-        $dto = $this->siteStatisticsService->getForSite($siteId, $year, $month);
+        $dto = $this->siteStatisticsService->getForSite($siteId, $monthRange);
 
         return $this->returnDto($dto);
     }

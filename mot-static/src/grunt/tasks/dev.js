@@ -8,7 +8,7 @@ module.exports = function (grunt, config) {
         grunt.registerTask('dev:optimise', 'Switches the environment into optimised mode',
             [
                 'sshexec:reset_database',
-                'amazon:cache:clear:national-statistics',
+                'cache:clear:amazon-national-statistics',
                 'sshexec:xdebug_disable',
                 'sshexec:server_mod_prod',
                 'doctrine:proxy',
@@ -19,7 +19,7 @@ module.exports = function (grunt, config) {
             [
                 'apache:restart:all', // reset DB requires a clean class cache, hence reset happens twice
                 'sshexec:reset_database',
-                'amazon:cache:clear:national-statistics',
+                'cache:clear:amazon-national-statistics',
                 'sshexec:server_mod_dev',
                 'sshexec:doctrine_default_develop_dist',
                 'apache:restart:all'
@@ -67,7 +67,7 @@ module.exports = function (grunt, config) {
             'shell:composer',
             'sshexec:mysql_proc_fix',
             'sshexec:reset_database',
-            'amazon:cache:clear:national-statistics',
+            'cache:clear:amazon-national-statistics',
             'sshexec:server_mod_dev',
             'sshexec:doctrine_default_develop_dist',
             'doctrine:proxy',
@@ -109,8 +109,14 @@ module.exports = function (grunt, config) {
             'apache:restart'
         ]);
 
-        grunt.registerTask('amazon:cache:clear:national-statistics', 'Clears the Amazon S3 cache of national statistics for test quality information', [
+        grunt.registerTask('cache:clear:amazon-national-statistics', 'Clears the Amazon S3 cache of national statistics for test quality information', [
             'shell:national_statistics_amazon_cache_clear'
+        ]);
+        grunt.registerTask('cache:clear:db-test-statistics', 'Clears the DB cache of test statistics for test quality information', [
+            'shell:test_statistics_db_cache_clear'
+        ]);
+        grunt.registerTask('cache:generate:db-test-statistics', 'Generates the DB cache of test statistics for test quality information', [
+            'shell:test_statistics_db_cache_generate'
         ]);
         grunt.registerTask('dev:zend-dev-tools:disable', 'Enable Zend Developer Tools', 'sshexec:zend_dev_tools_disable');
         grunt.registerTask('dev:zend-dev-tools:enable', 'Disable Zend Developer Tools', 'sshexec:zend_dev_tools_enable');

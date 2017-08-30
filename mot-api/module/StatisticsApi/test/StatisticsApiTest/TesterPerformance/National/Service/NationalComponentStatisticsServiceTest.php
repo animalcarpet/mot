@@ -8,7 +8,7 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Storage\NationalComponentFailRateStorage;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
-use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\Mocking\KeyValueStorage\KeyValueStorageFake;
@@ -16,6 +16,8 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 {
+    const THREE_MONTHS_RANGE = 3;
+
     /** @var NationalComponentStatisticsRepository */
     private $repository;
 
@@ -46,39 +48,20 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetReturnsDto()
     {
-        $currentDate = $this->getDateTimeHolder()->getCurrentDate();
-        $date = $currentDate->sub(new \DateInterval('P2M'));
-        $year = (int) $date->format('Y');
-        $month = (int) $date->format('m');
-
-        $dto = $this->createService()->get($year, $month, VehicleClassGroupCode::CARS_ETC);
+        $dto = $this->createService()->get(self::THREE_MONTHS_RANGE, VehicleClassGroupCode::CARS_ETC);
         $this->assertInstanceOf(NationalComponentStatisticsDto::class, $dto);
 
         $this->assertNationalComponentStatisticsDto(
             $dto,
-            $year,
-            $month,
+            self::THREE_MONTHS_RANGE,
             VehicleClassGroupCode::CARS_ETC
         );
     }
 
-    /**
-     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
-     */
-    public function testGetThrowsExceptionIfValidationFailed()
+    private function assertNationalComponentStatisticsDto(NationalComponentStatisticsDto $dto, $expectedMonthRange, $expectedGroup)
     {
-        $currentYear = (int) DateUtils::firstOfThisMonth()->format('Y');
-        $date = $this->getDateTimeHolder()->getCurrentDate();
-        $nextMonth = (int) $date->modify('next month')->format('m');
-
-        $this->createService()->get($currentYear, $nextMonth, VehicleClassGroupCode::BIKES);
-    }
-
-    private function assertNationalComponentStatisticsDto(NationalComponentStatisticsDto $dto, $expectedYear, $expectedMonth, $expectedGroup)
-    {
-        $this->assertEquals($expectedYear, $dto->getYear());
-        $this->assertEquals($expectedMonth, $dto->getMonth());
         $this->assertEquals($expectedGroup, $dto->getGroup());
+        $this->assertEquals($expectedMonthRange, $dto->getMonthRange());
         $this->assertCount(1, $dto->getComponents());
         $this->assertInstanceOf(ComponentDto::class, $dto->getComponents()[0]);
     }
@@ -89,7 +72,7 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         return new NationalComponentStatisticsService(
             new NationalComponentFailRateStorage($this->storage),
             $this->repository,
-            $this->getDateTimeHolder()
+            new LastMonthsDateRange($this->getDateTimeHolder())
         );
     }
 

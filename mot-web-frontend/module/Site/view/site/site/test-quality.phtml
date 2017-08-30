@@ -7,40 +7,38 @@ use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
 $returnLink = $viewModel->getReturnLink();
 ?>
 
-<div class='layout-filter-data'>
-
-    <div class="layout-filter__controls">
-
-        <?php echo $this->partial('partial/month-filter/month-filter', [
-            'monthFilter' => $viewModel->getMonthFilter(),
-        ]);
-        ?>
-    </div>
-
-    <div class="layout-filter__content">
-
-        <?php
-        if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::BIKES)) {
-            echo $this->partial('site/site/partials/test-quality-group', [
-                'group' => $viewModel->getA(),
-                'queryParams' => $viewModel->getQueryParams(),
-            ]);
-        }
-
-        if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::CARS_ETC)) {
-            echo $this->partial('site/site/partials/test-quality-group', [
-                'group' => $viewModel->getB(),
-                'queryParams' => $viewModel->getQueryParams(),
-            ]);
-        }
-        ?>
-    </div>
+<div class="text">
+    <p class="lede">This information will help you manage the quality of testing at your site. How you use it will
+        depend on how you manage the site, its size and number of staff.</p>
+    <h2 class="heading-medium">Tests done in <?php echo $viewModel->getDateRangeWording() ?> </h2>
 </div>
+
+<?php
+
+echo $this->partial('site/site/test-quality-information/month-range-form', [
+    'form' => $viewModel->getMonthRangeForm(),
+]);
+
+if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::BIKES)) {
+    echo $this->partial('site/site/test-quality-information/group', [
+        'group' => $viewModel->getA(),
+        'queryParams' => $viewModel->getQueryParams(),
+    ]);
+}
+
+if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::CARS_ETC)) {
+    echo $this->partial('site/site/test-quality-information/group', [
+        'group' => $viewModel->getB(),
+        'queryParams' => $viewModel->getQueryParams(),
+    ]);
+}
+?>
 
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
         <li>
-            <a id="return-link" href="<?php echo $this->url($returnLink->getRoot(), $returnLink->getParams(), $returnLink->getQueryParams()) ?>">
+            <a id="return-link"
+               href="<?php echo $this->url($returnLink->getRoot(), $returnLink->getParams(), $returnLink->getQueryParams()) ?>">
                 <?php echo $returnLink->getValue(); ?>
             </a>
         </li>

@@ -92,6 +92,8 @@ class UrlBuilder extends AbstractUrlBuilder
     const SITE = 'site/:id';
     const AUTHORISED_CLASSES = '/authorised-classes';
     const DEMO_TEST_ASSESSMENT = 'person/:personId/demo-test-assessment';
+    const GENERATE_DB_STATISTICS_RFR = 'statistic/tester-performance/batch/rfr-counts';
+    const GENERATE_DB_STATISTICS_TESTS = 'statistic/tester-performance/batch/test-counts';
 
     protected $routesStructure
         = [
@@ -187,6 +189,8 @@ class UrlBuilder extends AbstractUrlBuilder
             self::CLAIM_ACCOUNT => '',
             self::SECURITY_QUESTION => '',
             self::RESET_PIN => '',
+            self::GENERATE_DB_STATISTICS_RFR => '',
+            self::GENERATE_DB_STATISTICS_TESTS => '',
         ];
 
     public function home()
@@ -652,5 +656,15 @@ class UrlBuilder extends AbstractUrlBuilder
     public function getAuthorisedClasses()
     {
         return $this->appendRoutesAndParams(self::AUTHORISED_CLASSES);
+    }
+
+    public function generateStatisticsDbRfr()
+    {
+        return $this->appendRoutesAndParams(self::GENERATE_DB_STATISTICS_RFR);
+    }
+
+    public function generateStatisticsDbTests()
+    {
+        return $this->appendRoutesAndParams(self::GENERATE_DB_STATISTICS_TESTS);
     }
 }

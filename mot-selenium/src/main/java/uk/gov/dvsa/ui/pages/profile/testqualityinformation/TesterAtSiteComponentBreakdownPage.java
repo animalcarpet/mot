@@ -8,14 +8,12 @@ import uk.gov.dvsa.ui.pages.Page;
 
 public class TesterAtSiteComponentBreakdownPage extends Page {
 
-    @FindBy(css = ".content-header__tertiary")
-    private WebElement secondaryTitle;
     @FindBy(id = "return-link")
     private WebElement returnLink;
-    @FindBy(id = "tester-test-count")
+    @FindBy(id = "test-count")
     private WebElement testCount;
 
-    private static final String SECONDARY_PAGE_TITLE = "Tests done at ";
+    private static final String PAGE_TITLE = "Test quality information";
 
     public TesterAtSiteComponentBreakdownPage(MotAppDriver driver) {
         super(driver);
@@ -24,11 +22,7 @@ public class TesterAtSiteComponentBreakdownPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getSecondaryTitle(), SECONDARY_PAGE_TITLE);
-    }
-
-    private String getSecondaryTitle() {
-        return secondaryTitle.getText();
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
     public Integer getTestCount() {

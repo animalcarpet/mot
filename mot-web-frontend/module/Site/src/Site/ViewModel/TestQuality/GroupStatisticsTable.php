@@ -3,11 +3,12 @@
 namespace Site\ViewModel\TestQuality;
 
 use Core\Formatting\VehicleAgeFormatter;
-use DateTime;
+use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\AverageGroupStatisticsHeader;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SiteGroupPerformanceDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
+use DvsaCommon\Formatting\PersonFullNameFormatter;
 use DvsaCommon\Utility\TypeCheck;
 use Site\ViewModel\TimeSpanFormatter;
 
@@ -15,17 +16,10 @@ class GroupStatisticsTable
 {
     const NATIONAL_AVERAGE = 'National average';
     private $testCount;
-    private $averageTestDuration;
-    private $failurePercentage;
-    const TEXT_NOT_AVAILABLE = 'Not available';
     /** @var TestQualityStatisticRow[] */
     private $testerRows;
-    private $groupCode;
-    private $groupDescription;
-    private $averageVehicleAge;
-
-    /** @var DateTime */
-    private $viewedDate;
+    private $timeSpanFormatter;
+    private $personFullNameFormatter;
 
     /** @var TestQualityStatisticRow */
     private $nationalStatistic;
@@ -34,9 +28,10 @@ class GroupStatisticsTable
     private $nationalTestingPerformanceDto;
     /** @var VehicleTestingStationDto */
     private $site;
-    /** @var int */
-    private $csvFileSize;
     private $isNationalDataAvailable;
+    /** @var AverageGroupStatisticsHeader */
+    private $averageGroupStatisticsHeader;
+    private $groupCode;
 
     public function __construct(
         SiteGroupPerformanceDto $groupPerformanceDto,
@@ -45,28 +40,29 @@ class GroupStatisticsTable
         $groupName,
         $groupDescription,
         $groupCode,
-        $site,
-        DateTime $viewedDate,
-        $csvFileSize
+        $site
     ) {
+        $this->personFullNameFormatter = new PersonFullNameFormatter();
         $this->timeSpanFormatter = new TimeSpanFormatter();
         $this->site = $site;
         $this->groupCode = $groupCode;
-        $this->groupDescription = $groupDescription;
+        $this->averageGroupStatisticsHeader = new AverageGroupStatisticsHeader();
+        $this->averageGroupStatisticsHeader->setGroupCode($groupCode);
+        $this->averageGroupStatisticsHeader->setGroupDescription($groupDescription);
         $this->isNationalDataAvailable = $isNationalDataAvailable;
 
         $testers = $groupPerformanceDto->getStatistics();
 
         if (empty($testers)) {
             $this->testCount = 0;
-            $this->averageTestDuration = self::TEXT_NOT_AVAILABLE;
-            $this->failurePercentage = self::TEXT_NOT_AVAILABLE;
-            $this->averageVehicleAge = self::TEXT_NOT_AVAILABLE;
+            $this->averageGroupStatisticsHeader->setIsAverageVehicleAgeAvailable(false);
+            $this->averageGroupStatisticsHeader->setFailurePercentage(0);
         } else {
             $this->testCount = $groupPerformanceDto->getTotal()->getTotal();
-            $this->averageTestDuration = $this->timeSpanFormatter->formatForTestQualityInformationView($groupPerformanceDto->getTotal()->getAverageTime());
-            $this->averageVehicleAge = $this->determineVtsGroupAverageVehicleAge($groupPerformanceDto->getTotal());
-            $this->failurePercentage = $groupPerformanceDto->getTotal()->getPercentageFailed();
+            $this->averageGroupStatisticsHeader->setIsAverageVehicleAgeAvailable($groupPerformanceDto->getTotal()->getIsAverageVehicleAgeAvailable());
+            $this->averageGroupStatisticsHeader->setAverageTestDuration($this->timeSpanFormatter->formatForTestQualityInformationView($groupPerformanceDto->getTotal()->getAverageTime()));
+            $this->averageGroupStatisticsHeader->setAverageVehicleAge($this->determineVtsGroupAverageVehicleAge($groupPerformanceDto->getTotal()));
+            $this->averageGroupStatisticsHeader->setFailurePercentage($groupPerformanceDto->getTotal()->getPercentageFailed());
         }
 
         if ($this->isNationalDataAvailable) {
@@ -79,14 +75,18 @@ class GroupStatisticsTable
                     ? $this->timeSpanFormatter->formatForTestQualityInformationView($nationalTestingPerformanceDto->getAverageTime())
                     : '');
         }
-        $this->viewedDate = $viewedDate;
 
         $this->testerRows = $this->createTesterRows($groupPerformanceDto->getStatistics());
         $this->groupPerformanceDto = $groupPerformanceDto;
         $this->nationalTestingPerformanceDto = $nationalTestingPerformanceDto;
-        $this->csvFileSize = $csvFileSize;
+
+        $this->averageGroupStatisticsHeader->setHasTests($this->hasTests());
+        $this->averageGroupStatisticsHeader->setTestCount($this->getTestCount());
     }
 
+    /**
+     * @return boolean
+     */
     public function hasTests()
     {
         return count($this->testerRows) > 0;
@@ -105,20 +105,6 @@ class GroupStatisticsTable
         return $this->testCount;
     }
 
-    public function getAverageTestDuration()
-    {
-        return $this->averageTestDuration;
-    }
-
-    public function getFailurePercentage()
-    {
-        if (is_numeric($this->failurePercentage)) {
-            return number_format($this->failurePercentage, 0).'%';
-        } else {
-            return $this->failurePercentage;
-        }
-    }
-
     public function getTesterRows()
     {
         return $this->testerRows;
@@ -130,14 +116,6 @@ class GroupStatisticsTable
     public function getSiteId()
     {
         return $this->site->getId();
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getViewedDate()
-    {
-        return $this->viewedDate;
     }
 
     /**
@@ -158,39 +136,17 @@ class GroupStatisticsTable
             $rows[] = (new TestQualityStatisticRow())
                 ->setName($tester->getUsername())
                 ->setPersonId($tester->getPersonId())
-                ->setGroupCode($this->groupCode)
+                ->setFullName($this->personFullNameFormatter
+                    ->format($tester->getFirstName(), $tester->getMiddleName(), $tester->getFamilyName()))
+                ->setGroupCode($this->getGroupCode())
                 ->setSiteId($this->site->getId())
                 ->setTestCount($tester->getTotal())
                 ->setAverageTestDuration($this->timeSpanFormatter->formatForTestQualityInformationView($tester->getAverageTime()))
-                ->setAverageVehicleAge($tester->getIsAverageVehicleAgeAvailable()
-                    ? VehicleAgeFormatter::calculateVehicleAge($tester->getAverageVehicleAgeInMonths())
-                    : self::TEXT_NOT_AVAILABLE
-                )
-                ->setFailurePercentage($tester->getPercentageFailed())
-                ->setViewedDate($this->getViewedDate());
+                ->setAverageVehicleAge(VehicleAgeFormatter::calculateVehicleAge($tester->getAverageVehicleAgeInMonths()))
+                ->setFailurePercentage($tester->getPercentageFailed());
         }
 
         return $rows;
-    }
-
-    public function getGroupCode()
-    {
-        return $this->groupCode;
-    }
-
-    public function getGroupDescription()
-    {
-        return $this->groupDescription;
-    }
-
-    public function getAverageVehicleAge()
-    {
-        return $this->averageVehicleAge;
-    }
-
-    public function getNotAvailableText()
-    {
-        return self::TEXT_NOT_AVAILABLE;
     }
 
     /**
@@ -200,7 +156,7 @@ class GroupStatisticsTable
      */
     private function determineVtsGroupAverageVehicleAge(MotTestingPerformanceDto $groupPerformanceDto)
     {
-        $average = self::TEXT_NOT_AVAILABLE;
+        $average = 0;
 
         if ($groupPerformanceDto->getIsAverageVehicleAgeAvailable()) {
             $average = VehicleAgeFormatter::calculateVehicleAge(
@@ -218,41 +174,29 @@ class GroupStatisticsTable
      */
     protected function determineNationalAverageVehicleAge(MotTestingPerformanceDto $nationalPerformanceDto)
     {
-        $text = self::TEXT_NOT_AVAILABLE;
-
-        if ($nationalPerformanceDto->getTotal() < 1) {
-            $text = '';
-        } else {
-            if ($nationalPerformanceDto->getIsAverageVehicleAgeAvailable()) {
-                $text = VehicleAgeFormatter::calculateVehicleAge($nationalPerformanceDto->getAverageVehicleAgeInMonths());
-            }
+        $text = '';
+        if ($nationalPerformanceDto->getTotal() >= 1 && $nationalPerformanceDto->getIsAverageVehicleAgeAvailable()) {
+            $text = VehicleAgeFormatter::calculateVehicleAge($nationalPerformanceDto->getAverageVehicleAgeInMonths());
         }
 
         return $text;
     }
 
-    public function getCsvFileSize()
-    {
-        $kb = $this->csvFileSize / 1024;
-        if ($kb > 1) {
-            return round($kb).'KB';
-        } else {
-            return '1KB';
-        }
-    }
-
-    public function getMonth()
-    {
-        return (int) $this->viewedDate->format('m');
-    }
-
-    public function getYear()
-    {
-        return (int) $this->viewedDate->format('Y');
-    }
-
     public function isNationalDataAvailable()
     {
         return $this->isNationalDataAvailable;
+    }
+
+    /**
+     * @return AverageGroupStatisticsHeader
+     */
+    public function getAverageGroupStatisticsHeader()
+    {
+        return $this->averageGroupStatisticsHeader;
+    }
+
+    public function getGroupCode()
+    {
+        return $this->groupCode;
     }
 }

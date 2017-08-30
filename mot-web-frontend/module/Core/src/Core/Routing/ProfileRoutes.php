@@ -33,23 +33,29 @@ class ProfileRoutes extends AbstractRoutes
         return $this->url(ProfileRouteList::USER_SEARCH, ['id' => $userId]);
     }
 
-    public function yourProfileTqi($month, $year)
+    public function yourProfileTqi(array $queryParams = [])
     {
-        return $this->url(ProfileRouteList::YOUR_PROFILE_TQI, ['month' => $month, 'year' => $year]);
+        return $this->url(ProfileRouteList::YOUR_PROFILE_TQI, [], ['query' => $queryParams]);
     }
 
-    public function userSearchTqi($userId, $month, $year)
+    public function userSearchTqi($userId, array $queryParams = [])
     {
-        return $this->url(ProfileRouteList::USER_SEARCH_TQI, ['id' => $userId, 'month' => $month, 'year' => $year]);
+        return $this->url(ProfileRouteList::USER_SEARCH_TQI, ['id' => $userId], ['query' => $queryParams]);
     }
 
-    public function yourProfileTqiComponentsAtSite($siteId, $month, $year, $group)
+    public function yourProfileTqiComponentsAtSite(int $siteId, int $monthRange, string $group)
     {
-        return $this->url(ProfileRouteList::YOUR_PROFILE_TQI_COMPONENTS_AT_SITE, ['site' => $siteId, 'month' => $month, 'year' => $year, 'group' => $group]);
+        return $this->url(
+            ProfileRouteList::YOUR_PROFILE_TQI_COMPONENTS_AT_SITE,
+            ['site' => $siteId, 'group' => $group],
+            ['query' => ['monthRange' => $monthRange]]);
     }
 
-    public function userSearchTqiComponentsAtSite($userId, $siteId, $month, $year, $group)
+    public function userSearchTqiComponentsAtSite(int $userId, int $siteId, int $monthRange, string $group)
     {
-        return $this->url(ProfileRouteList::USER_SEARCH_TQI_COMPONENTS_AT_SITE, ['id' => $userId, 'site' => $siteId, 'month' => $month, 'year' => $year, 'group' => $group]);
+        return $this->url(
+            ProfileRouteList::USER_SEARCH_TQI_COMPONENTS_AT_SITE,
+            ['id' => $userId, 'site' => $siteId, 'group' => $group],
+            ['query' => ['monthRange' => $monthRange]]);
     }
 }

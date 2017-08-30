@@ -7,10 +7,14 @@ use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
+use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\NationalPerformanceReportDto;
+use DvsaCommon\Date\DateTimeHolder;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsRow;
+use Site\Form\TQIMonthRangeForm;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 
 class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
@@ -25,6 +29,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     const VTS_ID = 11;
     const CSV_FILE_SIZE = 10000;
     const IS_RETURN_TO_AE_TQI = false;
+    const THREE_MONTHS_RANGE = 3;
 
     /** @var UserTestQualityViewModel */
     protected $userTestQualityViewModelB;
@@ -35,28 +40,30 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->userTestQualityViewModelA = new UserTestQualityViewModel(
             self::buildUserPerformanceDto(),
-            SiteTestQualityViewModelTest::buildNationalStatisticsPerformanceDto()->getGroupA(),
+            $this->buildNationalStatisticsPerformanceDto()->getGroupA(),
             self::buildNationalComponentStatisticsDto(),
+            [],
             VehicleClassGroupCode::BIKES,
             self::USER_ID,
             self::buildVehicleTestingStationDto(),
-            self::buildViewedDate(),
-            self::CSV_FILE_SIZE,
+            new LastMonthsDateRange(new DateTimeHolder()),
             self::RETURN_LINK,
+            new TQIMonthRangeForm(),
             true
         );
 
         $this->userTestQualityViewModelB = new UserTestQualityViewModel(
             self::buildUserPerformanceDto(),
-            SiteTestQualityViewModelTest::buildNationalStatisticsPerformanceDto()->getGroupB(),
+            $this->buildNationalStatisticsPerformanceDto()->getGroupB(),
             self::buildNationalComponentStatisticsDto(),
+            [],
             VehicleClassGroupCode::CARS_ETC,
             self::USER_ID,
             self::buildVehicleTestingStationDto(),
-            self::buildViewedDate(),
-            self::CSV_FILE_SIZE,
+            new LastMonthsDateRange(new DateTimeHolder()),
             self::RETURN_LINK,
-            false
+            new TQIMonthRangeForm(),
+            true
         );
     }
 
@@ -99,8 +106,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     public static function buildNationalComponentStatisticsDto()
     {
         $national = new NationalComponentStatisticsDto();
-        $national->setMonth(4);
-        $national->setYear(2016);
+        $national->setMonthRange(self::THREE_MONTHS_RANGE);
 
         $brakes = new ComponentDto();
         $brakes->setId(self::COMPONENT_ONE_ID);
@@ -148,17 +154,17 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             UserTestQualityViewModel::$subtitles[VehicleClassGroupCode::BIKES],
-            $this->userTestQualityViewModelA->getTable()->getGroupDescription());
+            $this->userTestQualityViewModelA->getTable()->getAverageGroupStatisticsHeader()->getGroupDescription());
         $this->assertEquals(
             UserTestQualityViewModel::$subtitles[VehicleClassGroupCode::CARS_ETC],
-            $this->userTestQualityViewModelB->getTable()->getGroupDescription());
+            $this->userTestQualityViewModelB->getTable()->getAverageGroupStatisticsHeader()->getGroupDescription());
 
         $this->assertEquals(
-            'Group '.VehicleClassGroupCode::BIKES,
-            $this->userTestQualityViewModelA->getTable()->getGroupName());
+            VehicleClassGroupCode::BIKES,
+            $this->userTestQualityViewModelA->getTable()->getAverageGroupStatisticsHeader()->getGroupCode());
         $this->assertEquals(
-            'Group '.VehicleClassGroupCode::CARS_ETC,
-            $this->userTestQualityViewModelB->getTable()->getGroupName());
+            VehicleClassGroupCode::CARS_ETC,
+            $this->userTestQualityViewModelB->getTable()->getAverageGroupStatisticsHeader()->getGroupCode());
     }
 
     public static function buildVehicleTestingStationDto()
@@ -172,5 +178,29 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     public static function buildViewedDate()
     {
         return new DateTime();
+    }
+    public function buildNationalStatisticsPerformanceDto()
+    {
+        $national = new NationalPerformanceReportDto();
+        $national->setMonth(4);
+        $national->setYear(2016);
+
+        $groupA = new MotTestingPerformanceDto();
+        $groupA->setAverageTime(new TimeSpan(2, 2, 2, 2));
+        $groupA->setPercentageFailed(50);
+        $groupA->setTotal(10);
+
+        $national->setGroupA($groupA);
+
+        $groupB = new MotTestingPerformanceDto();
+        $groupB->setAverageTime(new TimeSpan(0, 0, 2, 2));
+        $groupB->setPercentageFailed(30);
+        $groupB->setTotal(5);
+
+        $national->setGroupB($groupB);
+
+        $national->getReportStatus()->setIsCompleted(true);
+
+        return $national;
     }
 }

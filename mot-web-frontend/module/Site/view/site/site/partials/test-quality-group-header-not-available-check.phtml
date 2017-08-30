@@ -1,0 +1,20 @@
+<?php
+
+/** @var bool $hasValue */
+/** @var mixed $value */
+/** @var string $suffix */
+/** @var string $id */
+
+$idString = 'id="%s"';
+$idString = !empty($id) ? sprintf($idString, $id) : '';
+?>
+
+<?php if (!$hasValue) : ?>
+    <span class="data-item bold-large" <?php echo $idString ?> >
+        No data <span class="line-break">available</span>
+    </span>
+<?php else : ?>
+    <span class="data-item bold-xxlarge" <?php echo $idString ?> >
+        <?php echo $value . $suffix; ?>
+    </span>
+<?php endif ?>

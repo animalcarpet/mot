@@ -9,7 +9,9 @@ use Dashboard\Factory\Controller\UserHomeControllerFactory;
 use Dashboard\Factory\Controller\UserTradeRolesControllerFactory;
 use Dashboard\ViewHelper\NotificationLinkViewHelper;
 use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
+use Dvsa\Mot\Frontend\PersonModule\Controller\TestQualityInformationController;
 use Dvsa\Mot\Frontend\PersonModule\Factory\Service\QualificationDetailsServiceFactory;
+use Site\Controller\SiteController;
 
 return [
 
@@ -38,11 +40,42 @@ return [
                 'child_routes' => [
                     'stats' => [
                         'type' => 'segment',
+                        'may_terminate' => true,
                         'options' => [
                             'route' => 'stats',
                             'defaults' => [
                                 'controller' => UserStatsController::class,
                                 'action' => 'show',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'test-quality-information' => [
+                                'type' => 'segment',
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route' => '/test-quality-information',
+                                    'defaults' => [
+                                        'controller' => TestQualityInformationController::class,
+                                        'action' => 'testQualityInformation',
+                                    ],
+                                ],
+                                'child_routes' => [
+                                    'component-breakdown-at-site' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/components-at-site/:site/:group',
+                                            'constraints' => [
+                                                'id' => '[0-9]+',
+                                                'group' => 'A|B',
+                                                'site' => '[0-9]+',
+                                            ],
+                                            'defaults' => [
+                                                'controller' => SiteController::class,
+                                                'action' => 'userTestQuality',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],

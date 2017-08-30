@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\Repository;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository\AbstractStatisticsRepository;
+use DvsaCommon\Date\LastMonthsDateRange;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryBuilder\ManyGroupsStatisticsQueryBuilder;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\Enum\MotTestStatusCode;
@@ -16,8 +17,6 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
 
     protected function getByParams(array $params)
     {
-        $this->setDaysConfiguration($params[self::PARAM_YEAR], $params[self::PARAM_MONTH]);
-
         $rsm = $this->buildResultSetMapping();
 
         $sql = $this->getSql();
@@ -46,14 +45,19 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
     {
         $testerPerformanceResult = new TesterPerformanceResult();
 
-        $testerPerformanceResult->setVehicleClassGroup($row['vehicleClassGroup'])
+        $testerPerformanceResult
             ->setPersonId($row['person_id'])
             ->setUsername($row['username'])
-            ->setTotalTime($row['totalTime'])
+            ->setFirstName($row['firstName'])
+            ->setMiddleName($row['middleName'])
+            ->setFamilyName($row['familyName'])
             ->setAverageVehicleAgeInMonths((float) $row['averageVehicleAgeInMonths'])
+            ->setVehicleClassGroup($row['vehicleClassGroup'])
+            ->setTotalTime($row['totalTime'])
             ->setIsAverageVehicleAgeAvailable(!is_null($row['averageVehicleAgeInMonths']))
+            ->setTotalCount($row ['totalCount'])
             ->setFailedCount($row['failedCount'])
-            ->setTotalCount($row ['totalCount']);
+        ;
 
         return $testerPerformanceResult;
     }
@@ -72,6 +76,9 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
             ->addScalarResult('totalTime', 'totalTime')
             ->addScalarResult('failedCount', 'failedCount')
             ->addScalarResult('totalCount', 'totalCount')
+            ->addScalarResult('firstName', 'firstName')
+            ->addScalarResult('middleName', 'middleName')
+            ->addScalarResult('familyName', 'familyName')
             ->addScalarResult('averageVehicleAgeInMonths', 'averageVehicleAgeInMonths');
     }
 

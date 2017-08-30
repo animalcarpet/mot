@@ -45,7 +45,7 @@ class MotTestFilter
 
     /**
      * @param DataCollection $motCollection
-     * @param int $months
+     * @param int $months Last n months to filter by
      * @return DataCollection
      */
     public function filterByMonths(DataCollection $motCollection, $months)
@@ -53,7 +53,7 @@ class MotTestFilter
         $startDate = new \DateTime(sprintf("first day of %d months ago", $months));
         $startDate->setTime(0, 0, 0);
 
-        $endDate = new \DateTime(sprintf("last day of %d months ago", $months));
+        $endDate = new \DateTime(sprintf("last day of 1 month ago"));
         $endDate->setTime(23, 59, 59);
 
         return $motCollection->filter(function (MotTestDto $mot) use ($startDate, $endDate) {

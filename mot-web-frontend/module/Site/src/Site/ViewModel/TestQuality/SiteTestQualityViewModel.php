@@ -5,17 +5,17 @@ namespace Site\ViewModel\TestQuality;
 use Core\BackLink\BackLinkQueryParam;
 use Core\Routing\AeRouteList;
 use Core\Routing\VtsRouteList;
-use DateTime;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\NationalPerformanceReportDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
-use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Date\Month;
+use DvsaCommon\Date\DateTimeHolderInterface;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
 use Organisation\Presenter\UrlPresenterData;
+use Site\Form\TQIMonthRangeForm;
 
 class SiteTestQualityViewModel
 {
@@ -34,28 +34,29 @@ class SiteTestQualityViewModel
     /** @var VehicleTestingStationDto */
     private $site;
 
-    /** @var DateTime */
-    private $viewedDate;
-
     /** @var UrlPresenterData */
     private $returnLink;
 
     /** @var bool */
     private $isReturnLinkToAETQI;
 
-    /** @var TestQualityMonthFilter $monthFilter */
-    private $monthFilter;
+    /**
+     * @var TQIMonthRangeForm
+     */
+    private $monthRangeForm;
+    private $monthRange;
+    private $dateTimeHolder;
 
     public function __construct(
         SitePerformanceDto $sitePerformanceDto,
         NationalPerformanceReportDto $nationalPerformanceStatisticsDto,
         $site,
-        DateTime $viewedDate,
-        $csvFileSizeGroupA,
-        $csvFileSizeGroupB,
         $isReturnLinkToAETQI,
-        TestQualityMonthFilter $monthFilter
-    ) {
+        TQIMonthRangeForm $monthRangeForm,
+        DateTimeHolderInterface $dateTimeHolder,
+        $monthRange
+    )
+    {
         $this->a = new GroupStatisticsTable(
             $sitePerformanceDto->getA(),
             $nationalPerformanceStatisticsDto->getReportStatus()->getIsCompleted(),
@@ -63,9 +64,7 @@ class SiteTestQualityViewModel
             'A',
             'Class 1 and 2',
             VehicleClassGroupCode::BIKES,
-            $site,
-            $viewedDate,
-            $csvFileSizeGroupA
+            $site
         );
 
         $this->b = new GroupStatisticsTable(
@@ -75,9 +74,7 @@ class SiteTestQualityViewModel
             'B',
             'Class 3, 4, 5 and 7',
             VehicleClassGroupCode::CARS_ETC,
-            $site,
-            $viewedDate,
-            $csvFileSizeGroupB
+            $site
         );
 
         $this->site = $site;
@@ -98,8 +95,6 @@ class SiteTestQualityViewModel
             $this->isBViewable = true;
         }
 
-        $this->viewedDate = $viewedDate;
-
         if ($isReturnLinkToAETQI) {
             $this->returnLink = new UrlPresenterData(self::RETURN_TO_AE_TQI, AeRouteList::AE_TEST_QUALITY, ['id' => $this->site->getOrganisation()->getId()]);
         } else {
@@ -107,15 +102,9 @@ class SiteTestQualityViewModel
         }
 
         $this->isReturnLinkToAETQI = $isReturnLinkToAETQI;
-
-        $oneMonthAgo = DateUtils::subtractCalendarMonths(DateUtils::toUserTz(new \DateTime()), 1);
-        $startMonth = new Month($oneMonthAgo->format('Y'), $oneMonthAgo->format('m'));
-        $viewedMonth = new Month($this->viewedDate->format('Y'), $this->viewedDate->format('m'));
-
-        $this->monthFilter = $monthFilter
-            ->setNumberOfMonthsBack(self::POSSIBLE_MONTHS_COUNT)
-            ->setStartMonth($startMonth)
-            ->setViewedMonth($viewedMonth);
+        $this->monthRangeForm = $monthRangeForm;
+        $this->monthRange = $monthRange;
+        $this->dateTimeHolder = $dateTimeHolder;
     }
 
     public function canGroupSectionBeViewed($group)
@@ -137,7 +126,7 @@ class SiteTestQualityViewModel
 
     public function getTestingPeriodTitle()
     {
-        return 'Initial tests '.date('F o', strtotime('last month'));
+        return 'Initial tests ' . date('F o', strtotime('last month'));
     }
 
     public function getSiteId()
@@ -145,17 +134,17 @@ class SiteTestQualityViewModel
         return $this->site->getId();
     }
 
-    public function getQueryParams()
+    public function getQueryParams():array
     {
+        $params = ['monthRange' => $this->monthRange];
+
         if ($this->isReturnLinkToAETQI) {
-            return [
-                'query' => [
-                    BackLinkQueryParam::RETURN_TO_AE_TQI => true,
-                ],
-            ];
-        } else {
-            return [];
+            $params[BackLinkQueryParam::RETURN_TO_AE_TQI] = true;
         }
+
+        return [
+            'query' => $params
+        ];
     }
 
     /** return UrlPresenterData */
@@ -164,8 +153,22 @@ class SiteTestQualityViewModel
         return $this->returnLink;
     }
 
-    public function getMonthFilter()
+    /**
+     * @return TQIMonthRangeForm
+     */
+    public function getMonthRangeForm():TQIMonthRangeForm
     {
-        return $this->monthFilter;
+        return $this->monthRangeForm;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateRangeWording():string
+    {
+        $range = new LastMonthsDateRange($this->dateTimeHolder);
+        $range->setNumberOfMonths($this->monthRange);
+
+        return $range->__toString();
     }
 }

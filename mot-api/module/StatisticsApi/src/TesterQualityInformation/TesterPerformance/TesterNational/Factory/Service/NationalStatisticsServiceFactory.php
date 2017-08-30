@@ -2,9 +2,11 @@
 
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Factory\Service;
 
+use DvsaCommon\Date\LastMonthsDateRange;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Repository\NationalStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Storage\NationalTesterPerformanceStatisticsStorage;
+use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateTimeHolderInterface;
 use DvsaCommon\Date\TimeSpan;
 use Zend\ServiceManager\FactoryInterface;
@@ -25,7 +27,8 @@ class NationalStatisticsServiceFactory implements FactoryInterface
             $repository,
             $storage,
             $dateTimeHolder,
-            new TimeSpan(0, 1, 0, 0)
+            new TimeSpan(0, 1, 0, 0),
+            new LastMonthsDateRange(new DateTimeHolder())
         );
     }
 }

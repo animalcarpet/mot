@@ -1,30 +1,24 @@
+
 <?php
-echo $this->partial('site/site/partials/test-quality-group-brakedown', [
-    'group' => $this->viewModel->getTable(),
-]);
-use Core\Routing\VtsRouteList;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 
 /** @var UserTestQualityViewModel $vm */
 $vm = $this->viewModel;
 ?>
 
-<?php if ($vm->showCsvSection()): ?>
-<div class="result__actions">
-    Download <?php echo $vm->getTable()->getGroupName(); ?> report as a
-    <a href="<?php echo $this->url(VtsRouteList::VTS_USER_TEST_QUALITY_CSV,
-        [
-            'userId' => $vm->getUserId(),
-            'id' => $vm->getSiteId(),
-            'group' => $vm->getTable()->getGroupCode(),
-            'month' => $vm->getMonth(),
-            'year' => $vm->getYear(),
-            'user',
-        ]) ?>" rel="external">
-        CSV (Spreadsheet)
-    </a> file (<?php echo $vm->getCsvFileSize() ?>).
+<div class="text">
+    <h2 class="heading-medium">Tests done in <?php echo $vm->getMonthRange() ?></h2>
 </div>
-<?php endif; ?>
+
+<?php
+echo $this->partial('site/site/test-quality-information/month-range-form', [
+    'form' => $vm->getMonthRangeForm(),
+]);
+
+echo $this->partial('site/site/partials/test-quality-group-breakdown', [
+    'group' => $vm->getTable(),
+]);
+?>
 
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">

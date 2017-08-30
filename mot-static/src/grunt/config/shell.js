@@ -73,6 +73,21 @@ module.exports = function(grunt, config) {
                 return 'curl -s ' + grunt.config.get('url.testsupport') + '/testsupport/clear-statistics-amazon-cache';
             }
         },
+        test_statistics_db_cache_clear: {
+            command: function () {
+                return 'curl -s ' + grunt.config.get('url.testsupport') + '/testsupport/clear-statistics-db-cache';
+            }
+        },
+        test_statistics_db_cache_generate: {
+            command: function () {
+                function genrerateCache(monthsAgo) {
+                    return 'curl -s <%= url.testsupport %>/testsupport/generate-statistics-db-cache/' + monthsAgo
+                }
+                return genrerateCache(1)
+                    + ' && ' + genrerateCache(2)
+                    + ' && ' + genrerateCache(3);
+            }
+        },
         update_all_java_services: {
             command: updateJavaService("all")
         },

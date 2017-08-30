@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\ParameterCheck\StatisticsParameterCheck;
+use DvsaCommon\Date\LastMonthsDateRange;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Report\NationalStatisticsReportGenerator;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Repository\NationalStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Storage\NationalTesterPerformanceStatisticsStorage;
@@ -17,50 +17,43 @@ class NationalStatisticsService
     private $storage;
     private $dateTimeHolder;
     private $timeoutPeriod;
+    /**
+     * @var LastMonthsDateRange
+     */
+    private $lastMonthsDateRange;
 
     public function __construct(
         NationalStatisticsRepository $nationalStatisticsRepository,
         NationalTesterPerformanceStatisticsStorage $storage,
         DateTimeHolderInterface $dateTimeHolder,
-        TimeSpan $timeoutPeriod
+        TimeSpan $timeoutPeriod,
+        LastMonthsDateRange $lastMonthsDateRange
     ) {
         $this->repository = $nationalStatisticsRepository;
         $this->storage = $storage;
         $this->dateTimeHolder = $dateTimeHolder;
         $this->timeoutPeriod = $timeoutPeriod;
+        $this->lastMonthsDateRange = $lastMonthsDateRange;
     }
 
     /**
-     * @param $year
-     * @param $month
-     *
+     * @param $monthRange
      * @return NationalPerformanceReportDto
-     *
      * @throws NotFoundException
      */
-    public function get($year, $month)
+    public function get(int $monthRange)
     {
-        $this->validateParams($year, $month);
         $generator = new NationalStatisticsReportGenerator(
             $this->repository,
             $this->storage,
             $this->dateTimeHolder,
             $this->timeoutPeriod,
-            $year,
-            $month
+            $this->lastMonthsDateRange->setNumberOfMonths($monthRange)
         );
 
         /** @var NationalPerformanceReportDto $reportDto */
         $reportDto = $generator->get();
 
         return $reportDto;
-    }
-
-    private function validateParams($year, $month)
-    {
-        $validator = new StatisticsParameterCheck();
-        if (!$validator->isValid($year, $month)) {
-            throw new NotFoundException('National Statistics');
-        }
     }
 }

@@ -28,10 +28,14 @@ class ComponentBreakdownDtoMapper implements AutoWireableInterface
         if (!empty($components)) {
             foreach ($components as $component) {
                 $componentDto = new ComponentDto();
-                $componentDto->setPercentageFailed($testerPerformance->getFailedCount() ?
-                    100 * $component->getFailedCount() / $testerPerformance->getFailedCount() : 0)
+                $componentDto
                     ->setName($component->getTestItemCategoryName())
                     ->setId($component->getTestItemCategoryId());
+
+                if($testerPerformance){
+                    $componentDto->setPercentageFailed($testerPerformance->getFailedCount() ?
+                    100 * $component->getFailedCount() / $testerPerformance->getFailedCount() : 0);
+                }
 
                 $componentDtos[] = $componentDto;
             }
@@ -40,14 +44,18 @@ class ComponentBreakdownDtoMapper implements AutoWireableInterface
         }
 
         $groupPerformanceDto = new MotTestingPerformanceDto();
-        $groupPerformanceDto->setPercentageFailed($testerPerformance->getTotalCount() ?
-            100 * $testerPerformance->getFailedCount() / $testerPerformance->getTotalCount() : 0)
-            ->setTotal($testerPerformance->getTotalCount())
-            ->setAverageVehicleAgeInMonths($testerPerformance->getAverageVehicleAgeInMonths())
-            ->setIsAverageVehicleAgeAvailable($testerPerformance->getIsAverageVehicleAgeAvailable())
-            ->setAverageTime(new TimeSpan(0, 0, 0, $testerPerformance->getTotalCount() ?
-                $testerPerformance->getTotalTime() / $testerPerformance->getTotalCount() : 0));
-        $componentBreakdownDto->setSiteName($testerPerformance->getSiteName());
+        if($testerPerformance){
+            $groupPerformanceDto->setPercentageFailed($testerPerformance->getTotalCount() ?
+                100 * $testerPerformance->getFailedCount() / $testerPerformance->getTotalCount() : 0)
+                ->setTotal($testerPerformance->getTotalCount())
+                ->setAverageVehicleAgeInMonths($testerPerformance->getAverageVehicleAgeInMonths())
+                ->setIsAverageVehicleAgeAvailable($testerPerformance->getIsAverageVehicleAgeAvailable())
+                ->setAverageTime(new TimeSpan(0, 0, 0, $testerPerformance->getTotalCount() ?
+                    $testerPerformance->getTotalTime() / $testerPerformance->getTotalCount() : 0));
+
+            $componentBreakdownDto->setSiteName($testerPerformance->getSiteName());
+        }
+
         $componentBreakdownDto->setGroupPerformance($groupPerformanceDto);
         $componentBreakdownDto->setUserName($person->getUsername());
         $componentBreakdownDto->setDisplayName($person->getDisplayName());

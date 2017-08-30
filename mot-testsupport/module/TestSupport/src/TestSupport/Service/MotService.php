@@ -95,4 +95,10 @@ class MotService
         $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_survey')->execute();
         $this->entityManager->getConnection()->prepare('DELETE FROM mot_test')->execute();
     }
+
+    public function removeAllTestStatistics()
+    {
+        $this->entityManager->getConnection()->prepare('DELETE FROM tqi_rfr_count')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM tqi_test_count')->execute();
+    }
 }

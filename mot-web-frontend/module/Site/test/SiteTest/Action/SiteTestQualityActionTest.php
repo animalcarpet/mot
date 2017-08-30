@@ -17,17 +17,17 @@ use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\VehicleClassGroup;
+use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Action\SiteTestQualityAction;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
-use Zend\Mvc\Controller\Plugin\Url;
 
 class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
 {
     const SITE_ID = 1;
     const SITE_NAME = 'name';
-    const MONTH = '04';
+    const MONTHS_RANGE = 1;
     const YEAR = '2015';
     const RETURN_LINK = '/vehicle-testing-station/1';
     const REQUIRED_PERMISSION = PermissionAtSite::VTS_VIEW_TEST_QUALITY;
@@ -61,18 +61,16 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
     /** @var SitePerformanceDto */
     private $sitePerformanceDto;
 
-    private $url;
-
     protected function setUp()
     {
         $this->sitePerformanceDto = $this->buildSitePerformanceDto();
 
         $this->sitePerformanceApiResourceMock = XMock::of(SitePerformanceApiResource::class);
-        $this->sitePerformanceApiResourceMock->method('getForDate')
+        $this->sitePerformanceApiResourceMock->method('getForMonthRange')
             ->willReturn($this->sitePerformanceDto);
 
         $this->nationalPerformanceApiResourceMock = XMock::of(NationalPerformanceApiResource::class);
-        $this->nationalPerformanceApiResourceMock->method('getForDate')
+        $this->nationalPerformanceApiResourceMock->method('getForMonths')
             ->willReturn($this->buildNationalStatisticsPerformanceDto());
 
         $this->siteDto = (new VehicleTestingStationDto())
@@ -93,19 +91,9 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
             $this->sitePerformanceApiResourceMock,
             $this->nationalPerformanceApiResourceMock,
             $this->siteMapper,
-            new ViewVtsTestQualityAssertion($this->authorisationService)
+            new ViewVtsTestQualityAssertion($this->authorisationService),
+            new TestDateTimeHolder(new \DateTime('2015-02-14'))
         );
-
-        $urlMethods = get_class_methods(Url::class);
-        $urlMethods[] = '__invoke';
-
-        $url = XMock::of(Url::class, $urlMethods);
-        $url
-            ->expects($this->any())
-            ->method('__invoke')
-            ->willReturn('http://link');
-
-        $this->url = $url;
     }
 
     /**
@@ -117,26 +105,13 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService->clearAll();
 
         // WHEN I try to view it
-        $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
+        $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
         // THEN I get an exception
-    }
-
-    /**
-     * @expectedException \DvsaCommon\Exception\UnauthorisedException
-     */
-    public function testAssertionIsCheckedForCsv()
-    {
-        // GIVEN I have no permission to view the page
-        $this->authorisationService->clearAll();
-
-        //WHEN I try to download CSV
-        $this->siteTestQualityAction->getCsv(self::SITE_ID, self::MONTH, self::YEAR, self::GROUP_CODE);
-        //THEN I get an exception
     }
 
     public function testValuesArePopulatedToLayoutResult()
     {
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
 
         /** @var SiteTestQualityViewModel $vm */
         $vm = $result->getViewModel();
@@ -147,16 +122,8 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::SITE_NAME, $result->layout()->getPageTitle());
         $this->assertNotNull($result->layout()->getPageSubTitle());
         $this->assertNotNull($result->layout()->getTemplate());
-        $this->assertNotNull($result->layout()->getPageTertiaryTitle());
 
         $this->assertSame($this->breadcrumbs, $result->layout()->getBreadcrumbs());
-    }
-
-    public function testCsvFileIsReturned()
-    {
-        $result = $this->siteTestQualityAction->getCsv(self::SITE_ID, self::MONTH, self::YEAR, self::GROUP_CODE);
-
-        $this->assertInstanceOf(CsvFile::class, $result->getFile());
     }
 
     /**
@@ -174,7 +141,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite(0, 0);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();
@@ -200,7 +167,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite($groupATests, $groupBTests);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();
@@ -227,7 +194,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite(0, 0);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();
@@ -245,7 +212,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite(0, 0);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();

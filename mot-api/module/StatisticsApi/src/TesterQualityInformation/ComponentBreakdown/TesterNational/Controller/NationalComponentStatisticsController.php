@@ -17,10 +17,9 @@ class NationalComponentStatisticsController extends AbstractDvsaRestfulControlle
 
     public function get($group)
     {
-        $year = (int) $this->params()->fromRoute('year');
-        $month = (int) $this->params()->fromRoute('month');
+        $monthRange = (int) $this->params()->fromRoute('monthRange');
 
-        $dto = $this->service->get($year, $month, strtoupper($group));
+        $dto = $this->service->get($monthRange, strtoupper($group));
 
         return $this->returnDto($dto);
     }

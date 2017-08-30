@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Report;
 
 use Dvsa\Mot\Api\StatisticsApi\ReportGeneration\AbstractReportGenerator;
+use DvsaCommon\Date\LastMonthsDateRange;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\QueryResult\NationalStatisticsResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Repository\NationalStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Storage\NationalTesterPerformanceStatisticsStorage;
@@ -18,20 +19,21 @@ class NationalStatisticsReportGenerator extends AbstractReportGenerator
     private $storage;
     private $year;
     private $month;
+    private $lastMonthsDateRange;
 
     public function __construct(
         NationalStatisticsRepository $nationalStatisticsRepository,
         NationalTesterPerformanceStatisticsStorage $storage,
         DateTimeHolderInterface $dateTimeHolder,
         TimeSpan $timeoutPeriod,
-        $year,
-        $month
+        LastMonthsDateRange $lastMonthsDateRange
     ) {
         parent::__construct($dateTimeHolder, $timeoutPeriod);
         $this->repository = $nationalStatisticsRepository;
         $this->storage = $storage;
-        $this->year = $year;
-        $this->month = $month;
+        $this->lastMonthsDateRange = $lastMonthsDateRange;
+        $this->year = $dateTimeHolder->getCurrent()->format('Y');
+        $this->month = $dateTimeHolder->getCurrent()->format('n');
     }
 
     /**
@@ -39,21 +41,21 @@ class NationalStatisticsReportGenerator extends AbstractReportGenerator
      */
     protected function getFromStorage()
     {
-        return $this->storage->get($this->year, $this->month);
+        return $this->storage->get($this->year, $this->month, $this->lastMonthsDateRange->getNumberOfMonths());
     }
 
     protected function generateReport()
     {
-        $statistics = $this->repository->getStatistics($this->year, $this->month);
+        $statistics = $this->repository->getStatistics($this->lastMonthsDateRange);
 
-        $report = $this->createDtoFromDbResult($statistics, $this->year, $this->month);
+        $report = $this->createDtoFromDbResult($statistics, $this->year, $this->month, $this->lastMonthsDateRange->getNumberOfMonths());
 
         return $report;
     }
 
     protected function storeReport($report)
     {
-        $this->storage->store($this->year, $this->month, $report);
+        $this->storage->store($this->year, $this->month, $this->lastMonthsDateRange->getNumberOfMonths(), $report);
     }
 
     /**
@@ -72,11 +74,12 @@ class NationalStatisticsReportGenerator extends AbstractReportGenerator
         return $dto;
     }
 
-    private function createDtoFromDbResult(NationalStatisticsResult $report, $year, $month)
+    private function createDtoFromDbResult(NationalStatisticsResult $report, $year, $month, $monthRange)
     {
         $dto = new NationalPerformanceReportDto();
         $dto->setYear($year);
         $dto->setMonth($month);
+        $dto->setMonthRange($monthRange);
 
         $groupADto = $this->createGroupADto($report);
         $groupBDto = $this->createGroupBDto($report);

@@ -2,7 +2,6 @@
 
 namespace DvsaCommon\ApiClient\Statistics\TesterPerformance;
 
-use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\AbstractApiResource;
@@ -11,12 +10,11 @@ class TesterPerformanceApiResource extends AbstractApiResource implements AutoWi
 {
     /**
      * @param $personId
-     * @param $month
-     * @param $year
+     * @param int $monthRange
      * @return TesterPerformanceDto
      */
-    public function get($personId, $month, $year)
+    public function get(int $personId, int $monthRange):TesterPerformanceDto
     {
-        return $this->getSingle(TesterPerformanceDto::class, sprintf('statistic/tester-performance/tester/%s/%s/%s', $personId, $year, $month));
+        return $this->getSingle(TesterPerformanceDto::class, sprintf('statistic/tester-performance/tester/%s/%s', $personId, $monthRange));
     }
 }
