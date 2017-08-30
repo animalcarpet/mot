@@ -8,9 +8,8 @@ use DvsaCommon\DtoSerialization\ReflectiveDtoInterface;
 
 class NationalComponentStatisticsDto implements ReflectiveDtoInterface, ReportDtoInterface
 {
-    private $month;
-    private $year;
     private $group;
+    private $monthRange;
     /** @var  \DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto[] */
     private $components;
 
@@ -20,28 +19,6 @@ class NationalComponentStatisticsDto implements ReflectiveDtoInterface, ReportDt
     function __construct()
     {
         $this->reportStatus = new ReportStatusDto();
-    }
-
-    public function getMonth()
-    {
-        return $this->month;
-    }
-
-    public function setMonth($month)
-    {
-        $this->month = $month;
-        return $this;
-    }
-
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    public function setYear($year)
-    {
-        $this->year = $year;
-        return $this;
     }
 
     public function getGroup()
@@ -82,5 +59,15 @@ class NationalComponentStatisticsDto implements ReflectiveDtoInterface, ReportDt
     {
         $this->reportStatus = $reportStatus;
         return $this;
+    }
+
+    public function getMonthRange()
+    {
+        return $this->monthRange;
+    }
+
+    public function setMonthRange($monthRange)
+    {
+        $this->monthRange = $monthRange;
     }
 }

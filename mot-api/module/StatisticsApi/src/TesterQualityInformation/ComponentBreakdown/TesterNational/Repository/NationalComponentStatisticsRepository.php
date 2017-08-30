@@ -5,16 +5,17 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown
 use Doctrine\ORM\Query\ResultSetMapping;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\QueryBuilder\NationalComponentBreakdownQueryBuilder;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class NationalComponentStatisticsRepository extends ComponentStatisticsRepository implements AutoWireableInterface
 {
-    public function get($group, $year, $month)
+    public function get($group, LastMonthsDateRange $monthRange)
     {
         $qb = new NationalComponentBreakdownQueryBuilder();
 
-        $this->setDaysConfiguration($year, $month);
+        $this->setMonthsRangeConfiguration($monthRange);
 
         return $this->getResult($qb->getSql(), [
             ComponentStatisticsRepository::PARAM_GROUP => $group,
@@ -23,9 +24,9 @@ class NationalComponentStatisticsRepository extends ComponentStatisticsRepositor
         ]);
     }
 
-    public function getNationalFailedMotTestCount($group, $year, $month)
+    public function getNationalFailedMotTestCount($group, LastMonthsDateRange $monthRange)
     {
-        $this->setDaysConfiguration($year, $month);
+        $this->setMonthsRangeConfiguration($monthRange);
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('testCount', 'testCount');

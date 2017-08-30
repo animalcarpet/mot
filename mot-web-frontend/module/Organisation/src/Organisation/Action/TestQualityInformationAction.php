@@ -2,7 +2,7 @@
 
 namespace Organisation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\AbstractActionResult;
 use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Routing\AeRoutes;
@@ -54,7 +54,7 @@ class TestQualityInformationAction implements AutoWireableInterface
         $this->url = $url;
     }
 
-    /*
+    /**
      * @return AbstractActionResult
      */
     public function execute($organisationId, $page)

@@ -9,18 +9,26 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterAtSiteSingleGroupStatisticsRepository;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Date\DateTimeHolder;
+use DvsaCommon\Date\DateTimeHolderInterface;
 use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonApiTest\Stub\ApiIdentityProviderStub;
 use DvsaCommonApiTest\Stub\IdentityStub;
+use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\Site;
+use DvsaEntities\Repository\SiteRepository;
 use PersonApi\Service\PersonalDetailsService;
 
 class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 {
+    const PERIOD_LAST_3_MONTHS = 3;
+    private $siteRepository;
     /** @var TesterAtSiteComponentStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject */
     private $componentStatisticsRepositoryMock;
     /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterAtSiteSingleGroupStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject */
@@ -35,9 +43,12 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
     private $siteId = 1;
     /** @var ApiIdentityProviderStub */
     private $identityProvider;
+    /** @var DateTimeHolderInterface */
+    private $dateTimeHolder;
 
     public function setUp()
     {
+        $this->dateTimeHolder = XMock::of(DateTimeHolder::class);
         $this->componentStatisticsRepositoryMock = XMock::of(TesterAtSiteComponentStatisticsRepository::class);
         $this->testerStatisticsRepositoryMock = XMock::of(TesterAtSiteSingleGroupStatisticsRepository::class);
         $this->authorisationService = new AuthorisationServiceMock();
@@ -54,12 +65,17 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
         $this->identityProvider = new ApiIdentityProviderStub();
         $this->identityProvider->setIdentity($identityStub);
 
+        $this->siteRepository = XMock::of(SiteRepository::class);
+        $this->siteRepository->method('get')->willReturn(new Site());
+
         $this->sut = new TesterAtSiteComponentStatisticsService($this->componentStatisticsRepositoryMock,
             $this->testerStatisticsRepositoryMock,
             $this->authorisationService,
             $this->personalDetailsService,
             new ComponentBreakdownDtoMapper(),
-            $this->identityProvider
+            $this->identityProvider,
+            new TestDateTimeHolder(DateUtils::today()),
+            $this->siteRepository
         );
     }
 
@@ -68,11 +84,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
      */
     public function testGetThrowsExceptionForInvalidData()
     {
-        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval('P1M'));
-        $year = (int) $date->format('Y');
-        $month = (int) $date->format('m');
-
-        $this->sut->get(1, 1, 'x', $year, $month);
+        $this->sut->get(1, 1, 'x', 0);
     }
 
     /**
@@ -95,10 +107,6 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
         $expectedPercentageFailed,
         $expectedAverageVehicleAge
     ) {
-        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval('P1M'));
-        $year = (int) $date->format('Y');
-        $month = (int) $date->format('m');
-
         $this->componentStatisticsRepositoryMock->method('get')
             ->willReturn([]);
 
@@ -107,7 +115,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
             ->method('get')
             ->willReturn($this->getTesterPerformanceResult($failedCount, $totalCount, $totalTime, $averageVehicleAge, 'Popular Garage'));
 
-        $result = $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
+        $result = $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, self::PERIOD_LAST_3_MONTHS);
 
         $this->assertEquals($expectedAverageTime, $result->getGroupPerformance()->getAverageTime()->getTotalSeconds());
         $this->assertEquals($expectedPercentageFailed, $result->getGroupPerformance()->getPercentageFailed());
@@ -135,10 +143,6 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
      */
     public function testComponentFailRateCalculation($failedCount, $expectedPercentage)
     {
-        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval('P1M'));
-        $year = (int) $date->format('Y');
-        $month = (int) $date->format('m');
-
         $this->componentStatisticsRepositoryMock->method('get')
             ->willReturn($this->getComponentResultsMock([
                 'Test Component' => $failedCount,
@@ -149,7 +153,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
             ->method('get')
             ->willReturn($this->getTesterPerformanceResult(10, 10, 0, 123, 'Popular Garage'));
 
-        $result = $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
+        $result = $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, self::PERIOD_LAST_3_MONTHS);
 
         $this->assertEquals($expectedPercentage, $result->getComponents()[0]->getPercentageFailed());
     }
@@ -193,9 +197,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
 
     public function testLastMonthStatisticsAreFetchedFromRepository()
     {
-        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval('P1M'));
-        $year = (int) $date->format('Y');
-        $month = (int) $date->format('m');
+        $monthRange = 1;
 
         $this->componentStatisticsRepositoryMock->method('get')
             ->willReturn([]);
@@ -207,11 +209,10 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
             ->willReturn(new TesterAtSitePerformanceResult());
         $testerStatisticsRepositorySpy = new MethodSpy($this->testerStatisticsRepositoryMock, 'get');
 
-        $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
+        $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $monthRange);
 
-        $this->assertRepositoryParameters($componentRepositorySpy->getInvocations()[0]->parameters, $year, $month);
-        $this->assertRepositoryParameters($testerStatisticsRepositorySpy->getInvocations()[0]->parameters, $year,
-            $month);
+        $this->assertRepositoryParameters($componentRepositorySpy->getInvocations()[0]->parameters, $monthRange);
+        $this->assertRepositoryParameters($testerStatisticsRepositorySpy->getInvocations()[0]->parameters, $monthRange);
     }
 
     public function testGetFetchedStatisticsFromRepository()
@@ -224,17 +225,10 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
             ->willReturn(new TesterAtSitePerformanceResult());
         $testerStatisticsRepositorySpy = new MethodSpy($this->testerStatisticsRepositoryMock, 'get');
 
-        $date = $this->getFirstOfThisMonth();
-        $date->sub(new \DateInterval('P3M'));
+        $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, self::PERIOD_LAST_3_MONTHS);
 
-        $year = (int) $date->format('Y');
-        $month = (int) $date->format('m');
-
-        $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
-
-        $this->assertRepositoryParameters($componentRepositorySpy->getInvocations()[0]->parameters, $year, $month);
-        $this->assertRepositoryParameters($testerStatisticsRepositorySpy->getInvocations()[0]->parameters, $year,
-            $month);
+        $this->assertRepositoryParameters($componentRepositorySpy->getInvocations()[0]->parameters, self::PERIOD_LAST_3_MONTHS);
+        $this->assertRepositoryParameters($testerStatisticsRepositorySpy->getInvocations()[0]->parameters, self::PERIOD_LAST_3_MONTHS);
     }
 
     /**
@@ -245,26 +239,16 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
         // GIVEN I do not have any permissions
         $this->authorisationService->clearAll();
 
-        $date = $this->getFirstOfThisMonth();
-        $year = (int) $date->format('Y');
-        $month = (int) $date->format('m');
-
-        $this->sut->get(1, 2, VehicleClassGroupCode::BIKES, $year, $month);
+        $this->sut->get(1, 2, VehicleClassGroupCode::BIKES, self::PERIOD_LAST_3_MONTHS);
     }
 
-    public function assertRepositoryParameters($parameters, $expectedYear, $expectedMonth)
+    public function assertRepositoryParameters($parameters, $expectedMonthRange)
     {
-        $repositoryYear = $parameters[3];
-        $repositoryMonth = $parameters[4];
+        /** @var LastMonthsDateRange $repositoryMonthRange */
+        $repositoryMonthRange = $parameters[3];
         $repositoryGroup = $parameters[2];
 
-        $this->assertEquals($expectedYear, $repositoryYear);
-        $this->assertEquals($expectedMonth, $repositoryMonth);
+        $this->assertEquals($expectedMonthRange, $repositoryMonthRange->getNumberOfMonths());
         $this->assertEquals(VehicleClassGroupCode::BIKES, $repositoryGroup);
-    }
-
-    private function getFirstOfThisMonth()
-    {
-        return DateUtils::firstOfThisMonth();
     }
 }

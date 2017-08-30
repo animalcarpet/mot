@@ -116,11 +116,9 @@ return [
             'vehicle-testing-station-test-quality' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/vehicle-testing-station/:id/test-quality[/:month][/:year]',
+                    'route' => '/vehicle-testing-station/:id/test-quality',
                     'constraints' => [
                         'id' => '[0-9]+',
-                        'month' => '[0-9]+',
-                        'year' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => SiteController::class,
@@ -143,18 +141,6 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes' => [
-                            'csv' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/csv',
-                                    'defaults' => [
-                                        'controller' => SiteController::class,
-                                        'action' => 'userTestQualityCsv',
-                                    ],
-                                ],
-                            ],
-                        ],
                     ],
                     'user-profile-test-quality' => [
                         'type' => 'segment',

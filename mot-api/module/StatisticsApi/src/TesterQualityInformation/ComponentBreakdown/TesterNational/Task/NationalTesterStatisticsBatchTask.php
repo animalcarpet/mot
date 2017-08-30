@@ -2,27 +2,26 @@
 
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Task;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Task\AbstractBatchTask;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService;
-use DvsaCommon\Date\Month;
 
-class NationalTesterStatisticsBatchTask extends AbstractBatchTask
+class NationalTesterStatisticsBatchTask
 {
     private $service;
+    private $monthRange;
 
-    public function __construct(Month $month, NationalStatisticsService $service)
+    public function __construct(int $monthRange, NationalStatisticsService $service)
     {
-        parent::__construct($month);
         $this->service = $service;
+        $this->monthRange = $monthRange;
     }
 
     public function execute()
     {
-        $this->service->get($this->getMonth()->getYear(), $this->getMonth()->getMonth());
+        $this->service->get($this->monthRange);
     }
 
     public function getName()
     {
-        return sprintf('National tester performance batch task - %s/%s', $this->getMonth()->getYear(), $this->getMonth()->getMonth());
+        return sprintf('National tester performance batch task - %s', $this->monthRange);
     }
 }

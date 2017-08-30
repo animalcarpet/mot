@@ -1,0 +1,28 @@
+<?php
+use Site\Form\TQIMonthRangeForm;
+
+/** @var $form TQIMonthRangeForm */
+
+?>
+<form action="" method="get">
+    <div class="form-group">
+        <fieldset class="inline">
+            <legend class="heading-small">Choose a date range</legend>
+            <div class="multiple-choice">
+                <?php echo $this->partial('simpleRadio', [
+                    'radio' => $form->getRadio1Month(),
+                ]) ?>
+            </div>
+            <div class="multiple-choice">
+                <?php echo $this->partial('simpleRadio', [
+                    'radio' => $form->getRadio3Months(),
+                ]) ?>
+            </div>
+            <div class="inline-element">
+                <?php echo $this->formElement($form->getSubmit()) ?>
+            </div>
+
+            <?php echo $this->formElement($form->getBackTo()) ?>
+        </fieldset>
+    </div>
+</form>

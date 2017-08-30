@@ -44,18 +44,38 @@ public class UserTestQualityViewTest extends DslTest {
         rfrList.add(ReasonForRejection.WARNING_LAMP_MISSING);
 
         motApi.createTestWithRfr(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, MILEAGE, getFirstDayOfPreviousMonth(), rfrList);
+                vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, MILEAGE, getFirstDayOfPreviousMonth(), rfrList);
 
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
 
         //Then tester statistics are displayed
         UserTestQualityPage userTestQualityPage = siteTestQualityPage.goToUserTestQualityPageForGroupA(tester.getUsername());
-        assertThat("Test count is correct", userTestQualityPage.getTestCount(), is(1));
         //And return link is displayed
         assertThat("Return link is displayed", userTestQualityPage.isReturnLinkDisplayed(), is(true));
-        //And correct average is calculated
-        assertThat("Correct average is displayed", userTestQualityPage.testerAverageEquals("Motorcycle lighting and signalling", 100), is(true));
+    }
+
+    @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site for 3 months")
+    public void viewUserTestQualityForThreeMonthsForGroupA() throws IOException, URISyntaxException {
+        //National stats calculations are cached
+        siteData.clearAllCachedStatistics();
+
+        //Given there are tests created for site in previous month
+        List<ReasonForRejection> rfrList = new ArrayList<>();
+        rfrList.add(ReasonForRejection.WARNING_LAMP_MISSING);
+
+        motApi.createTestWithRfr(tester, site.getId(),
+                vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, MILEAGE, getFirstDayOfThreeMonthAgo(), rfrList);
+
+        //When I go to site Test Quality page
+        SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
+
+        //Then tester statistics are displayed
+        siteTestQualityPage = siteTestQualityPage.choose3MonthRange();
+        UserTestQualityPage userTestQualityPage = siteTestQualityPage.goToUserTestQualityPageForGroupA(tester.getUsername());
+
+        //And return link is displayed
+        assertThat("Return link is displayed", userTestQualityPage.isReturnLinkDisplayed(), is(true));
     }
 
     @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site")
@@ -68,21 +88,45 @@ public class UserTestQualityViewTest extends DslTest {
         rfrList.add(ReasonForRejection.HORN_CONTROL_MISSING);
 
         motApi.createTestWithRfr(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.FAILED, MILEAGE, getFirstDayOfPreviousMonth(), rfrList);
+                vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.FAILED, MILEAGE, getFirstDayOfPreviousMonth(), rfrList);
 
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
 
         //Then tester statistics are displayed
         UserTestQualityPage userTestQualityPage = siteTestQualityPage.goToUserTestQualityPageForGroupB(tester.getUsername());
-        assertThat("Test count is correct", userTestQualityPage.getTestCount(), is(1));
         //And return link is displayed
         assertThat("Return link is displayed", userTestQualityPage.isReturnLinkDisplayed(), is(true));
-        //And correct average is calculated
-        assertThat("Correct average is displayed", userTestQualityPage.testerAverageEquals("Lamps, Reflectors and Electrical Equipment", 100), is(true));
+    }
+
+    @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site for 3 months")
+    public void viewUserTestQualityForThreeMonthsForGroupB() throws IOException, URISyntaxException {
+        //National stats calculations are cached
+        siteData.clearAllCachedStatistics();
+
+        //Given there are tests created for site in previous month
+        List<ReasonForRejection> rfrList = new ArrayList<>();
+        rfrList.add(ReasonForRejection.HORN_CONTROL_MISSING);
+
+        motApi.createTestWithRfr(tester, site.getId(),
+            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.FAILED, MILEAGE, getFirstDayOfThreeMonthAgo(), rfrList);
+
+        //When I go to site Test Quality page
+        SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
+
+        //Then tester statistics are displayed for the same month as we choose on VTS page
+        siteTestQualityPage = siteTestQualityPage.choose3MonthRange();
+        UserTestQualityPage userTestQualityPage = siteTestQualityPage.goToUserTestQualityPageForGroupB(tester.getUsername());
+
+        //And return link is displayed
+        assertThat("Return link is displayed", userTestQualityPage.isReturnLinkDisplayed(), is(true));
     }
 
     private DateTime getFirstDayOfPreviousMonth() {
         return DateTime.now().dayOfMonth().withMinimumValue().minusMonths(1);
+    }
+
+    private DateTime getFirstDayOfThreeMonthAgo() {
+        return DateTime.now().dayOfMonth().withMinimumValue().minusMonths(3);
     }
 }

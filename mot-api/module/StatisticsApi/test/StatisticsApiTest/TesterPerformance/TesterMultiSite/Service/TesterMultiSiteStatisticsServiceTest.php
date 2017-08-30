@@ -2,21 +2,20 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\TesterMultiSite\Service;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper\TesterStatisticsMapper;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\QueryResult\TesterMultiSitePerformanceResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\Repository\TesterMultiSiteStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\Service\TesterMultiSiteStatisticsService;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterMultiSitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterMultiSitePerformanceReportDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
+use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
 
 class TesterMultiSiteStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 {
     const TESTER_ID = 1;
-    const YEAR = 2016;
-    const MONTH = 8;
+    const MONTH_RANGE = 3;
     const ADDRESS_LINE_1 = 'address line 1';
     const TOWN = 'town';
     const COUNTRY = 'country';
@@ -28,8 +27,6 @@ class TesterMultiSiteStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     /** @var TesterMultiSiteStatisticsRepository */
     private $repository;
-    /** @var TesterStatisticsMapper */
-    private $mapper;
 
     /** @var TesterMultiSiteStatisticsService */
     private $sut;
@@ -41,17 +38,16 @@ class TesterMultiSiteStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->willReturn($this->createRepositoryResult());
 
-        $this->mapper = new TesterStatisticsMapper();
 
         $this->sut = new TesterMultiSiteStatisticsService(
             $this->repository,
-            $this->mapper
+            new TestDateTimeHolder(new \DateTime('2015-02-15'))
         );
     }
 
     public function testGetReturnsDto()
     {
-        $result = $this->sut->get(self::TESTER_ID, self::YEAR, self::MONTH);
+        $result = $this->sut->get(self::TESTER_ID, self::MONTH_RANGE);
 
         $this->assertInstanceOf(TesterMultiSitePerformanceReportDto::class, $result);
         $this->assertCount(2, $result->getA());

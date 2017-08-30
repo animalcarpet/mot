@@ -1,0 +1,60 @@
+<?php
+
+/* @var \Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\AverageGroupStatisticsHeader $group */
+/* @var array $queryParams */
+?>
+
+<div class="text">
+    <h2 class="heading-medium">
+        Group <?php echo $group->getGroupCode() ?>
+        <span class="heading-meta"><?php echo $group->getGroupDescription() ?></span>
+    </h2>
+</div>
+
+<div class="grid-row">
+    <div class="column-quarter">
+        <div class="data">
+            <?php echo $this->partial('site/site/partials/test-quality-group-header-not-available-check', [
+                'hasValue' => true,
+                'value' => $group->getTestCount(),
+                'id' => 'test-count',
+            ]); ?>
+            <span class="data-item bold-xsmall">tests done</span>
+        </div>
+    </div>
+
+    <div class="column-quarter">
+        <div class="data">
+            <?php echo $this->partial('site/site/partials/test-quality-group-header-not-available-check', [
+                'hasValue' => $group->getIsAverageVehicleAgeAvailable(),
+                'value' => $group->getAverageVehicleAge(),
+                'suffix' => 'y',
+                'id' => 'average-vehicle-age',
+            ]); ?>
+            <span class="data-item bold-xsmall">average vehicle age</span>
+        </div>
+    </div>
+
+    <div class="column-quarter">
+        <div class="data">
+            <?php echo $this->partial('site/site/partials/test-quality-group-header-not-available-check', [
+                'hasValue' => $group->isAverageTestTime(),
+                'value' => $group->getAverageTestDuration(),
+                'suffix' => 'm',
+                'id' => 'average-duration',
+            ]); ?>
+            <span class="data-item bold-xsmall">average test time</span>
+        </div>
+    </div>
+
+    <div class="column-quarter">
+        <div class="data">
+            <?php echo $this->partial('site/site/partials/test-quality-group-header-not-available-check', [
+                'hasValue' => $group->getFailurePercentage() != null,
+                'value' => $group->getFailurePercentage(),
+                'id' => 'failure-percentage',
+            ]); ?>
+            <span class="data-item bold-xsmall">tests failed</span>
+        </div>
+    </div>
+</div>

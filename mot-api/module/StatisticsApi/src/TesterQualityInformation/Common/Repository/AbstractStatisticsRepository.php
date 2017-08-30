@@ -4,6 +4,7 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
+use DvsaCommon\Date\LastMonthsDateRange;
 
 class AbstractStatisticsRepository
 {
@@ -36,10 +37,12 @@ class AbstractStatisticsRepository
         return new ResultSetMapping();
     }
 
-    protected function setDaysConfiguration($year, $month)
+    /**
+     * @param LastMonthsDateRange $monthsRangeDate
+     */
+    protected function setMonthsRangeConfiguration(LastMonthsDateRange $monthsRangeDate)
     {
-        $lastDay = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $this->startDate = sprintf('%s-%s-1 00:00:00', $year, $month);
-        $this->endDate = sprintf('%s-%s-%s 23:59:59', $year, $month, $lastDay);
+        $this->startDate = $monthsRangeDate->getStartDate();
+        $this->endDate = $monthsRangeDate->getEndDate();
     }
 }

@@ -2,8 +2,6 @@
 
 namespace Site\ViewModel\TestQuality;
 
-use DateTime;
-
 class TestQualityStatisticRow
 {
     private $name;
@@ -14,9 +12,7 @@ class TestQualityStatisticRow
     private $personId;
     private $groupCode;
     private $siteId;
-
-    /** @var DateTime */
-    private $viewedDate;
+    private $fullName;
 
     public function getPersonId()
     {
@@ -74,9 +70,9 @@ class TestQualityStatisticRow
     public function getFailurePercentage()
     {
         if ($this->getTestCount() > 0) {
-            return number_format($this->failurePercentage, 0).'%';
+            return number_format($this->failurePercentage, 0);
         } else {
-            return '';
+            return 0;
         }
     }
 
@@ -102,39 +98,12 @@ class TestQualityStatisticRow
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getViewedDateMonth()
-    {
-        return $this->viewedDate->format('m');
-    }
-
-    /**
-     * @return string
-     */
-    public function getViewedDateYear()
-    {
-        $this->viewedDate->format('Y');
-
-        return $this->viewedDate->format('Y');
-    }
-
-    public function setViewedDate(DateTime $viewedDate)
-    {
-        $this->viewedDate = $viewedDate;
-
-        return $this;
-    }
-
     public function getUserStatisticsLinkParams()
     {
         return [
             'id' => $this->getSiteId(),
             'userId' => $this->getPersonId(),
             'group' => $this->getGroupCode(),
-            'month' => $this->getViewedDateMonth(),
-            'year' => $this->getViewedDateYear(),
         ];
     }
 
@@ -164,6 +133,24 @@ class TestQualityStatisticRow
     {
         $this->averageVehicleAge = $averageVehicleAge;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->fullName;
+    }
+
+    /**
+     * @param string $fullName
+     * @return TestQualityStatisticRow
+     */
+    public function setFullName($fullName)
+    {
+        $this->fullName = $fullName;
         return $this;
     }
 }

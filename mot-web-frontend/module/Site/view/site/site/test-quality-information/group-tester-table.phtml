@@ -1,0 +1,109 @@
+<?php
+
+use Core\Routing\VtsRouteList;
+use Site\ViewModel\TestQuality\GroupStatisticsTable;
+
+/* @var GroupStatisticsTable $group */
+/* @var array $queryParams */
+?>
+
+<table id="tqi-table-<?php echo $group->getGroupCode() ?>">
+    <thead>
+        <tr>
+            <th scope="col">Tester</th>
+            <th class="numeric" scope="col">Tests done</th>
+            <th class="numeric" scope="col">Average vehicle age</th>
+            <th class="numeric" scope="col">Average test time</th>
+            <th class="numeric" scope="col">Tests failed</th>
+            <th class="numeric" scope="col">Failures by category</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    <?php if ($group->hasTests()): ?>
+        <?php foreach ($group->getTesterRows() as $testerRow): ?>
+            <tr>
+                <th scope="row">
+                    <span><?php echo $testerRow->getFullName() ?></span>
+                    <span class="key-value-list__meta"><?php echo $testerRow->getName() ?></span>
+                </th>
+
+                <?php echo $this->partial('tqi/partial/test-quality-group-not-available-check', [
+                    'hasTests' => $testerRow->hasTests(),
+                    'notAvailableText' => '0',
+                    'value' => $testerRow->getTestCount(),
+                ]); ?>
+
+                <?php echo $this->partial('tqi/partial/test-quality-group-not-available-check', [
+                    'hasTests' => $testerRow->hasTests(),
+                    'notAvailableText' => '-',
+                    'value' => $testerRow->getAverageVehicleAge(),
+                    'suffix' => 'y',
+                ]); ?>
+
+                <?php echo $this->partial('tqi/partial/test-quality-group-not-available-check', [
+                    'hasTests' => $testerRow->hasTests(),
+                    'notAvailableText' => '-',
+                    'value' => $testerRow->getAverageTestDuration(),
+                    'suffix' => 'm',
+                ]); ?>
+
+                <?php echo $this->partial('tqi/partial/test-quality-group-not-available-check', [
+                    'hasTests' => $testerRow->hasTests(),
+                    'notAvailableText' => '0%',
+                    'value' => $testerRow->getFailurePercentage(),
+                    'suffix' => '%'
+                ]); ?>
+                <td class="numeric">
+                    <a href="<?php echo $this->url(VtsRouteList::VTS_USER_TEST_QUALITY,
+                        $testerRow->getUserStatisticsLinkParams(), $queryParams); ?>">
+                        View
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="6">
+                No Group <?php echo $group->getGroupCode() ?> tests done
+            </td>
+        </tr>
+    <?php endif ?>
+
+    <?php if ($group->isNationalDataAvailable()): ?>
+        <tr>
+            <th scope="row">
+                National average
+            </th>
+            <td class="numeric">
+                <?php echo $group->getNationalStatistic()->getTestCount(); ?>
+            </td>
+            <?php echo $this->partial('tqi/partial/test-quality-group-not-available-check', [
+                'hasTests' => $group->getNationalStatistic()->hasTests(),
+                'notAvailableText' => '-',
+                'value' => $group->getNationalStatistic()->getAverageVehicleAge(),
+                'suffix' => 'y'
+            ]); ?>
+            <?php echo $this->partial('tqi/partial/test-quality-group-not-available-check', [
+                'hasTests' => $group->getNationalStatistic()->hasTests(),
+                'notAvailableText' => '-',
+                'value' => $group->getNationalStatistic()->getAverageTestDuration(),
+                'suffix' => 'm'
+            ]); ?>
+            <?php echo $this->partial('tqi/partial/test-quality-group-not-available-check', [
+                'hasTests' => $group->getNationalStatistic()->hasTests(),
+                'notAvailableText' => '0%',
+                'value' => $group->getNationalStatistic()->getFailurePercentage(),
+                'suffix' => '%'
+            ]); ?>
+            <td class="numeric"></td>
+        </tr>
+    <?php else: ?>
+        <tr class="table-reference__row--secondary">
+            <td colspan="6">
+                National average not available
+            </td>
+        </tr>
+    <?php endif; ?>
+    </tbody>
+</table>

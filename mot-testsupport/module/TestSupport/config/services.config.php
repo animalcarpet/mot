@@ -1,12 +1,14 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\ZendClient;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use TestSupport\Factory\CatUserServiceFactory;
 use TestSupport\Factory\ClaimAccountServiceFactory;
+use TestSupport\Factory\StatisticsDbServiceFactory;
 use TestSupport\Factory\TesterAuthorisationStatusServiceFactory;
 use TestSupport\Helper\NotificationsHelper;
 use TestSupport\Helper\SitePermissionsHelper;
@@ -42,6 +44,7 @@ use TestSupport\Service\SiteRoleNominationService;
 use TestSupport\Service\SiteUserDataService;
 use TestSupport\Service\SlotTransactionService;
 use TestSupport\Service\StatisticsAmazonCacheService;
+use TestSupport\Service\StatisticsDbService;
 use TestSupport\Service\TesterAuthorisationStatusService;
 use TestSupport\Service\TesterService;
 use TestSupport\Service\UserService;
@@ -59,8 +62,6 @@ use TestSupport\Factory\SecurityQuestionsServiceFactory;
 use TestSupport\Factory\SiteRoleNominationServiceFactory;
 use TestSupport\Service\OrganisationRoleNominationService;
 use TestSupport\Factory\RoleNominationServiceFactory;
-use TestSupport\Service\OneHundredMotTestsService;
-use TestSupport\Factory\TestSupportOneHundredMotTestsServiceFactory;
 use TestSupport\Service\VehicleTestingAdviceService;
 
 return [
@@ -166,12 +167,15 @@ return [
         DocumentService::class => \TestSupport\Factory\DocumentServiceFactory::class,
         GVTSTesterService::class => \TestSupport\Factory\GVTSTesterServiceFactory::class,
         StatisticsAmazonCacheService::class => \TestSupport\Factory\StatisticsAmazonCacheFactory::class,
+        StatisticsDbService::class => StatisticsDbServiceFactory::class,
         GdsSurveyService::class => GdsSurveyServiceFactory::class,
-        OneHundredMotTestsService::class => TestSupportOneHundredMotTestsServiceFactory::class,
         SecurityQuestionsService::class => SecurityQuestionsServiceFactory::class,
         ClaimAccountService::class => ClaimAccountServiceFactory::class,
         CatUserService::class => CatUserServiceFactory::class,
         SiteRoleNominationService::class => SiteRoleNominationServiceFactory::class,
         OrganisationRoleNominationService::class => RoleNominationServiceFactory::class,
+    ],
+    'abstract_factories' => [
+        AutoWireFactory::class,
     ],
 ];

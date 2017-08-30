@@ -8,6 +8,8 @@ use DvsaEntities\Factory\Repository\AuthorisationForTestingMotRepositoryFactory;
 use DvsaEntities\Factory\Repository\AuthorisationForTestingMotStatusRepositoryFactory;
 use DvsaEntities\Factory\Repository\QualificationAnnualCertificateRepositoryFactory;
 use DvsaEntities\Factory\Repository\SiteRiskAssessmentRepositoryFactory;
+use DvsaEntities\Factory\Repository\TqiRfrCountRepositoryFactory;
+use DvsaEntities\Factory\Repository\TqiTestCountRepositoryFactory;
 use DvsaEntities\Factory\Repository\VehicleClassRepositoryFactory;
 use DvsaEntities\Factory\Repository\VehicleClassGroupRepositoryFactory;
 use DvsaEntities\Factory\Repository\PersonRepositoryFactory;
@@ -28,12 +30,16 @@ use DvsaEntities\Repository\RbacRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaEntities\Repository\QualificationAwardRepository;
 use DvsaEntities\Repository\SiteRiskAssessmentRepository;
+use DvsaEntities\Repository\TqiRfrCountRepository;
+use DvsaEntities\Repository\TqiTestCountRepository;
 use DvsaEntities\Repository\VehicleClassGroupRepository;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\EventPersonMapRepository;
 use DvsaEntities\Repository\AuthorisationForTestingMotRepository;
 use DvsaEntities\Repository\AuthorisationForTestingMotStatusRepository;
 use DvsaEntities\Repository\VehicleClassRepository;
+use DvsaEntities\Repository\MotTestStatusRepository;
+use DvsaEntities\Factory\Repository\MotTestStatusRepositoryFactory;
 
 return [
     'service_manager' => [
@@ -55,6 +61,9 @@ return [
             SiteRiskAssessmentRepository::class => SiteRiskAssessmentRepositoryFactory::class,
             EventPersonMapRepository::class => EventPersonMapRepositoryFactory::class,
             QualificationAnnualCertificateRepository::class => QualificationAnnualCertificateRepositoryFactory::class,
+            MotTestStatusRepository::class => MotTestStatusRepositoryFactory::class,
+            TqiRfrCountRepository::class => TqiRfrCountRepositoryFactory::class,
+            TqiTestCountRepository::class => TqiTestCountRepositoryFactory::class,
         ],
     ],
     'doctrine' => [

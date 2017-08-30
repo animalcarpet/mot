@@ -8,18 +8,15 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
+use DvsaCommon\Enum\SiteBusinessRoleCode;
 
 class SingleGroupStatisticsRepository extends AbstractStatisticsRepository
 {
-    const PARAM_YEAR = 'year';
-    const PARAM_MONTH = 'month';
     const PARAM_GROUP_CODE = 'groupCode';
 
     protected function getByParams($params)
     {
         $rsm = $this->buildResultSetMapping();
-
-        $this->setDaysConfiguration($params[self::PARAM_YEAR], $params[self::PARAM_MONTH]);
 
         $query = $this->getNativeQuery($this->getSql(), $rsm)
             ->setParameters($params)
@@ -27,6 +24,7 @@ class SingleGroupStatisticsRepository extends AbstractStatisticsRepository
             ->setParameter('passStatusCode', MotTestStatusCode::PASSED)
             ->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST)
             ->setParameter('mysteryShopperTestCode', MotTestTypeCode::MYSTERY_SHOPPER)
+            ->setParameter('roleCode', SiteBusinessRoleCode::TESTER)
             ->setParameter('startDate', $this->startDate)
             ->setParameter('endData', $this->endDate)
             ->setParameter('groupCode', $params[self::PARAM_GROUP_CODE])

@@ -1,0 +1,10 @@
+<?php
+/** @var $radio \Site\Form\Element\SimpleRadio */
+?>
+<input
+    type="radio"
+    id="<?php echo $radio->getAttribute('id') ?>"
+    <?php echo $radio->isChecked() ? 'checked=checked' : '' ?>
+    name="<?php echo $radio->getName() ?>"
+    value="<?php echo $radio->getValue()?>">
+<?php echo $this->formLabel($radio) ?>

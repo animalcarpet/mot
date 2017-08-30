@@ -12,6 +12,9 @@ class SiteGroupPerformanceDto implements ReflectiveDtoInterface
     /** @var \DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto[] */
     private $statistics;
 
+    /**
+     * @return MotTestingPerformanceDto
+     */
     public function getTotal()
     {
         return $this->total;
@@ -23,6 +26,9 @@ class SiteGroupPerformanceDto implements ReflectiveDtoInterface
         return $this;
     }
 
+    /**
+     * @return EmployeePerformanceDto[]
+     */
     public function getStatistics()
     {
         return $this->statistics;

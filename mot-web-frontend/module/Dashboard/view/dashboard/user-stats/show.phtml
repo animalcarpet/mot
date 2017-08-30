@@ -1,6 +1,7 @@
 <?php
 
 use Core\Routing\MotTestRoutes;
+use Core\Routing\PerformanceDashboardRoutes;
 use Core\Routing\ProfileRoutes;
 use Dashboard\Controller\UserHomeController;
 use Dashboard\ViewModel\UserStatsViewModel;
@@ -88,7 +89,7 @@ $monthStats = $viewModel->getMonthStats();
 
 <div class="text">
     <p>
-        <a href="<?php echo ProfileRoutes::of($this)->yourProfileTqi($viewModel->getPreviousMonth(), $viewModel->getPreviousYear()) ?>" id="tqi-link" class="big-link">
+        <a href="<?php echo PerformanceDashboardRoutes::of($this)->performanceDashboardTqi() ?>" id="tqi-link" class="big-link">
             Test quality information
         </a>
     </p>

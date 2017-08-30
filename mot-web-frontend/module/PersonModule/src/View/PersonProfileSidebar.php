@@ -313,12 +313,7 @@ class PersonProfileSidebar extends GeneralSidebar
 
         $internalRolesUrl = $this->currentUrl.'/manage-internal-role';
 
-        $testQualityInformationUrl = $this->currentUrl.
-                sprintf(
-                    '/test-quality-information/%s',
-                    DateUtils::subtractCalendarMonths(
-                        DateUtils::toUserTz(DateUtils::firstOfThisMonth()), 1)
-                        ->format('m/Y'));
+        $testQualityInformationUrl = $this->currentUrl.'/test-quality-information';
 
         $relatedBox = new GeneralSidebarLinkList('Related');
         $relatedBox->setId('related');

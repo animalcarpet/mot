@@ -1,0 +1,43 @@
+<?php
+/** @var \Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable $group */
+?>
+
+<?php
+echo $this->partial('tqi/partial/group-header', [
+    'group' => $group->getAverageGroupStatisticsHeader()
+]);
+?>
+
+<table id="tqi-component-average" class="table-bold-th">
+    <caption class="heading-medium table-caption u-align-left">Failures by category</caption>
+    <thead>
+        <tr>
+            <th scope="col">Categories</th>
+            <th class="numeric" scope="col">Tester</th>
+            <th class="numeric" scope="col">Site average</th>
+            <th class="numeric" scope="col">National average</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($group->getComponentRows() as $componentRow): ?>
+            <tr>
+                <th class="tqi-category-name" scope="row">
+                    <?php echo $componentRow->getCategoryName(); ?>
+                </th>
+                <td class="numeric tqi-tester-value">
+                    <?php echo $componentRow->getTesterAverage(); ?>%
+                </td>
+                <td class="numeric tqi-tester-value">
+                    <?php echo $componentRow->getSiteAverage(); ?>%
+                </td>
+                <td class="numeric tqi-national-value">
+                    <?php if ($group->isNationalAverageAvailable()): ?>
+                        <?php echo $componentRow->getNationalAverage(); ?>%
+                    <?php else : ?>
+                        Currently unavailable
+                    <?php endif ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

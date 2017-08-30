@@ -64,16 +64,4 @@ class UserStatsViewModel
     public function getFirstOfThisMonthAsDayMonth() {
         return DateUtils::firstOfThisMonth()->format(DateTimeDisplayFormat::FORMAT_DAY_MONTH);
     }
-
-    public function getPreviousMonth() {
-        return $this->getFirstOfPreviousMonth()->format(self::DATE_MONTH_FORMAT);
-    }
-
-    public function getPreviousYear() {
-        return $this->getFirstOfPreviousMonth()->format(self::DATE_YEAR_FORMAT);
-    }
-
-    private function getFirstOfPreviousMonth() {
-        return new \DateTime(self::FIRST_DAY_OF_PREVIOUS_MONTH);
-    }
 }

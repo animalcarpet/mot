@@ -2,21 +2,19 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation;
 
-use DateTime;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\NationalPerformanceReportDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
-use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Date\Month;
+use DvsaCommon\Date\DateTimeHolderInterface;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
+use Site\Form\TQIMonthRangeForm;
 
 class TestQualityInformationViewModel
 {
-    const POSSIBLE_MONTHS_COUNT = 12;
-
-    /** @var DateTime $date */
-    private $date;
+    /** @var int $monthRange */
+    private $monthRange;
 
     /** @var string $returnLink */
     private $returnLink;
@@ -36,8 +34,12 @@ class TestQualityInformationViewModel
     /** @var bool */
     private $isBViewable;
 
-    /** @var TestQualityInformationMonthFilter $monthFilter */
-    private $monthFilter;
+    /** @var TQIMonthRangeForm $monthRangeForm */
+    private $monthRangeForm;
+
+    /** @var DateTimeHolderInterface */
+    private $dateTimeHolderInterface;
+
 
     /**
      * @param TesterPerformanceDto         $testerPerformance
@@ -45,12 +47,12 @@ class TestQualityInformationViewModel
      * @param array                        $groupBSiteTests
      * @param NationalPerformanceReportDto $nationalPerformanceStatisticsDto
      * @param TesterAuthorisation          $personAuthorisation
-     * @param DateTime                     $date
+     * @param int                          $monthRange
      * @param $returnLink
      * @param $returnLinkText
-     * @param $componentBreakdownLinkText
-     * @param $componentBreakdownLinkTextGroup
-     * @param TestQualityInformationMonthFilter $monthFilter
+     * @param TQIMonthRangeForm $monthRangeForm
+     * @param DateTimeHolderInterface $dateTimeHolderInterface
+     * @param int $targetPersonId
      */
     public function __construct(
         TesterPerformanceDto $testerPerformance,
@@ -58,16 +60,18 @@ class TestQualityInformationViewModel
         array $groupBSiteTests,
         NationalPerformanceReportDto $nationalPerformanceStatisticsDto = null,
         TesterAuthorisation $personAuthorisation,
-        $date,
+        int $monthRange,
         $returnLink,
         $returnLinkText,
-        $componentBreakdownLinkText,
-        $componentBreakdownLinkTextGroup,
-        $monthFilter
+        TQIMonthRangeForm $monthRangeForm,
+        DateTimeHolderInterface $dateTimeHolderInterface,
+        int $targetPersonId
     ) {
-        $this->date = $date;
+        $this->monthRange = $monthRange;
         $this->returnLink = $returnLink;
         $this->returnLinkText = $returnLinkText;
+        $this->monthRangeForm = $monthRangeForm;
+        $this->dateTimeHolderInterface = $dateTimeHolderInterface;
 
         $this->a = new GroupStatisticsTable(
             $testerPerformance->getGroupAPerformance(),
@@ -76,9 +80,7 @@ class TestQualityInformationViewModel
             $nationalPerformanceStatisticsDto->getGroupA() ?: null,
             'Class 1 and 2',
             VehicleClassGroupCode::BIKES,
-            $componentBreakdownLinkText,
-            $componentBreakdownLinkTextGroup,
-            $this->getComponentBreakdownLink(VehicleClassGroupCode::BIKES)
+            $targetPersonId
         );
 
         $this->b = new GroupStatisticsTable(
@@ -87,9 +89,7 @@ class TestQualityInformationViewModel
             $nationalPerformanceStatisticsDto->getReportStatus()->getIsCompleted() ?: false,
             $nationalPerformanceStatisticsDto->getGroupB() ?: null,
             'Class 3, 4, 5 and 7', VehicleClassGroupCode::CARS_ETC,
-            $componentBreakdownLinkText,
-            $componentBreakdownLinkTextGroup,
-            $this->getComponentBreakdownLink(VehicleClassGroupCode::CARS_ETC)
+            $targetPersonId
         );
 
         $this->isAViewable = $personAuthorisation->getGroupAStatus()->getCode() === AuthorisationForTestingMotStatusCode::QUALIFIED;
@@ -106,20 +106,6 @@ class TestQualityInformationViewModel
             $this->isAViewable = true;
             $this->isBViewable = true;
         }
-
-        $oneMonthAgo = DateUtils::subtractCalendarMonths(DateUtils::toUserTz(new \DateTime()), 1);
-        $startMonth = new Month($oneMonthAgo->format('Y'), $oneMonthAgo->format('m'));
-        $viewedMonth = new Month($this->date->format('Y'), $this->date->format('m'));
-
-        $this->monthFilter = $monthFilter
-            ->setNumberOfMonthsBack(self::POSSIBLE_MONTHS_COUNT)
-            ->setStartMonth($startMonth)
-            ->setViewedMonth($viewedMonth);
-    }
-
-    public function getMonthFilter()
-    {
-        return $this->monthFilter;
     }
 
     public function getReturnLink()
@@ -132,12 +118,12 @@ class TestQualityInformationViewModel
         return $this->returnLinkText;
     }
 
-    public function getA()
+    public function getA():GroupStatisticsTable
     {
         return $this->a;
     }
 
-    public function getB()
+    public function getB():GroupStatisticsTable
     {
         return $this->b;
     }
@@ -153,18 +139,30 @@ class TestQualityInformationViewModel
     }
 
     /**
-     * @param string $group
-     *
-     * @return string
+     * @return TQIMonthRangeForm
      */
-    private function getComponentBreakdownLink($group)
+    public function getMonthRangeForm():TQIMonthRangeForm
     {
-        return $this->returnLink.sprintf('/test-quality-information/%s/components/%s',
-            $this->getMonthYear(), $group);
+        return $this->monthRangeForm;
     }
 
-    private function getMonthYear()
+    /**
+     * @return string
+     */
+    public function getDateRangeWording():string
     {
-        return $this->date->format('m/Y');
+        $range = new LastMonthsDateRange($this->dateTimeHolderInterface);
+        $range->setNumberOfMonths($this->monthRange);
+
+        return $range->__toString();
+    }
+
+    public function getQueryParams():array
+    {
+        $params = ['monthRange' => $this->monthRange];
+
+        return [
+            'query' => $params
+        ];
     }
 }

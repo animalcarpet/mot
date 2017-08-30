@@ -45,20 +45,18 @@ public class AggregatedTestQualityViewTests extends DslTest {
     @Test(groups = {"Regression"}, description = "Verifies that user can see his own TQI page")
     public void userCanSeeHisOwnTqiPage() throws IOException, URISyntaxException {
         //Given I have performed MOT test in previous months
-        DateTime fourMonthsAgo = getFirstDayOfMonth(4);
+        DateTime threeMonthsAgo = getFirstDayOfMonth(3);
 
-        generatePassedMotTestForThePast(fourMonthsAgo, VehicleClass.four, tester, site);
+        generatePassedMotTestForThePast(threeMonthsAgo, VehicleClass.four, tester, site);
 
         //When I go to my Test Quality Information page
         AggregatedTestQualityPage aggregatedTqiPage = motUI.profile.viewYourProfile(tester)
                 .clickTestQualityInformationLink()
-                .chooseMonth(fourMonthsAgo);
+                .choose3MonthRange();
 
         //Then it contains correct information
         assertThat("Group A table is displayed", aggregatedTqiPage.isTableForGroupADisplayed(), is(true));
-        assertThat("Group A table has 2 rows", aggregatedTqiPage.getTableForGroupARowCount(), is(2));
         assertThat("Group B table is displayed", aggregatedTqiPage.isTableForGroupBDisplayed(), is(true));
-        assertThat("Group B table has 2 rows", aggregatedTqiPage.getTableForGroupBRowCount(), is(2));
         assertThat("Return link is displayed", aggregatedTqiPage.isReturnLinkDisplayed(), is(true));
     }
 
@@ -66,19 +64,18 @@ public class AggregatedTestQualityViewTests extends DslTest {
             description = "Verifies that DVSA user can see aggregated component breakdown TQI page of a user")
     public void dvsaUserCanSeeTesterComponentBreakdownPage() throws IOException, URISyntaxException {
         //Given user have performed MOT test in previous months
-        DateTime twoMonthsAgo = getFirstDayOfMonth(2);
+        DateTime oneMonthAgo = getFirstDayOfMonth(1);
 
-        generatePassedMotTestForThePast(twoMonthsAgo, VehicleClass.one, tester2, site);
+        generatePassedMotTestForThePast(oneMonthAgo, VehicleClass.one, tester2, site);
 
         //When I go to his Test Quality Information page
         AggregatedComponentBreakdownPage componentBreakdownPage = motUI.profile.dvsaViewUserProfile(ao1, tester2)
                 .clickTestQualityInformationLink()
-                .chooseMonth(twoMonthsAgo)
-                .clickGroupAFailures();
+                .choose1MonthRange()
+                .goToSiteComponentBreakdownPageForGroupA(site.getName());
 
         //Then it contains correct information
         assertThat("Return link is displayed", componentBreakdownPage.isReturnLinkDisplayed(), is(true));
-        assertThat("Test count is correct", componentBreakdownPage.getTestCount(), is(1));
     }
 
     @Test(groups = {"Regression"},
@@ -92,12 +89,11 @@ public class AggregatedTestQualityViewTests extends DslTest {
         //When I go to his Test Quality Information page
         TesterAtSiteComponentBreakdownPage componentBreakdownPage = motUI.profile.dvsaViewUserProfile(ao2, tester3)
                 .clickTestQualityInformationLink()
-                .chooseMonth(threeMonthsAgo)
+                .choose3MonthRange()
                 .clickFirstSiteInGroupAFailures();
 
         //Then it contains correct information
         assertThat("Return link is displayed", componentBreakdownPage.isReturnLinkDisplayed(), is(true));
-        assertThat("Test count is correct", componentBreakdownPage.getTestCount(), is(1));
     }
 
     private MotTest generatePassedMotTestForThePast(DateTime date, VehicleClass vehicleClass, User tester, Site site) throws IOException {

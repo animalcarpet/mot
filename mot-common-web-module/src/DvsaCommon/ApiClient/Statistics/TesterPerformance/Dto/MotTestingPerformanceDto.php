@@ -10,15 +10,15 @@ use DvsaCommon\Utility\TypeCheck;
 
 class MotTestingPerformanceDto implements ReflectiveDtoInterface
 {
-    private $total;
+    private $total = 0;
 
     /**
      * @var TimeSpan
      */
     private $averageTime;
-    private $percentageFailed;
-    private $averageVehicleAgeInMonths;
-    private $isAverageVehicleAgeAvailable;
+    private $percentageFailed = 0;
+    private $averageVehicleAgeInMonths = 0;
+    private $isAverageVehicleAgeAvailable = false;
 
     public function getTotal()
     {

@@ -3,22 +3,29 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Service\BatchStatisticsService;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Service\TesterPerformanceBatchStatisticsService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 
 class NationalBatchStatisticsController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
-    private $service;
+    private $batchStatisticsService;
+    private $testerPerformanceBatchStatisticsService;
 
-    public function __construct(BatchStatisticsService $service)
+    public function __construct(
+        BatchStatisticsService $service,
+        TesterPerformanceBatchStatisticsService $testerPerformanceBatchStatisticsService
+    )
     {
-        $this->service = $service;
+        $this->batchStatisticsService = $service;
+        $this->testerPerformanceBatchStatisticsService = $testerPerformanceBatchStatisticsService;
     }
 
     public function getList()
     {
-        $dtos = $this->service->generateReports();
-
-        return $this->returnDto($dtos);
+        return $this->returnDto(array_merge(
+            $this->batchStatisticsService->generateReports(),
+            $this->testerPerformanceBatchStatisticsService->generateReports()
+        ));
     }
 }

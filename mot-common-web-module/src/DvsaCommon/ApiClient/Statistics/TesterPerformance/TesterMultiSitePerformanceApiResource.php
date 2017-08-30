@@ -9,16 +9,15 @@ use DvsaCommon\HttpRestJson\AbstractApiResource;
 class TesterMultiSitePerformanceApiResource extends AbstractApiResource implements AutoWireableInterface
 {
     /**
-     * @param $personId
-     * @param $month
-     * @param $year
+     * @param int $personId
+     * @param int $monthRange
      * @return TesterMultiSitePerformanceReportDto
      */
-    public function get($personId, $month, $year)
+    public function get(int $personId, int $monthRange):TesterMultiSitePerformanceReportDto
     {
         return $this->getSingle(
             TesterMultiSitePerformanceReportDto::class,
-            sprintf('statistic/tester-performance/multi-site/%s/%s/%s', $personId, $year, $month)
+            sprintf('statistic/tester-performance/multi-site/%s/%s', $personId, $monthRange)
         );
     }
 }

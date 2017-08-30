@@ -18,11 +18,9 @@ class TesterMultiSiteStatisticsController extends AbstractDvsaRestfulController 
     public function get($testerId)
     {
         $testerId = (int) $testerId;
+        $monthRange = (int) $this->params()->fromRoute('monthRange');
 
-        $year = (int) $this->params()->fromRoute('year');
-        $month = (int) $this->params()->fromRoute('month');
-
-        $dto = $this->statisticsService->get($testerId, $year, $month);
+        $dto = $this->statisticsService->get($testerId, $monthRange);
 
         return $this->returnDto($dto);
     }

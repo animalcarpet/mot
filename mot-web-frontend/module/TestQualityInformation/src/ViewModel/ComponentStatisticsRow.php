@@ -8,6 +8,7 @@ class ComponentStatisticsRow
     protected $categoryName;
     protected $testerAverage;
     protected $nationalAverage;
+    protected $siteAverage;
 
     /**
      * @return mixed
@@ -65,6 +66,26 @@ class ComponentStatisticsRow
     public function setNationalAverage($nationalAverage)
     {
         $this->nationalAverage = $nationalAverage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteAverage()
+    {
+        return $this->siteAverage;
+    }
+
+    /**
+     * @param string $siteAverage
+     *
+     * @return ComponentStatisticsRow
+     */
+    public function setSiteAverage($siteAverage)
+    {
+        $this->siteAverage = $siteAverage;
 
         return $this;
     }

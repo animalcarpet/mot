@@ -17,10 +17,9 @@ class NationalStatisticsController extends AbstractDvsaRestfulController impleme
 
     public function getList()
     {
-        $year = (int) $this->params()->fromRoute('year');
-        $month = (int) $this->params()->fromRoute('month');
+        $monthRange = (int) $this->params()->fromRoute('monthRange');
 
-        $dto = $this->nationalStatisticsService->get($year, $month);
+        $dto = $this->nationalStatisticsService->get($monthRange);
 
         return $this->returnDto($dto);
     }

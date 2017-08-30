@@ -7,7 +7,9 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceD
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SiteGroupPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
+use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Dto\Person\PersonDto;
 
 class TesterPerformanceCalculator
 {
@@ -35,6 +37,9 @@ class TesterPerformanceCalculator
         $groupAStatistics = $this->calculateGroupStatistics($groupAmotTests);
         $groupBStatistics = $this->calculateGroupStatistics($groupBmotTests);
 
+        $groupAStatistics = $this->addTestersWithoutTestsInThisGroup($groupAStatistics, $motTests);
+        $groupBStatistics = $this->addTestersWithoutTestsInThisGroup($groupBStatistics, $motTests);
+
         $sitePerformance = new SitePerformanceDto();
         $sitePerformance
             ->setA($this->mapToSitePerformanceStatistics($groupAmotTests, $groupAStatistics))
@@ -56,6 +61,9 @@ class TesterPerformanceCalculator
 
         $groupAemployeePerformance = $this->calculateEmployeePerformance($groupAmotTests, $testerId, $username);
         $groupBemployeePerformance = $this->calculateEmployeePerformance($groupBmotTests, $testerId, $username);
+
+        $groupAemployeePerformance = $this->addTestersWithoutTestsInThisGroup($groupAemployeePerformance, $motTests);
+        $groupBemployeePerformance = $this->addTestersWithoutTestsInThisGroup($groupBemployeePerformance, $motTests);
 
         $testerPerformance = new TesterPerformanceDto();
         $testerPerformance
@@ -86,8 +94,10 @@ class TesterPerformanceCalculator
     {
         $groupStatistics = [];
         $testers = $this->getTestersId($motCollection);
-        foreach ($testers as $id => $username) {
-            $employeePerformance = $this->calculateEmployeePerformance($motCollection, $id, $username);
+
+        /** @var PersonDto $tester */
+        foreach ($testers as $tester) {
+            $employeePerformance = $this->calculateEmployeePerformance($motCollection, $tester->getId(), $tester);
 
             if ($employeePerformance !== null) {
                 $groupStatistics[] = $employeePerformance;
@@ -97,18 +107,53 @@ class TesterPerformanceCalculator
         return $groupStatistics;
     }
 
-    private function calculateEmployeePerformance(DataCollection $motCollection, $testerId, $username)
+    private function addTestersWithoutTestsInThisGroup($groupPerformance, DataCollection $motTestCollection)
+    {
+        /** @var PersonDto[] $testers */
+        $testers = $this->getTestersId($motTestCollection);
+
+        if (empty($groupPerformance)) {
+            $groupPerformance = [];
+            foreach ($testers as $tester) {
+                $employee = $this->getEmployeeWithDefaultValues($tester);
+                $groupPerformance[] = $employee;
+            }
+        }
+
+        return $groupPerformance;
+    }
+
+    private function getEmployeeWithDefaultValues(PersonDto $tester) {
+        $employee = new EmployeePerformanceDto();
+        $employee->setAverageVehicleAgeInMonths(0)
+            ->setIsAverageVehicleAgeAvailable(false)
+            ->setPercentageFailed(0)
+            ->setTotal(0)
+            ->setAverageTime(new TimeSpan(0, 0, 0, 0))
+            ->setUsername($tester->getUsername())
+            ->setFirstName($tester->getFirstName())
+            ->setFamilyName($tester->getFamilyName())
+            ->setMiddleName($tester->getMiddleName())
+            ->setPersonId($tester->getId());
+
+        return $employee;
+    }
+
+    private function calculateEmployeePerformance(DataCollection $motCollection, $testerId, PersonDto $tester)
     {
         $tests = $this->filter->filterByTesterId($motCollection, $testerId);
         if (count($tests) > 0) {
             $employeePerformance = $this->calculateStats($tests);
             $employeePerformance
-                ->setUsername($username)
+                ->setUsername($tester->getUsername())
+                ->setFirstName($tester->getFirstName())
+                ->setFamilyName($tester->getFamilyName())
+                ->setMiddleName($tester->getMiddleName())
                 ->setPersonId($testerId);
             return $employeePerformance;
+        } else {
+            return $this->getEmployeeWithDefaultValues($tester);
         }
-
-        return null;
     }
 
     private function mapToSitePerformanceStatistics($motTests, $groupStatistics)
@@ -150,8 +195,8 @@ class TesterPerformanceCalculator
         $testers = [];
         /** @var MotTestDto $mot */
         foreach ($motCollection as $mot) {
-            if (!in_array($mot->getTester()->getId(), $testers)) {
-                $testers[$mot->getTester()->getId()] = $mot->getTester()->getUsername();
+            if (!in_array($mot->getTester(), $testers)) {
+                $testers[$mot->getTester()->getId()] = $mot->getTester();
             }
         }
 

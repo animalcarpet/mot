@@ -1,0 +1,17 @@
+<?php
+
+/** @var bool $hasTests */
+/** @var mixed $value */
+/** @var string $notAvailableText */
+/** @var string $suffix */
+?>
+
+<td class="numeric">
+    <?php if (!$hasTests) : ?>
+        <span class="font-xsmall">
+            <?php echo $notAvailableText; ?>
+        </span>
+    <?php else :
+        echo $value . $suffix;
+    endif ?>
+</td>

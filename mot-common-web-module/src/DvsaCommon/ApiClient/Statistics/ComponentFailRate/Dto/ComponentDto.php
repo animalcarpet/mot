@@ -10,7 +10,7 @@ class ComponentDto implements ReflectiveDtoInterface
     /** @var  string */
     private $name;
     /** @var  double */
-    private $percentageFailed;
+    private $percentageFailed = 0;
 
     public function getId()
     {

@@ -10,6 +10,7 @@ class NationalPerformanceReportDto implements ReflectiveDtoInterface, ReportDtoI
 {
     private $month;
     private $year;
+    private $monthRange;
     /** @var MotTestingPerformanceDto */
     private $groupA;
 
@@ -43,6 +44,17 @@ class NationalPerformanceReportDto implements ReflectiveDtoInterface, ReportDtoI
     public function setYear($year)
     {
         $this->year = $year;
+        return $this;
+    }
+
+    public function getMonthRange()
+    {
+        return $this->monthRange;
+    }
+
+    public function setMonthRange($monthRange)
+    {
+        $this->monthRange = $monthRange;
         return $this;
     }
 

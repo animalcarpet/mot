@@ -6,9 +6,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
+import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.vts.SiteTestQualityPage;
+import uk.gov.dvsa.ui.pages.vts.UserTestQualityPage;
+
+import java.util.List;
 
 public class AggregatedTestQualityPage extends Page {
 
@@ -22,12 +28,15 @@ public class AggregatedTestQualityPage extends Page {
     private WebElement viewGroupAFailures;
     @FindBy(id = "view-components-B")
     private WebElement viewGroupBFailures;
-    @FindBy(css = "#tqi-table-A tbody tr:nth-child(2) td:nth-child(1) a")
+    @FindBy(css = "#tqi-table-A a")
     private WebElement viewFirstSiteInGroupAFailures;
     @FindBy(css = ".lede")
     private WebElement secondaryTitle;
+    @FindBy(id="last1Month")private WebElement last1MonthRadio;
+    @FindBy(id="last3Months")private WebElement last3MonthsRadio;
+    @FindBy(css="input[value='Update results']")private WebElement updateMonthRangeButton;
 
-    private static final String SECONDARY_PAGE_TITLE = "Tests done at all associated sites";
+    private static final String PAGE_TITLE = "Test quality information";
 
     public AggregatedTestQualityPage(MotAppDriver driver) {
         super(driver);
@@ -36,11 +45,7 @@ public class AggregatedTestQualityPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getSecondaryTitle(), SECONDARY_PAGE_TITLE);
-    }
-
-    private String getSecondaryTitle() {
-        return secondaryTitle.getText();
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
     public boolean isTableForGroupADisplayed() {
@@ -57,7 +62,7 @@ public class AggregatedTestQualityPage extends Page {
 
     private Integer getTableRowCount(WebElement tqiTable) {
         try {
-            return tqiTable.findElements(By.cssSelector("tbody tr")).size() - 1; // we subtract 1 as it's the header row
+            return tqiTable.findElements(By.cssSelector("tbody tr")).size();
         } catch (StaleElementReferenceException e) {
             return getTableRowCount(tqiTable);
         }
@@ -76,6 +81,18 @@ public class AggregatedTestQualityPage extends Page {
         return new AggregatedTestQualityPage(driver);
     }
 
+    public AggregatedTestQualityPage choose1MonthRange() {
+        last1MonthRadio.click();
+        updateMonthRangeButton.click();
+        return new AggregatedTestQualityPage(driver);
+    }
+
+    public AggregatedTestQualityPage choose3MonthRange() {
+        last3MonthsRadio.click();
+        updateMonthRangeButton.click();
+        return new AggregatedTestQualityPage(driver);
+    }
+
     public AggregatedComponentBreakdownPage clickGroupBFailures() {
         viewGroupBFailures.click();
         return new AggregatedComponentBreakdownPage(driver);
@@ -90,5 +107,25 @@ public class AggregatedTestQualityPage extends Page {
     {
         viewFirstSiteInGroupAFailures.click();
         return new TesterAtSiteComponentBreakdownPage(driver);
+    }
+
+    public AggregatedComponentBreakdownPage goToSiteComponentBreakdownPageForGroupA(String siteName){
+        return goToSiteComponentBreakdownPage(siteName, "A");
+    }
+
+    public AggregatedComponentBreakdownPage goToSiteComponentBreakdownPageForGroupB(String siteName){
+        return goToSiteComponentBreakdownPage(siteName, "B");
+    }
+
+    public AggregatedComponentBreakdownPage goToSiteComponentBreakdownPage(String siteName, String group){
+        List<WebElement> tableRows = driver.findElements(By.cssSelector("table#tqi-table-" + group + " tbody tr"));
+
+        for (WebElement row: tableRows){
+            if(row.getText().contains(siteName)) {
+                row.findElement(By.linkText("View")).click();
+                return new AggregatedComponentBreakdownPage(driver);
+            }
+        }
+        return null;
     }
 }

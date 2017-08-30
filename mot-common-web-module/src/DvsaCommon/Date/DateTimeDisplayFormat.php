@@ -15,6 +15,8 @@ class DateTimeDisplayFormat
     const FORMAT_DATE_SHORT = 'j M Y';
     const FORMAT_TIME = 'g:ia';
     const FORMAT_MONTH_YEAR = 'M Y';
+    const FORMAT_FULL_MONTH_WITH_YEAR = 'F Y';
+    const FORMAT_FULL_MONTH = 'F';
     const FORMAT_DAY_MONTH = 'j F';
     const DATE_TODAY = 'Today';
 

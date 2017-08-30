@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Api\StatisticsApiTest;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Storage\S3KeyGenerator;
+use DvsaCommon\Date\LastMonthsDateRange;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\QueryResult\NationalStatisticsResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Repository\NationalStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService;
@@ -18,6 +19,9 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
 {
+    const NUMBER_OF_LAST_MONTHS = 1;
+    /** @var  LastMonthsDateRange */
+    private $lastMonthsDateRange;
     /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService */
     private $service;
 
@@ -55,9 +59,9 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->timeoutPeriod = new TimeSpan(0, 1, 0, 0);
         $this->dateTimeHolder = new TestDateTimeHolder(new \DateTime());
         $this->timeoutDateTime = $this->timeoutPeriod->addDateTime($this->dateTimeHolder->getCurrent());
-        $this->year = (int) $this->dateTimeHolder->getCurrent()->modify("first day of last month")->format('Y');
-        $this->month = (int) $this->dateTimeHolder->getCurrent()->modify("first day of last month")->format('m');
-        
+        $this->year = (int) $this->dateTimeHolder->getCurrent()->format('Y');
+        $this->month = (int) $this->dateTimeHolder->getCurrent()->format('m');
+
         $this->repository = XMock::of(NationalStatisticsRepository::class);
 
         $this->repoStatisticsSpy = new MethodSpy($this->repository, 'getStatistics');
@@ -81,20 +85,16 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
 
         $nationalStorage = new NationalTesterPerformanceStatisticsStorage($this->storage);
 
+        $this->lastMonthsDateRange = new LastMonthsDateRange(new TestDateTimeHolder(new \DateTime()));
+        $this->lastMonthsDateRange->setNumberOfMonths(self::NUMBER_OF_LAST_MONTHS);
+
         $this->service = new NationalStatisticsService(
             $this->repository,
             $nationalStorage,
             $this->dateTimeHolder,
-            $this->timeoutPeriod
+            $this->timeoutPeriod,
+            $this->lastMonthsDateRange
         );
-    }
-
-    /**
-     * @expectedException \DvsaCommonApi\Service\Exception\NotFoundException
-     */
-    public function testGetThrowsExceptionIfValidationFailed()
-    {
-        $this->service->get(1099, 13);
     }
 
     public function testTheStatisticsCalculationAreDoneForCorrectMonthTotalCount()
@@ -102,16 +102,13 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         // GIVEN I need statistics for last month
 
         // WHEN I retrieve the statistics
-        $this->service->get($this->year, $this->month);
+        $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN I only get them once from repository
         $this->assertEquals(1, $this->repoStatisticsSpy->invocationCount());
 
-        // AND they are for correct year
-        $this->assertEquals($this->year, $this->repoStatisticsSpy->paramsForLastInvocation()[0]);
-
-        // AND correct month
-        $this->assertEquals($this->month, $this->repoStatisticsSpy->paramsForLastInvocation()[1]);
+        // AND they are for correct date range
+        $this->assertEquals($this->lastMonthsDateRange, $this->repoStatisticsSpy->paramsForLastInvocation()[0]);
     }
 
     public function testTheStatisticsCalculateTotalCount()
@@ -124,7 +121,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
             ->setGroupBTotal(30);
 
         // WHEN I retrieve the statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // AND values are correct
         $this->assertEquals(100 / 20, $stats->getGroupA()->getTotal());
@@ -141,7 +138,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
             ->setGroupBTotal(0);
 
         // WHEN I retrieve the statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // AND total count values are zeros
         $this->assertEquals(0, $stats->getGroupA()->getTotal());
@@ -160,7 +157,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->dbResult->setGroupBCumulativeTestTime('3600');
 
         // WHEN I retrieve statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the average group A test took 6 minutes
         $expected = new TimeSpan(0, 0, 6, 0);
@@ -183,7 +180,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->dbResult->setGroupBCumulativeTestTime(0);
 
         // WHEN I retrieve statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the average group A test took 0 minutes
         $expected = new TimeSpan(0, 0, 0, 0);
@@ -211,7 +208,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->dbResult->setGroupBFailed(200);
 
         // WHEN I retrieve statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the failed percentage is equal 2.5 in group A
         $this->assertEquals(2.5, $stats->getGroupA()->getPercentageFailed());
@@ -230,7 +227,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->dbResult->setGroupBCumulativeTestTime(0);
 
         // WHEN I retrieve statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the failed percentage is equal 0 in group A
         $this->assertEquals(0, $stats->getGroupA()->getPercentageFailed());
@@ -260,7 +257,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->dbResult->setIsGroupBAverageVehicleAgeAvailable($isGroupBAgeAvailable);
 
         // WHEN I retrieve statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the failed percentage is equal 0 in group A
         $this->assertEquals($groupAAge, $stats->getGroupA()->getAverageVehicleAgeInMonths());
@@ -280,11 +277,13 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $storedData->getReportStatus()->setIsCompleted(true);
         $storedData->setGroupA((new MotTestingPerformanceDto())->setAverageVehicleAgeInMonths($expectedMonths));
         $storedData->getReportStatus()->setIsCompleted(true);
-        $key = $this->getReportKey($this->year, $this->month);
+        $key = $this->getReportKey(
+            $this->year, $this->month, self::NUMBER_OF_LAST_MONTHS
+        );
         $this->storage->storeDto($key, $storedData);
 
         // WHEN I retrieve statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the repository is not used
         $this->assertEquals(0, $this->repoStatisticsSpy->invocationCount());
@@ -302,14 +301,17 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $this->storage->clear();
 
         // WHEN I retrieve statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the repo is called
         $this->assertEquals(1, $this->repoStatisticsSpy->invocationCount());
 
         // AND the report based on repository data is stored in storage
         /** @var NationalPerformanceReportDto $report */
-        $report = $this->storage->getAsDto($this->getReportKey($this->year, $this->month), NationalPerformanceReportDto::class);
+        $report = $this->storage->getAsDto(
+            $this->getReportKey($this->year, $this->month, self::NUMBER_OF_LAST_MONTHS),
+            NationalPerformanceReportDto::class
+        );
 
         $this->assertInstanceOf(NationalPerformanceReportDto::class, $report);
 
@@ -326,10 +328,13 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $storage = XMock::of(KeyValueStorageInterface::class);
         $storageSpy = new MethodSpy($storage, 'storeDto');
         $nationalStorage = new NationalTesterPerformanceStatisticsStorage($storage);
-        $service = new NationalStatisticsService($this->repository, $nationalStorage, $this->dateTimeHolder, $this->timeoutPeriod);
+        $service = new NationalStatisticsService(
+            $this->repository, $nationalStorage, $this->dateTimeHolder, $this->timeoutPeriod,
+            $this->lastMonthsDateRange
+        );
 
         // WHEN I retrieve statistics
-        $service->get($this->year, $this->month);
+        $service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the temporary statistics are created
         $this->assertGreaterThan(0, $storageSpy->invocationCount());
@@ -352,11 +357,14 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         // GIVEN the statistics report is being generated
         $report = new NationalPerformanceReportDto();
         $report->getReportStatus()->setIsCompleted(false);
-        $this->storage->storeDto($this->getReportKey($this->year, $this->month), $report);
+        $this->storage->storeDto(
+            $this->getReportKey($this->year, $this->month, self::NUMBER_OF_LAST_MONTHS),
+            $report
+        );
         // AND the timeout has not been set
 
         // WHEN I get statistics
-        $this->service->get($this->year, $this->month);
+        $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN I get an exception
     }
@@ -372,10 +380,13 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
 
         // AND generation time has not yet passed
 
-        $this->storage->storeDto($this->getReportKey($this->year, $this->month), $report);
+        $this->storage->storeDto(
+            $this->getReportKey($this->year, $this->month, self::NUMBER_OF_LAST_MONTHS),
+            $report
+        );
 
         // WHEN I get statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN repository is not called
         $this->assertEquals(0, $this->repoStatisticsSpy->invocationCount());
@@ -395,17 +406,23 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         $tooLate->sub(new \DateInterval('PT1S'));
 
         $report->getReportStatus()->setGenerationTimeoutDate($tooLate);
-        $this->storage->storeDto($this->getReportKey($this->year, $this->month), $report);
+        $this->storage->storeDto(
+            $this->getReportKey($this->year, $this->month, self::NUMBER_OF_LAST_MONTHS),
+            $report
+        );
 
         // WHEN I get statistics
-        $stats = $this->service->get($this->year, $this->month);
+        $stats = $this->service->get(self::NUMBER_OF_LAST_MONTHS);
 
         // THEN the repo is used to generate stats
         $this->assertEquals(1, $this->repoStatisticsSpy->invocationCount());
 
         // AND the report is saved in storage
         /** @var NationalPerformanceReportDto $report */
-        $report = $this->storage->getAsDto($this->getReportKey($this->year, $this->month), NationalPerformanceReportDto::class);
+        $report = $this->storage->getAsDto(
+            $this->getReportKey($this->year, $this->month, self::NUMBER_OF_LAST_MONTHS),
+            NationalPerformanceReportDto::class
+        );
 
         $this->assertInstanceOf(NationalPerformanceReportDto::class, $report);
 
@@ -426,10 +443,10 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function getReportKey($year, $month)
+    private function getReportKey($year, $month, $monthRange)
     {
         $keyGenerator = new S3KeyGenerator();
 
-        return $keyGenerator->generateForNationalTesterStatistics($year, $month);
+        return $keyGenerator->generateForNationalTesterStatistics($year, $month, $monthRange);
     }
 }

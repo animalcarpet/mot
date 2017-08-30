@@ -396,11 +396,7 @@ return [
                         'type' => 'segment',
                         'may_terminate' => true,
                         'options' => [
-                            'route' => '/test-quality-information/:month/:year',
-                            'constraints' => [
-                                'month' => '[0-9]+',
-                                'year' => '[0-9]+',
-                            ],
+                            'route' => '/test-quality-information',
                             'defaults' => [
                                 'controller' => TestQualityInformationController::class,
                                 'action' => 'testQualityInformation',
@@ -419,19 +415,6 @@ return [
                                     'defaults' => [
                                         'controller' => SiteController::class,
                                         'action' => 'userTestQuality',
-                                    ],
-                                ],
-                            ],
-                            'component-breakdown' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/components/:group',
-                                    'constraints' => [
-                                        'group' => 'A|B',
-                                    ],
-                                    'defaults' => [
-                                        'controller' => TestQualityInformationController::class,
-                                        'action' => 'componentBreakdown',
                                     ],
                                 ],
                             ],
@@ -885,11 +868,7 @@ return [
                         'type' => 'segment',
                         'may_terminate' => true,
                         'options' => [
-                            'route' => '/test-quality-information/:month/:year',
-                            'constraints' => [
-                                'month' => '[0-9]+',
-                                'year' => '[0-9]+',
-                            ],
+                            'route' => '/test-quality-information',
                             'defaults' => [
                                 'controller' => TestQualityInformationController::class,
                                 'action' => 'testQualityInformation',
@@ -908,19 +887,6 @@ return [
                                     'defaults' => [
                                         'controller' => SiteController::class,
                                         'action' => 'userTestQuality',
-                                    ],
-                                ],
-                            ],
-                            'component-breakdown' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/components/:group',
-                                    'constraints' => [
-                                        'group' => 'A|B',
-                                    ],
-                                    'defaults' => [
-                                        'controller' => TestQualityInformationController::class,
-                                        'action' => 'componentBreakdown',
                                     ],
                                 ],
                             ],
@@ -1387,29 +1353,10 @@ return [
                         'type' => 'segment',
                         'may_terminate' => true,
                         'options' => [
-                            'route' => '/test-quality-information/:month/:year',
-                            'constraints' => [
-                                'month' => '[0-9]+',
-                                'year' => '[0-9]+',
-                            ],
+                            'route' => '/test-quality-information',
                             'defaults' => [
                                 'controller' => TestQualityInformationController::class,
                                 'action' => 'testQualityInformation',
-                            ],
-                        ],
-                        'child_routes' => [
-                            'component-breakdown' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/components/:group',
-                                    'constraints' => [
-                                        'group' => 'A|B',
-                                    ],
-                                    'defaults' => [
-                                        'controller' => TestQualityInformationController::class,
-                                        'action' => 'componentBreakdown',
-                                    ],
-                                ],
                             ],
                         ],
                     ],
@@ -1805,29 +1752,10 @@ return [
                         'may_terminate' => true,
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/test-quality-information/:month/:year',
-                            'constraints' => [
-                                'month' => '[0-9]+',
-                                'year' => '[0-9]+',
-                            ],
+                            'route' => '/test-quality-information',
                             'defaults' => [
                                 'controller' => TestQualityInformationController::class,
                                 'action' => 'testQualityInformation',
-                            ],
-                        ],
-                        'child_routes' => [
-                            'component-breakdown' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/components/:group',
-                                    'constraints' => [
-                                        'group' => 'A|B',
-                                    ],
-                                    'defaults' => [
-                                        'controller' => TestQualityInformationController::class,
-                                        'action' => 'componentBreakdown',
-                                    ],
-                                ],
                             ],
                         ],
                     ],

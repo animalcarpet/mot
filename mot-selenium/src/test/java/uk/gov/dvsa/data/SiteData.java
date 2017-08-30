@@ -2,6 +2,7 @@ package uk.gov.dvsa.data;
 
 import com.google.common.base.Optional;
 import uk.gov.dvsa.domain.model.Site;
+import uk.gov.dvsa.domain.model.mot.MotTest;
 import uk.gov.dvsa.domain.service.SiteService;
 import org.joda.time.DateTime;
 import uk.gov.dvsa.domain.service.StatisticsService;

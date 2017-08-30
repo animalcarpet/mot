@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Action;
 
+use Application\Data\ApiPersonalDetails;
 use Core\Action\ViewActionResult;
 use Dvsa\Mot\Frontend\PersonModule\Action\TestQualityAction;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
@@ -24,6 +25,7 @@ use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Model\TesterGroupAuthorisationStatus;
 use DvsaCommon\PHPUnit\AbstractMotUnitTest;
+use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Mvc\Controller\Plugin\Url;
@@ -31,11 +33,17 @@ use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiBreadcrumbs;
 
 class TestQualityInformationActionTest extends AbstractMotUnitTest
 {
+    const THREE_MONTHS_RANGE = 3;
+    const TQI_TITLE = 'Test quality information';
+
     /** @var TestQualityAction */
     private $testQualityAction;
 
     /** @var TesterPerformanceApiResource $testerPerformanceApiResourceMock */
     private $testerPerformanceApiResourceMock;
+
+    /** @var ApiPersonalDetails $personalDetailsApiResourceMock*/
+    private $personalDetailsApiResourceMock;
 
     /** @var NationalPerformanceApiResource $nationalPerformanceApiResourceMock */
     private $nationalPerformanceApiResourceMock;
@@ -69,7 +77,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             ->willReturn($testerPerformanceDto);
 
         $this->nationalPerformanceApiResourceMock = XMock::of(NationalPerformanceApiResource::class);
-        $this->nationalPerformanceApiResourceMock->method('getForDate')
+        $this->nationalPerformanceApiResourceMock->method('getForMonths')
             ->willReturn($nationalPerformanceDto);
 
         $this->contextProviderMock = XMock::of(ContextProvider::class);
@@ -96,6 +104,12 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             ->method('getBreadcrumbs')
             ->willReturn(['breadcrumbLinkText' => 'http://breadcrumbsLink']);
 
+        $this->personalDetailsApiResourceMock = XMock::of(ApiPersonalDetails::class);
+        $this->personalDetailsApiResourceMock
+            ->expects($this->any())
+            ->method('getPersonalDetailsData')
+            ->willReturn([]);
+
         $this->testQualityAction = new TestQualityAction(
             $this->testerPerformanceApiResourceMock,
             $this->nationalPerformanceApiResourceMock,
@@ -104,7 +118,9 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             $this->viewTesterTestQualityAssertionMock,
             $this->personProfileRoutesMock,
             $this->multiSiteApiResource,
-            $this->testerTqiBreadcrumbs
+            $this->testerTqiBreadcrumbs,
+            new TestDateTimeHolder(new \DateTime('2015-02-15')),
+            $this->personalDetailsApiResourceMock
         );
 
         $urlMethods = get_class_methods(Url::class);
@@ -139,7 +155,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $this->mockMultiSiteData();
 
         /** @var ViewActionResult $result */
-        $result = $this->testQualityAction->execute('1', '07', '2013', $this->url, []);
+        $result = $this->testQualityAction->execute('1', self::THREE_MONTHS_RANGE, $this->url, []);
 
         $this->assertInstanceOf(ViewActionResult::class, $result);
 
@@ -204,8 +220,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $this->assertSame('100%', $site4Vm->getTestsFailedPercentage());
 
         $this->assertEquals($result->layout()->getBreadcrumbs(), $breadcrumb);
-        $this->assertEquals($result->layout()->getPageLede(), 'Tests done at all associated sites in July 2013');
-        $this->assertEquals($result->layout()->getPageTitle(), 'Test quality information');
+        $this->assertEquals($result->layout()->getPageSubTitle(), self::TQI_TITLE);
     }
 
     /**
@@ -215,7 +230,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
      * @param $contextualProfileName
      * @param $componentContextualProfile
      */
-    public function testProfileContext($context, $contextualProfileName, $componentContextualProfile, $componentContextualProfileGroup)
+    public function testProfileContext($context, $contextualProfileName)
     {
         /** @var ContextProvider|MockObj $contextProviderMock */
         $contextProviderMock = XMock::of(ContextProvider::class);
@@ -235,19 +250,17 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             $this->viewTesterTestQualityAssertionMock,
             $this->personProfileRoutesMock,
             $this->multiSiteApiResource,
-            $this->testerTqiBreadcrumbs
+            $this->testerTqiBreadcrumbs,
+            new TestDateTimeHolder(new \DateTime('2015-2-15')),
+            $this->personalDetailsApiResourceMock
         );
-        $result = $testQualityAction->execute('1', '07', '2013', $this->url, [], []);
+        $result = $testQualityAction->execute('1', self::THREE_MONTHS_RANGE, $this->url, []);
 
-        $this->assertEquals($result->layout()->getPageSubTitle(), $contextualProfileName);
+        $this->assertEquals($result->layout()->getPageSubTitle(), self::TQI_TITLE);
 
         /** @var TestQualityInformationViewModel $vm */
         $vm = $result->getViewModel();
         $this->assertEquals($vm->getReturnLinkText(), $returnLinkText);
-        $this->assertEquals($vm->getA()->getComponentLinkText(), $componentContextualProfile);
-        $this->assertEquals($vm->getA()->getComponentLinkTextGroup(), sprintf($componentContextualProfileGroup, 'A'));
-        $this->assertEquals($vm->getB()->getComponentLinkText(), $componentContextualProfile);
-        $this->assertEquals($vm->getB()->getComponentLinkTextGroup(), sprintf($componentContextualProfileGroup, 'B'));
     }
 
     public function dataProviderContext()
@@ -350,6 +363,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
         $groupBSitesDto = [
             (new TesterMultiSitePerformanceDto())
                 ->setSiteName('Turbo Bourbon')
+                ->setSiteId(104)
                 ->setTotal(40)
                 ->setAverageTime(new TimeSpan(1, 4, 6, 59))
                 ->setIsAverageVehicleAgeAvailable(true)
@@ -357,6 +371,7 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
                 ->setPercentageFailed(15.71),
             (new TesterMultiSitePerformanceDto())
                 ->setTotal(19)
+                ->setSiteId(105)
                 ->setSiteName('Wild Cat')
                 ->setAverageTime(new TimeSpan(1, 4, 6, 59))
                 ->setIsAverageVehicleAgeAvailable(false)

@@ -6,7 +6,11 @@ use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Enum\VehicleClassGroupCode;
+use Site\Form\TQIMonthRangeForm;
+use DvsaCommon\Utility\TypeCheck;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 
 class UserTestQualityViewModel
 {
@@ -19,27 +23,31 @@ class UserTestQualityViewModel
     private $groupCode;
     private $userId;
     private $siteId;
-    /** @var \DateTime */
-    private $viewedDate;
-    private $csvFileSize;
+    private $monthRange;
     private $returnLink;
-    private $showCsvLink;
+    /**
+     * @var TQIMonthRangeForm
+     */
+    private $monthRangeForm;
 
     public function __construct(
         ComponentBreakdownDto $userBreakdown,
         MotTestingPerformanceDto $nationalGroupPerformance,
         NationalComponentStatisticsDto $nationalComponentStatisticsDto,
+        array $siteAverageBreakdown,
         $groupCode,
         $userId,
         $siteId,
-        $viewedDate,
-        $csvFileSize,
+        LastMonthsDateRange $monthRange,
         $returnLink,
-        $showCsvLink
+        TQIMonthRangeForm $monthRangeForm
     ) {
+        TypeCheck::assertCollectionOfClass($siteAverageBreakdown, ComponentDto::class);
+
         $this->table = new ComponentStatisticsTable(
             $userBreakdown,
             $nationalComponentStatisticsDto,
+            $siteAverageBreakdown,
             static::$subtitles[$groupCode],
             $groupCode
         );
@@ -47,10 +55,17 @@ class UserTestQualityViewModel
         $this->groupCode = $groupCode;
         $this->userId = $userId;
         $this->siteId = $siteId;
-        $this->viewedDate = $viewedDate;
-        $this->csvFileSize = $csvFileSize;
+        $this->monthRange = $monthRange;
         $this->returnLink = $returnLink;
-        $this->showCsvLink = $showCsvLink;
+        $this->monthRangeForm = $monthRangeForm;
+    }
+
+    /**
+     * @return TQIMonthRangeForm
+     */
+    public function getMonthRangeForm()
+    {
+        return $this->monthRangeForm;
     }
 
     /**
@@ -83,33 +98,14 @@ class UserTestQualityViewModel
         return $this->siteId;
     }
 
-    public function getMonth()
-    {
-        return (int) $this->viewedDate->format('m');
-    }
-
-    public function getYear()
-    {
-        return (int) $this->viewedDate->format('Y');
-    }
-
-    public function getCsvFileSize()
-    {
-        $kb = $this->csvFileSize / 1024;
-        if ($kb > 1) {
-            return round($kb).'KB';
-        } else {
-            return '1KB';
-        }
-    }
-
     public function getReturnLink()
     {
         return $this->returnLink;
     }
 
-    public function showCsvSection()
+    public function getMonthRange()
     {
-        return $this->showCsvLink;
+        return $this->monthRange;
     }
+
 }

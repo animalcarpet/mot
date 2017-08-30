@@ -10,13 +10,15 @@ use DvsaCommon\HttpRestJson\AbstractApiResource;
 class SitePerformanceApiResource extends AbstractApiResource implements AutoWireableInterface
 {
     /**
-     * @param $siteId
-     * @param $month
-     * @param $year
+     * @param int $siteId
+     * @param int $numberOfLastMonths
      * @return SitePerformanceDto
      */
-    public function getForDate($siteId, $month, $year)
+    public function getForMonthRange(int $siteId, int $numberOfLastMonths)
     {
-        return $this->getSingle(SitePerformanceDto::class, sprintf('statistic/tester-performance/site/%s/%s/%s', $siteId, $year, $month));
+        return $this->getSingle(
+            SitePerformanceDto::class,
+            sprintf('statistic/tester-performance/site/%d/%d', $siteId, $numberOfLastMonths)
+        );
     }
 }

@@ -5,33 +5,33 @@ use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityI
 
 ?>
 
-<div class='layout-filter-data'>
-
-    <div class="layout-filter__controls">
-
-        <?php echo $this->partial('partial/month-filter/month-filter', [
-                'monthFilter' => $viewModel->getMonthFilter(),
-            ]);
-        ?>
-    </div>
-
-    <div class="layout-filter__content">
-
-        <?php
-        if ($viewModel->isAVisible()) {
-            echo $this->partial('partials/test-quality-group', [
-                'group' => $viewModel->getA(),
-            ]);
-        }
-
-        if ($viewModel->isBVisible()) {
-            echo $this->partial('partials/test-quality-group', [
-                'group' => $viewModel->getB(),
-            ]);
-        }
-        ?>
-    </div>
+<div class="text">
+    <p class="lede">This information will help you manage the quality of your tests.
+        How you use it will depend on how many vehicles you test and the vehicle type.</p>
+    <h2 class="heading-medium">Tests done in <?php echo $viewModel->getDateRangeWording() ?> </h2>
 </div>
+
+<?php
+echo $this->partial('site/site/test-quality-information/month-range-form', [
+    'form' => $viewModel->getMonthRangeForm(),
+]);
+?>
+
+<?php
+if ($viewModel->isAVisible()) {
+    echo $this->partial('partials/test-quality-group', [
+        'group' => $viewModel->getA(),
+        'queryParams' => $viewModel->getQueryParams()
+    ]);
+}
+
+if ($viewModel->isBVisible()) {
+    echo $this->partial('partials/test-quality-group', [
+        'group' => $viewModel->getB(),
+        'queryParams' => $viewModel->getQueryParams()
+    ]);
+}
+?>
 
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">

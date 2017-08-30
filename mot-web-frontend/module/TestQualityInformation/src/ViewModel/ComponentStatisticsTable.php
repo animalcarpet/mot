@@ -8,89 +8,73 @@ use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
-use DvsaCommon\Date\TimeSpan;
+use Site\ViewModel\TimeSpanFormatter;
+use DvsaCommon\Utility\TypeCheck;
 
 class ComponentStatisticsTable
 {
     const TEXT_EMPTY = 'n/a';
-    private $testCount;
     const DEFAULT_TESTER_AVERAGE = 0;
     const TEXT_NOT_AVAILABLE = 'Not available';
-    /**
-     * @var TimeSpan
-     */
-    private $averageTestDuration;
-    private $failurePercentage;
+
     private $componentRows;
-    private $groupDescription;
-    private $groupCode;
-    private $averageVehicleAge;
     /** @var bool */
     private $isNationalAverageAvailable;
+    /** @var AverageGroupStatisticsHeader */
+    private $averageGroupStatisticsHeader;
 
     public function __construct(
         ComponentBreakdownDto $breakdownDto,
         NationalComponentStatisticsDto $nationalComponentStatisticsDto,
+        array $siteAverageBreakdown,
         $groupDescription, $groupCode
     ) {
+        TypeCheck::assertCollectionOfClass($siteAverageBreakdown, ComponentDto::class);
+
         $this->isNationalAverageAvailable = $nationalComponentStatisticsDto->getReportStatus()->getIsCompleted();
         $motTestingPerformanceDto = $breakdownDto->getGroupPerformance();
-        $this->setTestCount($motTestingPerformanceDto->getTotal());
-        $this->setAverageTestDuration(
-            !is_null($motTestingPerformanceDto->getAverageTime())
-                ? $motTestingPerformanceDto->getAverageTime()->getTotalMinutes()
-                : static::TEXT_EMPTY
-        );
-        $this->setFailurePercentage($this->numberFormat($motTestingPerformanceDto->getPercentageFailed()));
-        $this->setGroupDescription($groupDescription);
-        $this->setGroupCode($groupCode);
-        $this->averageVehicleAge = $this->determineVehicleAge($motTestingPerformanceDto);
 
         $this->componentRows = $this->createComponentRows(
             $breakdownDto->getComponents(),
-            $nationalComponentStatisticsDto->getComponents()
+            $nationalComponentStatisticsDto->getComponents(),
+            $siteAverageBreakdown
         );
+
+        $this->averageGroupStatisticsHeader = $this->createAverageGroupStatisticsHeader($motTestingPerformanceDto, $groupDescription, $groupCode);
+    }
+
+    private function createAverageGroupStatisticsHeader(MotTestingPerformanceDto $motTestingPerformanceDto, $groupDescription, $groupCode):AverageGroupStatisticsHeader
+    {
+        $timeSpanFormatter = new TimeSpanFormatter();
+        $averageGroupStatistics = new AverageGroupStatisticsHeader();
+        $averageGroupStatistics->setTestCount($motTestingPerformanceDto->getTotal());
+        $averageGroupStatistics->setIsAverageVehicleAgeAvailable(
+            !is_null($motTestingPerformanceDto->getIsAverageVehicleAgeAvailable())
+                ? $motTestingPerformanceDto->getIsAverageVehicleAgeAvailable()
+                : false
+        );
+        $averageGroupStatistics->setAverageTestDuration(
+            !is_null($motTestingPerformanceDto->getAverageTime())
+                ? $timeSpanFormatter->formatForTestQualityInformationView($motTestingPerformanceDto->getAverageTime())
+                : 0
+        );
+        $averageGroupStatistics->setFailurePercentage($this->numberFormat(
+            !is_null($motTestingPerformanceDto->getPercentageFailed())
+                ? $motTestingPerformanceDto->getPercentageFailed()
+                : 0
+
+        ));
+        $averageGroupStatistics->setGroupDescription($groupDescription);
+        $averageGroupStatistics->setGroupCode($groupCode);
+        $averageGroupStatistics->setAverageVehicleAge($this->determineVehicleAge($motTestingPerformanceDto));
+
+        $averageGroupStatistics->setHasTests(!is_null($motTestingPerformanceDto->getAverageTime()) && $motTestingPerformanceDto->getTotal() !== 0);
+        return $averageGroupStatistics;
     }
 
     public function isNationalAverageAvailable()
     {
         return $this->isNationalAverageAvailable;
-    }
-
-    public function getTestCount()
-    {
-        return $this->getNotEmptyText($this->testCount, 0);
-    }
-
-    public function setTestCount($testCount)
-    {
-        $this->testCount = $testCount;
-
-        return $this;
-    }
-
-    public function getAverageTestDuration()
-    {
-        return $this->getNotEmptyText($this->averageTestDuration);
-    }
-
-    public function setAverageTestDuration($averageTestDuration)
-    {
-        $this->averageTestDuration = $averageTestDuration;
-
-        return $this;
-    }
-
-    public function getFailurePercentage()
-    {
-        return $this->getNotEmptyText($this->failurePercentage, static::TEXT_EMPTY, '%');
-    }
-
-    public function setFailurePercentage($failurePercentage)
-    {
-        $this->failurePercentage = $failurePercentage;
-
-        return $this;
     }
 
     /**
@@ -104,15 +88,17 @@ class ComponentStatisticsTable
     /**
      * @param ComponentDto[] $userComponents
      * @param ComponentDto[] $nationalComponents
+     * @param ComponentDto[] $siteAverageComponents
      *
      * @return ComponentStatisticsRow[]
      */
-    private function createComponentRows($userComponents, $nationalComponents)
+    private function createComponentRows($userComponents, $nationalComponents, $siteAverageComponents)
     {
         $rows = [];
 
         foreach ($userComponents as $userComponent) {
             $nationalComponent = $this->getTesterDataByComponentId($userComponent->getId(), $nationalComponents);
+            $siteAverageComponent = $this->getTesterDataByComponentId($userComponent->getId(), $siteAverageComponents);
             $rows[] = (new ComponentStatisticsRow())
                 ->setCategoryId($userComponent->getId())
                 ->setCategoryName($userComponent->getName())
@@ -125,70 +111,15 @@ class ComponentStatisticsTable
                     $this->isNationalAverageAvailable
                         ? ComponentFailRateFormatter::format($nationalComponent->getPercentageFailed())
                         : 0
+                )
+                ->setSiteAverage(
+                    ($siteAverageComponent && $siteAverageComponent->getPercentageFailed())
+                        ? ComponentFailRateFormatter::format($siteAverageComponent->getPercentageFailed())
+                        : self::DEFAULT_TESTER_AVERAGE
                 );
         }
 
         return $rows;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGroupName()
-    {
-        return 'Group '.$this->groupCode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAverageVehicleAge()
-    {
-        return $this->averageVehicleAge;
-    }
-
-    /**
-     * @param mixed $averageVehicleAge
-     *
-     * @return ComponentStatisticsTable
-     */
-    public function setAverageVehicleAge($averageVehicleAge)
-    {
-        $this->averageVehicleAge = $averageVehicleAge;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGroupDescription()
-    {
-        return $this->groupDescription;
-    }
-
-    /**
-     * @param string $groupDescription
-     */
-    public function setGroupDescription($groupDescription)
-    {
-        $this->groupDescription = $groupDescription;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGroupCode()
-    {
-        return $this->groupCode;
-    }
-
-    /**
-     * @param string $groupCode
-     */
-    public function setGroupCode($groupCode)
-    {
-        $this->groupCode = $groupCode;
     }
 
     /**
@@ -227,15 +158,14 @@ class ComponentStatisticsTable
     /**
      * @param MotTestingPerformanceDto $motTestingPerformanceDto
      *
-     * @return int|string
+     * @return int
      */
-    protected function determineVehicleAge($motTestingPerformanceDto)
+    protected function determineVehicleAge(MotTestingPerformanceDto $motTestingPerformanceDto):int
     {
-        $age = self::TEXT_NOT_AVAILABLE;
+        $age = 0;
 
         if ($motTestingPerformanceDto->getIsAverageVehicleAgeAvailable()) {
             $age = VehicleAgeFormatter::calculateVehicleAge($motTestingPerformanceDto->getAverageVehicleAgeInMonths());
-            $age = $age.' '.VehicleAgeFormatter::getYearSuffix($age);
         }
 
         return $age;
@@ -249,5 +179,13 @@ class ComponentStatisticsTable
     protected function numberFormat($number)
     {
         return is_numeric($number) ? round($number) : $number;
+    }
+
+    /**
+     * @return AverageGroupStatisticsHeader
+     */
+    public function getAverageGroupStatisticsHeader():AverageGroupStatisticsHeader
+    {
+        return $this->averageGroupStatisticsHeader;
     }
 }

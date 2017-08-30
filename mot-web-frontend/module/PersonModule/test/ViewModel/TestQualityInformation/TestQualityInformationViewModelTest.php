@@ -1,6 +1,6 @@
 <?php
 
-use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityInformationMonthFilter;
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\SiteRowViewModel;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
@@ -10,7 +10,8 @@ use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Model\TesterGroupAuthorisationStatus;
-use DvsaCommonTest\TestUtils\XMock;
+use DvsaCommonTest\Date\TestDateTimeHolder;
+use Site\Form\TQIMonthRangeForm;
 
 class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,27 +20,23 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
     const COMPONENT_LINK_TEXT = 'component link';
     const COMPONENT_LINK_TEXT_GROUP = 'component link group';
     const NOT_AVAILABLE = 'Not available';
+    const THREE_MONTHS_RANGE = 3;
+    const PERSON_ID = 1;
 
-    /** @var TestQualityInformationMonthFilter $testQualityInformationMonthFilter */
-    private $testQualityInformationMonthFilter;
-
-    public function setUp()
-    {
-        $this->testQualityInformationMonthFilter = XMock::of(TestQualityInformationMonthFilter::class);
-        $this->testQualityInformationMonthFilter->method('setStartMonth')
-            ->willReturn($this->testQualityInformationMonthFilter);
-        $this->testQualityInformationMonthFilter->method('setNumberOfMonthsBack')
-            ->willReturn($this->testQualityInformationMonthFilter);
-        $this->testQualityInformationMonthFilter->method('setViewedMonth')
-            ->willReturn($this->testQualityInformationMonthFilter);
-    }
 
     public function testTablePopulatesNationalStatistics()
     {
-        $date = new DateTime();
-
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            self::buildTesterPerformanceDto(false, false), [], [], self::buildNationalStatisticsPerformanceDto(), self::buildTesterAuthorisation(false, false), $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
+            self::buildTesterPerformanceDto(false, false),
+            [], [],
+            self::buildNationalStatisticsPerformanceDto(),
+            self::buildTesterAuthorisation(false, false),
+            self::THREE_MONTHS_RANGE,
+            self::RETURN_LINK,
+            self::RETURN_LINK_TEXT,
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new \DateTime('2015-2-15')),
+            self::PERSON_ID
         );
 
         $this->assertEquals(($testQualityInformationViewModel->getA()->getNationalTestCount()), 10);
@@ -53,38 +50,61 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function testTablePopulatesStatistics()
     {
-        $date = new DateTime();
-
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            self::buildTesterPerformanceDto(true, true), [], [], self::buildNationalStatisticsPerformanceDto(), self::buildTesterAuthorisation(false, false), $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
+            self::buildTesterPerformanceDto(true, true),
+            [self::buildSiteRowViewModel()],
+            [self::buildSiteRowViewModel()],
+            self::buildNationalStatisticsPerformanceDto(),
+            self::buildTesterAuthorisation(false, false),
+            self::THREE_MONTHS_RANGE,
+            self::RETURN_LINK,
+            self::RETURN_LINK_TEXT,
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new \DateTime('2015-2-15')),
+            self::PERSON_ID
         );
 
-        $this->assertEquals(($testQualityInformationViewModel->getA()->getTestCount()), 1);
-        $this->assertEquals(($testQualityInformationViewModel->getA()->getFailurePercentage()), '100%');
-        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageTestDuration()), 1501);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getTestCount()), 1);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getFailurePercentage()), '100%');
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getIsAverageVehicleAgeAvailable()), true);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->hasTests()), true);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getAverageTestDuration()), 1501);
 
-        $this->assertEquals(($testQualityInformationViewModel->getB()->getTestCount()), 200);
-        $this->assertEquals(($testQualityInformationViewModel->getB()->getFailurePercentage()), '33%');
-        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageTestDuration()), 3002);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getTestCount()), 200);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getFailurePercentage()), '33%');
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getIsAverageVehicleAgeAvailable()), true);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->hasTests()), true);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getAverageTestDuration()), 3002);
     }
 
     public function testTableNotAvailableText()
     {
-        $date = new DateTime();
-
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            self::buildTesterPerformanceDto(false, false), [], [], self::buildNationalStatisticsPerformanceDto(), self::buildTesterAuthorisation(false, false), $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
+            self::buildTesterPerformanceDto(false, false),
+            [], [],
+            self::buildNationalStatisticsPerformanceDto(),
+            self::buildTesterAuthorisation(false, false),
+            self::THREE_MONTHS_RANGE,
+            self::RETURN_LINK,
+            self::RETURN_LINK_TEXT,
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new \DateTime('2015-2-15')),
+            self::PERSON_ID
         );
 
-        $this->assertEquals(($testQualityInformationViewModel->getA()->getTestCount()), 0);
-        $this->assertEquals(($testQualityInformationViewModel->getA()->getFailurePercentage()), self::NOT_AVAILABLE);
-        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageTestDuration()), self::NOT_AVAILABLE);
-        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageVehicleAge()), self::NOT_AVAILABLE);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getTestCount()), 0);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getFailurePercentage()), '0%');
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->hasTests()), false);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getAverageTestDuration()), null);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getIsAverageVehicleAgeAvailable()), false);
+        $this->assertEquals(($testQualityInformationViewModel->getA()->getAverageGroupStatisticsHeader()->getAverageVehicleAge()), null);
 
-        $this->assertEquals(($testQualityInformationViewModel->getB()->getTestCount()), 0);
-        $this->assertEquals(($testQualityInformationViewModel->getB()->getFailurePercentage()), self::NOT_AVAILABLE);
-        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageTestDuration()), self::NOT_AVAILABLE);
-        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageVehicleAge()), self::NOT_AVAILABLE);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getTestCount()), 0);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getFailurePercentage()), '0%');
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->hasTests()), false);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getAverageTestDuration()), null);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getIsAverageVehicleAgeAvailable()), false);
+        $this->assertEquals(($testQualityInformationViewModel->getB()->getAverageGroupStatisticsHeader()->getAverageVehicleAge()), null);
     }
 
     /**
@@ -97,10 +117,17 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testAreTablesViewable($testerPerformance, $testerAuthorisation, $resultA, $resultB)
     {
-        $date = new DateTime();
-
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            $testerPerformance, [], [], self::buildNationalStatisticsPerformanceDto(), $testerAuthorisation, $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
+            $testerPerformance,
+            [], [],
+            self::buildNationalStatisticsPerformanceDto(),
+            $testerAuthorisation,
+            self::THREE_MONTHS_RANGE,
+            self::RETURN_LINK,
+            self::RETURN_LINK_TEXT,
+            new TQIMonthRangeForm(),
+            new TestDateTimeHolder(new \DateTime('2015-2-15')),
+            self::PERSON_ID
         );
 
         $this->assertEquals($resultA, $testQualityInformationViewModel->isAVisible());
@@ -197,6 +224,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
             $stats1->setTotal(1);
             $stats1->setAverageTime(new TimeSpan(1, 1, 1, 1));
             $stats1->setPercentageFailed(100);
+            $stats1->setIsAverageVehicleAgeAvailable(true);
 
             $tester->setGroupAPerformance($stats1);
         }
@@ -208,6 +236,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
             $stats2->setTotal(200);
             $stats2->setAverageTime(new TimeSpan(2, 2, 2, 2));
             $stats2->setPercentageFailed(33.33);
+            $stats2->setIsAverageVehicleAgeAvailable(true);
 
             $tester->setGroupBPerformance($stats2);
         }
@@ -235,4 +264,10 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
 
         return $testerAuthorisation;
     }
+
+    public static function buildSiteRowViewModel()
+    {
+        return new SiteRowViewModel(1, 'site name', 'address', 1, true, 1, new TimeSpan(1,23,59,59), 20, "/url");
+    }
+
 }

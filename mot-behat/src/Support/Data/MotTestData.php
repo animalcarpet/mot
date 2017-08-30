@@ -239,4 +239,12 @@ class MotTestData extends AbstractMotTestData
     {
         return $this->normalMotTestData->getLastResponse();
     }
+
+    public function generateTQIReport(AuthenticatedUser $user, $monthsAgo)
+    {
+        $token = $user->getAccessToken();
+
+        $this->motTest->generateTQIRFRCountReport($token, $monthsAgo);
+        $this->motTest->generateTQITestCountReport($token, $monthsAgo);
+    }
 }

@@ -29,6 +29,8 @@ class PersonProfileRoutes implements AutoWireableInterface
                 return ContextProvider::AE_PARENT_ROUTE;
             case ContextProvider::VTS_CONTEXT:
                 return ContextProvider::VTS_PARENT_ROUTE;
+            case ContextProvider::PERFORMANCE_DASHBOARD_CONTEXT:
+                return ContextProvider::PERFORMANCE_DASHBOARD_ROUTE;
             default:
                 throw new \Exception();
         }

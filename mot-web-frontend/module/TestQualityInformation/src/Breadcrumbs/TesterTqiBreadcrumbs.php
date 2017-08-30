@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs;
 
+use Core\Routing\PerformanceDashboardRoutes;
 use Core\Routing\ProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -30,6 +31,8 @@ class TesterTqiBreadcrumbs implements AutoWireableInterface
         $breadcrumbs = [];
         if ($this->contextProvider->isYourProfileContext()) {
             $breadcrumbs['Your profile'] = ProfileRoutes::of($this->url)->yourProfile();
+        } else if ($this->contextProvider->isPerformanceDashboardContext()) {
+            $breadcrumbs['Your performance dashboard'] = PerformanceDashboardRoutes::of($this->url)->performanceDashboard();
         } else {
             $personalDetails = new PersonalDetails($this
                 ->apiPersonalDetails

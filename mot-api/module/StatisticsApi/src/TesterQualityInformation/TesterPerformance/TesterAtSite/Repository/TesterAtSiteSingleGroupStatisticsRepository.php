@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\Repository\SingleGroupStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryBuilder\TesterAtSiteSingleGroupStatisticsQueryBuilder;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
+use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class TesterAtSiteSingleGroupStatisticsRepository extends SingleGroupStatisticsRepository implements AutoWireableInterface
@@ -12,15 +13,28 @@ class TesterAtSiteSingleGroupStatisticsRepository extends SingleGroupStatisticsR
     const PARAM_SITE_ID = 'vtsId';
     const PARAM_TESTER_ID = 'testerId';
 
-    public function get($siteId, $testerId, $groupCode, $year, $month)
+    public function get($siteId, $testerId, $groupCode, $monthRange)
     {
-        return $this->getByParams([
-            self::PARAM_SITE_ID => $siteId,
-            self::PARAM_TESTER_ID => $testerId,
-            self::PARAM_GROUP_CODE => $groupCode,
-            self::PARAM_YEAR => $year,
-            self::PARAM_MONTH => $month,
-        ]);
+        $this->setMonthsRangeConfiguration($monthRange);
+        $rsm = $this->buildResultSetMapping();
+
+        $query = $this->getNativeQuery($this->getSql(), $rsm)
+            ->setParameter(self::PARAM_SITE_ID, $siteId)
+            ->setParameter(self::PARAM_TESTER_ID, $testerId)
+            ->setParameter(self::PARAM_GROUP_CODE, $groupCode)
+            ->setParameter('roleCode', SiteBusinessRoleCode::TESTER)
+            ->setParameter('startDate', $this->startDate)
+            ->setParameter('endDate', $this->endDate);
+
+        $scalarResult = $query->getScalarResult();
+
+        if (!empty($scalarResult))
+        {
+            $row = $scalarResult[0];
+            return $this->createTesterPerformanceResult($row);
+        }
+
+        return null;
     }
 
     protected function getSql()

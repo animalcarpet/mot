@@ -37,7 +37,7 @@ class TesterStatisticsMapper
         return $siteDto;
     }
 
-    /**§
+    /**
      * @param TesterPerformanceResult[] $statistics
      * @return TesterPerformanceDto
      */
@@ -166,8 +166,11 @@ class TesterStatisticsMapper
         $dto = new EmployeePerformanceDto();
         /** @var EmployeePerformanceDto $dto */
         $dto = $this->buildMotTestingPerformanceDto($dto, $result);
-        $dto->setUsername($result->getUsername());
-        $dto->setPersonId($result->getPersonId());
+        $dto->setUsername($result->getUsername())
+            ->setFirstName($result->getFirstName())
+            ->setMiddleName($result->getMiddleName())
+            ->setFamilyName($result->getFamilyName())
+            ->setPersonId($result->getPersonId());
 
         return $dto;
     }

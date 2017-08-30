@@ -9,12 +9,14 @@ use DvsaCommon\HttpRestJson\AbstractApiResource;
 class NationalPerformanceApiResource extends AbstractApiResource implements AutoWireableInterface
 {
     /**
-     * @param $month
-     * @param $year
+     * @param int $numberOfMonths
      * @return NationalPerformanceReportDto
      */
-    public function getForDate($month, $year)
+    public function getForMonths(int $numberOfMonths):NationalPerformanceReportDto
     {
-        return $this->getSingle(NationalPerformanceReportDto::class, sprintf('statistic/tester-performance/national/%s/%s', $year, $month));
+        return $this->getSingle(
+            NationalPerformanceReportDto::class,
+            sprintf('statistic/tester-performance/national/%d', $numberOfMonths)
+        );
     }
 }

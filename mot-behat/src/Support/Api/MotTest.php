@@ -17,6 +17,8 @@ class MotTest extends AbstractMotTest
     const PATH_SURVEY = '/survey';
     const PATH_SURVEY_REPORTS = '/reports';
     const PATH_TEST_HISTORY = 'vehicle/{vehicle_id}/test-history';
+    const PATH_TQI_GENERATE_RFR_REPORT = '/statistic/tester-performance/batch/rfr-counts';
+    const PATH_TQI_GENERATE_TEST_REPORT = '/statistic/tester-performance/batch/test-counts';
 
     /**
      * @var Person
@@ -196,6 +198,30 @@ class MotTest extends AbstractMotTest
         return $this->sendGetRequest(
             $token,
             self::PATH_SURVEY.self::PATH_SURVEY_REPORTS
+        );
+    }
+
+    public function generateTQIRFRCountReport($token, $monthsAgo = 1)
+    {
+        $params = [
+            'monthsAgo' => $monthsAgo,
+        ];
+
+        return $this->sendGetRequest(
+            $token,
+            self::PATH_TQI_GENERATE_RFR_REPORT . "?" . http_build_query($params)
+        );
+    }
+
+    public function generateTQITestCountReport($token, $monthsAgo = 1)
+    {
+        $params = [
+            'monthsAgo' => $monthsAgo,
+        ];
+
+        return $this->sendGetRequest(
+            $token,
+            self::PATH_TQI_GENERATE_TEST_REPORT . "?" . http_build_query($params)
         );
     }
 }

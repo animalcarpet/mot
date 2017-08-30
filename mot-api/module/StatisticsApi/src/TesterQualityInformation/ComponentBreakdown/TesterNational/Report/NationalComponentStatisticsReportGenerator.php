@@ -8,7 +8,7 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use DvsaCommon\ApiClient\Statistics\Common\ReportDtoInterface;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
-use DvsaCommon\Date\DateTimeHolderInterface;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\DtoSerialization\ReflectiveDtoInterface;
 
@@ -16,26 +16,26 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
 {
     private $repository;
     private $storage;
+    private $monthRange;
+    private $group;
     private $year;
     private $month;
-    private $group;
 
     public function __construct(
         NationalComponentFailRateStorage $storage,
         NationalComponentStatisticsRepository $componentStatisticsRepository,
-        DateTimeHolderInterface $dateTimeHolder,
         TimeSpan $timeoutPeriod,
-        $year,
-        $month,
+        LastMonthsDateRange $monthRange,
         $group
     ) {
-        parent::__construct($dateTimeHolder, $timeoutPeriod);
+        parent::__construct($monthRange->getDateTimeHolder(), $timeoutPeriod);
 
         $this->repository = $componentStatisticsRepository;
         $this->storage = $storage;
-        $this->year = $year;
-        $this->month = $month;
+        $this->monthRange = $monthRange;
         $this->group = $group;
+        $this->year = $monthRange->getDateTimeHolder()->getCurrent()->format('Y');
+        $this->month = $monthRange->getDateTimeHolder()->getCurrent()->format('n');
     }
 
     /**
@@ -43,11 +43,10 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
      */
     protected function generateReport()
     {
-        $total = $this->repository->getNationalFailedMotTestCount($this->group, $this->year, $this->month);
-        $results = $this->repository->get($this->group, $this->year, $this->month);
+        $total = $this->repository->getNationalFailedMotTestCount($this->group, $this->monthRange);
+        $results = $this->repository->get($this->group, $this->monthRange);
         $report = $this->buildComponentDtosFromQueryResults($results, $total);
-        $report->setYear($this->year);
-        $report->setMonth($this->month);
+        $report->setMonthRange($this->monthRange->getNumberOfMonths());
         $report->setGroup($this->group);
 
         return $report;
@@ -55,7 +54,7 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
 
     protected function storeReport($report)
     {
-        $this->storage->store($this->year, $this->month, $this->group, $report);
+        $this->storage->store($this->year, $this->month, $this->monthRange->getNumberOfMonths(), $this->group, $report);
     }
 
     /**
@@ -71,7 +70,7 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
      */
     protected function getFromStorage()
     {
-        return $this->storage->get($this->year, $this->month, $this->group);
+        return $this->storage->get($this->year, $this->month, $this->monthRange->getNumberOfMonths(), $this->group);
     }
 
     /**

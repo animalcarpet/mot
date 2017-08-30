@@ -11,11 +11,11 @@ class TesterAtSiteComponentStatisticsRepository extends ComponentStatisticsRepos
     const PARAM_SITE_ID = 'siteId';
     const PARAM_TESTER_ID = 'testerId';
 
-    public function get($testerId, $siteId, $group, $year, $month)
+    public function get($testerId, $siteId, $group, $monthRange)
     {
         $qb = new TesterAtSiteComponentBreakdownQueryBuilder();
 
-        $this->setDaysConfiguration($year, $month);
+        $this->setMonthsRangeConfiguration($monthRange);
 
         return $this->getResult($qb->getSql(), [
             self::PARAM_TESTER_ID => $testerId,

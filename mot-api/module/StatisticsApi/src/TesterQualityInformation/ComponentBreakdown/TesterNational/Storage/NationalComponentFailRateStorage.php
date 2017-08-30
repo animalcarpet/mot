@@ -21,13 +21,14 @@ class NationalComponentFailRateStorage
     /**
      * @param int    $year
      * @param int    $month
+     * @param int    $monthRange
      * @param string $group
      *
      * @return NationalComponentStatisticsDto
      */
-    public function get($year, $month, $group)
+    public function get(int $year, int $month, int $monthRange, string $group)
     {
-        $key = $this->keyGenerator->generateForComponentBreakdownStatistics($year, $month, $group);
+        $key = $this->keyGenerator->generateForComponentBreakdownStatistics($year, $month, $group, $monthRange);
 
         return $this->storage->getAsDto($key, NationalComponentStatisticsDto::class);
     }
@@ -35,12 +36,13 @@ class NationalComponentFailRateStorage
     /**
      * @param $year
      * @param $month
+     * @param $monthRange
      * @param $group
      * @param NationalComponentStatisticsDto $dto
      */
-    public function store($year, $month, $group, NationalComponentStatisticsDto $dto)
+    public function store($year, $month, $monthRange, $group, NationalComponentStatisticsDto $dto)
     {
-        $key = $this->keyGenerator->generateForComponentBreakdownStatistics($year, $month, $group);
+        $key = $this->keyGenerator->generateForComponentBreakdownStatistics($year, $month, $group, $monthRange);
 
         $this->storage->storeDto($key, $dto);
     }

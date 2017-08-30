@@ -8,7 +8,6 @@ use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStati
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
 use DvsaCommon\Date\TimeSpan;
 use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable;
-use Site\ViewModel\TestQuality\GroupStatisticsTable;
 
 class ComponentStatisticsTableTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,8 +21,8 @@ class ComponentStatisticsTableTest extends \PHPUnit_Framework_TestCase
         ComponentBreakdownDto $sitePerformanceDto, NationalComponentStatisticsDto $nationalPerformanceDto,
         $expectedSiteAverage
     ) {
-        $table = new ComponentStatisticsTable($sitePerformanceDto, $nationalPerformanceDto, 'A', 'asdasd', 'A');
-        $this->assertEquals($expectedSiteAverage, $table->getAverageVehicleAge());
+        $table = new ComponentStatisticsTable($sitePerformanceDto, $nationalPerformanceDto, [], 'description', 'A');
+        $this->assertEquals($expectedSiteAverage, $table->getAverageGroupStatisticsHeader()->getAverageVehicleAge());
     }
 
     /**
@@ -32,8 +31,8 @@ class ComponentStatisticsTableTest extends \PHPUnit_Framework_TestCase
     public function testProperFailurePercentageRounding($expectedAverage,
         ComponentBreakdownDto $sitePerformanceDto, NationalComponentStatisticsDto $nationalPerformanceDto
     ) {
-        $table = new ComponentStatisticsTable($sitePerformanceDto, $nationalPerformanceDto, 'A', 'asdasd', 'A');
-        $this->assertEquals($expectedAverage, $table->getFailurePercentage());
+        $table = new ComponentStatisticsTable($sitePerformanceDto, $nationalPerformanceDto, [], 'description', 'A');
+        $this->assertEquals($expectedAverage, $table->getAverageGroupStatisticsHeader()->getFailurePercentage());
     }
 
     /**
@@ -42,8 +41,8 @@ class ComponentStatisticsTableTest extends \PHPUnit_Framework_TestCase
     public function testProperAverageTestDuration($expectedAverage,
         ComponentBreakdownDto $sitePerformanceDto, NationalComponentStatisticsDto $nationalPerformanceDto
     ) {
-        $table = new ComponentStatisticsTable($sitePerformanceDto, $nationalPerformanceDto, 'A', 'asdasd', 'A');
-        $this->assertEquals($expectedAverage, $table->getAverageTestDuration());
+        $table = new ComponentStatisticsTable($sitePerformanceDto, $nationalPerformanceDto, [], 'description', 'A');
+        $this->assertEquals($expectedAverage, $table->getAverageGroupStatisticsHeader()->getAverageTestDuration());
     }
 
     public static function buildEmptyComponentBreakdown()
@@ -83,12 +82,12 @@ class ComponentStatisticsTableTest extends \PHPUnit_Framework_TestCase
             [
                 self::buildEmptyComponentBreakdown(),
                 self::buildNationalComponentStatisticsDto(),
-                GroupStatisticsTable::TEXT_NOT_AVAILABLE,
+                0
             ],
             [
                 self::buildNotEmptyComponentBreakdown(),
                 self::buildNationalComponentStatisticsDto(),
-                $avgAgeInYears.' '.VehicleAgeFormatter::getYearSuffix($avgAgeInYears),
+                $avgAgeInYears
             ],
         ];
     }
@@ -102,7 +101,7 @@ class ComponentStatisticsTableTest extends \PHPUnit_Framework_TestCase
                 static::buildNationalComponentStatisticsDto(),
             ],
             [
-                ComponentStatisticsTable::TEXT_EMPTY,
+                '0%',
                 static::buildEmptyComponentBreakdown(),
                 static::buildNationalComponentStatisticsDto(),
             ],
@@ -116,7 +115,7 @@ class ComponentStatisticsTableTest extends \PHPUnit_Framework_TestCase
 
         return [
             [
-                ComponentStatisticsTable::TEXT_EMPTY,
+                0,
                 static::buildNotEmptyComponentBreakdown(),
                 static::buildNationalComponentStatisticsDto(),
             ],

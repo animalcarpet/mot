@@ -13,7 +13,7 @@ use Zend\Mvc\Router\Http\TreeRouteStack as Router;
 use Zend\Mvc\Router\RouteMatch;
 
 /**
- * ContextProvider uses the current route and request to determine the context (AE, VTS, User search, Your profile).
+ * ContextProvider uses the current route and request to determine the context (AE, VTS, User search, Your profile, Performance dashboard).
  */
 class ContextProvider implements AutoWireableInterface
 {
@@ -23,11 +23,14 @@ class ContextProvider implements AutoWireableInterface
     const USER_SEARCH_CONTEXT = 'user-search';
     const VTS_CONTEXT = 'vts';
     const YOUR_PROFILE_CONTEXT = 'your-profile';
+    const PERFORMANCE_DASHBOARD_CONTEXT = 'stats';
     // Parent routes
     const AE_PARENT_ROUTE = 'newProfileAE';
     const USER_SEARCH_PARENT_ROUTE = 'newProfileUserAdmin';
     const VTS_PARENT_ROUTE = 'newProfileVTS';
     const YOUR_PROFILE_PARENT_ROUTE = 'newProfile';
+    const USER_HOME_ROUTE = 'user-home';
+    const PERFORMANCE_DASHBOARD_ROUTE = 'user-home/stats';
 
     /**
      * @var Request
@@ -75,6 +78,8 @@ class ContextProvider implements AutoWireableInterface
                 return self::VTS_CONTEXT;
             case self::USER_SEARCH_PARENT_ROUTE:
                 return self::USER_SEARCH_CONTEXT;
+            case self::USER_HOME_ROUTE:
+                return self::PERFORMANCE_DASHBOARD_CONTEXT;
         }
 
         return self::NO_CONTEXT;
@@ -102,5 +107,10 @@ class ContextProvider implements AutoWireableInterface
     public function isUserSearchContext()
     {
         return self::USER_SEARCH_CONTEXT === $this->getContext();
+    }
+
+    public function isPerformanceDashboardContext()
+    {
+        return self::PERFORMANCE_DASHBOARD_CONTEXT === $this->getContext();
     }
 }

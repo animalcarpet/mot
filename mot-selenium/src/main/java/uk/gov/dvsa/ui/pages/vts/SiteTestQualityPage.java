@@ -15,7 +15,6 @@ import uk.gov.dvsa.ui.pages.authorisedexaminer.ServiceReportsPage;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.List;
 
 public class SiteTestQualityPage extends Page {
@@ -26,6 +25,9 @@ public class SiteTestQualityPage extends Page {
     @FindBy(id="return-link")private WebElement returnLink;
     @FindBy(id="tqi-table-A")private WebElement tqiTableA;
     @FindBy(id="tqi-table-B")private WebElement tqiTableB;
+    @FindBy(id="last1Month")private WebElement last1MonthRadio;
+    @FindBy(id="last3Months")private WebElement last3MonthsRadio;
+    @FindBy(css="input[value='Update results']")private WebElement updateMonthRangeButton;
     @FindBy(id="site-tqi-csv-downaload-group-A")private WebElement tqiCsvDownloadGroupA;
     @FindBy(id="site-tqi-csv-downaload-group-B")private WebElement tqiCsvDownloadGroupB;
 
@@ -49,12 +51,12 @@ public class SiteTestQualityPage extends Page {
 
     public int getTableForGroupARowCount()
     {
-        return tqiTableA.findElements(By.cssSelector("tbody tr")).size() - 1; // we subtract 1 as it's the header row
+        return tqiTableA.findElements(By.cssSelector("tbody tr")).size(); // we subtract 1 as it's the header row
     }
 
     public int getTableForGroupBRowCount()
     {
-        return tqiTableB.findElements(By.cssSelector("tbody tr")).size() - 1;
+        return tqiTableB.findElements(By.cssSelector("tbody tr")).size();
     }
 
     public boolean isReturnLinkDisplayed()
@@ -71,43 +73,62 @@ public class SiteTestQualityPage extends Page {
     }
 
     public UserTestQualityPage goToUserTestQualityPage(String userName, String group){
-        List<WebElement> tableRows = driver.findElements(By.cssSelector("table#tqi-table-" + group + "  td  a"));
+        List<WebElement> tableRows = driver.findElements(By.cssSelector("table#tqi-table-" + group + "  tr"));
 
         for (WebElement row: tableRows){
             if(row.getText().contains(userName)) {
-                row.click();
+                row.findElement(By.linkText("View")).click();
                 return MotPageFactory.newPage(driver, UserTestQualityPage.class);
             }
         }
         return null;
     }
 
-    public SiteTestQualityPage chooseMonth(DateTime date) {
-        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("MM/yyyy");
-        driver.findElement(By.id(dateFormat.print(date))).click();
+    public SiteTestQualityPage choose1MonthRange() {
+        last1MonthRadio.click();
+        updateMonthRangeButton.click();
         return new SiteTestQualityPage(driver);
     }
 
-    public boolean isThirteenMonthsAgoLinkPresent() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, (-13));
-        calendar.set(Calendar.DATE, 1);
-
-        DateTime thirteenMonthsAgo = new DateTime(calendar.getTime());
-
-        return PageInteractionHelper.isElementDisplayed(By.id(getDateAsString(thirteenMonthsAgo, "MM/yyyy")));
+    public SiteTestQualityPage choose3MonthRange() {
+        last3MonthsRadio.click();
+        updateMonthRangeButton.click();
+        return new SiteTestQualityPage(driver);
     }
 
-    public SiteTestQualityPage waitUntilPageTertiaryTitleWillShowDate(DateTime dateTime)
+    public SiteTestQualityPage waitUntilPageTertiaryTitleWillShowTitleForRange(int monthRange)
     {
-        pageTertiaryTitle = String.format(pageTertiaryTitle, getDateAsString(dateTime, "MMMM yyyy"));
-        PageInteractionHelper.waitForTextToBePresentInElement(driver.findElement(By.tagName("h2")), pageTertiaryTitle, 15);
+        PageInteractionHelper.waitForTextToBePresentInElement(
+                driver.findElement(By.tagName("h2")),
+                getHeaderForMonthRange(monthRange),
+                15
+        );
+
         return this;
     }
 
     private String getDateAsString(DateTime dateTime, String format) {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern(format);
         return dateFormat.print(dateTime);
+    }
+
+    private String getHeaderForMonthRange(int monthRange) {
+        DateTime startMonth = DateTime.now().dayOfMonth().withMinimumValue().minusMonths(monthRange);
+        if(monthRange == 1) {
+            return String.format(pageTertiaryTitle, startMonth.toString("MMMM yyyy"));
+        }
+
+        DateTime endMonth = DateTime.now().dayOfMonth().withMinimumValue().minusMonths(1);
+
+        String startMonthWording = areDatesInTheSameYear(startMonth, endMonth)
+                ? startMonth.toString("MMMM")
+                : startMonth.toString("MMMM yyyy");
+
+        return String.format(pageTertiaryTitle, startMonthWording + " to " + endMonth.toString("MMMM yyyy"));
+    }
+
+    private boolean areDatesInTheSameYear(DateTime startDate, DateTime endDate) {
+        return startDate.year().equals(endDate.year());
     }
 
     public ServiceReportsPage clickReturnButtonToAEPage()
