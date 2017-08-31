@@ -2,6 +2,7 @@
 
 namespace OrganisationApiTest\Service;
 
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
@@ -578,5 +579,73 @@ class SiteLinkServiceTest extends AbstractServiceTestCase
             ->setSiteNumber(self::SITE_NUMBER);
 
         return $organisation;
+    }
+
+
+    /**
+     * @dataProvider dataProviderSiteAssociations
+     * @param $associations
+     * @param DateTime $expectedEndDate
+     */
+    public function testGettingLastAssessment(array $associations, DateTime $expectedEndDate = null)
+    {
+        $lastAssociation = SiteLinkService::getLastAssociationWithAe($associations);
+        $this->assertEquals($expectedEndDate, $lastAssociation ? $lastAssociation->getStartDate() : null);
+    }
+
+    public function dataProviderSiteAssociations()
+    {
+        $endDate = new DateTime('2002-11-20');
+        return [
+            [
+                [
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2005-12-20'))->setEndDate($endDate),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2002-01-25'))->setEndDate($endDate),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2018-07-30')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2012-07-30'))->setEndDate($endDate),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2000-07-30'))->setEndDate($endDate),
+                ],
+                new DateTime('2018-07-30')
+            ],
+            [
+                [
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2005-12-20')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2002-01-25'))->setEndDate($endDate),
+                    (new OrganisationSiteMap()),
+                ],
+                new DateTime('2005-12-20')
+            ],
+            [
+                [
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2005-12-20'))->setEndDate($endDate),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2012-07-30')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2002-01-25'))->setEndDate($endDate),
+                ],
+                new DateTime('2012-07-30')
+            ],
+            [
+                /** This happens in the DB due to some migrations (site_id=25080) */
+                [
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2004-06-21')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('1999-10-08'))->setEndDate(new DateTime('2001-01-05')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2001-04-20'))->setEndDate(new DateTime('2002-03-06')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2003-06-10'))->setEndDate(new DateTime('2004-06-18')),
+                ],
+                new DateTime('2004-06-21')
+            ],
+            [
+                /** This happens in the DB due to some migrations (site_id=64672) */
+                [
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2010-01-26'))->setEndDate(new DateTime('2010-01-27')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2010-01-27')),
+                    (new OrganisationSiteMap())->setStartDate(new DateTime('2005-10-25'))->setEndDate(new DateTime('2010-01-26')),
+                ],
+                new DateTime('2010-01-27')
+            ],
+            [
+                [],
+                null
+            ],
+        ];
     }
 }

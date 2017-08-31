@@ -187,7 +187,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
         ];
 
         /**
-         * @var Site
+         * @var Site | \PHPUnit_Framework_MockObject_MockObject $site
          * @var OrganisationSiteMap $actual
          */
         $site = XMock::of(Site::class, ['getAssociationWithAe']);
