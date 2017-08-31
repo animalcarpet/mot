@@ -33,7 +33,6 @@ use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\EventSiteMap;
 use DvsaEntities\Entity\FacilityType;
 use DvsaEntities\Entity\NonWorkingDayCountry;
-use DvsaEntities\Entity\OrganisationSiteMap;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
 use DvsaEntities\Entity\SiteFacility;
@@ -51,6 +50,7 @@ use DvsaEntities\Repository\SiteTestingDailyScheduleRepository;
 use DvsaEntities\Repository\SiteTypeRepository;
 use DvsaEntities\Repository\VehicleClassRepository;
 use DvsaEventApi\Service\EventService;
+use OrganisationApi\Service\SiteLinkService;
 use SiteApi\Service\Mapper\SiteBusinessRoleMapMapper;
 use SiteApi\Service\Mapper\VtsMapper;
 use SiteApi\Service\Validator\SiteValidator;
@@ -423,8 +423,9 @@ class SiteService extends AbstractService
             throw new NotFoundException('Site', $id);
         }
 
-        /** @var OrganisationSiteMap $lastAssociation */
-        $lastAssociation = empty($site->getAssociationWithAe()) ? null : $site->getAssociationWithAe()->last();
+        $lastAssociation = SiteLinkService::getLastAssociationWithAe(
+            $site->getAssociationWithAe()->getIterator()->getArrayCopy()
+        );
         $organisationId = null;
         if (!empty($lastAssociation)) {
             $organisationId = $lastAssociation->getOrganisation() ? $lastAssociation->getOrganisation()->getId() : null;

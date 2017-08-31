@@ -2,6 +2,7 @@
 
 namespace OrganisationApi\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
@@ -12,6 +13,7 @@ use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Enum\EventTypeCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
+use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -363,5 +365,30 @@ ERR_MSG;
     private function getUserName()
     {
         return $this->identity->getUsername();
+    }
+
+    /**
+     * Gets last association.
+     * @param OrganisationSiteMap[] $associacionsWithAe
+     * @return OrganisationSiteMap
+     */
+    public static function getLastAssociationWithAe(array $associacionsWithAe)
+    {
+        $compareStartDates = function (OrganisationSiteMap $a, OrganisationSiteMap $b): int
+        {
+            if ($a == $b) {
+                return 0;
+            }
+            return $a->getStartDate() > $b->getStartDate() ? -1 : 1;
+        };
+
+        usort($associacionsWithAe, $compareStartDates);
+        $associationsOrderedByStartDateDesc = new ArrayCollection($associacionsWithAe);
+
+        $currentAssociation = ArrayUtils::firstOrNull($associationsOrderedByStartDateDesc, function (OrganisationSiteMap $siteMap){
+           return is_null($siteMap->getEndDate());
+        });
+
+        return $currentAssociation ?? $associationsOrderedByStartDateDesc->first();
     }
 }
