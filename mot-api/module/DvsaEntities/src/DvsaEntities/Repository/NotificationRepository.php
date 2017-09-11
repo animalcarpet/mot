@@ -2,6 +2,7 @@
 
 namespace DvsaEntities\Repository;
 
+use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaEntities\Entity\Notification;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 
@@ -108,5 +109,74 @@ class NotificationRepository extends AbstractMutableRepository
         $qb->select('count(n)');
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function checkIfNotificationsHasBeenSent(int $templateId, int $year, int $month): int
+    {
+        $sql = "
+            SELECT EXISTS (
+                SELECT 1
+                FROM `notification`
+                WHERE `notification`.`notification_template_id` = :TEMPLATE_ID
+                    AND YEAR(`created_on`) = :YEAR
+                    AND MONTH(`created_on`) = :MONTH
+            )
+        ";
+
+        $resultSetMapping = new ResultSetMapping();
+        $resultSetMapping->addScalarResult("found", "found", "integer");
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("TEMPLATE_ID", $templateId);
+        $stmt->bindValue("YEAR", $year);
+        $stmt->bindValue("MONTH", $month);
+
+        $stmt->execute();
+        $exists = (int) $stmt->fetchColumn();
+
+        return $exists === 1;
+    }
+
+    /**
+     * @param int $templateId
+     * @param int $recipientId
+     * @param int $createdById
+     * @param array $fieldData
+     * @return int Notification id
+     */
+    public function saveNotificationWithFields(int $templateId, int $recipientId, int $createdById, array $fieldData):int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            INSERT INTO `notification`
+                (`notification_template_id`, `recipient_id`, `created_by`)
+            VALUES
+	            (:templateId, :personId, :createdById)";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("personId", $recipientId);
+        $stmt->bindValue("templateId", $templateId);
+        $stmt->bindValue("createdById", $createdById);
+        $stmt->execute();
+        $notificationId = $conn->lastInsertId();
+
+        $notificationFieldSql = "
+            INSERT INTO `notification_field`
+                (`notification_id`, `field`, `content`, `created_by`)
+            VALUES
+	            (:notificationId, :fieldName, :fieldContent, :createdById)";
+
+        foreach ($fieldData as $field => $value) {
+            $stmt = $conn->prepare($notificationFieldSql);
+            $stmt->bindValue("notificationId", $notificationId);
+            $stmt->bindValue("fieldName", $field);
+            $stmt->bindValue("fieldContent", $value);
+            $stmt->bindValue("createdById", $createdById);
+            $stmt->execute();
+        }
+
+        return $notificationId;
     }
 }

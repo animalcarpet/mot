@@ -1,7 +1,9 @@
 <?php
 
 /* SINGLE NOTIFICATION VIEW */
-
+/** @var int[] $htmlNotifications */
+/** @var string $backLinkUrl */
+/** @var string $backLinkLabel */
 /** @var $notification \Dashboard\Model\Notification */
 $fields = $notification->getFields();
 $displayButton = isset($fields['buttonLink']) && isset($fields['buttonText']);
@@ -12,7 +14,7 @@ $displayButton = isset($fields['buttonLink']) && isset($fields['buttonText']);
 
 <div class="text">
     <p class="lede" id="notification-content">
-        <?php if ($notification->getTemplateId() === 24): ?>
+        <?php if (in_array($notification->getTemplateId(), $htmlNotifications)): ?>
             <?php echo $notification->getContent(); ?>
         <?php else: ?>
             <?php echo nl2br($this->escapeHtml($notification->getContent())); ?>

@@ -6,11 +6,13 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Validator\DateRan
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Site\Controller\SiteAverageComponentStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Controller\TesterAtSiteComponentStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Controller\NationalComponentStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Notification\Controller\SiteManagerNotificationController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Controller\AuthorisedExaminerStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Controller\TesterAggregatedStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Controller\SiteStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\Controller\TesterMultiSiteStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Controller\NationalStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Notification\Controller\AedmNotificationController;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 
@@ -152,6 +154,44 @@ return [
                     ],
                     'defaults' => [
                         'controller' => TesterMultiSiteStatisticsController::class,
+                    ],
+                ],
+            ],
+            'aedm-notification' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/tester-quality-information/notification/aedm',
+                    'defaults' => [
+                        'controller' => AedmNotificationController::class,
+                    ],
+                ],
+            ],
+            'sm-notification' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/tester-quality-information/notification/sm',
+                    'defaults' => [
+                        'controller' => SiteManagerNotificationController::class,
+                    ],
+                ],
+            ],
+            'sm-notification-is-sent' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/tester-quality-information/notification/sm/is-sent',
+                    'defaults' => [
+                        'controller' => SiteManagerNotificationController::class,
+                        'action' => 'checkIfNotificationHasBeenSent',
+                    ],
+                ],
+            ],
+            'aedm-notification-is-sent' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/tester-quality-information/notification/aedm/is-sent',
+                    'defaults' => [
+                        'controller' => AedmNotificationController::class,
+                        'action' => 'checkIfNotificationHasBeenSent',
                     ],
                 ],
             ],

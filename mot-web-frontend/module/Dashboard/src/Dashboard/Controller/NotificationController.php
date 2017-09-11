@@ -24,6 +24,7 @@ class NotificationController extends AbstractAuthActionController implements Aut
     const BACK_TO_HOME_PARAM = 'home';
 
     const SHORT_LIST_LIMIT = 5;
+    const HTML_NOTIFICATION_IDS = [24, 35, 36];
 
     private $apiNotificationResource;
     private $notificationAction;
@@ -63,6 +64,7 @@ class NotificationController extends AbstractAuthActionController implements Aut
             $viewModel->setVariable('notification', $notification);
             $viewModel->setVariable('backLinkUrl', $this->getBackLinkUrl());
             $viewModel->setVariable('backLinkLabel', $this->getBackLinkLabel());
+            $viewModel->setVariable('htmlNotifications', self::HTML_NOTIFICATION_IDS);
 
             if ($notification->isActionRequired()) {
                 $viewModel->setTemplate('dashboard/notification/notification_action.phtml');

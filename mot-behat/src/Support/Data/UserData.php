@@ -377,4 +377,9 @@ class UserData
 
         return $authenticatedUser;
     }
+
+    public function addSiteRoleToUser($personId, $siteId, $role)
+    {
+        $this->testSupportHelper->getAccountDataService()->addSiteRole($personId, $siteId, $role);
+    }
 }

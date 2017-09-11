@@ -19,6 +19,7 @@ class VtsDataController extends BaseTestSupportRestfulController
      */
     public function create($data)
     {
+        /** @var VtsService $vtsService */
         $vtsService = $this->getServiceLocator()->get(VtsService::class);
 
         return $vtsService->create($data);
