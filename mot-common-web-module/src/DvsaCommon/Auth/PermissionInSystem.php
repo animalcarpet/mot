@@ -160,6 +160,8 @@ final class PermissionInSystem
     const ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES = 'ENFORCEMENT-CAN-MASK-AND-UNMASK-VEHICLES';
     const VIEW_NON_MOT_TESTS = 'VIEW-NON-MOT-TESTS';
     const VIEW_MYSTERY_SHOPPER_TESTS = 'VIEW-MYSTERY-SHOPPER-TESTS';
+    const NOTIFY_AEDM_AND_AED_ABOUT_TQI_STATS = "NOTIFY-AEDM-AND-AED-ABOUT-TQI-STATS";
+    const NOTIFY_SM_ABOUT_TQI_STATS = "NOTIFY-SM-ABOUT-TQI-STATS";
 
     /**
      * @return array
@@ -316,6 +318,8 @@ final class PermissionInSystem
             self::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES,
             self::VIEW_NON_MOT_TESTS,
             self::VIEW_MYSTERY_SHOPPER_TESTS,
+            self::NOTIFY_AEDM_AND_AED_ABOUT_TQI_STATS,
+            self::NOTIFY_SM_ABOUT_TQI_STATS
         ];
     }
 }

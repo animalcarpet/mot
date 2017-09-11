@@ -62,6 +62,7 @@ default:
                 - TQIAeTesterPerformanceContext
                 - TQITesterPerformanceContext
                 - TQIComponentFailRateContext
+                - TQINotificationContext
                 - VehicleContext
                 - VtsContext
                 - VtsManagementContext

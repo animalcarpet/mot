@@ -40,6 +40,8 @@ use DvsaEntities\Repository\AuthorisationForTestingMotStatusRepository;
 use DvsaEntities\Repository\VehicleClassRepository;
 use DvsaEntities\Repository\MotTestStatusRepository;
 use DvsaEntities\Factory\Repository\MotTestStatusRepositoryFactory;
+use DvsaEntities\Repository\NotificationRepository;
+use DvsaEntities\Factory\Repository\NotificationRepositoryFactory;
 
 return [
     'service_manager' => [
@@ -64,6 +66,7 @@ return [
             MotTestStatusRepository::class => MotTestStatusRepositoryFactory::class,
             TqiRfrCountRepository::class => TqiRfrCountRepositoryFactory::class,
             TqiTestCountRepository::class => TqiTestCountRepositoryFactory::class,
+            NotificationRepository::class => NotificationRepositoryFactory::class,
         ],
     ],
     'doctrine' => [

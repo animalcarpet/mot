@@ -1,14 +1,13 @@
 <?php
 
 namespace DvsaCommon\Auth;
-
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 
 /**
  * Provides the current user's identity to objects that require it.
  */
 interface MotIdentityProviderInterface
 {
-    /** @return Identity */
+    /** @return MotFrontendIdentityInterface */
     public function getIdentity();
 }
