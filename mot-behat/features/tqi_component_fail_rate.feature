@@ -27,3 +27,8 @@ Feature: TQI Component Fail Rate
     Then there is no component fail rate statistics performed "1" months ago at site "Fast cars garage" for tester "Kowalsky" and group "A"
     Then there is no component fail rate statistics performed "1" months ago at site "Fast cars garage" for tester "Kowalsky" and group "B"
 
+  @test-quality-information
+  Scenario: Get performance statistics for all testers at site for the last 3 months
+    When I am logged in as a Tester "Kowalsky"
+    Then I should be able to see component fail rate statistics performed up to "3" months for all testers at site "Slow cars garage" for group "A"
+    Then I should be able to see component fail rate statistics performed up to "3" months for all testers at site "Slow cars garage" for group "B"

@@ -51,6 +51,8 @@ class SiteTestQualityViewModel
         SitePerformanceDto $sitePerformanceDto,
         NationalPerformanceReportDto $nationalPerformanceStatisticsDto,
         $site,
+        $csvFileSizeGroupA,
+        $csvFileSizeGroupB,
         $isReturnLinkToAETQI,
         TQIMonthRangeForm $monthRangeForm,
         DateTimeHolderInterface $dateTimeHolder,
@@ -64,7 +66,8 @@ class SiteTestQualityViewModel
             'A',
             'Class 1 and 2',
             VehicleClassGroupCode::BIKES,
-            $site
+            $site,
+            $csvFileSizeGroupA
         );
 
         $this->b = new GroupStatisticsTable(
@@ -74,7 +77,8 @@ class SiteTestQualityViewModel
             'B',
             'Class 3, 4, 5 and 7',
             VehicleClassGroupCode::CARS_ETC,
-            $site
+            $site,
+            $csvFileSizeGroupB
         );
 
         $this->site = $site;

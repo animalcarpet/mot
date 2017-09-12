@@ -33,6 +33,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Action\SiteTestQualityAction;
+use Site\Action\SiteTestQualityCsvAction;
 use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Site\Form\VtsCreateForm;
@@ -74,6 +75,8 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
     private $mockSession;
     /** @var SiteTestQualityAction */
     private $mockSiteTestQualityAction;
+    /** @var SiteTestQualityCsvAction */
+    private $mockSiteTestQualityCsvAction;
     /** @var ViewVtsTestQualityAssertion */
     private $mockViewVtsTestQualityAssertion;
     /** @var UserTestQualityAction */
@@ -92,6 +95,7 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
         $this->identityInterface = XMock::of(MotFrontendIdentityInterface::class);
         $this->mockSession = XMock::of(Container::class);
         $this->mockSiteTestQualityAction = XMock::of(SiteTestQualityAction::class);
+        $this->mockSiteTestQualityCsvAction = XMock::of(SiteTestQualityCsvAction::class);
         $this->mockViewVtsTestQualityAssertion = XMock::of(ViewVtsTestQualityAssertion::class);
         $this->mockUserTestQualityAction = XMock::of(UserTestQualityAction::class);
 
@@ -104,9 +108,9 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
         $this->setController(
             new SiteController(
                 $this->auth, $this->mapper, $this->identity, $this->catalog, $this->mockSession, $businessRoleCatalog,
-                $this->mockSiteTestQualityAction, $this->mockUserTestQualityAction, $this->mockViewVtsTestQualityAssertion,
-                XMock::of(ContextProvider::class), XMock::of(TesterTqiComponentsAtSiteBreadcrumbs::class),
-                $siteBreadcrumbsBuilder
+                $this->mockSiteTestQualityAction, $this->mockSiteTestQualityCsvAction, $this->mockUserTestQualityAction,
+                $this->mockViewVtsTestQualityAssertion, XMock::of(ContextProvider::class),
+                XMock::of(TesterTqiComponentsAtSiteBreadcrumbs::class), $siteBreadcrumbsBuilder
             )
         );
 

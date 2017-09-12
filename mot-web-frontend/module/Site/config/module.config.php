@@ -159,9 +159,10 @@ return [
                     'csv' => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/csv/group/:group',
+                            'route' => '/csv/group/:group/:monthRange',
                             'constraints' => [
                                 'group' => 'A|B',
+                                'monthRange' => '1|3',
                             ],
                             'defaults' => [
                                 'controller' => SiteController::class,

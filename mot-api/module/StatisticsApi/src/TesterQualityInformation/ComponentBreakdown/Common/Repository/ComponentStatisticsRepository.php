@@ -36,6 +36,7 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
             $dbResult->setTestItemCategoryName($row['testItemCategoryName']);
             $dbResult->setTestItemCategoryId($row['testItemCategoryId']);
             $dbResult->setFailedCount($row['failedCount']);
+            $dbResult->setTesterId($row['personId']);
 
             $dbResults[] = $dbResult;
         }
@@ -82,6 +83,7 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
     protected function getResultSetMapping()
     {
         $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('personId', 'personId');
         $rsm->addScalarResult('failedCount', 'failedCount');
         $rsm->addScalarResult('totalCount', 'totalCount');
         $rsm->addScalarResult('testItemCategoryId', 'testItemCategoryId');

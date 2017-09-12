@@ -4,6 +4,9 @@ namespace SiteTest\Action;
 
 use Core\File\CsvFile;
 use DvsaClient\Mapper\SiteMapper;
+use DvsaCommon\ApiClient\Statistics\Common\ReportStatusDto;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\SiteComponentStatisticsDto;
@@ -21,17 +24,17 @@ use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
-use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
-use Site\Action\SiteTestQualityAction;
-use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
+use Site\Action\SiteTestQualityCsvAction;
+use Zend\Mvc\Controller\Plugin\Url;
 
-class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
+class SiteTestQualityCsvActionTest extends \PHPUnit_Framework_TestCase
 {
     const SITE_ID = 1;
     const SITE_NAME = 'name';
+    const SITE_NUMBER = 'V1234';
     const MONTHS_RANGE = 1;
     const YEAR = '2015';
     const RETURN_LINK = '/vehicle-testing-station/1';
@@ -54,11 +57,14 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
     /** @var SiteComponentFailRateApiResource */
     private $siteComponentFailRateApiResourceMock;
 
+    /** @var ComponentFailRateApiResource */
+    private $componentFailRateApiResourceMock;
+
     /** @var NationalComponentStatisticApiResource */
     private $nationalComponentStatisticApiResourceMock;
 
-    /** @var SiteTestQualityAction */
-    private $siteTestQualityAction;
+    /** @var SiteTestQualityCsvAction */
+    private $siteTestQualityCsvAction;
 
     /** @var SiteMapper */
     private $siteMapper;
@@ -72,6 +78,8 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
     /** @var SitePerformanceDto */
     private $sitePerformanceDto;
 
+    private $url;
+
     protected function setUp()
     {
         $this->sitePerformanceDto = $this->buildSitePerformanceDto();
@@ -84,6 +92,10 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->siteComponentFailRateApiResourceMock->method('get')
             ->willReturn($this->buildSiteComponentStatisticsDto());
 
+        $this->componentFailRateApiResourceMock = XMock::of(ComponentFailRateApiResource::class);
+        $this->componentFailRateApiResourceMock->method('getForAllTestersAtSite')
+            ->willReturn($this->buildComponentBreakdownDtos());
+
         $this->nationalComponentStatisticApiResourceMock = XMock::of(NationalComponentStatisticApiResource::class);
         $this->nationalComponentStatisticApiResourceMock->method('getForDate')
             ->willReturn($this->buildNationalComponentStatisticsDto());
@@ -95,6 +107,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->siteDto = (new VehicleTestingStationDto())
             ->setTestClasses([])
             ->setName(self::SITE_NAME)
+            ->setSiteNumber(self::SITE_NUMBER)
             ->setId(1);
 
         $this->siteMapper = XMock::of(SiteMapper::class);
@@ -106,13 +119,27 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService = new AuthorisationServiceMock();
         $this->authorisationService->grantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, self::SITE_ID);
 
-        $this->siteTestQualityAction = new SiteTestQualityAction(
+        $this->siteTestQualityCsvAction = new SiteTestQualityCsvAction(
             $this->sitePerformanceApiResourceMock,
+            $this->componentFailRateApiResourceMock,
+            $this->siteComponentFailRateApiResourceMock,
+            $this->nationalComponentStatisticApiResourceMock,
             $this->nationalPerformanceApiResourceMock,
             $this->siteMapper,
             new ViewVtsTestQualityAssertion($this->authorisationService),
             new TestDateTimeHolder(new \DateTime('2015-02-14'))
         );
+
+        $urlMethods = get_class_methods(Url::class);
+        $urlMethods[] = '__invoke';
+
+        $url = XMock::of(Url::class, $urlMethods);
+        $url
+            ->expects($this->any())
+            ->method('__invoke')
+            ->willReturn('http://link');
+
+        $this->url = $url;
     }
 
     /**
@@ -124,121 +151,15 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService->clearAll();
 
         // WHEN I try to view it
-        $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $this->siteTestQualityCsvAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
         // THEN I get an exception
     }
 
-    public function testValuesArePopulatedToLayoutResult()
+    public function testCsvFileIsReturned()
     {
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $result = $this->siteTestQualityCsvAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::GROUP_CODE);
 
-        /** @var SiteTestQualityViewModel $vm */
-        $vm = $result->getViewModel();
-
-        $this->assertNotNull($vm);
-        $this->assertNotNull($result->getTemplate());
-
-        $this->assertSame(self::SITE_NAME, $result->layout()->getPageTitle());
-        $this->assertNotNull($result->layout()->getPageSubTitle());
-        $this->assertNotNull($result->layout()->getTemplate());
-
-        $this->assertSame($this->breadcrumbs, $result->layout()->getBreadcrumbs());
-    }
-
-    /**
-     * @dataProvider siteClassesDataProvider
-     *
-     * @param $vehicleClasses
-     * @param $vehicleGroup
-     */
-    public function testGroupSectionIsShownWhenSiteIsAuthorisedForTheGroup($vehicleClasses, $vehicleGroup)
-    {
-        // GIVEN site is allowed to test specific classes of vehicles
-        $this->siteDto->setTestClasses($vehicleClasses);
-
-        // AND it doesn't have any tests
-        $this->setUpTotalTestsDoneInSite(0, 0);
-
-        // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
-
-        /** @var SiteTestQualityViewModel $viewModel */
-        $viewModel = $result->getViewModel();
-
-        // THEN I can see the given group section
-        $this->assertTrue($viewModel->canGroupSectionBeViewed($vehicleGroup));
-    }
-
-    /**
-     * @dataProvider siteClassesDataProvider
-     *
-     * @param $vehicleClasses
-     * @param $vehicleGroup
-     */
-    public function testGroupSectionIsVisibleWhenSiteIsAuthorisedForTheGroup($vehicleClasses, $vehicleGroup)
-    {
-        // GIVEN site isn't allowed to test any classes of vehicles
-        $this->siteDto->setTestClasses($vehicleClasses);
-
-        // AND it has tests in the given month
-        $groupATests = $vehicleGroup === VehicleClassGroupCode::BIKES ? 10 : 0;
-        $groupBTests = $vehicleGroup === VehicleClassGroupCode::CARS_ETC ? 10 : 0;
-        $this->setUpTotalTestsDoneInSite($groupATests, $groupBTests);
-
-        // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
-
-        /** @var SiteTestQualityViewModel $viewModel */
-        $viewModel = $result->getViewModel();
-
-        // THEN I can see the given group section
-        $this->assertTrue($viewModel->canGroupSectionBeViewed($vehicleGroup));
-    }
-
-    /**
-     * @dataProvider siteClassesDataProvider
-     *
-     * @param $vehicleClasses
-     * @param $vehicleGroup
-     */
-    public function testGroupSectionsIsHiddenWhenThereAreNoTestsAndSiteIsNotAuthorised($vehicleClasses, $vehicleGroup)
-    {
-        // GIVEN site is authorised to do tests for the other group
-        $otherGroup = $vehicleGroup === VehicleClassGroupCode::BIKES ? VehicleClassGroupCode::CARS_ETC : VehicleClassGroupCode::BIKES;
-        $vehicleClasses = VehicleClassGroup::getClassesForGroup($otherGroup);
-
-        $this->siteDto->setTestClasses($vehicleClasses);
-
-        // AND and it has no tests done what so ever
-        $this->setUpTotalTestsDoneInSite(0, 0);
-
-        // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
-
-        /** @var SiteTestQualityViewModel $viewModel */
-        $viewModel = $result->getViewModel();
-
-        // THEN I CAN'T see the given group section
-        $this->assertFalse($viewModel->canGroupSectionBeViewed($vehicleGroup));
-    }
-
-    public function testBothSectionsAreShownWhenThereIsNoDataAtAll()
-    {
-        // GIVEN site isn't allowed to test any classes of vehicles
-        $this->siteDto->setTestClasses([]);
-
-        // AND and it has no tests done
-        $this->setUpTotalTestsDoneInSite(0, 0);
-
-        // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTHS_RANGE, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
-
-        /** @var SiteTestQualityViewModel $viewModel */
-        $viewModel = $result->getViewModel();
-
-        // THEN I see both sections
-        $this->assertTrue($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::BIKES));
-        $this->assertTrue($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::CARS_ETC));
+        $this->assertInstanceOf(CsvFile::class, $result->getFile());
     }
 
     public function siteClassesDataProvider()
@@ -261,6 +182,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
 
         $national->setMonth(4);
         $national->setYear(2016);
+        $national->setReportStatus((new ReportStatusDto())->setIsCompleted(true));
 
         $groupA = new MotTestingPerformanceDto();
         $groupA->setAverageTime(new TimeSpan(2, 2, 2, 2));
@@ -344,6 +266,21 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         return $siteComponentStatisticsDto;
     }
 
+    /**
+     * @return ComponentBreakdownDto[]
+     */
+    private static function buildComponentBreakdownDtos(): array
+    {
+        return [
+            (new ComponentBreakdownDto())
+                ->setComponents(self::buildComponents())
+                ->setUserName('tester1'),
+            (new ComponentBreakdownDto())
+                ->setComponents(self::buildComponents())
+                ->setUserName('tester1'),
+        ];
+    }
+
     private static function buildNationalComponentStatisticsDto():NationalComponentStatisticsDto
     {
         $nationalComponentStatisticsDto = new NationalComponentStatisticsDto();
@@ -355,6 +292,9 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         return $nationalComponentStatisticsDto;
     }
 
+    /**
+     * @return ComponentDto[]
+     */
     private static function buildComponents():array
     {
         $components = [];

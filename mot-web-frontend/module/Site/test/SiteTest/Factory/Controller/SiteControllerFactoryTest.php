@@ -12,6 +12,7 @@ use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Action\SiteTestQualityAction;
+use Site\Action\SiteTestQualityCsvAction;
 use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Site\Factory\Controller\SiteControllerFactory;
@@ -37,6 +38,7 @@ class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('CatalogService', XMock::of(CatalogService::class));
         $serviceManager->setService(EnumCatalog::class, $enumCatalog);
         $serviceManager->setService(SiteTestQualityAction::class, XMock::of(SiteTestQualityAction::class));
+        $serviceManager->setService(SiteTestQualityCsvAction::class, XMock::of(SiteTestQualityCsvAction::class));
         $serviceManager->setService(ViewVtsTestQualityAssertion::class, XMock::of(ViewVtsTestQualityAssertion::class));
         $serviceManager->setService(UserTestQualityAction::class, XMock::of(UserTestQualityAction::class));
         $serviceManager->setService(ContextProvider::class, XMock::of(ContextProvider::class));

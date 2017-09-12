@@ -53,6 +53,8 @@ public class SiteTestQualityViewTests extends DslTest {
         assertThat("Group A table has 2 rows", siteTestQualityPage.getTableForGroupARowCount(), is(2));
         assertThat("Group B table is displayed", siteTestQualityPage.isTableForGroupBDisplayed(), is(true));
         assertThat("Group B table has 2 rows", siteTestQualityPage.getTableForGroupBRowCount(), is(2));
+        assertThat("Group A CSV link is displayed", siteTestQualityPage.isCsvLinkForGroupADisplayed(), is(true));
+        assertThat("Group B CSV link is displayed", siteTestQualityPage.isCsvLinkForGroupBDisplayed(), is(true));
 
         //And return link is displayed
         assertThat("Return link is displayed", siteTestQualityPage.isReturnLinkDisplayed(), is(true));
@@ -74,7 +76,7 @@ public class SiteTestQualityViewTests extends DslTest {
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
 
-        //And return link is displayed
+        //And CSV link points to a downloadable file
 
         Response csvGroupA = frontendData.downloadFileFromFrontend(
             siteTestQualityPage.getCsvDownloadLinkForGroupA(),
@@ -88,7 +90,7 @@ public class SiteTestQualityViewTests extends DslTest {
             pageNavigator.getCurrentSessionCookie()
         );
 
-        // THEN the PDF is successfully generated
+        // THEN the CSV is successfully generated
         assertThat(HttpStatus.SC_OK, is(csvGroupA.getStatusCode()));
         assertThat("text/csv; charset=utf-8", is(csvGroupA.getContentType()));
         assertThat(HttpStatus.SC_OK, is(csvGroupB.getStatusCode()));

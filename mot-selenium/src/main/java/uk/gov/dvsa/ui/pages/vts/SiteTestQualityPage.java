@@ -44,6 +44,16 @@ public class SiteTestQualityPage extends Page {
         return tqiTableA.isDisplayed();
     }
 
+    public boolean isCsvLinkForGroupADisplayed()
+    {
+        return tqiCsvDownloadGroupA.isDisplayed();
+    }
+
+    public boolean isCsvLinkForGroupBDisplayed()
+    {
+        return tqiCsvDownloadGroupB.isDisplayed();
+    }
+
     public boolean isTableForGroupBDisplayed()
     {
         return tqiTableB.isDisplayed();

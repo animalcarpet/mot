@@ -28,6 +28,8 @@ class GroupStatisticsTable
     private $nationalTestingPerformanceDto;
     /** @var VehicleTestingStationDto */
     private $site;
+    /** @var int */
+    private $csvFileSize;
     private $isNationalDataAvailable;
     /** @var AverageGroupStatisticsHeader */
     private $averageGroupStatisticsHeader;
@@ -40,7 +42,8 @@ class GroupStatisticsTable
         $groupName,
         $groupDescription,
         $groupCode,
-        $site
+        $site,
+        $csvFileSize
     ) {
         $this->personFullNameFormatter = new PersonFullNameFormatter();
         $this->timeSpanFormatter = new TimeSpanFormatter();
@@ -79,6 +82,7 @@ class GroupStatisticsTable
         $this->testerRows = $this->createTesterRows($groupPerformanceDto->getStatistics());
         $this->groupPerformanceDto = $groupPerformanceDto;
         $this->nationalTestingPerformanceDto = $nationalTestingPerformanceDto;
+        $this->csvFileSize = $csvFileSize;
 
         $this->averageGroupStatisticsHeader->setHasTests($this->hasTests());
         $this->averageGroupStatisticsHeader->setTestCount($this->getTestCount());
@@ -180,6 +184,16 @@ class GroupStatisticsTable
         }
 
         return $text;
+    }
+
+    public function getCsvFileSize()
+    {
+        $kb = $this->csvFileSize / 1024;
+        if ($kb > 1) {
+            return round($kb).'KB';
+        } else {
+            return '1KB';
+        }
     }
 
     public function isNationalDataAvailable()

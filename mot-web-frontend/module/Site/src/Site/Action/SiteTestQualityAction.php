@@ -5,18 +5,15 @@ namespace Site\Action;
 use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use DvsaClient\Mapper\SiteMapper;
-use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\NationalPerformanceReportDto;
-use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\NationalPerformanceApiResource;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\SitePerformanceApiResource;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Date\DateTimeHolder;
-use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Site\Form\TQIMonthRangeForm;
+use Site\Service\CsvFileSizeCalculator;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
-use Zend\Mvc\Controller\Plugin\Url;
 
 class SiteTestQualityAction implements AutoWireableInterface
 {
@@ -66,6 +63,8 @@ class SiteTestQualityAction implements AutoWireableInterface
                 $sitePerformance,
                 $nationalPerformance,
                 $this->site,
+                (CsvFileSizeCalculator::calculateFileSizeForGroupA(count($sitePerformance->getA()->getStatistics()))),
+                (CsvFileSizeCalculator::calculateFileSizeForGroupB(count($sitePerformance->getB()->getStatistics()))),
                 $isReturnToAETQI,
                 $monthRangeForm,
                 $this->dateTimeHolder,

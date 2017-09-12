@@ -3,9 +3,8 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\Repository;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository\AbstractStatisticsRepository;
-use DvsaCommon\Date\LastMonthsDateRange;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryBuilder\ManyGroupsStatisticsQueryBuilder;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
@@ -43,7 +42,7 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
 
     protected function createResultRow($row)
     {
-        $testerPerformanceResult = new TesterPerformanceResult();
+        $testerPerformanceResult = new TesterAtSitePerformanceResult();
 
         $testerPerformanceResult
             ->setPersonId($row['person_id'])
