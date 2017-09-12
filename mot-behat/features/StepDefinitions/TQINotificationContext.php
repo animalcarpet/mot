@@ -99,8 +99,10 @@ class TQINotificationContext implements Context
             $notifications = $this->fetchAndFilterNotifications($user);
 
             PHPUnit::assertCount(1, $notifications);
-            PHPUnit::assertEquals(self::TQI_NOTIFICATION_TEMPLATES[$row['template']], $notifications[0]['templateId']);
-            PHPUnit::assertEquals($row[SiteParams::SITE_NAME], $notifications[0]['fields']['siteName']);
+
+            $notification = array_pop($notifications);
+            PHPUnit::assertEquals(self::TQI_NOTIFICATION_TEMPLATES[$row['template']], $notification['templateId']);
+            PHPUnit::assertEquals($row[SiteParams::SITE_NAME], $notification['fields']['siteName']);
         }
     }
 
@@ -134,8 +136,10 @@ class TQINotificationContext implements Context
             $notifications = $this->fetchAndFilterNotifications($aedm);
 
             PHPUnit::assertCount(1, $notifications);
-            PHPUnit::assertEquals(self::TEMPLATE_TQI_STATS_GENERATED_INFORMATION_FOR_AEDM_AND_AED, $notifications[0]['templateId']);
-            PHPUnit::assertEquals($site->getOrganisation()->getName(), $notifications[0]['fields']['orgName']);
+
+            $notification = array_pop($notifications);
+            PHPUnit::assertEquals(self::TEMPLATE_TQI_STATS_GENERATED_INFORMATION_FOR_AEDM_AND_AED, $notification['templateId']);
+            PHPUnit::assertEquals($site->getOrganisation()->getName(), $notification['fields']['orgName']);
         }
     }
 
