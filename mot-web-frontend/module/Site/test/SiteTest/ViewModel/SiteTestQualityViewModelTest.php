@@ -21,6 +21,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
 
     const RETURN_LINK = '/vehicle-testing-station/1';
     const POSSIBLE_MONTHS_COUNT = 10;
+    const CSV_FILE_SIZE_GROUP_A = 1001;
+    const CSV_FILE_SIZE_GROUP_B = 1002;
     const IS_RETURN_TO_AE_TQI = false;
 
     /** @var SiteTestQualityViewModel */
@@ -32,6 +34,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildSitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
+            self::CSV_FILE_SIZE_GROUP_A,
+            self::CSV_FILE_SIZE_GROUP_B,
             self::IS_RETURN_TO_AE_TQI,
             new TQIMonthRangeForm(),
             new TestDateTimeHolder(new DateTime('2015-02-15')),
@@ -149,6 +153,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildEmptySitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
+            self::CSV_FILE_SIZE_GROUP_A,
+            self::CSV_FILE_SIZE_GROUP_B,
             self::IS_RETURN_TO_AE_TQI,
             new TQIMonthRangeForm(),
             new TestDateTimeHolder(new DateTime('2015-02-15')),
@@ -176,6 +182,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildEmptySitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
+            self::CSV_FILE_SIZE_GROUP_A,
+            self::CSV_FILE_SIZE_GROUP_B,
             true,
             new TQIMonthRangeForm(),
             new TestDateTimeHolder(new DateTime('2015-02-15')),
@@ -191,6 +199,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildEmptySitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
             self::buildSiteDto(),
+            self::CSV_FILE_SIZE_GROUP_A,
+            self::CSV_FILE_SIZE_GROUP_B,
             false,
             new TQIMonthRangeForm(),
             new TestDateTimeHolder(new DateTime('2015-02-15')),

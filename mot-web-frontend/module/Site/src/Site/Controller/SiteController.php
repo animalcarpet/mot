@@ -31,6 +31,7 @@ use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
 use Organisation\Presenter\StatusPresenter;
 use Site\Action\SiteTestQualityAction;
+use Site\Action\SiteTestQualityCsvAction;
 use Site\Action\UserTestQualityAction;
 use Site\Authorization\VtsOverviewPagePermissions;
 use Site\Form\VtsCreateForm;
@@ -102,6 +103,8 @@ class SiteController extends AbstractAuthActionController
 
     private $siteTestQualityAction;
 
+    private $siteTestQualityCsvAction;
+
     private $viewVtsTestQualityAssertion;
 
     private $userTestQualityAction;
@@ -120,6 +123,7 @@ class SiteController extends AbstractAuthActionController
         Container $session,
         BusinessRoleCatalog $businessRoleCatalog,
         SiteTestQualityAction $siteTestQualityAction,
+        SiteTestQualityCsvAction $siteTestQualityCsvAction,
         UserTestQualityAction $userTestQualityAction,
         ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion,
         ContextProvider $contextProvider,
@@ -133,6 +137,7 @@ class SiteController extends AbstractAuthActionController
         $this->session = $session;
         $this->businessRoleCatalog = $businessRoleCatalog;
         $this->siteTestQualityAction = $siteTestQualityAction;
+        $this->siteTestQualityCsvAction = $siteTestQualityCsvAction;
         $this->userTestQualityAction = $userTestQualityAction;
         $this->viewVtsTestQualityAssertion = $viewVtsTestQualityAssertion;
         $this->contextProvider = $contextProvider;
@@ -905,10 +910,9 @@ class SiteController extends AbstractAuthActionController
     {
         $id = $this->params('id');
         $group = $this->params('group');
-        $month = $this->params('month');
-        $year = $this->params('year');
+        $monthRange = (int) $this->params('monthRange');
 
-        $csv = $this->siteTestQualityAction->getCsv($id, $month, $year, $group);
+        $csv = $this->siteTestQualityCsvAction->execute($id, $monthRange, $group);
 
         return $this->applyActionResult($csv);
     }

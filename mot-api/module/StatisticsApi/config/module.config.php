@@ -2,6 +2,7 @@
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller\BatchPersonStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller\NationalBatchStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Controller\MultipleTestersAtSiteComponentStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Validator\DateRangeValidator;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Site\Controller\SiteAverageComponentStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Controller\TesterAtSiteComponentStatisticsController;
@@ -24,7 +25,7 @@ return [
                 'options' => [
                     'route' => '/statistic/tester-performance/national/:monthRange',
                     'constraints' => [
-                        'monthRange' =>  ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
+                        'monthRange' => ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
                     ],
                     'defaults' => [
                         'controller' => NationalStatisticsController::class,
@@ -37,7 +38,7 @@ return [
                     'route' => '/statistic/tester-performance/site/:id/:monthRange',
                     'constraints' => [
                         'id' => '[0-9]+',
-                        'monthRange' =>  ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
+                        'monthRange' => ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
                     ],
                     'defaults' => [
                         'controller' => SiteStatisticsController::class,
@@ -106,7 +107,7 @@ return [
             'tester-at-site-component-fail-rate' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/statistic/component-fail-rate/site/:siteId/tester/:testerId/group/:group/:monthRange',
+                    'route' => '/statistic/component-fail-rate/site/:siteId/tester/:testerId/group/:group/monthRange/:monthRange',
                     'constraints' => [
                         'siteId' => '[0-9]+',
                         'testerId' => '[0-9]+',
@@ -115,6 +116,20 @@ return [
                     ],
                     'defaults' => [
                         'controller' => TesterAtSiteComponentStatisticsController::class,
+                    ],
+                ],
+            ],
+            'multiple-testers-at-site-component-fail-rate' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/component-fail-rate/site/:siteId/group/:group/monthRange/:monthRange',
+                    'constraints' => [
+                        'siteId' => '[0-9]+',
+                        'group' => 'A|B',
+                        'monthRange' => ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE)
+                    ],
+                    'defaults' => [
+                        'controller' => MultipleTestersAtSiteComponentStatisticsController::class,
                     ],
                 ],
             ],
@@ -137,7 +152,7 @@ return [
                     'route' => '/statistic/tester-performance/tester/:id/:monthRange',
                     'constraints' => [
                         'id' => '[0-9]+',
-                        'monthRange' =>  ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
+                        'monthRange' => ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
                     ],
                     'defaults' => [
                         'controller' => TesterAggregatedStatisticsController::class,
@@ -150,7 +165,7 @@ return [
                     'route' => '/statistic/tester-performance/multi-site/:id/:monthRange',
                     'constraints' => [
                         'id' => '[0-9]+',
-                        ':monthRange' =>  ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
+                        ':monthRange' => ArrayUtils::joinNonEmpty("|", DateRangeValidator::DATE_RANGE),
                     ],
                     'defaults' => [
                         'controller' => TesterMultiSiteStatisticsController::class,

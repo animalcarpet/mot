@@ -142,5 +142,43 @@ class TQIComponentFailRateContext implements Context
         PHPUnit::assertEquals($group, $nationalComponentStatistics->getGroup());
         PHPUnit::assertEquals($months, $nationalComponentStatistics->getMonthRange());
     }
+
+    /**
+     * @Then I should be able to see component fail rate statistics performed up to :months months for all testers at site :site for group :group
+     */
+    public function iShouldBeAbleToSeeComponentFailRateStatisticsPerformedUpToMonthsForAllTestersAtSiteForGroup($months, SiteDto $site, $group)
+    {
+        /** @var ComponentFailRateApiResource $apiResource */
+        $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
+        $allComponentBreakdowns = $apiResource->getForAllTestersAtSite($site->getId(), $group, $months);
+
+        $this->assertComponentBreakdownForTestersExists($this->getTesters(), $allComponentBreakdowns);
+    }
+
+    /**
+     * @return AuthenticatedUser[]
+     */
+    private function getTesters(): array
+    {
+       return [
+           $this->userData->get("Kowalsky"),
+           $this->userData->get("Sikorsky")
+       ];
+    }
+
+    /**
+     * @param AuthenticatedUser[] $testers
+     * @param ComponentBreakdownDto[] $allComponentBreakdowns
+     */
+    private function assertComponentBreakdownForTestersExists(array $testers, array $allComponentBreakdowns) {
+        $testerUsernamesInComponentBreakdown = [];
+        foreach ($allComponentBreakdowns as $componentBreakdown) {
+            $testerUsernamesInComponentBreakdown[] = $componentBreakdown->getUserName();
+        }
+
+        foreach ($testers as $tester) {
+            PHPUnit::assertContains($tester->getUsername(), $testerUsernamesInComponentBreakdown);
+        }
+    }
 }
 

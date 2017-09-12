@@ -1,0 +1,36 @@
+<?php
+
+use Core\Routing\VtsRouteList;
+use Site\ViewModel\TestQuality\GroupStatisticsTable;
+
+/* @var GroupStatisticsTable $group */
+/* @var array $queryParams */
+?>
+<div class="text">
+    <h3 class="heading-medium">Download group <?php echo $group->getGroupCode(); ?> data</h3>
+    <p>
+        <a id="site-tqi-csv-downaload-group-<?php echo $group->getGroupCode(); ?>"
+           href="<?php echo $this->url(VtsRouteList::VTS_TEST_QUALITY_CSV,
+               [
+                   'id' => $group->getSiteId(),
+                   'group' => $group->getGroupCode(),
+                   'monthRange' => $queryParams['query']['monthRange'],
+               ]) ?>" rel="external">
+            Download the group <?php echo $group->getGroupCode(); ?> report as a CSV (spreadsheet) file (<?php echo $group->getCsvFileSize() ?>)
+        </a>
+    </p>
+    <details role="group">
+        <summary role="button" aria-controls="details-group<?php echo $group->getGroupCode(); ?>" aria-expanded="false" tabindex="0">
+            <span class="summary">What's in this file?</span>
+        </summary>
+        <div class="panel panel-border-narrow" id="details-group<?php echo $group->getGroupCode(); ?>" aria-hidden="true" style="display: none;">
+            <p>This file contains:</p>
+            <ul class="list list-bullet">
+                <li>test quality information for all group <?php echo $group->getGroupCode(); ?>
+                    testers associated to the site over the date range selected
+                </li>
+                <li>all group <?php echo $group->getGroupCode(); ?> testers' failures by category over the date range selected</li>
+            </ul>
+        </div>
+    </details>
+</div>

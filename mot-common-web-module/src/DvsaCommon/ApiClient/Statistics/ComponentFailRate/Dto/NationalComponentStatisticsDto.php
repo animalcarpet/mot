@@ -69,5 +69,6 @@ class NationalComponentStatisticsDto implements ReflectiveDtoInterface, ReportDt
     public function setMonthRange($monthRange)
     {
         $this->monthRange = $monthRange;
+        return $this;
     }
 }

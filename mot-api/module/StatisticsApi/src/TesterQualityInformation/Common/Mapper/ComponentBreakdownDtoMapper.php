@@ -20,7 +20,8 @@ class ComponentBreakdownDtoMapper implements AutoWireableInterface
      *
      * @return ComponentBreakdownDto
      */
-    public function mapQueryResultsToComponentBreakdownDto($components, $testerPerformance, Person $person)
+    public function mapQueryResultsToComponentBreakdownDto(array $components,
+       TesterAtSitePerformanceResult $testerPerformance = null, Person $person): ComponentBreakdownDto
     {
         $componentBreakdownDto = new ComponentBreakdownDto();
 
@@ -61,5 +62,41 @@ class ComponentBreakdownDtoMapper implements AutoWireableInterface
         $componentBreakdownDto->setDisplayName($person->getDisplayName());
 
         return $componentBreakdownDto;
+    }
+
+    /**
+     * @param ComponentFailRateResult[] $allTestersComponents
+     * @param TesterAtSitePerformanceResult[] $testersPerformance
+     * @return ComponentBreakdownDto[]
+     */
+    public function mapQueryResultsForMultipleTesters(array $allTestersComponents, array $testersPerformance, $group)
+    {
+        $componentBreakdownForTesters = [];
+        foreach($testersPerformance as $singleTesterPerformance) {
+            if ($singleTesterPerformance->getVehicleClassGroup() === $group) {
+                $personId = $singleTesterPerformance->getPersonId();
+                $singleTesterComponents = $this->filterComponentsForTester($allTestersComponents, $personId);
+                $person = new Person();
+                $person->setId($personId);
+                $person->setUsername($singleTesterPerformance->getUsername());
+                $componentBreakdownForTesters[] = $this->mapQueryResultsToComponentBreakdownDto($singleTesterComponents, $singleTesterPerformance, $person);
+            }
+        }
+        return $componentBreakdownForTesters;
+    }
+
+    /**
+     * @param ComponentFailRateResult[] $allTestersComponents
+     * @param int $testerId
+     * @return ComponentFailRateResult[]
+     */
+    private function filterComponentsForTester(array $allTestersComponents, int $testerId): array
+    {
+       return array_filter(
+           $allTestersComponents,
+           function(ComponentFailRateResult $component) use ($testerId) {
+               return $component->getTesterId() == $testerId;
+           }
+       );
     }
 }

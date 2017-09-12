@@ -14,3 +14,10 @@ echo $this->partial('site/site/test-quality-information/group-tester-table', [
     'group' => $group,
     'queryParams' => $queryParams,
 ]);
+
+if ($group->hasTests()) {
+    echo $this->partial('site/site/test-quality-information/group-csv-download', [
+        'group' => $group,
+        'queryParams' => $queryParams,
+    ]);
+}

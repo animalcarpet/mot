@@ -8,6 +8,7 @@ use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSi
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use Site\Action\SiteTestQualityAction;
+use Site\Action\SiteTestQualityCsvAction;
 use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Site\Service\SiteBreadcrumbsBuilder;
@@ -40,6 +41,7 @@ class SiteControllerFactory implements FactoryInterface
             new Container(SiteController::SESSION_CNTR_KEY),
             $enumCatalog->businessRole(),
             $serviceLocator->get(SiteTestQualityAction::class),
+            $serviceLocator->get(SiteTestQualityCsvAction::class),
             $serviceLocator->get(UserTestQualityAction::class),
             $serviceLocator->get(ViewVtsTestQualityAssertion::class),
             $serviceLocator->get(ContextProvider::class),
