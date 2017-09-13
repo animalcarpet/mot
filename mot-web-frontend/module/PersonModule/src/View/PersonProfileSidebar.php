@@ -104,7 +104,8 @@ class PersonProfileSidebar extends GeneralSidebar
         $this->setUpAccountSecurityBox();
         $this->setUpAccountManagementBox($displayResetAccountByEmailButton);
         $this->setUpRelatedLinksSection();
-        $this->setUpQualificationsAndAnnualAssessmentSection();
+        $this->setUpAnnualAssessmentSection();
+        $this->setUpQualificationsSection();
     }
 
     /**
@@ -269,38 +270,46 @@ class PersonProfileSidebar extends GeneralSidebar
         $this->addItem($accountManagementBox);
     }
 
-    private function setUpQualificationsAndAnnualAssessmentSection()
+    private function setUpAnnualAssessmentSection()
     {
-        $qualificationDetailsUrl = $this->currentUrl.'/qualification-details';
+        if ($this->personProfileGuard->canViewAnnualAssessmentCertificates() === false) {
+            return;
+        }
 
         $annualAssessmentCertificatesUrl = $this->currentUrl.'/annual-assessment-certificates';
 
-        $relatedBox = new GeneralSidebarLinkList('MOT training and certificates');
+        $relatedBox = new GeneralSidebarLinkList('Annual assessments');
+        $relatedBox->setId('annual_assessments');
+        $relatedBox->addLink(
+            new GeneralSidebarLink(
+                'annual-assessment-certificates',
+                'View or add annual assessment certificates',
+                $annualAssessmentCertificatesUrl
+            )
+        );
+
+        $this->addItem($relatedBox);
+    }
+
+    private function setUpQualificationsSection()
+    {
+        if ($this->personProfileGuard->canViewQualificationDetails() === false) {
+            return;
+        }
+
+        $qualificationDetailsUrl = $this->currentUrl.'/qualification-details';
+
+        $relatedBox = new GeneralSidebarLinkList('Initial training and demonstration tests');
         $relatedBox->setId('qualifications');
+        $relatedBox->addLink(
+            new GeneralSidebarLink(
+                'qualification-details',
+                'View or add initial training qualifications',
+                $qualificationDetailsUrl
+            )
+        );
 
-        if ($this->personProfileGuard->canViewQualificationDetails()) {
-            $relatedBox->addLink(
-                new GeneralSidebarLink(
-                    'qualification-details',
-                    'MOT tester training certificates',
-                    $qualificationDetailsUrl
-                )
-            );
-        }
-
-        if ($this->personProfileGuard->canViewAnnualAssessmentCertificates()) {
-            $relatedBox->addLink(
-                new GeneralSidebarLink(
-                    'annual-assessment-certificates',
-                    'Annual assessment certificates',
-                    $annualAssessmentCertificatesUrl
-                )
-            );
-        }
-
-        if (!empty($relatedBox->getLinks())) {
-            $this->addItem($relatedBox);
-        }
+        $this->addItem($relatedBox);
     }
 
     private function setUpRelatedLinksSection()

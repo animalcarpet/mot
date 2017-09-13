@@ -5,7 +5,7 @@ namespace Dvsa\Mot\Frontend\PersonModule\ViewModel;
 class QualificationDetailsViewModel
 {
     private $template = 'qualification-details/view';
-    private $pageTitle = 'MOT tester training certificates';
+    private $pageTitle = 'Initial training qualifications';
     private $returnLinkText = 'Return to %s';
     private $returnLink;
     private $pageSubtitle;
