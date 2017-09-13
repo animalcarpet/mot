@@ -111,8 +111,16 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
             ->willReturn(false);
 
         $sut = $this->createPersonProfileSidebar();
+        $sidebarItems = $sut->getSidebarItems();
 
-        $this->assertFalse(array_key_exists(2, $sut->getSidebarItems()));
+        $hasTestQualitySidebar = false;
+        foreach ($sidebarItems as $item) {
+            if ($item->getId()=== "test-quality-information") {
+                $hasTestQualitySidebar = true;
+            }
+        }
+
+        $this->assertFalse($hasTestQualitySidebar);
     }
 
     public function testSideBarDoesNotContainTwoFactorLinks()

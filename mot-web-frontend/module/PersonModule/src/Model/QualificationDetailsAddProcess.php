@@ -191,7 +191,7 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
 
     public function getBackLinkText()
     {
-        return 'Back to add a certificate';
+        return 'Return to initial training qualifications';
     }
 
     public function hasConfirmationPage()
