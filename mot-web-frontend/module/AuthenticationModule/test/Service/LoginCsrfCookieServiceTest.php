@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Service;
 use Csrf\CsrfConstants;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
 use DvsaCommon\Configuration\MotConfig;
+use DvsaCommon\Guid\Guid;
 use Zend\Http\Header\Cookie;
 use Zend\Http\Header\SetCookie;
 use Zend\Http\Request;
@@ -85,5 +86,41 @@ class LoginCsrfCookieServiceTest extends \PHPUnit_Framework_TestCase
         $request->getHeaders()->addHeader(new Cookie(['my_cookie' => $cookieToken]));
 
         $this->assertFalse($this->createService()->validate($request));
+    }
+
+    public function testValidate_ensureCsrfTokenIsReAdded()
+    {
+        $response = new Response();
+        $requestToken = Guid::newGuid();
+        $request = new Request();
+        $request->setMethod('POST');
+        $request->setPost(new Parameters([CsrfConstants::REQ_TOKEN => $requestToken]));
+        $request->getHeaders()->addHeader(new Cookie(['my_cookie' => $requestToken]));
+        $this->assertEquals($this->createService()->ensureCsrfCookie($request, $response), $requestToken);
+    }
+
+    public function testValidate_ensureCsrfTokenIsReAddedForGetRequests()
+    {
+        $response = new Response();
+        $requestToken = Guid::newGuid();
+        $request = new Request();
+        $request->getHeaders()->addHeader(new Cookie(['my_cookie' => $requestToken]));
+        $this->assertEquals($this->createService()->ensureCsrfCookie($request, $response), $requestToken);
+    }
+
+    public function testValidate_ensureCsrfTokenIsAddedWhenItsNotPresent()
+    {
+        $response = new Response();
+        $request = new Request();
+        $this->createService()->ensureCsrfCookie($request, $response);
+        /** @var SetCookie $setCookieHeader */
+        $setCookieHeader = $response->getHeaders()->get('Set-Cookie')[0];
+
+        $this->assertEquals('my_cookie', $setCookieHeader->getName());
+        $this->assertEquals('/my_path', $setCookieHeader->getPath());
+        $this->assertEquals('.my.domain.com', $setCookieHeader->getDomain());
+        $this->assertEquals(true, $setCookieHeader->isSecure());
+        $this->assertTrue($setCookieHeader->isHttponly());
+        $this->assertTrue($setCookieHeader->isSessionCookie());
     }
 }

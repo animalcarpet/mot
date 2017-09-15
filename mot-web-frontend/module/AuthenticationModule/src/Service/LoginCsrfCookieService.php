@@ -26,12 +26,15 @@ class LoginCsrfCookieService
 
     /**
      * @param Response $response
+     * @param Guid $token
      *
      * @return string csrf token
      */
-    public function addCsrfCookie(Response $response)
+    public function addCsrfCookie(Response $response, $token = null)
     {
-        $token = Guid::newGuid();
+        if (null === $token) {
+            $token = Guid::newGuid();
+        }
         $cookie = new SetCookie(
             $this->name,
             $token,
@@ -65,5 +68,24 @@ class LoginCsrfCookieService
         }
 
         return false;
+    }
+    
+    /**
+     * Ensure CSRF cookie is set.
+     *
+     * @param Request  $request
+     * @param Response $response
+     *
+     * @return string csrf token
+     */
+    public function ensureCsrfCookie(Request $request, Response $response) {
+        $csrfToken= null;
+        /** @var array $cookies */
+        $cookies = $request->getCookie();
+        if (isset($cookies[$this->name])) {
+            $csrfToken = $cookies[$this->name];
+            return $this->addCsrfCookie($response, $csrfToken);
+        }
+        return $this->addCsrfCookie($response);
     }
 }

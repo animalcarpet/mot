@@ -193,10 +193,10 @@ class SecurityController extends AbstractDvsaActionController
         // Redirect on success
         return $this->applyActionResult($this->successLoginResultRoutingService->route($result, $request));
     }
-
+    
     private function setUpLoginCsrfCookie(ViewModel $vm)
     {
-        $csrfToken = $this->loginCsrfCookieService->addCsrfCookie($this->response);
+        $csrfToken = $this->loginCsrfCookieService->ensureCsrfCookie($this->request, $this->response);
         $vm->setVariable('csrfToken', $csrfToken);
     }
 
