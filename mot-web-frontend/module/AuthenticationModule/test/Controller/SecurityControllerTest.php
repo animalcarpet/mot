@@ -78,7 +78,7 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
     {
         $this->givenGET();
         $this->identitySessionState(new IdentitySessionState(false, false));
-        $this->loginCsrfCookieService->expects($this->once())->method('addCsrfCookie');
+        $this->loginCsrfCookieService->expects($this->once())->method('ensureCsrfCookie');
 
         $vm = $this->getController()->loginAction();
         $this->assertEquals('', $vm->getVariables['goto']);
