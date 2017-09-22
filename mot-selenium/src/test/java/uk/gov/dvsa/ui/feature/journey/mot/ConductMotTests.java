@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import uk.gov.dvsa.domain.api.response.Vehicle;
@@ -13,18 +14,13 @@ import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
+import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
+import uk.gov.dvsa.helper.DefectsTestsDataProvider;
 import uk.gov.dvsa.helper.ReasonForRejection;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.mot.TestAbandonedPage;
-import uk.gov.dvsa.ui.pages.mot.TestAbortedPage;
-import uk.gov.dvsa.ui.pages.mot.TestCompletePage;
-import uk.gov.dvsa.ui.pages.mot.TestOptionsPage;
-import uk.gov.dvsa.ui.pages.mot.TestResultsEntryGroupAPageInterface;
-import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
-import uk.gov.dvsa.ui.pages.mot.TestResultsEntryPageInterface;
-import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
+import uk.gov.dvsa.ui.pages.mot.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -65,6 +61,44 @@ public class ConductMotTests extends DslTest {
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester,vehicle);
 
         //When I complete all test details with passing data
+        testResultsEntryPage.completeTestDetailsWithPassValues(false);
+
+        //Then I should see a pass on the test result page
+        assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
+
+        //Then I should be able to complete the Test Successfully
+        TestCompletePage testCompletePage = testResultsEntryPage.clickReviewTestButton().clickFinishButton(TestCompletePage.class);
+
+        assertThat(testCompletePage.isReturnToHomepageLinkDisplayed(), is(true));
+    }
+
+    @Test(groups = {"Regression"})
+    public void failTestWithBrakeTestRFRs() throws IOException, URISyntaxException {
+        //Given I am on the Test Results Entry Page
+        TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester,vehicle);
+
+        //When I complete all test details with passing odometer and failing brake weights data
+        testResultsEntryPage.addOdometerReading(1000).completeBrakeTestWithFailValues(false);
+
+        //Then I should see a fail on the test result page
+        assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(false));
+
+        //Then I should be able to complete the Test Successfully
+        TestCompletePage testCompletePage = testResultsEntryPage.clickReviewTestButton().clickFinishButton(TestCompletePage.class);
+
+        assertThat(testCompletePage.isReturnToHomepageLinkDisplayed(), is(true));
+    }
+
+    @Test(groups = {"Regression"}, dataProvider = "getPRSDefect")
+    public void passTestSuccessfullyWithPRS(Defect defect) throws IOException, URISyntaxException {
+        //Given I am on the Test Results Entry Page
+        TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester,vehicle);
+
+        //And I add PRS
+        testResultsEntryPage.clickAddDefectButton().navigateToDefectCategory(defect.getCategoryPath())
+                .navigateToAddDefectPage(defect).setIsDangerous().clickAddDefectButton().clickFinishAndReturnButton();
+
+        //And I complete all test details with passing data
         testResultsEntryPage.completeTestDetailsWithPassValues(false);
 
         //Then I should see a pass on the test result page
@@ -138,19 +172,6 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"2fa"} )
-    public void startAndAbandonTest2FaActiveUser() throws URISyntaxException, IOException {
-        //Given I am a 2FA activated user and I am on the Test Results Page
-        User twoFactorUser = motApi.user.createTester(site.getId());
-        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
-
-        //When I abandon the test with a reason
-        TestAbandonedPage testAbandonedPage =
-                testResultsEntryPage.abandonMotTest2FaActiveUser(CancelTestReason.DANGEROUS_OR_CAUSE_DAMAGE);
-
-        //Then I the test process should be cancelled without needing a pin and a VT30 Certificate generated message is displayed
-        assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
-    }
 
     @Test(groups = {"Regression"} )
     public void startAndAbortTestAsTester() throws URISyntaxException, IOException {
@@ -328,5 +349,10 @@ public class ConductMotTests extends DslTest {
 
         //Then the defect should not be displayed
         assertThat(testSummaryPage.isDefectDisplayed(defectName), is(false));
+    }
+
+    @DataProvider(name = "getPRSDefect")
+    public Object[][] getAdvisoryDefect() throws IOException {
+        return DefectsTestsDataProvider.getPRSDefect(true);
     }
 }

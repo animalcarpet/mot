@@ -34,7 +34,7 @@ public class RemoveDefectsPageTests extends DslTest {
 
     @DataProvider(name = "getDefectArray")
     public Object[][] getDefectArray() throws IOException {
-        return DefectsTestsDataProvider.getDefectArray();
+        return DefectsTestsDataProvider.getDefectArray(false, false, false);
     }
 
     @Test(groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
