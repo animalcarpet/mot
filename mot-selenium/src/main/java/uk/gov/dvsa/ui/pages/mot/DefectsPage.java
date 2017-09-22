@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 
 public class DefectsPage extends AbstractDefectsBasketPage {
@@ -15,6 +16,7 @@ public class DefectsPage extends AbstractDefectsBasketPage {
     @FindBy(id = "submit-defect") protected WebElement addDefect;
     @FindBy(css = "nav.content-navigation a.button") private WebElement finishAndReturnToMOTTestButton;
     @FindBy(css = "nav.content-navigation ul li a") private WebElement returnToDefectCategoriesLink;
+    @FindBy(id = "failureDangerous") private WebElement dangerousCheckbox;
 
     public DefectsPage(MotAppDriver driver) {
         super(driver);
@@ -38,6 +40,11 @@ public class DefectsPage extends AbstractDefectsBasketPage {
 
     public DefectsPage clickAddDefectButton() {
         addDefect.click();
+        return this;
+    }
+
+    public DefectsPage setIsDangerous(){
+        FormDataHelper.enterInputRadioButtonOrCheckbox(dangerousCheckbox, true);
         return this;
     }
 

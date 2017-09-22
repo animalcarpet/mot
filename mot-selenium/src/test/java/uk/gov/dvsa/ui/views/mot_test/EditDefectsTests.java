@@ -33,12 +33,12 @@ public class EditDefectsTests extends DslTest {
 
     @DataProvider(name = "getDefectArray")
     public Object[][] getDefectArray() throws IOException {
-        return DefectsTestsDataProvider.getDefectArray();
+        return DefectsTestsDataProvider.getDefectArray(false, false, false);
     }
 
     @DataProvider(name = "getAdvisoryDefect")
     public Object[][] getAdvisoryDefect() throws IOException {
-        return DefectsTestsDataProvider.getAdvisoryDefect();
+        return DefectsTestsDataProvider.getAdvisoryDefect(false);
     }
 
     @Test(groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",

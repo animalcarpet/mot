@@ -35,7 +35,7 @@ public class DefectsPageTests extends DslTest {
 
     @DataProvider(name = "getAdvisoryDefect")
     public Object[][] getAdvisoryDefect() throws IOException {
-        return DefectsTestsDataProvider.getAdvisoryDefect();
+        return DefectsTestsDataProvider.getAdvisoryDefect(false);
     }
 
     @DataProvider(name = "getManualAdvisoryDefect")

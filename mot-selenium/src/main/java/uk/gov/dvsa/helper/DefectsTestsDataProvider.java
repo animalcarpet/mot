@@ -6,21 +6,29 @@ import java.io.IOException;
 
 public class DefectsTestsDataProvider {
 
-    public static Object[][] getDefectArray() throws IOException {
+    public static Object[][] getDefectArray(boolean isAdvisoryDangerous, boolean isPRSDangerous, boolean isFailureDangerous) throws IOException {
         Object[][] defects = new Object[3][1];
         Defect.DefectBuilder builder = new Defect.DefectBuilder();
 
-        defects[0][0] = buildAdvisoryDefect(builder, false);
-        defects[1][0] = buildPRSDefect(builder);
-        defects[2][0] = buildFailureDefect(builder);
+        defects[0][0] = buildAdvisoryDefect(builder, false, isAdvisoryDangerous);
+        defects[1][0] = buildPRSDefect(builder, isPRSDangerous);
+        defects[2][0] = buildFailureDefect(builder, isFailureDangerous);
 
         return defects;
     }
 
-    public static Object[][] getAdvisoryDefect() throws IOException {
+    public static Object[][] getAdvisoryDefect(boolean isDangerous) throws IOException {
         Object[][] defect = new Object[1][1];
 
-        defect[0][0] = buildAdvisoryDefect(new Defect.DefectBuilder(), false);
+        defect[0][0] = buildAdvisoryDefect(new Defect.DefectBuilder(), false, isDangerous);
+
+        return defect;
+    }
+
+    public static Object[][] getPRSDefect(boolean isDangerous) throws IOException {
+        Object[][] defect = new Object[1][1];
+
+        defect[0][0] = buildPRSDefect(new Defect.DefectBuilder(), isDangerous);
 
         return defect;
     }
@@ -51,25 +59,25 @@ public class DefectsTestsDataProvider {
         return builder.build();
     }
 
-    private static Defect buildFailureDefect(Defect.DefectBuilder builder) {
+    private static Defect buildFailureDefect(Defect.DefectBuilder builder, boolean isDangerous) {
         builder.setCategoryPath(new String[] {"Drivers view of the road", "Windscreen"});
         builder.setDefectName("is of a temporary type");
         builder.setDefectType(Defect.DefectType.Failure);
         builder.setAddOrRemoveName("Windscreen is of a temporary type");
-        builder.setIsDangerous(false);
+        builder.setIsDangerous(isDangerous);
         return builder.build();
     }
 
-    private static Defect buildPRSDefect(Defect.DefectBuilder builder) {
+    private static Defect buildPRSDefect(Defect.DefectBuilder builder, boolean isDangerous) {
         builder.setCategoryPath(new String[] {"Tyres", "Condition"});
         builder.setDefectName("has ply or cords exposed");
         builder.setDefectType(Defect.DefectType.PRS);
         builder.setAddOrRemoveName("Tyre has ply or cords exposed");
-        builder.setIsDangerous(false);
+        builder.setIsDangerous(isDangerous);
         return builder.build();
     }
 
-    private static Defect buildAdvisoryDefect(Defect.DefectBuilder builder, Boolean defectIsAdded) {
+    private static Defect buildAdvisoryDefect(Defect.DefectBuilder builder, boolean defectIsAdded, boolean isDangerous) {
         builder.setCategoryPath(new String[] {"Brakes", "Brake performance", "Decelerometer", "Brake operation"});
         builder.setDefectName("grabbing slightly");
         builder.setDefectType(Defect.DefectType.Advisory);
@@ -81,7 +89,7 @@ public class DefectsTestsDataProvider {
             builder.setAddOrRemoveName("Service brake grabbing slightly");
         }
 
-        builder.setIsDangerous(false);
+        builder.setIsDangerous(isDangerous);
         return builder.build();
     }
 

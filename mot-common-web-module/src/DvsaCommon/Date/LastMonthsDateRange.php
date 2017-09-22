@@ -41,8 +41,7 @@ class LastMonthsDateRange implements AutoWireableInterface
             } else {
                 return sprintf($dateTemplate,
                     $startDate->format(DateTimeDisplayFormat::FORMAT_FULL_MONTH_WITH_YEAR),
-                    $endDate->format(DateTimeDisplayFormat::FORMAT_FULL_MONTH_WITH_YEAR)
-                );
+                    $endDate->format(DateTimeDisplayFormat::FORMAT_FULL_MONTH_WITH_YEAR));
             }
         }
     }
