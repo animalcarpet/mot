@@ -5,17 +5,17 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\MotTestController;
 
 /**
- * @var \DvsaCommon\Dto\Common\ReasonForCancelDto[]
+ * @var \DvsaCommon\Dto\Common\ReasonForCancelDto[] $reasons
  * @var \DvsaCommon\Dto\Common\ReasonForCancelDto   $reason
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest   $motTest
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\Tester    $tester
  * @var int                                         $selectedReasonId
  */
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
 $reasons = $this->reasonsForCancel;
 $selectedReasonId = $this->selectedReasonId;
 
 $vts = $motTest->getSiteId();
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\Tester $tester */
 $tester = $motTest->getTester();
 
 $vtsName = ArrayUtils::tryGet($vts, 'name');

@@ -6,15 +6,17 @@ use DvsaMotTest\View\ReplacementVehicleViewModel;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
 /**
- * @var ReplacementVehicleViewModel
+ * @var ReplacementVehicleViewModel       $vehicle
  * @var OdometerReadingViewObject         $odometerReading
  * @var ReplacementSiteViewModel          $vts
  * @var DvsaVehicleViewModel              $dvsaVehicleViewModel
  * @var \DvsaCommon\Dto\Common\MotTestDto $motTest
- * @var $colours                          \Vehicle\Helper\ColoursContainer
- * @var $countryOfRegistrationList
- * @var $isAdmin
- * @var $isTester
+ * @var \Vehicle\Helper\ColoursContainer  $colours
+ * @var array                             $countryOfRegistrationList
+ * @var array                             $modelList
+ * @var array                             $makeList
+ * @var bool                              $isAdmin
+ * @var bool                              $isTester
  */
 $title = 'Replacement certificate update';
 $this->headTitle($title);
