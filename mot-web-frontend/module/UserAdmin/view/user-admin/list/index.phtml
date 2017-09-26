@@ -17,12 +17,6 @@
             <?php foreach ($this->users as $user) : ?>
                 <tr>
                     <td>
-                        <?php
-                        /*
-                        <a href="<?php echo $this->url(
-                            'user_admin/view', ['userid' => $user->getId()]
-                        ); ?>"><?php echo $this->escapeHtml($user->getId()); ?></a>
-                        */?>
                         <?php echo $this->escapeHtml($user->getId()); ?>
                     </td>
                     <td><?php echo $this->escapeHtml($user->getUsername()); ?></td>

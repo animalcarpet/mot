@@ -2,18 +2,18 @@
 /**
  * Required params:.
  *
- * @var
- * @var $radioOptions array of radioLabel => radioValue pairs or
- *                    array of just radioValues which will be also used as the radioLabels
+ * @var string $name
+ * @var array $radioOptions array of radioLabel => radioValue pairs or
+ *                          array of just radioValues which will be also used as the radioLabels
  *
  * Optional params:
- * @var $label
- * @var $checkedValue
- * @var $labelId
- * @var $fieldsetCssClass
- * @var $labelCssClass
- * @var $required
- * @var $isInline
+ * @var string $label
+ * @var string $checkedValue
+ * @var string $labelId
+ * @var string $fieldsetCssClass
+ * @var string $labelCssClass
+ * @var string $required
+ * @var bool   $isInline
  */
 $label = $this->withDefault('')->getValue($label);
 $checkedValue = $this->withDefault('')->getValue($checkedValue);
