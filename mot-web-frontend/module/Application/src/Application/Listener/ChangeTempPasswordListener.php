@@ -32,6 +32,7 @@ class ChangeTempPasswordListener
         'login-2fa',
         'survey',
         'cookies',
+        'privacy-policy',
     ];
 
     private $ChangeTempPasswordRoutes = [

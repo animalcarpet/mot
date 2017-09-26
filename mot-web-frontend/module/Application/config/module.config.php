@@ -100,6 +100,16 @@ return [
                     ],
                 ],
             ],
+            'privacy-policy' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/privacy-policy',
+                    'defaults' => [
+                        'controller' => Application\PrivacyPolicyController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
             'special-notices' => [
                 'type' => 'segment',
                 'options' => [

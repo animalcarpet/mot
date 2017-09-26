@@ -122,6 +122,7 @@ class ExpiredPasswordListener
             ContextProvider::YOUR_PROFILE_PARENT_ROUTE.'/change-password/confirmation',
             'survey',
             'cookies',
+            'privacy-policy',
             self::LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE,
             self::LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE . '/security-questions',
             self::LOST_AND_FORGOTTEN_CARD_PARENT_ROUTE . '/confirmation',

@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\FormsController;
+use Application\Controller\PrivacyPolicyController;
 use Application\Controller\ReportController;
 use Application\Controller\CookiesController;
 use DvsaCommon\Factory\AutoWire\AutoWireFactory;
@@ -35,6 +36,7 @@ return [
         FormsController::class => FormsController::class,
         ReportController::class => ReportController::class,
         CookiesController::class => CookiesController::class,
+        PrivacyPolicyController::class => PrivacyPolicyController::class,
         LocationSelectController::class => LocationSelectController::class,
         VehicleDictionaryController::class => VehicleDictionaryController::class,
         TestItemSelectorController::class => TestItemSelectorController::class,
