@@ -7,6 +7,9 @@
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Configuration\MotConfigFactory;
 use DvsaCommonApi\Transaction\ServiceTransactionAwareInitializer;
+use DvsaEntities\Factory\Repository\CertificateTypeRepositoryFactory;
+use DvsaEntities\Repository\CertificateReplacementRepository;
+use DvsaEntities\Repository\CertificateTypeRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Factory\Helper\MysteryShopperHelperFactory;
@@ -25,6 +28,7 @@ use DvsaMotApi\Factory\Service\BrakeTestResultServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateChangeServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateCreationServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateExpiryServiceFactory;
+use DvsaMotApi\Factory\Service\CertificateOdometerHistoryUpdaterFactory;
 use DvsaMotApi\Factory\Service\CreateMotTestServiceFactory;
 use DvsaMotApi\Factory\Service\DemoTestAssessmentServiceFactory;
 use DvsaMotApi\Factory\Service\EmergencyServiceFactory;
@@ -73,10 +77,12 @@ use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\DemoTestAssessmentService;
 use DvsaMotApi\Service\EmergencyService;
+use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestOptionsService;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApi\Service\MotTestStatusChangeNotificationService;
+use DvsaMotApi\Service\ReplacementCertificate\CertificateOdometerHistoryUpdater;
 use DvsaMotApi\Service\S3\S3CsvStore;
 use DvsaMotApi\Service\SurveyService;
 use DvsaMotApi\Service\TesterMotTestLogService;
@@ -132,6 +138,7 @@ return [
         'OdometerReadingUpdatingService' => OdometerReadingUpdatingServiceFactory::class,
         'OdometerReadingQueryService' => OdometerReadingQueryServiceFactory::class,
         'MotTestMapper' => MotTestMapperFactory::class,
+        MotTestMapper::class => MotTestMapperFactory::class,
         //  @ARCHIVE VM-4532    MotDemoTestService
         CertificateCreationService::class => CertificateCreationServiceFactory::class,
         'CertificateReplacementRepository' => CertificateReplacementRepositoryFactory::class,
@@ -156,5 +163,8 @@ return [
         S3CsvStore::class => S3CsvStoreFactory::class,
         DefectSentenceCaseConverter::class => DefectSentenceCaseConverterFactory::class,
         MysteryShopperHelper::class => MysteryShopperHelperFactory::class,
+        CertificateOdometerHistoryUpdater::class => CertificateOdometerHistoryUpdaterFactory::class,
+        CertificateTypeRepository::class => CertificateTypeRepositoryFactory::class,
+        CertificateReplacementRepository::class => CertificateReplacementRepositoryFactory::class,
     ],
 ];

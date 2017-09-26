@@ -4,6 +4,7 @@ namespace DvsaMotApi\Factory\Service;
 
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaMotApi\Service\ReplacementCertificate\CertificateOdometerHistoryUpdater;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

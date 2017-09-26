@@ -24,6 +24,7 @@ use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\MotTestSecurityService;
+use DvsaMotApi\Service\ReplacementCertificate\CertificateOdometerHistoryUpdater;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use DvsaMotApiTest\Factory\ReplacementCertificateObjectsFactory;

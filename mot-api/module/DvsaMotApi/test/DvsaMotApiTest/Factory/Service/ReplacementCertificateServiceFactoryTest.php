@@ -13,6 +13,7 @@ use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\ReplacementCertificateDraftRepository;
 use DvsaMotApi\Factory\Service\ReplacementCertificateServiceFactory;
 use DvsaMotApi\Service\CertificateCreationService;
+use DvsaMotApi\Service\ReplacementCertificate\CertificateOdometerHistoryUpdater;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftCreator;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftUpdater;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
@@ -37,6 +38,7 @@ class ReplacementCertificateServiceFactoryTest extends AbstractServiceTestCase
         $motTestRepository = XMock::of(MotTestRepository::class);
         $otpService = XMock::of(OtpService::class);
         $certificateCreationService = XMock::of(CertificateCreationService::class);
+        $certificateOdometerHistoryUpdated = XMock::of(CertificateOdometerHistoryUpdater::class);
 
         $mockEntityManager = $this->getMockEntityManager();
 
@@ -55,6 +57,7 @@ class ReplacementCertificateServiceFactoryTest extends AbstractServiceTestCase
         $this->serviceLocator->setService(OtpService::class, $otpService);
         $this->serviceLocator->setService(CertificateCreationService::class, $certificateCreationService);
         $this->serviceLocator->setService(MotIdentityProviderInterface::class, XMock::of(MotIdentityProviderInterface::class));
+        $this->serviceLocator->setService(CertificateOdometerHistoryUpdater::class, $certificateOdometerHistoryUpdated);
     }
 
     public function testReplacementCertificateServiceFactory()

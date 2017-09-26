@@ -173,19 +173,19 @@ class CertificateCreationService
      * However, it's quite plausible that you may need to generate a document
      * explicitly; in which case do feel free to make these methods public.
      *
-     * @param string     $id
+     * @param string     $motTestNumber
      * @param MotTestDto $data
      * @param int        $userId
      *
      * @return MotTestDto
      */
-    private function createPassCertificate($id, MotTestDto $data, $userId)
+    private function createPassCertificate($motTestNumber, MotTestDto $data, $userId)
     {
         $certificateMapper = new Mapper\MotTestCertificateMapper($this->dataCatalogService);
         $documentName = 'MOT-Pass-Certificate';
 
         return $this->createCertificate(
-            $id,
+            $motTestNumber,
             $data,
             $certificateMapper,
             $documentName,
