@@ -13,11 +13,13 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaEntities\Entity\CertificateReplacement;
 use DvsaEntities\Entity\CertificateReplacementDraft;
+use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\CertificateReplacementRepository;
 use DvsaEntities\Repository\CertificateTypeRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\ReplacementCertificateDraftRepository;
 use DvsaMotApi\Service\CertificateCreationService;
+use DvsaMotApi\Service\ReplacementCertificate\CertificateOdometerHistoryUpdater;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftCreator;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftUpdater;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
@@ -26,6 +28,7 @@ use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use DvsaMotApiTest\Factory\ReplacementCertificateObjectsFactory;
 use IntegrationApi\DvlaVehicle\Service\DvlaVehicleUpdatedService;
 use DvsaCommon\Auth\PermissionInSystem;
+use \PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Class ReplacementCertificateServiceTest.
@@ -37,6 +40,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
     private $motTestRepository;
     private $draftCreator;
     private $draftUpdater;
+    /** @var ReplacementCertificateUpdater | MockObject  */
     private $certificateCreator;
     private $certificateReplacementRepository;
     private $draftRepository;
@@ -48,6 +52,9 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
 
     /** @var MotIdentityProviderInterface $motIdentityProvider */
     private $motIdentityProvider;
+
+    /** @var CertificateOdometerHistoryUpdater | MockObject  $certificateOdometerHistoryUpdater  */
+    private $certificateOdometerHistoryUpdater;
 
     public function setUp()
     {
@@ -89,6 +96,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $this->authorizationService = XMock::of('DvsaAuthorisation\Service\AuthorisationServiceInterface', ['isGranted']);
         $this->otpService = XMock::of(OtpService::class);
         $this->certificateCreationService = XMock::of(CertificateCreationService::class);
+        $this->certificateOdometerHistoryUpdater = XMock::of(CertificateOdometerHistoryUpdater::class);
 
         $this->motIdentity = XMock::of(\DvsaAuthentication\Identity::class);
         $this->motIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
@@ -116,7 +124,8 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
             $this->authorizationService,
             $this->motTestRepository,
             $this->otpService,
-            $this->certificateCreationService
+            $this->certificateCreationService,
+            $this->certificateOdometerHistoryUpdater
         );
 
         TestTransactionExecutor::inject($sut);
@@ -212,6 +221,10 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
 
         $data = ['oneTimePassword' => '123456'];
 
+        $this->withCertificateUpdaterReturningMotTestEntity();
+        $this->withOdometerChangeDetectedInDraft();
+        $this->odometerHistoryShouldBeUpdated();
+
         $this->createSUT()->applyDraft($draft->getId(), $data);
 
         /** @var CertificateReplacement $certReplacement */
@@ -245,6 +258,10 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
             ->with($certificateReplacementCapture());
 
         $data = ['oneTimePassword' => '123456'];
+
+        $this->withCertificateUpdaterReturningMotTestEntity();
+        $this->withOdometerChangeDetectedInDraft();
+        $this->odometerHistoryShouldBeUpdated();
 
         $this->createSUT()->applyDraft($draft->getId(), $data);
 
@@ -311,6 +328,11 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
             ->expects($isAuthorisationExpected ? $this->once() : $this->never())
             ->method('authenticate')
             ->with($otpPin);
+
+        $this->withCertificateUpdaterReturningMotTestEntity();
+        $this->withOdometerChangeDetectedInDraft();
+        $this->odometerHistoryShouldBeUpdated();
+
         $this->createSUT()->applyDraft($draft->getId(), $draftData);
     }
 
@@ -320,5 +342,43 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
             ->method('get')
             ->with($inputDraftId)
             ->will($this->returnValue($returnedDraft));
+    }
+
+    private function withCertificateUpdaterReturningMotTestEntity()
+    {
+        $motTestMock = XMock::of(MotTest::class);
+
+        $this->certificateCreator
+            ->expects($this->once())
+            ->method('update')
+            ->with(
+                $this->isInstanceOf(CertificateReplacementDraft::class),
+                $this->anything()
+            )
+            ->willReturn($motTestMock);
+    }
+
+    private function withOdometerChangeDetectedInDraft()
+    {
+        $this->certificateOdometerHistoryUpdater
+            ->expects($this->once())
+            ->method('isOdometerModified')
+            ->with(
+                $this->isInstanceOf(MotTest::class),
+                $this->isInstanceOf(CertificateReplacementDraft::class)
+            )
+            ->willReturn(true);
+        ;
+    }
+
+    private function odometerHistoryShouldBeUpdated()
+    {
+        $this->certificateOdometerHistoryUpdater
+            ->expects($this->once())
+            ->method('updateOdometerHistoryOnSubsequentCertificates')
+            ->with(
+                $this->isInstanceOf(MotTest::class),
+                $this->isInstanceOf(CertificateReplacementDraft::class)
+            );
     }
 }

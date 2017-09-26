@@ -77,6 +77,11 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     }
 
     /**
+     * @return mixed
+     */
+    abstract public function mapData();
+
+    /**
      * Get a key's value.
      *
      * @param string $key

@@ -130,7 +130,7 @@ class ReplacementCertificateUpdater
      *
      * @param CertificateReplacementDraft $draft
      * @param MotTest                     $motTest
-     * @param bool                        $hasFullRights
+     * @param bool                        $hasFullUpdateRights
      * @param bool                        $isPsrTest
      *
      * @return MotTest
@@ -159,7 +159,7 @@ class ReplacementCertificateUpdater
     /**
      * @param CertificateReplacementDraft $draft
      * @param MotTest                     $motTest
-     * @param bool                        $hasFullRights
+     * @param bool                        $hasFullUpdateRights
      *
      * @return \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle
      */

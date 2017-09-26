@@ -7,6 +7,7 @@ use DvsaAuthentication\Service\OtpService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\CertificateCreationService;
+use DvsaMotApi\Service\ReplacementCertificate\CertificateOdometerHistoryUpdater;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
@@ -26,7 +27,8 @@ class ReplacementCertificateServiceFactory implements FactoryInterface
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get(MotTestRepository::class),
             $serviceLocator->get(OtpService::class),
-            $serviceLocator->get(CertificateCreationService::class)
+            $serviceLocator->get(CertificateCreationService::class),
+            $serviceLocator->get(CertificateOdometerHistoryUpdater::class)
         );
     }
 }

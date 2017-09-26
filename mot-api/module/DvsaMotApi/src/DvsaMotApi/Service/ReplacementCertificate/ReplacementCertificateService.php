@@ -17,6 +17,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\CertificateReplacement;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaEntities\Entity\CertificateType;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\CertificateReplacementRepository;
@@ -84,6 +85,11 @@ class ReplacementCertificateService implements TransactionAwareInterface
     private $motIdentityProvider;
 
     /**
+     * @var CertificateOdometerHistoryUpdater
+     */
+    private $certificateOdometerHistoryUpdater;
+
+    /**
      * @param \Doctrine\ORM\EntityManager                   $entityManager
      * @param ReplacementCertificateDraftRepository         $repository
      * @param ReplacementCertificateDraftCreator            $draftCreator
@@ -95,6 +101,7 @@ class ReplacementCertificateService implements TransactionAwareInterface
      * @param OtpService                                    $otpService
      * @param CertificateCreationService                    $certificateCreationService
      * @param \DvsaCommon\Auth\MotIdentityProviderInterface $motIdentityProvider
+     * @param CertificateOdometerHistoryUpdater             $certificateOdometerHistoryUpdater
      */
     public function __construct(
         EntityManager $entityManager,
@@ -107,7 +114,8 @@ class ReplacementCertificateService implements TransactionAwareInterface
         AuthorisationServiceInterface $authService,
         MotTestRepository $motTestRepository,
         OtpService $otpService,
-        CertificateCreationService $certificateCreationService
+        CertificateCreationService $certificateCreationService,
+        CertificateOdometerHistoryUpdater $certificateOdometerHistoryUpdater
     ) {
         $this->entityManager = $entityManager;
         $this->motIdentityProvider = $motIdentityProvider;
@@ -120,6 +128,7 @@ class ReplacementCertificateService implements TransactionAwareInterface
         $this->certificateReplacementRepository = $certificateReplacementRepository;
         $this->otpService = $otpService;
         $this->certificateCreationService = $certificateCreationService;
+        $this->certificateOdometerHistoryUpdater = $certificateOdometerHistoryUpdater;
     }
 
     /**
@@ -214,6 +223,10 @@ class ReplacementCertificateService implements TransactionAwareInterface
         $certificateDraftRepository = $this->repository;
         $certificateUpdater = $this->certificateUpdater;
 
+        $draft = $certificateDraftRepository->get($draftId);
+        // detect change in odometer in MotTest before overwriting it with data from draft
+        $isOdometerModified = $this->certificateOdometerHistoryUpdater->isOdometerModified($draft->getMotTest(), $draft);
+
         $motTest = $this->inTransaction(
 
             function () use (
@@ -223,34 +236,39 @@ class ReplacementCertificateService implements TransactionAwareInterface
                 $certificateReplacementRepository,
                 $certificateDraftRepository,
                 $certificateUpdater,
-                $isDvlaImport
+                $isDvlaImport,
+                $draft
             ) {
-                $draft = $certificateDraftRepository->get($draftId);
                 $motTest = $certificateUpdater->update($draft, $isDvlaImport);
 
-                $certificateReplacement = (new CertificateReplacement())
-                    ->setMotTest($draft->getMotTest())
-                    ->setMotTestVersion($draft->getMotTestVersion())
-                    ->setReasonForDifferentTester($draft->getDifferentTesterReason())
-                    ->setReplacementReason($draft->getReasonForReplacement())
-                    ->setIsVinVrmExpiryChanged($draft->isVinVrmExpiryChanged())
-                    ->includeInMismatchFile($draft->isIncludeInMismatchFile())
-                    ->includeInPassFile($draft->isIncludeInPassFile());
-
-                if ($draft->getReasonForReplacement() == $cherishedTransferReason) {
-                    $certificateReplacement->setCertificateType(
-                        $certTypeRepo->getByCode(CertificateTypeCode::TRANSFER)
-                    );
-                } else {
-                    $certificateReplacement->setCertificateType(
-                        $certTypeRepo->getByCode(CertificateTypeCode::REPLACE)
-                    );
-                }
+                $certificateReplacement = $this->generateCertificateReplacementEntity($draft, $cherishedTransferReason, $certTypeRepo);
 
                 $certificateReplacementRepository->save($certificateReplacement);
-                $certificateDraftRepository->remove($draft);
 
                 return $motTest;
+            }
+        );
+
+        // This second transaction is here because we want to regenerate certificates on subsequent mot certificates (to update odometer history on them) as a next step
+        // and for that we need up to date state of motTest entity which is being modified in previous transaction.
+        // Because of entityManager->flush() is being called during our certificate generation process (which essentially interrupts the transaction)
+        // we can't do it within that block and ensure atomicity at the same time
+        $this->inTransaction(
+            function () use (
+                $draft,
+                $motTest,
+                $isOdometerModified,
+                $certificateDraftRepository
+            ) {
+                if($draft === null || $motTest === null){
+                    throw new \RuntimeException('Cannot update odometer history - previous transaction failed?');
+                }
+
+                if($isOdometerModified){
+                    $this->certificateOdometerHistoryUpdater->updateOdometerHistoryOnSubsequentCertificates($motTest, $draft);
+                }
+
+                $certificateDraftRepository->remove($draft);
             }
         );
 
@@ -266,5 +284,39 @@ class ReplacementCertificateService implements TransactionAwareInterface
     public function createCertificate($motTestNumber, $userId)
     {
         return $this->certificateCreationService->createFromMotTestNumber($motTestNumber, $userId);
+    }
+
+    /**
+     * @param CertificateReplacementDraft $draft
+     * @param $cherishedTransferReason
+     * @param CertificateTypeRepository $certTypeRepo
+     * @return $this
+     */
+    function generateCertificateReplacementEntity(
+        CertificateReplacementDraft $draft,
+        $cherishedTransferReason,
+        CertificateTypeRepository $certTypeRepo
+    )
+    {
+        $certificateReplacement = (new CertificateReplacement())
+            ->setMotTest($draft->getMotTest())
+            ->setMotTestVersion($draft->getMotTestVersion())
+            ->setReasonForDifferentTester($draft->getDifferentTesterReason())
+            ->setReplacementReason($draft->getReasonForReplacement())
+            ->setIsVinVrmExpiryChanged($draft->isVinVrmExpiryChanged())
+            ->includeInMismatchFile($draft->isIncludeInMismatchFile())
+            ->includeInPassFile($draft->isIncludeInPassFile());
+
+        if ($draft->getReasonForReplacement() == $cherishedTransferReason) {
+            $certificateReplacement->setCertificateType(
+                $certTypeRepo->getByCode(CertificateTypeCode::TRANSFER)
+            );
+            return $certificateReplacement;
+        } else {
+            $certificateReplacement->setCertificateType(
+                $certTypeRepo->getByCode(CertificateTypeCode::REPLACE)
+            );
+            return $certificateReplacement;
+        }
     }
 }
