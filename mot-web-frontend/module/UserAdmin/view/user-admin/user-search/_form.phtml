@@ -1,4 +1,6 @@
-<form action="<?php echo $this->url($searchResultsRoute); ?>" method="GET" novalidate>
+<form action="<?php echo $this->url($searchResultsRoute); ?>" method="POST" novalidate>
+    <?php echo $this->csrfToken() ?>
+
     <fieldset>
         <?php
         echo $this->partial(

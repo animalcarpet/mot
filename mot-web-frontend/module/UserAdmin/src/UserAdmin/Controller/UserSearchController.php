@@ -8,6 +8,7 @@ use DvsaCommon\Date\Exception\IncorrectDateFormatException;
 use DvsaCommon\Date\Exception\NonexistentDateException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
+use UserAdmin\Factory\Controller\UserSearchControllerFactory;
 use UserAdmin\Service\DateOfBirthFilterService;
 use UserAdmin\Traits\UserAdminServicesTrait;
 use UserAdmin\ViewModel\UserSearchViewModel;
@@ -49,6 +50,9 @@ class UserSearchController extends AbstractDvsaMotTestController
     /** @var DateOfBirthFilterService $dateOfBirthFilterService */
     private $dateOfBirthFilterService;
 
+    /** @var array $validationMessages */
+    private $validationMessages = [];
+
     public function __construct(DateOfBirthFilterService $dateOfBirthFilterService)
     {
         $this->dateOfBirthFilterService = $dateOfBirthFilterService;
@@ -71,8 +75,8 @@ class UserSearchController extends AbstractDvsaMotTestController
 
         $this->layout('layout/layout-govuk.phtml');
 
-        $systemMessage = $this->flashMessenger()->getErrorMessages();
-        $infoMessage = current($this->flashMessenger()->getInfoMessages());
+        $systemMessage = $this->validationMessages;
+        $infoMessage = $this->params()->fromRoute('infoMessage');
 
         return [
             'viewModel' => $viewModel,
@@ -93,7 +97,7 @@ class UserSearchController extends AbstractDvsaMotTestController
         $this->layout()->setVariable('pageSubTitle', self::PAGE_SUBTITLE_RESULTS);
 
         if (false === $this->isSearchDataValid()) {
-            return $this->redirectToSearchWithQuery();
+            return $this->redirectToSearch();
         }
 
         try {
@@ -111,35 +115,23 @@ class UserSearchController extends AbstractDvsaMotTestController
 
         $userSearchExtended = $this->getAuthorizationService()->isGranted(PermissionInSystem::USER_SEARCH_EXTENDED);
 
-        $userSearchRoute = $this->url()
-            ->fromRoute(
-                self::ROUTE_USER_SEARCH,
-                [],
-                [
-                    'query' => $this->getFullSearchCriteria(),
-                ]
-            );
-
         $this->layout('layout/layout-govuk.phtml');
 
         return [
             'viewModel' => $viewModel,
             'userHomeRoute' => self::ROUTE_USER_HOME,
-            'escUserSearchRoute' => $userSearchRoute,
+            'userSearchRoute' => self::ROUTE_USER_SEARCH,
+            'userSearchCriteria' => $this->getFullSearchCriteria(),
             'helper' => new UserSearchHelper($this->getAuthorizationService()),
-            'resultsQueryArray' => $this->getRequest()->getQuery()->toArray(),
             'userSearchExtended' => $userSearchExtended,
         ];
     }
 
-    private function redirectToSearchWithQuery()
+    private function redirectToSearch($message = null)
     {
-        return $this->redirect()->toRoute(
-            self::ROUTE_USER_SEARCH,
-            [],
-            [
-                'query' => $this->getFullSearchCriteria(),
-            ]
+        return $this->forward()->dispatch(
+            UserSearchControllerFactory::class,
+            ['action' => 'index', 'infoMessage' => $message]
         );
     }
 
@@ -172,13 +164,13 @@ class UserSearchController extends AbstractDvsaMotTestController
         $request = $this->getRequest();
 
         return [
-            self::PARAM_USERNAME => $request->getQuery(self::PARAM_USERNAME),
-            self::PARAM_FIRSTNAME => $request->getQuery(self::PARAM_FIRSTNAME),
-            self::PARAM_LASTNAME => $request->getQuery(self::PARAM_LASTNAME),
-            self::PARAM_EMAIL => $request->getQuery(self::PARAM_EMAIL),
+            self::PARAM_USERNAME => $request->getPost(self::PARAM_USERNAME),
+            self::PARAM_FIRSTNAME => $request->getPost(self::PARAM_FIRSTNAME),
+            self::PARAM_LASTNAME => $request->getPost(self::PARAM_LASTNAME),
+            self::PARAM_EMAIL => $request->getPost(self::PARAM_EMAIL),
             self::PARAM_DOB => $this->getDobSearchCriteria(),
-            self::PARAM_TOWN => $request->getQuery(self::PARAM_TOWN),
-            self::PARAM_POSTCODE => $request->getQuery(self::PARAM_POSTCODE),
+            self::PARAM_TOWN => $request->getPost(self::PARAM_TOWN),
+            self::PARAM_POSTCODE => $request->getPost(self::PARAM_POSTCODE),
         ];
     }
 
@@ -201,9 +193,9 @@ class UserSearchController extends AbstractDvsaMotTestController
         return array_merge(
             $this->getFilteredSearchCriteria(),
             [
-                self::PARAM_DOB_YEAR => $request->getQuery(self::PARAM_DOB_YEAR),
-                self::PARAM_DOB_MONTH => $request->getQuery(self::PARAM_DOB_MONTH),
-                self::PARAM_DOB_DAY => $request->getQuery(self::PARAM_DOB_DAY),
+                self::PARAM_DOB_YEAR => $request->getPost(self::PARAM_DOB_YEAR),
+                self::PARAM_DOB_MONTH => $request->getPost(self::PARAM_DOB_MONTH),
+                self::PARAM_DOB_DAY => $request->getPost(self::PARAM_DOB_DAY),
             ]
         );
     }
@@ -220,9 +212,9 @@ class UserSearchController extends AbstractDvsaMotTestController
             '-',
             array_filter(
                 [
-                    $request->getQuery(self::PARAM_DOB_YEAR),
-                    $request->getQuery(self::PARAM_DOB_MONTH),
-                    $request->getQuery(self::PARAM_DOB_DAY),
+                    $request->getPost(self::PARAM_DOB_YEAR),
+                    $request->getPost(self::PARAM_DOB_MONTH),
+                    $request->getPost(self::PARAM_DOB_DAY),
                 ],
                 'strlen'
             )
@@ -234,20 +226,20 @@ class UserSearchController extends AbstractDvsaMotTestController
         $valid = true;
 
         if (count($this->getFilteredSearchCriteria()) === 0) {
-            $this->addErrorMessages(self::EXCEPTION_VALIDATION_NO_CRITERIA);
+            $this->validationMessages[] = self::EXCEPTION_VALIDATION_NO_CRITERIA;
             $valid = false;
         } elseif ('' !== $this->getDobSearchCriteria()) {
             try {
                 $date = DateUtils::toDate($this->getDobSearchCriteria());
                 if (DateUtils::isDateInFuture($date)) {
-                    $this->addErrorMessages(self::EXCEPTION_VALIDATION_DOB_DATE_IN_FUTURE);
+                    $this->validationMessages[] = self::EXCEPTION_VALIDATION_DOB_DATE_IN_FUTURE;
                     $valid = false;
                 }
             } catch (NonexistentDateException $e) {
-                $this->addErrorMessages(self::EXCEPTION_VALIDATION_DOB_INVALID_DATE);
+                $this->validationMessages[] = self::EXCEPTION_VALIDATION_DOB_INVALID_DATE;
                 $valid = false;
             } catch (IncorrectDateFormatException $e) {
-                $this->addErrorMessages(self::EXCEPTION_VALIDATION_DOB_INCORRECT_FORMAT);
+                $this->validationMessages[] = self::EXCEPTION_VALIDATION_DOB_INCORRECT_FORMAT;
                 $valid = false;
             }
         }
@@ -279,6 +271,6 @@ class UserSearchController extends AbstractDvsaMotTestController
 
         $this->addInfoMessages($message);
 
-        return $this->redirectToSearchWithQuery();
+        return $this->redirectToSearch($message);
     }
 }

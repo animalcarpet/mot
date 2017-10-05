@@ -3,18 +3,20 @@
 namespace UserAdminTest\Controller;
 
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaClient\Mapper\UserAdminMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\Person\SearchPersonResultDto;
+use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonTest\Bootstrap;
-use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\TestUtils\XMock;
 use UserAdmin\Controller\UserSearchController;
 use UserAdmin\Service\DateOfBirthFilterService;
 use UserAdmin\Service\UserAdminSessionManager;
+use Zend\Mvc\Application;
+use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
-use DvsaCommon\Exception\UnauthorisedException;
 
 /**
  * Class UserSearchControllerTest.
@@ -37,6 +39,11 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
 
         $this->setController(new UserSearchController($this->dateOfBirthFilterService));
         $this->getController()->setServiceLocator($this->serviceManager);
+
+        $pluginManager = new PluginManager();
+        $pluginManager->setController($this->getController());
+        $pluginManager->setServiceLocator($this->getServiceManager());
+        $this->getController()->setPluginManager($pluginManager);
 
         $sessionMock = XMock::of(UserAdminSessionManager::class, ['deleteUserAdminSession']);
         $this->serviceManager->setService(UserAdminSessionManager::class, $sessionMock);
@@ -137,5 +144,15 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
             ->will($this->returnValue([new SearchPersonResultDto($data)]));
 
         return $mapper;
+    }
+
+    public function setControllerHandler($controllerName)
+    {
+        parent::setControllerHandler($controllerName);
+
+        $app = new Application([], $this->getServiceManager());
+        $this->event->setApplication($app);
+
+        return $this;
     }
 }

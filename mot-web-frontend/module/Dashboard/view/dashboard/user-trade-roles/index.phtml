@@ -23,19 +23,8 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $this->
             <li>
                 <?php /** if javascript is enabled clicking this link triggers window.history.back() */ ?>
                 <a class="history-go-back"
-                <?php
-                    echo $userTradeRolesViewModel->getPersonIsViewingOwnProfile() ?
-                        null : 'onclick="window.history.back();return false;"';
-                ?>
-                href="
-                <?php
-                    echo $userTradeRolesViewModel->getPreviousRouteUrl();
-                ?>">
-                <?php
-                    echo $userTradeRolesViewModel->getPersonIsViewingOwnProfile() ?
-                        'Return to your profile' :
-                        'Return to user profile';
-                ?>
+                href="<?php echo $userTradeRolesViewModel->getPreviousRouteUrl(); ?>">
+                <?php echo $userTradeRolesViewModel->getPersonIsViewingOwnProfile() ? 'Return to your profile' : 'Return to user profile'; ?>
                 </a>
             </li>
         </ul>

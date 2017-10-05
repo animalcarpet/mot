@@ -4,6 +4,7 @@ use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use UserAdmin\Controller\UserSearchController;
 
 /**
  * @var \Dashboard\Model\PersonalDetails  $personalDetails
@@ -205,9 +206,22 @@ endif ?>
 
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
-        <?php if ($context === ContextProvider::USER_SEARCH_CONTEXT): ?>
+        <?php if ($context === ContextProvider::USER_SEARCH_CONTEXT && $showReturnToResultsLink == true): ?>
             <li>
-                <a href="<?php echo $this->escapeHtmlAttr($userSearchResultUrl); ?>">Cancel and return to search results</a>
+                <form action="<?php echo $userSearchResultUrl; ?>" method="POST">
+                    <?php echo $this->csrfToken() ?>
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_USERNAME; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_USERNAME]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_FIRSTNAME; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_FIRSTNAME]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_LASTNAME; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_LASTNAME]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_EMAIL; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_EMAIL]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_DOB]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_DAY; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_DOB_DAY]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_MONTH; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_DOB_MONTH]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_YEAR; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_DOB_YEAR]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_TOWN; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_TOWN]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_POSTCODE; ?>" value="<?php echo $userSearchResultData[UserSearchController::PARAM_POSTCODE]; ?>" />
+                    <input type="submit" class="button--link" id="cancelAndReturnToSearchResults" value="Cancel and return to search results" />
+                </form>
             </li>
         <?php endif; ?>
         <li>

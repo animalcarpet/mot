@@ -28,6 +28,7 @@ use DvsaClient\MapperFactory;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use Exception;
+use UserAdmin\Controller\UserSearchController;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\View\Model\ViewModel;
 
@@ -158,9 +159,11 @@ class PersonProfileController extends AbstractAuthActionController
             'routeName' => $routeName,
             'routeParams' => $routeParams,
             'context' => $context,
-            'userSearchResultUrl' => $this->getUserSearchResultUrl(),
+            'userSearchResultUrl' => $this->url()->fromRoute('user_admin/user-search-results'),
+            'userSearchResultData' => $this->getUserSearchResultData(),
             'securityCard' => $securityCard,
             'displayResetAccountError' => $personProfileGuard->canSeeResetAccountByEmailButton(),
+            'showReturnToResultsLink' => $this->showReturnToResultsLink(),
         ]);
     }
 
@@ -469,12 +472,22 @@ class PersonProfileController extends AbstractAuthActionController
     }
 
     /**
-     * @return string|null
+     * @return array
      */
-    private function getUserSearchResultUrl()
+    private function getUserSearchResultData()
     {
-        return $this->url()->fromRoute('user_admin/user-search-results', [],
-            ['query' => $this->getRequest()->getQuery()->toArray()]);
+        return [
+            UserSearchController::PARAM_USERNAME => $this->getRequest()->getPost(UserSearchController::PARAM_USERNAME),
+            UserSearchController::PARAM_FIRSTNAME => $this->getRequest()->getPost(UserSearchController::PARAM_FIRSTNAME),
+            UserSearchController::PARAM_LASTNAME => $this->getRequest()->getPost(UserSearchController::PARAM_LASTNAME),
+            UserSearchController::PARAM_EMAIL => $this->getRequest()->getPost(UserSearchController::PARAM_EMAIL),
+            UserSearchController::PARAM_DOB => $this->getRequest()->getPost(UserSearchController::PARAM_DOB),
+            UserSearchController::PARAM_DOB_YEAR => $this->getRequest()->getPost(UserSearchController::PARAM_DOB_YEAR),
+            UserSearchController::PARAM_DOB_MONTH => $this->getRequest()->getPost(UserSearchController::PARAM_DOB_MONTH),
+            UserSearchController::PARAM_DOB_DAY => $this->getRequest()->getPost(UserSearchController::PARAM_DOB_DAY),
+            UserSearchController::PARAM_TOWN => $this->getRequest()->getPost(UserSearchController::PARAM_TOWN),
+            UserSearchController::PARAM_POSTCODE => $this->getRequest()->getPost(UserSearchController::PARAM_POSTCODE),
+        ];
     }
 
     private function hasActiveSecurityCard($username)
@@ -482,5 +495,16 @@ class PersonProfileController extends AbstractAuthActionController
         $securityCard = $this->securityCardService->getSecurityCardForUser($username);
 
         return $securityCard instanceof SecurityCard && $securityCard->isActive();
+    }
+
+    private function showReturnToResultsLink()
+    {
+        foreach ($this->getUserSearchResultData() as $data) {
+            if ($data != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

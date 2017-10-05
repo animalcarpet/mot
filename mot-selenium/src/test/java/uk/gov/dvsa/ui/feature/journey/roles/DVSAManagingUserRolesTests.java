@@ -177,9 +177,9 @@ public class DVSAManagingUserRolesTests extends DslTest {
         //When I search for user by username and going back to user search form
         UserSearchPage userSearchPage =
                 motUI.searchUser.searchForUserByUsername(vehicleExaminer.getUsername(), UserSearchResultsPage.class)
-                .chooseUser(0)
-                .clickCancelAndReturnToSearchResults()
-                .clickBackToUserSearch();
+                    .chooseUser(0)
+                    .clickCancelAndReturnToSearchResults()
+                    .clickBackToUserSearch();
 
         //Then I should see the user search parameters
         assertThat(userSearchPage.getUserNameFieldValue(), containsString(vehicleExaminer.getUsername()));

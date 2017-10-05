@@ -39,7 +39,7 @@ public class UserProfilePage extends ProfilePage {
     @FindBy(css = "#date-of-birth a") protected WebElement changeDOBLink;
     @FindBy(css = "#email-address") private WebElement userEmail;
     @FindBy(css = "#drivingLicence span") protected WebElement personDrivingLicenceRegion;
-    @FindBy(xpath = "(//*[@class='content-navigation__secondary']//a)[1]") protected WebElement cancelAndReturnToSearchResults;
+    @FindBy(id = "cancelAndReturnToSearchResults") protected WebElement cancelAndReturnToSearchResults;
     @FindBy(css = "#full-address a") private WebElement changeAddressLink;
     private By messageSuccessSelector = By.id("validation-message--success");
     @FindBy(id = "security-card-order") private WebElement orderSecurityCardLink;
