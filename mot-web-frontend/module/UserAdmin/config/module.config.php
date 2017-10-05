@@ -3,7 +3,6 @@
 use UserAdmin\Controller\ChangeQualificationStatusController;
 use UserAdmin\Controller\DemoTestRequestsController;
 use UserAdmin\Controller\RecordDemoTestController;
-use UserAdmin\Controller\UserSearchController;
 use UserAdmin\Factory\Controller\ChangeQualificationStatusControllerFactory;
 use UserAdmin\Factory\Controller\DrivingLicenceControllerFactory;
 use UserAdmin\Factory\Controller\EmailAddressControllerFactory;
@@ -15,9 +14,6 @@ use UserAdmin\Factory\Controller\UserSearchControllerFactory;
 
 return [
     'controllers' => [
-        'invokables' => [
-            UserSearchController::class => UserSearchController::class,
-        ],
         'factories' => [
             ResetAccountClaimByPostControllerFactory::class => ResetAccountClaimByPostControllerFactory::class,
             UserProfileControllerFactory::class => UserProfileControllerFactory::class,

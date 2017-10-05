@@ -1,8 +1,9 @@
 <?php
 /** @var \UserAdmin\ViewModel\UserSearchViewModel $viewModel */
 /** @var string $userProfileRoute */
-/** @var array $resultsQueryArray */
 $this->headTitle('Search results');
+
+use UserAdmin\Controller\UserSearchController;
 
 ?>
 
@@ -19,7 +20,7 @@ $this->headTitle('Search results');
                     'users' => $viewModel->getSearchResult(),
                     'viewModel' => $viewModel,
                     'helper' => $helper,
-                    'resultsQueryArray' => $resultsQueryArray,
+                    'userSearchCriteria' => $userSearchCriteria,
                     'userSearchExtended' => $userSearchExtended,
                 ]
             ); ?>
@@ -30,9 +31,20 @@ $this->headTitle('Search results');
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
         <li>
-            <a href="<?php echo $this->escUserSearchRoute; ?>" id="return_to_user_search">
-                Back to user search
-            </a>
+            <form action="<?php echo $this->url($userSearchRoute); ?>" method="POST">
+                <?php echo $this->csrfToken() ?>
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_USERNAME; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_USERNAME]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_FIRSTNAME; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_FIRSTNAME]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_LASTNAME; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_LASTNAME]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_EMAIL; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_EMAIL]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_DAY; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB_DAY]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_MONTH; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB_MONTH]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_YEAR; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB_YEAR]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_TOWN; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_TOWN]; ?>" />
+                <input type="hidden" name="<?php echo UserSearchController::PARAM_POSTCODE; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_POSTCODE]; ?>" />
+                <input type="submit" id="return_to_user_search" class="button--link" value="Back to user search" />
+            </form>
         </li>
     </ul>
 </nav>

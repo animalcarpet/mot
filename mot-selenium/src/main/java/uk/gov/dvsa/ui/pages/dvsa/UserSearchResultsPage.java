@@ -40,7 +40,7 @@ public class UserSearchResultsPage extends Page {
 
     public List<String> getUserDetails() {
         List<String> userDetails = new ArrayList<>();
-        userDetails.add(searchResults.findElement(By.xpath(".//*[@data-element='result-username']")).getText());
+        userDetails.add(searchResults.findElement(By.xpath(".//*[@data-element='result-username']//input[@class='button--link']")).getAttribute("value"));
         userDetails.add(searchResults.findElement(By.xpath(".//*[@data-element='result-user-address']")).getText());
         userDetails.add(searchResults.findElement(By.xpath(".//*[@data-element='result-user-postcode']")).getText());
         return userDetails;
@@ -51,7 +51,7 @@ public class UserSearchResultsPage extends Page {
     }
 
     private List<WebElement> getResultsList() {
-        return searchResults.findElements(By.cssSelector("a"));
+        return searchResults.findElements(By.cssSelector("input[type='submit']"));
     }
 }
 

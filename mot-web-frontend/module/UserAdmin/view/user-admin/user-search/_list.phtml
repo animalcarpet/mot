@@ -2,7 +2,10 @@
 
 /* @var \UserAdmin\Presenter\PersonPresenter[] $users */
 /* @var string $userProfileRoute */
-/* @var array $resultsQueryArray */
+/* @var array $userSearchCriteria */
+
+use UserAdmin\Controller\UserSearchController;
+
 ?>
 
 <table id="results" class="table">
@@ -23,17 +26,28 @@
     <?php foreach ($users as $user): ?>
         <tr data-element="result-details">
             <td data-element="result-username">
-                <a href="<?php
-                echo $this->url('newProfileUserAdmin',
+
+                <form action="<?php echo $this->url('newProfileUserAdmin',
                         [
                             'id' => $user->getPersonId(),
-                        ],
-                        [
-                            'query' => $resultsQueryArray,
-                        ]
-                    ); ?>">
-                    <?php echo $this->escapeHtml($user->displayFullName()); ?>
-                </a>
+                        ]); ?>" method="POST">
+
+                    <?php echo $this->csrfToken() ?>
+
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_USERNAME; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_USERNAME]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_FIRSTNAME; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_FIRSTNAME]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_LASTNAME; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_LASTNAME]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_EMAIL; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_EMAIL]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_YEAR; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB_YEAR]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_MONTH; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB_MONTH]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_DOB_DAY; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_DOB_DAY]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_TOWN; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_TOWN]; ?>" />
+                    <input type="hidden" name="<?php echo UserSearchController::PARAM_POSTCODE; ?>" value="<?php echo $userSearchCriteria[UserSearchController::PARAM_POSTCODE]; ?>" />
+                    <input type="submit" class="button--link" value="<?php echo $this->escapeHtml($user->displayFullName()); ?>" />
+                </form>
+
+
             </td>
             <?php if ($userSearchExtended): ?>
                 <td data-element="result-user-username"><?php echo $this->escapeHtml($user->displayUsername()); ?></td>
