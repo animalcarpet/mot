@@ -260,10 +260,10 @@ class VehicleService
 
     /**
      * @param Person $person
-     * @param int $vehicleId
-     * @param int $vehicleClassCode
-     * @param int $primaryColourCode
-     * @param int $secondaryColourCode
+     * @param int    $vehicleId
+     * @param int    $vehicleClassCode
+     * @param int    $primaryColourCode
+     * @param int    $secondaryColourCode
      * @param string $fuelTypeCode
      */
     public function logDvlaVehicleImportChanges(
@@ -377,6 +377,10 @@ class VehicleService
             self::DEFAULT_COUNTRY_OF_REGISTRATION
         )->getId();
 
+        $engineNumber = $dvlaVehicle->getEngineNumber() ? $dvlaVehicle->getEngineNumber() : null;
+        $euClassification = $dvlaVehicle->getEuClassification() ? $dvlaVehicle->getEuClassification() : null;
+        $wheelPlanCode = $dvlaVehicle->getWheelPlanCode() ? $dvlaVehicle->getWheelPlanCode() : null;
+
         $dvlaVehicleRequest = new CreateDvlaVehicleRequest();
         $dvlaVehicleRequest->setRegistration($dvlaVehicle->getRegistration())
             ->setId($dvlaVehicle->getId())
@@ -393,7 +397,10 @@ class VehicleService
             ->setCountryOfRegistrationId($countryOfRegistrationId)
             ->setFirstUsedDate($dvlaVehicle->getFirstUsedDate())
             ->setFirstRegistrationDate($dvlaVehicle->getFirstRegistrationDate())
-            ->setIsNewAtFirstReg((bool) $dvlaVehicle->isVehicleNewAtFirstRegistration());
+            ->setIsNewAtFirstReg((bool) $dvlaVehicle->isVehicleNewAtFirstRegistration())
+            ->setEngineNumber($engineNumber)
+            ->setEuClassification($euClassification)
+            ->setWheelPlanCode($wheelPlanCode);
 
         if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
             $dvlaVehicleRequest->setCylinderCapacity($dvlaVehicle->getCylinderCapacity());
@@ -410,13 +417,11 @@ class VehicleService
         $weightAndSource = $this->getVehicleWeight($dvlaVehicle, $vehicleClass);
 
         if ($weightAndSource->hasWeight()) {
-
             $dvlaVehicleRequest->setWeight($weightAndSource->getWeight());
 
             if ($weightAndSource->hasWeightSource()) {
                 $dvlaVehicleRequest->setWeightSourceId($weightAndSource->getWeightSource());
             }
-
         }
 
         return $this->newVehicleService->createVehicleFromDvla($dvlaVehicleRequest);

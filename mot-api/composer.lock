@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2223a383412e789b706bb8ddf7eb5b19",
+    "content-hash": "0d2dc6ad8def146e3d9044b566a5d7ae",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -251,12 +251,6 @@
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
                 "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-queues-1.10.0-p-767e96.tar",
-                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8",
-                "shasum": "4b3538efa34d9d645472a2fc5bdd2eed7578bd80"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -1978,17 +1972,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "16.0.0",
+            "version": "17.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "0fad1f20005c5937e214a984f048a3ef13627d1d"
+                "reference": "16e8ebea9b108d12e1d95e65f9e6c213a389bdff"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-16.0.0-772dde.tar",
-                "reference": "0fad1f20005c5937e214a984f048a3ef13627d1d",
-                "shasum": "2378eb4ec5382cf5e8fb98db30ac98112471e49e"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-17.0.0-7ea666.tar",
+                "reference": "16e8ebea9b108d12e1d95e65f9e6c213a389bdff",
+                "shasum": "a14a55bce6043097376222f78c41c398714a2282"
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.2",
@@ -2035,7 +2029,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "time": "2017-06-21T10:25:53+00:00"
+            "time": "2017-10-09T16:14:20+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",

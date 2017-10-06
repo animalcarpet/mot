@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0ed81634dda8b9af94106b0815f12fc",
+    "content-hash": "c48baccdda098abbad3142f93348f771",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -123,13 +123,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-client.git",
-                "reference": "44035ce941be95d8e563f5408ada64411aef0a7d"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/cpms-client-1.22.3-p-a0eb87.tar",
-                "reference": "44035ce941be95d8e563f5408ada64411aef0a7d",
-                "shasum": "368345a533affdbd17a1701f43b29700cf1c0688"
+                "reference": "a01162b54d2e2f0abaef5f84ba997c5f4fd78430"
             },
             "require": {
                 "zendframework/zendframework": "~2.5.3"
@@ -2165,17 +2159,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "16.0.0",
+            "version": "17.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "0fad1f20005c5937e214a984f048a3ef13627d1d"
+                "reference": "16e8ebea9b108d12e1d95e65f9e6c213a389bdff"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-16.0.0-772dde.tar",
-                "reference": "0fad1f20005c5937e214a984f048a3ef13627d1d",
-                "shasum": "2378eb4ec5382cf5e8fb98db30ac98112471e49e"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-17.0.0-7ea666.tar",
+                "reference": "16e8ebea9b108d12e1d95e65f9e6c213a389bdff",
+                "shasum": "a14a55bce6043097376222f78c41c398714a2282"
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.2",
@@ -2222,7 +2216,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "time": "2017-06-21T10:25:53+00:00"
+            "time": "2017-10-09T16:14:20+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
