@@ -200,6 +200,24 @@ class DvlaVehicle implements VehicleInterface
     private $dvlaVehicleId;
 
     /**
+     * EU Classification Code.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="eu_classification", type="string", length=2, nullable=true)
+     */
+    private $euClassification;
+
+    /**
+     * Wheel Plan Code.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="wheelplan_code", type="string", length=1, nullable=true)
+     */
+    private $wheelPlanCode;
+
+    /**
      * @param string $value body type code
      *
      * @return $this
@@ -733,5 +751,45 @@ class DvlaVehicle implements VehicleInterface
     public function isDvla()
     {
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEuClassification()
+    {
+        return $this->euClassification;
+    }
+
+    /**
+     * @param $euClassification
+     *
+     * @return $this
+     */
+    public function setEuClassification($euClassification)
+    {
+        $this->euClassification = $euClassification;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWheelPlanCode()
+    {
+        return $this->wheelPlanCode;
+    }
+
+    /**
+     * @param $wheelPlanCode
+     *
+     * @return $this
+     */
+    public function setWheelPlanCode($wheelPlanCode)
+    {
+        $this->wheelPlanCode = $wheelPlanCode;
+
+        return $this;
     }
 }
