@@ -53,6 +53,20 @@ class TestItemSelector
      */
     private $descriptions;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_date", type="date", nullable=false)
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_date", type="date", nullable=true)
+     */
+    private $endDate;
+
     public function __construct()
     {
         $this->vehicleClasses = new \Doctrine\Common\Collections\ArrayCollection();
@@ -188,6 +202,46 @@ class TestItemSelector
     public function setDescriptions($descriptions)
     {
         $this->descriptions = $descriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     *
+     * @return $this
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param \DateTime $endDate
+     *
+     * @return $this
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
 
         return $this;
     }

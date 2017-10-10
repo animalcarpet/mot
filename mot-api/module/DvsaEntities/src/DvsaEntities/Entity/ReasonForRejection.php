@@ -5,6 +5,7 @@ namespace DvsaEntities\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
@@ -172,9 +173,24 @@ class ReasonForRejection
     /**
      * @var \DateTime
      *
+     * @ORM\Column(name="start_date", type="date", nullable=false)
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="end_date", type="date", nullable=true)
      */
     private $endDate;
+
+    /**
+     * @var RfrDeficiencyCategory
+     *
+     * @ORM\OneToOne(targetEntity="\DvsaEntities\Entity\RfrDeficiencyCategory", fetch="EAGER")
+     * @ORM\JoinColumn(name="rfr_deficiency_category_id", referencedColumnName="id", nullable=false)
+     */
+    private $rfrDeficiencyCategory;
 
     /**
      * Set rfrId.
@@ -581,6 +597,46 @@ class ReasonForRejection
     /**
      * @return \DateTime
      */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     *
+     * @return $this
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * @return RfrDeficiencyCategory
+     */
+    public function getRfrDeficiencyCategory()
+    {
+        return $this->rfrDeficiencyCategory;
+    }
+
+    /**
+     * @param RfrDeficiencyCategory $rfrDeficiencyCategory
+     *
+     * @return $this
+     */
+    public function setRfrDeficiencyCategory($rfrDeficiencyCategory)
+    {
+        $this->rfrDeficiencyCategory = $rfrDeficiencyCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
     public function getEndDate()
     {
         return $this->endDate;
@@ -611,5 +667,13 @@ class ReasonForRejection
                 return $vehicleClass->getCode() === $currentVehicleClass->getCode();
             }
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPreEuDirective()
+    {
+        return $this->rfrDeficiencyCategory->getCode() == RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE;
     }
 }
