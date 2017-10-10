@@ -7,6 +7,7 @@ use DvsaEntities\Factory\Repository\MotTestingCertificateRepositoryFactory;
 use DvsaEntities\Factory\Repository\AuthorisationForTestingMotRepositoryFactory;
 use DvsaEntities\Factory\Repository\AuthorisationForTestingMotStatusRepositoryFactory;
 use DvsaEntities\Factory\Repository\QualificationAnnualCertificateRepositoryFactory;
+use DvsaEntities\Factory\Repository\RfrDeficiencyCategoryRepositoryFactory;
 use DvsaEntities\Factory\Repository\SiteRiskAssessmentRepositoryFactory;
 use DvsaEntities\Factory\Repository\TqiRfrCountRepositoryFactory;
 use DvsaEntities\Factory\Repository\TqiTestCountRepositoryFactory;
@@ -27,6 +28,7 @@ use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\PhoneContactTypeRepository;
 use DvsaEntities\Repository\QualificationAnnualCertificateRepository;
 use DvsaEntities\Repository\RbacRepository;
+use DvsaEntities\Repository\RfrDeficiencyCategoryRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaEntities\Repository\QualificationAwardRepository;
 use DvsaEntities\Repository\SiteRiskAssessmentRepository;
@@ -67,6 +69,7 @@ return [
             TqiRfrCountRepository::class => TqiRfrCountRepositoryFactory::class,
             TqiTestCountRepository::class => TqiTestCountRepositoryFactory::class,
             NotificationRepository::class => NotificationRepositoryFactory::class,
+            RfrDeficiencyCategoryRepository::class => RfrDeficiencyCategoryRepositoryFactory::class
         ],
     ],
     'doctrine' => [
