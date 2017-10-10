@@ -9,6 +9,7 @@ use Dvsa\OpenAM\OpenAMClientInterface;
 use DvsaCommon\InputFilter\Account\ChangePasswordInputFilter;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\StringUtils;
+use Zend\Validator\NotEmpty;
 
 class ChangePasswordForm extends PasswordForm
 {
@@ -106,6 +107,12 @@ class ChangePasswordForm extends PasswordForm
     public function getElements()
     {
         return parent::getIterator();
+    }
+
+    public function isCurrentPasswordNotEmpty()
+    {
+        $notEmptyValidator = new NotEmpty();
+        return $notEmptyValidator->isValid($this->get(ChangePasswordInputFilter::FIELD_OLD_PASSWORD)->getValue());
     }
 
     private function isCurrentPasswordValid()

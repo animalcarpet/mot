@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Factory\Action;
 
+use Dashboard\Service\PasswordService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsAction;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsSessionService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsStepService;
@@ -20,10 +21,13 @@ class ChangeSecurityQuestionsActionFactory implements FactoryInterface
 
         $passwordValidationService = $serviceLocator->get(PasswordValidationService::class);
 
+        $passwordService = $serviceLocator->get(PasswordService::class);
+
         return new ChangeSecurityQuestionsAction(
             $changeSecurityQuestionsStepService,
             $changeSecurityQuestionsSessionService,
-            $passwordValidationService
+            $passwordValidationService,
+            $passwordService
         );
     }
 }

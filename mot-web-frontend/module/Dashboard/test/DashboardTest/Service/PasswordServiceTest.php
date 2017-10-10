@@ -5,6 +5,8 @@ namespace DashboardTest\Service;
 use Dashboard\Service\PasswordService;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\OpenAM\OpenAMClientInterface;
+use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\InputFilter\Account\ChangePasswordInputFilter;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
@@ -54,6 +56,8 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         return new PasswordService(
             $client,
+            XMock::of(OpenAMClientInterface::class),
+            XMock::of(OpenAMClientOptions::class),
             $this->createIdentityProvider()
         );
     }

@@ -1,0 +1,33 @@
+<?php
+/**
+ * @var \Dashboard\ViewModel\LockoutWarningViewModel $viewModel
+ */
+?>
+<div class="banner--error column-two-thirds">
+    <span class="banner__heading-large"><?php echo $viewModel->getHeading(); ?></span>
+    <span><?php echo  $viewModel->getMessage(); ?></span>
+</div>
+<div class="text">
+
+    <div>
+        <p>
+            Contact the DVSA helpdesk on <strong><?php echo $viewModel->getHelpDeskContact()->getPhoneNumber() ?></strong>
+            if you have forgotten your password and security questions.
+        </p>
+        <p>
+            Opening hours:
+        </p>
+        <p>
+            <ul class="list-bullet">
+                <li><?php echo $viewModel->getHelpDeskContact()->getOpeningHrsWeekdays(); ?></li>
+                <li><?php echo $viewModel->getHelpDeskContact()->getOpeningHrsSaturday(); ?></li>
+                <li><?php echo $viewModel->getHelpDeskContact()->getOpeningHrsSunday(); ?></li>
+            </ul>
+        </p>
+    </div>
+
+    <p>
+        <a href="<?php echo $viewModel->getBackLink() ?>"><?php echo $viewModel->getBackLinkText() ?></a>
+    </p>
+
+</div>

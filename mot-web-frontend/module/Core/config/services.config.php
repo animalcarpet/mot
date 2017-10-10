@@ -24,6 +24,10 @@ use DvsaMotTest\NewVehicle\Form\VehicleWizard\Factory\CreateVehicleFormWizardFac
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\View\Helper\Url;
 use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Http\PhpEnvironment\Response;
+use Core\Factory\ResponseFactory;
+use Zend\Http\PhpEnvironment\Request;
+use Core\Factory\RequestFactory;
 
 return [
     'factories' => [
@@ -41,6 +45,8 @@ return [
         MotEventManager::class => MotEventManagerFactory::class,
         RouteMatch::class => HttpRouteMatchFactory::class,
         FlashMessenger::class => FlashMessengerFactory::class,
+        Response::class => ResponseFactory::class,
+        Request::class => RequestFactory::class,
     ],
     'abstract_factories' => [
         AutoWireFactory::class,

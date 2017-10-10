@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Listener;
 
+use Account\Controller\LockedAccountController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use DvsaApplicationLogger\TokenService\TokenServiceInterface;
@@ -88,6 +89,7 @@ class WebAuthenticationListener
             '@^/survey/[[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/thanks@', // survey/<uuid>/thanks
             '@^/cookies@',
             '@^/privacy-policy@',
+            sprintf('@^/%s@', LockedAccountController::LOCKED_ACCOUNT_ROUTE),
         ];
     }
 }

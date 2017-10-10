@@ -2,8 +2,10 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
 
+use Account\Controller\LockedAccountController;
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
+use Dashboard\Service\PasswordService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Form\ChangeSecurityQuestionsPasswordForm;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsSessionService;
@@ -14,6 +16,7 @@ use Zend\Http\Request;
 
 class ChangeSecurityQuestionsAction
 {
+    const BACK_LINK = 'security-questions-ref';
     const CHANGE_SECURITY_QUESTIONS_START_PAGE_TITLE = 'Change security questions';
     const CHANGE_SECURITY_QUESTIONS_START_PAGE_SUBTITLE = 'Your profile';
     const CHANGE_SECURITY_QUESTIONS_START_TEMPLATE = 'profile/change-security-questions/start';
@@ -24,13 +27,17 @@ class ChangeSecurityQuestionsAction
 
     private $passwordValidationService;
 
+    private $passwordService;
+
     public function __construct(ChangeSecurityQuestionsStepService $changeSecurityQuestionsStepService,
                                 ChangeSecurityQuestionsSessionService $changeSecurityQuestionsSessionService,
-                                PasswordValidationService $passwordValidationService)
+                                PasswordValidationService $passwordValidationService,
+                                PasswordService $passwordService)
     {
         $this->changeSecurityQuestionsStepService = $changeSecurityQuestionsStepService;
         $this->changeSecurityQuestionsSessionService = $changeSecurityQuestionsSessionService;
         $this->passwordValidationService = $passwordValidationService;
+        $this->passwordService = $passwordService;
     }
 
     public function execute(Request $request)
@@ -47,10 +54,14 @@ class ChangeSecurityQuestionsAction
             $form->setData($postData);
 
             if ($form->isValid()) {
-                if ($this->passwordValidationService->isPasswordValid($form->getPassword()->getValue())) {
+                if ($this->passwordValidationService->isPasswordValid($form->getPassword()->getValue())){
                     $this->setUpSession();
-
                     return new RedirectToRoute(ChangeSecurityQuestionOneController::ROUTE);
+                } elseif ($this->passwordService->shouldWarnUserAboutFailedAttempts()) {
+                    return new RedirectToRoute(LockedAccountController::LOCKOUT_WARNING_ROUTE, [],
+                        ['backTo' => self::BACK_LINK]);
+                } elseif ($this->passwordService->isAccountLocked()) {
+                    return new RedirectToRoute(LockedAccountController::SET_COOKIE_AND_LOGOUT);
                 } else {
                     $form->setCustomError($form->getPassword(), $form::MSG_PROBLEM_WITH_PASSWORD);
                     $form->showLabelOnError($form::FIELD_PASSWORD, $form::PASSWORD_LABEL);
