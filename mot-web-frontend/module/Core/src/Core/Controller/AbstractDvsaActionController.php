@@ -326,6 +326,8 @@ abstract class AbstractDvsaActionController extends AbstractActionController
                 $viewModel->setTemplate($result->getTemplate());
             }
 
+            $this->layout()->setVariable('showOrganisationLogo', $result->layout()->getShowOrganisationLogo());
+
             return $viewModel;
         } elseif ($result instanceof RedirectToRoute) {
             return $this->redirect()->toRoute(

@@ -4,6 +4,7 @@ use Account\Controller\ClaimController;
 use Account\Factory\Controller\ClaimAccountControllerFactory;
 use Account\Factory\Controller\PasswordResetControllerFactory;
 use Account\Factory\Controller\SecurityQuestionControllerFactory;
+use Account\Controller\LockedAccountController;
 
 return [
     'router' => [
@@ -86,6 +87,41 @@ return [
                                 'may_terminate' => true,
                             ],
                         ],
+                    ],
+                    'lockout-warning' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => "/lockout-warning",
+                            'defaults' => [
+                                'controller' => LockedAccountController::class,
+                                'action' => 'showLockoutWarning',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'locked' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => "/locked",
+                            'defaults' => [
+                                'controller' => LockedAccountController::class,
+                                'action' => 'showMessage',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'set-cookie' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/set-cookie',
+                                    'defaults' => [
+                                        'controller' => LockedAccountController::class,
+                                        'action' => 'setCookieAndLogout',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ]
                     ],
                 ],
             ],

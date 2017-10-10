@@ -2,6 +2,8 @@
 
 namespace Dashboard\Factory\Service;
 
+use Dvsa\OpenAM\OpenAMClientInterface;
+use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaCommon\HttpRestJson\Client;
@@ -13,6 +15,8 @@ class PasswordServiceFactory implements FactoryInterface
     {
         return new PasswordService(
             $serviceLocator->get(Client::class),
+            $serviceLocator->get(OpenAMClientInterface::class),
+            $serviceLocator->get(OpenAMClientOptions::class),
             $serviceLocator->get('MotIdentityProvider')
         );
     }

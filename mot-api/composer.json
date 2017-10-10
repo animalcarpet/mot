@@ -10,7 +10,7 @@
     "dvsa/dvsa-doctrine-module": "1.2.0",
     "dvsa/dvsa-document-module": "1.4.0",
     "dvsa/feature-toggle": "1.2.0",
-    "dvsa/dvsa-openam-client" : "1.11.0",
+    "dvsa/dvsa-openam-client" : "1.11.1",
     "dvsa/scripts": "2.0.3",
     "dvsa/dvsa-logger": "1.2.0",
     "dvsa/dvsa-application-logger": "2.0.1",

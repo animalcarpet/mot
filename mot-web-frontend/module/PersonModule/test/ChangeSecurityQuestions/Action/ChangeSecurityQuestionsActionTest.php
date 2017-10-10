@@ -4,6 +4,7 @@ namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Action;
 
 use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
+use Dashboard\Service\PasswordService;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsAction;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Form\ChangeSecurityQuestionsPasswordForm;
@@ -32,6 +33,9 @@ class ChangeSecurityQuestionsActionTest extends \PHPUnit_Framework_TestCase
     /** @var PasswordValidationService $passwordValidationService */
     private $passwordValidationService;
 
+    /** @var  PasswordService */
+    private $passwordService;
+
     public function setUp()
     {
         parent::setUp();
@@ -39,6 +43,7 @@ class ChangeSecurityQuestionsActionTest extends \PHPUnit_Framework_TestCase
         $this->changeSecurityQuestionsSessionService = XMock::of(ChangeSecurityQuestionsSessionService::class);
         $this->request = XMock::of(Request::class);
         $this->passwordValidationService = XMock::of(PasswordValidationService::class);
+        $this->passwordService = XMock::of(PasswordService::class);
     }
 
     public function testWhenPost_formValid_passwordValid_shouldRedirectToQuestionOne()
@@ -99,7 +104,8 @@ class ChangeSecurityQuestionsActionTest extends \PHPUnit_Framework_TestCase
         $action = new ChangeSecurityQuestionsAction(
             $this->changeSecurityQuestionsStepService,
             $this->changeSecurityQuestionsSessionService,
-            $this->passwordValidationService
+            $this->passwordValidationService,
+            $this->passwordService
         );
 
         return $action;

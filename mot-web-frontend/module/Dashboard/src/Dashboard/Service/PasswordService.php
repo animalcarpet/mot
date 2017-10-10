@@ -2,6 +2,8 @@
 
 namespace Dashboard\Service;
 
+use Dvsa\OpenAM\OpenAMClientInterface;
+use Dvsa\OpenAM\Options\OpenAMClientOptions;
 use DvsaCommon\InputFilter\Account\ChangePasswordInputFilter;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\HttpRestJson\Client;
@@ -10,15 +12,22 @@ use DvsaCommon\HttpRestJson\Exception\ValidationException;
 
 class PasswordService
 {
-    private $client;
+    private $apiClient;
+
+    private $authClient;
+
+    private $openAMClientOptions;
 
     private $identityProvider;
 
     private $errors = [];
 
-    public function __construct(Client $client, MotFrontendIdentityProviderInterface $identityProvider)
+    public function __construct(Client $apiClient, OpenAMClientInterface $authClient, OpenAMClientOptions $openAMClientOptions,
+                                MotFrontendIdentityProviderInterface $identityProvider)
     {
-        $this->client = $client;
+        $this->apiClient = $apiClient;
+        $this->authClient = $authClient;
+        $this->openAMClientOptions = $openAMClientOptions;
         $this->identityProvider = $identityProvider;
     }
 
@@ -29,7 +38,7 @@ class PasswordService
         $this->errors = [];
 
         try {
-            $this->client->put($url, $data);
+            $this->apiClient->put($url, $data);
             $this->identityProvider->getIdentity()->setPasswordExpired(false);
 
             return true;
@@ -38,6 +47,20 @@ class PasswordService
 
             return false;
         }
+    }
+
+    public function shouldWarnUserAboutFailedAttempts(): bool
+    {
+        $username = $this->identityProvider->getIdentity()->getUsername();
+        return $this->openAMClientOptions->getWarnUserAfterNFailures() ==
+            $this->authClient->getNumberOfFailedAtempts($username);
+    }
+
+    public function isAccountLocked(): bool
+    {
+        $username = $this->identityProvider->getIdentity()->getUsername();
+        return $this->openAMClientOptions->getLoginFailureLockoutCount() ==
+        $this->authClient->getNumberOfFailedAtempts($username);
     }
 
     private function extractErrors(ValidationException $e)

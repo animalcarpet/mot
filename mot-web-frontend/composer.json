@@ -19,7 +19,7 @@
         "soflomo/purifier": "~0.1.1",
         "dvsa/dvsa-document-module": "1.4.0",
         "slot-purchase/web-frontend": "3.9.5",
-        "dvsa/dvsa-openam-client": "1.11.0",
+        "dvsa/dvsa-openam-client": "1.11.1",
         "zendframework/zend-view": "2.7.0"
     },
     "autoload" : {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d2dc6ad8def146e3d9044b566a5d7ae",
+    "content-hash": "c84e156e36f862fe51ceff21dd5e2a84",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -251,6 +251,12 @@
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
                 "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-queues-1.10.0-p-767e96.tar",
+                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8",
+                "shasum": "4b3538efa34d9d645472a2fc5bdd2eed7578bd80"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -1334,17 +1340,17 @@
         },
         {
             "name": "dvsa/dvsa-openam-client",
-            "version": "v1.11.0",
+            "version": "v1.11.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-openam-client.git",
-                "reference": "a34d82814ce620538d5551da12029fb2592d421e"
+                "reference": "4a11c00f1f0598e9ad2a715bbcb35f8e99be04f7"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-openam-client-v1.11.0-b7fbb4.tar",
-                "reference": "a34d82814ce620538d5551da12029fb2592d421e",
-                "shasum": "ffaf1fe1085f84f3bdd057e915b44ebf8c6a681a"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-openam-client-v1.11.1-77da56.tar",
+                "reference": "4a11c00f1f0598e9ad2a715bbcb35f8e99be04f7",
+                "shasum": "a73a4622ee0ca2546e7e5ff62669feefb05db48d"
             },
             "require": {
                 "php": ">=5.5",
@@ -1371,7 +1377,7 @@
                 }
             },
             "description": "JSON mapper used to map objects to/from JSON compatible arrays",
-            "time": "2017-06-02T11:59:24+00:00"
+            "time": "2017-10-10T09:26:53+00:00"
         },
         {
             "name": "dvsa/feature-toggle",

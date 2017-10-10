@@ -12,6 +12,8 @@ class ActionResultLayout
 
     private $pageTertiaryTitle;
 
+    private $showOrganisationLogo;
+
     private $template;
 
     private $breadcrumbs = [];
@@ -85,6 +87,17 @@ class ActionResultLayout
     {
         $this->pageTertiaryTitle = $pageTertiaryTitle;
 
+        return $this;
+    }
+
+    public function getShowOrganisationLogo()
+    {
+        return $this->showOrganisationLogo;
+    }
+
+    public function setShowOrganisationLogo($showOrganisationLogo)
+    {
+        $this->showOrganisationLogo = $showOrganisationLogo;
         return $this;
     }
 }
