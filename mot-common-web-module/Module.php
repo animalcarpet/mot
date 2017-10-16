@@ -2,6 +2,8 @@
 
 namespace DvsaCommon;
 
+use DvsaCommon\Date\RfrCurrentDateFaker;
+use DvsaCommon\Factory\Date\RfrCurrentDateFakerFactory;
 use DvsaCommon\Factory\HttpRestJson\ClientFactory;
 use DvsaCommon\Factory\Validator\UsernameValidatorFactory;
 use DvsaCommon\HttpRestJson\Client;
@@ -59,6 +61,7 @@ class Module implements
                 ParamEncrypter::class => ParamEncrypterFactory::class,
                 ParamObfuscator::class => ParamObfuscatorFactory::class,
                 UsernameValidator::class => UsernameValidatorFactory::class,
+                RfrCurrentDateFaker::class => RfrCurrentDateFakerFactory::class,
             ],
         ];
     }
