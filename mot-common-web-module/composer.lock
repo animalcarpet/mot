@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b37903ff4eab7180cb503723057b652",
+    "content-hash": "84450824fe33ef42c03963dee6ed8204",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -819,17 +819,17 @@
         },
         {
             "name": "dvsa/dvsa-application-logger",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-application-logger.git",
-                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12"
+                "reference": "325f5068a8a52cdbd5fd962a2be768c198965a71"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.1-88e1fe.tar",
-                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12",
-                "shasum": "dacba534ca9ff8eae87f3a3edd839fc6427afde1"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.2-c5c0e8.tar",
+                "reference": "325f5068a8a52cdbd5fd962a2be768c198965a71",
+                "shasum": "166e56728dc62fd76e6a8982b5854c9dec714ed1"
             },
             "require": {
                 "php": ">=5.5",
@@ -865,7 +865,7 @@
                 "logging",
                 "zf2"
             ],
-            "time": "2017-08-10T10:21:32+00:00"
+            "time": "2017-10-12T14:13:43+00:00"
         },
         {
             "name": "dvsa/dvsa-doctrine-module",
@@ -879,7 +879,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-doctrine-module-v1.2.0-424590.tar",
                 "reference": "d39298c571a09359c36842d8fddb73fd26e88aaf",
-                "shasum": "8ea1bf4ab70616af67cb8af290db0f9931705ef7"
+                "shasum": "7a9d050fe612c516fc0e027efd814785e8e79f2d"
             },
             "require": {
                 "doctrine/cache": "~1.6.0",
@@ -915,7 +915,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-document-module-1.4.0-4ad38f.tar",
                 "reference": "1ce351069b604786cecd0454c0d05748ed67165b",
-                "shasum": "8073afa2bfd226f8df82c6678b51ca6c6ae124b8"
+                "shasum": "212deaf7e8b8b39b7eb04f2e0adf150225527f52"
             },
             "require": {
                 "doctrine/doctrine-module": "^1.2.0",
@@ -950,7 +950,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-feature-toggle-v1.2.0-c4dffb.tar",
                 "reference": "4116d4f85dd4b8115f54dc8edc0a0aa829b74f37",
-                "shasum": "f0bdfa50d6a56674e153feb1c18a357424936a80"
+                "shasum": "7cc8a26ba1b363261d10029dd5d472d2033350a1"
             },
             "require": {
                 "php": ">=5.3.3",
@@ -5625,7 +5625,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/zendframework-zendpdf-2.0.2-0d86fd.tar",
                 "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0",
-                "shasum": "674fec40e5290aa80f3448011bfb61aa8a0f661d"
+                "shasum": "a95ffc4ef12c3899edaed01e92e320220903d2cb"
             },
             "require": {
                 "php": ">=5.3.3",
