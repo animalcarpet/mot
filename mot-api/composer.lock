@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c84e156e36f862fe51ceff21dd5e2a84",
+    "content-hash": "b8dd2680f9220abc92d7f336c8b57c3f",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -173,7 +173,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/cpms-client-1.25.5-p-7a4ced.tar",
                 "reference": "45ff33d2d5570cb1c7380a2a1e9d9cdf7ab0f949",
-                "shasum": "25783e002f3cc770cc66d18c5c53922e4b10c14b"
+                "shasum": "7a784ab924bd289b8e0bc4d043c81d429d125af4"
             },
             "require": {
                 "cpms/cpms-notifications": "4.1.2-p",
@@ -217,7 +217,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/cpms-cpms-notifications-4.1.2-p-40d857.tar",
                 "reference": "be38508db370b7e024057bcb97b1831c50b31e8c",
-                "shasum": "4bc8d0bd2724a4de31824d390576782da9c92795"
+                "shasum": "5026d7bd155d83006b4bc8c3cc77245263d5dc11"
             },
             "require": {
                 "cpms/cpms-queues": "1.10.0-p",
@@ -256,7 +256,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/cpms-cpms-queues-1.10.0-p-767e96.tar",
                 "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8",
-                "shasum": "4b3538efa34d9d645472a2fc5bdd2eed7578bd80"
+                "shasum": "67e92a638bdc03c07061442764ed6b9baa5c86e0"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -297,7 +297,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/cpms-shared-reports-v1.22.5-p-2b012d.tar",
                 "reference": "24e195415055f1b294c87f80ce23d8834debedf3",
-                "shasum": "eb5478cb3c2e566d3c5352ae6ac088b7a50885ac"
+                "shasum": "ad58cfe29e9342adf3c292c9d7288fb47b369b88"
             },
             "require": {
                 "cpms/client": "1.25.5-p",
@@ -1168,17 +1168,17 @@
         },
         {
             "name": "dvsa/dvsa-application-logger",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-application-logger.git",
-                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12"
+                "reference": "325f5068a8a52cdbd5fd962a2be768c198965a71"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.1-88e1fe.tar",
-                "reference": "2283ac1e84c21d6c87d38c12d1a2c8f6b5ce5b12",
-                "shasum": "dacba534ca9ff8eae87f3a3edd839fc6427afde1"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v2.0.2-c5c0e8.tar",
+                "reference": "325f5068a8a52cdbd5fd962a2be768c198965a71",
+                "shasum": "166e56728dc62fd76e6a8982b5854c9dec714ed1"
             },
             "require": {
                 "php": ">=5.5",
@@ -1214,7 +1214,7 @@
                 "logging",
                 "zf2"
             ],
-            "time": "2017-08-10T10:21:32+00:00"
+            "time": "2017-10-12T14:13:43+00:00"
         },
         {
             "name": "dvsa/dvsa-doctrine-module",
@@ -1228,7 +1228,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-doctrine-module-v1.2.0-424590.tar",
                 "reference": "d39298c571a09359c36842d8fddb73fd26e88aaf",
-                "shasum": "8ea1bf4ab70616af67cb8af290db0f9931705ef7"
+                "shasum": "7a9d050fe612c516fc0e027efd814785e8e79f2d"
             },
             "require": {
                 "doctrine/cache": "~1.6.0",
@@ -1264,7 +1264,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-document-module-1.4.0-4ad38f.tar",
                 "reference": "1ce351069b604786cecd0454c0d05748ed67165b",
-                "shasum": "8073afa2bfd226f8df82c6678b51ca6c6ae124b8"
+                "shasum": "212deaf7e8b8b39b7eb04f2e0adf150225527f52"
             },
             "require": {
                 "doctrine/doctrine-module": "^1.2.0",
@@ -1299,7 +1299,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-logger-v1.2.0-41fb55.tar",
                 "reference": "680f59a9a7828237f222a75cea68b981dcf486f6",
-                "shasum": "04c3dfe094413dfc0dc4109e0e94ec1542b23f1c"
+                "shasum": "180b69444c706d429f492dfacda143f373312fb8"
             },
             "require": {
                 "doctrine/doctrine-module": "^1.2.0",
@@ -1391,7 +1391,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-feature-toggle-v1.2.0-c4dffb.tar",
                 "reference": "4116d4f85dd4b8115f54dc8edc0a0aa829b74f37",
-                "shasum": "f0bdfa50d6a56674e153feb1c18a357424936a80"
+                "shasum": "7cc8a26ba1b363261d10029dd5d472d2033350a1"
             },
             "require": {
                 "php": ">=5.3.3",
@@ -1426,7 +1426,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-scripts-v2.0.3-f93058.tar",
                 "reference": "936bd13932b4f121150ff78ee23b7438b46cb3a9",
-                "shasum": "18954677b5079c185e020063fcd4743440a7c59d"
+                "shasum": "25a17d448d49a90bd1f40ad28fc7bc074d34d096"
             },
             "type": "library",
             "description": "Shared facility for developer tools, shell scripts, jenkins scripts and anything infrastructure related",
@@ -3692,7 +3692,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v5.0.2-f40b69.tar",
                 "reference": "79b08857697f841721b188d456aab0c0826185fc",
-                "shasum": "4a50778eff8ca77f82013677cb608ce0fed8edc3"
+                "shasum": "d2f1e5f8b259f115d322c12f58d054f98e25bfcb"
             },
             "require": {
                 "cpms/shared-reports": "1.22.5-p",
@@ -7222,7 +7222,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/zendframework-zendpdf-2.0.2-0d86fd.tar",
                 "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0",
-                "shasum": "674fec40e5290aa80f3448011bfb61aa8a0f661d"
+                "shasum": "a95ffc4ef12c3899edaed01e92e320220903d2cb"
             },
             "require": {
                 "php": ">=5.3.3",
