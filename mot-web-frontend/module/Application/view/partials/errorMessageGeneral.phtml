@@ -1,0 +1,10 @@
+<?php if (isset($errorMessages) && count($errorMessages) > 0) : ?>
+    <div class="error-summary">
+        <h2 class="heading-medium error-summary-heading">There was a problem</h2>
+        <ul class="error-summary-list">
+        <?php foreach ($errorMessages as $message): ?>
+            <li><?php echo $message ?></li>
+        <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

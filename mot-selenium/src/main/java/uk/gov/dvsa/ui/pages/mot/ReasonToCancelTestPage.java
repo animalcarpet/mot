@@ -34,7 +34,7 @@ public class ReasonToCancelTestPage extends Page {
     @FindBy(id = "cancelComment")
     private WebElement cancelComment;
 
-    private static final String PAGE_TITLE = "Reasons to cancel test";
+    private static final String PAGE_TITLE = "Cancel test";
     public static final String PATH = "mot-test/%s/cancel";
     private static final String PIN = "123456";
 

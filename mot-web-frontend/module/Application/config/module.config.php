@@ -998,6 +998,8 @@ return [
             'vehicleExaminerDetails' => __DIR__.'/../view/partials/vehicleExaminerDetails.phtml',
             'slots' => __DIR__.'/../view/partials/slots.phtml',
             'errorMessages' => __DIR__.'/../view/partials/errorMessages.phtml',
+            'errorMessageGeneral' => __DIR__.'/../view/partials/errorMessageGeneral.phtml',
+            'errorMessageValidation' => __DIR__.'/../view/partials/errorMessageValidation.phtml',
             'infoMessages' => __DIR__.'/../view/partials/infoMessages.phtml',
             'testItemSelectorSearch' => __DIR__.'/../view/partials/testItemSelectorSearch.phtml',
             'motHeaderDetails' => __DIR__.'/../view/partials/motHeaderDetails.phtml',

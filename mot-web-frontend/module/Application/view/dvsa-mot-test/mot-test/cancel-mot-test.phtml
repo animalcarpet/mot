@@ -3,6 +3,7 @@
 use Application\Helper\PrgHelper;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
+use DvsaMotTest\InputFilter\CancelMotTestInputFilter;
 
 /**
  * @var int                                         $motTestNumber
@@ -16,118 +17,123 @@ $motTestNumber = $this->motTestNumber;
 $selectedReasonId = ($this->selectedReasonId ? $this->selectedReasonId : null);
 $reasonsForCancel = $this->reasonsForCancel;
 $comment = $this->comment;
+$vehicle = $this->vehicle;
+$errorMessages = $this->errorMessages;
+$validationMessages = $this->validationMessages;
 
-$title = 'Cancel MOT test';
+$title = 'Cancel test';
 $this->headTitle($title);
 ?>
 
-<div class="row" id="content">
-    <div class="col-lg-12 header-container">
-        <h1>Reasons to cancel test</h1>
-    </div>
+<header class="content-header">
+    <ul class="content-header__tertiary-list">
+        <li class="content-header__list-item--primary"><?php echo $vehicle->getMakeAndModel(); ?></li>
+        <li class="content-header__list-item"><?php echo $vehicle->getRegistration(); ?></li>
+        <li class="content-header__list-item">First used <?php echo DateTime::createFromFormat('Y-m-d', $vehicle->getFirstUsedDate())->format('j M Y') ?></li>
+    </ul>
+</header>
+
+<div class="text">
+    <p class="lede">Cancel the test if you can't continue.</p>
+    <p>This will produce a certificate for the customer showing the reason for cancelling.</p>
 </div>
 
 <?php
-echo $this->partial('errorMessages', ['getFromFlash' => true]);
-echo $this->partial('infoMessages', ['getFromFlash' => true]);
+    if (isset($errorMessages)) {
+        echo $this->partial('errorMessageGeneral');
+        echo $this->partial('errorMessageValidation');
+    }
 ?>
 
-<div class="row">
-    <div class="col-sm-8">
-        <p class="lead">Please note that the reason for cancelling the test will be displayed on documentation.</p>
-    </div>
-</div>
+
+
+
+<div class="text">
+
+<h2 class="heading-medium">Why are you cancelling the test?</h2>
 
 <form action="<?php echo MotTestUrlBuilderWeb::cancel($motTestNumber); ?>" method="POST">
     <input type="hidden" name="status" value="<?php echo MotTestStatusName::ABORTED; ?>">
     <?php
-    echo $this->csrfToken();
-    echo $this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '';
+        echo $this->csrfToken();
+        echo $this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '';
     ?>
     <fieldset>
-        <legend>Please select a reason for cancelling this test</legend>
-        <div class="form-group">
-            <div>
-                <?php foreach ($reasonsForCancel as $reason) :
-                    $rfcId = $reason->getId();
-                    $selected = ($rfcId == $selectedReasonId);
-                    ?>
+        <legend class="u-space-b15">Choose a reason from the list</legend>
 
-                    <div>
-                        <label>
-                            <input type="radio" id="reasonForCancel<?php echo $this->escapeHtmlAttr($rfcId); ?>"
-                                   value="<?php echo $this->escapeHtmlAttr($rfcId); ?>" name="reasonForCancelId"
-                                   data-abandoned="<?php echo $this->escapeHtmlAttr($reason->getAbandoned()) ?>"
-                                   <?php if ($selected): ?>checked="checked" <?php endif; ?>
-                                >
-                            <?php echo $this->escapeHtml($reason->getReasonInLang()); ?>
-                        </label>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+        <div id="<?= CancelMotTestInputFilter::FIELD_REASON_FOR_CANCEL_ID ?>" class="form-group<?= (isset($validationMessages[CancelMotTestInputFilter::FIELD_REASON_FOR_CANCEL_ID])) ? ' form-group-error':'' ?>">
+            <?php foreach ($reasonsForCancel as $reason) :
+                $rfcId = $reason->getId();
+                $selected = ($rfcId == $selectedReasonId);
+                if ($rfcId == $selectedReasonId) {
+                    $selected = true;
+                } else {
+                    $selected = false;
+                }
+            ?>
 
-            <!-- TODO remove the br element here -->
-            <?php if ($this->canAbandonVehicleTest): ?>
-                <div id="abandonAdditionalInput">
-                    <label for="cancelComment">How might this be dangerous or cause damage?</label><br/>
-                    <textarea rows="5" cols="50" id="cancelComment" name="cancelComment"><?php echo $this->escapeHtml($cancelComment); ?></textarea>
-                    <div class="row">
-                        <div class="col-sm-8">
-
-                            <?php
-                            if ($this->canTestWithoutOtp()) {
-                                echo $this->partial(
-                                    '2faDeclaration',
-                                    [
-                                        'declarationMessage' => 'By cancelling this test you confirm that you '.
-                                            'have carried the MOT test to the point of the cancellation in line '.
-                                            'with DVSA conditions for MOT testing.',
-                                    ]
-                                );
-                            }
-                            ?>
-                            <?php
-                            echo $this->partial(
-                                'otpInput',
-                                [
-                                    'canTestWithoutOpt' => $this->canTestWithoutOtp(),
-                                    'errorMessage' => $this->otpErrorMessage,
-                                    'shortErrorMessage' => $this->otpErrorShortMessage,
-                                ]
-                            );
-                            ?>
-                        </div>
-                    </div>
+                <div class="multiple-choice" data-target="reason<?php echo $rfcId?>">
+                    <input type="radio" id="reasonForCancel<?php echo $this->escapeHtmlAttr($rfcId); ?>"
+                        value="<?php echo $this->escapeHtmlAttr($rfcId); ?>" name="<?= CancelMotTestInputFilter::FIELD_REASON_FOR_CANCEL_ID ?>"
+                        data-abandoned="<?php echo $this->escapeHtmlAttr($reason->getAbandoned()) ?>"
+                       <?php if ($selected): ?>checked="checked" <?php endif; ?>
+                            >
+                    <label for="reasonForCancel<?php echo $this->escapeHtmlAttr($rfcId); ?>">
+                        <?php echo $this->escapeHtml($reason->getReasonInLang()); ?>
+                    </label>
                 </div>
+
+            <?php endforeach; ?>
+
+        </div>
+
+        <div class="form-group js-hidden<?= (isset($validationMessages[CancelMotTestInputFilter::FIELD_CANCEL_COMMENT])) ? ' form-group-error':'' ?>" id="reason21">
+
+            <?php if ($this->canAbandonVehicleTest): ?>
+
+                <label for="<?= CancelMotTestInputFilter::FIELD_CANCEL_COMMENT ?>">How might this be dangerous or cause damage?</label><br/>
+                <textarea rows="5" cols="50" id="<?= CancelMotTestInputFilter::FIELD_CANCEL_COMMENT ?>" name="<?= CancelMotTestInputFilter::FIELD_CANCEL_COMMENT ?>"><?= $this->escapeHtml($cancelComment); ?></textarea>
+
+                <?php if ($this->canTestWithoutOtp()): ?>
+                    <div id="declarationStatement" class="message">
+                        <p>By cancelling this test you confirm that you have carried the MOT test to the point of the cancellation in line with DVSA conditions for MOT testing.</p>
+                    </div>
+                <?php endif; ?>
+
+                <?php
+                    echo $this->partial(
+                        'otpInput',
+                        [
+                            'canTestWithoutOpt' => $this->canTestWithoutOtp(),
+                            'errorMessage' => $this->otpErrorMessage,
+                            'shortErrorMessage' => $this->otpErrorShortMessage,
+                        ]
+                    );
+                ?>
+
             <?php endif; ?>
         </div>
 
-
-        <nav class="module-content-navigation">
-            <input type="submit" id="mot_test_cancel_confirm" value="Confirm and cancel test" class="button-warning"/>
-            <ul class="content-navigation_secondary">
+        <nav class="content-navigation">
+            <input type="submit" id="mot_test_cancel_confirm" value="Cancel test" class="button-warning"/>
+            <ul class="content-navigation__secondary">
                 <li>
-                    <a href="<?php echo MotTestUrlBuilderWeb::motTest($motTestNumber); ?>" id="returnToMotTest"
-                        >Return to test</a>
+                    <a href="<?php echo MotTestUrlBuilderWeb::motTest($motTestNumber); ?>" id="returnToMotTest">Return to MOT test results</a>
                 </li>
             </ul>
         </nav>
+
     </fieldset>
 </form>
 
+</div>
+
+<?php
+    $this->headScript()->appendFile('/assets/javascripts/govuk/show-hide-content.js');
+?>
 <?php $this->inlineScript()->captureStart(); ?> 
-(function() {
-    var toggleAbandonedInfo = function toggleAbandonedInfo(e) {
-        var el = e.target || e,
-            $el = $(el),
-            abandoned = $el.data('abandoned'),
-            checked = $el.is(':checked'),
-            displayAdditionalInfo = (abandoned === 1 && checked);
-
-        $("#abandonAdditionalInput").toggle(displayAdditionalInfo);
-    };
-
-    $("[data-abandoned]").change(toggleAbandonedInfo);
-    toggleAbandonedInfo('[data-abandoned=1]');
-}());
+$(document).ready(function () {
+    var showHideContent = new GOVUK.ShowHideContent();
+    showHideContent.init();
+});
 <?php $this->inlineScript()->captureEnd();
