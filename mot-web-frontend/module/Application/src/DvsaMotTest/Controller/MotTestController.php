@@ -44,6 +44,8 @@ use DvsaCommon\Validation\ValidationException;
 use DvsaCommon\Validation\ValidationResult;
 use DvsaCommonApi\Service\Exception\UnauthenticatedException;
 use DvsaMotTest\Dto\MotPrintModelDto;
+use DvsaMotTest\Form\Validator\CancelMotTestValidator;
+use DvsaMotTest\InputFilter\CancelMotTestInputFilter;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
 use DvsaMotTest\View\Model\MotPrintModel;
@@ -505,6 +507,8 @@ class MotTestController extends AbstractDvsaMotTestController
         $otpErrorData = null;
         $selectedReasonId = null;
         $cancelComment = null;
+        $validationMessages = null;
+        $errorMessages = [];
         $reasonsForCancel = $this->getCatalogService()->getData()['reasonsForCancel'];
         $reasonsForCancel = $this->removeNotDisplayableReasons($reasonsForCancel);
 
@@ -514,26 +518,34 @@ class MotTestController extends AbstractDvsaMotTestController
         }
 
         if ($request->isPost()) {
+            $data = $request->getPost()->toArray();
+            $data['clientIp'] = $this->getClientIp();
+            $selectedReasonId = ArrayUtils::tryGet($data, 'reasonForCancelId');
+            $cancelComment = ArrayUtils::tryGet($data, 'cancelComment');
+
+            $inputFilter = new CancelMotTestInputFilter();
+            $inputFilter->setData($data);
+
+            if (!$inputFilter->isCommentFieldRequired()) {
+                $inputFilter->setValidationGroup(CancelMotTestInputFilter::FIELD_REASON_FOR_CANCEL_ID);
+            }
+
             $urlFinish = MotTestUrlBuilderWeb::cancelled($motTestNumber);
             $prgHelper->setRedirectUrl($urlFinish->toString());
 
-            try {
-                $data = $request->getPost()->toArray();
-                $data['clientIp'] = $this->getClientIp();
-                $selectedReasonId = ArrayUtils::tryGet($data, 'reasonForCancelId');
-                $cancelComment = ArrayUtils::tryGet($data, 'cancelComment');
-
-                $apiUrl = MotTestUrlBuilder::motTestStatus($motTestNumber)->toString();
-                $this->getRestClient()->post($apiUrl, $data);
-
-                return $this->redirect()->toUrl($urlFinish);
-            } catch (OtpApplicationException $e) {
-                $this->addErrorMessages($e->getDisplayMessages());
-                $otpErrorData = $e->getErrorData();
-            } catch (RestApplicationException $e) {
-                $this->addErrorMessages($e->getDisplayMessages());
+            if ($inputFilter->isValid($data)) {
+                $this->sendCancelMotTestAPIRequest($errorMessages, $otpErrorData, $urlFinish, $motTestNumber, $data);
+            } else {
+                $validationMessages = $inputFilter->getMessages();
             }
         }
+
+        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+
+        $this->layout('layout/layout-govuk.phtml');
+        $this->layout()->setVariable('pageTitle', 'Cancel test');
+
+        $errorMessages = array_unique(array_filter($errorMessages));
 
         return new ViewModel(
             [
@@ -542,13 +554,37 @@ class MotTestController extends AbstractDvsaMotTestController
                 'reasonsForCancel' => $reasonsForCancel,
                 'selectedReasonId' => $selectedReasonId,
                 'cancelComment' => $cancelComment,
+                'errorMessages' => $errorMessages,
+                'validationMessages' => $validationMessages,
                 'canTestWithoutOtp' => $this->canTestWithoutOtp(),
                 'otpErrorData' => $otpErrorData,
                 'canAbandonVehicleTest' => $canAbandonVehicleTest,
                 'prgHelper' => $prgHelper,
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
+                'vehicle' => $vehicle,
             ]
         );
+    }
+
+    /**
+     * @param $errorMessages
+     * @param $otpErrorData
+     * @param $prgHelper
+     * @param $motTestNumber
+     * @param $data
+     */
+    private function sendCancelMotTestAPIRequest(&$errorMessages, &$otpErrorData, $urlFinish, $motTestNumber, $data)
+    {
+        try {
+            $apiUrl = MotTestUrlBuilder::motTestStatus($motTestNumber)->toString();
+            $this->getRestClient()->post($apiUrl, $data);
+            $this->redirect()->toUrl($urlFinish);
+        } catch (OtpApplicationException $e) {
+            $errorMessages = $e->getDisplayMessages();
+            $otpErrorData = $e->getErrorData();
+        } catch (RestApplicationException $e) {
+            $errorMessages = $e->getDisplayMessages();
+        }
     }
 
     /**

@@ -1,0 +1,10 @@
+<?php if (isset($validationMessages) && count($validationMessages) > 0): ?>
+    <div class="error-summary">
+        <h2 class="heading-medium error-summary-heading">There was a problem</h2>
+        <ul class="error-summary-list">
+            <?php foreach ($validationMessages as $element => $message): ?>
+                <li><a href="#<?php echo $element ?>"><?php echo array_values($message)[0] ?></a></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

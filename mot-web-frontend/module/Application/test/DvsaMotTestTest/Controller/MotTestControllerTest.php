@@ -534,7 +534,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         //  --  request & check    --
         $postParams = [
             'status' => $status,
-            'reasonForCancel' => $reasonForCancel,
+            'reasonForCancelId' => $reasonForCancel,
         ];
 
         $this->getResultForAction2('post', 'cancelMotTest', ['motTestNumber' => $motTestNumber], null, $postParams);
@@ -561,7 +561,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         //  --  request & check    --
         $postParams = [
             'status' => $status,
-            'reasonForCancel' => $reasonForCancel,
+            'reasonForCancelId' => $reasonForCancel,
             'oneTimePassword' => $oneTimePassword,
         ];
 
