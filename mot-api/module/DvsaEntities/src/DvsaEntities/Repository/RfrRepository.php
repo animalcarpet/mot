@@ -8,7 +8,7 @@ use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaEntities\Entity\ReasonForRejectionDescription;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
-
+use DvsaCommon\Date\RfrCurrentDateFaker;
 /**
  * A repository for Reasons For Rejection related functionality.
  *
@@ -19,9 +19,13 @@ class RfrRepository
     /** @var EntityManager */
     private $em;
 
-    public function __construct(EntityManager $em)
+    /** @var  RfrCurrentDateFaker */
+    private $rfrCurrentDateFaker;
+
+    public function __construct(EntityManager $em, RfrCurrentDateFaker $rfrCurrentDateFaker)
     {
         $this->em = $em;
+        $this->rfrCurrentDateFaker = $rfrCurrentDateFaker;
     }
 
     /**
@@ -49,7 +53,8 @@ class RfrRepository
                     JOIN `language_type` parentCategoryLanguage
                  	  ON parentCategoryDescription.`language_lookup_id`= parentCategoryLanguage.id
                     WHERE vClass.code = :vehicleClassCode
-                    AND (rfr.end_date is null or rfr.end_date > CURRENT_DATE)
+                    AND (rfr.end_date is null or rfr.end_date > :currentDate)
+                    AND rfr.start_date <= :currentDate
                     AND categoryLanguage.code = :languageCode
                     AND parentCategoryLanguage.code = :languageCode
                 ',
@@ -59,6 +64,7 @@ class RfrRepository
             )
             ->setParameter('vehicleClassCode', $vehicleClassCode)
             ->setParameter('languageCode', LanguageTypeCode::ENGLISH)
+            ->setParameter('currentDate', $this->rfrCurrentDateFaker->getCurrentDateTime())
             ->getResult();
 
         return $data;
@@ -84,13 +90,15 @@ class RfrRepository
                 WHERE tRfr.testItemSelectorId = ?1
                     AND vc.code = ?2
                     AND (tRfr.audience = ?3 OR tRfr.audience = \'b\')
-                    AND (tRfr.endDate is null or tRfr.endDate > CURRENT_DATE())
+                    AND (tRfr.endDate is null or tRfr.endDate > :currentDate)
+                    AND tRfr.startDate <= :currentDate
                     AND tRfr.specProc = 0
                 '
             )
             ->setParameter(1, $id)
             ->setParameter(2, $vehicleClass)
             ->setParameter(3, $role)
+            ->setParameter('currentDate', $this->rfrCurrentDateFaker->getCurrentDateTime())
             ->getResult();
     }
 
@@ -160,7 +168,8 @@ class RfrRepository
                         OR rfr.id LIKE :likeSearchParam
                     )
                     AND rfr.spec_proc = 0
-                    AND (rfr.end_date IS NULL OR rfr.end_date > CURRENT_DATE)
+                    AND (rfr.end_date IS NULL OR rfr.end_date > :currentDate)
+                    AND rfr.start_date <= :currentDate
                     AND lang.code = :languageCode
                 ORDER BY rank DESC, rfr.inspection_manual_reference ASC LIMIT :limitStart, :limitEnd
                 ',
@@ -173,6 +182,7 @@ class RfrRepository
             ->setParameter('limitStart', $start)
             ->setParameter('limitEnd', $end)
             ->setParameter('languageCode', LanguageTypeCode::ENGLISH)
+            ->setParameter('currentDate', $this->rfrCurrentDateFaker->getCurrentDateTime())
             ->getResult();
     }
 
