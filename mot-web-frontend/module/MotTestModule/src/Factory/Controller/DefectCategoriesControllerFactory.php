@@ -8,6 +8,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Factory\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\DefectCategoriesController;
+use Dvsa\Mot\Frontend\MotTestModule\Service\RfrCache;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use DvsaAuthorisation\Service\AuthorisationService;
 use Zend\ServiceManager\FactoryInterface;
@@ -30,11 +31,11 @@ class DefectCategoriesControllerFactory implements FactoryInterface
 
         /** @var AuthorisationService $authorisationService */
         $authorisationService = $mainServiceManager->get('AuthorisationService');
-        /**
-         * @var DefectsContentBreadcrumbsBuilder
-         */
+        /** @var DefectsContentBreadcrumbsBuilder $breadcrumbsBuilder */
         $breadcrumbsBuilder = $mainServiceManager->get(DefectsContentBreadcrumbsBuilder::class);
+        /** @var RfrCache $rfrCache */
+        $rfrCache = $mainServiceManager->get(RfrCache::class);
 
-        return new DefectCategoriesController($authorisationService, $breadcrumbsBuilder);
+        return new DefectCategoriesController($authorisationService, $breadcrumbsBuilder, $rfrCache);
     }
 }

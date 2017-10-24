@@ -9,6 +9,8 @@ namespace Dvsa\Mot\Frontend\MotTestModuleTest\Factory;
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\DefectCategoriesController;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Controller\DefectCategoriesControllerFactory;
+use Dvsa\Mot\Frontend\MotTestModule\Factory\Service\RfrCacheFactory;
+use Dvsa\Mot\Frontend\MotTestModule\Service\RfrCache;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
@@ -23,6 +25,7 @@ class DefectCategoriesControllerFactoryTest extends \PHPUnit_Framework_TestCase
             [
                 'AuthorisationService' => MotAuthorisationServiceInterface::class,
                 DefectsContentBreadcrumbsBuilder::class => DefectsContentBreadcrumbsBuilder::class,
+                RfrCache::class => RfrCache::class
             ]
         );
     }
