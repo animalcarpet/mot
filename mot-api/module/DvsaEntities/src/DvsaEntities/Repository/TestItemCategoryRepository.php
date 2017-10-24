@@ -5,6 +5,7 @@ namespace DvsaEntities\Repository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
+use DvsaCommon\Date\RfrCurrentDateFaker;
 use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaEntities\Entity\Language;
 use DvsaEntities\Entity\TestItemCategoryDescription;
@@ -20,11 +21,15 @@ class TestItemCategoryRepository extends EntityRepository
     /** @var EntityManager $entityManager */
     private $entityManager;
 
+    /** @var RfrCurrentDateFaker $rfrCurrentDateFaker */
+    private $rfrCurrentDateFaker;
+
     const SPECIAL_PROCESSING_SELECTOR_FORMAT = '%(sp)';
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, RfrCurrentDateFaker $rfrCurrentDateFaker)
     {
         $this->entityManager = $entityManager;
+        $this->rfrCurrentDateFaker = $rfrCurrentDateFaker;
     }
 
     /**
@@ -96,7 +101,10 @@ class TestItemCategoryRepository extends EntityRepository
             JOIN ti_category_language_content_map cat_l ON cat_l.test_item_category_id = cat.`id`
             JOIN language_type cat_l_lang ON cat_l_lang.id = cat_l.`language_lookup_id`
             WHERE cat.`parent_test_item_category_id` = :parentId
-            AND (rfr.`end_date` IS NULL OR rfr.`end_date` > CURRENT_DATE)
+            AND (rfr.`start_date` IS NULL OR rfr.`start_date` <= :currentDate)
+            AND (rfr.`end_date` IS NULL OR rfr.`end_date` > :currentDate)
+            AND cat.`start_date` <= :currentDate
+            AND (cat.`end_date` IS NULL OR cat.`end_date` > :currentDate)
             AND vclass.code = :vehicleClassCode
             AND cat_l_lang.code = :languageCode
             AND cat_l.name NOT LIKE :specialProc
@@ -113,6 +121,7 @@ SQL;
             ->setParameter('vehicleClassCode', $vehicleClass)
             ->setParameter('specialProc', self::SPECIAL_PROCESSING_SELECTOR_FORMAT)
             ->setParameter('languageCode', LanguageTypeCode::ENGLISH)
+            ->setParameter('currentDate', $this->rfrCurrentDateFaker->getCurrentDateTime())
             ->getResult();
     }
 

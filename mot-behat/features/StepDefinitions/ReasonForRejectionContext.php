@@ -2,13 +2,9 @@
 
 use Behat\Behat\Context\Context;
 use PHPUnit_Framework_Assert as PHPUnit;
-use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Data\ReasonForRejectionData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
-use DvsaCommon\Enum\VehicleClassCode;
 use Zend\Http\Response as HttpResponse;
 
 class ReasonForRejectionContext implements Context
@@ -23,8 +19,7 @@ class ReasonForRejectionContext implements Context
         ReasonForRejectionData $reasonForRejectionData,
         UserData $userData,
         MotTestData $motTestData
-    )
-    {
+    ) {
         $this->reasonForRejectionData = $reasonForRejectionData;
         $this->userData = $userData;
         $this->motTestData = $motTestData;
@@ -57,6 +52,46 @@ class ReasonForRejectionContext implements Context
     }
 
     /**
+     * @Then the new start-dated defect :category is available to use
+     */
+    public function theNewStartDatedDefectIsAvailableToUse($category)
+    {
+        $this->reasonForRejectionData->listTestItemSelectors($this->motTestData->getLast());
+        $response = $this->reasonForRejectionData->getLastResponse();
+        $body = $response->getBody()->getData();
+        $testItemSelectors = $body[0]['testItemSelectors'];
+
+        $foundItemSelector = false;
+        foreach ($testItemSelectors as $itemSelector) {
+            if ($itemSelector['name'] == $category) {
+                $foundItemSelector = true;
+            }
+        }
+
+        PHPUnit::assertTrue($foundItemSelector, "Category of $category not found in Item Selectors");
+    }
+
+    /**
+     * @Then the end-dated defect :category is not available to use
+     */
+    public function theEndDatedDefectIsNotAvailableToUse($category)
+    {
+        $this->reasonForRejectionData->listTestItemSelectors($this->motTestData->getLast());
+        $response = $this->reasonForRejectionData->getLastResponse();
+        $body = $response->getBody()->getData();
+        $testItemSelectors = $body[0]['testItemSelectors'];
+
+        $foundItemSelector = false;
+        foreach ($testItemSelectors as $itemSelector) {
+            if ($itemSelector['name'] == $category) {
+                $foundItemSelector = true;
+            }
+        }
+
+        PHPUnit::assertFalse($foundItemSelector, "Category of $category was found in Item Selectors");
+    }
+
+    /**
      * @Given /^I can add PRS to test$/
      */
     public function iCanAddPRSToTest()
@@ -66,7 +101,7 @@ class ReasonForRejectionContext implements Context
             $this->motTestData->getLast()
         );
 
-        $response =$this->reasonForRejectionData->getLastResponse();
+        $response = $this->reasonForRejectionData->getLastResponse();
 
         PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
@@ -100,4 +135,5 @@ class ReasonForRejectionContext implements Context
             $this->reasonForRejectionData->getLastResponse()->getBody()->getData()
         );
     }
+
 }
