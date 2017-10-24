@@ -43,6 +43,8 @@ class DefectDtoBuilder
         $defectDto->setAdvisory($reasonForRejection->getIsAdvisory());
         $defectDto->setPrs($reasonForRejection->getIsPrsFail());
         $defectDto->setFailure(!$reasonForRejection->getIsAdvisory() && !$reasonForRejection->getIsPrsFail());
+        $defectDto->setDeficiencyCategoryCode($reasonForRejection->getRfrDeficiencyCategoryCode());
+        $defectDto->setPreEuDirective($reasonForRejection->isPreEuDirective());
 
         return $defectDto;
     }

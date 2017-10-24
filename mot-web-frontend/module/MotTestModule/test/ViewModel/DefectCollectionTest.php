@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 
 class DefectCollectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -101,6 +102,8 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
                             'isAdvisory' => true,
                             'isPrsFail' => false,
                             'canBeDangerous' => true,
+                            'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                            'isPreEuDirective' => true,
                         ],
                     ],
                 ],
@@ -132,6 +135,8 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
                             'isAdvisory' => true,
                             'isPrsFail' => false,
                             'canBeDangerous' => false,
+                            'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                            'isPreEuDirective' => true,
                             'audience' => 'b',
                             'endDate' => null,
                             'vehicleClasses' => [],

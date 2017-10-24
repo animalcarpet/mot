@@ -69,7 +69,9 @@ class DefectCollection extends ArrayCollection
                   : '',
                 $defectFromApi['isAdvisory'],
                 $defectFromApi['isPrsFail'],
-                !$defectFromApi['isPrsFail'] && !$defectFromApi['isAdvisory']
+                !$defectFromApi['isPrsFail'] && !$defectFromApi['isAdvisory'],
+                $defectFromApi['deficiencyCategoryCode'],
+                $defectFromApi['isPreEuDirective']
             );
 
             array_push($defects, $defect);
@@ -86,7 +88,6 @@ class DefectCollection extends ArrayCollection
     public static function fromSearchResults(array $searchResults)
     {
         $defects = [];
-
         foreach ($searchResults['data']['reasonsForRejection'] as $searchResult) {
             $defect = new Defect(
                 $searchResult['rfrId'],
@@ -103,7 +104,9 @@ class DefectCollection extends ArrayCollection
                     : '',
                 $searchResult['isAdvisory'],
                 $searchResult['isPrsFail'],
-                !$searchResult['isPrsFail'] && !$searchResult['isAdvisory']
+                !$searchResult['isPrsFail'] && !$searchResult['isAdvisory'],
+                $searchResult['deficiencyCategoryCode'],
+                $searchResult['isPreEuDirective']
             );
 
             array_push($defects, $defect);

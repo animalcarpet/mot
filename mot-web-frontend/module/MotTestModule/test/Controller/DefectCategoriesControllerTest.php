@@ -12,6 +12,7 @@ use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTestTest\TestHelper\Fixture;
@@ -356,6 +357,8 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
                         'isAdvisory' => true,
                         'isPrsFail' => false,
                         'canBeDangerous' => true,
+                        'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                        'isPreEuDirective' => true,
                     ],
                 ],
             ],

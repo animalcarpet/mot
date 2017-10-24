@@ -55,7 +55,9 @@
       "failureTextCy" : "advisorycy",
       "testItemSelectorId" : 1,
       "inspectionManualReference" : "inspectionManualReference",
-      "markedAsRepaired" : false
+      "markedAsRepaired" : false,
+      "deficiencyCategoryCode" : "PE",
+      "preEuDirective" : true
     } ]
   },
   "status" : "ACTIVE",

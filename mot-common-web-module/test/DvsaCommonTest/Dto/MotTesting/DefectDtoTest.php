@@ -8,7 +8,9 @@
 namespace DvsaCommonTest\Dto\MotTesting;
 
 use DvsaCommon\Dto\MotTesting\DefectDto;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommonTest\Dto\AbstractDtoTester;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 use JsonSerializable;
 
 class DefectDtoTest extends AbstractDtoTester
@@ -27,6 +29,7 @@ class DefectDtoTest extends AbstractDtoTester
         $dto->setAdvisory(true);
         $dto->setPrs(false);
         $dto->setFailure(false);
+        $dto->setDeficiencyCategoryCode(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
 
         $this->assertInstanceOf(JsonSerializable::class, $dto);
 
@@ -39,6 +42,7 @@ class DefectDtoTest extends AbstractDtoTester
         $this->assertEquals(true, $serializableData['advisory']);
         $this->assertEquals(false, $serializableData['prs']);
         $this->assertEquals(false, $serializableData['failure']);
+        $this->assertEquals(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, $serializableData['deficiencyCategoryCode']);
 
         $jsonData = json_encode($dto);
         $this->assertInternalType('string', $jsonData);
@@ -52,35 +56,6 @@ class DefectDtoTest extends AbstractDtoTester
         $this->assertEquals(true, $fromJson['advisory']);
         $this->assertEquals(false, $fromJson['prs']);
         $this->assertEquals(false, $fromJson['failure']);
-    }
-
-    public function testIsJsonSerializableWithEmptyData()
-    {
-        $dto = new DefectDto();
-
-        $this->assertInstanceOf(JsonSerializable::class, $dto);
-
-        $serializableData = $dto->jsonSerialize();
-        $this->assertEquals(null, $serializableData['id']);
-        $this->assertEquals(null, $serializableData['parentCategoryId']);
-        $this->assertEquals(null, $serializableData['description']);
-        $this->assertEquals(null, $serializableData['advisoryText']);
-        $this->assertEquals(null, $serializableData['inspectionManualReference']);
-        $this->assertEquals(null, $serializableData['advisory']);
-        $this->assertEquals(null, $serializableData['prs']);
-        $this->assertEquals(null, $serializableData['failure']);
-
-        $jsonData = json_encode($dto);
-        $this->assertInternalType('string', $jsonData);
-
-        $fromJson = json_decode($jsonData, true);
-        $this->assertEquals(null, $fromJson['id']);
-        $this->assertEquals(null, $fromJson['parentCategoryId']);
-        $this->assertEquals(null, $fromJson['description']);
-        $this->assertEquals(null, $fromJson['advisoryText']);
-        $this->assertEquals(null, $fromJson['inspectionManualReference']);
-        $this->assertEquals(null, $fromJson['advisory']);
-        $this->assertEquals(null, $fromJson['prs']);
-        $this->assertEquals(null, $fromJson['failure']);
+        $this->assertEquals(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, $fromJson['deficiencyCategoryCode']);
     }
 }

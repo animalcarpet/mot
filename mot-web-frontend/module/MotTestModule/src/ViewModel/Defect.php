@@ -8,6 +8,8 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 use DvsaCommon\Dto\MotTesting\DefectDto;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 
 class Defect
 {
@@ -57,6 +59,16 @@ class Defect
     private $failure;
 
     /**
+     * @var String
+     */
+    private $deficiencyCategoryCode;
+
+    /**
+     * @var bool
+     */
+    private $preEuDirective;
+
+    /**
      * @var string
      */
     private $inspectionManualReferenceUrl;
@@ -73,6 +85,8 @@ class Defect
      * @param bool   $isAdvisory
      * @param bool   $isPrs
      * @param bool   $isFailure
+     * @param String $deficiencyCategoryCode
+     * @param bool   $isPreEuDirective
      */
     public function __construct(
         $defectId,
@@ -83,7 +97,9 @@ class Defect
         $inspectionManualReference,
         $isAdvisory,
         $isPrs,
-        $isFailure
+        $isFailure,
+        $deficiencyCategoryCode,
+        $isPreEuDirective
     ) {
         $this->defectId = $defectId;
         $this->parentCategoryId = $parentCategoryId;
@@ -94,6 +110,8 @@ class Defect
         $this->advisory = $isAdvisory;
         $this->prs = $isPrs;
         $this->failure = $isFailure;
+        $this->deficiencyCategoryCode = $deficiencyCategoryCode;
+        $this->preEuDirective = $isPreEuDirective;
     }
 
     /**
@@ -112,6 +130,8 @@ class Defect
         $isAdvisory = $data->isAdvisory();
         $isPrs = $data->isPrs();
         $isFailure = $data->isFailure();
+        $deficiencyCategoryCode = $data->getDeficiencyCategoryCode();
+        $isPreEuDirective = $data->isPreEuDirective();
 
         return new self(
             $defectId,
@@ -122,7 +142,9 @@ class Defect
             $inspectionManualReference,
             $isAdvisory,
             $isPrs,
-            $isFailure
+            $isFailure,
+            $deficiencyCategoryCode,
+            $isPreEuDirective
         );
     }
 
@@ -207,6 +229,22 @@ class Defect
     }
 
     /**
+     * @return String
+     */
+    public function getDeficiencyCategoryCode()
+    {
+        return $this->deficiencyCategoryCode;
+    }
+
+    /**
+     * @param String $deficiencyCategoryCode
+     */
+    public function setDeficiencyCategoryCode($deficiencyCategoryCode)
+    {
+        $this->deficiencyCategoryCode = $deficiencyCategoryCode;
+    }
+
+    /**
      * @param string $inspectionManualReferenceUrl
      */
     public function setInspectionManualReferenceUrl($inspectionManualReferenceUrl)
@@ -220,5 +258,21 @@ class Defect
     public function getInspectionManualReferenceUrl()
     {
         return $this->inspectionManualReferenceUrl;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPreEuDirective()
+    {
+        return $this->preEuDirective;
+    }
+
+    /**
+     * @param boolean $preEuDirective
+     */
+    public function setPreEuDirective($preEuDirective)
+    {
+        $this->preEuDirective = $preEuDirective;
     }
 }

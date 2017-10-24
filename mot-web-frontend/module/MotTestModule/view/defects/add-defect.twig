@@ -55,11 +55,13 @@
         <textarea type="text" name="comment" id="comment" class="form-control"></textarea>
     </div>
 
-    <div class="form-group">
-        <label class="block-label" for="failureDangerous">
-            <input type="checkbox" value="1" name="failureDangerous" id="failureDangerous">This defect is dangerous
-        </label>
-    </div>
+    {% if isPreEuDirective == true %}
+        <div class="form-group">
+            <label class="block-label" for="failureDangerous">
+                <input type="checkbox" value="1" name="failureDangerous" id="failureDangerous">This defect is dangerous
+            </label>
+        </div>
+    {% endif %}
 
     <nav class="content-navigation">
         <input type="hidden" name="confirmDetailPage" value="">

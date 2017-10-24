@@ -84,6 +84,7 @@ class EditDefectController extends AbstractDvsaMotTestController
         $errorMessages = [];
         $type = '';
         $identifiedDefect = null;
+        $isPreEuDirective = false;
 
         $backUrl = $this->defectsJourneyUrlGenerator->goBack();
 
@@ -99,6 +100,7 @@ class EditDefectController extends AbstractDvsaMotTestController
             $this->layout()->setVariable('pageTertiaryTitle', $identifiedDefect->getName());
 
             $request = $this->getRequest();
+            $isPreEuDirective = $identifiedDefect->isPreEuDirective();
             if ($request->isPost()) {
                 $apiPath = MotTestUrlBuilder::motTestRfr($motTest->getMotTestNumber());
 
@@ -149,6 +151,7 @@ class EditDefectController extends AbstractDvsaMotTestController
             'errorMessages' => $errorMessages,
             'identifiedDefect' => $identifiedDefect,
             'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
+            'isPreEuDirective' => $isPreEuDirective
         ]);
     }
 

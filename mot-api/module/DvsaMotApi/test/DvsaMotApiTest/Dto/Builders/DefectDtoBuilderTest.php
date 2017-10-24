@@ -2,7 +2,9 @@
 
 namespace DvsaMotApiTest\Dto\Builders;
 
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaMotApi\Dto\Builders\DefectDtoBuilder;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
@@ -38,6 +40,8 @@ class DefectDtoBuilderTest extends PHPUnit_Framework_TestCase
             'advisory' => true,
             'prs' => true,
             'failure' => false,
+            'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+            'preEuDirective' => true,
         ];
         $this->mockDefectSentenceCaseConverter = $this->mockDefectSentenceCaseConverter($expectedData);
         $this->mockTestItemSelector = $this->mockTestItemSelector($expectedData);
@@ -137,6 +141,16 @@ class DefectDtoBuilderTest extends PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getIsPrsFail')
             ->willReturn($expectedData['prs']);
+
+        $reasonForRejectionMock
+            ->expects($this->any())
+            ->method('getRfrDeficiencyCategoryCode')
+            ->willReturn(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+
+        $reasonForRejectionMock
+            ->expects($this->any())
+            ->method('isPreEuDirective')
+            ->willReturn(true);
 
         return $reasonForRejectionMock;
     }

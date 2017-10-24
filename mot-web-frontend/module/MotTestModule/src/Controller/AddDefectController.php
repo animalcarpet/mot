@@ -14,6 +14,7 @@ use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use DvsaCommon\Domain\MotTestType;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
@@ -79,6 +80,7 @@ class AddDefectController extends AbstractDvsaMotTestController
         $defects = null;
         $title = '';
         $errorMessages = '';
+        $isPreEuDirective = false;
 
         try {
             $title = $this->createTitle($type);
@@ -107,6 +109,8 @@ class AddDefectController extends AbstractDvsaMotTestController
             $testType = $motTest->getTestTypeCode();
             $isNonMotTest = MotTestType::isNonMotTypes($testType);
             $request = $this->getRequest();
+
+            $isPreEuDirective = $defect->isPreEuDirective();
 
             if ($request->isPost()) {
                 $apiPath = MotTestUrlBuilder::motTestRfr($motTest->getMotTestNumber());
@@ -155,6 +159,7 @@ class AddDefectController extends AbstractDvsaMotTestController
             'isManualAdvisory' => false,
             'backUrl' => $backUrl,
             'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
+            'isPreEuDirective' => $isPreEuDirective
         ]);
     }
 
@@ -307,7 +312,6 @@ class AddDefectController extends AbstractDvsaMotTestController
     private function getDefect($motTestNumber, $defectId)
     {
         $getDefectApiUrl = MotTestUrlBuilder::reasonForRejection($motTestNumber, $defectId)->toString();
-
         return Defect::fromApi($this->getRestClient()->get($getDefectApiUrl)['data']);
     }
 }

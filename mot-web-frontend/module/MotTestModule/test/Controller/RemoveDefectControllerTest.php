@@ -15,6 +15,7 @@ use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use DvsaCommon\Dto\MotTesting\DefectDto;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
@@ -190,6 +191,8 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['onOriginalTest'] = '';
             $rfr['generated'] = false;
             $rfr['markedAsRepaired'] = false;
+            $rfr['deficiencyCategoryCode'] = RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE;
+            $rfr['preEuDirective'] = true;
 
             $failArray[] = $rfr;
             ++$defectId;
@@ -210,6 +213,8 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['onOriginalTest'] = '';
             $rfr['generated'] = false;
             $rfr['markedAsRepaired'] = false;
+            $rfr['deficiencyCategoryCode'] = RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE;
+            $rfr['preEuDirective'] = true;
 
             $prsArray[] = $rfr;
 
@@ -231,6 +236,8 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['onOriginalTest'] = '';
             $rfr['generated'] = false;
             $rfr['markedAsRepaired'] = false;
+            $rfr['deficiencyCategoryCode'] = RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE;
+            $rfr['preEuDirective'] = true;
 
             $advisoryArray[] = $rfr;
             ++$defectId;
@@ -375,7 +382,9 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
       "failureTextCy" : "advisorycy",
       "testItemSelectorId" : 1,
       "inspectionManualReference" : "inspectionManualReference",
-      "markedAsRepaired" : "FALSE"
+      "markedAsRepaired" : "FALSE",
+      "deficiencyCategoryCode" : "PE",
+      "preEuDirective" : true
     } ]
   },
   "statusCode" : "ACTIVE",

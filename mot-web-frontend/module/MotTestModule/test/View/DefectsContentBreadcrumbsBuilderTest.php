@@ -4,6 +4,7 @@ namespace Dvsa\Mot\Frontend\MotTestModuleTest\View;
 
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ComponentCategoryCollection;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Mvc\Router\RouteStackInterface;
 
@@ -122,6 +123,8 @@ class DefectsContentBreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
                         'isAdvisory' => true,
                         'isPrsFail' => false,
                         'canBeDangerous' => true,
+                        'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                        'isPreEuDirective' => true,
                     ],
                 ],
             ],
@@ -198,6 +201,8 @@ class DefectsContentBreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
                         'isAdvisory' => true,
                         'isPrsFail' => false,
                         'canBeDangerous' => true,
+                        'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                        'isPreEuDirective' => true,
                     ],
                 ],
             ],

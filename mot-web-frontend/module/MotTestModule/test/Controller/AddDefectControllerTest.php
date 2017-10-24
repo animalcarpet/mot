@@ -14,6 +14,7 @@ use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\MotTesting\DefectDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
@@ -104,6 +105,7 @@ class AddDefectControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * Test the addAction in the AddDefectController without post data.
+     * Ensure the pre-eu flag is set - to show the dangerous checkbox on the page
      */
     public function testAddDefect()
     {
@@ -129,7 +131,7 @@ class AddDefectControllerTest extends AbstractFrontendControllerTestCase
             ->expects($this->once())
             ->method('get')
             ->with(MotTestUrlBuilder::reasonForRejection($motTestNumber, $defectId)->toString())
-            ->willReturn(['data' => $this->getDefect()]);
+            ->willReturn(['data' => $this->getPreEuDefect()]);
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
@@ -138,8 +140,53 @@ class AddDefectControllerTest extends AbstractFrontendControllerTestCase
             'type' => $type,
         ];
 
-        $this->getResultForAction('add', $routeParams);
+        $viewModel = $this->getResultForAction('add', $routeParams);
+
         $this->assertResponseStatus(self::HTTP_OK_CODE);
+        $this->assertTrue($viewModel->isPreEuDirective);
+    }
+
+    /**
+     * Test the addAction in the AddDefectController without post data.
+     * Ensure the pre-eu flag is set to false - to hide the dangerous checkbox on the page
+     */
+    public function testAddPostEuDefect()
+    {
+        $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asTester());
+        $this->setupAuthorizationService([PermissionInSystem::RFR_LIST]);
+
+        $motTestNumber = 1;
+        $categoryId = 304;
+        $defectId = 502;
+        $type = 'advisory';
+
+        $testMotTestData = $this->getMotTestDataClass4();
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $restClientMock = $this->getRestClientMockForServiceManager();
+        $restClientMock
+            ->expects($this->once())
+            ->method('get')
+            ->with(MotTestUrlBuilder::reasonForRejection($motTestNumber, $defectId)->toString())
+            ->willReturn(['data' => $this->getPostEuDefect()]);
+
+        $routeParams = [
+            'motTestNumber' => $motTestNumber,
+            'categoryId' => $categoryId,
+            'defectId' => $defectId,
+            'type' => $type,
+        ];
+
+        $viewModel = $this->getResultForAction('add', $routeParams);
+
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
+        $this->assertFalse($viewModel->isPreEuDirective);
     }
 
     /**
@@ -169,7 +216,7 @@ class AddDefectControllerTest extends AbstractFrontendControllerTestCase
             ->expects($this->at(0))
             ->method('get')
             ->with(MotTestUrlBuilder::reasonForRejection($motTestNumber, $defectId)->toString())
-            ->willReturn(['data' => $this->getDefect()]);
+            ->willReturn(['data' => $this->getPreEuDefect()]);
 
         $testMotTestData = $this->getMotTestDataClass4();
 
@@ -260,7 +307,7 @@ class AddDefectControllerTest extends AbstractFrontendControllerTestCase
             ->expects($this->at(0))
             ->method('get')
             ->with(MotTestUrlBuilder::reasonForRejection($motTestNumber, $defectId)->toString())
-            ->willReturn(['data' => $this->getDefect()]);
+            ->willReturn(['data' => $this->getPreEuDefect()]);
 
         switch ($motTestTypeCode) {
             case MotTestTypeCode::NORMAL_TEST:
@@ -330,11 +377,24 @@ class AddDefectControllerTest extends AbstractFrontendControllerTestCase
     /**
      * @return DefectDto
      */
-    private function getDefect()
+    private function getPreEuDefect()
     {
         $testDefect = new DefectDto();
         $testDefect->setDescription('Defect description');
+        $testDefect->setDeficiencyCategoryCode(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+        $testDefect->setPreEuDirective(true);
+        return $testDefect;
+    }
 
+    /**
+     * @return DefectDto
+     */
+    private function getPostEuDefect()
+    {
+        $testDefect = new DefectDto();
+        $testDefect->setDescription('Defect description');
+        $testDefect->setDeficiencyCategoryCode(RfrDeficiencyCategoryCode::MAJOR);
+        $testDefect->setPreEuDirective(false);
         return $testDefect;
     }
 

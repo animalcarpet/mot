@@ -143,6 +143,7 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
             'isManualAdvisory' => true,
             'motTestNumber' => $motTestNumber,
             'type' => $type,
+            'isPreEuDirective' => true,
         ]);
     }
 
