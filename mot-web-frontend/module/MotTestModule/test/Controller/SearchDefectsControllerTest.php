@@ -13,6 +13,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTestTest\TestHelper\Fixture;
@@ -161,6 +162,8 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
                     'testItemSelector' => 'asd',
                     'isAdvisory' => false,
                     'isPrsFail' => true,
+                    'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                    'isPreEuDirective' => true,
                 ],
             ],
         ];

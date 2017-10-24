@@ -108,6 +108,16 @@ class IdentifiedDefect
     private $markedAsRepaired;
 
     /**
+     * @var String
+     */
+    private $deficiencyCategoryCode;
+
+    /**
+     * @var bool
+     */
+    private $preEuDirective;
+
+    /**
      * IdentifiedDefect constructor.
      *
      * @param string $defectType
@@ -122,9 +132,25 @@ class IdentifiedDefect
      * @param bool   $onOriginalTest
      * @param bool   $generated
      * @param bool   $markedAsRepaired
+     * @param String $deficiencyCategoryCode
+     * @param bool   $isPreEuDirective
      */
-    public function __construct($defectType, $lateralLocation, $longitudinalLocation, $verticalLocation, $userComment, $dangerous, $name, $id, $defectId, $onOriginalTest, $generated, $markedAsRepaired)
-    {
+    public function __construct(
+        $defectType,
+        $lateralLocation,
+        $longitudinalLocation,
+        $verticalLocation,
+        $userComment,
+        $dangerous,
+        $name,
+        $id,
+        $defectId,
+        $onOriginalTest,
+        $generated,
+        $markedAsRepaired,
+        $deficiencyCategoryCode,
+        $isPreEuDirective
+    ) {
         $this->defectType = $defectType;
         $this->lateralLocation = $lateralLocation;
         $this->longitudinalLocation = $longitudinalLocation;
@@ -137,6 +163,8 @@ class IdentifiedDefect
         $this->onOriginalTest = (bool) $onOriginalTest;
         $this->generated = (bool) $generated;
         $this->markedAsRepaired = $markedAsRepaired;
+        $this->deficiencyCategoryCode = $deficiencyCategoryCode;
+        $this->preEuDirective = $isPreEuDirective;
     }
 
     /**
@@ -289,5 +317,37 @@ class IdentifiedDefect
     public function isMarkedAsRepaired()
     {
         return $this->markedAsRepaired;
+    }
+
+    /**
+     * @return String
+     */
+    public function getDeficiencyCategoryCode()
+    {
+        return $this->deficiencyCategoryCode;
+    }
+
+    /**
+     * @param String $deficiencyCategoryCode
+     */
+    public function setDeficiencyCategoryCode($deficiencyCategoryCode)
+    {
+        $this->deficiencyCategoryCode = $deficiencyCategoryCode;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPreEuDirective()
+    {
+        return $this->preEuDirective;
+    }
+
+    /**
+     * @param boolean $preEuDirective
+     */
+    public function setPreEuDirective($preEuDirective)
+    {
+        $this->preEuDirective = $preEuDirective;
     }
 }

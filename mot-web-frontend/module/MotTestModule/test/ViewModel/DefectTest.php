@@ -3,6 +3,8 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 
 class DefectTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,6 +19,8 @@ class DefectTest extends \PHPUnit_Framework_TestCase
             'Inspection manual reference',
             true,
             false,
+            true,
+            RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
             true
         );
 
@@ -34,5 +38,7 @@ class DefectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $defect->isPrs());
         $this->assertEquals(true, $defect->isFailure());
         $this->assertEquals('http://noot.com', $defect->getInspectionManualReferenceUrl());
+        $this->assertEquals(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, $defect->getDeficiencyCategoryCode());
+        $this->assertTrue($defect->isPreEuDirective());
     }
 }

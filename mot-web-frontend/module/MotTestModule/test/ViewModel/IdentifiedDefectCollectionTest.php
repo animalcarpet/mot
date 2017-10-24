@@ -5,6 +5,7 @@ namespace DvsaMotTestTest\ViewModel;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaMotTestTest\TestHelper\Fixture;
 
 /**
@@ -243,6 +244,8 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'testItemSelectorId' => 5696,
                     'inspectionManualReference' => '6.1.B.2',
                     'markedAsRepaired' => false,
+                    'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                    'preEuDirective' => true
                 ],
             ];
         }
@@ -270,6 +273,8 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'testItemSelectorId' => 5696,
                     'inspectionManualReference' => '6.1.B.2',
                     'markedAsRepaired' => false,
+                    'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                    'preEuDirective' => true
                 ],
             ];
         }
@@ -297,6 +302,8 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'testItemSelectorId' => 5696,
                     'inspectionManualReference' => '6.1.B.2',
                     'markedAsRepaired' => false,
+                    'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                    'preEuDirective' => true
                 ],
             ];
         }
@@ -335,6 +342,8 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                 'testItemSelectorId' => 5696,
                 'inspectionManualReference' => '6.1.B.2',
                 'markedAsRepaired' => false,
+                'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                'preEuDirective' => true
             ];
         }
 

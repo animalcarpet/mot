@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ComponentCategoryCollection;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 
 /**
  * Class ComponentCategoryCollectionTest.
@@ -120,6 +121,8 @@ class ComponentCategoryCollectionTest extends \PHPUnit_Framework_TestCase
                         'isAdvisory' => true,
                         'isPrsFail' => false,
                         'canBeDangerous' => true,
+                        'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                        'isPreEuDirective' => true,
                     ],
                 ],
             ],
@@ -196,6 +199,8 @@ class ComponentCategoryCollectionTest extends \PHPUnit_Framework_TestCase
                         'isAdvisory' => true,
                         'isPrsFail' => false,
                         'canBeDangerous' => true,
+                        'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                        'isPreEuDirective' => true
                     ],
                 ],
             ],

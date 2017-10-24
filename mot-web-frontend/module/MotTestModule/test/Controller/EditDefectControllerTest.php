@@ -13,6 +13,7 @@ use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTestTest\TestHelper\Fixture;
@@ -99,6 +100,41 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
+     * Test that the Edit Defect page loads with pre eu flag not set
+     */
+    public function testEditWhenPreEuFalse()
+    {
+        $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asTester());
+        $this->setupAuthorizationService([PermissionInSystem::RFR_LIST]);
+
+        $motTestNumber = 1;
+        $defectId = 1;
+
+        $routeParams = [
+            'motTestNumber' => $motTestNumber,
+            'identifiedDefectId' => $defectId,
+        ];
+
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+
+        $rfrs = $this->getFailuresPrsAndAdvisories(1, 1, 2, false);
+        $testMotTestData->reasonsForRejection = $rfrs;
+
+        $motTest = new MotTest($testMotTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
+
+        $viewModel = $this->getResultForAction2('get', 'edit', $routeParams);
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
+        $this->assertFalse($viewModel->isPreEuDirective);
+    }
+
+    /**
      * Test that the Edit Defect page loads correctly.
      */
     public function testEditActionWithGetMethod()
@@ -116,7 +152,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
 
         $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
 
-        $rfrs = $this->getFailuresPrsAndAdvisories(1, 1, 2);
+        $rfrs = $this->getFailuresPrsAndAdvisories(1, 1, 2, true);
         $testMotTestData->reasonsForRejection = $rfrs;
 
         $motTest = new MotTest($testMotTestData);
@@ -160,7 +196,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
         $this->defectsJourneyUrlGeneratorMock->method('goBack')->willReturn('mot-test');
 
         $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
-        $rfrs = $this->getFailuresPrsAndAdvisories(1, 1, 2);
+        $rfrs = $this->getFailuresPrsAndAdvisories(1, 1, 2, true);
         $testMotTestData->reasonsForRejection = $rfrs;
 
         $motTest = new MotTest($testMotTestData);
@@ -180,10 +216,11 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
      * @param int $failures
      * @param int $prs
      * @param int $advisories
+     * @param boolean $isPreEu
      *
      * @return array[] reasonsForRejection
      */
-    private function getFailuresPrsAndAdvisories($failures, $prs, $advisories)
+    private function getFailuresPrsAndAdvisories($failures, $prs, $advisories, $isPreEu)
     {
         $failArray = [];
         $prsArray = [];
@@ -206,6 +243,8 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['onOriginalTest'] = '';
             $rfr['generated'] = false;
             $rfr['markedAsRepaired'] = false;
+            $rfr['deficiencyCategoryCode'] = RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE;
+            $rfr['preEuDirective'] = $isPreEu;
 
             $failArray[] = $rfr;
 
@@ -227,6 +266,8 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['onOriginalTest'] = '';
             $rfr['generated'] = false;
             $rfr['markedAsRepaired'] = false;
+            $rfr['deficiencyCategoryCode'] = RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE;
+            $rfr['preEuDirective'] = $isPreEu;
 
             $prsArray[] = $rfr;
 
@@ -248,6 +289,8 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['onOriginalTest'] = '';
             $rfr['generated'] = false;
             $rfr['markedAsRepaired'] = false;
+            $rfr['deficiencyCategoryCode'] = RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE;
+            $rfr['preEuDirective'] = $isPreEu;
 
             $advisoryArray[] = $rfr;
 

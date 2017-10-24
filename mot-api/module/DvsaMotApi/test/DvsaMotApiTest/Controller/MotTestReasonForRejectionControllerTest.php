@@ -2,6 +2,7 @@
 
 namespace DvsaMotApiTest\Controller;
 
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaEntities\Entity\ReasonForRejection;
@@ -120,6 +121,8 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
                 'advisory' => true,
                 'prs' => true,
                 'failure' => false,
+                'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                'preEuDirective' => true,
                 '_class' => 'DvsaCommon\Dto\MotTesting\DefectDto',
             ],
         ];
@@ -253,6 +256,16 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
             ->expects($this->any())
             ->method('getIsPrsFail')
             ->willReturn($expectedData['data']['prs']);
+
+        $reasonForRejectionMock
+            ->expects($this->any())
+            ->method('getRfrDeficiencyCategoryCode')
+            ->willReturn(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+
+        $reasonForRejectionMock
+            ->expects($this->any())
+            ->method('isPreEuDirective')
+            ->willReturn(true);
 
         return $reasonForRejectionMock;
     }

@@ -2171,17 +2171,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "17.0.0",
+            "version": "18.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "16e8ebea9b108d12e1d95e65f9e6c213a389bdff"
+                "reference": "1210bce12aa674933e052fe9fc575b732ddd5264"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-17.0.0-7ea666.tar",
-                "reference": "16e8ebea9b108d12e1d95e65f9e6c213a389bdff",
-                "shasum": "a14a55bce6043097376222f78c41c398714a2282"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-18.0.0-b2e5e1.tar",
+                "reference": "1210bce12aa674933e052fe9fc575b732ddd5264",
+                "shasum": "1650b5f2bc89429f33a205a560edd10818cd89dd"
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.2",
@@ -2228,7 +2228,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "time": "2017-10-09T16:14:20+00:00"
+            "time": "2017-10-24T11:28:30+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -7985,7 +7985,7 @@
                 "tool",
                 "zf2"
             ],
-            "time": "2015-10-21T07:40:59+00:00"
+            "time": "2015-10-21 07:40:59"
         }
     ],
     "aliases": [],

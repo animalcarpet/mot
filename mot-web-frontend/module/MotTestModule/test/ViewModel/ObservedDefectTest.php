@@ -8,6 +8,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 
 class ObservedDefectTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +22,8 @@ class ObservedDefectTest extends \PHPUnit_Framework_TestCase
     public function testIsManualAdvisory($defectType, $defectId, $result)
     {
         $identifiedDefect = new IdentifiedDefect($defectType, 'lateralLocation', 'longitudinalLocation',
-            'verticalLocation', 'userComment', false, 'name', 1, $defectId, false, false, false);
+            'verticalLocation', 'userComment', false, 'name', 1, $defectId, false, false, false,
+            RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, true);
 
         $temp = '';
 
@@ -31,7 +33,8 @@ class ObservedDefectTest extends \PHPUnit_Framework_TestCase
     public function testGetLocationStringWithLocation()
     {
         $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, 'lateralLocation', 'longitudinalLocation',
-            'verticalLocation', 'userComment', false, 'name', 1, 1, false, false, false);
+            'verticalLocation', 'userComment', false, 'name', 1, 1, false, false, false,
+            RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, true);
 
         $this->assertEquals(
             'LateralLocation, longitudinalLocation, verticalLocation',
@@ -42,7 +45,8 @@ class ObservedDefectTest extends \PHPUnit_Framework_TestCase
     public function testGetLocationStringWithoutLocation()
     {
         $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, '', '',
-            '', 'userComment', false, 'name', 1, 1, false, false, false);
+            '', 'userComment', false, 'name', 1, 1, false, false, false,
+            RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, true);
 
         $this->assertEquals(
             'n/a',
@@ -53,7 +57,8 @@ class ObservedDefectTest extends \PHPUnit_Framework_TestCase
     public function testSetOnOriginalTest()
     {
         $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, 'lateralLocation', 'longitudinalLocation',
-            'verticalLocation', 'userComment', false, 'name', 1, 1, false, false, false);
+            'verticalLocation', 'userComment', false, 'name', 1, 1, false, false, false,
+            RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, true);
         $identifiedDefect->setOnOriginalTest(true);
 
         $this->assertEquals(true, $identifiedDefect->isOnOriginalTest());

@@ -7,6 +7,8 @@
 
 namespace DvsaCommon\Dto\MotTesting;
 
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 use JsonSerializable;
 
 class DefectDto implements JsonSerializable
@@ -59,6 +61,16 @@ class DefectDto implements JsonSerializable
     private $failure;
 
     /**
+     * @var String
+     */
+    private $deficiencyCategoryCode;
+
+    /**
+     * @var bool
+     */
+    private $preEuDirective;
+
+    /**
      * {@inheritdoc}
      */
     public function jsonSerialize()
@@ -73,6 +85,8 @@ class DefectDto implements JsonSerializable
             'advisory' => $this->isAdvisory(),
             'prs' => $this->isPrs(),
             'failure' => $this->isFailure(),
+            'deficiencyCategoryCode' => $this->getDeficiencyCategoryCode(),
+            'preEuDirective' => $this->isPreEuDirective(),
         ];
     }
 
@@ -220,5 +234,37 @@ class DefectDto implements JsonSerializable
     public function setFailure($failure)
     {
         $this->failure = $failure;
+    }
+
+    /**
+     * @return String
+     */
+    public function getDeficiencyCategoryCode()
+    {
+        return $this->deficiencyCategoryCode;
+    }
+
+    /**
+     * @param String $deficiencyCategoryCode
+     */
+    public function setDeficiencyCategoryCode($deficiencyCategoryCode)
+    {
+        $this->deficiencyCategoryCode = $deficiencyCategoryCode;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPreEuDirective()
+    {
+        return $this->preEuDirective;
+    }
+
+    /**
+     * @param boolean $preEuDirective
+     */
+    public function setPreEuDirective($preEuDirective)
+    {
+        $this->preEuDirective = $preEuDirective;
     }
 }

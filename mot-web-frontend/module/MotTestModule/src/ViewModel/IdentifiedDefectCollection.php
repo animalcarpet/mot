@@ -106,7 +106,9 @@ class IdentifiedDefectCollection
                 $failure->rfrId,
                 $failure->onOriginalTest,
                 $failure->generated,
-                $failure->markedAsRepaired
+                $failure->markedAsRepaired,
+                $failure->deficiencyCategoryCode,
+                $failure->preEuDirective
             );
 
             if (isset($failure->generated) && $failure->generated) {
@@ -129,7 +131,9 @@ class IdentifiedDefectCollection
                 $loopPrs->rfrId,
                 $loopPrs->onOriginalTest,
                 $loopPrs->generated,
-                $loopPrs->markedAsRepaired
+                $loopPrs->markedAsRepaired,
+                $loopPrs->deficiencyCategoryCode,
+                $loopPrs->preEuDirective
             );
 
             array_push($prs, $identifiedDefect);
@@ -152,7 +156,9 @@ class IdentifiedDefectCollection
                 $advisory->rfrId,
                 $advisory->onOriginalTest,
                 $advisory->generated,
-                $advisory->markedAsRepaired
+                $advisory->markedAsRepaired,
+                $advisory->deficiencyCategoryCode,
+                $advisory->preEuDirective
             );
 
             array_push($advisories, $identifiedDefect);
