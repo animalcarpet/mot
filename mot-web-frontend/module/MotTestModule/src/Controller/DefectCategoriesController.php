@@ -10,6 +10,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use DateTime;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\Frontend\MotTestModule\Service\RfrCache;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
@@ -46,16 +47,24 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     private $breadcrumbsBuilder;
 
     /**
+     * @var RfrCache
+     */
+    private $rfrCache;
+
+    /**
      * DefectCategoriesController constructor.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param DefectsContentBreadcrumbsBuilder $breadcrumbsBuilder
+     * @param RfrCache $rfrCache
      */
     public function __construct(MotAuthorisationServiceInterface $authorisationService,
-                                DefectsContentBreadcrumbsBuilder $breadcrumbsBuilder)
+                                DefectsContentBreadcrumbsBuilder $breadcrumbsBuilder,
+                                RfrCache $rfrCache)
     {
         $this->authorisationService = $authorisationService;
         $this->breadcrumbsBuilder = $breadcrumbsBuilder;
+        $this->rfrCache = $rfrCache;
     }
 
     /**
@@ -111,11 +120,12 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
             $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+            $vehicleClass = (int) $vehicle->getVehicleClass()->getCode();
             $testType = $motTest->getTestTypeCode();
             $isDemo = MotTestType::isDemo($testType);
             $isReinspection = MotTestType::isReinspection($testType);
             $isRetest = MotTestType::isRetest($testType);
-            $defectCategories = $this->getDefectCategories($motTestNumber, $categoryId);
+            $defectCategories = $this->getDefectCategories($motTestNumber, $categoryId, $vehicleClass);
             $isNonMotTest = MotTestType::isNonMotTypes($testType);
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
@@ -243,19 +253,32 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     /**
      * @param $motTestNumber
      * @param $categoryId
+     * @param $vehicleClass
      *
      * @return ComponentCategoryCollection
      */
-    private function getDefectCategories($motTestNumber, $categoryId)
+    private function getDefectCategories($motTestNumber, $categoryId, $vehicleClass)
     {
         $isVe = $this->authorisationService->hasRole(Role::VEHICLE_EXAMINER);
 
-        $dataFromApi = $this->getDataFromApi(
-            MotTestUrlBuilder::motTestItem(
-                $motTestNumber,
-                $categoryId
-            )
-        );
+        $dataFromApi  = null;
+
+        if($this->rfrCache->isEnabled()) {
+            $dataFromApi = $this->rfrCache->getItem($vehicleClass, $categoryId, $isVe, null);
+        }
+
+        if ($dataFromApi === null) {
+            $dataFromApi = $this->getDataFromApi(
+                MotTestUrlBuilder::motTestItem(
+                    $motTestNumber,
+                    $categoryId
+                )
+            );
+
+            if($this->rfrCache->isEnabled()) {
+                $this->rfrCache->setItem($vehicleClass, $categoryId, $isVe, null, $dataFromApi);
+            }
+        }
 
         // Here we reverse the tree. We want the the columns stored in order of left->right.
         $dataFromApi = array_reverse($dataFromApi);
