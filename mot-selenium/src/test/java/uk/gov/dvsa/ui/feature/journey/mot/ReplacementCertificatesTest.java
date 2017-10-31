@@ -57,12 +57,12 @@ public class ReplacementCertificatesTest extends DslTest {
     }
 
     @Test(groups = {"BVT"})
-    public void odometerCannotBeEditedAfter7DaysOfFromIssueDate() throws IOException, URISyntaxException {
-        //Given I conducted an mot test 8 days ago as a tester
+    public void odometerCannotBeEditedAfter28DaysOfFromIssueDate() throws IOException, URISyntaxException {
+        //Given I conducted an mot test 29 days ago as a tester
         User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         MotTest motTest = motApi.createTest(tester, site.getId(), vehicle,
-                TestOutcome.PASSED, 12345, DateTime.now().minusDays(8));
+                TestOutcome.PASSED, 12345, DateTime.now().minusDays(29));
 
         //When I attempt to edit a certificate
         motUI.certificate.updateCertificate(tester, vehicle, motTest.getMotTestNumber());

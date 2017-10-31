@@ -23,7 +23,7 @@ use DvsaMotApi\Service\TesterService;
  */
 class MotTestSecurityServiceTest extends AbstractServiceTestCase
 {
-    const SEVEN_DAYS_ODOMETER_MODIFICATION_PERIOD = 7;
+    const ODOMETER_MODIFICATION_PERIOD = 28;
 
     private $entityManagerMock;
     private $testerServiceMock;
@@ -73,7 +73,7 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $this->entityManagerMock = $this->getMockEntityManager();
         $this->testerServiceMock = XMock::of(TesterService::class);
         $this->configurationRepositoryStub = ConfigurationRepositoryStub::returningValue(
-            self::SEVEN_DAYS_ODOMETER_MODIFICATION_PERIOD
+            self::ODOMETER_MODIFICATION_PERIOD
         );
         $this->motIdentityProviderMock = XMock::of(\Zend\Authentication\AuthenticationService::class);
         $this->motIdentityProviderMock->expects($this->any())
@@ -165,8 +165,8 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
     {
         // given
         $motTestNumber = 2;
-        $this->currentDateIs('2010-01-08');
-        $this->givenOdometerReadingModificationWindowLengthInDaysEqualTo(7);
+        $this->currentDateIs('2010-01-29');
+        $this->givenOdometerReadingModificationWindowLengthInDaysEqualTo(self::ODOMETER_MODIFICATION_PERIOD);
 
         $this->motTestRepository->expects($this->any())
             ->method('getMotTestByNumber')
@@ -189,7 +189,7 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $motTestNumber = 2;
 
         // given
-        $this->currentDateIs('2010-01-09');
+        $this->currentDateIs('2010-01-30');
 
         $this->motTestRepository->expects($this->any())
             ->method('getMotTestByNumber')
