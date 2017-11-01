@@ -8,6 +8,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Validator\AddressValidator;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\InvalidFieldValueException;
+use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\PersonContact;
 use DvsaEntities\Entity\PersonContactType;
@@ -70,10 +71,26 @@ class PersonAddressService extends AbstractService
         if (!$this->validator->isValid($data)) {
             throw new InvalidFieldValueException(implode(', ', $this->validator->getMessages()));
         }
+
         $person = $this->findPerson($personId);
 
-        $personContact = $this->getContactByPerson($person);
+        $this->updateOrCreateAddress($this->getContactByPerson($person), $data);
+
+        if ($identity->getUserId() != $personId) {
+            $this->notificationHelper->sendChangedPersonalDetailsNotification($person);
+        }
+
+        return $data;
+    }
+
+    private function updateOrCreateAddress(PersonContact $personContact, $data) {
+
         $address = $personContact->getDetails()->getAddress();
+
+        if ($address === null) {
+            $address = new Address();
+            $personContact->getDetails()->setAddress($address);
+        }
 
         $address->setAddressLine1($data[self::FIRST_LINE]);
         $address->setAddressLine2($data[self::SECOND_LINE]);
@@ -83,12 +100,6 @@ class PersonAddressService extends AbstractService
         $address->setPostcode($data[self::POSTCODE]);
 
         $this->entityManager->flush();
-
-        if ($identity->getUserId() != $personId) {
-            $this->notificationHelper->sendChangedPersonalDetailsNotification($person);
-        }
-
-        return $data;
     }
 
     /**

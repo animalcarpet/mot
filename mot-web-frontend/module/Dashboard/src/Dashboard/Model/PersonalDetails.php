@@ -465,6 +465,22 @@ class PersonalDetails
     }
 
     /**
+     * @return bool
+     */
+    public function hasAddress(): bool {
+
+        $addressArray = array_filter([
+            $this->getAddressLine1(),
+            $this->getAddressLine2(),
+            $this->getAddressLine3(),
+            $this->getTown(),
+            $this->getPostcode()
+        ], 'strlen');
+
+        return !empty($addressArray);
+    }
+
+    /**
      * @param mixed $dateOfBirth
      *
      * @return PersonalDetails

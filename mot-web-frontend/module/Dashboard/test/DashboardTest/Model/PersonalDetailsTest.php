@@ -107,6 +107,23 @@ class PersonalDetailsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::ROLE_TESTER, $site['roles'][0]);
     }
 
+    public function testHasAddressMethodReturnsTrueIfHasAddress() {
+
+        $personalDetails = new PersonalDetails(self::getData());
+        $this->assertTrue($personalDetails->hasAddress());
+    }
+
+    public function testHasAddressMethodReturnsFalseIfNullAddress() {
+
+        $personalDetails = new PersonalDetails(self::getData());
+        $personalDetails->setAddressLine1(null)
+            ->setAddressLine2(null)
+            ->setAddressLine3(null)
+            ->setTown(null)
+            ->setPostcode(null);
+        $this->assertFalse($personalDetails->hasAddress());
+    }
+
     public static function getData()
     {
         return [
