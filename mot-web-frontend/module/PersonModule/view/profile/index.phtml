@@ -18,16 +18,6 @@ use UserAdmin\Controller\UserSearchController;
  * @var string                           $userSearchResultUrl
  * @var bool                             $displayResetAccountError
  */
-$motAuthorisations = $this->motAuthorisations;
-$fullAddressArray = array_filter([
-    $personalDetails->getAddressLine1(),
-    $personalDetails->getAddressLine2(),
-    $personalDetails->getAddressLine3(),
-    $personalDetails->getTown(),
-    $personalDetails->getPostcode(),
-],
-    'strlen');
-$escFullAddress = $this->escapeHtml(implode(', ', $fullAddressArray)) ?: null;
 
 $this->layout()->setVariable('pageSubTitle', $personProfileGuard->isViewingOwnProfile() ? 'Your profile' : 'User profile');
 $this->layout()->setVariable('pageTitle', $personalDetails->getFullName());
@@ -127,7 +117,7 @@ endif ?>
         <tr>
             <th class="table-summary__key">Address</th>
             <td class="table-summary__value" id="full-address">
-                <?php if (!empty($fullAddressArray)) : ?>
+                <?php if ($personalDetails->hasAddress()) : ?>
                     <?php echo ($personalDetails->getAddressLine1() != '') ? $this->escapeHtml($personalDetails->getAddressLine1()).', <br>'
                         : ''; ?>
                     <?php echo ($personalDetails->getAddressLine2() != '') ? $this->escapeHtml($personalDetails->getAddressLine2()).', <br>'
