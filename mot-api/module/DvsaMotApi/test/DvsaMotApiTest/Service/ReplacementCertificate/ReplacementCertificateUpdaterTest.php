@@ -88,10 +88,8 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
             ->setReasonForReplacement('Reason');
 
-//        when
         $motTest = $this->createSut()->update($draft);
 
-        // then
         $this->assertEquals($draft->getPrimaryColour()->getId(), $motTest->getPrimaryColour()->getId());
         $this->assertEquals($draft->getSecondaryColour()->getId(), $motTest->getSecondaryColour()->getId());
         $this->assertEquals($draft->getExpiryDate(), $motTest->getExpiryDate());
@@ -147,7 +145,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
             ->method('validateOdometerReadingModificationWindowOpen')
             ->wilLReturn(CheckResult::ok());
 
-        $this->createSut()->update($draft);
+        $this->createSut()->update($draft, false, true);
     }
 
     public function testCreateGivenDifferentMotTestVersionWhenApplyingShouldThrowForbiddenException()
@@ -181,9 +179,9 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $this->userAssignedToVts();
         $this->outsideOdometerReadingModificationWindow();
         $this->permissionsGranted([PermissionInSystem::CERTIFICATE_REPLACEMENT]);
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
 
-        $this->createSut()->update($draft);
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
+        $this->createSut()->update($draft,false, true);
     }
 
     public function testCreateGivenNoReasonForReplacementShouldThrowForbiddenException()

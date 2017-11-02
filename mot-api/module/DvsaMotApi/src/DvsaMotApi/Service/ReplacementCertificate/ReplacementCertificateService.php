@@ -237,9 +237,11 @@ class ReplacementCertificateService implements TransactionAwareInterface
                 $certificateDraftRepository,
                 $certificateUpdater,
                 $isDvlaImport,
+                $isOdometerModified,
                 $draft
+
             ) {
-                $motTest = $certificateUpdater->update($draft, $isDvlaImport);
+                $motTest = $certificateUpdater->update($draft, $isDvlaImport, $isOdometerModified);
 
                 $certificateReplacement = $this->generateCertificateReplacementEntity($draft, $cherishedTransferReason, $certTypeRepo);
 
