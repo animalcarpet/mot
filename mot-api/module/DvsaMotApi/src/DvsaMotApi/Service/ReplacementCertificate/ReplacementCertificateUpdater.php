@@ -71,7 +71,7 @@ class ReplacementCertificateUpdater
      * @throws ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
-    public function update(CertificateReplacementDraft $draft, $isDvlaImport = false)
+    public function update(CertificateReplacementDraft $draft, $isDvlaImport = false, $isOdometerModified = false)
     {
         $hasFullUpdateRights = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
 
@@ -84,8 +84,10 @@ class ReplacementCertificateUpdater
             );
         }
         if (!$hasFullUpdateRights) {
-            $checkResult = $this->motTestSecurityService->validateOdometerReadingModificationWindowOpen($motTest);
-            CheckResultExceptionTranslator::tryThrowBadRequestException($checkResult);
+            if ($isOdometerModified) {
+                $checkResult = $this->motTestSecurityService->validateOdometerReadingModificationWindowOpen($motTest);
+                CheckResultExceptionTranslator::tryThrowBadRequestException($checkResult);
+            }
 
             if (!$this->motTestSecurityService->isCurrentTesterAssignedToMotTest($motTest)
                 && !$draft->getDifferentTesterReason()
