@@ -14,6 +14,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Zend\Cache\Storage\Adapter\Apc as ApcAdapter;
 use Zend\Cache\Storage\Adapter\Memcached as MemcachedAdapter;
+use DvsaApplicationLogger\Log\Logger;
 
 class RfrCacheFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,6 +28,8 @@ class RfrCacheFactoryTest extends \PHPUnit_Framework_TestCase
     private $keyGenerator;
     /** @var ServiceLocatorInterface | MockObject */
     private $serviceLocator;
+    /** @var Logger | MockObject */
+    private $logger;
 
     /** @var  RfrCacheFactory */
     private $sut;
@@ -38,6 +41,7 @@ class RfrCacheFactoryTest extends \PHPUnit_Framework_TestCase
         $this->storage = XMock::of(StorageInterface::class);
         $this->keyGenerator = XMock::of(RfrCacheKeyGenerator::class);
         $this->featureToggles = XMock::of(FeatureToggles::class);
+        $this->logger = XMock::of(Logger::class);
 
         $this->serviceLocator
             ->expects($this->at(0))
@@ -56,6 +60,12 @@ class RfrCacheFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with('Feature\FeatureToggles')
             ->willReturn($this->featureToggles);
+
+        $this->serviceLocator
+            ->expects($this->at(3))
+            ->method('get')
+            ->with('Application\Logger')
+            ->willReturn($this->logger);
 
         $this->sut = new RfrCacheFactory();
     }

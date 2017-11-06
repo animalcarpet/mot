@@ -9,6 +9,7 @@ use DvsaCommon\Constants\FeatureToggle;
 use DvsaFeature\FeatureToggles;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Exception\ExceptionInterface;
+use DvsaApplicationLogger\Log\Logger;
 
 class RfrCache extends Cache
 {
@@ -16,21 +17,28 @@ class RfrCache extends Cache
      * @var FeatureToggles
      */
     private $featureToggles;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * @param StorageInterface $storage
      * @param CacheKeyGenerator $cacheKeyGenerator
      * @param FeatureToggles $featureToggles
+     * @param Logger $logger
      */
     public function __construct(
         StorageInterface $storage,
         CacheKeyGenerator $cacheKeyGenerator,
-        FeatureToggles $featureToggles
+        FeatureToggles $featureToggles,
+        Logger $logger
     )
     {
         parent::__construct($storage, $cacheKeyGenerator);
 
         $this->featureToggles = $featureToggles;
+        $this->logger = $logger;
     }
 
     /**
@@ -48,6 +56,7 @@ class RfrCache extends Cache
             return  $this->storage->getItem($key);
 
         } catch (\Exception $ex) {
+            $this->logMsg("Failed to get from cache, Message: {$ex->getMessage()} , stackTrace: {$ex->getTraceAsString()}", func_get_args(), __METHOD__);
             return null;
         }
     }
@@ -68,6 +77,7 @@ class RfrCache extends Cache
             return $this->storage->setItem($key, $value);
 
         } catch (\Exception $ex) {
+            $this->logMsg("Failed to set item in cache, Message: {$ex->getMessage()} , stackTrace: {$ex->getTraceAsString()}", func_get_args(), __METHOD__);
             return false;
         }
     }
@@ -78,5 +88,59 @@ class RfrCache extends Cache
     public function isEnabled(): bool
     {
         return $this->featureToggles->isEnabled(FeatureToggle::RFR_CACHE);
+    }
+
+    /**
+     * @param $msg
+     * @param $methodArgs
+     * @param string $method
+     */
+    private function logMsg($msg, $methodArgs, $method = __METHOD__)
+    {
+        $methodArgsPrintable = $this->printifyFunctionArgs($methodArgs);
+
+        $loggedMsg = sprintf("[%s] (function args: %s) %s",
+            $method,
+            print_r($methodArgsPrintable, true),
+            $msg
+        );
+
+        $this->logger->warn($loggedMsg);
+    }
+
+    /**
+     * @param $methodArgs
+     * @return array
+     */
+    private function printifyFunctionArgs($methodArgs)
+    {
+        $return = [];
+
+        if(is_null($methodArgs)){
+            return [ 0 =>'null'];
+        }
+
+        foreach($methodArgs as $key => $value)
+        {
+            if (is_null($value)) {
+                $return[$key] = 'null';
+                continue;
+            }
+
+            if (is_bool($value)) {
+                $return[$key] = true === $value ? 'true' : 'false';
+                continue;
+            }
+
+            if (is_array($value)) {
+                $count = count($value);
+                $return[$key] = "array of $count elements";
+                continue;
+            }
+
+            $return[$key] = $value;
+        }
+
+        return $return;
     }
 }
