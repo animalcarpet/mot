@@ -7,45 +7,39 @@ use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
 
 class ReasonForRejectionData extends AbstractData
 {
     private $reasonForRejection;
+    private $rfrClient;
 
-    public function __construct(ReasonForRejection $reasonForRejection, UserData $userData)
+    public function __construct(ReasonForRejection $reasonForRejection, UserData $userData, SearchReasonForRejectionInterface $rfrClient)
     {
         parent::__construct($userData);
 
         $this->reasonForRejection = $reasonForRejection;
+        $this->rfrClient = $rfrClient;
     }
 
-    public function searchByUser(AuthenticatedUser $user, MotTestDto $mot, $term, $start, $end)
+    public function searchWithParams($vehicleClassCode, $term, $audience = SearchReasonForRejectionInterface::TESTER_ROLE_FLAG, $page = 1)
     {
-        $this->reasonForRejection->search(
-            $user->getAccessToken(),
-            $mot->getMotTestNumber(),
+        return $this->rfrClient->search(
             $term,
-            $start,
-            $end
+            $vehicleClassCode,
+            $audience,
+            $page
         );
     }
 
-    public function search(MotTestDto $mot, $term, $start, $end)
+    public function search(MotTestDto $mot, $term, $audience, $page)
     {
-        $tester = $this->getTesterFormMotTest($mot);
-        $this->searchByUser($tester, $mot, $term, $start, $end);
-
-    }
-
-    public function searchWithDefaultParamsByUser(AuthenticatedUser $user, MotTestDto $mot)
-    {
-        $this->searchByUser($user, $mot, "brake", 0, 2);
+        return $this->searchWithParams($mot->getVehicleClass()->getCode(), $term, $audience, $page);
     }
 
     public function searchWithDefaultParams(MotTestDto $mot)
     {
-        $tester = $this->getTesterFormMotTest($mot);
-        $this->searchWithDefaultParamsByUser($tester, $mot);
+        return $this->search($mot, "brake", "t", 1);
     }
 
     public function listTestItemSelectorsByUser(AuthenticatedUser $user, MotTestDto $mot, $rootItemId = 0)

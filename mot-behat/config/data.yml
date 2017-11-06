@@ -129,4 +129,5 @@ services:
         arguments:
             - @dvsa.reason_for_rejection
             - @dvsa.data.user
+            - @dvsa.reason_for_rejection_client
 

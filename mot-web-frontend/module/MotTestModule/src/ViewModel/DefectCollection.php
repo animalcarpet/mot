@@ -8,6 +8,8 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DvsaCommon\Utility\TypeCheck;
+use DvsaCommon\Dto\ReasonForRejection\ReasonForRejectionDto;
 
 /**
  * A collection of Defect instances belonging to the same category.
@@ -81,38 +83,61 @@ class DefectCollection extends ArrayCollection
     }
 
     /**
-     * @param array $searchResults
+     * @param ReasonForRejectionDto[] $result
      *
-     * @return DefectCollection
+     *  @return DefectCollection
      */
-    public static function fromSearchResults(array $searchResults)
+    public static function fromSearchResult(array $result)
     {
+        TypeCheck::assertCollectionOfClass($result, ReasonForRejectionDto::class);
+
         $defects = [];
-        foreach ($searchResults['data']['reasonsForRejection'] as $searchResult) {
+        foreach ($result as $dto) {
             $defect = new Defect(
-                $searchResult['rfrId'],
-                $searchResult['testItemSelectorId'],
-                $searchResult['description'],
-                $searchResult['testItemSelectorName'],
-                !self::isDefectInNonComponentAdvisoriesCategory(
-                    $searchResult['testItemSelectorId']
-                ) ? $searchResult['advisoryText']
-                    : '',
-                !self::isDefectInNonComponentAdvisoriesCategory(
-                    $searchResult['testItemSelector']
-                ) ? $searchResult['inspectionManualReference']
-                    : '',
-                $searchResult['isAdvisory'],
-                $searchResult['isPrsFail'],
-                !$searchResult['isPrsFail'] && !$searchResult['isAdvisory'],
-                $searchResult['deficiencyCategoryCode'],
-                $searchResult['isPreEuDirective']
+                $dto->getRfrId(),
+                $dto->getTestItemSelectorId(),
+                $dto->getDescription(),
+                $dto->getTestItemSelectorName(),
+                self::getAdvisoryText($dto),
+                self::getInspectionManualReference($dto),
+                $dto->getIsAdvisory(),
+                $dto->getIsPrsFail(),
+                self::isFailure($dto),
+                $dto->getDeficiencyCategoryCode(),
+                $dto->getIsPreEuDirective()
             );
 
-            array_push($defects, $defect);
+            $defect->setInspectionManualReferenceUrl($dto->getInspectionManualReferenceUrl());
+
+            $defects[] = $defect;
         }
 
         return new self($defects);
+    }
+
+    private static function getAdvisoryText(ReasonForRejectionDto $dto): string
+    {
+        $advisoryText = "";
+        if (self::isDefectInNonComponentAdvisoriesCategory($dto->getTestItemSelectorId()) === false) {
+            $advisoryText = $dto->getAdvisoryText();
+        }
+
+        return $advisoryText;
+    }
+
+    private static function getInspectionManualReference(ReasonForRejectionDto $dto): string
+    {
+        $inspectionManualReference = "";
+        if (self::isDefectInNonComponentAdvisoriesCategory($dto->getTestItemSelectorId()) === false) {
+            $inspectionManualReference = $dto->getInspectionManualReference();
+        }
+
+        return $inspectionManualReference;
+    }
+
+    private static function isFailure(ReasonForRejectionDto $dto): bool
+    {
+        return (!$dto->getIsPrsFail() && !$dto->getIsAdvisory());
     }
 
     /**

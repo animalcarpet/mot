@@ -95,6 +95,8 @@ use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use DvsaMotApi\Service\VehicleHistoryService;
+use DvsaMotApi\Service\ReasonForRejection\SearchReasonForRejectionService;
+use DvsaMotApi\Factory\SearchReasonForRejectionServiceFactory;
 
 return [
     'invokables' => [
@@ -166,5 +168,6 @@ return [
         CertificateOdometerHistoryUpdater::class => CertificateOdometerHistoryUpdaterFactory::class,
         CertificateTypeRepository::class => CertificateTypeRepositoryFactory::class,
         CertificateReplacementRepository::class => CertificateReplacementRepositoryFactory::class,
+        SearchReasonForRejectionService::class => SearchReasonForRejectionServiceFactory::class
     ],
 ];

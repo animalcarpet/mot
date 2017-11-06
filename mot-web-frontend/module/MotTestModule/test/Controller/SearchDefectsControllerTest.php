@@ -13,7 +13,10 @@ use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
+use Dvsa\Mot\Frontend\MotTestModule\Service\ReasonForRejectionPaginator;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SearchReasonForRejectionService;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
+use DvsaCommon\ReasonForRejection\ReasonForRejectionResponseDto;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTestTest\TestHelper\Fixture;
@@ -37,9 +40,20 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
             $this->getMockVehicleServiceClient()
         );
 
+        $dto = new ReasonForRejectionResponseDto();
+        $dto->setData([]);
+        $dto->setTotalCount(0);
+        $dto->setItemPerPage(5);
+        $dto->setPage(1);
+
+        $searchReasonForRejectionService = XMock::of(SearchReasonForRejectionService::class);
+        $searchReasonForRejectionService
+            ->method("search")
+            ->willReturn(new ReasonForRejectionPaginator($dto));
+
         $this->setServiceManager($this->serviceManager);
         $this->setController(
-            new SearchDefectsController()
+            new SearchDefectsController($searchReasonForRejectionService)
         );
 
         parent::setUp();

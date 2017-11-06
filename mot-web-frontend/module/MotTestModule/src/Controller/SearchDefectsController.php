@@ -11,13 +11,12 @@ use DateTime;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Resource\Item\VehicleClass;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\Service\ReasonForRejectionPaginator;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SearchReasonForRejectionService;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\Paginator\Adapter\ArrayAdapter;
@@ -41,6 +40,13 @@ class SearchDefectsController extends AbstractDvsaMotTestController
     const QUERY_PARAM_SEARCH_TERM = 'q';
     const QUERY_PARAM_SEARCH_PAGE = 'p';
 
+    private $reasonForRejectionService;
+
+    public function __construct(SearchReasonForRejectionService $reasonForRejectionService)
+    {
+        $this->reasonForRejectionService = $reasonForRejectionService;
+    }
+
     /**
      * Handles the root categories view when the search functionality is enabled. No category is selected.
      *
@@ -52,7 +58,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $searchTerm = $this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_TERM);
-        $page = $this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_PAGE);
+        $page = (int) $this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_PAGE, 0);
         if (empty($page)) {
             $page = 1;
         }
@@ -94,18 +100,10 @@ class SearchDefectsController extends AbstractDvsaMotTestController
         $this->setHeadTitle('Search for a defect');
 
         if ($searchTerm !== '' && !is_null($searchTerm)) {
-            $defects = $this->getSearchResultsFromApi();
+            $paginator = $this->getSearchResultsFromApi($searchTerm, $vehicle->getVehicleClass()->getCode(), $page);
         }
 
-        if (!is_null($defects)) {
-            $defects = $this->addInspectionManualReferenceUrls($defects, $vehicleClassCode);
-            $paginator = new Paginator(new ArrayAdapter($defects->getDefects()));
-            $paginator->setItemCountPerPage(10);
-            $paginator->setPageRange(5);
-            $paginator->setCurrentPageNumber($page);
-        }
-
-        $hasResults = !empty($defects);
+        $hasResults = !is_null($paginator);
         $isRetest = $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST;
 
         return $this->createViewModel('defects/search.twig', [
@@ -176,83 +174,8 @@ class SearchDefectsController extends AbstractDvsaMotTestController
         return $breadcrumbs;
     }
 
-    /**
-     * Due to time constraints I wasn't able to change the API to make it work
-     * in a sane way. So we just fetch all the results for the search term.
-     *
-     * This doesn't work too badly. A search term returning >500 results only
-     * takes around half a second to return.
-     *
-     * This will return a DefectCollection containing all the defects which
-     * correspond to the search term, which can then be used in a Paginator.
-     *
-     * The API is broken in two ways:
-     *  the 'end' parameter doesn't do anything;
-     *  the 'count' which the API returns is always 10 or less, regardless of how
-     *      many results there actually are.
-     *
-     * @return DefectCollection|null
-     *
-     * @see Paginator
-     */
-    private function getSearchResultsFromApi()
+    private function getSearchResultsFromApi(string $searchTerm, string $vehicleClassCode, int $page): ReasonForRejectionPaginator
     {
-        $searchTerm = $this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_TERM);
-        if ($searchTerm === '') {
-            return null;
-        }
-
-        $motTestNumber = $this->params()->fromRoute('motTestNumber');
-        $searchResults = null;
-
-        try {
-            $params =
-                [
-                    'search' => $searchTerm,
-                    'start' => self::WE_ARE_NOT_USING_THIS_PARAMETER,
-                    'end' => self::WE_ARE_NOT_USING_THIS_PARAMETER,
-                ];
-
-            $endPoint = MotTestUrlBuilder::motSearchTestItem($motTestNumber);
-
-            /**
-             * @var array
-             */
-            $resultsFromApi = $this
-                ->getRestClient()
-                ->getWithParamsReturnDto($endPoint, $params);
-
-            $searchResults = DefectCollection::fromSearchResults($resultsFromApi);
-        } catch (RestApplicationException $e) {
-            $this->addErrorMessages($e->getDisplayMessages());
-        }
-
-        return $searchResults;
-    }
-
-    /**
-     * @param DefectCollection $defects
-     * @param VehicleClass     $vehicleClassCode
-     *
-     * @return DefectCollection
-     */
-    private function addInspectionManualReferenceUrls(DefectCollection $defects, $vehicleClassCode)
-    {
-        foreach ($defects as $defect) {
-            /* @var Defect $defect */
-            // Generate inspection manual reference URL for each defect
-            $inspectionManualReference = trim($defect->getInspectionManualReference());
-            $vehicleClass = (intval($vehicleClassCode->getCode()) > 2) ? 4 : 1;
-
-            if (strlen($inspectionManualReference)) {
-                $inspectionManualReferenceParts = explode('.', $inspectionManualReference);
-                if (count($inspectionManualReferenceParts) >= 2) {
-                    $defect->setInspectionManualReferenceUrl(sprintf('documents/manuals/m%ds0%s000%s01.htm',
-                        $vehicleClass, $inspectionManualReferenceParts[0], $inspectionManualReferenceParts[1]));
-                }
-            }
-        }
-
-        return $defects;
+        return $this->reasonForRejectionService->search($searchTerm, $vehicleClassCode, $page);
     }
 }

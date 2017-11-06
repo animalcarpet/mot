@@ -5,7 +5,12 @@ use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Data\ReasonForRejectionData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use DvsaCommon\ReasonForRejection\SearchReasonForRejectionResponseInterface;
 use Zend\Http\Response as HttpResponse;
+use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
+use DvsaCommon\ApiClient\ReasonForRejection\ReasonForRejectionApiResource;
+use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
+use DvsaCommon\Dto\ReasonForRejection\ReasonForRejectionDto;
 
 class ReasonForRejectionContext implements Context
 {
@@ -15,14 +20,24 @@ class ReasonForRejectionContext implements Context
 
     private $motTestData;
 
+    private $apiResourceHelper;
+
+    /** @var SearchReasonForRejectionResponseInterface */
+    private $reasonForRejectionResponse = null;
+
+    /** @var SearchReasonForRejectionResponseInterface */
+    private $synonymReasonForRejectionResponse = null;
+
     public function __construct(
         ReasonForRejectionData $reasonForRejectionData,
         UserData $userData,
-        MotTestData $motTestData
+        MotTestData $motTestData,
+        ApiResourceHelper $apiResourceHelper
     ) {
         $this->reasonForRejectionData = $reasonForRejectionData;
         $this->userData = $userData;
         $this->motTestData = $motTestData;
+        $this->apiResourceHelper = $apiResourceHelper;
     }
 
     /**
@@ -30,14 +45,82 @@ class ReasonForRejectionContext implements Context
      */
     public function iCanSearchForRfr()
     {
-        $this->reasonForRejectionData->searchWithDefaultParamsByUser(
-            $this->userData->getCurrentLoggedUser(),
+        $response = $this->reasonForRejectionData->searchWithDefaultParams(
             $this->motTestData->getLast()
         );
 
-        $response = $this->reasonForRejectionData->getLastResponse();
+        PHPUnit::assertGreaterThan(0, $response->getTotalCount());
+    }
 
-        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    /**
+     * @When I search for reason for rejection by :searchTerm for vehicle class :vehicleClassCode
+     */
+    public function iSearchForReasonForRejectionByForVehicleClass($searchTerm, $vehicleClassCode)
+    {
+        $this->reasonForRejectionResponse = $this->reasonForRejectionData->searchWithParams($vehicleClassCode, $searchTerm);
+    }
+
+    /**
+     * @When I search for reason for rejection by :searchTerm for vehicle class :vehicleClassCode via api
+     */
+    public function iSearchForReasonForRejectionByForVehicleClassViaApi($searchTerm, $vehicleClassCode)
+    {
+        /** @var ReasonForRejectionApiResource $rfrApiClient */
+        $rfrApiClient = $this->apiResourceHelper->create(ReasonForRejectionApiResource::class);
+
+        $this->reasonForRejectionResponse = $rfrApiClient->search($searchTerm, $vehicleClassCode, SearchReasonForRejectionInterface::TESTER_ROLE_FLAG, 1);
+    }
+
+    /**
+     * @Then Reason for rejection is returned
+     */
+    public function reasonForRejectionIsReturned()
+    {
+        PHPUnit::assertGreaterThan(0, $this->reasonForRejectionResponse->getTotalCount());
+    }
+
+    /**
+     * @When I search for reason for rejection by synonym :synonymedTerm for vehicle class :vehicleClass
+     */
+    public function iSearchForReasonForRejectionBySynonymForVehicleClass($synonymedTerm, $vehicleClass)
+    {
+        $this->synonymReasonForRejectionResponse = $this->reasonForRejectionData->searchWithParams($vehicleClass, $synonymedTerm);
+    }
+
+    /**
+     * @Then Both sets of returned reasons for rejection are the same
+     */
+    public function bothSetsOfReturnedReasonsForRejectionAreTheSame()
+    {
+        PHPUnit::assertGreaterThan(0, $this->reasonForRejectionResponse->getTotalCount());
+
+        $areRfrsEqual = $this->synonymReasonForRejectionResponse->getData() === $this->reasonForRejectionResponse->getData();
+
+        PHPUnit::assertTrue($areRfrsEqual, "Rfrs are not equal!");
+    }
+
+    /**
+     * @Then All returned reasons for rejection contain the exact :expectedTerm term
+     */
+    public function allReturnedReasonsForRejectionContainTheExactTerm($expectedTerm)
+    {
+        PHPUnit::assertGreaterThan(0, $this->reasonForRejectionResponse->getTotalCount());
+
+        $rfrs = $this->reasonForRejectionResponse->getData();
+
+        foreach($rfrs as $rfr) {
+            $rfrDataContainsTerm = $this->checkIfRfrDataContainsTerm($rfr, $expectedTerm);
+
+            PHPUnit::assertTrue($rfrDataContainsTerm, "Not all returned RFRs doesn't contain the specified term!");
+        }
+    }
+
+    /**
+     * @Then Reason for rejection is not returned
+     */
+    public function reasonForRejectionIsNotReturned()
+    {
+        PHPUnit::assertEquals(0, $this->reasonForRejectionResponse->getTotalCount());
     }
 
     /**
@@ -92,6 +175,43 @@ class ReasonForRejectionContext implements Context
     }
 
     /**
+     * @Then The first returned element contains :synonymTerm but not :baseTerm
+     */
+    public function theFirstReturnedElementContainsButNot($baseTerm, $synonymTerm)
+    {
+        PHPUnit::assertGreaterThan(0, $this->reasonForRejectionResponse->getTotalCount());
+
+        $topRfr = $this->reasonForRejectionResponse->getData()[0];
+
+        $rfrContainsBaseTerm = $this->checkIfRfrDataContainsTerm($topRfr, $baseTerm);
+        $rfrContainsSynonymTerm = $this->checkIfRfrDataContainsTerm($topRfr, $synonymTerm);
+
+        PHPUnit::assertFalse($rfrContainsBaseTerm, "The base term was found within the RFR");
+        PHPUnit::assertTrue($rfrContainsSynonymTerm, "The synonym was not found within the RFR");
+    }
+
+    /**
+     * @Then Any of the returned reasons for rejection contains the exact :expectedTerm term
+     */
+    public function anyOfTheReturnedReasonsForRejectionContainsTheExactTerm($expectedTerm)
+    {
+        PHPUnit::assertGreaterThan(0, $this->reasonForRejectionResponse->getTotalCount());
+
+        $rfrs = $this->reasonForRejectionResponse->getData();
+
+        $containsTerm = false;
+        foreach($rfrs as $rfr) {
+
+            if($this->checkIfRfrDataContainsTerm($rfr, $expectedTerm)) {
+                $containsTerm = true;
+                break;
+            }
+        }
+
+        PHPUnit::assertTrue($containsTerm, "Not even one of the returned RFRs contains the specified term!");
+    }
+
+    /**
      * @Given /^I can add PRS to test$/
      */
     public function iCanAddPRSToTest()
@@ -136,4 +256,19 @@ class ReasonForRejectionContext implements Context
         );
     }
 
+    private function checkIfRfrDataContainsTerm(ReasonForRejectionDto $rfr, $expectedTerm) {
+        $description = $rfr->getDescription();
+        $testItemSelectorName = $rfr->getTestItemSelectorName();
+        $inspectionManualReference = $rfr->getInspectionManualReference();
+        $rfrId = $rfr->getRfrId();
+
+        $expectedTermRegExp = "/" . $expectedTerm . "/";
+
+        $rfrDataContainsTerm = (preg_match($expectedTermRegExp, $description)) ||
+            (preg_match($expectedTermRegExp, $testItemSelectorName)) ||
+            (preg_match($expectedTermRegExp, $inspectionManualReference)) ||
+            (preg_match($expectedTermRegExp, $rfrId));
+
+        return $rfrDataContainsTerm;
+    }
 }
