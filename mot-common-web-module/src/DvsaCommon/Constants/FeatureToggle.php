@@ -15,4 +15,5 @@ class FeatureToggle
     const VEHICLE_WEIGHT_FROM_VEHICLE = 'vehicle_weight_from_vehicle';
     const EU_ROADWORTHINESS = 'eu_roadworthiness';
     const RFR_CACHE = 'rfr_cache';
+    const RFR_ELASTICSEARCH = 'rfr_elasticsearch';
 }

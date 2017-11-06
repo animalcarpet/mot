@@ -4,10 +4,9 @@ namespace DvsaEntities\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
+use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Enum\LanguageTypeCode;
-use DvsaEntities\Entity\ReasonForRejectionDescription;
 use DvsaEntities\Entity\ReasonForRejection;
-use DvsaEntities\Entity\TestItemSelector;
 use DvsaCommon\Date\RfrCurrentDateFaker;
 /**
  * A repository for Reasons For Rejection related functionality.
@@ -102,24 +101,55 @@ class RfrRepository
             ->getResult();
     }
 
-    /**
-     * @param string $searchString
-     * @param string $vehicleClass
-     * @param string $role
-     * @param int    $start
-     * @param int    $end
-     *
-     * @return ReasonForRejection[]
-     */
-    public function findBySearchQuery(
-        $searchString,
-        $vehicleClass,
-        $role,
-        $start,
-        $end
-    ) {
-        $rsm = $this->getSearchResultSetMapping();
+    public function findAll() :array
+    {
+        $stmt = $this->em->getConnection()->prepare(
+                '
+                SELECT 
+                    rfr.id AS rfrId,
+                    rfr.test_item_category_id AS testItemSelectorId,
+                    rfl.test_item_selector_name AS testItemSelectorName,
+                    rfr.inspection_manual_reference AS inspectionManualReference,
+                    rfr.manual AS manual,
+                    rfr.is_advisory AS isAdvisory,
+                    rfr.is_prs_fail AS isPrsFail,
+                    rfr.audience AS audience,
+                    rfr.start_date AS startDate,
+                    rfr.end_date AS endDate,
+                    ticlm.name AS categoryName,
+                    ticlm.description AS categoryDescription,
+                    rfl.name AS description,
+                    rfl.advisory_text AS advisoryText,
+                    rfl.inspection_manual_description AS inspectionManualDescription,
+                    rdc.id AS deficiencyCategoryId,
+                    rdc.code AS deficiencyCategoryCode,
+                    rdc.description AS deficiencyCategoryDescription,
+                    GROUP_CONCAT(vclass.id) AS vehicleClasses
+                FROM reason_for_rejection rfr
+                
+                JOIN rfr_vehicle_class_map vc ON rfr.id = vc.rfr_id
+                JOIN vehicle_class vclass ON vc.vehicle_class_id = vclass.id
+                JOIN rfr_language_content_map rfl ON rfl.rfr_id = rfr.id
+                JOIN language_type lang ON rfl.language_type_id = lang.id
+                JOIN test_item_category tis ON rfr.test_item_category_id = tis.id
+                LEFT JOIN ti_category_language_content_map ticlm 
+                    ON ticlm.test_item_category_id = tis.id
+                    AND ticlm.language_lookup_id = (SELECT id FROM language_type WHERE code = :languageCode)
+                JOIN rfr_deficiency_category rdc ON rdc.id = rfr.rfr_deficiency_category_id 
 
+                WHERE rfr.spec_proc = 0
+                    AND (rfr.end_date IS NULL OR rfr.end_date > CURRENT_DATE)
+                    AND lang.code = :languageCode
+                GROUP BY rfr.id
+                '
+            );
+        $stmt->bindValue('languageCode', LanguageTypeCode::ENGLISH);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function findBySearchQuery(string $searchString, string $vehicleClass, string $audience, int $start, int $end): array
+    {
         $booleanSearch = str_replace(
             ['+', '<', '>', '&', '-', '@', '(', ')', '~', '*', '"'],
             ' ',
@@ -128,95 +158,115 @@ class RfrRepository
 
         $likeSearchParam = "$searchString%";
 
-        return $this->em
-            ->createNativeQuery(
-                '
-                SELECT
-                    rfr.id as rfr_id,
-                    rfr.test_item_category_id,
-                    rfr.test_item_selector_name,
-                    rfr.inspection_manual_reference,
-                    rfr.minor_item,
-                    rfr.location_marker,
-                    rfr.qt_marker,
-                    rfr.note,
-                    rfr.manual,
-                    rfr.spec_proc,
-                    rfr.is_advisory,
-                    rfr.is_prs_fail,
-                    rfr.can_be_dangerous,
-                    rfr.audience,
-                    tis.id testItemSelect_id,
-                    tis.parent_test_item_category_id,
-                    tis.section_test_item_category_id,
-                    rfl.id as rfl_id,
-                    rfl.name,
-                    rfl.advisory_text,
-                    rfl.inspection_manual_description,
+        $sqlPattern = '
+            SELECT
+                rfr.id AS rfrId,
+                rfr.test_item_category_id AS testItemSelectorId,
+                rfl.test_item_selector_name AS testItemSelectorName,
+                rfr.inspection_manual_reference AS inspectionManualReference,
+                rfr.manual AS manual,
+                rfr.is_advisory AS isAdvisory,
+                rfr.is_prs_fail AS isPrsFail,
+                rfr.audience AS audience,
+                rfr.start_date AS startDate,
+                rfr.end_date AS endDate,
+                ticlm.name AS categoryName,
+                ticlm.description AS categoryDescription,
+                rfl.name AS description,
+                rfl.advisory_text AS advisoryText,
+                rfl.inspection_manual_description AS inspectionManualDescription,
+                rdc.id AS deficiencyCategoryId,
+                rdc.code AS deficiencyCategoryCode,
+                rdc.description AS deficiencyCategoryDescription,
+                GROUP_CONCAT(vclass.id) AS vehicleClasses,
                 MATCH (rfl.name, rfl.test_item_selector_name) AGAINST (:searchString IN BOOLEAN MODE) AS rank
-                FROM reason_for_rejection rfr
-                JOIN rfr_vehicle_class_map vc ON rfr.id = vc.rfr_id
-                JOIN vehicle_class vclass ON vc.vehicle_class_id = vclass.id
-                JOIN rfr_language_content_map rfl on rfl.rfr_id = rfr.id
-                JOIN language_type lang on rfl.language_type_id = lang.id
-                JOIN test_item_category tis on rfr.test_item_category_id = tis.id
-                WHERE vclass.code = :vehicleClass
-                    AND (rfr.audience = :role OR rfr.audience = \'b\')
-                    AND (
-                        MATCH (rfl.name, rfl.test_item_selector_name) AGAINST (:searchString IN BOOLEAN MODE)
-                        OR rfr.inspection_manual_reference LIKE :likeSearchParam
-                        OR rfr.id LIKE :likeSearchParam
-                    )
-                    AND rfr.spec_proc = 0
-                    AND (rfr.end_date IS NULL OR rfr.end_date > :currentDate)
-                    AND rfr.start_date <= :currentDate
-                    AND lang.code = :languageCode
-                ORDER BY rank DESC, rfr.inspection_manual_reference ASC LIMIT :limitStart, :limitEnd
-                ',
-                $rsm
-            )
-            ->setParameter('searchString', $booleanSearch)
-            ->setParameter('vehicleClass', $vehicleClass)
-            ->setParameter('role', $role)
-            ->setParameter('likeSearchParam', $likeSearchParam)
-            ->setParameter('limitStart', $start)
-            ->setParameter('limitEnd', $end)
-            ->setParameter('languageCode', LanguageTypeCode::ENGLISH)
-            ->setParameter('currentDate', $this->rfrCurrentDateFaker->getCurrentDateTime())
-            ->getResult();
+            %s
+            ORDER BY rank DESC, rfr.inspection_manual_reference ASC
+            LIMIT :limitStart, :limitEnd
+        ';
+
+        $sql = sprintf($sqlPattern, $this->getCommonSqlForSearchingRfrs());
+
+
+        $stmt = $this->em->getConnection()->prepare($sql);
+
+        $stmt->bindValue('languageCode', LanguageTypeCode::ENGLISH);
+        $stmt->bindValue('searchString', $booleanSearch);
+        $stmt->bindValue('vehicleClass', $vehicleClass);
+        $stmt->bindValue('audience', $audience);
+        $stmt->bindValue('likeSearchParam', $likeSearchParam);
+        $stmt->bindValue('limitStart', (int) $start, \PDO::PARAM_INT);
+        $stmt->bindValue('limitEnd', (int) $end, \PDO::PARAM_INT);
+        $stmt->bindValue('currentDate', $this->getRfrCurrentDate());
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 
-    /**
-     * @return ResultSetMapping
-     */
-    private static function getSearchResultSetMapping()
+    public function count(string $searchString, string $vehicleClass, string $audience): int
     {
-        $rsm = new ResultSetMapping();
-        $rsm->addEntityResult(ReasonForRejection::class, 'rfr');
-        $rsm->addFieldResult('rfr', 'rfr_id', 'rfrId');
-        $rsm->addFieldResult('rfr', 'test_item_category_id', 'testItemSelectorId');
-        $rsm->addFieldResult('rfr', 'test_item_selector_name', 'testItemSelectorName');
-        $rsm->addFieldResult('rfr', 'inspection_manual_reference', 'inspectionManualReference');
-        $rsm->addFieldResult('rfr', 'minor_item', 'minorItem');
-        $rsm->addFieldResult('rfr', 'location_marker', 'locationMarker');
-        $rsm->addFieldResult('rfr', 'qt_marker', 'qtMarker');
-        $rsm->addFieldResult('rfr', 'note', 'note');
-        $rsm->addFieldResult('rfr', 'manual', 'manual');
-        $rsm->addFieldResult('rfr', 'spec_proc', 'specProc');
-        $rsm->addFieldResult('rfr', 'is_advisory', 'isAdvisory');
-        $rsm->addFieldResult('rfr', 'is_prs_fail', 'isPrsFail');
-        $rsm->addFieldResult('rfr', 'can_be_dangerous', 'canBeDangerous');
-        $rsm->addFieldResult('rfr', 'audience', 'audience');
+        $booleanSearch = str_replace(
+            ['+', '<', '>', '&', '-', '@', '(', ')', '~', '*', '"'],
+            ' ',
+            $searchString
+        );
 
-        $rsm->addJoinedEntityResult(ReasonForRejectionDescription::class, 'rfl', 'rfr', 'descriptions');
-        $rsm->addFieldResult('rfl', 'rfl_id', 'id');
-        $rsm->addFieldResult('rfl', 'name', 'name');
-        $rsm->addFieldResult('rfl', 'advisory_text', 'advisoryText');
-        $rsm->addFieldResult('rfl', 'inspection_manual_description', 'inspectionManualDescription');
+        $likeSearchParam = "$searchString%";
 
-        $rsm->addJoinedEntityResult(TestItemSelector::class, 'tis', 'rfr', 'testItemSelector');
-        $rsm->addFieldResult('tis', 'testItemSelect_id', 'id');
+        $sqlPattern = '
+                SELECT COUNT(id) AS amount
+                FROM (
+                    SELECT rfr.id
+                    %s
+                ) rfr_id
+                ';
 
-        return $rsm;
+        $sql = sprintf($sqlPattern, $this->getCommonSqlForSearchingRfrs());
+
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->bindValue('languageCode', LanguageTypeCode::ENGLISH);
+        $stmt->bindValue('searchString', $booleanSearch);
+        $stmt->bindValue('vehicleClass', $vehicleClass);
+        $stmt->bindValue('audience', $audience);
+        $stmt->bindValue('likeSearchParam', $likeSearchParam);
+        $stmt->bindValue('currentDate', $this->getRfrCurrentDate());
+
+        $stmt->execute();
+
+        return (int) $stmt->fetch()["amount"];
+    }
+
+    private function getCommonSqlForSearchingRfrs(): string
+    {
+        return "
+            FROM reason_for_rejection rfr
+            JOIN rfr_vehicle_class_map vc ON rfr.id = vc.rfr_id
+            JOIN vehicle_class vclass ON vc.vehicle_class_id = vclass.id
+            JOIN rfr_language_content_map rfl ON rfl.rfr_id = rfr.id
+            JOIN language_type lang ON rfl.language_type_id = lang.id
+            JOIN test_item_category tis ON rfr.test_item_category_id = tis.id
+            LEFT JOIN ti_category_language_content_map ticlm
+                ON ticlm.test_item_category_id = tis.id
+                AND ticlm.language_lookup_id = (SELECT id FROM language_type WHERE code = :languageCode)
+            JOIN rfr_deficiency_category rdc ON rdc.id = rfr.rfr_deficiency_category_id
+
+            WHERE vclass.code = :vehicleClass
+                AND (rfr.audience = :audience OR rfr.audience = 'b')
+                AND (
+                    MATCH (rfl.name, rfl.test_item_selector_name) AGAINST (:searchString IN BOOLEAN MODE)
+                    OR rfr.inspection_manual_reference LIKE :likeSearchParam
+                    OR rfr.id LIKE :likeSearchParam
+                )
+                AND rfr.spec_proc = 0
+                AND (rfr.end_date IS NULL OR rfr.end_date > :currentDate)
+                AND rfr.start_date <= :currentDate
+                AND lang.code = :languageCode
+            GROUP BY rfr.id
+            ";
+    }
+
+    private function getRfrCurrentDate(): string
+    {
+        return $this->rfrCurrentDateFaker->getCurrentDateTime()->format(DateTimeApiFormat::FORMAT_ISO_8601_DATE_ONLY);
     }
 }

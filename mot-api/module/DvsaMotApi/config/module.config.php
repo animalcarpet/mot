@@ -13,6 +13,7 @@ use DvsaMotApi\Controller\MotTestShortSummaryController;
 use DvsaMotApi\Controller\MotTestStatusController;
 use DvsaMotApi\Controller\NonMotInspectionController;
 use DvsaMotApi\Controller\ReasonForRejectionController;
+use DvsaMotApi\Controller\SearchReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
 use DvsaMotApi\Controller\SessionConfirmationController;
@@ -213,6 +214,24 @@ return [
                     ],
                 ],
             ],
+            'all-reasons-for-rejection' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/reasons-for-rejection',
+                    'defaults' => [
+                        'controller' => ReasonForRejectionController::class,
+                    ],
+                ],
+            ],
+            'search-reasons-for-rejection' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/reasons-for-rejection/search',
+                    'defaults' => [
+                        'controller' => SearchReasonForRejectionController::class,
+                    ],
+                ],
+            ],
             'mot-test' => [
                 'type' => 'Segment',
                 'options' => [
@@ -270,15 +289,6 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                    ],
-                    'reason-for-rejection' => [
-                        'type' => 'Segment',
-                        'options' => [
-                            'route' => '/reason-for-rejection',
-                            'defaults' => [
-                                'controller' => ReasonForRejectionController::class,
-                            ],
-                        ],
                     ],
                     'short-summary' => [
                         'type' => 'Segment',

@@ -122,6 +122,27 @@ class DefectSentenceCaseConverter
     }
 
     /**
+     * @param $description
+     * @param $advisoryText
+     * @param $categoryName
+     * @return array
+     */
+    public function getRawDefectDetailsForSearch($description, $advisoryText, $categoryName)
+    {
+        $defectDetails = [
+            'description' => '',
+            'advisoryText' => ''
+        ];
+
+        $defectDetails['description'] = $categoryName.' '.$description;
+        $defectDetails['description'] = ucfirst(self::toFirstOccurrenceOfEachAcronymExpanded($defectDetails['description']));
+        $defectDetails['advisoryText'] = $categoryName.' '.$advisoryText;
+        $defectDetails['advisoryText'] = ucfirst(self::toFirstOccurrenceOfEachAcronymExpanded($defectDetails['advisoryText']));
+
+        return $defectDetails;
+    }
+
+    /**
      * @param TestItemSelector $category
      *
      * @return array

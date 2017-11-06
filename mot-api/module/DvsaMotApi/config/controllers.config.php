@@ -13,6 +13,7 @@ use DvsaMotApi\Controller\MotTestShortSummaryController;
 use DvsaMotApi\Controller\MotTestStatusController;
 use DvsaMotApi\Controller\NonMotInspectionController;
 use DvsaMotApi\Controller\ReasonForRejectionController;
+use DvsaMotApi\Controller\SearchReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
 use DvsaMotApi\Controller\SessionConfirmationController;
@@ -26,6 +27,7 @@ use DvsaMotApi\Factory\Controller\MotTestReasonForRejectionControllerFactory;
 use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
 use DvsaMotApi\Factory\Controller\NonMotInspectionControllerFactory;
 use DvsaMotApi\Factory\Controller\ReasonForRejectionControllerFactory;
+use DvsaMotApi\Factory\Controller\SearchReasonForRejectionControllerFactory;
 use DvsaMotApi\Factory\Controller\ReplacementCertificateDraftControllerFactory;
 use DvsaMotApi\Factory\Controller\SessionConfirmationControllerFactory;
 use DvsaMotApi\Factory\Controller\SurveyControllerFactory;
@@ -77,5 +79,6 @@ return [
         NonMotInspectionController::class => NonMotInspectionControllerFactory::class,
         'DvsaMotApi\Controller\TestItemSelector' => TestItemSelectorControllerFactory::class,
         ReasonForRejectionController::class => ReasonForRejectionControllerFactory::class,
+        SearchReasonForRejectionController::class => SearchReasonForRejectionControllerFactory::class,
     ],
 ];

@@ -1,6 +1,10 @@
 parameters:
     base_url: http://mot-api
     frontend_url: https://dev.motdev.org.uk/
+    elasticsearch_host: 10.0.2.2
+    elasticsearch_port: 9200
+    elasticsearch_index: "mot_search"
+    elasticsearch_region: "eu-west-1"
 
 services:
     dvsa.api:
@@ -146,6 +150,14 @@ services:
         public: false
         arguments:
             - base_uri: %base_url%
+
+    dvsa.reason_for_rejection_client:
+        class: Dvsa\Mot\Behat\Support\SearchReasonForRejectionElasticSearchClient
+        arguments:
+            - %elasticsearch_host%
+            - %elasticsearch_port%
+            - %elasticsearch_index%
+            - %elasticsearch_region%
 
     dvsa.http_client.reflective:
         class: Dvsa\Mot\Behat\Support\HttpClient\ReflectiveClient

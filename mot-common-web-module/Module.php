@@ -12,6 +12,10 @@ use DvsaCommon\Obfuscate\Factory\ParamObfuscatorFactory;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Validator\UsernameValidator;
+use DvsaCommon\ApiClient\ReasonForRejection\ReasonForRejectionApiResource;
+use DvsaCommon\ApiClient\ReasonForRejection\Factory\ReasonForRejectionApiResourceFactory;
+use DvsaCommon\ReasonForRejection\ElasticSearch\ReasonForRejectionElasticSearchClient;
+use DvsaCommon\ReasonForRejection\ElasticSearch\Factory\ReasonForRejectionElasticSearchClientFactory;
 use Zend\Loader\ClassMapAutoloader;
 use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -62,6 +66,8 @@ class Module implements
                 ParamObfuscator::class => ParamObfuscatorFactory::class,
                 UsernameValidator::class => UsernameValidatorFactory::class,
                 RfrCurrentDateFaker::class => RfrCurrentDateFakerFactory::class,
+                ReasonForRejectionApiResource::class => ReasonForRejectionApiResourceFactory::class,
+                ReasonForRejectionElasticSearchClient::class => ReasonForRejectionElasticSearchClientFactory::class,
             ],
         ];
     }

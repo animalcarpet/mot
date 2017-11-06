@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
+use DvsaCommon\Dto\ReasonForRejection\ReasonForRejectionDto;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 
 class DefectCollectionTest extends \PHPUnit_Framework_TestCase
@@ -55,27 +56,27 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider creationFromSearchResultsDataProvider
      *
-     * @param array $rawData
+     * @param ReasonForRejectionDto[] $dtos
      */
-    public function testCreationFromSearchResults(array $rawData)
+    public function testCreationFromSearchResults(array $dtos)
     {
-        $testCollection = DefectCollection::fromSearchResults($rawData);
-        $rawData = $rawData['data']['reasonsForRejection'][0];
+        $testCollection = DefectCollection::fromSearchResult($dtos);
+        $dto = $dtos[0];
 
         $this->assertInstanceOf(DefectCollection::class, $testCollection);
 
         $this->assertEquals(
-            $rawData['rfrId'],
+            $dto->getRfrId(),
             $testCollection->getDefects()[0]->getDefectId()
         );
 
         $this->assertEquals(
-            $rawData['testItemSelectorId'],
+            $dto->getTestItemSelectorId(),
             $testCollection->getDefects()[0]->getParentCategoryId()
         );
 
         $this->assertEquals(
-            $rawData['inspectionManualReference'],
+            $dto->getInspectionManualReference(),
             $testCollection->getDefects()[0]->getInspectionManualReference()
         );
     }
@@ -116,40 +117,23 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function creationFromSearchResultsDataProvider()
     {
+        $dto = new ReasonForRejectionDto();
+        $dto->setRfrId(1);
+        $dto->setTestItemSelectorId(2);
+        $dto->setDescription("Description");
+        $dto->setTestItemSelectorName("Hello");
+        $dto->setAdvisoryText("Advisory");
+        $dto->setInspectionManualReference("2.1.23");
+        $dto->setInspectionManualReferenceUrl("url");
+        $dto->setIsAdvisory(true);
+        $dto->setIsPrsFail(false);
+        $dto->setDeficiencyCategoryCode(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+        $dto->setIsPreEuDirective(true);
+
         return [
             [
-                [
-                'data' => [
-                    'reasonsForRejection' => [
-                        [
-                            'rfrId' => 10006,
-                            'testItemSelectorId' => 10000,
-                            'testItemSelectorName' => 'Vehicle > ',
-                            'inspectionManualReference' => '',
-                            'minorItem' => true,
-                            'locationMarker' => false,
-                            'qtMarker' => false,
-                            'note' => false,
-                            'manual' => '',
-                            'specProc' => false,
-                            'isAdvisory' => true,
-                            'isPrsFail' => false,
-                            'canBeDangerous' => false,
-                            'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
-                            'isPreEuDirective' => true,
-                            'audience' => 'b',
-                            'endDate' => null,
-                            'vehicleClasses' => [],
-                            'testItemSelector' => null,
-                            'sectionTestItemSelector' => null,
-                            'description' => 'Non obligatory mirror damaged',
-                            'advisoryText' => 'Non obligatory mirror damaged',
-                            'inspectionManualDescription' => '',
-                        ],
-                    ],
-                ],
-                ],
-            ],
+                [$dto]
+            ]
         ];
     }
 }

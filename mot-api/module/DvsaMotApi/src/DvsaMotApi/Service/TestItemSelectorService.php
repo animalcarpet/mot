@@ -3,18 +3,25 @@
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\PersistentCollection;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Configuration\MotConfig;
+use DvsaCommon\Constants\MotConfig\ElasticsearchConfigKeys;
+use DvsaCommon\Constants\MotConfig\MotConfigKeys;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
+use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
+use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\RfrRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Service\ReasonForRejection\ReasonForRejectionTypeConverterService;
 
 /**
  * Class TestItemSelectorService.
@@ -22,11 +29,7 @@ use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 class TestItemSelectorService extends AbstractService
 {
     const ROOT_SELECTOR_ID = 0;
-    const SEARCH_MAX_COUNT = 10;
     const RECURSION_MAX_LEVEL = 100;
-
-    const VE_ROLE_FLAG = 'v';
-    const TESTER_ROLE_FLAG = 't';
 
     protected $objectHydrator;
     protected $authService;
@@ -42,6 +45,9 @@ class TestItemSelectorService extends AbstractService
      */
     private $defectSentenceCaseConverter;
 
+    /** @var MotConfig */
+    private $motConfig;
+
     public function __construct(
         EntityManager $entityManager,
         DoctrineHydrator $objectHydrator,
@@ -49,7 +55,8 @@ class TestItemSelectorService extends AbstractService
         AuthorisationServiceInterface $authService,
         TestItemCategoryRepository $testItemCategoryRepository,
         array $disabledRfrs,
-        DefectSentenceCaseConverter $defectSentenceCaseConverter
+        DefectSentenceCaseConverter $defectSentenceCaseConverter,
+        MotConfig $motConfig
     ) {
         parent::__construct($entityManager);
 
@@ -59,6 +66,7 @@ class TestItemSelectorService extends AbstractService
         $this->testItemCategoryRepository = $testItemCategoryRepository;
         $this->disabledRfrs = $disabledRfrs;
         $this->defectSentenceCaseConverter = $defectSentenceCaseConverter;
+        $this->motConfig = $motConfig;
     }
 
     /**
@@ -195,6 +203,20 @@ class TestItemSelectorService extends AbstractService
         return $reasonsForRejectionData;
     }
 
+    private function extractVehicleClassessIntoRfr(array $testItemRfrData) {
+        $extractedVehicleClasses = [];
+
+        if (key_exists('vehicleClasses', $testItemRfrData) &&
+            $testItemRfrData['vehicleClasses'] instanceof PersistentCollection)
+        {
+            $extractedVehicleClasses = array_map(function(VehicleClass $class) {
+                return $class->getCode();
+            }, $testItemRfrData['vehicleClasses']->toArray());
+        }
+
+        return $extractedVehicleClasses;
+    }
+
     /**
      * @param ReasonForRejection $testItemRfr
      *
@@ -209,6 +231,8 @@ class TestItemSelectorService extends AbstractService
         if (!empty($defectDetails)) {
             $testItemRfrData = array_merge($testItemRfrData, $defectDetails);
         }
+
+        $testItemRfrData['vehicleClasses'] = $this->extractVehicleClassessIntoRfr($testItemRfrData);
 
         return $testItemRfrData;
     }
@@ -276,24 +300,42 @@ class TestItemSelectorService extends AbstractService
         return $parents;
     }
 
-    /**
-     * @param $vehicleClass
-     * @param string $searchString
-     *
-     * @return array
-     */
-    public function searchReasonsForRejection($vehicleClass, $searchString)
+    public function getAllReasonsForRejection(): array
     {
         $this->authService->assertGranted(PermissionInSystem::RFR_LIST);
+        return $reasonsForRejection = $this->rfrRepository->findAll();
+    }
 
-        $role = $this->determineRole();
-        $reasonsForRejection = $this->rfrRepository->findBySearchQuery($searchString, $vehicleClass, $role, 0, 9999);
-        $rfrCount = count($reasonsForRejection);
+    /**
+     * @param array $reasonsForRejection
+     * @return array
+     */
+    public function formatReasonsForRejectionForElasticSearch(array $reasonsForRejection)
+    {
+        $reasonForRejectionTypeConverterService = new ReasonForRejectionTypeConverterService();
+        $elasticSearchRFRs = [];
 
-        return [
-            'searchDetails' => ['count' => $rfrCount],
-            'reasonsForRejection' => $this->extractReasonsForRejection($reasonsForRejection),
-        ];
+        foreach ($reasonsForRejection as $rfr) {
+            if($this->shouldHideRfr($rfr['rfrId'])) {
+                continue;
+            }
+
+            $rfr = $reasonForRejectionTypeConverterService->convert($rfr);
+
+            $elasticsearchConfig = $this->motConfig->get(MotConfigKeys::ELASTICSEARCH);
+
+            $elasticSearchRFRs[] = [
+                ["index" =>
+                    [
+                        "_index" => $elasticsearchConfig[ElasticsearchConfigKeys::ES_INDEX_NAME],
+                        "_type" => 'reasons_for_rejection',
+                        "_id" => $rfr['rfrId']
+                    ],
+                ],
+                $rfr
+            ];
+        }
+        return $elasticSearchRFRs;
     }
 
     protected function extractTestItemSelector($testItemSelectors)
@@ -327,9 +369,9 @@ class TestItemSelectorService extends AbstractService
 
     protected function determineRole()
     {
-        $role = self::TESTER_ROLE_FLAG;
+        $role = SearchReasonForRejectionInterface::TESTER_ROLE_FLAG;
         if ($this->authService->isGranted(PermissionInSystem::VE_RFR_ITEMS_NOT_TESTED)) {
-            $role = self::VE_ROLE_FLAG;
+            $role = SearchReasonForRejectionInterface::VEHICLE_EXAMINER_ROLE_FLAG;
         }
 
         return $role;

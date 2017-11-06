@@ -3,7 +3,12 @@
 namespace DvsaMotApiTest\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DvsaCommon\Configuration\MotConfig;
+use DvsaCommon\Constants\MotConfig\ElasticsearchConfigKeys;
+use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
 use DvsaCommonTest\TestUtils\MockHandler;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemCategoryDescription;
@@ -21,9 +26,9 @@ use DvsaMotApi\Service\TestItemSelectorService;
 class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 {
     private $testMotTestNumber = '17';
-    private $vehicleClass = '4';
+    private $vehicleClass = VehicleClassCode::CLASS_4;
     private $testItemSelector;
-    private $determinedRole = 'v';
+    private $determinedRole = SearchReasonForRejectionInterface::VEHICLE_EXAMINER_ROLE_FLAG;
 
     private $mockTestItemCategoryRepository;
     private $mockRfrRepository;
@@ -32,6 +37,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
      * @var DefectSentenceCaseConverter
      */
     private $defectSentenceCaseConverter;
+    private $motConfig;
 
     public function setUp()
     {
@@ -46,6 +52,11 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
             ->getMockBuilder(DefectSentenceCaseConverter::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->motConfig = XMock::of(MotConfig::class);
+        $this->motConfig->method('get')->willReturn([
+            ElasticsearchConfigKeys::ES_INDEX_NAME => 'index'
+            ]);
     }
 
     public function testGetTestItemSelectorsDataByClass()
@@ -174,79 +185,9 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         //then exception
     }
 
-    public function testSearchReasonsForRejection()
+    public function test_search_thorwsExcption_whenUserHasNotGotPermissionForReadingRfr()
     {
-        //given
-        $searchString = 'stop lamp';
 
-        $reasonForRejection = (new ReasonForRejection())
-            ->setDescriptions([]);
-        $expectedReasonsForRejection = [$reasonForRejection];
-        $expectedHydratedRfr = $this->getTestArrayWithId(1);
-        $expectedHydratedRfrData = [$expectedHydratedRfr];
-        $expectedData = [
-            'searchDetails' => ['count' => count($expectedReasonsForRejection)],
-            'reasonsForRejection' => $expectedHydratedRfrData,
-        ];
-
-        $mockEntityManager = $this->getMockEntityManager();
-
-        $this->mockRfrRepository->expects($this->once())
-            ->method('findBySearchQuery')
-            ->with($searchString, $this->vehicleClass, $this->determinedRole, 0, 9999)
-            ->will($this->returnValue($expectedReasonsForRejection));
-
-        $mockHydrator = $this->getMockHydrator();
-        $mockHydrator->expects($this->any())
-            ->method('extract')
-            ->with($reasonForRejection)
-            ->will($this->returnValue($expectedHydratedRfr));
-
-        $testItemSelectorService = $this->getTisServiceWithMocks($mockEntityManager, $mockHydrator);
-
-        //when
-        $result = $testItemSelectorService->searchReasonsForRejection($this->vehicleClass, $searchString);
-        //then
-        $this->assertEquals($expectedData, $result);
-    }
-
-    // failing
-    public function testSearchReasonsForRejectionDoNotReturnsDisabledRfrs()
-    {
-        $searchString = 'stop lamp';
-        $diabledRfrId = 123;
-
-        $reasonForRejection = (new ReasonForRejection())
-            ->setDescriptions([])
-            ->setRfrId($diabledRfrId);
-
-        $expectedReasonsForRejection = [$reasonForRejection];
-        $expectedHydratedRfr = $this->getTestArrayWithId(1);
-
-        $expectedData = [
-            'searchDetails' => ['count' => 1],
-            'reasonsForRejection' => [],
-        ];
-
-        $mockEntityManager = $this->getMockEntityManager();
-
-        $this->mockRfrRepository->expects($this->once())
-            ->method('findBySearchQuery')
-            ->with($searchString, $this->vehicleClass, $this->determinedRole, 0, 9999)
-            ->will($this->returnValue($expectedReasonsForRejection));
-
-        $mockHydrator = $this->getMockHydrator();
-        $mockHydrator->expects($this->any())
-            ->method('extract')
-            ->with($reasonForRejection)
-            ->will($this->returnValue($expectedHydratedRfr));
-
-        $testItemSelectorService = $this->getTisServiceWithMocks($mockEntityManager, $mockHydrator, null, [$diabledRfrId]);
-
-        //when
-        $result = $testItemSelectorService->searchReasonsForRejection($this->vehicleClass, $searchString);
-        //then
-        $this->assertEquals($expectedData, $result);
     }
 
     protected function getTestMotTest()
@@ -261,7 +202,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
     protected function getTestArrayWithId($motTestId = 17)
     {
-        return ['id' => $motTestId, 'parentTestItemSelectorId' => 0];
+        return ['id' => $motTestId, 'parentTestItemSelectorId' => 0, 'vehicleClasses' => []];
     }
 
     protected function getExpectedData($tis, $tises, $tisRfrs, $parentTises)
@@ -286,7 +227,8 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
             $mockAuthService,
             $this->mockTestItemCategoryRepository,
             $disabledRfrs,
-            $this->defectSentenceCaseConverter
+            $this->defectSentenceCaseConverter,
+            $this->motConfig
         );
     }
 

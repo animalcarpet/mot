@@ -22,11 +22,7 @@ class ReasonForRejectionControllerFactory implements FactoryInterface
         /* @var ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
         $testItemSelectorService = $serviceLocator->get(TestItemSelectorService::class);
-        $motTestService = $serviceLocator->get("MotTestService");
 
-        return new ReasonForRejectionController(
-            $testItemSelectorService,
-            $motTestService
-        );
+        return new ReasonForRejectionController($testItemSelectorService);
     }
 }

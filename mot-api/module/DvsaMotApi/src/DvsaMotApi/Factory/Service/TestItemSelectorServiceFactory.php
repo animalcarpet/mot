@@ -24,7 +24,8 @@ class TestItemSelectorServiceFactory implements FactoryInterface
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get(TestItemCategoryRepository::class),
             $serviceLocator->get(MotConfig::class)->withDefault([])->get('disabled_rfrs'),
-            $serviceLocator->get(DefectSentenceCaseConverter::class)
+            $serviceLocator->get(DefectSentenceCaseConverter::class),
+            $serviceLocator->get(MotConfig::class)
         );
     }
 }

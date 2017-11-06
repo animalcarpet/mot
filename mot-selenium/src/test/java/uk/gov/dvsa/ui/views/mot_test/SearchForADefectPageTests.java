@@ -72,12 +72,13 @@ public class SearchForADefectPageTests extends DslTest {
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
+        String searchTerm = "xxxxccccyyy zzzzccccc";
         // When I click Search for a defect
-        searchForADefectPage = searchForADefectPage.searchForDefect("foobar");
+        searchForADefectPage = searchForADefectPage.searchForDefect(searchTerm);
 
         // Then the search summary should contain the search string foobar and the result count is 0
         assertThat("Search summary should contain search string",
-                searchForADefectPage.checkSearchSummaryCorrect("foobar", "0"), is(true));
+                searchForADefectPage.checkSearchSummaryCorrect(searchTerm, "0"), is(true));
     }
 
     @Test(groups = {"BVT", "BL-1932"},
@@ -101,7 +102,7 @@ public class SearchForADefectPageTests extends DslTest {
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
         // When I click Search for a defect
-        searchForADefectPage = searchForADefectPage.searchForDefect("mirror");
+        searchForADefectPage = searchForADefectPage.searchForDefect("3.7.A.1");
 
         // Then the search results should be paginated
         assertThat("Search results should not be paginated", searchForADefectPage.isPaginationDisplayed(), is(false));
@@ -114,7 +115,7 @@ public class SearchForADefectPageTests extends DslTest {
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
         // When I click Search for a defect
-        searchForADefectPage = searchForADefectPage.searchForDefect("100");
+        searchForADefectPage = searchForADefectPage.searchForDefect("brake");
 
         // Then the search results should be paginated
         assertThat("Search results should be paginated", searchForADefectPage.isPaginationDisplayed(), is(true));
@@ -127,7 +128,7 @@ public class SearchForADefectPageTests extends DslTest {
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
         // When I click Search for a defect
-        searchForADefectPage = searchForADefectPage.searchForDefect("100");
+        searchForADefectPage = searchForADefectPage.searchForDefect("brake");
 
         // Then the search results should be paginated
         assertThat("Pagination should not show previous but should show next on first page",
@@ -141,7 +142,7 @@ public class SearchForADefectPageTests extends DslTest {
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
         // When I click Search for a defect
-        searchForADefectPage = searchForADefectPage.searchForDefect("100").navigateToPage(2);
+        searchForADefectPage = searchForADefectPage.searchForDefect("brake").navigateToPage(2);
 
         // Then the search results should be paginated
         assertThat("Pagination should show previous and next links",
@@ -155,7 +156,7 @@ public class SearchForADefectPageTests extends DslTest {
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
         // When I click Search for a defect
-        searchForADefectPage = searchForADefectPage.searchForDefect("100").navigateToLastPage();
+        searchForADefectPage = searchForADefectPage.searchForDefect("engine").navigateToLastPage();
 
         // Then the search results should be paginated
         assertThat("Pagination should show previous but not should show next on last page",

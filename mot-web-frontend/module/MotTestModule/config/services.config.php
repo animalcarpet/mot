@@ -18,6 +18,8 @@ use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\View\DefectsJourneyUrlGeneratorFactory;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Listener\SatisfactionSurveyListenerFactory;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SearchReasonForRejectionService;
+use Dvsa\Mot\Frontend\MotTestModule\Factory\Service\SearchReasonForRejectionServiceFactory;
 
 return [
     'factories' => [
@@ -27,6 +29,7 @@ return [
         DefectsJourneyContextProvider::class => DefectsJourneyContextProviderFactory::class,
         DefectsJourneyUrlGenerator::class => DefectsJourneyUrlGeneratorFactory::class,
         SatisfactionSurveyListener::class => SatisfactionSurveyListenerFactory::class,
-        RfrCache::class => RfrCacheFactory::class
+        RfrCache::class => RfrCacheFactory::class,
+        SearchReasonForRejectionService::class => SearchReasonForRejectionServiceFactory::class,
     ],
 ];
