@@ -9,6 +9,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use Zend\Cache\Storage\StorageInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
+use DvsaApplicationLogger\Log\Logger;
 
 class RfrCacheTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,6 +23,8 @@ class RfrCacheTest extends \PHPUnit_Framework_TestCase
     private $storage;
     /** @var  CacheKeyGenerator | MockObj */
     private $keyGenerator;
+    /** @var  Logger | MockObj */
+    private $logger;
 
     /** @var  RfrCache */
     private $sut;
@@ -31,14 +34,19 @@ class RfrCacheTest extends \PHPUnit_Framework_TestCase
         $this->fetureToggles = XMock::of(FeatureToggles::class);
         $this->storage = XMock::of(StorageInterface::class);
         $this->keyGenerator = XMock::of(CacheKeyGenerator::class);
+        $this->logger = XMock::of(Logger::class);
 
         $this->sut = new RfrCache(
             $this->storage,
             $this->keyGenerator,
-            $this->fetureToggles
+            $this->fetureToggles,
+            $this->logger
         );
     }
 
+    /**
+     * @param bool $value
+     */
     private function withFeatureToggle($value = true)
     {
         $this->fetureToggles
@@ -46,6 +54,15 @@ class RfrCacheTest extends \PHPUnit_Framework_TestCase
             ->method('isEnabled')
             ->with(FeatureToggle::RFR_CACHE)
             ->willReturn($value);
+    }
+
+
+    private function errorMessageShouldBeLogged()
+    {
+        $this->logger
+            ->expects($this->once())
+            ->method('warn')
+            ->with($this->anything());
     }
 
     /**
@@ -170,6 +187,7 @@ class RfrCacheTest extends \PHPUnit_Framework_TestCase
     public function testGetItem_withErrorOnKeyGenerator_shouldReturnNull()
     {
         $this->withKeyGenerator(self::DEFAULT_KEY, true);
+        $this->errorMessageShouldBeLogged();
 
         $result = $this->callGetItemWithDefaultParams();
 
@@ -180,6 +198,7 @@ class RfrCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->withKeyGenerator();
         $this->withGetItemOnStorage(self::DEFAULT_KEY, false, true);
+        $this->errorMessageShouldBeLogged();
 
         $result = $this->callGetItemWithDefaultParams();
 
@@ -199,6 +218,7 @@ class RfrCacheTest extends \PHPUnit_Framework_TestCase
     public function testSetItem_withErrorOnKeyGenerator_shouldReturnFalse()
     {
         $this->withKeyGenerator(self::DEFAULT_KEY, true);
+        $this->errorMessageShouldBeLogged();
 
         $result = $this->callSetItemWithDefaultParams();
 
@@ -210,6 +230,7 @@ class RfrCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->withKeyGenerator();
         $this->withSetItemOnStorage(self::DEFAULT_CACHED_ITEM, self::DEFAULT_KEY, false, true);
+        $this->errorMessageShouldBeLogged();
 
         $result = $this->callSetItemWithDefaultParams();
 

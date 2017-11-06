@@ -11,6 +11,7 @@ use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Cache\Exception\InvalidArgumentException;
+use DvsaApplicationLogger\Log\Logger;
 
 class RfrCacheFactory implements FactoryInterface
 {
@@ -38,10 +39,14 @@ class RfrCacheFactory implements FactoryInterface
         /** @var FeatureToggles $featureToggles */
         $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
 
+        /** @var Logger $logger */
+        $logger = $serviceLocator->get('Application\Logger');
+
         return new RfrCache(
             $storage,
             $cacheKeyGenerator,
-            $featureToggles
+            $featureToggles,
+            $logger
         );
     }
 
