@@ -5,6 +5,7 @@ use Aws\Credentials\CredentialProvider;
 use DvsaCommon\Configuration\ApplicationEnv;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Constants\MotConfig\ElasticsearchConfigKeys;
+use DvsaCommon\Constants\MotConfig\EnvironmentConfigKeys;
 use DvsaCommon\ReasonForRejection\ElasticSearch\ElasticsearchSettings;
 use DvsaCommon\Constants\MotConfig\MotConfigKeys;
 use DvsaCommon\ReasonForRejection\ElasticSearch\ReasonForRejectionElasticSearchClient;
@@ -18,19 +19,26 @@ class ReasonForRejectionElasticSearchClientFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var MotConfig $motConfig */
         $motConfig = $serviceLocator->get(MotConfig::class);
         $elasticSearchConfig = $motConfig->get(MotConfigKeys::ELASTICSEARCH);
+        $environment = $motConfig->withDefault("")->get(MotConfigKeys::ENVIRONMENT_CONFIG, EnvironmentConfigKeys::ENVIRONMENT);
 
-        return self::createServiceWithArgs($elasticSearchConfig);
+        return self::createServiceWithArgs($elasticSearchConfig, $this->shouldUseProxy($environment));
     }
 
-    public static function createServiceWithArgs(array $elasticSearchConfig): ReasonForRejectionElasticSearchClient
+    private function shouldUseProxy(string $environment): bool
+    {
+        preg_match("/^dev\\d+/", $environment, $matches);
+        return (ApplicationEnv::isDevelopmentEnv() === false && empty($matches) === true);
+    }
+
+    public static function createServiceWithArgs(array $elasticSearchConfig, bool $useProxy = false): ReasonForRejectionElasticSearchClient
     {
         $clientBuilder = ClientBuilder::create();
 
         $provider = null;
         $urlPrefix = "http";
-
 
         if (ApplicationEnv::isDevelopmentEnv() === false) {
             $urlPrefix = "https";
@@ -43,6 +51,17 @@ class ReasonForRejectionElasticSearchClientFactory implements FactoryInterface
             );
 
             $clientBuilder->setHandler($handler);
+        }
+
+        if ($useProxy) {
+            $clientBuilder->setConnectionParams([
+                'client' => [
+                    'curl' => [
+                        CURLOPT_PROXY => ElasticsearchSettings::PROXY,
+                        CURLOPT_PROXYPORT => ElasticsearchSettings::PROXY_PORT
+                    ]
+                ]
+            ]);
         }
 
         $esHostname = ArrayUtils::get($elasticSearchConfig, ElasticsearchConfigKeys::ES_HOSTNAME);
