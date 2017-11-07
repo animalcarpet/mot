@@ -23,10 +23,6 @@ class SearchReasonForRejectionController extends AbstractDvsaRestfulController i
 
     public function getList()
     {
-        if ($this->featureToggles->isEnabled(FeatureToggle::RFR_ELASTICSEARCH)) {
-            throw new FeatureNotAvailableException();
-        }
-
         $searchTerm = $this->params()->fromQuery("searchTerm", "");
         $vehicleClass = $this->params()->fromQuery("vehicleClass", "");
         $audience = $this->params()->fromQuery("audience", "");
