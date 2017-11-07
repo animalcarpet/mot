@@ -3,7 +3,7 @@ parameters:
     frontend_url: '{{key "environment::external_url"}}'
     elasticsearch_host: '{{key "elasticsearch_endpoint"}}'
     elasticsearch_port: '{{key "environment::elasticsearch::es_hostname_port"}}'
-    elasticsearch_index: '{{key "environment::elasticsearch::es_index_name"}}_{{key "app_stack_identifier"}}'
+    elasticsearch_index: '{{key "environment::elasticsearch::es_index_name"}}'
     elasticsearch_region: 'eu-west-1'
 
 services:
