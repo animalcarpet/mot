@@ -35,7 +35,7 @@ class ComponentCategoryTest extends \PHPUnit_Framework_TestCase
                             'isPrsFail' => false,
                             'canBeDangerous' => true,
                             'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
-                            'isPreEuDirective' => true
+                            'isPreEuDirective' => true,
                         ],
                     ],
                 ]));
@@ -47,5 +47,7 @@ class ComponentCategoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Description', $componentCategory->getDescription());
         $this->assertEquals(['Description 1', 'Description 2'], $componentCategory->getDescriptions());
         $this->assertEquals(['3', '4', '5'], $componentCategory->getVehicleClasses());
+        $this->assertEquals(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+            $componentCategory->getDefectsCollection()->getDefects()[0]->getDeficiencyCategoryCode());
     }
 }

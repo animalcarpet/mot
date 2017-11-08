@@ -3,6 +3,7 @@
 namespace DvsaMotApiTest\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Constants\MotConfig\ElasticsearchConfigKeys;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -11,6 +12,7 @@ use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 use DvsaEntities\Entity\TestItemCategoryDescription;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
@@ -55,8 +57,8 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
         $this->motConfig = XMock::of(MotConfig::class);
         $this->motConfig->method('get')->willReturn([
-            ElasticsearchConfigKeys::ES_INDEX_NAME => 'index'
-            ]);
+            ElasticsearchConfigKeys::ES_INDEX_NAME => 'index',
+        ]);
     }
 
     public function testGetTestItemSelectorsDataByClass()
@@ -107,7 +109,12 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $expectedData[] = $this->getExpectedData(
             $expectedTisHydratorData,
             [$expectedTisHydratorData],
-            [$expectedTisHydratorData],
+            [[
+                'id' => 0,
+                'parentTestItemSelectorId' => 0,
+                'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                'vehicleClasses' => [],
+            ]],
             [$expectedTisHydratorData]
         );
 
@@ -185,11 +192,6 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         //then exception
     }
 
-    public function test_search_thorwsExcption_whenUserHasNotGotPermissionForReadingRfr()
-    {
-
-    }
-
     protected function getTestMotTest()
     {
         $motTest = (new MotTest())->setId($this->testMotTestNumber);
@@ -202,7 +204,12 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
     protected function getTestArrayWithId($motTestId = 17)
     {
-        return ['id' => $motTestId, 'parentTestItemSelectorId' => 0, 'vehicleClasses' => []];
+        return [
+            'id' => $motTestId,
+            'parentTestItemSelectorId' => 0,
+            'rfrDeficiencyCategory' => (new RfrDeficiencyCategory())->setCode(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE),
+            'vehicleClasses' => [],
+        ];
     }
 
     protected function getExpectedData($tis, $tises, $tisRfrs, $parentTises)

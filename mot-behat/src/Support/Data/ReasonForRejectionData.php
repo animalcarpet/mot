@@ -3,6 +3,7 @@ namespace Dvsa\Mot\Behat\Support\Data;
 
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionEU;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -126,9 +127,68 @@ class ReasonForRejectionData extends AbstractData
         $this->reasonForRejection->addAdvisory($user->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
     }
 
+    public function addDefaultAdvisoryByUser(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
+            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
+
+        $this->addAdvisoryByUser($user, $mot, $rfrId);
+    }
+
     public function addAdvisory(MotTestDto $mot, $rfrId)
     {
         $this->addAdvisoryByUser($this->getTesterFormMotTest($mot), $mot, $rfrId);
+    }
+
+    public function removeRFRByUser(AuthenticatedUser $user, MotTestDto $mot, $rfrId)
+    {
+        $this->reasonForRejection->removeRFR($user->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
+    }
+
+    public function removeDefaultRFRByUser(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
+            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
+
+        $this->removeRFRByUser($user, $mot, $rfrId);
+    }
+
+    public function addDefaultDangerousDefectByUser(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $rfrId = ReasonForRejectionEU::RFR_VEHICLE_IDENTIFICATION_NUMBER_DANGEROUS;
+
+        $this->addDangerousDefectByUser($user, $mot, $rfrId);
+    }
+
+    public function addDangerousDefectByUser(AuthenticatedUser $user, MotTestDto $mot, $rfrId)
+    {
+        $this->reasonForRejection->addDangerousDefect($user->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
+    }
+
+    public function addDefaultMajorDefectByUser(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $rfrId = ReasonForRejectionEU::RFR_REGISTRATION_PLATES_MAJOR;
+
+        $this->addMajorDefectByUser($user, $mot, $rfrId);
+    }
+
+    public function addMajorDefectByUser(AuthenticatedUser $user, MotTestDto $mot, $rfrId)
+    {
+        $this->reasonForRejection->addMajorDefect($user->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
+    }
+
+    public function addDefaultMinorDefectByUser(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $rfrId = ReasonForRejectionEU::RFR_REGISTRATION_PLATES_MINOR;
+
+        $this->addMinorDefectByUser($user, $mot, $rfrId);
+    }
+
+    public function addMinorDefectByUser(AuthenticatedUser $user, MotTestDto $mot, $rfrId)
+    {
+        $this->reasonForRejection->addMinorDefect($user->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
     }
 
     public function getLastResponse()

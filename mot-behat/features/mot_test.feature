@@ -9,7 +9,7 @@ Feature: MOT Test
     And the Tester adds an Odometer Reading of 1000 mi
     And the Tester adds a Class 3-7 Decelerometer Brake Test
     When the Tester Passes the Mot Test
-    Then the MOT Test Status is "PASSED"
+    Then the MOT Test Status is PASSED
   Examples:
     | class |
     | 3     |
@@ -23,7 +23,7 @@ Feature: MOT Test
     And the Tester adds an Odometer Reading of 1000 mi
     And the Tester adds a Class 1-2 Decelerometer Brake Test
     When the Tester Passes the Mot Test
-    Then the MOT Test Status is "PASSED"
+    Then the MOT Test Status is PASSED
   Examples:
     | class |
     | 1     |
@@ -33,13 +33,13 @@ Feature: MOT Test
     Given I am logged in as a Tester
     And there is a Mot test in progress
     When the Tester Aborts the Mot Test
-    Then the MOT Test Status is "ABORTED"
+    Then the MOT Test Status is ABORTED
 
   Scenario Outline: Tester cancels In Progress MOT Test
     Given I am logged in as a Tester
     And there is a Mot test in progress
     And the Tester cancels the test with a reason of "<cancelReason>"
-    Then the MOT Test Status is "<testStatus>"
+    Then the MOT Test Status is <testStatus>
 
   Examples:
     | cancelReason                                             | testStatus |
@@ -83,3 +83,69 @@ Feature: MOT Test
     And I can add PRS to test
     And I can add a Failure to test
     And I can edit previously added Rfr
+
+  Scenario Outline: MOT Test defects can be added to an MOT test
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class <class> Vehicle
+    When I add a <defect type> to the test
+    Then the <defect type> is associated with the MOT test
+
+    Examples:
+      |class | defect type |
+      | 1    | Advisory    |
+      | 2    | PRS         |
+      | 3    | Failure     |
+      | 4    | Advisory    |
+      | 5    | PRS         |
+      | 7    | Failure     |
+
+  Scenario Outline: MOT defects can be edited within an MOT test
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class <class> Vehicle
+    And I add a <defect type> to the test
+    When I edit the defect
+    Then the edited defect is updated
+
+    Examples:
+      |class | defect type |
+      | 1    | Advisory    |
+      | 2    | PRS         |
+      | 3    | Failure     |
+      | 4    | Advisory    |
+      | 5    | PRS         |
+      | 7    | Failure     |
+
+  Scenario Outline: MOT defects can be removed from an MOT test
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class <class> Vehicle
+    And I add a <defect type> to the test
+    When I remove the defect
+    Then the defect is not associated with the MOT test
+
+    Examples:
+      |class | defect type |
+      | 1    | Advisory    |
+      | 2    | PRS         |
+      | 3    | Failure     |
+      | 4    | Advisory    |
+      | 5    | PRS         |
+      | 7    | Failure     |
+
+  Scenario: Tester can create an MOT with failure and fail
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class 3 Vehicle
+    And I can add a Failure to test
+    And the Tester adds a Class 3-7 Decelerometer Brake Test
+    And the Tester adds an Odometer Reading of 1000 mi
+    When the Tester Fails the Mot Test
+    Then the MOT Test Status is FAILED
+
+  Scenario: Tester can create an Advisory and pass
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class 3 Vehicle
+    And I add a Advisory to the test
+    And the Tester adds a Class 3-7 Decelerometer Brake Test
+    And the Tester adds an Odometer Reading of 1000 mi
+    When the Tester Passes the Mot Test
+    Then the MOT Test Status is PASSED
+

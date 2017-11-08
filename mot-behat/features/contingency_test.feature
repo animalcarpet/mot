@@ -61,7 +61,7 @@ Feature: Contingency Test
     And the Tester adds an Odometer Reading of 658 mi
     And the Tester adds a Class 3-7 Decelerometer Brake Test
     When the Tester Passes the Mot Test
-    Then the MOT Test Status is "PASSED"
+    Then the MOT Test Status is PASSED
     And the Contingency Test is Logged
 
   @quarantine
@@ -87,14 +87,14 @@ Feature: Contingency Test
     And the Tester adds a Class 3-7 Decelerometer Brake Test
     And the Tester adds a Reason for Rejection
     When the Tester Fails the Mot Test
-    Then the MOT Test Status is "FAILED"
+    Then the MOT Test Status is FAILED
     And the Contingency Test is Logged
 
   Scenario: Tester Completes a Contingency - ABORTED MOT Test
     Given I am logged in as a Tester
     And I start a Contingency MOT test
     When the Tester Aborts the Mot Test
-    Then the MOT Test Status is "ABORTED"
+    Then the MOT Test Status is ABORTED
     And the Contingency Test is Logged
 
   Scenario: Tester performs retest after failed Contingency Test and aborted Normal Test

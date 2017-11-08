@@ -203,13 +203,13 @@ class TestItemSelectorService extends AbstractService
         return $reasonsForRejectionData;
     }
 
-    private function extractVehicleClassessIntoRfr(array $testItemRfrData) {
+    private function extractVehicleClassessIntoRfr(array $testItemRfrData)
+    {
         $extractedVehicleClasses = [];
 
         if (key_exists('vehicleClasses', $testItemRfrData) &&
-            $testItemRfrData['vehicleClasses'] instanceof PersistentCollection)
-        {
-            $extractedVehicleClasses = array_map(function(VehicleClass $class) {
+            $testItemRfrData['vehicleClasses'] instanceof PersistentCollection) {
+            $extractedVehicleClasses = array_map(function (VehicleClass $class) {
                 return $class->getCode();
             }, $testItemRfrData['vehicleClasses']->toArray());
         }
@@ -231,6 +231,14 @@ class TestItemSelectorService extends AbstractService
         if (!empty($defectDetails)) {
             $testItemRfrData = array_merge($testItemRfrData, $defectDetails);
         }
+
+        /** @var RfrDeficiencyCategory $testItemRfrDeficiencyCategory */
+        $testItemRfrDeficiencyCategory = $testItemRfrData['rfrDeficiencyCategory'];
+        if ($testItemRfrDeficiencyCategory !== null) {
+            $testItemRfrData['deficiencyCategoryCode'] = $testItemRfrDeficiencyCategory->getCode();
+        }
+
+        unset($testItemRfrData['rfrDeficiencyCategory']);
 
         $testItemRfrData['vehicleClasses'] = $this->extractVehicleClassessIntoRfr($testItemRfrData);
 
@@ -303,11 +311,13 @@ class TestItemSelectorService extends AbstractService
     public function getAllReasonsForRejection(): array
     {
         $this->authService->assertGranted(PermissionInSystem::RFR_LIST);
+
         return $reasonsForRejection = $this->rfrRepository->findAll();
     }
 
     /**
      * @param array $reasonsForRejection
+     *
      * @return array
      */
     public function formatReasonsForRejectionForElasticSearch(array $reasonsForRejection)
@@ -316,7 +326,7 @@ class TestItemSelectorService extends AbstractService
         $elasticSearchRFRs = [];
 
         foreach ($reasonsForRejection as $rfr) {
-            if($this->shouldHideRfr($rfr['rfrId'])) {
+            if ($this->shouldHideRfr($rfr['rfrId'])) {
                 continue;
             }
 
@@ -325,16 +335,16 @@ class TestItemSelectorService extends AbstractService
             $elasticsearchConfig = $this->motConfig->get(MotConfigKeys::ELASTICSEARCH);
 
             $elasticSearchRFRs[] = [
-                ["index" =>
-                    [
-                        "_index" => $elasticsearchConfig[ElasticsearchConfigKeys::ES_INDEX_NAME],
-                        "_type" => 'reasons_for_rejection',
-                        "_id" => $rfr['rfrId']
-                    ],
+                ['index' => [
+                         '_index' => $elasticsearchConfig[ElasticsearchConfigKeys::ES_INDEX_NAME],
+                         '_type' => 'reasons_for_rejection',
+                         '_id' => $rfr['rfrId'],
+                     ],
                 ],
-                $rfr
+                $rfr,
             ];
         }
+
         return $elasticSearchRFRs;
     }
 

@@ -200,7 +200,7 @@ class ComponentCategoryCollectionTest extends \PHPUnit_Framework_TestCase
                         'isPrsFail' => false,
                         'canBeDangerous' => true,
                         'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
-                        'isPreEuDirective' => true
+                        'isPreEuDirective' => true,
                     ],
                 ],
             ],

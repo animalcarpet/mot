@@ -271,4 +271,144 @@ class ReasonForRejectionContext implements Context
 
         return $rfrDataContainsTerm;
     }
+
+    /**
+     * @When /^I add a (.*) to the test$/
+     */
+    public function iAddADefectTypeToTheTest($defect)
+    {
+        if ($defect === 'Advisory') {
+            $this->reasonForRejectionData->addDefaultAdvisoryByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        } elseif ($defect === 'PRS') {
+            $this->reasonForRejectionData->addDefaultPrsByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        } elseif ($defect === 'Failure') {
+            $this->reasonForRejectionData->addDefaultFailureByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        }
+        $response = $this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    }
+
+    /**
+     * @Then /^the (.*) is associated with the MOT test$/
+     */
+    public function theDefectIsAssociatedWithTheMOTTest($defect)
+    {
+        if ($defect === 'Failure') {
+            $defect = 'Fail';
+        }
+
+        $expectedDefectCategory = strtoupper($defect);
+        $expectedMOT = $this->motTestData->getLast()->getMotTestNumber();
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+        $requestBody = json_decode($response->getRequest()->getBody());
+
+        $actualDefectCategory = $requestBody->type;
+        $motURIString = $response->getRequest()->getUriAsSting();
+
+        PHPUnit::assertContains($expectedMOT, $motURIString);
+        PHPUnit::assertSame($expectedDefectCategory, $actualDefectCategory);
+    }
+
+    /**
+     * @When /^I edit the defect$/
+     */
+    public function iEditTheDefect()
+    {
+        $mot = $this->motTestData->getLast();
+
+        $this->reasonForRejectionData->editRFRByUser(
+            $this->userData->getCurrentLoggedUser(),
+            $mot,
+            $this->reasonForRejectionData->getLastResponse()->getBody()->getData()
+        );
+    }
+
+    /**
+     * @Then /^the edited defect is updated$/
+     */
+    public function theEditedDefectIsUpdated()
+    {
+        $expectedLongitudinalPosition = 'rear';
+        $expectedMOT = $this->motTestData->getLast()->getMotTestNumber();
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+        $requestBody = json_decode($response->getRequest()->getBody());
+
+        $actualPosition = $requestBody->locationLongitudinal;
+        $motURIString = $response->getRequest()->getUriAsSting();
+
+        PHPUnit::assertContains($expectedMOT, $motURIString);
+        PHPUnit::assertSame($expectedLongitudinalPosition, $actualPosition);
+    }
+
+    /**
+     * @When /^I remove the defect$/
+     */
+    public function iRemoveTheDefect()
+    {
+        $mot = $this->motTestData->getLast();
+
+        $this->reasonForRejectionData->removeRFRByUser(
+            $this->userData->getCurrentLoggedUser(),
+            $mot,
+            $this->reasonForRejectionData->getLastResponse()->getBody()->getData()
+        );
+    }
+
+    /**
+     * @Then /^the defect is not associated with the MOT test$/
+     */
+    public function theDefectIsNotAssociatedWithTheMOTTest()
+    {
+        $response = $this->reasonForRejectionData->getLastResponse();
+        $motTest = $this->motTestData->getLast();
+        $data = $response->getBody()->getData();
+
+        PHPUnit::assertEmpty($motTest->getReasonsForRejection());
+        PHPUnit::assertEquals('successfully updated Reason for Rejection', $data);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    }
+
+    /**
+     * @When /^I add an new EU (.*) to the test$/
+     */
+    public function iAddAnNewEUDefectToTheTest($defect)
+    {
+        if ($defect === 'Dangerous') {
+            $this->reasonForRejectionData->addDefaultDangerousDefectByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        } elseif ($defect === 'Major') {
+            $this->reasonForRejectionData->addDefaultMajorDefectByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        } elseif ($defect === 'Minor') {
+            $this->reasonForRejectionData->addDefaultMinorDefectByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        } elseif ($defect === 'Advisory') {
+            $this->reasonForRejectionData->addDefaultAdvisoryByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        }
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    }
 }

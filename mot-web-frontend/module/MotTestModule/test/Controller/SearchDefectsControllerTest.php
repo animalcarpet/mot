@@ -176,7 +176,7 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
                     'testItemSelector' => 'asd',
                     'isAdvisory' => false,
                     'isPrsFail' => true,
-                    'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
+                    'rfrDeficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
                     'isPreEuDirective' => true,
                 ],
             ],

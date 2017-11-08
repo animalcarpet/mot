@@ -83,9 +83,10 @@ class RfrRepository
         return $this->em
             ->createQuery(
                 '
-                SELECT tRfr
-                FROM ' .ReasonForRejection::class.' tRfr
+                SELECT tRfr, dc
+                FROM '.ReasonForRejection::class.' tRfr
                 JOIN tRfr.vehicleClasses vc
+                JOIN tRfr.rfrDeficiencyCategory dc
                 WHERE tRfr.testItemSelectorId = ?1
                     AND vc.code = ?2
                     AND (tRfr.audience = ?3 OR tRfr.audience = \'b\')

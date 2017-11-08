@@ -52,7 +52,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
     protected $mockVehicleServiceClient;
 
     /**
-     * @var  RfrCache | MockObject
+     * @var RfrCache | MockObject
      */
     private $rfrCacheMock;
 
@@ -97,7 +97,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @param bool $isVe
-     * @param int $invocationCount
+     * @param int  $invocationCount
      */
     private function withUserBeingVehicleExaminer($isVe = false, $invocationCount = 1)
     {
@@ -110,7 +110,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @param bool $value
-     * @param int $invocationCount
+     * @param int  $invocationCount
      */
     private function withRfrCachingEnabled($value = true, $invocationCount = 1)
     {
@@ -122,7 +122,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @param null $return
-     * @param int $invocationCount
+     * @param int  $invocationCount
      */
     private function withGetItemOnRfrCache($return = null, $invocationCount = 1)
     {
@@ -135,7 +135,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @param bool $return
-     * @param int $invocationCount
+     * @param int  $invocationCount
      */
     private function withSetItemOnRfrCache($return = true, $invocationCount = 1)
     {
@@ -313,7 +313,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
                     $this->never()
             )
             ->method('getWithParamsReturnDto')
-            ->willReturn(['data' => $dataReturnedFromApi ]);
+            ->willReturn(['data' => $dataReturnedFromApi]);
 
         $routeParams = $this->createRouteParams();
 
@@ -580,6 +580,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
     /**
      * @param $motTestNumber
      * @param $testItemSelectorId
+     *
      * @return array
      */
     private function createRouteParams($motTestNumber = self::DEFAULT_MOT_TEST_ID, $testItemSelectorId = self::DEFAULT_TEST_ITEM_SELECTOR_ID)
@@ -619,11 +620,12 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
     /**
      * @param bool $isRfrCacheEnabled
      * @param bool $rfrCacheHit
+     *
      * @return int
      */
     private function expectedIsCacheEnabledInvocations($isRfrCacheEnabled, $rfrCacheHit)
     {
-        if($isRfrCacheEnabled === true && $rfrCacheHit === true) {
+        if ($isRfrCacheEnabled === true && $rfrCacheHit === true) {
             return 1;
         }
 
@@ -632,6 +634,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @param bool $isRfrCacheEnabled
+     *
      * @return int
      */
     private function expectedGetItemInvocations($isRfrCacheEnabled)
@@ -642,11 +645,12 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
     /**
      * @param bool $isRfrCacheEnabled
      * @param bool $rfrCacheHit
+     *
      * @return int
      */
     private function expectedSetItemInvocations($isRfrCacheEnabled, $rfrCacheHit)
     {
-        if($isRfrCacheEnabled === true && $rfrCacheHit === false) {
+        if ($isRfrCacheEnabled === true && $rfrCacheHit === false) {
             return 1;
         }
 
@@ -678,7 +682,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     private function shouldDataBeFetchedFromApi($isRfrCacheEnabled, $rfrCacheHit)
     {
-        if($isRfrCacheEnabled === true && $rfrCacheHit === true){
+        if ($isRfrCacheEnabled === true && $rfrCacheHit === true) {
             return false;
         }
 

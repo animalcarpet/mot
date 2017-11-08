@@ -81,20 +81,13 @@
                             PRS
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ url('mot-test-defects/categories/category/add-defect',
-                        {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
-                            'defectId' : defect.defectId, 'type' : 'failure'}) }}" class="button--alert">
-                            Failure
-                        </a>
-                    </li>
                 {% endif %}
-                {% if defect.isFailure %}
+                {% if (defect.isFailure or defect.isPrs) %}
                     <li>
                         <a href="{{ url('mot-test-defects/categories/category/add-defect',
                                         {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
                                             'defectId' : defect.defectId, 'type' : 'failure'}) }}" class="button--alert">
-                            Failure
+                            {{ defect.getLabelForRfr }}
                         </a>
                     </li>
                 {% endif %}

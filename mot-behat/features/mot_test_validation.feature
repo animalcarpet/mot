@@ -94,7 +94,7 @@ Feature: MOT Test Validation
     Given there is a Mot test in progress
     And I am logged in as a Vehicle Examiner
     When as a Vehicle Examiner I abort the test
-    Then the MOT Test Status is "ABORTED_VE"
+    Then the MOT Test Status is ABORTED_VE
 
   Scenario Outline: Tester with zero slot balance cannot perform an MOT Test
     Given I am logged in as a Tester
