@@ -11,10 +11,13 @@ use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\BadRequestException;
+use DvsaCommonApi\Service\Exception\DataValidationException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaEntities\Entity\MotTest;
@@ -39,6 +42,10 @@ class MotTestReasonForRejectionService extends AbstractService
     const TYPE_FIELD = 'type';
     const LONGITUDINAL_LOCATION_FIELD = 'locationLongitudinal';
     const COMMENT_FIELD = 'comment';
+    const LATERAL_LOCATION_FIELD = 'locationLateral';
+    const VERRTICAL_LOCATION_FIELD = 'locationVertical';
+    const FAILURE_DANGEROUS_FIELD = 'failureDangerous';
+    const GENERATED_FIELD = 'generated';
 
     /**
      * @var MotTestValidator
@@ -183,12 +190,11 @@ class MotTestReasonForRejectionService extends AbstractService
         $locationLongitudinal = ArrayUtils::tryGet($data, 'locationLongitudinal');
         $locationVertical = ArrayUtils::tryGet($data, 'locationVertical');
         $comment = ArrayUtils::tryGet($data, 'comment');
-        $failureDangerous = ArrayUtils::tryGet($data, 'failureDangerous', false);
 
-        $location = $this->fetchLocation($locationLateral, $locationLongitudinal, $locationVertical);
+        $rfrTypeName = $rfr->getType()->getReasonForRejectionType();
 
-        $rfr->setLocation($location)
-            ->setFailureDangerous($failureDangerous)
+        $rfr->setLocation($this->fetchLocation($locationLateral, $locationLongitudinal, $locationVertical))
+            ->setFailureDangerous($this->getIsFailureDangerous($data, $rfr->getReasonForRejection(), $rfrType))
             ->getMotTestReasonForRejectionComment()->setComment($comment);
 
         if (!$this->isTrainingTest($motTest)) {
@@ -219,35 +225,47 @@ class MotTestReasonForRejectionService extends AbstractService
         RequiredFieldException::CheckIfRequiredFieldsNotEmpty([self::RFR_ID_FIELD, self::TYPE_FIELD], $data);
 
         $rfrId = ($data[self::RFR_ID_FIELD] > 0 ? $data[self::RFR_ID_FIELD] : null);
-        $type = $data[self::TYPE_FIELD];
+        $comment = ArrayUtils::tryGet($data, self::COMMENT_FIELD);
 
-        $locationLateral = ArrayUtils::tryGet($data, 'locationLateral');
-        $locationLongitudinal = ArrayUtils::tryGet($data, 'locationLongitudinal');
-        $locationVertical = ArrayUtils::tryGet($data, 'locationVertical');
-        $comment = ArrayUtils::tryGet($data, 'comment');
-        $failureDangerous = ArrayUtils::tryGet($data, 'failureDangerous', false);
-        $generated = ArrayUtils::tryGet($data, 'generated', false);
-
-        $location = $this->fetchLocation($locationLateral, $locationLongitudinal, $locationVertical);
-
-        $rfrType = $this->getEntityManager()->getRepository(ReasonForRejectionType::class)->findOneBy(
-            ['reasonForRejectionType' => $type]
-        );
-
-        $motTestRfr = new MotTestReasonForRejection();
-        $motTestRfr->setMotTest($motTest)
-            ->setType($rfrType)
-            ->setLocation($location)
-            ->setFailureDangerous($failureDangerous)
-            ->setGenerated($generated);
+        $motTestRfr = (new MotTestReasonForRejection())
+            ->setMotTest($motTest)
+            ->setGenerated(ArrayUtils::tryGet($data, self::GENERATED_FIELD, false));
 
         if (!is_null($comment)) {
             $motTestRfr->setMotTestReasonForRejectionComment(
-                (new MotTestReasonForRejectionComment())->setComment($comment)
-            );
+                (new MotTestReasonForRejectionComment())->setComment($comment));
         }
 
-        // this will be removed in future, when db schema is updated...
+        if ($rfrId === null) {
+            // "Custom description" field is capped to 100 characters.
+            $description = new MotTestReasonForRejectionDescription();
+            $description->setCustomDescription(substr($comment, 0, 100));
+            $motTestRfr->setCustomDescription($description);
+        }
+
+        $motTestRfr->setLocation($this->fetchLocation(ArrayUtils::tryGet($data, self::LATERAL_LOCATION_FIELD),
+            ArrayUtils::tryGet($data, self::LONGITUDINAL_LOCATION_FIELD),
+            ArrayUtils::tryGet($data, self::VERRTICAL_LOCATION_FIELD)));
+
+        /** @var ReasonForRejection $reasonForRejection */
+        $reasonForRejection = $this->getReasonForRejection($rfrId);
+
+        $motTestRfr->setReasonForRejection($reasonForRejection);
+
+        /** @var ReasonForRejectionType $rfrType */
+        $rfrType = $this->getRfrType($data[self::TYPE_FIELD], $reasonForRejection);
+        $motTestRfr->setType($rfrType);
+        $motTestRfr->setFailureDangerous($this->getIsFailureDangerous(
+            $data,
+            $reasonForRejection,
+            $rfrType->getReasonForRejectionType())
+        );
+
+        return $motTestRfr;
+    }
+
+    private function getReasonForRejection($rfrId)
+    {
         if ($rfrId !== null) {
             /** @var ReasonForRejection $reasonForRejection */
             $reasonForRejection = $this->entityManager->find(ReasonForRejection::class, ['rfrId' => $rfrId]);
@@ -255,18 +273,65 @@ class MotTestReasonForRejectionService extends AbstractService
             if (!$reasonForRejection) {
                 throw new NotFoundException('Reason for Rejection', $rfrId);
             }
-            $motTestRfr->setReasonForRejection($reasonForRejection);
-        } else {
-            // "Custom description" field is capped to 100 characters.
-            $customDescription = substr($comment, 0, 100);
 
-            $description = new MotTestReasonForRejectionDescription();
-            $description->setCustomDescription($customDescription);
-
-            $motTestRfr->setCustomDescription($description);
+            return $reasonForRejection;
         }
 
-        return $motTestRfr;
+        return;
+    }
+
+    /**
+     * @param $typeName
+     * @param ReasonForRejection $reasonForRejection
+     *
+     * @return null|object
+     */
+    private function getRfrType($typeName, $reasonForRejection)
+    {
+        $rfrTypeToFind = $typeName;
+        if ($reasonForRejection !== null
+            && $typeName == ReasonForRejectionTypeName::FAIL
+            && $reasonForRejection->getRfrDeficiencyCategory()->getCode() == RfrDeficiencyCategoryCode::MINOR) {
+            $rfrTypeToFind = ReasonForRejectionTypeName::ADVISORY;
+        }
+
+        return $this->getEntityManager()
+            ->getRepository(ReasonForRejectionType::class)
+            ->findOneBy(['reasonForRejectionType' => $rfrTypeToFind]);
+    }
+
+    /**
+     * @param $data
+     * @param ReasonForRejection $reasonForRejection
+     *
+     * @return bool|mixed
+     *
+     * @throws DataValidationException
+     */
+    private function getIsFailureDangerous($data, $reasonForRejection, $rfrTypeName)
+    {
+        $dangerousFlagFromPostData = ArrayUtils::tryGet($data, self::FAILURE_DANGEROUS_FIELD, false);
+        if ($reasonForRejection !== null) {
+            if (!$reasonForRejection->isPreEuDirective() && $rfrTypeName == ReasonForRejectionTypeName::ADVISORY) {
+                return false;
+            }
+
+            $deficiencyCategoryCode = $reasonForRejection->getRfrDeficiencyCategory()->getCode();
+
+            if ($deficiencyCategoryCode == RfrDeficiencyCategoryCode::DANGEROUS) {
+                return true;
+            }
+            if ($deficiencyCategoryCode == RfrDeficiencyCategoryCode::MAJOR ||
+                $deficiencyCategoryCode == RfrDeficiencyCategoryCode::MINOR) {
+                if ($dangerousFlagFromPostData == true) {
+                    throw new DataValidationException();
+                }
+
+                return false;
+            }
+        }
+
+        return $dangerousFlagFromPostData;
     }
 
     /**

@@ -6,6 +6,7 @@ use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
@@ -259,8 +260,9 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
 
         $reasonForRejectionMock
             ->expects($this->any())
-            ->method('getRfrDeficiencyCategoryCode')
-            ->willReturn(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+            ->method('getRfrDeficiencyCategory')
+            ->willReturn((new RfrDeficiencyCategory())
+                ->setCode(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE));
 
         $reasonForRejectionMock
             ->expects($this->any())

@@ -193,11 +193,6 @@ class ReasonForRejection
     private $rfrDeficiencyCategory;
 
     /**
-     * @var bool
-     */
-    private $preEuDirective;
-
-    /**
      * Set rfrId.
      *
      * @param int $rfrId
@@ -617,14 +612,6 @@ class ReasonForRejection
         $this->startDate = $startDate;
 
         return $this;
-    }
-
-    /**
-     * @return String
-     */
-    public function getRfrDeficiencyCategoryCode()
-    {
-        return $this->rfrDeficiencyCategory->getCode();
     }
 
     /**

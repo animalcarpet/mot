@@ -13,6 +13,10 @@ use DvsaEntities\Entity\RfrDeficiencyCategory;
 
 class Defect
 {
+    const FAILURE_LABEL_TEXT = "Failure";
+    const DANGEROUS_LABEL_TEXT = "Dangerous";
+    const MAJOR_LABEL_TEXT = "Major";
+    const MINOR_LABEL_TEXT = "Minor";
     /**
      * @var int
      */
@@ -274,5 +278,22 @@ class Defect
     public function setPreEuDirective($preEuDirective)
     {
         $this->preEuDirective = $preEuDirective;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getLabelForRfr()
+    {
+        switch ($this->deficiencyCategoryCode) {
+            case RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE:
+                return self::FAILURE_LABEL_TEXT;
+            case RfrDeficiencyCategoryCode::DANGEROUS:
+                return self::DANGEROUS_LABEL_TEXT;
+            case RfrDeficiencyCategoryCode::MAJOR:
+                return self::MAJOR_LABEL_TEXT;
+            case RfrDeficiencyCategoryCode::MINOR:
+                return self::MINOR_LABEL_TEXT;
+        }
     }
 }

@@ -10,4 +10,4 @@ Feature: Mystery Shopper Test
     And the Tester adds an Odometer Reading of 1000 mi
     And the Tester adds a Class 3-7 Decelerometer Brake Test
     When the Tester Passes the Mystery Shopper Test
-    Then the MOT Test Status is "PASSED"
+    Then the MOT Test Status is PASSED

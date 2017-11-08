@@ -35,6 +35,24 @@ class ReasonForRejection extends MotApi
         return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::PRS);
     }
 
+    /** Change to ReasonForRejectionTypeName::DANGEROUS when field is added to reason_for_rejection_type table */
+    public function addDangerousDefect($token, $mot_test_number, $rfrId)
+    {
+        return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::FAIL);
+    }
+
+    /** Change to ReasonForRejectionTypeName::MAJOR when field is added to reason_for_rejection_type table */
+    public function addMajorDefect($token, $mot_test_number, $rfrId)
+    {
+        return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::FAIL);
+    }
+
+    /** Change to ReasonForRejectionTypeName::MINOR when field is added to reason_for_rejection_type table */
+    public function addMinorDefect($token, $mot_test_number, $rfrId)
+    {
+        return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::ADVISORY);
+    }
+
     public function addRfr($accessToken, $motTestNumber, $rdrId, $rfrType)
     {
         $body = array_merge(
@@ -51,9 +69,23 @@ class ReasonForRejection extends MotApi
 
     public function editRFR($accessToken, $motTestNumber, $rdrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION)
     {
+        $this->defaultRfrDetails['locationLongitudinal'] = "rear";
+
         $body = array_merge(
             [
                 'id' => $rdrId,
+            ],
+            $this->defaultRfrDetails
+        );
+
+        return $this->postRfrToApi($accessToken, $motTestNumber, $body);
+    }
+
+    public function removeRFR($accessToken, $motTestNumber, $rfrId)
+    {
+        $body = array_merge(
+            [
+                'id' => $rfrId,
             ],
             $this->defaultRfrDetails
         );

@@ -116,7 +116,7 @@ Feature: Permissions
     Given there is a Mot test with "<test_type>" type in progress
     And I am logged in as user with <role>
     When I abort the Mot Test
-    Then the MOT Test Status is "<status>"
+    Then the MOT Test Status is <status>
     Examples:
       | test_type                | role            | status     |
       | Targeted Reinspection    | vehicleExaminer | ABORTED    |

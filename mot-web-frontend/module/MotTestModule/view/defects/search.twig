@@ -94,16 +94,11 @@
                                 PRS
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'failure') }}" class="button--alert">
-                                Failure
-                            </a>
-                        </li>
                     {% endif %}
-                    {% if defect.isFailure %}
+                    {% if (defect.isFailure or defect.isPrs) %}
                         <li>
                             <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'failure') }}" class="button--alert">
-                                Failure
+                                {{ defect.getLabelForRfr }}
                             </a>
                         </li>
                     {% endif %}

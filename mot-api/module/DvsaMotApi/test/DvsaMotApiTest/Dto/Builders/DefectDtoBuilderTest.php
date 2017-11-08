@@ -144,8 +144,9 @@ class DefectDtoBuilderTest extends PHPUnit_Framework_TestCase
 
         $reasonForRejectionMock
             ->expects($this->any())
-            ->method('getRfrDeficiencyCategoryCode')
-            ->willReturn(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+            ->method('getRfrDeficiencyCategory')
+            ->willReturn((new RfrDeficiencyCategory())
+                ->setCode(RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE));
 
         $reasonForRejectionMock
             ->expects($this->any())

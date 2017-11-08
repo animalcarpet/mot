@@ -18,7 +18,7 @@ Feature: Demo MOT Test
     And the Tester adds an Odometer Reading "<type>"
     And the Tester adds a Class 3-7 Roller Brake Test Result
     When the Tester Passes the Mot Test
-    Then the MOT Test Status is "PASSED"
+    Then the MOT Test Status is PASSED
   Examples:
     | type     |
     | NOT READ |
@@ -30,7 +30,7 @@ Feature: Demo MOT Test
     And the Tester adds an Odometer Reading of <distance>
     And the Tester adds a Class 3-7 Roller Brake Test Result
     When the Tester Passes the Mot Test
-    Then the MOT Test Status is "PASSED"
+    Then the MOT Test Status is PASSED
   Examples:
     | distance |
     | 499 km   |
@@ -42,7 +42,7 @@ Feature: Demo MOT Test
     And the Tester adds an Odometer Reading of 1000 mi
     And the Tester adds a Class 3-7 Decelerometer Brake Test
     When the Tester Passes the Mot Test
-    Then the MOT Test Status is "PASSED"
+    Then the MOT Test Status is PASSED
 
   Scenario: Add a Reason for Rejection
     Given I start a Demo MOT test as a Tester
@@ -50,7 +50,7 @@ Feature: Demo MOT Test
     And the Tester adds a Class 3-7 Decelerometer Brake Test
     And the Tester adds a Reason for Rejection
     When the Tester Fails the Mot Test
-    Then the MOT Test Status is "FAILED"
+    Then the MOT Test Status is FAILED
 
   @defect
   Scenario Outline: Being authorised to perform Demo Test, I can interact with reasons for rejection

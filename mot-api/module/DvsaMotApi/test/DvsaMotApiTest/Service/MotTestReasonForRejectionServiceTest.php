@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -23,12 +24,14 @@ use DvsaEntities\Entity\MotTestReasonForRejectionLocation;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionType;
+use DvsaEntities\Entity\RfrDeficiencyCategory;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestReasonForRejectionLocationRepository;
 use DvsaEntitiesTest\Entity\MotTestReasonForRejectionTest;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApi\Service\TestItemSelectorService;
+use Exception;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
@@ -73,22 +76,54 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             'failureDangerous' => false,
         ];
 
-        $failureText = 'adversely affected by the operation of another lamp';
-        $ref = '1.2.1f';
-        $selectorName = 'Rear Stop lamp';
+        $motTestId = 1;
+        $motTest = self::getTestMotTestEntity();
+        $motTest
+            ->setId($motTestId)
+            ->setOdometerUnit(OdometerUnit::KILOMETERS)
+            ->setMotTestType((new MotTestType())->setCode(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING));
 
-        $failureTextCy = 'adversely affected by the operation of another lamp (W)';
-        $selectorNameCy = 'Rear Stop lamp (W)';
+        $this->prepareMocks();
 
-        $this->addReasonForRejectionOk(
-            $data,
-            $failureText,
-            $ref,
-            $selectorName,
-            $failureTextCy,
-            $selectorNameCy,
-            true
-        );
+        $mockRfrLocationRepo = XMock::of(MotTestReasonForRejectionLocationRepository::class);
+        $mockRfrLocationRepo->expects($this->any())
+            ->method('getLocation')
+            ->willReturn(new MotTestReasonForRejectionLocation());
+
+        $this->mockEntityManager->expects($this->at(0))
+            ->method('getRepository')
+            ->with(MotTestReasonForRejectionLocation::class)
+            ->will($this->returnValue($mockRfrLocationRepo));
+
+        $testItemSelector = new TestItemSelector();
+        $testItemSelector
+            ->setId(1)
+            ->setName('Rear Stop lamp')
+            ->setNameCy('Rear Stop lamp (W)');
+
+        $deficiencyCategory = (new RfrDeficiencyCategory())->setCode('D');
+        $reasonForRejection = new ReasonForRejection();
+        $reasonForRejection
+            ->setRfrId($data['rfrId'])
+            ->setTestItemSelector($testItemSelector)
+            ->setSectionTestItemSelector((new TestItemSelector())->setSectionTestItemSelectorId(3))
+            ->setRfrDeficiencyCategory($deficiencyCategory);
+
+        $this->mockEntityManager
+            ->method('find')
+            ->willReturn($reasonForRejection);
+
+        $mockReasonForRejectionType = XMock::of(EntityRepository::class);
+        $mockReasonForRejectionType->method('findOneBy')
+            ->willReturn(new ReasonForRejectionType());
+
+        $this->mockEntityManager->expects($this->at(2))
+            ->method('getRepository')
+            ->with(ReasonForRejectionType::class)
+            ->willReturn($mockReasonForRejectionType);
+
+        $service = $this->createService();
+        $service->addReasonForRejection($motTest, $data);
     }
 
     public function testAddReasonForRejectionUsingBrakeTestPerformanceNotTestedRfr()
@@ -97,10 +132,13 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             'rfrId' => ReasonForRejectionConstants::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
             'type' => 'FAIL',
         ];
+
+        $deficiencyCategory = (new RfrDeficiencyCategory())->setCode('PE');
         $expectedNumberOfReposSearchedDuringClearBrakeTestResults = 3;
         $motTest = self::getTestMotTestEntity();
         $reasonForRejection = (new ReasonForRejection())
-            ->setRfrId($data['rfrId']);
+            ->setRfrId($data['rfrId'])
+            ->setRfrDeficiencyCategory($deficiencyCategory);
 
         $this->prepareMocks();
 
@@ -120,7 +158,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             ->willReturn(new ReasonForRejectionType());
 
         $this->mockEntityManager
-            ->expects($this->exactly(1))
+            ->expects($this->any())
             ->method('find')
             ->with(
                 ReasonForRejection::class,
@@ -283,11 +321,6 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             ->method('findOneBy')
             ->willReturn(new ReasonForRejectionType());
 
-        $this->mockEntityManager->expects($this->at(1))
-            ->method('getRepository')
-            ->with(ReasonForRejectionType::class)
-            ->will($this->returnValue($mockRfrTypeRepo));
-
         $this->mockEntityManager->expects($this->once())
             ->method('find')
             ->will($this->returnValue(null));
@@ -397,6 +430,69 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         $service->deleteReasonForRejectionById($motTestNumber, $rfrId);
     }
 
+    public function testAddAdvisoryOfDangerousEUDefectShouldNotBeDangerous()
+    {
+        $data = [
+            'rfrId' => 1,
+            'type' => 'ADVISORY',
+            'locationLateral' => 'nearside',
+            'locationLongitudinal' => 'front',
+            'locationVertical' => 'top',
+            'comment' => 'comment goes here',
+            'failureDangerous' => true,
+        ];
+
+        $this->prepareMocks();
+        $motTestId = 1;
+
+        $motTest = self::getTestMotTestEntity();
+        $motTest
+            ->setId($motTestId)
+            ->setOdometerUnit(OdometerUnit::KILOMETERS);
+
+        $this->prepareMocks();
+
+        $mockRfrLocationRepo = XMock::of(MotTestReasonForRejectionLocationRepository::class);
+        $mockRfrLocationRepo->expects($this->any())
+            ->method('getLocation')
+            ->willReturn(new MotTestReasonForRejectionLocation());
+
+        $mockEntityManagerHandler = new MockHandler($this->mockEntityManager, $this);
+
+        $mockEntityManagerHandler->next('getRepository')
+            ->with(MotTestReasonForRejectionLocation::class)
+            ->will($this->returnValue($mockRfrLocationRepo));
+
+        $deficiencyCategory = (new RfrDeficiencyCategory())->setCode('DA');
+        $reasonForRejection = (new ReasonForRejection())
+            ->setRfrId($data['rfrId'])
+            ->setRfrDeficiencyCategory($deficiencyCategory);
+
+        $mockEntityManagerHandler->find()
+            ->with(
+                ReasonForRejection::class,
+                ['rfrId' => $data['rfrId']]
+            )
+            ->will($this->returnValue($reasonForRejection));
+
+        $rfrType = (new ReasonForRejectionType())->setReasonForRejectionType(ReasonForRejectionTypeName::ADVISORY);
+        $mockReasonForRejectionType = XMock::of(EntityRepository::class);
+        $mockReasonForRejectionType->method('findOneBy')
+            ->willReturn($rfrType);
+
+        $this->mockEntityManager->expects($this->at(2))
+            ->method('getRepository')
+            ->with(ReasonForRejectionType::class)
+            ->willReturn($mockReasonForRejectionType);
+
+        $service = $this->createService();
+        $motTestRfr = $service->createRfrFromData($data, $motTest);
+
+        $this->assertFalse($motTestRfr->getFailureDangerous());
+        $this->assertSame(ReasonForRejectionTypeName::ADVISORY, $motTestRfr->getType()->getReasonForRejectionType());
+        $this->assertSame('DA', $motTestRfr->getReasonForRejection()->getRfrDeficiencyCategory()->getCode());
+    }
+
     private function addReasonForRejectionOk(
         $data,
         $failureText,
@@ -444,18 +540,20 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
                 ->setName($selectorName)
                 ->setNameCy($selectorNameCy);
 
+            $deficiencyCategory = (new RfrDeficiencyCategory())->setCode('PE');
             $reasonForRejection = new ReasonForRejection();
             $reasonForRejection
                 ->setRfrId($data['rfrId'])
                 ->setTestItemSelector($testItemSelector)
-                ->setSectionTestItemSelector((new TestItemSelector())->setSectionTestItemSelectorId(3));
+                ->setSectionTestItemSelector((new TestItemSelector())->setSectionTestItemSelectorId(3))
+                ->setRfrDeficiencyCategory($deficiencyCategory);
 
             $this->mockTestItemSelectorService->expects($this->once())
                 ->method('getReasonForRejectionById')
                 ->with($data['rfrId'])
                 ->will($this->returnValue($reasonForRejection));
 
-            $mockEntityManagerHandler->next('find')
+            $mockEntityManagerHandler->find()
                 ->with(
                     ReasonForRejection::class,
                     ['rfrId' => $data['rfrId']]

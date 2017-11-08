@@ -493,7 +493,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then /^the MOT Test Status is "([^"]*)"$/
+     * @Then /^the MOT Test Status is (.*)$/
+     * @And /^the MOT Test Status is "([^"]*)"$/
      * @Then /^the MOT Test Status should be "([^"]*)"$/
      *
      * @param $status

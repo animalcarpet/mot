@@ -17,6 +17,11 @@ class ReasonForRejectionTypeName
     const SYSTEM_GENERATED = 'SYSTEM GENERATED';
     const USER_ENTERED = 'USER ENTERED';
 
+    /** EU Categories */
+    const DANGEROUS = 'DANGEROUS';
+    const MAJOR = 'MAJOR';
+    const MINOR = 'MINOR';
+
     /**
      * @return array of values for the type ReasonForRejectionTypeName
      */
@@ -29,6 +34,9 @@ class ReasonForRejectionTypeName
             self::NON_SPECIFIC,
             self::SYSTEM_GENERATED,
             self::USER_ENTERED,
+            self::DANGEROUS,
+            self::MAJOR,
+            self::MINOR,
         ];
     }
 
