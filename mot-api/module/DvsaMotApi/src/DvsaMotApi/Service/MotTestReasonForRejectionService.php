@@ -194,7 +194,7 @@ class MotTestReasonForRejectionService extends AbstractService
         $rfrTypeName = $rfr->getType()->getReasonForRejectionType();
 
         $rfr->setLocation($this->fetchLocation($locationLateral, $locationLongitudinal, $locationVertical))
-            ->setFailureDangerous($this->getIsFailureDangerous($data, $rfr->getReasonForRejection(), $rfrType))
+            ->setFailureDangerous($this->getIsFailureDangerous($data, $rfr->getReasonForRejection(), $rfrTypeName))
             ->getMotTestReasonForRejectionComment()->setComment($comment);
 
         if (!$this->isTrainingTest($motTest)) {
@@ -303,6 +303,7 @@ class MotTestReasonForRejectionService extends AbstractService
     /**
      * @param $data
      * @param ReasonForRejection $reasonForRejection
+     * @param string             $rfrTypeName
      *
      * @return bool|mixed
      *
