@@ -12,6 +12,8 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
+use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
 use Dvsa\Mot\Frontend\MotTestModule\Service\ReasonForRejectionPaginator;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SearchReasonForRejectionService;
@@ -55,6 +57,9 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
         $this->setController(
             new SearchDefectsController($searchReasonForRejectionService)
         );
+
+        $dataLayerPlugin = new DataLayerPlugin(new DataLayer());
+        $this->getController()->getPluginManager()->setService('gtmDataLayer', $dataLayerPlugin);
 
         parent::setUp();
     }
@@ -155,7 +160,6 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
             ->will($this->returnValue($vehicle));
 
         $this->getResultForAction2('get', 'index', $routeParams, $queryParams);
-
         $this->assertResponseStatus(self::HTTP_OK_CODE);
     }
 
