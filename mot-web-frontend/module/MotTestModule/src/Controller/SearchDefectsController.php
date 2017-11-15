@@ -101,10 +101,16 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
         if ($searchTerm !== '' && !is_null($searchTerm)) {
             $paginator = $this->getSearchResultsFromApi($searchTerm, $vehicle->getVehicleClass()->getCode(), $page);
+
+            $this->gtmDataLayer([
+                'search-results' => $paginator->getTotalItemCount(),
+                'search-keyword' => $searchTerm
+            ]);
         }
 
         $hasResults = !is_null($paginator);
         $isRetest = $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST;
+
 
         return $this->createViewModel('defects/search.twig', [
             'motTestNumber' => $motTestNumber,
