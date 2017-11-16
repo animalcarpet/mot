@@ -16,7 +16,7 @@ $returnLink = $viewModel->getReturnLink();
 <?php
 
 echo $this->partial('site/site/test-quality-information/month-range-form', [
-    'form' => $viewModel->getMonthRangeForm(),
+    'form' => $viewModel->getMonthRangeForm()
 ]);
 
 if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::BIKES)) {

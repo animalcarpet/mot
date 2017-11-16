@@ -24,6 +24,7 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     const CSV_FILE_SIZE_GROUP_A = 1001;
     const CSV_FILE_SIZE_GROUP_B = 1002;
     const IS_RETURN_TO_AE_TQI = false;
+    const GQR_REPORTS_3_MONTHS_OPTION = true;
 
     /** @var SiteTestQualityViewModel */
     private $siteTestQualityViewModel;
@@ -37,7 +38,7 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
             self::IS_RETURN_TO_AE_TQI,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new DateTime('2015-02-15')),
             1
         );
@@ -156,7 +157,7 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
             self::IS_RETURN_TO_AE_TQI,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new DateTime('2015-02-15')),
             1
         );
@@ -185,7 +186,7 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
             true,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new DateTime('2015-02-15')),
             1
         );
@@ -202,7 +203,7 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
             false,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new DateTime('2015-02-15')),
             1
         );

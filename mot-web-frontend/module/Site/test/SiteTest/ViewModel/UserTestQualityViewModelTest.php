@@ -30,6 +30,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     const CSV_FILE_SIZE = 10000;
     const IS_RETURN_TO_AE_TQI = false;
     const THREE_MONTHS_RANGE = 3;
+    const GQR_REPORTS_3_MONTHS_OPTION = true;
 
     /** @var UserTestQualityViewModel */
     protected $userTestQualityViewModelB;
@@ -48,8 +49,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildVehicleTestingStationDto(),
             new LastMonthsDateRange(new DateTimeHolder()),
             self::RETURN_LINK,
-            new TQIMonthRangeForm(),
-            true
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION)
         );
 
         $this->userTestQualityViewModelB = new UserTestQualityViewModel(
@@ -62,8 +62,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildVehicleTestingStationDto(),
             new LastMonthsDateRange(new DateTimeHolder()),
             self::RETURN_LINK,
-            new TQIMonthRangeForm(),
-            true
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION)
         );
     }
 

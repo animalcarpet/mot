@@ -55,7 +55,7 @@ public class UserTestQualityViewTest extends DslTest {
         assertThat("Return link is displayed", userTestQualityPage.isReturnLinkDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site for 3 months")
+    @Test(groups = {"Regression"}, testName = "gqrReports3MonthsOptionDisabled", description = "Verifies that tester can view Test Quality for site for 3 months")
     public void viewUserTestQualityForThreeMonthsForGroupA() throws IOException, URISyntaxException {
         //National stats calculations are cached
         siteData.clearAllCachedStatistics();
@@ -99,7 +99,7 @@ public class UserTestQualityViewTest extends DslTest {
         assertThat("Return link is displayed", userTestQualityPage.isReturnLinkDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site for 3 months")
+    @Test(groups = {"Regression"}, testName="gqrReports3MonthsOptionDisabled", description = "Verifies that tester can view Test Quality for site for 3 months")
     public void viewUserTestQualityForThreeMonthsForGroupB() throws IOException, URISyntaxException {
         //National stats calculations are cached
         siteData.clearAllCachedStatistics();

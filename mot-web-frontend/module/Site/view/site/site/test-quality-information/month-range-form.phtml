@@ -13,11 +13,15 @@ use Site\Form\TQIMonthRangeForm;
                     'radio' => $form->getRadio1Month(),
                 ]) ?>
             </div>
-            <div class="multiple-choice">
-                <?php echo $this->partial('simpleRadio', [
-                    'radio' => $form->getRadio3Months(),
-                ]) ?>
-            </div>
+
+            <?php if($form->is3MonthsViewEnabled()) : ?>
+                <div class="multiple-choice">
+                    <?php echo $this->partial('simpleRadio', [
+                        'radio' => $form->getRadio3Months(),
+                    ]) ?>
+                </div>
+            <?php endif; ?>
+
             <div class="inline-element">
                 <?php echo $this->formElement($form->getSubmit()) ?>
             </div>

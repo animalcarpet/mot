@@ -12,17 +12,14 @@ class TQIMonthRangeForm
     const RANGE_ONE_MONTH = 1;
     const RANGE_THREE_MONTHS = 3;
 
-    const VALID_MONTH_RANGES = [
-        self::RANGE_ONE_MONTH,
-        self::RANGE_THREE_MONTHS,
-    ];
-
+    private $validMonthRanges;
     private $radio1Month;
     private $radio3Months;
     private $submit;
     private $backTo;
+    private $gqr3MonthsViewEnabled;
 
-    public function __construct()
+    public function __construct(bool $gqr3MonthsViewEnabled)
     {
         $this->radio1Month = new SimpleRadio();
         $this->radio1Month
@@ -37,8 +34,7 @@ class TQIMonthRangeForm
             ->setValue(self::RANGE_THREE_MONTHS)
             ->setName('monthRange')
             ->setLabel('Last 3 months')
-            ->setAttribute('id', 'last3Months')
-        ;
+            ->setAttribute('id', 'last3Months');
 
         $this->submit = new Submit();
         $this->submit->setValue('Update results');
@@ -46,6 +42,26 @@ class TQIMonthRangeForm
         $this->submit->setAttribute('class', 'button');
 
         $this->backTo = new Hidden('returnToAETQI');
+
+        $this->toggle3MonthsView($gqr3MonthsViewEnabled);
+        $this->gqr3MonthsViewEnabled = $gqr3MonthsViewEnabled;
+    }
+
+    private function toggle3MonthsView($threeMonthsViewEnabled) {
+        if($threeMonthsViewEnabled) {
+            $this->validMonthRanges = [
+                self::RANGE_ONE_MONTH,
+                self::RANGE_THREE_MONTHS
+            ];
+        } else {
+            $this->validMonthRanges = [
+                self::RANGE_ONE_MONTH
+            ];
+        }
+    }
+
+    public function is3MonthsViewEnabled() {
+        return $this->gqr3MonthsViewEnabled;
     }
 
     /**
@@ -104,7 +120,7 @@ class TQIMonthRangeForm
     public function isValid(int $monthRange)
     {
         $inArray = new InArray();
-        $inArray->setHaystack(self::VALID_MONTH_RANGES);
+        $inArray->setHaystack($this->validMonthRanges);
         return $inArray->isValid($monthRange);
     }
 

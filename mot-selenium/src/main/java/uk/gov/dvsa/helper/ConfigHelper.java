@@ -10,4 +10,7 @@ public class ConfigHelper {
     }
 
     public static boolean is2faHardStopEnabled() { return service.getToggleValue("2fa.hardstop.enabled"); }
+
+    public static boolean isGqrReports3MonthsOptionEnabled() { return service.getToggleValue("gqr_reports_3_months_option"); }
+
 }

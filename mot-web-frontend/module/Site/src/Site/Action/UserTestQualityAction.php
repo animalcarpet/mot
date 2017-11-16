@@ -30,6 +30,8 @@ use Site\Form\TQIMonthRangeForm;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 use Zend\Mvc\Controller\Plugin\Url;
 use Zend\Mvc\Router\Http\RouteMatch;
+use DvsaFeature\FeatureToggles;
+use DvsaCommon\Constants\FeatureToggle;
 
 class UserTestQualityAction implements AutoWireableInterface
 {
@@ -62,7 +64,8 @@ class UserTestQualityAction implements AutoWireableInterface
         ContextProvider $contextProvider,
         RouteMatch $routeMatch,
         MotIdentityProviderInterface $identityProvider,
-        DateTimeHolder $dateTimeHolder
+        DateTimeHolder $dateTimeHolder,
+        FeatureToggles $featureToggles
     ) {
         $this->assertion = $assertion;
         $this->componentFailRateApiResource = $componentFailRateApiResource;
@@ -74,10 +77,13 @@ class UserTestQualityAction implements AutoWireableInterface
         $this->routeMatch = $routeMatch;
         $this->identityProvider = $identityProvider;
         $this->dateTimeHolder = $dateTimeHolder;
+        $this->featureToggles = $featureToggles;
     }
 
     public function execute($siteId, $userId, int $monthRange, $groupCode, array $breadcrumbs, $isReturnToAETQI, Url $urlPlugin)
     {
+        $gqr3MonthsViewEnabled = $this->featureToggles->isEnabled(FeatureToggle::GQR_REPORTS_3_MONTHS_OPTION);
+
         if ($this->identityProvider->getIdentity()->getUserId() != $userId) {
             $this->assertion->assertGranted($siteId);
         }
@@ -87,7 +93,7 @@ class UserTestQualityAction implements AutoWireableInterface
         $queryParams = ['monthRange' => $monthRange];
         $monthDateRange = new LastMonthsDateRange($this->dateTimeHolder);
         $monthDateRange->setNumberOfMonths($monthRange);
-        $monthRangeForm = (new TQIMonthRangeForm())
+        $monthRangeForm = (new TQIMonthRangeForm($gqr3MonthsViewEnabled))
             ->setValue($monthRange)
             ->setBackTo($isReturnToAETQI);
         if(!$monthRangeForm->isValid($monthRange)){

@@ -30,6 +30,8 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Formatting\PersonFullNameFormatter;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
+use DvsaFeature\FeatureToggles;
+use DvsaCommon\Constants\FeatureToggle;
 use Site\Form\TQIMonthRangeForm;
 use Zend\Mvc\Controller\Plugin\Url;
 
@@ -87,7 +89,8 @@ class TestQualityAction implements AutoWireableInterface
         TesterMultiSitePerformanceApiResource $multiSiteApiResource,
         TesterTqiBreadcrumbs $testerTqiBreadcrumbs,
         DateTimeHolder $dateTimeHolder,
-        ApiPersonalDetails $personalDetailsService
+        ApiPersonalDetails $personalDetailsService,
+        FeatureToggles $featureToggles
     ) {
         $this->testerPerformanceApiResource = $testerPerformanceApiResource;
         $this->nationalPerformanceApiResource = $nationalPerformanceApiResource;
@@ -100,6 +103,7 @@ class TestQualityAction implements AutoWireableInterface
         $this->buildReturnLinkSuffix($contextProvider->getContext());
         $this->dateTimeHolder = $dateTimeHolder;
         $this->personalDetailsService = $personalDetailsService;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -121,7 +125,9 @@ class TestQualityAction implements AutoWireableInterface
 
         $this->url = $url;
 
-        $monthRangeForm = (new TQIMonthRangeForm())
+        $gqr3MonthsViewEnabled = $this->featureToggles->isEnabled(FeatureToggle::GQR_REPORTS_3_MONTHS_OPTION);
+
+        $monthRangeForm = (new TQIMonthRangeForm($gqr3MonthsViewEnabled))
             ->setValue($monthRange);
         if(!$monthRangeForm->isValid($monthRange)){
             return new NotFoundActionResult();

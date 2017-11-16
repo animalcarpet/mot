@@ -22,6 +22,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
     const NOT_AVAILABLE = 'Not available';
     const THREE_MONTHS_RANGE = 3;
     const PERSON_ID = 1;
+    const GQR_REPORTS_3_MONTHS_OPTION = true;
 
 
     public function testTablePopulatesNationalStatistics()
@@ -34,7 +35,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
             self::THREE_MONTHS_RANGE,
             self::RETURN_LINK,
             self::RETURN_LINK_TEXT,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new \DateTime('2015-2-15')),
             self::PERSON_ID
         );
@@ -59,7 +60,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
             self::THREE_MONTHS_RANGE,
             self::RETURN_LINK,
             self::RETURN_LINK_TEXT,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new \DateTime('2015-2-15')),
             self::PERSON_ID
         );
@@ -87,7 +88,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
             self::THREE_MONTHS_RANGE,
             self::RETURN_LINK,
             self::RETURN_LINK_TEXT,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new \DateTime('2015-2-15')),
             self::PERSON_ID
         );
@@ -125,7 +126,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
             self::THREE_MONTHS_RANGE,
             self::RETURN_LINK,
             self::RETURN_LINK_TEXT,
-            new TQIMonthRangeForm(),
+            new TQIMonthRangeForm(self::GQR_REPORTS_3_MONTHS_OPTION),
             new TestDateTimeHolder(new \DateTime('2015-2-15')),
             self::PERSON_ID
         );

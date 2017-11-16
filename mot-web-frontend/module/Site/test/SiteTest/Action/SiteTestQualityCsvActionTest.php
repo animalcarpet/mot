@@ -29,6 +29,7 @@ use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Action\SiteTestQualityCsvAction;
 use Zend\Mvc\Controller\Plugin\Url;
+use DvsaFeature\FeatureToggles;
 
 class SiteTestQualityCsvActionTest extends \PHPUnit_Framework_TestCase
 {
@@ -119,6 +120,11 @@ class SiteTestQualityCsvActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService = new AuthorisationServiceMock();
         $this->authorisationService->grantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, self::SITE_ID);
 
+        $this->featureTogglesMock = XMock::of(FeatureToggles::class);
+        $this->featureTogglesMock->expects($this->any())
+            ->method('isEnabled')
+            ->willReturn(true);
+
         $this->siteTestQualityCsvAction = new SiteTestQualityCsvAction(
             $this->sitePerformanceApiResourceMock,
             $this->componentFailRateApiResourceMock,
@@ -127,7 +133,8 @@ class SiteTestQualityCsvActionTest extends \PHPUnit_Framework_TestCase
             $this->nationalPerformanceApiResourceMock,
             $this->siteMapper,
             new ViewVtsTestQualityAssertion($this->authorisationService),
-            new TestDateTimeHolder(new \DateTime('2015-02-14'))
+            new TestDateTimeHolder(new \DateTime('2015-02-14')),
+            $this->featureTogglesMock
         );
 
         $urlMethods = get_class_methods(Url::class);

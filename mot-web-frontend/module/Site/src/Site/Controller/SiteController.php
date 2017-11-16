@@ -3,6 +3,7 @@
 namespace Site\Controller;
 
 use Application\Service\CatalogService;
+use Core\Action\NotFoundActionResult;
 use Core\BackLink\BackLinkQueryParam;
 use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Core\Controller\AbstractAuthActionController;
@@ -45,6 +46,7 @@ use Site\ViewModel\VehicleTestingStation\VtsFormViewModel;
 use Zend\Http\Request;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
+use Site\Form\TQIMonthRangeForm;
 
 /**
  * Class SiteController.
@@ -912,8 +914,15 @@ class SiteController extends AbstractAuthActionController
         $group = $this->params('group');
         $monthRange = (int) $this->params('monthRange');
 
-        $csv = $this->siteTestQualityCsvAction->execute($id, $monthRange, $group);
+        $featureToggles = $this->getFeatureToggles();
 
-        return $this->applyActionResult($csv);
+        $actionResult = null;
+        if($featureToggles->isDisabled(FeatureToggle::GQR_REPORTS_3_MONTHS_OPTION) && $monthRange == TQIMonthRangeForm::RANGE_THREE_MONTHS) {
+            $actionResult = new NotFoundActionResult();
+        } else {
+            $actionResult = $this->siteTestQualityCsvAction->execute($id, $monthRange, $group);
+        }
+
+        return $this->applyActionResult($actionResult);
     }
 }

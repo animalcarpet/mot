@@ -27,6 +27,7 @@ use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use Site\Action\SiteTestQualityAction;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
+use DvsaFeature\FeatureToggles;
 
 class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
 {
@@ -106,12 +107,18 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService = new AuthorisationServiceMock();
         $this->authorisationService->grantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, self::SITE_ID);
 
+        $this->featureTogglesMock = XMock::of(FeatureToggles::class);
+        $this->featureTogglesMock->expects($this->any())
+            ->method('isEnabled')
+            ->willReturn(true);
+
         $this->siteTestQualityAction = new SiteTestQualityAction(
             $this->sitePerformanceApiResourceMock,
             $this->nationalPerformanceApiResourceMock,
             $this->siteMapper,
             new ViewVtsTestQualityAssertion($this->authorisationService),
-            new TestDateTimeHolder(new \DateTime('2015-02-14'))
+            new TestDateTimeHolder(new \DateTime('2015-02-14')),
+            $this->featureTogglesMock
         );
     }
 
