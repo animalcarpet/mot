@@ -34,6 +34,7 @@ use Site\Action\UserTestQualityAction;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 use Zend\Mvc\Controller\Plugin\Url;
 use Zend\Mvc\Router\Http\RouteMatch;
+use DvsaFeature\FeatureToggles;
 
 class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
 {
@@ -124,6 +125,11 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
         $this->identityProvider = new FrontendIdentityProviderStub();
         $this->identityProvider->setIdentity($identity);
 
+        $this->featureTogglesMock = XMock::of(FeatureToggles::class);
+        $this->featureTogglesMock->expects($this->any())
+            ->method('isEnabled')
+            ->willReturn(true);
+
         $this->userTestQualityAction = new UserTestQualityAction(
             $this->componentFailRateApiResource,
             $this->nationalComponentStatisticApiResource,
@@ -134,7 +140,8 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
             XMock::of(ContextProvider::class),
             XMock::of(RouteMatch::class),
             $this->identityProvider,
-            new TestDateTimeHolder(new \DateTime('2015-02-14'))
+            new TestDateTimeHolder(new \DateTime('2015-02-14')),
+            $this->featureTogglesMock
         );
     }
 
@@ -176,7 +183,8 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
             XMock::of(ContextProvider::class),
             XMock::of(RouteMatch::class),
             $this->identityProvider,
-            new TestDateTimeHolder(new \DateTime('2015-02-14'))
+            new TestDateTimeHolder(new \DateTime('2015-02-14')),
+            $this->featureTogglesMock
         );
     }
 

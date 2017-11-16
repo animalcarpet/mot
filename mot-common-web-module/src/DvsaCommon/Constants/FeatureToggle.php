@@ -16,4 +16,5 @@ class FeatureToggle
     const EU_ROADWORTHINESS = 'eu_roadworthiness';
     const RFR_CACHE = 'rfr_cache';
     const RFR_ELASTICSEARCH = 'rfr_elasticsearch';
+    const GQR_REPORTS_3_MONTHS_OPTION = 'gqr_reports_3_months_option';
 }

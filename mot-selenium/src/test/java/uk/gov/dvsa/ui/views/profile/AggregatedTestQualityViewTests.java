@@ -42,7 +42,7 @@ public class AggregatedTestQualityViewTests extends DslTest {
         tester3 = motApi.user.createTester(site.getId());
     }
 
-    @Test(groups = {"Regression"}, description = "Verifies that user can see his own TQI page")
+    @Test(groups = {"Regression"}, testName = "gqrReports3MonthsOptionDisabled", description = "Verifies that user can see his own TQI page")
     public void userCanSeeHisOwnTqiPage() throws IOException, URISyntaxException {
         //Given I have performed MOT test in previous months
         DateTime threeMonthsAgo = getFirstDayOfMonth(3);
@@ -79,6 +79,7 @@ public class AggregatedTestQualityViewTests extends DslTest {
     }
 
     @Test(groups = {"Regression"},
+            testName = "gqrReports3MonthsOptionDisabled",
             description = "Verifies that DVSA user can see component breakdown for tester at site from person TQI journey")
     public void dvsaUserCanSeeTesterAtSiteComponentBreakdownPage() throws IOException, URISyntaxException {
         //Given user have performed MOT test in previous months

@@ -22,5 +22,9 @@ public class FeatureToggleAnnotationTransformer implements IAnnotationTransforme
         if(iTestAnnotation.getTestName().equals("2faHardStopDisabled")) {
             iTestAnnotation.setEnabled(!ConfigHelper.is2faHardStopEnabled());
         }
+
+        if(iTestAnnotation.getTestName().equals("gqrReports3MonthsOptionDisabled")) {
+            iTestAnnotation.setEnabled(ConfigHelper.isGqrReports3MonthsOptionEnabled());
+        }
     }
 }

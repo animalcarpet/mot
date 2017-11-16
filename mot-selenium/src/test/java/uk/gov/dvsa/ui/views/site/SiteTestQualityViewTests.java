@@ -98,6 +98,7 @@ public class SiteTestQualityViewTests extends DslTest {
     }
 
     @Test(groups = {"Regression"},
+        testName = "gqrReports3MonthsOptionDisabled",
         description = "Verifies that tester can view Test Quality for site for lst 3 months with correct data")
     public void checkDataForLast3Months() throws IOException, URISyntaxException {
         //National stats calculations are cached

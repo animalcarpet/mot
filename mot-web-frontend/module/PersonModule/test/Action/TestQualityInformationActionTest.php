@@ -27,6 +27,7 @@ use DvsaCommon\Model\TesterGroupAuthorisationStatus;
 use DvsaCommon\PHPUnit\AbstractMotUnitTest;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Mvc\Controller\Plugin\Url;
 use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiBreadcrumbs;
@@ -110,6 +111,11 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             ->method('getPersonalDetailsData')
             ->willReturn([]);
 
+        $this->featureTogglesMock = XMock::of(FeatureToggles::class);
+        $this->featureTogglesMock->expects($this->any())
+            ->method('isEnabled')
+            ->willReturn(true);
+
         $this->testQualityAction = new TestQualityAction(
             $this->testerPerformanceApiResourceMock,
             $this->nationalPerformanceApiResourceMock,
@@ -120,7 +126,8 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             $this->multiSiteApiResource,
             $this->testerTqiBreadcrumbs,
             new TestDateTimeHolder(new \DateTime('2015-02-15')),
-            $this->personalDetailsApiResourceMock
+            $this->personalDetailsApiResourceMock,
+            $this->featureTogglesMock
         );
 
         $urlMethods = get_class_methods(Url::class);
@@ -252,7 +259,8 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
             $this->multiSiteApiResource,
             $this->testerTqiBreadcrumbs,
             new TestDateTimeHolder(new \DateTime('2015-2-15')),
-            $this->personalDetailsApiResourceMock
+            $this->personalDetailsApiResourceMock,
+            $this->featureTogglesMock
         );
         $result = $testQualityAction->execute('1', self::THREE_MONTHS_RANGE, $this->url, []);
 

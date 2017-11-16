@@ -11,6 +11,8 @@ use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use DvsaFeature\FeatureToggles;
+use DvsaCommon\Constants\FeatureToggle;
 use Site\Form\TQIMonthRangeForm;
 use Site\Service\CsvFileSizeCalculator;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
@@ -33,19 +35,23 @@ class SiteTestQualityAction implements AutoWireableInterface
         NationalPerformanceApiResource $nationalPerformanceApiResource,
         SiteMapper $siteMapper,
         ViewVtsTestQualityAssertion $assertion,
-        DateTimeHolder $dateTimeHolder
+        DateTimeHolder $dateTimeHolder,
+        FeatureToggles $featureToggles
     ) {
         $this->sitePerformanceApiResource = $sitePerformanceApiResource;
         $this->nationalPerformanceApiResource = $nationalPerformanceApiResource;
         $this->siteMapper = $siteMapper;
         $this->assertion = $assertion;
         $this->dateTimeHolder = $dateTimeHolder;
+        $this->featureToggles = $featureToggles;
     }
 
     public function execute($siteId, $monthRange, $isReturnToAETQI, array $breadcrumbs)
     {
+        $gqr3MonthsViewEnabled = $this->featureToggles->isEnabled(FeatureToggle::GQR_REPORTS_3_MONTHS_OPTION);
+
         $this->assertion->assertGranted($siteId);
-        $monthRangeForm = (new TQIMonthRangeForm())
+        $monthRangeForm = (new TQIMonthRangeForm($gqr3MonthsViewEnabled))
             ->setValue($monthRange)
             ->setBackTo($isReturnToAETQI);
         if(!$monthRangeForm->isValid($monthRange)){
