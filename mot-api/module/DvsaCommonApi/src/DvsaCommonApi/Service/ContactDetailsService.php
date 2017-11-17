@@ -116,9 +116,6 @@ class ContactDetailsService extends AbstractService
 
     private function updatePhonesInContactDetails(ContactDetail $contactDetails, array $phoneDtos)
     {
-        /** @var \Doctrine\Common\Collections\ArrayCollection $phoneEntities */
-        $phoneEntities = $contactDetails->getPhones();
-
         /** @var PhoneDto $phoneDto */
         foreach ($phoneDtos as $phoneDto) {
             $id = $phoneDto->getId();
@@ -126,24 +123,22 @@ class ContactDetailsService extends AbstractService
             $isPrimary = $phoneDto->isPrimary();
             $number = trim($phoneDto->getNumber());
 
-            //  --  find entity by id or if id is null, then if it is primary --
-            $phoneEntity = ArrayUtils::firstOrNull(
-                $phoneEntities,
-                function (Phone $phone) use ($id, $type, $isPrimary) {
-                    return
-                        (
-                            $id === null
-                            && $isPrimary === true
-                            && $phone->getContactType()->getCode() === $type
-                            && $phone->getIsPrimary() === $isPrimary
-                        )
-                        || ((int) $phone->getId() === $id);
+            if ($id !== null) {
+                //  --  find entity by id --
+                $phoneEntity = $contactDetails->getPhoneById($id);
+            } else {
+                //  --  if id is null, then first look for a matching primary phone entity --
+                $phoneEntity = $contactDetails->getMatchingPhone($type, $isPrimary);
+
+                if ($phoneEntity === null) {
+                    //  --  if the phone entity is null, look for a matching non-primary phone entity --
+                    $phoneEntity = $contactDetails->getMatchingPhone($type, false);
                 }
-            );
+            }
 
             if ((string) $number === '') {
                 if ($phoneEntity !== null) {
-                    //  --  if number is empty, then drop entity in db    --
+                    //  --  if number is empty, then drop entity in db  --
                     $this->entityManager->remove($phoneEntity);
                     $contactDetails->removePhone($phoneEntity);
                 }

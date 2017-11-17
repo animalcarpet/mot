@@ -207,8 +207,10 @@ class ContactDetailsServiceTest extends AbstractServiceTest
 
         $phoneEntity2 = $this->clonePhone($phoneEntity)->setId(999);
 
+        $phoneEntity3 = $this->clonePhone($phoneEntity)->setId(888)->setIsPrimary(false);
+
         return [
-            //  --  contact has not phones, dto has -> should add phone to contact  --
+            //  --  contact has no phones, dto has -> should add phone to contact  --
             [
                 'entity' => null,
                 'dto' => $this->clonePhoneDto($phoneDto),
@@ -232,6 +234,14 @@ class ContactDetailsServiceTest extends AbstractServiceTest
                 'expectEntity' => $this->clonePhone($phoneEntity)->setNumber('+A99881'),
                 'expectRemoveEntity' => null,
             ],
+            //  --  contact has non-primary phone, dto has number -> should find non-primary nr and update  --
+            [
+                'entity' => $this->clonePhone($phoneEntity3),
+                'dto' => $this->clonePhoneDto($phoneDto)->setNumber('+A99881'),
+                'typeCode' => PhoneContactTypeCode::BUSINESS,
+                'expectEntity' => $this->clonePhone($phoneEntity3)->setNumber('+A99881')->setIsPrimary(true),
+                'expectRemoveEntity' => null,
+            ],
             //  --  details has phone, dto without number -> phone should be removed from contact    --
             [
                 'entity' => $phoneEntity2,
@@ -239,6 +249,14 @@ class ContactDetailsServiceTest extends AbstractServiceTest
                 'typeCode' => null,
                 'expectEntity' => null,
                 'expectRemoveEntity' => $phoneEntity2,
+            ],
+            //  --  details has non-primary phone, dto without number -> phone should be removed from contact    --
+            [
+                'entity' => $phoneEntity3,
+                'dto' => $this->clonePhoneDto($phoneDto)->setNumber(''),
+                'typeCode' => null,
+                'expectEntity' => null,
+                'expectRemoveEntity' => $phoneEntity3,
             ],
         ];
     }

@@ -7,6 +7,8 @@ use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\Email;
 use DvsaEntities\Entity\Phone;
+use DvsaEntities\Entity\PhoneContactType;
+use DvsaCommon\Enum\PhoneContactTypeCode;
 
 /**
  * Unit test for ContactDetail entity.
@@ -38,6 +40,44 @@ class ContactDetailTest extends \PHPUnit_Framework_TestCase
 
         $entity->setId($value = 9999);
         $this->assertSame($value, $entity->getId());
+    }
+
+    public function testGetPhoneById()
+    {
+        $detailsEntity = new ContactDetail();
+
+        $phoneEntity1 = new Phone();
+        $phoneEntity1->setId($idValue1 = 12345);
+
+        $phoneEntity2 = new Phone();
+        $phoneEntity2->setId($idValue2 = 54321);
+
+        $detailsEntity->addPhone($phoneEntity1);
+        $detailsEntity->addPhone($phoneEntity2);
+
+        $this->assertSame($idValue1, $detailsEntity->getPhoneById($idValue1)->getId());
+        $this->assertSame($idValue2, $detailsEntity->getPhoneById($idValue2)->getId());
+    }
+
+    public function testGetMatchingPhone()
+    {
+        $detailsEntity = new ContactDetail();
+
+        $phoneEntity1 = new Phone();
+        $phoneEntity1->setIsPrimary(true);
+        $phoneEntity1->setContactType((new PhoneContactType())->setCode(PhoneContactTypeCode::BUSINESS));
+
+        $phoneEntity2 = new Phone();
+        $phoneEntity2->setIsPrimary(false);
+        $phoneEntity2->setContactType((new PhoneContactType())->setCode(PhoneContactTypeCode::BUSINESS));
+
+        $detailsEntity->addPhone($phoneEntity1);
+        $detailsEntity->addPhone($phoneEntity2);
+
+        $this->assertSame($phoneEntity1, $detailsEntity->getMatchingPhone($phoneEntity1->getContactType()->getCode(),
+            $phoneEntity1->getIsPrimary()));
+        $this->assertSame($phoneEntity2, $detailsEntity->getMatchingPhone($phoneEntity2->getContactType()->getCode(),
+            $phoneEntity2->getIsPrimary()));
     }
 
     public function testAddRemovePhone()
