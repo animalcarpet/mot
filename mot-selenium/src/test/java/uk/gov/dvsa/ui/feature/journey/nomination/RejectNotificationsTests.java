@@ -7,6 +7,11 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.shared.role.OrganisationBusinessRoleCodes;
 import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.vts.ChooseARolePage;
+import uk.gov.dvsa.ui.pages.vts.SearchForAUserPage;
+import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
+import uk.gov.dvsa.domain.navigation.PageNavigator;
+
 
 import java.io.IOException;
 
@@ -68,22 +73,26 @@ public class RejectNotificationsTests extends DslTest {
     }
 
     @Test(groups = {"nomination"})
-    void userRejectsTesterNominationWith2FAon() throws IOException {
-        step("Given I have been nominated for a Tester role as non 2fa user");
+    void unqualifiedUserCannotBeNominated() throws IOException {
+        step("Given that a new user has entered a qualification certificate but not yet had a demo test");
         User user = motApi.user.createUserWithoutRole();
         Site testSite = siteData.createSite();
         qualificationDetailsData.createQualificationCertificateForGroupA(
                 user, "1234123412341234", "2016-04-01", testSite.getSiteNumber()
         );
-        motApi.nominations.nominateSiteRole(user,testSite.getId(), TradeRoles.TESTER);
+        User aoUser = motApi.user.createAreaOfficeOne("Ao1");
 
-        step("When I order and activate the card from Tester nomination notification");
-        motUI.nominations.orderAndActivateSecurityCard(user);
-        String message = motUI.nominations.viewMostRecent(user).rejectNomination().getConfirmationText();
+        step("When I login as Area Office user, search for the new user and nominate them for a tester role");
+        motUI.login(aoUser);
+        SearchForAUserPage searchForAUserPage = pageNavigator.goToSearchForAUserPage(String.valueOf(testSite.getId()));
+        searchForAUserPage.fillUserSearchBoxInput(user.getUsername());
 
-        step("Then I can reject my nomination");
-        assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of Tester"));
+        ChooseARolePage chooseARolePage = searchForAUserPage.clickSearchButtonAndProgress();
+        chooseARolePage.selectTesterRole().clickSelectButton().clickAssignButton();
+
+        step("Then the user cannot be nominated for the role");
+        assertThat(chooseARolePage.isValidationSummaryDisplayed(), is(true));
+
     }
 
     @Test(groups = {"nomination"})

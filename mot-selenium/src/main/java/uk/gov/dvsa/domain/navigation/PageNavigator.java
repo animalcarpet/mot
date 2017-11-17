@@ -37,12 +37,16 @@ import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.CreateVehicleStartPage;
+import uk.gov.dvsa.ui.pages.vts.ChooseARolePage;
+import uk.gov.dvsa.ui.pages.vts.SearchForAUserPage;
 import uk.gov.dvsa.ui.pages.vts.SearchForAVtsPage;
 import uk.gov.dvsa.ui.pages.vts.SiteTestQualityPage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
+
 import java.io.IOException;
 import java.net.URISyntaxException;
+
 
 public class PageNavigator {
 
@@ -213,6 +217,18 @@ public class PageNavigator {
 
     public ManageRolesPage goToManageRolesPageViaUserSearch(User loggedUser, User searchedUser) throws IOException, URISyntaxException {
         return goToUserSearchedProfilePageViaUserSearch(loggedUser, searchedUser).clickManageRolesLink();
+    }
+
+    public ChooseARolePage goToChooseARolePage(String vtsId) throws IOException {
+        navigateToPath(String.format(ChooseARolePage.PATH, vtsId));
+
+        return new ChooseARolePage(driver);
+    }
+
+    public SearchForAUserPage goToSearchForAUserPage(String vtsId) throws IOException {
+        navigateToPath(String.format(SearchForAUserPage.PATH, vtsId));
+
+        return new SearchForAUserPage(driver);
     }
 
     public ProfilePage goToUserSearchedProfilePageViaUserSearch(User loggedUser, User searchedUser) throws IOException, URISyntaxException {

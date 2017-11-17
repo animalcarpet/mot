@@ -16,6 +16,7 @@ use SiteApi\Model\SitePersonnel;
 class TesterRestriction extends AbstractSiteRoleRestriction
 {
     const NOT_QUALIFIED = 'This person is not qualified to be a tester';
+    const WRONG_GROUP = 'This person is not qualified to be a tester for this class of vehicle';
 
     /**
      * Checks if all requirements are met to assign a role to the user in the given organisation.
@@ -32,6 +33,8 @@ class TesterRestriction extends AbstractSiteRoleRestriction
 
         if (!$this->isQualified($person)) {
             $errors->add(self::NOT_QUALIFIED);
+        } elseif (!$this->hasCorrectGroupQualification($person, $personnel)) {
+            $errors->add(self::WRONG_GROUP);
         }
 
         return $errors;
@@ -50,13 +53,29 @@ class TesterRestriction extends AbstractSiteRoleRestriction
                     [
                         AuthorisationForTestingMotStatusCode::QUALIFIED,
                         AuthorisationForTestingMotStatusCode::REFRESHER_NEEDED,
-                        AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED,
                     ]
                 );
 
                 return $isAllowed;
             }
         );
+    }
+
+    /**
+     * @param Person $person
+     * @param SitePersonnel $sitePersonnel
+     * @return bool
+     */
+    public function hasCorrectGroupQualification(Person $person, SitePersonnel $sitePersonnel)
+    {
+        $siteClasses = $sitePersonnel->getSite()->getApprovedVehicleClasses();
+        foreach ($siteClasses as $class) {
+            if($person->isQualifiedTesterForVehicleClass($class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
