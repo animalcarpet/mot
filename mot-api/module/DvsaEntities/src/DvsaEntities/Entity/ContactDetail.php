@@ -138,6 +138,37 @@ class ContactDetail extends Entity
     }
 
     /**
+     * @param int $id
+     *
+     * @return Phone
+     */
+    public function getPhoneById($id)
+    {
+        return ArrayUtils::firstOrNull(
+            $this->getPhones(),
+            function (Phone $phone) use ($id) {
+                return (int) $phone->getId() === $id;
+            }
+        );
+    }
+
+    /**
+     * @param string $contactType
+     * @param bool   $isPrimary
+     *
+     * @return Phone
+     */
+    public function getMatchingPhone($contactType, $isPrimary)
+    {
+        return ArrayUtils::firstOrNull(
+            $this->getPhones(),
+            function (Phone $phone) use ($contactType, $isPrimary) {
+                return $phone->getContactType()->getCode() === $contactType && $phone->getIsPrimary() === $isPrimary;
+            }
+        );
+    }
+
+    /**
      * @return Phone
      */
     public function getPrimaryPhone()

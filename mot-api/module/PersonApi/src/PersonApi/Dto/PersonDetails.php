@@ -197,13 +197,10 @@ class PersonDetails
             $phone = $entityManager
                 ->getRepository(Phone::class)
                 ->findOneBy(
-                    [
-                        'contact' => $profileContactDetails,
-                        'contactType' => $phoneContactType,
-                    ]
+                    ['contact' => $profileContactDetails, 'contactType' => $phoneContactType],
+                    ['isPrimary' => 'DESC']
                 );
 
-            $this->phone = ($phone instanceof Phone) ? ($phone->getNumber() ?: null) : null;
             if ($phone instanceof Phone) {
                 if (null === $phone->getNumber()) {
                     $this->phone = null;
