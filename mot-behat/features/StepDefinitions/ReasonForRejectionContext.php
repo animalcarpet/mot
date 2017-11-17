@@ -1,6 +1,7 @@
 <?php
 
 use Behat\Behat\Context\Context;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Data\ReasonForRejectionData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
@@ -96,7 +97,7 @@ class ReasonForRejectionContext implements Context
 
         $areRfrsEqual = $this->synonymReasonForRejectionResponse->getData() === $this->reasonForRejectionResponse->getData();
 
-        PHPUnit::assertTrue($areRfrsEqual, "Rfrs are not equal!");
+        PHPUnit::assertTrue($areRfrsEqual, 'Rfrs are not equal!');
     }
 
     /**
@@ -108,7 +109,7 @@ class ReasonForRejectionContext implements Context
 
         $rfrs = $this->reasonForRejectionResponse->getData();
 
-        foreach($rfrs as $rfr) {
+        foreach ($rfrs as $rfr) {
             $rfrDataContainsTerm = $this->checkIfRfrDataContainsTerm($rfr, $expectedTerm);
 
             PHPUnit::assertTrue($rfrDataContainsTerm, "Not all returned RFRs doesn't contain the specified term!");
@@ -186,8 +187,8 @@ class ReasonForRejectionContext implements Context
         $rfrContainsBaseTerm = $this->checkIfRfrDataContainsTerm($topRfr, $baseTerm);
         $rfrContainsSynonymTerm = $this->checkIfRfrDataContainsTerm($topRfr, $synonymTerm);
 
-        PHPUnit::assertFalse($rfrContainsBaseTerm, "The base term was found within the RFR");
-        PHPUnit::assertTrue($rfrContainsSynonymTerm, "The synonym was not found within the RFR");
+        PHPUnit::assertFalse($rfrContainsBaseTerm, 'The base term was found within the RFR');
+        PHPUnit::assertTrue($rfrContainsSynonymTerm, 'The synonym was not found within the RFR');
     }
 
     /**
@@ -200,15 +201,14 @@ class ReasonForRejectionContext implements Context
         $rfrs = $this->reasonForRejectionResponse->getData();
 
         $containsTerm = false;
-        foreach($rfrs as $rfr) {
-
-            if($this->checkIfRfrDataContainsTerm($rfr, $expectedTerm)) {
+        foreach ($rfrs as $rfr) {
+            if ($this->checkIfRfrDataContainsTerm($rfr, $expectedTerm)) {
                 $containsTerm = true;
                 break;
             }
         }
 
-        PHPUnit::assertTrue($containsTerm, "Not even one of the returned RFRs contains the specified term!");
+        PHPUnit::assertTrue($containsTerm, 'Not even one of the returned RFRs contains the specified term!');
     }
 
     /**
@@ -256,13 +256,14 @@ class ReasonForRejectionContext implements Context
         );
     }
 
-    private function checkIfRfrDataContainsTerm(ReasonForRejectionDto $rfr, $expectedTerm) {
+    private function checkIfRfrDataContainsTerm(ReasonForRejectionDto $rfr, $expectedTerm)
+    {
         $description = $rfr->getDescription();
         $testItemSelectorName = $rfr->getTestItemSelectorName();
         $inspectionManualReference = $rfr->getInspectionManualReference();
         $rfrId = $rfr->getRfrId();
 
-        $expectedTermRegExp = "/" . $expectedTerm . "/";
+        $expectedTermRegExp = '/'.$expectedTerm.'/';
 
         $rfrDataContainsTerm = (preg_match($expectedTermRegExp, $description)) ||
             (preg_match($expectedTermRegExp, $testItemSelectorName)) ||
@@ -410,5 +411,58 @@ class ReasonForRejectionContext implements Context
         $response = $this->reasonForRejectionData->getLastResponse();
 
         PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    }
+
+    /**
+     * @Then the new start-dated past rfr is available to use
+     */
+    public function theNewStartDatedRfrIsAvailableToUse()
+    {
+        $this->reasonForRejectionData->addDefaultStartDatedPastReasonForRejection(
+            $this->userData->getCurrentLoggedUser(),
+            $this->motTestData->getLast()
+        );
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    }
+
+    /**
+     * @Then the new end-dated past rfr is not available to use
+     */
+    public function theNewEndDatedPastRfrIsNotAvailableToUse()
+    {
+        try {
+            $this->reasonForRejectionData->addDefaultEndDatedPastReasonForRejection(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+        }
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_400, $response->getStatusCode());
+        PHPUnit::assertSame('End-dated RFR can not be added', $exception->getMessage());
+    }
+
+    /**
+     * @Then the new start-dated future rfr is not available to use
+     */
+    public function theNewNewStartDatedFutureRfrIsNotAvailableToUse()
+    {
+        try {
+            $this->reasonForRejectionData->addDefaultStartDatedFutureReasonForRejection(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast()
+            );
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+        }
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_400, $response->getStatusCode());
+        PHPUnit::assertSame('Future Start-dated RFR can not be added', $exception->getMessage());
     }
 }

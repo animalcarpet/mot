@@ -25,3 +25,20 @@ Feature: MOT test category and RFR view
       | 5    | "EU - Identification of the vehicle"  |
       | 7    | "EU - Identification of the vehicle"  |
 
+
+  Scenario:  MOT test defect RFR view start date past available to use
+    Given I am logged in as a Tester
+    And I start an MOT Test
+    Then the new start-dated past rfr is available to use
+
+  @disabled
+  Scenario:  MOT test defect RFR start date in future not available to use
+    Given I am logged in as a Tester
+    And I start an MOT Test
+    Then the new start-dated future rfr is not available to use
+
+  Scenario:  MOT test defect RFR end date in future not available to use
+    Given I am logged in as a Tester
+    And I start an MOT Test
+    Then the new end-dated past rfr is not available to use
+
