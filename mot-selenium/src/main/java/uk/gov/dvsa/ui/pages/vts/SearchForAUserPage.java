@@ -7,8 +7,8 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
 public class SearchForAUserPage extends Page {
-    public static final String path = "/vehicle-testing-station/%s/search-for-person";
-    private static final String PAGE_TITLE = "Search for a user";
+    public static final String PATH = "/vehicle-testing-station/%s/search-for-person";
+    private static final String PAGE_TITLE = "Vehicle Testing Station\n" + "Assign a role";
 
     @FindBy(id = "search-button" ) private WebElement searchButton;
     @FindBy(id = "userSearchBox" ) private WebElement userSearchBoxInput;
@@ -31,5 +31,10 @@ public class SearchForAUserPage extends Page {
     public SearchForAUserPage fillUserSearchBoxInput(String userName) {
         userSearchBoxInput.sendKeys(userName);
         return this;
+    }
+
+    public ChooseARolePage clickSearchButtonAndProgress() {
+        searchButton.click();
+        return new ChooseARolePage(driver);
     }
 }
