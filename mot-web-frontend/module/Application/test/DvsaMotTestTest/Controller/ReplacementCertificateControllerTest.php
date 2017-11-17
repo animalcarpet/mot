@@ -6,6 +6,7 @@ use Application\Helper\PrgHelper;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\Site;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -38,6 +39,8 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 {
     const EXAMPLE_MOT_TEST_NUMBER = 1;
     const EXAMPLE_DRAFT_ID = 5;
+    const DRAFT_PRIMARY_COLOUR = 'Yellow';
+    const DRAFT_SECONDARY_COLOUR = null;
 
     /** @var VehicleCatalogService */
     private $vehicleCatalogService;
@@ -233,6 +236,10 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 
         $viewModel = $this->getResultForAction('review');
         $this->assertReviewViewModelProperties($viewModel);
+
+        $this->assertNull($viewModel->motVTSDraft);
+        $this->assertEquals(self::DRAFT_PRIMARY_COLOUR, $viewModel->vehicleViewModel->getColour()->getName());
+        $this->assertEquals(self::DRAFT_SECONDARY_COLOUR, $viewModel->vehicleViewModel->getColourSecondary()->getName());
     }
 
     public function testReviewActionGivenAdminShouldReturnViewModelContainingRequiredProperties()
@@ -268,6 +275,10 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 
         $viewModel = $this->getResultForAction('review');
         $this->assertReviewViewModelProperties($viewModel);
+
+        $this->assertInstanceOf(Site::class, $viewModel->motVTSDraft);
+        $this->assertEquals(self::DRAFT_PRIMARY_COLOUR, $viewModel->vehicleViewModel->getColour()->getName());
+        $this->assertEquals(self::DRAFT_SECONDARY_COLOUR, $viewModel->vehicleViewModel->getColourSecondary()->getName());
     }
 
     public function testReviewActionGivenOriginalTesterShouldReturnViewModelContainingRequiredProperties()
@@ -302,6 +313,10 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 
         $viewModel = $this->getResultForAction('review');
         $this->assertReviewViewModelProperties($viewModel);
+
+        $this->assertNull($viewModel->motVTSDraft);
+        $this->assertEquals(self::DRAFT_PRIMARY_COLOUR, $viewModel->vehicleViewModel->getColour()->getName());
+        $this->assertEquals(self::DRAFT_SECONDARY_COLOUR, $viewModel->vehicleViewModel->getColourSecondary()->getName());
     }
 
     /**
@@ -508,8 +523,8 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     {
         return self::asResponse(
             [
-                'primaryColour' => ['id' => 4, 'name' => 'Yellow'],
-                'secondaryColour' => null,
+                'primaryColour' => ['id' => 4, 'name' => self::DRAFT_PRIMARY_COLOUR],
+                'secondaryColour' => self::DRAFT_SECONDARY_COLOUR,
                 'odometerReading' => [
                     'value' => 1234,
                     'unit' => OdometerUnit::KILOMETERS,
@@ -525,10 +540,10 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                 'vts' => [
                     'siteNumber' => '32323',
                     'address' => [
-                        'line1' => '',
-                        'line2' => '',
-                        'line3' => '',
-                        'line4' => '',
+                        'addressLine1' => '',
+                        'addressLine2' => '',
+                        'addressLine3' => '',
+                        'addressLine4' => '',
                         'town' => '',
                         'postcode' => '',
                         'country' => '',
@@ -707,7 +722,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     {
         $vars = $vm->getVariables();
         $assertVars = $this->hasKeyAssertFactory($vars);
-        $assertVars('motTest', 'odometerReading', 'isOriginalTester', 'differentTesterReasons', 'isAdmin');
+        $assertVars('motTest', 'odometerReading', 'isOriginalTester', 'differentTesterReasons', 'isAdmin', 'motVTSDraft');
     }
 
     private function assertTesterShowDraftViewModelProperties($vars)

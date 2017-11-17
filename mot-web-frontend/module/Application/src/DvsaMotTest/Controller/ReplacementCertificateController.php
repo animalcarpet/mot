@@ -13,6 +13,8 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\Make;
 use Dvsa\Mot\ApiClient\Resource\Item\Model;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\Site;
+use Dvsa\Mot\ApiClient\Resource\Item\SiteAddress;
 use Dvsa\Mot\ApiClient\Resource\Item\Tester;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\OdometerReadingResultType;
@@ -176,20 +178,25 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             }
         }
 
+        $primaryColourDraft = $draft['primaryColour'];
         /** @var ColourDto $primaryColour */
         $primaryColour = new ColourDto();
         $primaryColour->setName($vehicle->getColour()->getName());
+        $primaryColour
+            ->setName(ArrayUtils::tryGet($primaryColourDraft, 'name'))
+            ->setCode(ArrayUtils::tryGet($primaryColourDraft, 'code'));
 
         $secondaryColourDraft = $draft['secondaryColour'];
         /** @var ColourDto $secondaryColour */
         $secondaryColour = new ColourDto();
         $secondaryColour->setName($vehicle->getColourSecondary()->getName());
-
         $secondaryColour
             ->setName(ArrayUtils::tryGet($secondaryColourDraft, 'name'))
             ->setCode(ArrayUtils::tryGet($secondaryColourDraft, 'code'));
 
         $vehicleViewModel = new DvsaVehicleViewModel($vehicle);
+        /** @var Site $motVTSDraft */
+        $motVTSDraft = null;
 
         if ($this->hasAdminRights()) {
             $countryOfRegistration = new CountryDto();
@@ -209,12 +216,26 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
             $countryOfRegistration->setName($draft['countryOfRegistration']['name']);
 
+            if (isset($draft['vts'])) {
+                $siteDraft = $draft['vts'];
+                $siteAddress = SiteAddress::fromStdClass((object) ArrayUtils::tryGet($siteDraft, 'address'));
+                $motVTSDraft = new Site(
+                    ArrayUtils::tryGet($siteDraft, 'id'),
+                    ArrayUtils::tryGet($siteDraft, 'siteNumber'),
+                    ArrayUtils::tryGet($siteDraft, 'name'),
+                    [$siteAddress]
+                );
+            }
+
             $draft['vts']['address'] = AddressUtils::stringify($draft['vts']['address']);
         }
 
         $this->odometerViewObject->setValue($draft['odometerReading']['value']);
         $this->odometerViewObject->setUnit($draft['odometerReading']['unit']);
         $this->odometerViewObject->setResultType($draft['odometerReading']['resultType']);
+
+        $vehicleViewModel->setColour($primaryColour);
+        $vehicleViewModel->setColourSecondary($secondaryColour);
 
         /** @var Tester $tester */
         $tester = $motTest->getTester();
@@ -241,6 +262,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 'isAdmin' => $this->hasAdminRights(),
                 'otpErrorData' => $otpErrorData,
                 'prgHelper' => $prgHelper,
+                'motVTSDraft' => $motVTSDraft,
             ]
         );
         $viewModel->setTemplate(self::TEMPLATE_REPLACEMENT_CERTIFICATE_SUMMARY);

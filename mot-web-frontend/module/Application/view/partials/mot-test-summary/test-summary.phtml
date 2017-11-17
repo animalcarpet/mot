@@ -64,7 +64,7 @@ $isReinspection = \DvsaCommon\Domain\MotTestType::isReinspection($motTestType);
                 'partials/mot-test-summary/site-address',
                 [
                     'cssDlClass' => 'col-sm-6 no-bot-marg',
-                    'siteData' => $motTest->getSite(),
+                    'siteData' => (empty($motVTSDraft)? $motTest->getSite(): $motVTSDraft),
                 ]
             );
             ?>
