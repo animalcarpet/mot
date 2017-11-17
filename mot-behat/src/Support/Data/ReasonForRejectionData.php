@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Behat\Support\Data;
 
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
@@ -40,7 +41,7 @@ class ReasonForRejectionData extends AbstractData
 
     public function searchWithDefaultParams(MotTestDto $mot)
     {
-        return $this->search($mot, "brake", "t", 1);
+        return $this->search($mot, 'brake', 't', 1);
     }
 
     public function listTestItemSelectorsByUser(AuthenticatedUser $user, MotTestDto $mot, $rootItemId = 0)
@@ -79,13 +80,11 @@ class ReasonForRejectionData extends AbstractData
             : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
 
         $this->addPrsByUser($user, $mot, $rfrId);
-
     }
 
     public function addDefaultPrs(MotTestDto $mot)
     {
         $this->addDefaultPrsByUser($this->getTesterFormMotTest($mot), $mot);
-
     }
 
     public function addFailureByUser(AuthenticatedUser $user, MotTestDto $mot, $rfrId)
@@ -189,6 +188,33 @@ class ReasonForRejectionData extends AbstractData
     public function addMinorDefectByUser(AuthenticatedUser $user, MotTestDto $mot, $rfrId)
     {
         $this->reasonForRejection->addMinorDefect($user->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
+    }
+
+    public function addDefaultStartDatedPastReasonForRejection(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $this->reasonForRejection->addMajorDefect(
+            $user->getAccessToken(),
+            $mot->getMotTestNumber(),
+            ReasonForRejectionEU::RFR_START_DATED_PAST
+        );
+    }
+
+    public function addDefaultStartDatedFutureReasonForRejection(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $this->reasonForRejection->addMajorDefect(
+            $user->getAccessToken(),
+            $mot->getMotTestNumber(),
+            ReasonForRejectionEU::RFR_START_DATED_FUTURE
+        );
+    }
+
+    public function addDefaultEndDatedPastReasonForRejection(AuthenticatedUser $user, MotTestDto $mot)
+    {
+        $this->reasonForRejection->addMajorDefect(
+            $user->getAccessToken(),
+            $mot->getMotTestNumber(),
+            ReasonForRejectionEU::RFR_END_DATED_PAST
+        );
     }
 
     public function getLastResponse()
