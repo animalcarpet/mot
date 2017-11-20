@@ -296,4 +296,36 @@ class Defect
                 return self::MINOR_LABEL_TEXT;
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function isMinorDefect()
+    {
+        return $this->getDeficiencyCategoryCode() === RfrDeficiencyCategoryCode::MINOR;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canDisplayPrsButton()
+    {
+        return $this->isPrs() && !$this->isMinorDefect();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canDisplayFailureButton()
+    {
+        return $this->isPrs() || $this->isFailure();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canDisplayAdvisoryButton()
+    {
+        return $this->isAdvisory();
+    }
 }

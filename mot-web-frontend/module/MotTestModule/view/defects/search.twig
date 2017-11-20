@@ -81,21 +81,21 @@
 
                 <h4 class="visuallyhidden">Defect severity</h4>
                 <ul class="defect__add">
-                    {% if defect.isAdvisory %}
+                    {% if defect.canDisplayAdvisoryButton %}
                         <li>
                             <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'advisory') }}" class="button--warn">
                                 Advisory
                             </a>
                         </li>
                     {% endif %}
-                    {% if defect.isPrs %}
+                    {% if defect.canDisplayPrsButton %}
                         <li>
                             <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'prs') }}" class="button--info">
                                 PRS
                             </a>
                         </li>
                     {% endif %}
-                    {% if (defect.isFailure or defect.isPrs) %}
+                    {% if defect.canDisplayFailureButton %}
                         <li>
                             <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'failure') }}" class="button--alert">
                                 {{ defect.getLabelForRfr }}
