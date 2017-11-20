@@ -64,7 +64,7 @@
 
             <h4 class="visuallyhidden">Defect severity</h4>
             <ul class="defect__add">
-                {% if defect.isAdvisory %}
+                {% if defect.canDisplayAdvisoryButton %}
                     <li>
                         <a href="{{ url('mot-test-defects/categories/category/add-defect',
                                         {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
@@ -73,7 +73,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if defect.isPrs %}
+                {% if defect.canDisplayPrsButton %}
                     <li>
                         <a href="{{ url('mot-test-defects/categories/category/add-defect',
                                         {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
@@ -82,7 +82,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if (defect.isFailure or defect.isPrs) %}
+                {% if defect.canDisplayFailureButton  %}
                     <li>
                         <a href="{{ url('mot-test-defects/categories/category/add-defect',
                                         {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
