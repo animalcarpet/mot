@@ -5,6 +5,7 @@ namespace DvsaMotApiTest\Controller;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
+use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\RfrDeficiencyCategory;
 use DvsaEntities\Entity\TestItemSelector;
@@ -47,10 +48,12 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
             ->method('getMotTest')
             ->willReturn($motTest);
 
+        $motTestReasonForRejection = new MotTestReasonForRejection();
+        $motTestReasonForRejection->setId($expectedData['data']);
         $this->getMockRfrService()->expects($this->once())
             ->method('addReasonForRejection')
             ->with($motTest, $data)
-            ->will($this->returnValue(10));
+            ->willReturn($motTestReasonForRejection);
 
         //  --  make request    --
         $this->routeMatch->setParam('motTestNumber', $motTestNumber);

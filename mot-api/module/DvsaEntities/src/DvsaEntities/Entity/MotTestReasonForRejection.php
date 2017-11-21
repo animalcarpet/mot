@@ -16,7 +16,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
  * @ORM\Table(name="mot_test_current_rfr_map", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="DvsaEntities\Repository\MotTestReasonForRejectionRepository")
  */
 class MotTestReasonForRejection extends Entity
 {
