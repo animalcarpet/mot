@@ -6,14 +6,17 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Enum\LanguageTypeCode;
+use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaCommon\Date\RfrCurrentDateFaker;
+use DvsaMotApi\Service\TestItemSelectorService;
+
 /**
  * A repository for Reasons For Rejection related functionality.
  *
  * @codeCoverageIgnore
  */
-class RfrRepository
+class RfrRepository extends AbstractMutableRepository
 {
     /** @var EntityManager */
     private $em;
@@ -21,10 +24,37 @@ class RfrRepository
     /** @var  RfrCurrentDateFaker */
     private $rfrCurrentDateFaker;
 
-    public function __construct(EntityManager $em, RfrCurrentDateFaker $rfrCurrentDateFaker)
+    /** @var array */
+    private $disabledRfrs = [];
+
+    public function __construct(
+        EntityManager $em,
+        RfrCurrentDateFaker $rfrCurrentDateFaker,
+        array $disabledRfrs)
     {
         $this->em = $em;
         $this->rfrCurrentDateFaker = $rfrCurrentDateFaker;
+        $this->disabledRfrs = $disabledRfrs;
+    }
+
+    public function get($rfrId)
+    {
+        if (in_array($rfrId, $this->disabledRfrs)) {
+            return null;
+        }
+
+        $reasonForRejection = $this->em
+            ->createQuery(
+                '
+                SELECT tRfr
+                FROM '.ReasonForRejection::class.' tRfr
+                WHERE tRfr.rfrId = ?1
+                '
+            )
+            ->setParameter(1, $rfrId)
+            ->getResult();
+
+        return $reasonForRejection[0];
     }
 
     /**
