@@ -6,6 +6,7 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Service\TesterPerf
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService;
 use DvsaCommon\Date\DateTimeHolderInterface;
 use DvsaCommon\KeyValueStorage\KeyValueStorageInterface;
+use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,11 +20,14 @@ class TesterPerformanceBatchStatisticServiceFactory implements FactoryInterface
         $dateTimeHolder = $serviceLocator->get(DateTimeHolderInterface::class);
         /** @var NationalStatisticsService $nationalStatisticsService */
         $nationalStatisticsService = $serviceLocator->get(NationalStatisticsService::class);
+        /** @var FeatureToggles $featureToggles */
+        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
 
         return new TesterPerformanceBatchStatisticsService(
             $storage,
             $dateTimeHolder,
-            $nationalStatisticsService
+            $nationalStatisticsService,
+            $featureToggles
         );
     }
 }

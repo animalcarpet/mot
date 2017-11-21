@@ -2,6 +2,7 @@
 namespace Dvsa\Mot\Behat\Support;
 
 use DvsaCommon\Constants\MotConfig\ElasticsearchConfigKeys;
+use DvsaCommon\Factory\Date\RfrCurrentDateFakerFactory;
 use DvsaCommon\ReasonForRejection\SearchReasonForRejectionResponseInterface;
 use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
 use DvsaCommon\ReasonForRejection\ElasticSearch\Factory\ReasonForRejectionElasticSearchClientFactory;
@@ -14,7 +15,8 @@ class SearchReasonForRejectionElasticSearchClient implements SearchReasonForReje
         string $hostName,
         string $port,
         string $indexName,
-        string $region
+        string $region,
+        string $fakeDate = ""
     )
     {
         $args = [
@@ -24,7 +26,14 @@ class SearchReasonForRejectionElasticSearchClient implements SearchReasonForReje
             ElasticsearchConfigKeys::ES_REGION => $region
         ];
 
-        $this->client = ReasonForRejectionElasticSearchClientFactory::createServiceWithArgs($args);
+        $factory = new RfrCurrentDateFakerFactory();
+
+        $date = null;
+        if ($fakeDate !== "") {
+            $date = new \DateTime($fakeDate);
+        }
+
+        $this->client = ReasonForRejectionElasticSearchClientFactory::createServiceWithArgs($args, $factory->createServiceWithArgs($date));
     }
 
     public function search(string $searchTerm, string $vehicleClassCode, string $audience, int $page): SearchReasonForRejectionResponseInterface

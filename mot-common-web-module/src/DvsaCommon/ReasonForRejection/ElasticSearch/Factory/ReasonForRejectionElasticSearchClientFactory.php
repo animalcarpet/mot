@@ -2,6 +2,7 @@
 namespace DvsaCommon\ReasonForRejection\ElasticSearch\Factory;
 
 use Aws\Credentials\CredentialProvider;
+use DvsaCommon\Date\RfrCurrentDateFaker;
 use DvsaCommon\Configuration\ApplicationEnv;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Constants\MotConfig\ElasticsearchConfigKeys;
@@ -24,7 +25,10 @@ class ReasonForRejectionElasticSearchClientFactory implements FactoryInterface
         $elasticSearchConfig = $motConfig->get(MotConfigKeys::ELASTICSEARCH);
         $environment = $motConfig->withDefault("")->get(MotConfigKeys::ENVIRONMENT_CONFIG, EnvironmentConfigKeys::ENVIRONMENT);
 
-        return self::createServiceWithArgs($elasticSearchConfig, $this->shouldUseProxy($environment));
+        /** @var RfrCurrentDateFaker $rfrCurrentDateFaker */
+        $rfrCurrentDateFaker = $serviceLocator->get(RfrCurrentDateFaker::class);
+
+        return self::createServiceWithArgs($elasticSearchConfig, $rfrCurrentDateFaker ,$this->shouldUseProxy($environment));
     }
 
     private function shouldUseProxy(string $environment): bool
@@ -33,7 +37,7 @@ class ReasonForRejectionElasticSearchClientFactory implements FactoryInterface
         return (ApplicationEnv::isDevelopmentEnv() === false && empty($matches) === true);
     }
 
-    public static function createServiceWithArgs(array $elasticSearchConfig, bool $useProxy = false): ReasonForRejectionElasticSearchClient
+    public static function createServiceWithArgs(array $elasticSearchConfig, RfrCurrentDateFaker $rfrCurrentDateFaker, bool $useProxy = false): ReasonForRejectionElasticSearchClient
     {
         $clientBuilder = ClientBuilder::create();
 
@@ -80,6 +84,7 @@ class ReasonForRejectionElasticSearchClientFactory implements FactoryInterface
 
         return new ReasonForRejectionElasticSearchClient(
             $client,
+            $rfrCurrentDateFaker,
             ArrayUtils::get($elasticSearchConfig, ElasticsearchConfigKeys::ES_INDEX_NAME),
             ElasticsearchSettings::ES_DOCUMENT_TYPE
         );

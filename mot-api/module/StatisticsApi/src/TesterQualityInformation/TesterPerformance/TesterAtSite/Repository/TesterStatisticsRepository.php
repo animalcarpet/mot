@@ -12,11 +12,11 @@ class TesterStatisticsRepository extends AbstractStatisticsRepository implements
 {
     public function getForSite($siteId, LastMonthsDateRange $monthRange)
     {
-        return (new SiteManyGroupsStatisticsRepository($this->entityManager))->get($siteId, $monthRange);
+        return (new SiteManyGroupsStatisticsRepository($this->entityManager, $this->motConfig))->get($siteId, $monthRange);
     }
 
     public function getForTester($testerId, LastMonthsDateRange $monthRange)
     {
-        return (new TesterManyGroupsStatisticsRepository($this->entityManager))->get($testerId, $monthRange);
+        return (new TesterManyGroupsStatisticsRepository($this->entityManager, $this->motConfig))->get($testerId, $monthRange);
     }
 }

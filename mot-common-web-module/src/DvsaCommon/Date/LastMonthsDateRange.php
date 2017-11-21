@@ -5,7 +5,7 @@ namespace DvsaCommon\Date;
 use DateTime;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
-class LastMonthsDateRange implements AutoWireableInterface
+class LastMonthsDateRange implements DateRangeInterface, AutoWireableInterface
 {
     const ONE_MONTH = 1;
     const THREE_MONTHS = 3;

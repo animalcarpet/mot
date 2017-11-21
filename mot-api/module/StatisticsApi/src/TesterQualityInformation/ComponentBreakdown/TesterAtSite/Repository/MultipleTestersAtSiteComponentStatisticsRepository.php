@@ -28,7 +28,7 @@ class MultipleTestersAtSiteComponentStatisticsRepository extends ComponentStatis
             self::PARAM_SITE_ID => $siteId,
             ComponentStatisticsRepository::PARAM_GROUP => $group,
             ComponentStatisticsRepository::PARAM_START_DATE => $this->startDate,
-            ComponentStatisticsRepository::PARAM_END_DATE => $this->endDate,
+            ComponentStatisticsRepository::PARAM_END_DATE => $this->endDate
         ]);
     }
 }

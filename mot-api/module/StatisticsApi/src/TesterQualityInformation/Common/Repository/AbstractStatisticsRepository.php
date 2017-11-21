@@ -4,7 +4,10 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
-use DvsaCommon\Date\LastMonthsDateRange;
+use DvsaCommon\Configuration\MotConfig;
+use DvsaCommon\Constants\MotConfig\GqrStatsDateRangeConfigKeys;
+use DvsaCommon\Constants\MotConfig\MotConfigKeys;
+use DvsaCommon\Date\DateRangeInterface;
 
 class AbstractStatisticsRepository
 {
@@ -12,10 +15,12 @@ class AbstractStatisticsRepository
     protected $lastDay;
     protected $startDate;
     protected $endDate;
+    protected $motConfig;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, MotConfig $motConfig)
     {
         $this->entityManager = $entityManager;
+        $this->motConfig = $motConfig;
     }
 
     /**
@@ -38,11 +43,22 @@ class AbstractStatisticsRepository
     }
 
     /**
-     * @param LastMonthsDateRange $monthsRangeDate
+     * @param DateRangeInterface $monthsRangeDate
      */
-    protected function setMonthsRangeConfiguration(LastMonthsDateRange $monthsRangeDate)
+    protected function setMonthsRangeConfiguration(DateRangeInterface $monthsRangeDate)
     {
         $this->startDate = $monthsRangeDate->getStartDate();
-        $this->endDate = $monthsRangeDate->getEndDate();
+
+        $endDate = $monthsRangeDate->getEndDate();
+
+        $gqrMinDate = $this->motConfig->get(MotConfigKeys::GQR_STATS_DATE_RANGE, GqrStatsDateRangeConfigKeys::MIN_DATE);
+        $gqrMaxDate = $this->motConfig->get(MotConfigKeys::GQR_STATS_DATE_RANGE, GqrStatsDateRangeConfigKeys::MAX_DATE);
+        $gqrEndDate = $this->motConfig->get(MotConfigKeys::GQR_STATS_DATE_RANGE, GqrStatsDateRangeConfigKeys::END_DATE);
+
+        if ($endDate >= new \DateTime($gqrMinDate) && $endDate <= new \DateTime($gqrMaxDate)) {
+            $endDate = new \DateTime($gqrEndDate);
+        }
+
+        $this->endDate = $endDate;
     }
 }

@@ -5,13 +5,13 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown
 use Doctrine\ORM\Query\ResultSetMapping;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\QueryBuilder\NationalComponentBreakdownQueryBuilder;
-use DvsaCommon\Date\LastMonthsDateRange;
+use DvsaCommon\Date\DateRangeInterface;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class NationalComponentStatisticsRepository extends ComponentStatisticsRepository implements AutoWireableInterface
 {
-    public function get($group, LastMonthsDateRange $monthRange)
+    public function get($group, DateRangeInterface $monthRange)
     {
         $qb = new NationalComponentBreakdownQueryBuilder();
 
@@ -24,7 +24,7 @@ class NationalComponentStatisticsRepository extends ComponentStatisticsRepositor
         ]);
     }
 
-    public function getNationalFailedMotTestCount($group, LastMonthsDateRange $monthRange)
+    public function getNationalFailedMotTestCount($group, DateRangeInterface $monthRange)
     {
         $this->setMonthsRangeConfiguration($monthRange);
 

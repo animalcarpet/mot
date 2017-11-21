@@ -3,8 +3,11 @@
 namespace Dvsa\Mot\Behat\Support\Data\Statistics;
 
 use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\EuReasonForRejectionToggle;
 use Dvsa\Mot\Behat\Support\Data\Statistics\Model\ComponentBreakdown\GroupACategoriesTree;
+use Dvsa\Mot\Behat\Support\Data\Statistics\Model\ComponentBreakdown\GroupAEuCategoriesTree;
 use Dvsa\Mot\Behat\Support\Data\Statistics\Model\ComponentBreakdown\GroupBCategoriesTree;
+use Dvsa\Mot\Behat\Support\Data\Statistics\Model\ComponentBreakdown\GroupBEuCategoriesTree;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
@@ -162,12 +165,24 @@ class ComponentBreakdownCalculator
 
     private function groupByCategoriesAndVehicleGroupA(DataCollection $motCollection)
     {
-        return $this->groupByCategories($motCollection, GroupACategoriesTree::get());
+        if (EuReasonForRejectionToggle::isEnabled()) {
+            $tree = GroupAEuCategoriesTree::get();
+        } else {
+            $tree = GroupACategoriesTree::get();
+        }
+
+        return $this->groupByCategories($motCollection, $tree);
     }
 
     private function groupByCategoriesAndVehicleGroupB(DataCollection $motCollection)
     {
-        return $this->groupByCategories($motCollection, GroupBCategoriesTree::get());
+        if (EuReasonForRejectionToggle::isEnabled()) {
+            $tree = GroupBEuCategoriesTree::get();
+        } else {
+            $tree = GroupBCategoriesTree::get();
+        }
+
+        return $this->groupByCategories($motCollection, $tree);
     }
 
     private function groupByCategories(DataCollection $motCollection, array $categories)

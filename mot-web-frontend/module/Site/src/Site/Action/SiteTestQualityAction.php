@@ -26,6 +26,7 @@ class SiteTestQualityAction implements AutoWireableInterface
     private $assertion;
     private $siteMapper;
     private $dateTimeHolder;
+    private $featureToggles;
 
     /** @var VehicleTestingStationDto */
     private $site;

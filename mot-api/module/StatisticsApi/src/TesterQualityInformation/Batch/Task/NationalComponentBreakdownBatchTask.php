@@ -3,25 +3,32 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Task;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Service\NationalComponentStatisticsService;
+use DvsaCommon\Date\DateRangeInterface;
 
 class NationalComponentBreakdownBatchTask
 {
     private $service;
     private $vehicleGroup;
-    private $monthRange;
+    private $dateRange;
+    private $reportYear;
+    private $reportMonth;
 
-    public function __construct($vehicleGroup, int $monthRange, NationalComponentStatisticsService $service)
+    public function __construct($vehicleGroup, DateRangeInterface $monthRange, NationalComponentStatisticsService $service, $reportYear, $reportMonth)
     {
         $this->service = $service;
         $this->vehicleGroup = $vehicleGroup;
-        $this->monthRange = $monthRange;
+        $this->dateRange = $monthRange;
+        $this->reportYear = $reportYear;
+        $this->reportMonth = $reportMonth;
     }
 
     public function execute()
     {
         $this->service->get(
-            $this->monthRange,
-            $this->vehicleGroup
+            $this->dateRange,
+            $this->vehicleGroup,
+            $this->reportYear,
+            $this->reportMonth
         );
     }
 
@@ -30,13 +37,13 @@ class NationalComponentBreakdownBatchTask
         return sprintf(
             'National component breakdown batch task (Vehicle Group %s) - %s',
             $this->vehicleGroup,
-            $this->monthRange
+            $this->dateRange->getNumberOfMonths()
         );
     }
 
     public function getMonthRange()
     {
-        return $this->monthRange;
+        return $this->dateRange->getNumberOfMonths();
     }
 
     /**

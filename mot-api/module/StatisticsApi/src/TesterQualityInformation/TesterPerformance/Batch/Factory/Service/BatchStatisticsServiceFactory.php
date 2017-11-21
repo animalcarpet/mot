@@ -6,6 +6,7 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Service\BatchStati
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Service\NationalComponentStatisticsService;
 use DvsaCommon\Date\DateTimeHolderInterface;
 use DvsaCommon\KeyValueStorage\KeyValueStorageInterface;
+use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,11 +20,14 @@ class BatchStatisticsServiceFactory implements FactoryInterface
         $dateTimeHolder = $serviceLocator->get(DateTimeHolderInterface::class);
         /** @var NationalComponentStatisticsService $nationalComponentService */
         $nationalComponentService = $serviceLocator->get(NationalComponentStatisticsService::class);
+        /** @var FeatureToggles $featureToggles */
+        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
 
         return new BatchStatisticsService(
             $storage,
             $dateTimeHolder,
-            $nationalComponentService
+            $nationalComponentService,
+            $featureToggles
         );
     }
 }

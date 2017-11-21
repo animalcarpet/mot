@@ -51,6 +51,8 @@ class TesterAtSiteComponentBreakdownQueryBuilder
 					 -- removing parent test item category and \'Items not tested\' that is not appearing in frontend
 					 AND tic.id NOT IN (0, 5800, 10000)
 					 AND vcg.code = :groupCode
+                     AND (tic.end_date is null OR tic.end_date > :startDate)
+                     AND tic.start_date <= :endDate
 			   GROUP BY id, vcg.code 
 			 ) category_names ON x.test_item_category_id = category_names.id and category_names.group_code = x.vehicle_class_group
           GROUP BY x.site_id, x.organisation_id, x.person_id, category_names.id

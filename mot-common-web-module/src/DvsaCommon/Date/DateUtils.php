@@ -180,6 +180,16 @@ final class DateUtils
         return $dateTime1->diff($dateTime2)->format('%r%a');
     }
 
+    public static function getTimeDifferenceInMonths(DateTime $datetime1, DateTime $datetime2) {
+        $year1 = (int) $datetime1->format('Y');
+        $year2 = (int) $datetime2->format('Y');
+
+        $month1 = (int) $datetime1->format('n');
+        $month2 = (int) $datetime2->format('n');
+
+        return abs((($year2 - $year1) * 12) + ($month2 - $month1));
+    }
+
     /**
      * Gets the absolute number of seconds between two DateTimes.
      *
@@ -569,7 +579,7 @@ final class DateUtils
         }
     }
 
-    private static function checkDate($year, $month, $day)
+    public static function checkDate($year, $month, $day)
     {
         $invalidDate = !checkdate(intval($month), intval($day), intval($year));
         if ($invalidDate) {

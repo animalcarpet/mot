@@ -4,6 +4,7 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\QueryBuilder\TesterAtSiteComponentBreakdownQueryBuilder;
+use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class TesterAtSiteComponentStatisticsRepository extends ComponentStatisticsRepository implements AutoWireableInterface
@@ -11,7 +12,7 @@ class TesterAtSiteComponentStatisticsRepository extends ComponentStatisticsRepos
     const PARAM_SITE_ID = 'siteId';
     const PARAM_TESTER_ID = 'testerId';
 
-    public function get($testerId, $siteId, $group, $monthRange)
+    public function get($testerId, $siteId, $group, LastMonthsDateRange $monthRange)
     {
         $qb = new TesterAtSiteComponentBreakdownQueryBuilder();
 

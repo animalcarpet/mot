@@ -59,6 +59,28 @@ class MonthTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider nextDatesProvider
+     *
+     * @param Month $currentMonth
+     * @param Month $expectedNextMonth
+     */
+    public function testNext_previousMonthIsCalculatedCorrectly(Month $currentMonth, Month $expectedNextMonth)
+    {
+        $actualNextsMonth = $currentMonth->next();
+
+        $this->assertTrue($expectedNextMonth->equals($actualNextsMonth));
+    }
+
+    public function nextDatesProvider()
+    {
+        return [
+            [new Month(2012, 12), new Month(2013, 1)],
+            [new Month(2013, 10), new Month(2013, 11)],
+            [new Month(2010, 1), new Month(2010, 2)],
+        ];
+    }
+
+    /**
      * @dataProvider startDateProvider
      *
      * @param $year
@@ -103,31 +125,6 @@ class MonthTest extends \PHPUnit_Framework_TestCase
         return [
             [2012, 11, '2012-11-30 23:59:59'], // integers are handled
             ['2012', '2', '2012-02-29 23:59:59'], // strings are handled
-        ];
-    }
-
-    /**
-     * @dataProvider greaterThanProvider
-     *
-     * @param $monthA
-     * @param $monthB
-     * @param $expectedResult
-     */
-    public function testGreaterThan(Month $monthA, Month $monthB, $expectedResult)
-    {
-        $this->assertEquals($expectedResult, $monthA->greaterThan($monthB));
-    }
-
-    public function greaterThanProvider()
-    {
-        return [
-            [new Month(2010, 10), new Month(2010, 10), false],
-
-            [new Month(2010, 11), new Month(2010, 10), true],
-            [new Month(2010, 10), new Month(2010, 11), false],
-
-            [new Month(2009, 10), new Month(2008, 12), true],
-            [new Month(2009, 10), new Month(2010, 9), false],
         ];
     }
 }

@@ -3,8 +3,9 @@
 namespace Dvsa\Mot\Behat\Support\Data\Generator;
 
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\EuReasonForRejectionToggle;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\GroupB\GroupBEuReasonForRejection;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
@@ -26,7 +27,32 @@ class ComponentBreakdownMotTestGenerator
 
     public function generate(SiteDto $site, AuthenticatedUser $tester)
     {
+        if (EuReasonForRejectionToggle::isEnabled()) {
+            $this->generateForEuRfrs($site, $tester);
+        }
+
         $testStartedDate = "first day of previous month";
+        $dateOfManufacture = new \DateTime("first day of 4 years ago")
+        ;
+
+        $motorcycleClass2 = $this->vehicleData->createWithParams(
+            $tester->getAccessToken(),
+            [
+                VehicleParams::TEST_CLASS => VehicleClassCode::CLASS_2,
+                VehicleParams::DATE_OF_MANUFACTURE => $dateOfManufacture->format("Y-m-d")
+            ]
+        );
+
+        $this->motTestGenerator
+            ->setDuration(50)
+            ->setStartedDate($testStartedDate)
+            ->setRfrId(ReasonForRejection::getGroupA()->getForClass2());
+        $this->motTestGenerator->generateFailedMotTests($tester, $site, $motorcycleClass2);
+
+        $motTest = $this->motTestData->create($tester, $motorcycleClass2, $site);
+        $this->motTestData->failMotTestWithManyRfrs($motTest, [ReasonForRejection::getGroupA()->getForClass1(), ReasonForRejection::getGroupA()->getForClass1Advisory()]);
+
+
         $dateOfManufacture = new \DateTime("first day of 2 years ago");
         $motorcycleClass1 = $this->vehicleData->createWithParams(
             $tester->getAccessToken(),
@@ -49,20 +75,13 @@ class ComponentBreakdownMotTestGenerator
                 VehicleParams::DATE_OF_MANUFACTURE => $dateOfManufacture->format("Y-m-d")
             ]
         );
-        $this->motTestGenerator
-            ->setDuration(50)
-            ->setStartedDate($testStartedDate)
-            ->setRfrId(ReasonForRejectionGroupA::RFR_POSITION_LAMPS_MOTORCYCLE_FRONT);
-        $this->motTestGenerator->generateFailedMotTests($tester, $site, $motorcycleClass2);
 
         $this->motTestGenerator
             ->setDuration(50)
             ->setStartedDate($testStartedDate)
-            ->setRfrId(ReasonForRejectionGroupA::RFR_SIDECAR_SHOCK_ABSORBER_LEAKING);
+            ->setRfrId(ReasonForRejection::getGroupA()->getForClass2Advisory());
         $this->motTestGenerator->generateFailedMotTestsWithAdvisories($tester, $site, $motorcycleClass2);
 
-        $motTest = $this->motTestData->create($tester, $motorcycleClass2, $site);
-        $this->motTestData->failMotTestWithManyRfrs($motTest, [ReasonForRejectionGroupA::RFR_POSITION_LAMPS_MOTORCYCLE_FRONT, ReasonForRejectionGroupA::RFR_BRAKES_PERFORMANCE_GRADIENT]);
 
         $dateOfManufacture = new \DateTime("first day of 14 years ago");
         $vehicleClass4 = $this->vehicleData->createWithParams(
@@ -75,13 +94,32 @@ class ComponentBreakdownMotTestGenerator
         $this->motTestGenerator
             ->setDuration(40)
             ->setStartedDate($testStartedDate)
-            ->setRfrId(ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION);
+            ->setRfrId(ReasonForRejection::getGroupB()->getForClass4());
         $this->motTestGenerator->generateFailedMotTests($tester, $site, $vehicleClass4);
 
         $this->motTestGenerator
             ->setDuration(30)
             ->setStartedDate($testStartedDate)
-            ->setRfrId(ReasonForRejectionGroupB::RFR_ROAD_WHEELS_CONDITION);
+            ->setRfrId(ReasonForRejection::getGroupB()->getForClass4Advisory());
         $this->motTestGenerator->generateFailedMotTestsWithAdvisories($tester, $site, $vehicleClass4);
+    }
+
+    private function generateForEuRfrs(SiteDto $site, AuthenticatedUser $tester)
+    {
+        $testStartedDate = "first day of previous month";
+        $dateOfManufacture = new \DateTime("first day of 14 years ago");
+        $vehicleClass4 = $this->vehicleData->createWithParams(
+            $tester->getAccessToken(),
+            [
+                VehicleParams::TEST_CLASS => VehicleClassCode::CLASS_4,
+                VehicleParams::DATE_OF_MANUFACTURE => $dateOfManufacture->format("Y-m-d")
+            ]
+        );
+
+        $this->motTestGenerator
+            ->setDuration(40)
+            ->setStartedDate($testStartedDate)
+            ->setRfrId((new GroupBEuReasonForRejection())->getForClass4Dangerous());
+        $this->motTestGenerator->generateFailedMotTests($tester, $site, $vehicleClass4);
     }
 }

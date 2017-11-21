@@ -248,6 +248,28 @@ class DateUtilsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider providerTestGetTimeDifferenceInMonths
+     */
+    public function testGetTimeDifferenceInMonths($time1, $time2, $expectedResult)
+    {
+        $this->assertEquals($expectedResult, DateUtils::getTimeDifferenceInMonths($time1, $time2));
+    }
+
+    public function providerTestGetTimeDifferenceInMonths()
+    {
+        return [
+            [new \DateTime('2014-05-18 00:00:01'), new \DateTime('2014-05-19 00:00:01'), 0],
+            [new \DateTime('31-01-2017'), new \DateTime('01-12-2016 00:00:00'), 1],
+            [new \DateTime('15-02-2017'), new \DateTime('01-01-2017 00:00:00'), 1],
+            [new \DateTime('2014-12-18 00:00:05'), new \DateTime('2015-02-18 00:00:10'), 2],
+            [new \DateTime('15-02-2017'), new \DateTime('01-11-2016 00:00:00'), 3],
+            [new \DateTime('2014-05-18 00:00:10'), new \DateTime('2015-05-18 00:00:05'), 12],
+            [new \DateTime('2010-05-18 01:00:00'), new \DateTime('2020-05-18 00:00:00'), 120]
+
+        ];
+    }
+
+    /**
      * @dataProvider providerConvertSecondsToDateInterval
      */
     public function testConvertSecondsToDateInterval($seconds, \DateInterval $expectedResult)
