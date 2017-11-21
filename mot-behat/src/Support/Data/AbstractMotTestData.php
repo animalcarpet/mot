@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Behat\Support\Data;
 
 use Dvsa\Mot\Behat\Support\Api\MotTest;
@@ -8,7 +9,6 @@ use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Response;
-use Zend\Http\Response as HttpResponse;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Dto\Person\PersonDto;
@@ -34,8 +34,7 @@ abstract class AbstractMotTestData extends AbstractData
         OdometerReadingData $odometerReadingData,
         ReasonForRejectionData $reasonForRejectionData,
         TestSupportHelper $testSupportHelper
-    )
-    {
+    ) {
         parent::__construct($userData);
 
         $this->motTest = $motTest;
@@ -68,12 +67,14 @@ abstract class AbstractMotTestData extends AbstractData
     public function passMotTestWithAdvisory(MotTestDto $mot, $rfrId)
     {
         $this->reasonForRejectionData->addAdvisory($mot, $rfrId);
+
         return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function failMotTestWithAdvisory(MotTestDto $mot, $rfrId)
     {
         $this->reasonForRejectionData->addAdvisory($mot, $rfrId);
+
         return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
@@ -99,6 +100,7 @@ abstract class AbstractMotTestData extends AbstractData
     public function failMotTestWithDefaultRfr(MotTestDto $mot)
     {
         $this->reasonForRejectionData->addDefaultFailure($mot);
+
         return $this->failMotTest($mot);
     }
 
@@ -134,7 +136,6 @@ abstract class AbstractMotTestData extends AbstractData
         return $mot;
     }
 
-
     public function failMotTestWithPrs(MotTestDto $mot, $rfrId = null)
     {
         $tester = $this->getTester($mot);
@@ -147,6 +148,18 @@ abstract class AbstractMotTestData extends AbstractData
         } else {
             $this->reasonForRejectionData->addPrs($mot, $rfrId);
         }
+
+        $response = $this->motTest->passed($tester->getAccessToken(), $mot->getMotTestNumber());
+
+        $mot = $this->hydrateResponseToDto($response);
+        $this->motCollection->add($mot, $mot->getMotTestNumber());
+
+        return $mot;
+    }
+
+    public function failMotTestWithPrsAlreadyAdded(MotTestDto $mot)
+    {
+        $tester = $this->getTester($mot);
 
         $response = $this->motTest->passed($tester->getAccessToken(), $mot->getMotTestNumber());
 
@@ -177,7 +190,7 @@ abstract class AbstractMotTestData extends AbstractData
 
     public function abortMotTestByUser(MotTestDto $mot, AuthenticatedUser $user)
     {
-        return $this->abandonMotTestByUser($mot,$user, 5);
+        return $this->abandonMotTestByUser($mot, $user, 5);
     }
 
     public function abortMotTest(MotTestDto $mot)
@@ -216,6 +229,7 @@ abstract class AbstractMotTestData extends AbstractData
 
     /**
      * @param int $vehicleId
+     *
      * @return int
      */
     public function getLatestMotTestIdForVehicle($vehicleId)
@@ -228,6 +242,7 @@ abstract class AbstractMotTestData extends AbstractData
 
     /**
      * @param MotTestDto $mot
+     *
      * @return AuthenticatedUser
      */
     protected function getTester(MotTestDto $mot)
@@ -273,6 +288,7 @@ abstract class AbstractMotTestData extends AbstractData
     public function getInProgressTestByUser(AuthenticatedUser $requestor, AuthenticatedUser $tester)
     {
         $motTestNumber = $this->motTest->getInProgressTestId($requestor->getAccessToken(), $tester->getUserId());
+
         return $this->fetchMotTestData($requestor, $motTestNumber);
     }
 
@@ -284,6 +300,7 @@ abstract class AbstractMotTestData extends AbstractData
     /**
      * @param $vehicleId
      * @param AuthenticatedUser $tester
+     *
      * @return MotTestDto[]
      */
     public function getTestHistory($vehicleId, AuthenticatedUser $tester)
@@ -308,10 +325,11 @@ abstract class AbstractMotTestData extends AbstractData
 
     /**
      * @param AuthenticatedUser $tester
-     * @param VehicleDto $vehicle
-     * @param int $motTestNumber
-     * @param string $motTestType
-     * @param SiteDto|null $site
+     * @param VehicleDto        $vehicle
+     * @param int               $motTestNumber
+     * @param string            $motTestType
+     * @param SiteDto|null      $site
+     *
      * @return MotTestDto
      */
     protected function mapToMotTestDto(
@@ -320,8 +338,7 @@ abstract class AbstractMotTestData extends AbstractData
         $motTestNumber,
         $motTestType,
         SiteDto $site = null
-    )
-    {
+    ) {
         $personDto = new PersonDto();
         $personDto
             ->setId($tester->getUserId())

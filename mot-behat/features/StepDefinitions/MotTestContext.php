@@ -214,6 +214,14 @@ class MotTestContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @When the Tester Fails the Mot Test with PRS
+     */
+    public function theTesterFailsTheMotTestWithPrs()
+    {
+        $this->motTestData->failMotTestWithPrsAlreadyAdded($this->motTestData->getAll()->last());
+    }
+
+    /**
      * @When /^the Tester tries fail the Mot Test$/
      */
     public function theTesterTriesFailTheMotTest()

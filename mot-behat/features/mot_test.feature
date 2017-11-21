@@ -131,16 +131,7 @@ Feature: MOT Test
       | 5    | PRS         |
       | 7    | Failure     |
 
-  Scenario: Tester can create an MOT with failure and fail
-    Given I am logged in as a Tester
-    And I start an Mot Test with a Class 3 Vehicle
-    And I can add a Failure to test
-    And the Tester adds a Class 3-7 Decelerometer Brake Test
-    And the Tester adds an Odometer Reading of 1000 mi
-    When the Tester Fails the Mot Test
-    Then the MOT Test Status is FAILED
-
-  Scenario: Tester can create an Advisory and pass
+  Scenario: Tester can create an MOT with an Advisory and the MOT Test result is pass
     Given I am logged in as a Tester
     And I start an Mot Test with a Class 3 Vehicle
     And I add a Advisory to the test
@@ -149,3 +140,32 @@ Feature: MOT Test
     When the Tester Passes the Mot Test
     Then the MOT Test Status is PASSED
 
+  Scenario Outline: Tester can create an MOT with PRS Fail and the MOT Test result is fail
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class <class> Vehicle
+    And I add a <defect type> to the test
+    And the Tester adds a Class 3-7 Decelerometer Brake Test
+    And the Tester adds an Odometer Reading of 1000 mi
+    When the Tester Fails the Mot Test with PRS
+    Then the MOT Test Status is FAILED
+    Examples:
+    |class |defect type  |
+    |3     | Failure PRS |
+    |4     | Failure PRS |
+    |5     | Failure PRS |
+    |7     | Failure PRS |
+
+  Scenario Outline: Tester can create an MOT with Failure and the MOT Test result is fail
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class <class> Vehicle
+    And I add a <defect type> to the test
+    And the Tester adds a Class 3-7 Decelerometer Brake Test
+    And the Tester adds an Odometer Reading of 1000 mi
+    When the Tester Fails the Mot Test
+    Then the MOT Test Status is FAILED
+    Examples:
+      |class |defect type  |
+      |3     | Failure     |
+      |4     | Failure     |
+      |5     | Failure     |
+      |7     | Failure     |
