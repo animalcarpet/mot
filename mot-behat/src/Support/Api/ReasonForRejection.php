@@ -2,8 +2,7 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
-use Dvsa\Mot\Behat\Support\Request;
+use DVSA\MOT\Behat\Support\Data\Model\ReasonForRejection\ReasonForRejection as ReasonForRejectionModel;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 
 class ReasonForRejection extends MotApi
@@ -25,13 +24,21 @@ class ReasonForRejection extends MotApi
         return $this->addRfr($accessToken, $motTestNumber, $rfrId, ReasonForRejectionTypeName::ADVISORY);
     }
 
-    public function addFailure($token, $mot_test_number, $rfrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION)
+    public function addFailure($token, $mot_test_number, $rfrId = null)
     {
+        if ($rfrId === null) {
+            $rfrId = ReasonForRejectionModel::getGroupB()->getForClass4();
+        }
+
         return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::FAIL);
     }
 
-    public function addPrs($token, $mot_test_number, $rfrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION)
+    public function addPrs($token, $mot_test_number, $rfrId = null)
     {
+        if ($rfrId === null) {
+            $rfrId = ReasonForRejectionModel::getGroupB()->getForClass4Prs();
+        }
+
         return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::PRS);
     }
 
@@ -67,13 +74,17 @@ class ReasonForRejection extends MotApi
     }
 
 
-    public function editRFR($accessToken, $motTestNumber, $rdrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION)
+    public function editRFR($accessToken, $motTestNumber, $rfrId = null)
     {
+        if ($rfrId === null) {
+            $rfrId = ReasonForRejectionModel::getGroupB()->getForClass4();
+        }
+
         $this->defaultRfrDetails['locationLongitudinal'] = "rear";
 
         $body = array_merge(
             [
-                'id' => $rdrId,
+                'id' => $rfrId,
             ],
             $this->defaultRfrDetails
         );

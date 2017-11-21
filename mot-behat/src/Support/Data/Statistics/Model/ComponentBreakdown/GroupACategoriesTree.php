@@ -1,7 +1,7 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data\Statistics\Model\ComponentBreakdown;
 
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\GroupA\GroupAPreEuDirectiveReasonForRejection;
 
 class GroupACategoriesTree
 {
@@ -38,12 +38,16 @@ class GroupACategoriesTree
     {
         return [
             self::MOTORCYCLE_BODY_AND_STRUCTURE => [
-
+                GroupAPreEuDirectiveReasonForRejection::FAIRINGS_SO_LOCATED_THAT_IT_IS_LIKELY_TO_IMPEDE_THE_STEERING,
+                GroupAPreEuDirectiveReasonForRejection::FAIRINGS_INSECURE_AND_LIKELY_TO_IMPEDE_THE_STEERING,
+                GroupAPreEuDirectiveReasonForRejection::FOOTREST_MISSING,
             ],
             self::MOTORCYCLE_BRAKES => [
-                ReasonForRejectionGroupA::RFR_BRAKES_PERFORMANCE_GRADIENT,
-                ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+                GroupAPreEuDirectiveReasonForRejection::BRAKE_LEVER_INSECURE,
+                GroupAPreEuDirectiveReasonForRejection::BRAKE_LEVER_PIVOTS_EXCESSIVELY_WORN,
+                GroupAPreEuDirectiveReasonForRejection::BRAKE_LEVER_CRACKED,
             ],
+
             self::MOTORCYCLE_DRIVE_SYSTEM => [
 
             ],
@@ -54,7 +58,7 @@ class GroupACategoriesTree
 
             ],
             self::MOTORCYCLE_LIGHTING_AND_SIGNALLING => [
-                ReasonForRejectionGroupA::RFR_POSITION_LAMPS_MOTORCYCLE_FRONT
+
             ],
             self::MOTORCYCLE_REG_PLATES_AND_VIN => [
 

@@ -2,6 +2,7 @@
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller\BatchPersonStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller\NationalBatchStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller\NationalBatchStatisticsForMonthController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Controller\MultipleTestersAtSiteComponentStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Validator\DateRangeValidator;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Site\Controller\SiteAverageComponentStatisticsController;
@@ -14,10 +15,18 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\Controller\TesterMultiSiteStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Controller\NationalStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Notification\Controller\AedmNotificationController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller\Factory\BatchPersonStatisticsControllerFactory;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 
 return [
+    'controllers' => [
+        'invokables' => [
+        ],
+        'factories' => [
+            BatchPersonStatisticsController::class => BatchPersonStatisticsControllerFactory::class
+        ],
+    ],
     'router' => [
         'routes' => [
             'national-tester-statistics' => [
@@ -70,6 +79,20 @@ return [
                     ],
                 ],
             ],
+            'batch-national-tester-statistics-chosen-month-days' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/tester-performance/national/batch-for-month/:year/:month/:day',
+                    'constraints' => [
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
+                        'day' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => NationalBatchStatisticsForMonthController::class,
+                    ],
+                ],
+            ],
             'batch-test-person-statistics-generation' => [
                 'type' => 'Segment',
                 'options' => [
@@ -80,6 +103,21 @@ return [
                     ],
                 ],
             ],
+            'batch-test-person-statistics-generation-for-month' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/tester-performance/batch/test-counts-for-month/:year/:month/:day',
+                    'constraints' => [
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
+                        'day' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => BatchPersonStatisticsController::class,
+                        'action' => 'generateTestCountsForDate',
+                    ],
+                ],
+            ],
             'batch-rfr-person-statistics-generation' => [
                 'type' => 'Segment',
                 'options' => [
@@ -87,6 +125,21 @@ return [
                     'defaults' => [
                         'controller' => BatchPersonStatisticsController::class,
                         'action' => 'generateRfrCounts',
+                    ],
+                ],
+            ],
+            'batch-rfr-person-statistics-generation-for-month' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/statistic/tester-performance/batch/rfr-counts-for-month/:year/:month/:day',
+                    'constraints' => [
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
+                        'day' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => BatchPersonStatisticsController::class,
+                        'action' => 'generateRfrCountsForDate',
                     ],
                 ],
             ],

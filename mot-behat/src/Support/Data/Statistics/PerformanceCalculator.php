@@ -40,7 +40,7 @@ class PerformanceCalculator
                 $startedDate = new \DateTime($mot->getStartedDate());
                 $diff = $completedDate->diff($startedDate);
 
-                $time += $diff->d * 24 * 60 + $diff->h * 60 + $diff->i + $diff->s / 60;
+                $time += (float)($diff->d * 24 * 60) + (float)($diff->h * 60) + (float)$diff->i + (float)($diff->s / 60);
 
                 if ($mot->getStatus() === MotTestStatusName::FAILED) {
                     $numOfFailedTests++;
@@ -63,7 +63,7 @@ class PerformanceCalculator
             $minutes = floor($avgTime);
             $avgTime -= $minutes;
 
-            $seconds = floor($avgTime * 60);
+            $seconds = round($avgTime * 60);
 
             $avgVehicleAge = round($age / $total);
             $percentageFailed = ($numOfFailedTests / $total) * 100;

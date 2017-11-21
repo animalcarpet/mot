@@ -8,6 +8,7 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Storage\NationalComponentFailRateStorage;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
+use DvsaCommon\Date\DateRange;
 use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonTest\Date\TestDateTimeHolder;
@@ -17,6 +18,8 @@ use DvsaCommonTest\TestUtils\XMock;
 class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 {
     const THREE_MONTHS_RANGE = 3;
+    const REPORT_YEAR = 2017;
+    const REPORT_MONTH = 12;
 
     /** @var NationalComponentStatisticsRepository */
     private $repository;
@@ -48,7 +51,13 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetReturnsDto()
     {
-        $dto = $this->createService()->get(self::THREE_MONTHS_RANGE, VehicleClassGroupCode::CARS_ETC);
+        $dto = $this->createService()->get(
+            (new LastMonthsDateRange($this->getDateTimeHolder()))->setNumberOfMonths(self::THREE_MONTHS_RANGE),
+            VehicleClassGroupCode::CARS_ETC,
+            self::REPORT_YEAR,
+            self::REPORT_MONTH
+
+        );
         $this->assertInstanceOf(NationalComponentStatisticsDto::class, $dto);
 
         $this->assertNationalComponentStatisticsDto(

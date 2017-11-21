@@ -2,16 +2,17 @@
 
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\Repository\SingleGroupStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository\AbstractStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryBuilder\TesterAtSiteSingleGroupStatisticsQueryBuilder;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
-class TesterAtSiteSingleGroupStatisticsRepository extends SingleGroupStatisticsRepository implements AutoWireableInterface
+class TesterAtSiteSingleGroupStatisticsRepository extends AbstractStatisticsRepository implements AutoWireableInterface
 {
     const PARAM_SITE_ID = 'vtsId';
     const PARAM_TESTER_ID = 'testerId';
+    const PARAM_GROUP_CODE = 'groupCode';
 
     public function get($siteId, $testerId, $groupCode, $monthRange)
     {
@@ -44,9 +45,15 @@ class TesterAtSiteSingleGroupStatisticsRepository extends SingleGroupStatisticsR
 
     protected function buildResultSetMapping()
     {
-        $rsm = parent::buildResultSetMapping();
+        $rsm = $this->getResultSetMapping();
 
-        return $rsm->addScalarResult('siteName', 'siteName');
+        $rsm->addScalarResult('totalTime', 'totalTime')
+            ->addScalarResult('failedCount', 'failedCount')
+            ->addScalarResult('totalCount', 'totalCount')
+            ->addScalarResult('averageVehicleAgeInMonths', 'averageVehicleAgeInMonths')
+            ->addScalarResult('siteName', 'siteName');
+
+        return $rsm;
     }
 
     protected function createTesterPerformanceResult(array $row)

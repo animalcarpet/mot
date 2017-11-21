@@ -8,7 +8,8 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use DvsaCommon\ApiClient\Statistics\Common\ReportDtoInterface;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
-use DvsaCommon\Date\LastMonthsDateRange;
+use DvsaCommon\Date\DateRangeInterface;
+use DvsaCommon\Date\DateTimeHolderInterface;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\DtoSerialization\ReflectiveDtoInterface;
 
@@ -25,17 +26,20 @@ class NationalComponentStatisticsReportGenerator extends AbstractReportGenerator
         NationalComponentFailRateStorage $storage,
         NationalComponentStatisticsRepository $componentStatisticsRepository,
         TimeSpan $timeoutPeriod,
-        LastMonthsDateRange $monthRange,
-        $group
+        DateRangeInterface $dateRange,
+        $group,
+        int $reportYear,
+        int $reportMonth,
+        DateTimeHolderInterface $dateTimeHolder
     ) {
-        parent::__construct($monthRange->getDateTimeHolder(), $timeoutPeriod);
+        parent::__construct($dateTimeHolder, $timeoutPeriod);
 
         $this->repository = $componentStatisticsRepository;
         $this->storage = $storage;
-        $this->monthRange = $monthRange;
+        $this->monthRange = $dateRange;
         $this->group = $group;
-        $this->year = $monthRange->getDateTimeHolder()->getCurrent()->format('Y');
-        $this->month = $monthRange->getDateTimeHolder()->getCurrent()->format('n');
+        $this->year = $reportYear;
+        $this->month = $reportMonth;
     }
 
     /**

@@ -9,6 +9,7 @@ use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 
 /**
  * A repository for TQI RFR counts.
@@ -70,6 +71,7 @@ class TqiRfrCountRepository extends AbstractMutableRepository
             JOIN model_detail md ON md.id = vehicle.model_detail_id
             JOIN vehicle_class class ON class.id = md.vehicle_class_id
             JOIN vehicle_class_group class_group ON class_group.id = class.vehicle_class_group_id
+            JOIN rfr_deficiency_category rdc ON rdc.id = rfr.rfr_deficiency_category_id
             LEFT JOIN mot_test_emergency_reason mter ON mter.id = test.id
             WHERE 
                 test.completed_date >= :start_date 
@@ -79,6 +81,7 @@ class TqiRfrCountRepository extends AbstractMutableRepository
                 AND lt.code = :language_code
                 AND mter.emergency_log_id IS NULL
                 AND rfr_type.name NOT IN (:rfr_advisory, :rfr_non_specific, :rfr_user_entered)
+                AND rdc.code NOT IN (:rdc_code)
             GROUP BY 
                 test.site_id, 
                 test.organisation_id, 
@@ -97,6 +100,7 @@ class TqiRfrCountRepository extends AbstractMutableRepository
         $stmt->bindValue("rfr_advisory", ReasonForRejectionTypeName::ADVISORY);
         $stmt->bindValue("rfr_non_specific", ReasonForRejectionTypeName::NON_SPECIFIC);
         $stmt->bindValue("rfr_user_entered", ReasonForRejectionTypeName::USER_ENTERED);
+        $stmt->bindValue("rdc_code", RfrDeficiencyCategoryCode::MINOR);
 
         try {
             $this->_em->beginTransaction();

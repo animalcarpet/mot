@@ -79,6 +79,8 @@ class TestQualityAction implements AutoWireableInterface
 
     private $personalDetailsService;
 
+    private $featureToggles;
+
     public function __construct(
         TesterPerformanceApiResource $testerPerformanceApiResource,
         NationalPerformanceApiResource $nationalPerformanceApiResource,

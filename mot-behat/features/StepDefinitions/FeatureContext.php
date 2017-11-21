@@ -12,8 +12,6 @@ use Dvsa\Mot\Behat\Support\Data\Transformer\EventTypeToCodeTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\EmergencyReasonToCodeTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\ReasonForCancelToIdTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\AuthorisationForTestingMotStatusToCodeTransformer;
-use Dvsa\Mot\Behat\Support\Data\Transformer\CountryOfRegistrationNameToIdTransformer;
-use Dvsa\Mot\Behat\Support\Data\Transformer\ColourNameToCodeTransformer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
@@ -26,6 +24,7 @@ use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\Generator\DefaultDataGenerator;
 use Dvsa\Mot\Behat\Support\Data\Generator\BeforeScenarioDataGenerator;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\EuReasonForRejectionToggle;
 use Zend\Http\Response as HttpResponse;
 
 use PHPUnit_Framework_Assert as PHPUnit;
@@ -132,6 +131,8 @@ class FeatureContext implements Context
      */
     public function setUp(BeforeScenarioScope $scope)
     {
+        EuReasonForRejectionToggle::disable();
+
         $beforeScenarioDataGenerator = new BeforeScenarioDataGenerator(
             $scope,
             $this->authorisedExaminerData,

@@ -116,6 +116,11 @@ abstract class AbstractMotTestData extends AbstractData
         return $mot;
     }
 
+    public function createFailedMotTestWithRfr(MotTestDto $mot, $rfrId)
+    {
+        return $this->failMotTestWithManyRfrs($mot, [$rfrId]);
+    }
+
     public function failMotTestWithManyRfrs(MotTestDto $mot, array $rfrs)
     {
         $tester = $this->getTester($mot);

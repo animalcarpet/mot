@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Report;
 
 use Dvsa\Mot\Api\StatisticsApi\ReportGeneration\AbstractReportGenerator;
-use DvsaCommon\Date\LastMonthsDateRange;
+use DvsaCommon\Date\DateRangeInterface;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\QueryResult\NationalStatisticsResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Repository\NationalStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Storage\NationalTesterPerformanceStatisticsStorage;
@@ -26,14 +26,16 @@ class NationalStatisticsReportGenerator extends AbstractReportGenerator
         NationalTesterPerformanceStatisticsStorage $storage,
         DateTimeHolderInterface $dateTimeHolder,
         TimeSpan $timeoutPeriod,
-        LastMonthsDateRange $lastMonthsDateRange
+        DateRangeInterface $lastMonthsDateRange,
+        $reportYear,
+        $reportMonth
     ) {
         parent::__construct($dateTimeHolder, $timeoutPeriod);
         $this->repository = $nationalStatisticsRepository;
         $this->storage = $storage;
         $this->lastMonthsDateRange = $lastMonthsDateRange;
-        $this->year = $dateTimeHolder->getCurrent()->format('Y');
-        $this->month = $dateTimeHolder->getCurrent()->format('n');
+        $this->year = $reportYear;
+        $this->month = $reportMonth;
     }
 
     /**

@@ -18,12 +18,18 @@ class RfrCurrentDateFakerFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): RfrCurrentDateFaker
     {
         /** @var MotConfig $config */
         $config = $serviceLocator->get(MotConfig::class);
+
         $fakeDate = $this->getFakeDateValue($config);
 
+        return $this->createServiceWithArgs($fakeDate);
+    }
+
+    public function createServiceWithArgs(\DateTime $fakeDate = null): RfrCurrentDateFaker
+    {
         return new RfrCurrentDateFaker(
             new DateTimeHolder(),
             $fakeDate
@@ -34,7 +40,7 @@ class RfrCurrentDateFakerFactory implements FactoryInterface
      * @param $config
      * @return \DateTime|null
      */
-    public function getFakeDateValue($config)
+    public function getFakeDateValue(MotConfig $config)
     {
         $fakeDate = $config
             ->withDefault(null)

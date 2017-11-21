@@ -1,6 +1,7 @@
 <?php
 namespace DvsaCommon\ReasonForRejection\ElasticSearch;
 
+use DvsaCommon\Date\RfrCurrentDateFaker;
 use DvsaCommon\ReasonForRejection\ElasticSearch\QueryBuilder\ReasonForRejectionElasticSearchQueryBuilder;
 use DvsaCommon\ReasonForRejection\ReasonForRejectionDtoMapper;
 use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
@@ -14,10 +15,10 @@ class ReasonForRejectionElasticSearchClient implements SearchReasonForRejectionI
     /** @var ReasonForRejectionElasticSearchQueryBuilder */
     private $reasonForRejectionElasticSearchQueryBuilder;
 
-    public function __construct(Client $client, string $indexName, string $documentType)
+    public function __construct(Client $client, RfrCurrentDateFaker $rfrCurrentDateFaker, string $indexName, string $documentType)
     {
         $this->client = $client;
-        $this->reasonForRejectionElasticSearchQueryBuilder = new ReasonForRejectionElasticSearchQueryBuilder($indexName, $documentType);
+        $this->reasonForRejectionElasticSearchQueryBuilder = new ReasonForRejectionElasticSearchQueryBuilder($indexName, $documentType, $rfrCurrentDateFaker);
     }
 
     public function search(string $searchTerm, string $vehicleClassCode, string $audience, int $page): SearchReasonForRejectionResponseInterface

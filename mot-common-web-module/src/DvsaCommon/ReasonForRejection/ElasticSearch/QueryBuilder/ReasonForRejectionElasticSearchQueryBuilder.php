@@ -2,7 +2,7 @@
 namespace DvsaCommon\ReasonForRejection\ElasticSearch\QueryBuilder;
 
 use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Date\RfrCurrentDateFaker;
 use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
 use Zend\Validator\Regex;
 
@@ -10,11 +10,13 @@ class ReasonForRejectionElasticSearchQueryBuilder
 {
     private $index;
     private $documentType;
+    private $rfrCurrentDateFaker;
 
-    public function __construct(string $index, string $documentType)
+    public function __construct(string $index, string $documentType, RfrCurrentDateFaker $rfrCurrentDateFaker)
     {
         $this->index = $index;
         $this->documentType = $documentType;
+        $this->rfrCurrentDateFaker = $rfrCurrentDateFaker;
     }
 
     public function buildCountQuery(string $searchTerm, string $vehicleClassCode, string $audience): array
@@ -115,12 +117,12 @@ class ReasonForRejectionElasticSearchQueryBuilder
 
     private function createDateFilter(): array
     {
-        $today = DateUtils::today()->format(DateTimeApiFormat::FORMAT_ISO_8601_DATE_ONLY);
+        $today = $this->rfrCurrentDateFaker->getCurrentDateTime()->format(DateTimeApiFormat::FORMAT_ISO_8601_DATE_ONLY);
 
         return [
             "bool" => [
                 "should" => [
-                    ["range" =>["endDate" => ["gte" => $today, "format" => "yyyy-MM-dd"]]],
+                    ["range" =>["endDate" => ["gt" => $today, "format" => "yyyy-MM-dd"]]],
                     ["range" =>["startDate" => ["lte" => $today, "format" => "yyyy-MM-dd"]]],
                     [
                         "bool" => [

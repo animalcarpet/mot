@@ -2,6 +2,8 @@
 
 namespace DvsaCommonTest\ReasonForRejection\ElasticSearch;
 
+use DvsaCommon\Date\DateTimeHolder;
+use DvsaCommon\Date\RfrCurrentDateFaker;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\ReasonForRejection\ElasticSearch\ReasonForRejectionElasticSearchClient;
@@ -21,7 +23,7 @@ class ReasonForRejectionElasticSearchClientTest extends \PHPUnit_Framework_TestC
         $client->method("search")->willReturn($this->createClientResponse());
         $client->method("count")->willReturn(["count" => 1]);
 
-        $rfrClient = new ReasonForRejectionElasticSearchClient($client, self::INDEX_NAME, self::DOCUMENT_TYPE);
+        $rfrClient = new ReasonForRejectionElasticSearchClient($client, new RfrCurrentDateFaker(new DateTimeHolder()), self::INDEX_NAME, self::DOCUMENT_TYPE);
         $response = $rfrClient->search("wheel", VehicleClassCode::CLASS_1, "t", 1);
 
         $this->assertInstanceOf(SearchReasonForRejectionResponseInterface::class, $response);
@@ -37,7 +39,7 @@ class ReasonForRejectionElasticSearchClientTest extends \PHPUnit_Framework_TestC
         $client->expects($searchSpy = $this->any())->method("search")->willReturn($this->createClientResponse());
         $client->expects($countSpy = $this->any())->method("count")->willReturn(["count" => 1]);
 
-        $rfrClient = new ReasonForRejectionElasticSearchClient($client, self::INDEX_NAME, self::DOCUMENT_TYPE);
+        $rfrClient = new ReasonForRejectionElasticSearchClient($client, new RfrCurrentDateFaker(new DateTimeHolder()), self::INDEX_NAME, self::DOCUMENT_TYPE);
         $rfrClient->search($searchTerm, VehicleClassCode::CLASS_1, "t", 1);
 
         $params = $searchSpy->getInvocations()[0]->parameters[0];
@@ -70,7 +72,7 @@ class ReasonForRejectionElasticSearchClientTest extends \PHPUnit_Framework_TestC
         $client->expects($searchSpy = $this->any())->method("search")->willReturn($this->createClientResponse());
         $client->expects($countSpy = $this->any())->method("count")->willReturn(["count" => 1]);
 
-        $rfrClient = new ReasonForRejectionElasticSearchClient($client, self::INDEX_NAME, self::DOCUMENT_TYPE);
+        $rfrClient = new ReasonForRejectionElasticSearchClient($client, new RfrCurrentDateFaker(new DateTimeHolder()), self::INDEX_NAME, self::DOCUMENT_TYPE);
         $rfrClient->search($searchTerm, VehicleClassCode::CLASS_1, "t", 1);
 
         $params = $searchSpy->getInvocations()[0]->parameters[0];

@@ -5,6 +5,8 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Report\NationalComponentStatisticsReportGenerator;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Repository\NationalComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Storage\NationalComponentFailRateStorage;
+use DvsaCommon\Date\DateRangeInterface;
+use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\LastMonthsDateRange;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -25,14 +27,17 @@ class NationalComponentStatisticsService implements AutoWireableInterface
         $this->lastMonthsDateRange = $lastMonthsDateRange;
     }
 
-    public function get(int $monthRange, $group)
+    public function get(DateRangeInterface $dateRange, $group, int $reportYear, int $reportMonth)
     {
         $generator = new NationalComponentStatisticsReportGenerator(
             $this->storage,
             $this->repository,
             new TimeSpan(0, 1, 0, 0),
-            $this->lastMonthsDateRange->setNumberOfMonths($monthRange),
-            $group
+            $dateRange,
+            $group,
+            $reportYear,
+            $reportMonth,
+            new DateTimeHolder()
         );
 
         return $generator->get();

@@ -80,6 +80,19 @@ class MotTestData extends AbstractMotTestData
         }
     }
 
+    public function createRetest(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, $rfrId = null)
+    {
+        $this->createFailedMotTest($tester, $site, $vehicle, MotTestTypeCode::NORMAL_TEST, $rfrId);
+
+        return $this->createWithType(
+            $tester,
+            $vehicle,
+            $site,
+            MotTestTypeCode::RE_TEST
+        );
+
+    }
+
     private function createWithType(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, $type)
     {
        if (MotTestTypeCode::exists($type) === false) {

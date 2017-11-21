@@ -11,7 +11,7 @@ use DvsaEntities\Repository\TqiRfrCountRepository;
 use DvsaEntities\Repository\TqiTestCountRepository;
 use Zend\Validator\Between;
 
-class BatchPersonTestQualityInformationService implements AutoWireableInterface
+class BatchPersonTestQualityInformationService extends AbstractBatchStatisticsService implements AutoWireableInterface
 {
     private $dateTimeHolder;
     private $tqiTestCountRepository;
@@ -24,6 +24,7 @@ class BatchPersonTestQualityInformationService implements AutoWireableInterface
         TqiRfrCountRepository $tqiRfrCountRepository
     )
     {
+        parent::__construct($dateTimeHolder);
         $this->tqiTestCountRepository = $tqiTestCountRepository;
         $this->tqiRfrCountRepository = $tqiRfrCountRepository;
         $this->dateTimeHolder = $dateTimeHolder;
@@ -38,6 +39,14 @@ class BatchPersonTestQualityInformationService implements AutoWireableInterface
     public function generatePersonTestStatistics(int $monthsAgo)
     {
         $month = $this->getMonth($monthsAgo);
+        $this->generatePersonTestStatisticsForDate($month->getYear(), $month->getMonth(), $month->getDay());
+    }
+
+    public function generatePersonTestStatisticsForDate(int $year, int $month, int $day)
+    {
+        $month = new Month($year, $month, $day);
+        $this->validateDate($month);
+
         $this->deleteOldTestReports();
 
         if($this->rfrCountsAreNotGenerated($month)) {
@@ -53,6 +62,17 @@ class BatchPersonTestQualityInformationService implements AutoWireableInterface
     {
         $month = $this->getMonth($monthsAgo);
         $this->deleteOldRfrReports();
+
+        if($this->testCountsAreNotGenerated($month)) {
+            $result = $this->tqiRfrCountRepository->populateTableWithData($month->getStartDate(), $month->getEndDate());
+            $this->validateQueryResult($result);
+        }
+    }
+
+    public function generatePersonComponentStatisticsForDate(int $year, int $month, int $day)
+    {
+        $month = new Month($year, $month, $day);
+        $this->validateDate($month);
 
         if($this->testCountsAreNotGenerated($month)) {
             $result = $this->tqiRfrCountRepository->populateTableWithData($month->getStartDate(), $month->getEndDate());

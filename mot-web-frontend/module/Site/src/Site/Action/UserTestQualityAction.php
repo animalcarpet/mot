@@ -53,6 +53,7 @@ class UserTestQualityAction implements AutoWireableInterface
     private $routeMatch;
     private $identityProvider;
     private $dateTimeHolder;
+    private $featureToggles;
 
     public function __construct(
         ComponentFailRateApiResource $componentFailRateApiResource,

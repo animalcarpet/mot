@@ -4,41 +4,11 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Repository\AbstractStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryBuilder\ManyGroupsStatisticsQueryBuilder;
-use DvsaCommon\Enum\MotTestStatusCode;
-use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Enum\OrganisationSiteStatusCode;
 
 class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
 {
     const PARAM_YEAR = 'year';
     const PARAM_MONTH = 'month';
-
-    protected function getByParams(array $params)
-    {
-        $rsm = $this->buildResultSetMapping();
-
-        $sql = $this->getSql();
-
-        $query = $this->getNativeQuery($sql, $rsm)
-            ->setParameters($params)
-            ->setParameter('failedStatusCode', MotTestStatusCode::FAILED)
-            ->setParameter('passStatusCode', MotTestStatusCode::PASSED)
-            ->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST)
-            ->setParameter('mysteryShopperTestCode', MotTestTypeCode::MYSTERY_SHOPPER)
-            ->setParameter('startDate', $this->startDate)
-            ->setParameter('endData', $this->endDate)
-            ->setParameter('irrelevantAssociationCodes',
-                [
-                    OrganisationSiteStatusCode::APPLIED,
-                    OrganisationSiteStatusCode::UNKNOWN,
-                ]
-            );
-
-        $scalarResult = $query->getScalarResult();
-
-        return $this->buildResult($scalarResult);
-    }
 
     protected function createResultRow($row)
     {
@@ -59,11 +29,6 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
         ;
 
         return $testerPerformanceResult;
-    }
-
-    protected function getSql()
-    {
-        return (new ManyGroupsStatisticsQueryBuilder())->getSql();
     }
 
     protected function buildResultSetMapping()

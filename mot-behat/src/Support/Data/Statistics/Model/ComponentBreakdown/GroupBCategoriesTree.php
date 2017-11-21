@@ -1,7 +1,7 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data\Statistics\Model\ComponentBreakdown;
 
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\GroupB\GroupBPreEuDirectiveReasonForRejection;
 
 class GroupBCategoriesTree
 {
@@ -42,9 +42,19 @@ class GroupBCategoriesTree
     {
         return [
             self::BODY_STRUCTURE_AND_GENERAL_ITEMS => [
-                ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION
+                GroupBPreEuDirectiveReasonForRejection::BODY_HAS_EXCESSIVE_DISPLACEMENT_WHICH_MAY_LEAD_TO_LOSS_OF_VEHICLE_CONTROL,
+                GroupBPreEuDirectiveReasonForRejection::BODY_INSECURE_AND_DANGEROUS_TO_OTHER_ROAD_USERS,
+                GroupBPreEuDirectiveReasonForRejection::BONNET_RETAINING_DEVICE_INSECURE,
+                GroupBPreEuDirectiveReasonForRejection::DRIVERS_DOOR_CATCH_MISSING,
+                GroupBPreEuDirectiveReasonForRejection::FRONT_PASSENGER_DOOR_PILLAR_INSECURE,
             ],
-            self::BRAKES => [],
+            self::BRAKES => [
+                GroupBPreEuDirectiveReasonForRejection::ANTI_LOCK_BRAKING_SYSTEM_COMPONENT_MISSING,
+                GroupBPreEuDirectiveReasonForRejection::ANTI_LOCK_BRAKING_SYSTEM_EXCESSIVELY_DAMAGED,
+                GroupBPreEuDirectiveReasonForRejection::ANTI_LOCK_BRAKING_SYSTEM_INAPPROPRIATELY_REPAIRED,
+                GroupBPreEuDirectiveReasonForRejection::ANTI_LOCK_BRAKING_SYSTEM_INAPPROPRIATELY_MODIFIED,
+                GroupBPreEuDirectiveReasonForRejection::ANTI_LOCK_BRAKING_SYSTEM_WARNING_LAMP_IS_MISSING,
+            ],
             self::DRIVERS_VIEW_OF_THE_ROAD => [],
             self::DRIVING_CONTROLS_AND_SPEED_LIMITERS => [],
             self::EXHAUST_FUEL_AND_EMISSIONS => [],
@@ -56,7 +66,9 @@ class GroupBCategoriesTree
             self::STEERING => [],
             self::SUSPENSION => [],
             self::TOWBARS => [],
-            self::TYRES => [],
+            self::TYRES => [
+                GroupBPreEuDirectiveReasonForRejection::TYRE_HAS_PLY_OR_CORDS_EXPOSED
+            ],
         ];
     }
 }

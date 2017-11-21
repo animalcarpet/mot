@@ -20,11 +20,6 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
     const PARAM_END_DATE = 'endDate';
     const PARAM_GROUP = 'groupCode';
 
-    public function __construct(EntityManager $entityManager)
-    {
-        parent::__construct($entityManager);
-    }
-
     protected function mapResult($scalarResult)
     {
         /** @var ComponentFailRateResult[] $dbResults */

@@ -5,11 +5,10 @@ namespace Dvsa\Mot\Behat\Support\Data;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionEU;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejection\ReasonForRejection as ReasonForRejectionModel;
 
 class ReasonForRejectionData extends AbstractData
 {
@@ -76,8 +75,8 @@ class ReasonForRejectionData extends AbstractData
     public function addDefaultPrsByUser(AuthenticatedUser $user, MotTestDto $mot)
     {
         $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
-            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
-            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
+            ? ReasonForRejectionModel::getGroupA()->getForClass1Prs()
+            : ReasonForRejectionModel::getGroupB()->getForClass4Prs();
 
         $this->addPrsByUser($user, $mot, $rfrId);
     }
@@ -100,8 +99,8 @@ class ReasonForRejectionData extends AbstractData
     public function addDefaultFailureByUser(AuthenticatedUser $user, MotTestDto $mot)
     {
         $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
-            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
-            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
+            ? ReasonForRejectionModel::getGroupA()->getForClass1()
+            : ReasonForRejectionModel::getGroupB()->getForClass4();
 
         $this->addFailureByUser($user, $mot, $rfrId);
     }
@@ -129,8 +128,8 @@ class ReasonForRejectionData extends AbstractData
     public function addDefaultAdvisoryByUser(AuthenticatedUser $user, MotTestDto $mot)
     {
         $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
-            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
-            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
+            ? ReasonForRejectionModel::getGroupA()->getForClass1Advisory()
+            : ReasonForRejectionModel::getGroupB()->getForClass4Advisory();
 
         $this->addAdvisoryByUser($user, $mot, $rfrId);
     }
@@ -148,8 +147,8 @@ class ReasonForRejectionData extends AbstractData
     public function removeDefaultRFRByUser(AuthenticatedUser $user, MotTestDto $mot)
     {
         $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
-            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
-            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
+            ? ReasonForRejectionModel::getGroupA()->getForClass1()
+            : ReasonForRejectionModel::getGroupB()->getForClass4();
 
         $this->removeRFRByUser($user, $mot, $rfrId);
     }

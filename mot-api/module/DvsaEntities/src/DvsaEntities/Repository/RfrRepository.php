@@ -169,12 +169,13 @@ class RfrRepository extends AbstractMutableRepository
                 JOIN rfr_deficiency_category rdc ON rdc.id = rfr.rfr_deficiency_category_id 
 
                 WHERE rfr.spec_proc = 0
-                    AND (rfr.end_date IS NULL OR rfr.end_date > CURRENT_DATE)
+                    AND (rfr.end_date IS NULL OR rfr.end_date > :currentDate)
                     AND lang.code = :languageCode
                 GROUP BY rfr.id
                 '
             );
         $stmt->bindValue('languageCode', LanguageTypeCode::ENGLISH);
+        $stmt->bindValue('currentDate', $this->getRfrCurrentDate());
         $stmt->execute();
         return $stmt->fetchAll();
     }
