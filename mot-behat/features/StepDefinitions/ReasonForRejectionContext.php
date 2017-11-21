@@ -2,6 +2,7 @@
 
 use Behat\Behat\Context\Context;
 use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionEU;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Data\ReasonForRejectionData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
@@ -12,6 +13,7 @@ use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use DvsaCommon\ApiClient\ReasonForRejection\ReasonForRejectionApiResource;
 use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
 use DvsaCommon\Dto\ReasonForRejection\ReasonForRejectionDto;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 
 class ReasonForRejectionContext implements Context
 {
@@ -293,6 +295,12 @@ class ReasonForRejectionContext implements Context
                 $this->userData->getCurrentLoggedUser(),
                 $this->motTestData->getLast()
             );
+        } elseif ($defect === 'Failure PRS') {
+            $this->reasonForRejectionData->addPrsByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast(),
+                ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION
+            );
         }
         $response = $this->reasonForRejectionData->getLastResponse();
 
@@ -405,6 +413,18 @@ class ReasonForRejectionContext implements Context
             $this->reasonForRejectionData->addDefaultAdvisoryByUser(
                 $this->userData->getCurrentLoggedUser(),
                 $this->motTestData->getLast()
+            );
+        } elseif ($defect === 'Major PRS') {
+            $this->reasonForRejectionData->addPrsByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast(),
+                ReasonForRejectionEU::RFR_REGISTRATION_PLATES_MAJOR
+            );
+        } elseif ($defect === 'Dangerous PRS') {
+            $this->reasonForRejectionData->addPrsByUser(
+                $this->userData->getCurrentLoggedUser(),
+                $this->motTestData->getLast(),
+                ReasonForRejectionEU::RFR_VEHICLE_IDENTIFICATION_NUMBER_DANGEROUS
             );
         }
 
