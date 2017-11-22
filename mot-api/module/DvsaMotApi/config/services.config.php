@@ -8,15 +8,9 @@ use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Configuration\MotConfigFactory;
 use DvsaCommonApi\Transaction\ServiceTransactionAwareInitializer;
 use DvsaEntities\Factory\Repository\CertificateTypeRepositoryFactory;
-use DvsaEntities\Factory\Repository\MotTestReasonForRejectionLocationRepositoryFactory;
-use DvsaEntities\Factory\Repository\MotTestReasonForRejectionRepositoryFactory;
-use DvsaEntities\Factory\Repository\ReasonForRejectionTypeRepositoryFactory;
 use DvsaEntities\Repository\CertificateReplacementRepository;
 use DvsaEntities\Repository\CertificateTypeRepository;
-use DvsaEntities\Repository\MotTestReasonForRejectionLocationRepository;
-use DvsaEntities\Repository\MotTestReasonForRejectionRepository;
 use DvsaEntities\Repository\MotTestRepository;
-use DvsaEntities\Repository\ReasonForRejectionTypeRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Factory\Helper\MysteryShopperHelperFactory;
 use DvsaMotApi\Factory\S3CsvStoreFactory;
@@ -156,9 +150,6 @@ return [
         'ReplacementCertificateDraftUpdater' => ReplacementCertificateDraftUpdaterFactory::class,
         'ReplacementCertificateService' => ReplacementCertificateServiceFactory::class,
         'CertificateChangeService' => CertificateChangeServiceFactory::class,
-        MotTestReasonForRejectionRepository::class => MotTestReasonForRejectionRepositoryFactory::class,
-        MotTestReasonForRejectionLocationRepository::class => MotTestReasonForRejectionLocationRepositoryFactory::class,
-        ReasonForRejectionTypeRepository::class => ReasonForRejectionTypeRepositoryFactory::class,
         MotTestReasonForRejectionService::class => MotTestReasonForRejectionServiceFactory::class,
         TestItemCategoryRepository::class => TestItemCategoryRepositoryFactory::class,
         VehicleHistoryService::class => VehicleHistoryServiceFactory::class,
