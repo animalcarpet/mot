@@ -15,6 +15,7 @@ use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
+use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\DataValidationException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -26,106 +27,92 @@ use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\MotTestReasonForRejectionLocation;
 use DvsaEntities\Entity\MotTestReasonForRejectionMarkedAsRepaired;
 use DvsaEntities\Entity\ReasonForRejection;
-use DvsaEntities\Repository\MotTestReasonForRejectionLocationRepository;
-use DvsaEntities\Repository\MotTestReasonForRejectionRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Entity\ReasonForRejectionType;
-use DvsaEntities\Repository\ReasonForRejectionTypeRepository;
-use DvsaEntities\Repository\ReasonForRejectionTypeRepositoryInterface;
-use DvsaEntities\Repository\RfrRepository;
 use DvsaMotApi\Service\Helper\BrakeTestResultsHelper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 
-class MotTestReasonForRejectionService
+/**
+ * Class MotTestReasonForRejectionService.
+ */
+class MotTestReasonForRejectionService extends AbstractService
 {
-    const LONGITUDINAL_LOCATION_FIELD = 'locationLongitudinal';
-    const VERRTICAL_LOCATION_FIELD = 'locationVertical';
-    const LATERAL_LOCATION_FIELD = 'locationLateral';
-    const FAILURE_DANGEROUS_FIELD = 'failureDangerous';
-    const GENERATED_FIELD = 'generated';
-    const COMMENT_FIELD = 'comment';
     const RFR_ID_FIELD = 'rfrId';
     const TYPE_FIELD = 'type';
+    const LONGITUDINAL_LOCATION_FIELD = 'locationLongitudinal';
+    const COMMENT_FIELD = 'comment';
+    const LATERAL_LOCATION_FIELD = 'locationLateral';
+    const VERRTICAL_LOCATION_FIELD = 'locationVertical';
+    const FAILURE_DANGEROUS_FIELD = 'failureDangerous';
+    const GENERATED_FIELD = 'generated';
 
-    /** @var MotTestValidator */
+    /**
+     * @var MotTestValidator
+     */
     protected $motTestValidator;
 
-    /** @var AuthorisationServiceInterface */
+    /**
+     * @var AuthorisationServiceInterface
+     */
     protected $authService;
 
-    /** @var ApiPerformMotTestAssertion */
+    /**
+     * @var TestItemSelectorService
+     */
+    protected $testItemSelectorService;
+
+    /**
+     * @var ApiPerformMotTestAssertion
+     */
     private $performMotTestAssertion;
 
-    /** @var MotTestRepository */
+    /**
+     * @var MotTestRepository
+     */
     private $motTestRepository;
-
-    /** @var EntityManager */
-    private $entityManager;
-
-    /** @var RfrRepository */
-    private $rfrRepository;
-
-    /** @var MotTestReasonForRejectionRepository */
-    private $motTestReasonForRejectionRepository;
-
-    /** @var MotTestReasonForRejectionLocationRepository */
-    private $motTestReasonForRejectionLocationRepository;
-
-    /** @var ReasonForRejectionTypeRepository $reasonForRejectionTypeRepository */
-    private $reasonForRejectionTypeRepository;
-
-    /** @var BrakeTestResultsHelper $brakeTestResultsHelper */
-    private $brakeTestResultsHelper;
 
     /**
      * MotTestReasonForRejectionService constructor.
      *
-     * @param EntityManager $entityManager
+     * @param EntityManager                 $entityManager
      * @param AuthorisationServiceInterface $authService
-     * @param MotTestValidator $motTestValidator
-     * @param ApiPerformMotTestAssertion $performMotTestAssertion
-     * @param MotTestRepository $motTestRepository
-     * @param RfrRepository $rfrRepository
-     * @param MotTestReasonForRejectionRepository $motTestReasonForRejectionRepository
-     * @param MotTestReasonForRejectionLocationRepository $motTestReasonForRejectionLocationRepository
-     * @param ReasonForRejectionTypeRepositoryInterface $reasonForRejectionTypeRepository
-     * @param BrakeTestResultsHelper $brakeTestResultsHelper
+     * @param MotTestValidator              $motTestValidator
+     * @param TestItemSelectorService       $motTestItemSelectorService
+     * @param ApiPerformMotTestAssertion    $performMotTestAssertion
+     * @param MotTestRepository             $motTestRepository
      */
     public function __construct(
         EntityManager $entityManager,
         AuthorisationServiceInterface $authService,
         MotTestValidator $motTestValidator,
+        TestItemSelectorService $motTestItemSelectorService,
         ApiPerformMotTestAssertion $performMotTestAssertion,
-        MotTestRepository $motTestRepository,
-        RfrRepository $rfrRepository,
-        MotTestReasonForRejectionRepository $motTestReasonForRejectionRepository,
-        MotTestReasonForRejectionLocationRepository $motTestReasonForRejectionLocationRepository,
-        ReasonForRejectionTypeRepositoryInterface $reasonForRejectionTypeRepository,
-        BrakeTestResultsHelper $brakeTestResultsHelper
+        MotTestRepository $motTestRepository
     ) {
-        $this->entityManager = $entityManager;
+        parent::__construct($entityManager);
+
         $this->authService = $authService;
         $this->motTestValidator = $motTestValidator;
+        $this->testItemSelectorService = $motTestItemSelectorService;
         $this->performMotTestAssertion = $performMotTestAssertion;
         $this->motTestRepository = $motTestRepository;
-        $this->rfrRepository = $rfrRepository;
-        $this->motTestReasonForRejectionRepository = $motTestReasonForRejectionRepository;
-        $this->motTestReasonForRejectionLocationRepository = $motTestReasonForRejectionLocationRepository;
-        $this->reasonForRejectionTypeRepository = $reasonForRejectionTypeRepository;
-        $this->brakeTestResultsHelper = $brakeTestResultsHelper;
     }
 
     /**
      * @param int $defectId
      *
-     * @throws NotFoundException if the ReasonForRejection entity is not found in the database
+     * @throws NotFoundException If the ReasonForRejection entity is not found in the database
      *
      * @return ReasonForRejection
      */
-    public function getDefect($defectId) : ReasonForRejection
+    public function getDefect($defectId)
     {
-        $defect = $this->rfrRepository->get($defectId);
+        /* @var ReasonForRejection $reasonForRejection */
+        $defect = $this
+            ->entityManager
+            ->getRepository(ReasonForRejection::class)
+            ->find($defectId);
 
         if (!$defect) {
             throw new NotFoundException('Defect', $defectId);
@@ -137,9 +124,8 @@ class MotTestReasonForRejectionService
     /**
      * @param MotTest $motTest
      * @param $data
-     * @return MotTestReasonForRejection
-     * @throws BadRequestException
-     * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
+     *
+     * @return int
      */
     public function addReasonForRejection(MotTest $motTest, $data)
     {
@@ -176,22 +162,19 @@ class MotTestReasonForRejectionService
             }
         }
 
-        return $rfr;
+        return $rfr->getId();
     }
 
     /**
-     * @param int $motTestRfrId
+     * @param $motTestRfrId
      * @param $data
      *
-     * @throws BadRequestException
-     * @throws DataValidationException
-     * @throws NotFoundException
-     * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
+     * @return bool|null
      */
-    public function editReasonForRejection(int $motTestRfrId, $data)
+    public function editReasonForRejection($motTestRfrId, $data)
     {
         /** @var MotTestReasonForRejection $rfr */
-        $rfr = $this->motTestReasonForRejectionRepository->find($motTestRfrId);
+        $rfr = $this->entityManager->find(MotTestReasonForRejection::class, $motTestRfrId);
 
         $motTest = $rfr->getMotTest();
 
@@ -219,8 +202,13 @@ class MotTestReasonForRejectionService
         }
 
         if ($this->motTestValidator->validateMotTestReasonForRejection($rfr)) {
-            $this->motTestReasonForRejectionRepository->save($rfr);
+            $this->entityManager->persist($rfr);
+            $this->entityManager->flush();
+
+            return true;
         }
+
+        return;
     }
 
     /**
@@ -232,7 +220,7 @@ class MotTestReasonForRejectionService
      *
      * @return MotTestReasonForRejection
      */
-    public function createRfrFromData($data, MotTest $motTest) : MotTestReasonForRejection
+    public function createRfrFromData($data, MotTest $motTest)
     {
         RequiredFieldException::CheckIfRequiredFieldsNotEmpty([self::RFR_ID_FIELD, self::TYPE_FIELD], $data);
 
@@ -250,9 +238,9 @@ class MotTestReasonForRejectionService
 
         if ($rfrId === null) {
             // "Custom description" field is capped to 100 characters.
-            $motTestRfr->setCustomDescription(
-                (new MotTestReasonForRejectionDescription())
-                    ->setCustomDescription(substr($comment, 0, 100)));
+            $description = new MotTestReasonForRejectionDescription();
+            $description->setCustomDescription(substr($comment, 0, 100));
+            $motTestRfr->setCustomDescription($description);
         }
 
         $motTestRfr->setLocation($this->fetchLocation(ArrayUtils::tryGet($data, self::LATERAL_LOCATION_FIELD),
@@ -267,25 +255,20 @@ class MotTestReasonForRejectionService
         /** @var ReasonForRejectionType $rfrType */
         $rfrType = $this->getRfrType($data[self::TYPE_FIELD], $reasonForRejection);
         $motTestRfr->setType($rfrType);
-        $motTestRfr->setFailureDangerous(
-            $this->getIsFailureDangerous($data, $reasonForRejection, $rfrType->getReasonForRejectionType())
+        $motTestRfr->setFailureDangerous($this->getIsFailureDangerous(
+            $data,
+            $reasonForRejection,
+            $rfrType->getReasonForRejectionType())
         );
 
         return $motTestRfr;
     }
 
-    /**
-     * @param $rfrId
-     *
-     * @return ReasonForRejection|null
-     *
-     * @throws NotFoundException
-     */
     private function getReasonForRejection($rfrId)
     {
         if ($rfrId !== null) {
             /** @var ReasonForRejection $reasonForRejection */
-            $reasonForRejection = $this->rfrRepository->get($rfrId);
+            $reasonForRejection = $this->entityManager->find(ReasonForRejection::class, ['rfrId' => $rfrId]);
 
             if (!$reasonForRejection) {
                 throw new NotFoundException('Reason for Rejection', $rfrId);
@@ -294,15 +277,16 @@ class MotTestReasonForRejectionService
             return $reasonForRejection;
         }
 
-        return null;
+        return;
     }
 
     /**
-     * @param string $typeName
+     * @param $typeName
      * @param ReasonForRejection $reasonForRejection
-     * @return ReasonForRejectionType
+     *
+     * @return null|object
      */
-    private function getRfrType(string $typeName, $reasonForRejection) : ReasonForRejectionType
+    private function getRfrType($typeName, $reasonForRejection)
     {
         $rfrTypeToFind = $typeName;
         if ($reasonForRejection !== null
@@ -311,8 +295,9 @@ class MotTestReasonForRejectionService
             $rfrTypeToFind = ReasonForRejectionTypeName::ADVISORY;
         }
 
-        return $this->reasonForRejectionTypeRepository
-            ->getByType($rfrTypeToFind);
+        return $this->getEntityManager()
+            ->getRepository(ReasonForRejectionType::class)
+            ->findOneBy(['reasonForRejectionType' => $rfrTypeToFind]);
     }
 
     /**
@@ -360,8 +345,7 @@ class MotTestReasonForRejectionService
     public function deleteReasonForRejectionById($motTestNumber, $motTestRfrId)
     {
         /** @var MotTestReasonForRejection $rfrToDelete */
-        $rfrToDelete = $this->motTestReasonForRejectionRepository->find($motTestRfrId);
-
+        $rfrToDelete = $this->entityManager->find(MotTestReasonForRejection::class, $motTestRfrId);
         if (!$rfrToDelete instanceof MotTestReasonForRejection) {
             throw new NotFoundException(sprintf('Unable to fetch an MotTestReasonForRejection with ID "%s"',
                 $motTestRfrId));
@@ -394,11 +378,12 @@ class MotTestReasonForRejectionService
                 throw new BadRequestException(sprintf('Field "%s" is not valid: "%s"', $name, $value),
                     BadRequestException::ERROR_CODE_INVALID_DATA);
             }
+
             unset($name, $value);
         }
 
         /** @var MotTestReasonForRejection $motTestRfr */
-        $motTestRfr = $this->motTestReasonForRejectionRepository->find($motTestRfrId);
+        $motTestRfr = $this->entityManager->getRepository(MotTestReasonForRejection::class)->find($motTestRfrId);
         if (!$motTestRfr instanceof MotTestReasonForRejection) {
             throw new NotFoundException('MotTestReasonForRejection', sprintf('id: %d'.$motTestRfrId));
         }
@@ -426,8 +411,7 @@ class MotTestReasonForRejectionService
         }
 
         /** @var MotTestReasonForRejection $motTestRfr */
-        $motTestRfr = $this->motTestReasonForRejectionRepository->find($motTestRfrId);
-
+        $motTestRfr = $this->entityManager->getRepository(MotTestReasonForRejection::class)->find($motTestRfrId);
         if (!$motTestRfr instanceof MotTestReasonForRejection) {
             throw new NotFoundException(sprintf('Unable to fetch an MotTestReasonForRejection with ID "%s"',
                 $motTestRfrId));
@@ -499,8 +483,7 @@ class MotTestReasonForRejectionService
     {
         // Added null check until null check is resolved in createRfrFromData
         if ($motTestRfr->getReasonForRejection() !== null) {
-
-            $reasonForRejection = $this->rfrRepository->get(
+            $reasonForRejection = $this->testItemSelectorService->getReasonForRejectionById(
                 $motTestRfr->getReasonForRejection()->getRfrId()
             );
 
@@ -521,7 +504,7 @@ class MotTestReasonForRejectionService
     {
         $testTypeCode = $motTest->getMotTestType()->getCode();
 
-        return $testTypeCode == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING;
+        return $testTypeCode == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING ? true : false;
     }
 
     /**
@@ -533,8 +516,9 @@ class MotTestReasonForRejectionService
      */
     private function fetchLocation($lateral, $longitudinal, $vertical)
     {
-        $location = $this->motTestReasonForRejectionLocationRepository
-            ->getLocation($lateral, $longitudinal, $vertical);
+        $location = $this->getEntityManager()->getRepository(MotTestReasonForRejectionLocation::class)->getLocation(
+            $lateral, $longitudinal, $vertical
+        );
 
         if (!$location) {
             $location = new MotTestReasonForRejectionLocation();
@@ -576,7 +560,7 @@ class MotTestReasonForRejectionService
             return false;
         }
 
-        return (in_array($motTestRfrId, ReasonForRejectionConstants::BRAKE_PERFORMANCE_NOT_TESTED_RFR_IDS));
+        return (in_array($motTestRfrId, ReasonForRejectionConstants::BRAKE_PERFORMANCE_NOT_TESTED_RFR_IDS)) ? true : false;
     }
 
     /**
@@ -584,7 +568,8 @@ class MotTestReasonForRejectionService
      */
     private function clearBrakeTestResults(MotTest $motTest)
     {
-        $this->brakeTestResultsHelper->deleteAllBrakeTestResults($motTest);
+        $brakeTestsHelper = new BrakeTestResultsHelper($this->entityManager);
+        $brakeTestsHelper->deleteAllBrakeTestResults($motTest);
         $this->deleteAllGeneratedRfrs($motTest);
     }
 
@@ -593,7 +578,8 @@ class MotTestReasonForRejectionService
      */
     private function deleteAllGeneratedRfrs(MotTest $motTest)
     {
-        $generatedRfrs = $this->motTestReasonForRejectionRepository->findBy(['generated' => true, 'motTestId' => $motTest->getId()]);
+        $rfrRepository = $this->entityManager->getRepository(MotTestReasonForRejection::class);
+        $generatedRfrs = $rfrRepository->findBy(['generated' => true, 'motTestId' => $motTest->getId()]);
         foreach ($generatedRfrs as $rfr) {
             $this->removeReasonForRejection($rfr);
         }

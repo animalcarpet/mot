@@ -14,7 +14,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  * ReasonForRejectionType.
  *
  * @ORM\Table(name="reason_for_rejection_type")
- * @ORM\Entity(readOnly=true, repositoryClass="DvsaEntities\Repository\ReasonForRejectionTypeRepository")
+ * @ORM\Entity(readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
  */
 class ReasonForRejectionType

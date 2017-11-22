@@ -16,7 +16,6 @@ use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
-use DvsaEntities\Entity\RfrDeficiencyCategory;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\RfrRepository;
@@ -27,36 +26,27 @@ use DvsaMotApi\Service\ReasonForRejection\ReasonForRejectionTypeConverterService
 /**
  * Class TestItemSelectorService.
  */
-class TestItemSelectorService
+class TestItemSelectorService extends AbstractService
 {
     const ROOT_SELECTOR_ID = 0;
     const RECURSION_MAX_LEVEL = 100;
 
-    /** @var DoctrineHydrator */
     protected $objectHydrator;
-
-    /** @var AuthorisationServiceInterface */
     protected $authService;
-
     protected $motTestMapper;
 
     /** @var RfrRepository */
     private $rfrRepository;
-
-    /** @var TestItemCategoryRepository */
     private $testItemCategoryRepository;
-
-    /** @var array */
     private $disabledRfrs = [];
 
-    /** @var DefectSentenceCaseConverter */
+    /**
+     * @var DefectSentenceCaseConverter
+     */
     private $defectSentenceCaseConverter;
 
     /** @var MotConfig */
     private $motConfig;
-
-    /** @var EntityManager */
-    private $entityManager;
 
     public function __construct(
         EntityManager $entityManager,
@@ -68,7 +58,8 @@ class TestItemSelectorService
         DefectSentenceCaseConverter $defectSentenceCaseConverter,
         MotConfig $motConfig
     ) {
-        $this->entityManager = $entityManager;
+        parent::__construct($entityManager);
+
         $this->objectHydrator = $objectHydrator;
         $this->rfrRepository = $rfrRepository;
         $this->authService = $authService;
@@ -368,6 +359,24 @@ class TestItemSelectorService
         return $returnTestItemSelector;
     }
 
+    /**
+     * @param int $rfrId
+     *
+     * @return null|ReasonForRejection
+     *                                 TODO move to RfrRepository
+     */
+    public function getReasonForRejectionById($rfrId)
+    {
+        if ($this->shouldHideRfr($rfrId)) {
+            return;
+        }
+
+        $reasonForRejection = $this->entityManager->getRepository(ReasonForRejection::class)
+            ->findOneBy(['rfrId' => $rfrId]);
+
+        return $reasonForRejection;
+    }
+
     protected function determineRole()
     {
         $role = SearchReasonForRejectionInterface::TESTER_ROLE_FLAG;
@@ -404,7 +413,7 @@ class TestItemSelectorService
         return $applicable;
     }
 
-    public function shouldHideRfr($rfrId)
+    private function shouldHideRfr($rfrId)
     {
         return in_array($rfrId, $this->disabledRfrs);
     }

@@ -11,7 +11,6 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaMotApi\Dto\Builders\DefectDtoBuilder;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
@@ -82,8 +81,7 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
             $motTestNumber = $this->params()->fromRoute('motTestNumber', null);
             $motTest = $this->getMotTestService()->getMotTest($motTestNumber);
 
-            /** @var MotTestReasonForRejection $result */
-            $result = $service->addReasonForRejection($motTest, $data)->getId();
+            $result = $service->addReasonForRejection($motTest, $data);
 
             return ApiResponse::jsonOk($result);
         }
