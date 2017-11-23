@@ -695,10 +695,12 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20227,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20228,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20229,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20230,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20231,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20232,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20233,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20234,3,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20234,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20235,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20236,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20237,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20238,3,@app_user_id);
@@ -797,6 +799,7 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20346,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20347,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20348,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20349,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20350,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20352,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20353,3,@app_user_id);
@@ -804,12 +807,15 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20355,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20356,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20357,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20358,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20359,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20361,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20362,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20363,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20364,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20365,3,@app_user_id);
+#20366 added for class 3 even tho xls said N
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20367,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20368,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20369,3,@app_user_id);
@@ -817,9 +823,15 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20371,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20374,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20376,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20379,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20380,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20381,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20414,3,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20381,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20417,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20418,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20419,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20420,3,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20421,3,@app_user_id);
+
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20000,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20001,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20002,4,@app_user_id);
@@ -1169,6 +1181,7 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20346,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20347,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20348,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20349,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20350,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20351,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20352,4,@app_user_id);
@@ -1177,13 +1190,15 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20355,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20356,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20357,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20358,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20359,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20360,4,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20360,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20361,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20362,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20363,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20364,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20365,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20367,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20368,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20369,4,@app_user_id);
@@ -1232,9 +1247,26 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20412,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20413,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20414,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20415,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20416,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20417,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20418,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20419,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20420,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20421,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20422,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20423,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20424,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20425,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20426,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20427,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20428,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20429,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20430,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20431,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20432,4,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20433,4,@app_user_id);
+
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20000,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20001,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20002,5,@app_user_id);
@@ -1375,6 +1407,7 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20137,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20138,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20139,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20140,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20143,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20145,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20146,5,@app_user_id);
@@ -1466,6 +1499,7 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20232,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20233,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20234,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20235,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20236,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20237,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20238,5,@app_user_id);
@@ -1590,8 +1624,10 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20358,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20359,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20360,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20361,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20364,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20365,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20367,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20368,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20369,5,@app_user_id);
@@ -1602,7 +1638,7 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20374,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20376,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20377,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20378,5,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20378,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20379,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20380,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20381,5,@app_user_id);
@@ -1651,6 +1687,14 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20424,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20425,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20426,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20427,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20428,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20429,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20430,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20431,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20432,5,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20433,5,@app_user_id);
+
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20000,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20001,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20002,7,@app_user_id);
@@ -1791,6 +1835,7 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20137,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20138,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20139,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20140,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20143,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20145,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20146,7,@app_user_id);
@@ -1882,6 +1927,7 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20232,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20233,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20234,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20235,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20236,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20237,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20238,7,@app_user_id);
@@ -2005,8 +2051,10 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20357,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20359,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20360,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20361,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20364,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20365,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20367,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20368,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20369,7,@app_user_id);
@@ -2017,12 +2065,12 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20374,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20376,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20377,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20378,7,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20378,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20379,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20380,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20381,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20382,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20383,7,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20382,7,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20383,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20384,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20385,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20386,7,@app_user_id);
@@ -2054,42 +2102,12 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20412,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20413,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20414,7,@app_user_id);
-
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20366,7,@app_user_id);
-
-#Temporary assignment of vehicle class to components not defined fully in spreadhseet.
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20427,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20427,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20427,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20427,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20428,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20428,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20428,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20428,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20429,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20429,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20429,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20429,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20430,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20430,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20430,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20430,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20431,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20431,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20431,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20431,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20432,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20432,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20432,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20432,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20433,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20433,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20433,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20433,7,@app_user_id);
-
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20416,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20417,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20418,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20419,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20420,7,@app_user_id);
+INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20421,7,@app_user_id);
 
 #new test ti_language_content_map entries
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20000,1,'Identification of the vehicle',NULL,@app_user_id);
@@ -2171,7 +2189,7 @@ INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`languag
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20076,1,'Rbt (sp)',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20077,1,'Service brake performance','Service brake:',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20078,1,'Service brake imbalance','Brakes imbalanced',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20079,1,'Decelerometer (sp)Service brake performance','Service brake',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20079,1,'Decelerometer (sp)','Service brake',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20080,1,'Plate brake tester (sp)',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20081,1,'Service brake performance','Service brake',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20082,1,'Service brake imbalance','Brakes imbalanced',@app_user_id);
@@ -2191,10 +2209,10 @@ INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`languag
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20096,1,'Parking brake efficiency (Trikes, quads and pre-68 vehicles)','Parking',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20097,1,'Parking brake performance not tested','Parking brake performance',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20098,1,'Parking brake efficiency sp)',NULL,@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20099,1,'Rbt (sp)Parking brake performance','Parking brake',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20100,1,'Decelerometer (sp)Parking brake performance','Parking brake',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20101,1,'Plate brake tester (sp)Parking brake performance','Parking brake',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20102,1,'Gradient tester (sp)Parking brake performance','Parking brake',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20099,1,'Rbt (sp)','Parking brake',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20100,1,'Decelerometer (sp)','Parking brake',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20101,1,'Plate brake tester (sp)','Parking brake',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20102,1,'Gradient tester (sp)','Parking brake',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20103,1,'Additional braking device','Additional braking device',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20104,1,'Anti-lock braking system',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20105,1,'Electronic braking system',NULL,@app_user_id);
@@ -2304,9 +2322,9 @@ INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`languag
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20209,1,'Rear reflectors','Rear reflector',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20210,1,'Mandatory tell-tales',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20211,1,'Main beam tell-tale','Main beam tell-tale',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20212,1,'Direction indicator tell-tale','Indicator tell tale',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20213,1,'Hazard warning tell tale','Hazard warning tell tale',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20214,1,'Rear fog lamp tell tale','Rear fog lamp tell tale',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20212,1,'Direction indicator tell-tale','Indicator tell-tale',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20213,1,'Hazard warning tell-tale','Hazard warning tell-tale',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20214,1,'Rear fog lamp tell-tale','Rear fog lamp tell-tale',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20215,1,'Trailer electrical socket','Trailer electrical socket',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20216,1,'Electrical wiring ','Electrical wiring ',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20217,1,'Battery(ies)','Battery',@app_user_id);
@@ -2516,8 +2534,8 @@ INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`languag
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20421,1,'Other leaks','Fluid',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20422,1,'Supplementary Tests for Buses and Coaches',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20423,1,'Doors',NULL,@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20424,1,'Emergency exits (Class 5)','Emergency exit',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20425,1,'Passenger entrance/exit doors (Class 5)','Entrance/exit door',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20424,1,'Emergency exits','Emergency exit',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20425,1,'Passenger entrance/exit doors','Entrance/exit door',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20426,1,'Passenger grab handles','Passenger grab handle',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20427,1,'Steps and stairs',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20428,1,'Steps','Entrance/exit step',@app_user_id);
