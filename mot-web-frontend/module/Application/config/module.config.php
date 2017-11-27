@@ -27,10 +27,12 @@ use DvsaMotEnforcementApi\Controller as Ajax;
 use DvsaMotTest\Controller as MotTest;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Factory\Service\MotChecklistPdfServiceFactory;
+use DvsaMotTest\Factory\Service\ReplacementCertificateDraftServiceFactory;
 use DvsaMotTest\Factory\Service\StartTestChangeServiceFactory;
 use DvsaMotTest\Factory\Service\StartTestSessionServiceFactory;
 use DvsaMotTest\Form\Validator\SpecialNoticePublishDateValidator;
 use DvsaMotTest\Service\MotChecklistPdfService;
+use DvsaMotTest\Service\ReplacementCertificateDraftService;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\StartTestSessionService;
 use Application\Service\CanTestWithoutOtpService;
@@ -970,7 +972,8 @@ return [
             StartTestSessionService::class => StartTestSessionServiceFactory::class,
             PhpRenderer::class => MotPhpRendererFactory::class,
             SubmitBrakeTestConfigurationAction::class => SubmitBrakeTestConfigurationActionFactory::class,
-            ViewBrakeTestConfigurationAction::class => ViewBrakeTestConfigurationActionFactory::class
+            ViewBrakeTestConfigurationAction::class => ViewBrakeTestConfigurationActionFactory::class,
+            ReplacementCertificateDraftService::class => ReplacementCertificateDraftServiceFactory::class
         ],
     ],
     'session_namespace_prefixes' => [

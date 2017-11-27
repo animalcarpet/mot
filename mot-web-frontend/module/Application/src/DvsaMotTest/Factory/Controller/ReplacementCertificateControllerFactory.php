@@ -9,6 +9,7 @@ namespace DvsaMotTest\Factory\Controller;
 
 use DvsaMotTest\Controller\ReplacementCertificateController;
 use DvsaMotTest\Model\OdometerReadingViewObject;
+use DvsaMotTest\Service\ReplacementCertificateDraftService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Vehicle\Service\VehicleCatalogService;
@@ -19,17 +20,22 @@ use Vehicle\Service\VehicleCatalogService;
 class ReplacementCertificateControllerFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
+     * @param ServiceLocatorInterface $controllerManager
      * @return ReplacementCertificateController
      */
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
+
+        $replacementCertificateDraftService = $serviceLocator->get(ReplacementCertificateDraftService::class);
         $vehicleCatalogService = $serviceLocator->get(VehicleCatalogService::class);
         $odometerViewObject = new OdometerReadingViewObject();
 
-        return new ReplacementCertificateController($vehicleCatalogService, $odometerViewObject);
+        return new ReplacementCertificateController(
+            $replacementCertificateDraftService,
+            $vehicleCatalogService,
+            $odometerViewObject
+        );
     }
 }
