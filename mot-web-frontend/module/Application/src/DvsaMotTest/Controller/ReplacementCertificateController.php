@@ -33,6 +33,7 @@ use DvsaMotTest\Dto\MotPrintModelDto;
 use DvsaMotTest\Form\VrmUpdateForm;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
+use DvsaMotTest\Service\ReplacementCertificateDraftService;
 use DvsaMotTest\View\Model\MotPrintModel;
 use DvsaMotTest\View\ReplacementMakeViewModel;
 use DvsaMotTest\View\ReplacementSiteViewModel;
@@ -64,23 +65,27 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     /** @var VehicleCatalogService */
     private $vehicleCatalogService;
 
-    /**
-     * @var OdometerReadingViewObject
-     */
+    /** @var OdometerReadingViewObject */
     private $odometerViewObject;
+
+    /** @var ReplacementCertificateDraftService */
+    private $replacementCertificateDraftService;
 
     /**
      * ReplacementCertificateController constructor.
      *
-     * @param VehicleCatalogService     $vehicleCatalogService
+     * @param ReplacementCertificateDraftService $replacementCertificateDraftService
+     * @param VehicleCatalogService $vehicleCatalogService
      * @param OdometerReadingViewObject $odometerViewObject
      */
     public function __construct(
+        ReplacementCertificateDraftService $replacementCertificateDraftService,
         VehicleCatalogService $vehicleCatalogService,
         OdometerReadingViewObject $odometerViewObject
     ) {
         $this->vehicleCatalogService = $vehicleCatalogService;
         $this->odometerViewObject = $odometerViewObject;
+        $this->replacementCertificateDraftService = $replacementCertificateDraftService;
     }
 
     /**
@@ -146,20 +151,13 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                     $isOriginalTester = $this->getIdentity()->getUserId() === $testerDto->getId();
                     if (!$isOriginalTester) {
                         $diffTesterReasonCode = $this->params()->fromPost('reasonForDifferentTester');
-                        $data = ['reasonForDifferentTester' => $diffTesterReasonCode];
-                        $this->getRestClient()->put(
-                            UrlBuilder::replacementCertificateDraft($id, $motTestNumber),
-                            $data
-                        );
+                        $this->replacementCertificateDraftService
+                            ->updateDraftReasonForDifferentTester($id, $motTestNumber, $diffTesterReasonCode);
                     }
                 }
 
                 $otp = $this->params()->fromPost('oneTimePassword');
-                $data = ['oneTimePassword' => $otp];
-                $this->getRestClient()->post(
-                    UrlBuilder::replacementCertificateDraftApply($id, $motTestNumber),
-                    $data
-                );
+                $this->replacementCertificateDraftService->applyDraft($id, $motTestNumber, $otp);
 
                 return $this->redirect()->toUrl($urlFinish);
             } catch (OtpApplicationException $e) {
@@ -243,7 +241,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
         $differentTesterReasons = [];
         if (!$isOriginalTester) {
-            $reasons = $this->getRestClient()->get('cert-change-diff-tester-reason')['data'];
+            $reasons = $this->replacementCertificateDraftService->getChangeOfTesterReasons();
 
             foreach ($reasons as $r) {
                 $differentTesterReasons[$r['code']] = $r['description'];
@@ -310,6 +308,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         $draft = $this->getDraftData($id, $motTestNumber);
 
         if ($this->getRequest()->isPost()) {
+            // TODO: This condition will never be true -- an exception will be raised with getDraftData if ID is null
             if ($id === null) {
                 return $this->createDraft($this->params()->fromPost('motTestNumber'));
             }
@@ -341,10 +340,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
      */
     private function createDraft($motTestNumber)
     {
-        $draftId = $this->getRestClient()->post(
-            UrlBuilder::replacementCertificateDraft(null, $motTestNumber),
-            ['motTestNumber' => $motTestNumber]
-        )['data']['id'];
+        $draftId = $this->replacementCertificateDraftService->createDraft($motTestNumber);
 
         return $this->redirectToDraft($draftId, $motTestNumber);
     }
@@ -427,10 +423,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                     }
                 }
 
-                $this->getRestClient()->put(
-                    UrlBuilder::replacementCertificateDraft($id, $motTestNumber),
-                    $result
-                );
+                $this->replacementCertificateDraftService->updateDraft($id, $motTestNumber, $result);
             } catch (ValidationException $ve) {
                 $this->addErrorMessages($ve->getDisplayMessages());
 
@@ -442,8 +435,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             }
         }
 
-        $apiUrl = UrlBuilder::replacementCertificateDraftDiff($id, $motTestNumber);
-        $diff = $this->getRestClient()->get($apiUrl)['data'];
+        $diff = $this->replacementCertificateDraftService->getDraftDiff($id, $motTestNumber);
 
         if (empty($diff)) {
             $this->addErrorMessages(self::INTACT_CERT_DETAIL);
@@ -544,9 +536,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
      */
     private function getDraftData($id, $motTestNumber)
     {
-        $apiPath = UrlBuilder::replacementCertificateDraft($id, $motTestNumber);
-
-        return ArrayUtils::tryGet($this->getRestClient()->get((string) $apiPath), 'data');
+        return $this->replacementCertificateDraftService->getDraft($id, $motTestNumber);
     }
 
     /**
@@ -614,12 +604,9 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         $this->odometerViewObject->setUnit($draft['odometerReading']['unit']);
         $this->odometerViewObject->setResultType($draft['odometerReading']['resultType']);
 
-        $apiUrl = MotTestUrlBuilder::odometerReadingModifyCheck($draft['motTestNumber'])->toString();
-
         if (!$this->hasAdminRights()) {
-            $apiResult = $this->getRestClient()->get($apiUrl);
-
-            $odometerModifiable = $apiResult['data']['modifiable'];
+            $odometerModifiable = $this->replacementCertificateDraftService
+                ->isOdometerReadingEditable($draft['motTestNumber']);
             $this->odometerViewObject->setModifiable($odometerModifiable);
         }
 
