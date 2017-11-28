@@ -526,13 +526,11 @@ class MotTestStatusChangeService implements TransactionAwareInterface, AutoWirea
                 $motTest = $this->updateMotTestVehicleWeight($motTest);
             }
 
-            if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
-                if ($this->shouldAmendVehicleWeightInVehicle($motTest)) {
-                    $vehicle = $this->updateVehicleVehicleWeight($motTest);
-
-                    $motTest->setVehicleVersion($vehicle->getVersion());
-                }
+            if ($this->shouldAmendVehicleWeightInVehicle($motTest)) {
+                $vehicle = $this->updateVehicleVehicleWeight($motTest);
+                $motTest->setVehicleVersion($vehicle->getVersion());
             }
+
         }
 
         //  --  create ReasonForRejection RRS MOT test clone    --
@@ -693,14 +691,10 @@ class MotTestStatusChangeService implements TransactionAwareInterface, AutoWirea
             return false;
         }
 
-        if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
-            // we copy all values from BrakeTestResults table to mot_test_current
-            // there is additional mapping logic on saving actual weightSource on saving brakeTestResults
-            return true;
-        }
+        // we copy all values from BrakeTestResults table to mot_test_current
+        // there is additional mapping logic on saving actual weightSource on saving brakeTestResults
+        return true;
 
-        // this should be removed when feature toggle will be ON by default
-        return $this->hasVsiWeight($motTest, $brakeTestResult) || $this->hasDgwWeight($motTest, $brakeTestResult);
     }
 
     /**
@@ -722,30 +716,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface, AutoWirea
         );
 
         return $isOfficial && $brakeTestResult->getVehicleWeight() != $motTest->getVehicle()->getWeight();
-    }
-
-    /**
-     * @param MotTest         $motTest
-     * @param BrakeTestResult $brakeTestResult
-     *
-     * @return bool
-     */
-    private function hasVsiWeight(MotTest $motTest, BrakeTestResult $brakeTestResult)
-    {
-        return in_array($motTest->getVehicleClass()->getCode(), self::$VEHICLE_WEIGHT_FROM_VSI_VEHICLE_CLASSES)
-            && $brakeTestResult->getWeightType()->getCode() === WeightSourceCode::VSI;
-    }
-
-    /**
-     * @param MotTest         $motTest
-     * @param BrakeTestResult $brakeTestResult
-     *
-     * @return bool
-     */
-    private function hasDgwWeight(MotTest $motTest, BrakeTestResult $brakeTestResult)
-    {
-        return in_array($motTest->getVehicleClass(), self::$VEHICLE_WEIGHT_FROM_DGW_VEHICLE_CLASSES)
-            && $brakeTestResult->getWeightType()->getCode() === WeightSourceCode::DGW;
     }
 
     /**

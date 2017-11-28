@@ -230,13 +230,6 @@ class BrakeTestConfigurationClass3AndAboveTest extends \PHPUnit_Framework_TestCa
         $configurationHelper = new BrakeTestConfigurationClass3AndAboveHelper($dto);
         $configurationHelper->setVehicleClass($vehicleClassCode);
 
-        /** @var FeatureToggles | \PHPUnit_Framework_MockObject_MockObject $featureTogglesMock */
-        $featureTogglesMock = XMock::of(FeatureToggles::class);
-        $featureTogglesMock->expects($this->any())
-            ->method("isEnabled")
-            ->willReturn(true);
-        $configurationHelper->setFeatureToggles($featureTogglesMock);
-
         $this->assertEquals($expectedResult, $configurationHelper->isSelectedWeightType($weightSourceOnList));
     }
 

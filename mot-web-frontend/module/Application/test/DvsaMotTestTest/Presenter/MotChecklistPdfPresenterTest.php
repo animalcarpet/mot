@@ -5,10 +5,8 @@ namespace Application\test\DvsaMotTestTest\Presenter;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Presenter\MotChecklistPdfPresenter;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTestTest\TestHelper\Fixture;
@@ -16,8 +14,6 @@ use DvsaMotTestTest\TestHelper\Fixture;
 
 class MotChecklistPdfPresenterTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var $featureToggles FeatureToggles|\PHPUnit_Framework_MockObject_MockObject  */
-    private $featureToggles;
     /** @var $officialVehicleWeightSpec OfficialWeightSourceForVehicle|\PHPUnit_Framework_MockObject_MockObject */
     private $officialVehicleWeightSpec;
 
@@ -34,10 +30,9 @@ class MotChecklistPdfPresenterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->featureToggles = XMock::of(FeatureToggles::class);
         $this->officialVehicleWeightSpec = XMock::of(OfficialWeightSourceForVehicle::class);
 
-        $this->presenter = new MotChecklistPdfPresenter($this->featureToggles, $this->officialVehicleWeightSpec);
+        $this->presenter = new MotChecklistPdfPresenter($this->officialVehicleWeightSpec);
 
         $this->identity = XMock::of(MotFrontendIdentityInterface::class);
         $this->presenter->setIdentity($this->identity);
@@ -61,21 +56,10 @@ class MotChecklistPdfPresenterTest extends \PHPUnit_Framework_TestCase
      * @dataProvider dataProviderFeatureToggleStatus
      *
      * @param string $classCode
-     * @param bool $featureToggleValue
      */
-    public function testPickVehicleWeight_withFeatureToggle($classCode, $featureToggleValue)
+    public function testPickVehicleWeight_withFeatureToggle($classCode)
     {
-        $this->featureToggles
-            ->expects($this->any())
-            ->method("isEnabled")
-            ->with(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)
-            ->willReturn($featureToggleValue);
-
         $this->setUpPresenterBasedOnClass($classCode);
-
-        $this->officialVehicleWeightSpec
-            ->expects($featureToggleValue === true ? $this->once() : $this->never())
-            ->method('isSatisfiedBy');
 
         $this->presenter->pickVehicleWeight();
     }
@@ -85,9 +69,6 @@ class MotChecklistPdfPresenterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [VehicleClassCode::CLASS_4, true],
-
-            [VehicleClassCode::CLASS_1, false],
-            [VehicleClassCode::CLASS_4, false],
         ];
     }
 

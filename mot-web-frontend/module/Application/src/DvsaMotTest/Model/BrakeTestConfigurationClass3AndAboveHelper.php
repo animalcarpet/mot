@@ -34,11 +34,6 @@ class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurati
      */
     private $configDto;
 
-    /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
-
     public function __construct(ConfigDto $configDto = null)
     {
         if (isset($configDto)) {
@@ -264,9 +259,6 @@ class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurati
 
     public function isSelectedWeightType($weightType)
     {
-        if(empty($this->featureToggles) || !$this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
-            return $weightType == $this->configDto->getWeightType();
-        }
 
         if(empty($weightType) || empty($this->configDto->getWeightType())) {
             return false;
@@ -303,12 +295,4 @@ class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurati
         $this->vehicleClass = $vehicleClass;
     }
 
-    /**
-     * We inject feature toggles through setter, so we don't need to modify way this helper is constructed
-     * @param FeatureToggles $featureToggles
-     */
-    public function setFeatureToggles($featureToggles)
-    {
-        $this->featureToggles = $featureToggles;
-    }
 }

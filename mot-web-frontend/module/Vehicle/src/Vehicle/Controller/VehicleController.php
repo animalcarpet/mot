@@ -11,15 +11,12 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaClient\Mapper\VehicleExpiryMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
-use DvsaCommon\Model\VehicleClassGroup;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use GuzzleHttp\Exception\ClientException;
 use Vehicle\Helper\VehicleViewModelBuilder;
@@ -69,9 +66,6 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
     /** @var OfficialWeightSourceForVehicle $officialWeightSourceSpec */
     private $officialWeightSourceSpec;
 
-    /** @var FeatureToggles */
-    private $featureToggles;
-
     /**
      * VehicleController constructor.
      *
@@ -82,7 +76,6 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
      * @param VehicleViewModelBuilder $vehicleTableBuilder
      * @param VehicleExpiryMapper $vehicleExpiryMapper
      * @param OfficialWeightSourceForVehicle $officialWeightSourceSpec
-     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         ParamObfuscator $paramObfuscator,
@@ -91,8 +84,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         MotAuthorisationServiceInterface $authorisationService,
         VehicleViewModelBuilder $vehicleTableBuilder,
         VehicleExpiryMapper $vehicleExpiryMapper,
-        OfficialWeightSourceForVehicle $officialWeightSourceSpec,
-        FeatureToggles $featureToggles
+        OfficialWeightSourceForVehicle $officialWeightSourceSpec
     ) {
         $this->paramObfuscator = $paramObfuscator;
         $this->vehicleService = $vehicleService;
@@ -101,7 +93,6 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         $this->vehicleTableBuilder = $vehicleTableBuilder;
         $this->vehicleExpiryMapper = $vehicleExpiryMapper;
         $this->officialWeightSourceSpec = $officialWeightSourceSpec;
-        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -128,7 +119,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         try {
             /** @var VehicleService $vehicleService */
             $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
-            $this->setVehicleWeight($vehicleId, $vehicle);
+            $this->setVehicleWeight($vehicle);
 
             $expiryDateForVehicle = $this->vehicleExpiryMapper->getExpiryForVehicle($vehicleId);
         } catch (ValidationException $e) {
@@ -240,40 +231,11 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
     }
 
     /**
-     * @param $vehicleId
      * @param $vehicle
      */
-    private function setVehicleWeight($vehicleId, DvsaVehicle $vehicle)
-    {
-        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)){
-            $this->setWeightWhenFeatureToggleEnabled($vehicle);
-        }
-        else {
-            $this->setWeightWhenFeatureToggleDisabled($vehicleId, $vehicle);
-        }
-    }
-
-    /**
-     * @param DvsaVehicle $vehicle
-     */
-    private function setWeightWhenFeatureToggleEnabled(DvsaVehicle $vehicle)
+    private function setVehicleWeight(DvsaVehicle $vehicle)
     {
         if(!$this->officialWeightSourceSpec->isSatisfiedBy($vehicle)){
-            $vehicle->setWeight(self::UNKNOWN_TEST);
-        }
-    }
-
-    /**
-     * @param $vehicleId
-     * @param DvsaVehicle $vehicle
-     */
-    private function setWeightWhenFeatureToggleDisabled($vehicleId, DvsaVehicle $vehicle)
-    {
-        $vehicleTestWeight = $this->motTestServiceClient->getVehicleTestWeight($vehicleId);
-
-        if (!empty($vehicleTestWeight) && VehicleClassGroup::isGroupB($vehicle->getVehicleClass()->getCode())) {
-            $vehicle->setWeight($vehicleTestWeight);
-        } else {
             $vehicle->setWeight(self::UNKNOWN_TEST);
         }
     }

@@ -863,20 +863,10 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
      */
     protected function canDisplayVehicleWeight()
     {
-        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE))
-        {
-            return
-                !empty($this->vehicleDetails->getWeight()) &&
-                VehicleClassGroup::isGroupB($this->vehicleDetails->getVehicleClass()->getCode()) &&
-                $this->officialWeightSourceForVehicleSpec->isSatisfiedBy($this->vehicleDetails);
-        }
-        else
-        {
-            return
-                !empty($this->vehicleDetails->getWeight()) &&
-                VehicleClassGroup::isGroupB($this->vehicleDetails->getVehicleClass()->getCode());
-        }
-
+        return
+            !empty($this->vehicleDetails->getWeight()) &&
+            VehicleClassGroup::isGroupB($this->vehicleDetails->getVehicleClass()->getCode()) &&
+            $this->officialWeightSourceForVehicleSpec->isSatisfiedBy($this->vehicleDetails);
     }
 
     /**
@@ -896,25 +886,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     {
         $this->vehicleDetails = $this->getVehicleServiceClient()->getDvsaVehicleById($vehicleId);
 
-        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)){
-            // we don't need overwrite the vehicle weight from mot_test_current table anymore
-            return;
-        }
-
-        // To be removed after feature toggle clean up
-        $this->overwriteDvsaVehicleWeightFromMotTestData($vehicleId);
+        // we don't need overwrite the vehicle weight from mot_test_current table anymore
+        return;
     }
-
-    /**
-     * @param $vehicleId
-     * @deprecated this method should be removed when FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE will be enabled by default
-     */
-    private function overwriteDvsaVehicleWeightFromMotTestData($vehicleId)
-    {
-        if ($this->vehicleDetails !== null) {
-            $this->vehicleDetails->setWeight($this->getMotTestServiceClient()->getVehicleTestWeight($vehicleId));
-        }
-    }
-
-
 }
