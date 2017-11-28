@@ -12,7 +12,6 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Action\BrakeTestResults\SubmitBrakeTestConfigurationAction;
 use DvsaMotTest\Controller\BrakeTestResultsController;
 use DvsaMotTest\Controller\MotTestController;
@@ -33,9 +32,6 @@ class SubmitBrakeTestConfigurationActionTest extends TestCase
     /** @var stdClass $motTestData */
     private $motTestData;
 
-    /** @var FeatureToggles|MockObject */
-    private $featureToggles;
-
     /** @var OfficialWeightSourceForVehicle|MockObject */
     private $officialWeightSourceForVehicle;
 
@@ -52,11 +48,9 @@ class SubmitBrakeTestConfigurationActionTest extends TestCase
         $this->motTestData->vehicleVersion = 1;
         $this->motTestData->status = MotTestStatusName::ACTIVE;
 
-        $this->featureToggles = XMock::of(FeatureToggles::class);
         $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
 
         $this->brakeTestConfigurationClass3AndAboveMapper = new BrakeTestConfigurationClass3AndAboveMapper(
-            $this->featureToggles,
             $this->officialWeightSourceForVehicle
         );
     }

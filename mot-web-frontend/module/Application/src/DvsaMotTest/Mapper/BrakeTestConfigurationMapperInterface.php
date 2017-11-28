@@ -13,6 +13,9 @@ interface BrakeTestConfigurationMapperInterface
 {
     /**
      * @param MotTest $motTest
+     * @param DvsaVehicle $vehicle - DvsaVehicle is needed for class 3+ to fetch vehicle weight,
+     *          but it's not needed for classes 1 and 2 - therefore null default value for the second param.
+     *          Ideally this interface should be split to accommodate those differences
      *
      * @return BrakeTestConfigurationDtoInterface
      */

@@ -7,12 +7,10 @@ use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Model\VehicleClassGroup;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Model\MotChecklistPdfField;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 
@@ -52,17 +50,10 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
      */
     protected $officialVehicleWeightSourceSpec;
 
-    /**
-     * @var  FeatureToggles
-     */
-    protected $featureToggles;
-
     public function __construct(
-        FeatureToggles $featureToggles,
         OfficialWeightSourceForVehicle $officialVehicleWeightSourceSpec
     )
     {
-        $this->featureToggles = $featureToggles;
         $this->officialVehicleWeightSourceSpec = $officialVehicleWeightSourceSpec;
     }
 
@@ -135,12 +126,7 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
 
     public function pickVehicleWeight()
     {
-        if($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)){
-            return $this->checkVehicleWeightIsAppropriateAndDisplay();
-        }
-        else{
-            return $this->displayVehicleWeightWithoutCheckingIfAppropriate();
-        }
+        return $this->checkVehicleWeightIsAppropriateAndDisplay();
     }
 
     private function checkVehicleWeightIsAppropriateAndDisplay()

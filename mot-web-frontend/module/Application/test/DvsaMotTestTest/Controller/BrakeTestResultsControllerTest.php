@@ -30,7 +30,6 @@ use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use Zend\Log\Filter\Mock;
 
 /**
  * Class BrakeTestResultsControllerTest.
@@ -47,9 +46,6 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     /** @var ViewBrakeTestConfigurationAction|MockObject $viewBrakeTestConfigurationAction */
     private $viewBrakeTestConfigurationAction;
 
-    /** @var FeatureToggles|MockObject */
-    private $featureToggles;
-
     /** @var OfficialWeightSourceForVehicle|MockObject */
     private $officialWeightSourceForVehicle;
 
@@ -60,10 +56,8 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     {
         $this->submitBrakeTestConfigurationAction = XMock::of(SubmitBrakeTestConfigurationAction::class);
         $this->viewBrakeTestConfigurationAction = XMock::of(ViewBrakeTestConfigurationAction::class);
-        $this->featureToggles = XMock::of(FeatureToggles::class);
         $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
         $this->brakeTestConfigurationClass3AndAboveMapper = new BrakeTestConfigurationClass3AndAboveMapper(
-            $this->featureToggles,
             $this->officialWeightSourceForVehicle
         );
 

@@ -788,32 +788,6 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
             [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::dgw(), true, false, true],
             [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::dgw(), true, true, true],
             [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::dgw(), true, true, true],
-
-            //feature toggle OFF
-            // Old login: copy vehicle's weight/weightSource from brakeTestResult to MotTest record only if it's VSI/DGW source (for class3+)
-            [Vehicle::VEHICLE_CLASS_1, WeightSourceFactory::vsi(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_2, WeightSourceFactory::vsi(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::vsi(), true, false, false],
-            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::vsi(), true, false, false],
-            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::vsi(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::vsi(), false, false, false],
-
-            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::presented(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::presented(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::presented(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::presented(), false, false, false],
-
-            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::calculated(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::calculated(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::calculated(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::calculated(), false, false, false],
-
-            [Vehicle::VEHICLE_CLASS_1, WeightSourceFactory::dgw(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_2, WeightSourceFactory::dgw(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_3, WeightSourceFactory::dgw(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_4, WeightSourceFactory::dgw(), false, false, false],
-            [Vehicle::VEHICLE_CLASS_5, WeightSourceFactory::dgw(), true, false, false],
-            [Vehicle::VEHICLE_CLASS_7, WeightSourceFactory::dgw(), true, false, false],
         ];
     }
 

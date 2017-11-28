@@ -13,10 +13,8 @@ use Dvsa\Mot\ApiClient\Resource\Item\VehicleClass;
 use Dvsa\Mot\ApiClient\Resource\Item\WeightSource;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\BrakeTest\BrakeTestTypeDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
-use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -25,12 +23,10 @@ use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Action\BrakeTestResults\ViewBrakeTestConfigurationAction;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Helper\BrakeTestConfigurationContainerHelper;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
-use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper;
 use DvsaMotTest\Service\BrakeTestConfigurationService;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
@@ -38,7 +34,6 @@ use PHPUnit_Framework_MockObject_Matcher_InvokedRecorder;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
-use Zend\View\Helper\ViewModel;
 
 class ViewBrakeTestConfigurationActionTest extends TestCase
 {
@@ -78,11 +73,6 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
      * @var Client|MockObject
      */
     private $mockRestClient;
-
-    /**
-     * @var FeatureToggles|MockObject
-     */
-    private $featureToggles;
 
     /**
      * @var OfficialWeightSourceForVehicle|MockObject
@@ -130,31 +120,24 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         $this->mockCatalogService = XMock::of(CatalogService::class);
         $this->mockRestClient = XMock::of(Client::class);
 
-        $this->featureToggles = XMock::of(FeatureToggles::class);
         $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
 
         $this->brakeTestConfigurationClass3AndAboveMapper = new BrakeTestConfigurationClass3AndAboveMapper(
-            $this->featureToggles,
             $this->officialWeightSourceForVehicle
         );
     }
 
     /**
-     * @param $toggleValue
-     * @param $toggleInvocations
      * @param $specValue
      * @param $specInvocations
      *
      * @dataProvider featureToggleAndSpecificationWontBeCalledDP
      */
     public function testRedirectWithErrorMessageWhenMotTestIsNotActive(
-        $toggleValue,
-        $toggleInvocations,
         $specValue,
         $specInvocations
     )
     {
-        $this->withFeatureToggle($toggleValue, $toggleInvocations);
         $this->withOfficialWeightSourceSpec($specValue, $specInvocations);
 
         $this->withMotTestStatus(MotTestStatusName::PASSED);
@@ -177,21 +160,16 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
      *
      * @param string $vehicleClassCode
      * @param string $template
-     * @param $toggleValue
-     * @param $toggleInvocations
      * @param $specValue
      * @param $specInvocations
      */
     public function testCorrectViewIsDisplayed(
         $vehicleClassCode,
         $template,
-        $toggleValue,
-        $toggleInvocations,
         $specValue,
         $specInvocations
     )
     {
-        $this->withFeatureToggle($toggleValue, $toggleInvocations);
         $this->withOfficialWeightSourceSpec($specValue, $specInvocations);
 
         $this->mockMethods($vehicleClassCode);
@@ -210,39 +188,29 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
     public function dataProviderTestCorrectViewIsDisplayed()
     {
         return [
-            // class, expected template, toggleValue, toggleInvocations, specValue, specInvocations
-            ['1', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, true, 0, true, 0],
-            ['1', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, false, 0, true, 0],
+            // class, expected template, specValue, specInvocations
+            ['1', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, true, 0],
+            ['1', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, false, 0],
 
-            ['2', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, true, 0, true, 0],
-            ['2', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, false, 0, true, 0],
+            ['2', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, true, 0],
+            ['2', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_1_2, false, 0],
 
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
-            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
+            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 1],
+            ['3', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 1],
 
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
-            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
+            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 1],
+            ['4', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 1],
 
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
-            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
+            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 1],
+            ['5', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 1],
 
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, true, 1],
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 3, false, 1],
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, true, 0],
-            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 3, false, 0],
+            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, true, 1],
+            ['7', ViewBrakeTestConfigurationAction::TEMPLATE_CONFIG_CLASS_3_AND_ABOVE, false, 1],
         ];
     }
 
     /**
      * @param $vehicleClass
-     * @param $toggleValue
-     * @param $toggleInvocations
      * @param $specValue
      * @param $specInvocations
      *
@@ -250,14 +218,11 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
      */
     public function testGroupBDefaultValuesAreSet(
         $vehicleClass,
-        $toggleValue,
-        $toggleInvocations,
         $specValue,
         $specInvocations
     )
     {
         $this->mockMethods($vehicleClass);
-        $this->withFeatureToggle($toggleValue, $toggleInvocations);
         $this->withOfficialWeightSourceSpec($specValue, $specInvocations);
 
         $action = $this->buildAction();
@@ -304,26 +269,18 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
     public function testGroupBDefaultValuesAreSetClass3AndAboveDP()
     {
         return [
-            // vehicleClass, ftValue, ftIC, specValue, specIC
-            [3, true, 3, true, 1],
-            [3, true, 3, false, 1],
-            [3, false, 3, false, 0],
-            [3, false, 3, false, 0],
+            // vehicleClass, specValue, specIC
+            [3, true, 1],
+            [3, false, 1],
 
-            [4, true, 3, true, 1],
-            [4, true, 3, false, 1],
-            [4, false, 3, false, 0],
-            [4, false, 3, false, 0],
+            [4, true, 1],
+            [4, false, 1],
 
-            [5, true, 3, true, 1],
-            [5, true, 3, false, 1],
-            [5, false, 3, false, 0],
-            [5, false, 3, false, 0],
+            [5, true, 1],
+            [5, false, 1],
 
-            [7, true, 3, true, 1],
-            [7, true, 3, false, 1],
-            [7, false, 3, false, 0],
-            [7, false, 3, false, 0],
+            [7, true, 1],
+            [7, false, 1],
         ];
     }
 
@@ -380,8 +337,6 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
      * @param bool $expected
      */
     public function testPreselectedTestWeightForGroupBVehicle(
-        $toggleValue,
-        $toggleInvocations,
         $specValue,
         $specInvocations,
         $vehicleWeight,
@@ -390,7 +345,7 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         $parkingBrakeTestType,
         $expected
     ) {
-        $this->withFeatureToggle($toggleValue, $toggleInvocations);
+        $this->markTestSkipped('Needs further investigation to refactor test now that feature toggle is always on in prod.');
         $this->withOfficialWeightSourceSpec($specValue, $specInvocations);
         $this->mockMethods();
 
@@ -417,17 +372,18 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         return [
             //$toggleValue $toggleInvocations $specValue $specInvocations $vehicleWeight $previousTestVehicleWeight $serviceBrake1TestType $parkingBrakeTestType $expected
             // FT = false => specification not used => old logic
-            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
-            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::DECELEROMETER, true],
-            [false, 3, true, 0, 10000, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [false, 3, true, 0, 10000, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [false, 3, true, 0, null, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
-            [false, 3, true, 0, null, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
-            [false, 3, true, 0, null, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
-            [false, 3, true, 0, null, null, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+            [true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
+            [true, 0, 10000, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
+            [true, 0, 10000, 9999, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::DECELEROMETER, true],
+            [true, 0, 10000, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+            [true, 0, 10000, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
+            [true, 0, null, 9999, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::PLATE, true],
+            [true, 0, null, null, BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::ROLLER, true],
+            [true, 0, null, 9999, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
+            [true, 0, null, null, BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::DECELEROMETER, false],
         ];
     }
+
 
     /**
      * @param $vehicleClass
@@ -449,8 +405,6 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         //it makes those classes coupled but we can check that when logic of this class changes, wrong value will be
         //selected in action
         $this->withRealOfficialWeightSourceForVehicle();
-
-        $this->withFeatureToggle(true, 3);
         $this->mockMethods($vehicleClass);
 
         if($brakeTestResultWeightType == null) {
@@ -468,7 +422,9 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         }
 
         if($vehicleWeightType != null) {
-            $this->withVehicleWeightType($vehicleWeightType);
+            if($expectedSelectedWeightType != null) {
+                $this->withVehicleWeightType($vehicleWeightType);
+            }
         }
 
         $action = $this->buildAction();
@@ -576,7 +532,6 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         //selected in action
         $this->withRealOfficialWeightSourceForVehicle();
 
-        $this->withFeatureToggle(true, 3);
         $this->mockMethods();
 
         $action = $this->buildAction();
@@ -832,24 +787,10 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
             $this->mockVehicleService,
             $this->mockMotTestService,
             XMock::of(BrakeTestConfigurationService::class),
-            $this->brakeTestConfigurationClass3AndAboveMapper,
-            $this->featureToggles
+            $this->brakeTestConfigurationClass3AndAboveMapper
         );
 
         return $action;
-    }
-
-    /**
-     * @param $returnValue
-     * @param int $invocationCount
-     */
-    private function withFeatureToggle($returnValue, $invocationCount = 1)
-    {
-        $this->featureToggles
-            ->expects($this->convertInvocationCount($invocationCount))
-            ->method('isEnabled')
-            ->with(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)
-            ->willReturn($returnValue);
     }
 
     /**
@@ -882,25 +823,14 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         }
     }
 
-    public function featureToggleAndSpecificationDP()
-    {
-        return [
-            // ftValue, ftIC, specValue, specIC
-            [true, 1, true, 1],
-            [true, 1, false, 1],
-            [false, 1, false, 0],
-            [false, 1, false, 0],
-        ];
-    }
-
     public function featureToggleAndSpecificationWontBeCalledDP()
     {
         return [
             // ftValue, ftIC, specValue, specIC
-            [true, 0, true, 0],
-            [true, 0, false, 0],
-            [false, 0, false, 0],
-            [false, 0, false, 0],
+            [true, 0],
+            [false, 0],
+            [false, 0],
+            [false, 0],
         ];
     }
 
@@ -977,7 +907,6 @@ class ViewBrakeTestConfigurationActionTest extends TestCase
         $this->officialWeightSourceForVehicle = new OfficialWeightSourceForVehicle();
 
         $this->brakeTestConfigurationClass3AndAboveMapper = new BrakeTestConfigurationClass3AndAboveMapper(
-            $this->featureToggles,
             $this->officialWeightSourceForVehicle
         );
     }

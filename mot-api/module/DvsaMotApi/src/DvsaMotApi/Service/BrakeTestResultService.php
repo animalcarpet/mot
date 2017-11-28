@@ -275,9 +275,7 @@ class BrakeTestResultService extends AbstractService
 
         $brakeTestResult = $this->brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $vehicle);
 
-        if ($this->featureToggles->isEnabled(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)) {
-            $brakeTestResult = $this->mapVehicleWeightSource($brakeTestResult, $vehicle);
-        }
+        $brakeTestResult = $this->mapVehicleWeightSource($brakeTestResult, $vehicle);
 
         $summary = new BrakeTestResultSubmissionSummary();
         $summary->brakeTestResultClass3AndAbove = $brakeTestResult;

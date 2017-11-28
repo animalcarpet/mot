@@ -19,7 +19,6 @@ use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use DvsaMotTestTest\Controller\AbstractDvsaMotTestTestCase;
 use PHPUnit_Framework_Constraint_IsAnything;
@@ -54,9 +53,6 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
     /** @var ParamObfuscator|MockObj $paramObfuscator */
     private $paramObfuscator;
 
-    /** @var FeatureToggles|MockObj */
-    private $featureToggles;
-
     /** @var OfficialWeightSourceForVehicle|MockObj */
     private $officialWeightSourceForVehicle;
 
@@ -90,7 +86,6 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->paramObfuscator = $this->createParamObfuscatorMock(self::$obfuscationMap);
 
-        $this->featureToggles = XMock::of(FeatureToggles::class);
         $this->officialWeightSourceForVehicle = XMock::of(OfficialWeightSourceForVehicle::class);
 
         $this->setController(
@@ -101,8 +96,7 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
                 XMock::of(MotAuthorisationServiceInterface::class),
                 $mockVehicleViewModelBuilder,
                 XMock::of(VehicleExpiryMapper::class),
-                $this->officialWeightSourceForVehicle,
-                $this->featureToggles
+                $this->officialWeightSourceForVehicle
             )
         );
         $this->getController()->setServiceLocator($serviceManager);
@@ -152,10 +146,8 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
      * @param int $weightDp
      * @param bool $isSatisfied
      */
-    public function testVehicleWeightIsDisplayedCorrectlyWithFTOn($vehicleClassDp, $weightSourceDp, $weightDp, $isSatisfied, $featureToggleStatus)
+    public function testVehicleWeightIsDisplayedCorrectly($vehicleClassDp, $weightSourceDp, $weightDp, $isSatisfied)
     {
-        $this->withFeatureToggle($featureToggleStatus);
-
         $vehicle = $this->mockDvsaVehicle($vehicleClassDp, $weightSourceDp, $weightDp);
 
         $this->mockVehicleService
@@ -164,7 +156,7 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
             ->willReturn(new DvsaVehicle($vehicle));
 
         $this->officialWeightSourceForVehicle
-            ->expects(true == $featureToggleStatus ? $this->once() : $this->never())
+            ->expects($this->once())
             ->method('isSatisfiedBy')
             ->willReturn($isSatisfied);
 
@@ -288,7 +280,6 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses($weight, $vehicleClass, $expectedWeight)
     {
-        $this->withFeatureToggle(false);
         $mockDvsaVehicle = XMock::of(DvsaVehicle::class);
 
         $this->mockVehicleService
@@ -315,6 +306,12 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
             ->method('setWeight')
             ->with($expectedWeight)
             ->willReturnSelf();
+
+        $this->officialWeightSourceForVehicle
+            ->expects($this->once())
+            ->method('isSatisfiedBy')
+            ->with($mockDvsaVehicle)
+            ->willReturn(true);
 
         $obfuscatedVehicleId = $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, self::VEHICLE_ID);
 
@@ -374,20 +371,5 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
         );
 
         return $mockParamObfuscator;
-    }
-
-    /**
-     * @param bool $isFeatureToggleEnabled
-     *
-     * @return $this
-     */
-    private function withFeatureToggle($isFeatureToggleEnabled)
-    {
-        $this->featureToggles
-            ->expects($this->once())
-            ->method('isEnabled')
-            ->willReturn($isFeatureToggleEnabled);
-
-        return $this;
     }
 }

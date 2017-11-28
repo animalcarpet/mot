@@ -210,28 +210,15 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      *
      * @param int $weight
      * @param string $vehicleClass
-     * @param boolean $isFeatureToggleEnabled
+     * @param string $weightSource
      * @param int|string $expectedWeight
      */
-    public function testVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses($weight, $vehicleClass, $weightSource, $isFeatureToggleEnabled, $expectedWeight)
+    public function testVehicleWeightIsDisplayedCorrectlyForDifferentVehicleClasses($weight, $vehicleClass, $weightSource, $expectedWeight)
     {
         $this->mockGetIdentity();
         $this->mockGetCombinedAuthorisedClassesForPersonAndVts();
 
         $this->getMockDvsaVehicle($weight, $vehicleClass, $weightSource);
-
-        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
-        $mockMotTestServiceClient
-            ->expects($isFeatureToggleEnabled === true ? $this->never() : $this->once())
-            ->method('getVehicleTestWeight')
-            ->with(self::VEHICLE_ID)
-            ->willReturn($weight);
-
-        $this->featureToggles
-            ->expects($this->exactly(2))
-            ->method('isEnabled')
-            ->with(FeatureToggle::VEHICLE_WEIGHT_FROM_VEHICLE)
-            ->willReturn($isFeatureToggleEnabled);
 
         $resultOfIndexGetAction = $this->getResultForAction2(
             Request::METHOD_GET,
@@ -253,119 +240,68 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     public function dataProviderTestCorrectWeightDisplayedForAppropriateClassAndWeightSource()
     {
         return [
+            //$weight, $vehicleClass, $weightSource, $expectedWeight
             //appropriate weight source
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::VSI,        false, self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::MISW,       false, self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::ORD_MISW,   false, self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::VSI,        false, '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::MISW,       false, '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::ORD_MISW,   false, '1000 kg'],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::VSI,        true,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::MISW,       true,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::ORD_MISW,   true,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::VSI,        true,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::MISW,       true,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::ORD_MISW,   true,  '1000 kg'],
+            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::VSI,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::MISW,       self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::ORD_MISW,   self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::VSI,        '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::MISW,       '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::ORD_MISW,   '1000 kg'],
 
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::VSI,        false, self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::MISW,       false, self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::ORD_MISW,   false, self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::VSI,        false, '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::MISW,       false, '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::ORD_MISW,   false, '1000 kg'],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::VSI,        true,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::MISW,       true,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::ORD_MISW,   true,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::VSI,        true,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::MISW,       true,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::ORD_MISW,   true,  '1000 kg'],
+            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::VSI,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::MISW,       self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::ORD_MISW,   self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::VSI,        '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::MISW,       '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::ORD_MISW,   '1000 kg'],
 
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::VSI,        false, self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::DGW,        false, self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::DGW_MAM,    false, self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW_MAM,false, self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::VSI,        false, '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::DGW,        false, '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::DGW_MAM,    false, '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW_MAM,false, '1000 kg'],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::VSI,        true,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::DGW,        true,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::DGW_MAM,    true,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW_MAM,true,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::VSI,        true,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::DGW,        true,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::DGW_MAM,    true,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW_MAM,true,  '1000 kg'],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::VSI,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::DGW,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::DGW_MAM,    self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW_MAM,self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::VSI,        '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::DGW,        '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::DGW_MAM,    '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW_MAM,'1000 kg'],
 
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::DGW,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::VSI,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::ORD_DGW,   false,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::DGW,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::VSI,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::ORD_DGW,   false,  '1000 kg'],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::DGW,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::VSI,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::ORD_DGW,   true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::DGW,       true,   '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::VSI,       true,   '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::ORD_DGW,   true,   '1000 kg'],
+            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::DGW,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::VSI,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::ORD_DGW,    self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::DGW,        '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::VSI,        '1000 kg'],
+            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::ORD_DGW,    '1000 kg'],
 
             //inappropriate weight source
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::MAM,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::DGW,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::UNLADEN,   false,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::MAM,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::DGW,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::UNLADEN,   false,  '1000 kg'],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::DGW,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::UNLADEN,   true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::DGW,       true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::UNLADEN,   true,   self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::DGW,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_3, WeightSourceCode::UNLADEN,    self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::DGW,        self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_3, WeightSourceCode::UNLADEN,    self::UNKNOWN_TEST],
 
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::MAM,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::DGW,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::UNLADEN,   false,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::MAM,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::DGW,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::UNLADEN,   false,  '1000 kg'],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::DGW,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::UNLADEN,   true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::DGW,       true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::UNLADEN,   true,   self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::DGW,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_4, WeightSourceCode::UNLADEN,    self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::DGW,        self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_4, WeightSourceCode::UNLADEN,    self::UNKNOWN_TEST],
 
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::MAM,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::MISW,      false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW,   false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_MISW,  false,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::MAM,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::MISW,      false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW,   false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_MISW,  false,  '1000 kg'],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::MISW,      true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW,   true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_MISW,  true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::MISW,      true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW,   true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_MISW,  true,   self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::MISW,       self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW,    self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_5, WeightSourceCode::ORD_MISW,   self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::MISW,       self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_DGW,    self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_5, WeightSourceCode::ORD_MISW,   self::UNKNOWN_TEST],
 
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::MAM,       false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::MISW,      false,  self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::ORD_MISW,  false,  self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::MAM,       false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::MISW,      false,  '1000 kg'],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::ORD_MISW,  false,  '1000 kg'],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::MISW,      true,   self::UNKNOWN_TEST],
-            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::ORD_MISW,  true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::MAM,       true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::MISW,      true,   self::UNKNOWN_TEST],
-            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::ORD_MISW,  true,   self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::MISW,       self::UNKNOWN_TEST],
+            [0,     VehicleClassCode::CLASS_7, WeightSourceCode::ORD_MISW,   self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::MAM,        self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::MISW,       self::UNKNOWN_TEST],
+            [1000,  VehicleClassCode::CLASS_7, WeightSourceCode::ORD_MISW,   self::UNKNOWN_TEST],
 
         ];
     }

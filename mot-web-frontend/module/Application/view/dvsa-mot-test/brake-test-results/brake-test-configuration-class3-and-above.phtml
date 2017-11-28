@@ -75,15 +75,9 @@ $this->placeholder('progressBar')->captureEnd();
                     <div class="form-group form-group-related label-reg">
                         <?php foreach ($viewModel->weightTypes as $weightType => $weightTypeName):
                             $hasBrakeTestWeight = false;
-                            if($viewModel->isFeatureToggleOn) {
                                 if ($weightType == $viewModel->selectedWeightType) {
                                     $hasBrakeTestWeight = true;
                                 }
-                            } else {
-                                if ($viewModel->configHelper->isSelectedWeightType($weightType) && $viewModel->preselectBrakeTestWeight) {
-                                    $hasBrakeTestWeight = true;
-                                }
-                            }
                             ?>
                             <label class="block-label label-clear" for="weightType-<?php echo $this->escapeHtml($weightType); ?>">
                                 <input type="radio"

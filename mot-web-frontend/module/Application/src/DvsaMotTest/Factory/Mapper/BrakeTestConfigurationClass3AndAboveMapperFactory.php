@@ -2,7 +2,6 @@
 
 namespace DvsaMotTest\Factory\Mapper;
 
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
 use DvsaMotTest\Specification\OfficialWeightSourceForVehicle;
 use Zend\ServiceManager\FactoryInterface;
@@ -16,13 +15,10 @@ class BrakeTestConfigurationClass3AndAboveMapperFactory implements FactoryInterf
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var FeatureToggles $featureToggles */
-        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
         /** @var OfficialWeightSourceForVehicle $officialWeightSourceForVehicleSpec */
         $officialWeightSourceForVehicleSpec = $serviceLocator->get(OfficialWeightSourceForVehicle::class);
 
         return new BrakeTestConfigurationClass3AndAboveMapper(
-            $featureToggles,
             $officialWeightSourceForVehicleSpec
         );
     }
