@@ -12,5 +12,5 @@ namespace Dvsa\Mot\Frontend;
  */
 class Version
 {
-    const VERSION = '2.11.0';
+    const VERSION = '3.21.0';
 }
