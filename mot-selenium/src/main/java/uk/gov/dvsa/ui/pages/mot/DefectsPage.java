@@ -17,6 +17,10 @@ public class DefectsPage extends AbstractDefectsBasketPage {
     @FindBy(css = "nav.content-navigation a.button") private WebElement finishAndReturnToMOTTestButton;
     @FindBy(css = "nav.content-navigation ul li a") private WebElement returnToDefectCategoriesLink;
     @FindBy(id = "failureDangerous") private WebElement dangerousCheckbox;
+    @FindBy(id = "comment") private WebElement commentTextbox;
+    @FindBy(id = "locationLateral") private WebElement locationLateralDropdown;
+    @FindBy(id = "locationLongitudinal") private WebElement locationLongitudinalDropdown;
+    @FindBy(id = "locationVertical") private WebElement locationVerticalDropdown;
 
     public DefectsPage(MotAppDriver driver) {
         super(driver);
@@ -48,6 +52,11 @@ public class DefectsPage extends AbstractDefectsBasketPage {
         return this;
     }
 
+    public DefectsPage addComment(String comment) {
+        FormDataHelper.enterText(commentTextbox, comment);
+        return this;
+    }
+
     public TestResultsEntryNewPage clickFinishAndReturnButton() {
         finishAndReturnToMOTTestButton.click();
         return new TestResultsEntryNewPage(driver);
@@ -56,5 +65,20 @@ public class DefectsPage extends AbstractDefectsBasketPage {
     public DefectCategoriesPage clickReturnToDefectCategoriesLink() {
         returnToDefectCategoriesLink.click();
         return new DefectCategoriesPage(driver);
+    }
+
+    public DefectsPage setLocationLateral(String locationLateral) {
+        FormDataHelper.selectFromDropDownByVisibleText(locationLateralDropdown, locationLateral);
+        return this;
+    }
+
+    public DefectsPage setLocationLongitudinal(String locationLongitudinal) {
+        FormDataHelper.selectFromDropDownByVisibleText(locationLongitudinalDropdown, locationLongitudinal);
+        return this;
+    }
+
+    public DefectsPage setLocationVertical(String locationVertical) {
+        FormDataHelper.selectFromDropDownByVisibleText(locationVerticalDropdown, locationVertical);
+        return this;
     }
 }

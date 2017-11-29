@@ -103,7 +103,7 @@ Feature: MOT Test
     Given I am logged in as a Tester
     And I start an Mot Test with a Class <class> Vehicle
     And I add a <defect type> to the test
-    When I edit the defect
+    When When I edit all editable fields for the defect
     Then the edited defect is updated
 
     Examples:
