@@ -303,6 +303,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $defaultValues = [];
 
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
+        $motTestNumberToCompare = $this->params()->fromRoute('motTestNumberToCompare');
 
         if ($this->getRequest()->isPost()) {
             try {
@@ -328,10 +329,9 @@ class MotTestController extends AbstractDvsaMotTestController
         }
 
         try {
-            $apiUrl = UrlBuilder::create()->motTest()->routeParam('motTestNumber', $motTestNumber)->motTestCompareById()
-                ->toString();
-            $result = $this->getRestClient()->get($apiUrl);
-
+            $apiUrl = (new UrlBuilder())->compareMotTest()->toString();
+            $params = ["motTestNumber" => $motTestNumber, "motTestNumberToCompare" => $motTestNumberToCompare];
+            $result = $this->getRestClient()->getWithParams($apiUrl, $params);
             $compareResult = $result['data'];
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());

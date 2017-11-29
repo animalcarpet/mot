@@ -50,7 +50,7 @@ $this->headTitle('Mot Test Results');
                     foreach ($this->compareResult as $inspectionManualReference => $rfrs) {
                         $divider = 'dividerThick';
                         foreach ($rfrs as $rfr) {
-                            $isTester = $rfr['testType'] === MotTestTypeCode::NORMAL_TEST || $rfr['testType'] === MotTestTypeCode::MYSTERY_SHOPPER;
+                            $isTester = $rfr['testType'] === MotTestTypeCode::NORMAL_TEST || $rfr['testType'] === MotTestTypeCode::MYSTERY_SHOPPER || $rfr[testType] === MotTestTypeCode::RE_TEST;
                             $rfr['tester'] = ($isTester ? 'Tester' : 'Vehicle Examiner');
                             $rfr['divider'] = $divider;
                             $rfr['description'] = $rfr['name'].' '.$rfr['failureText'];
