@@ -9,6 +9,7 @@ import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.helper.DefectsTestsDataProvider;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.mot.DefectCategoriesPage;
 import uk.gov.dvsa.ui.pages.mot.DefectsPage;
 import uk.gov.dvsa.ui.pages.mot.EditDefectPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
@@ -21,6 +22,14 @@ import static org.hamcrest.core.Is.is;
 
 public class EditDefectsTests extends DslTest {
 
+    public static final String ORIGINAL_TEST_COMMENT = "Original test comment";
+    public static final String NEW_COMMENT_ON_EDIT = "New comment on edit";
+    public static final String LOC_LATERAL_ORIGINAL_NEARSIDE = "Nearside";
+    public static final String LOCATION_LATERAL_EDITED_CENTRAL = "Central";
+    public static final String LOC_LONG_ORIGINAL_FRONT = "Front";
+    public static final String LOC_LONG_EDITED_REAR = "Rear";
+    public static final String LOC_VERTICAL_ORIGINAL_UPPER = "Upper";
+    public static final String LOC_VERTICAL_EDITED_INNER = "Inner";
     protected User tester;
     protected Vehicle vehicle;
 
@@ -111,5 +120,49 @@ public class EditDefectsTests extends DslTest {
 
         // Then I am returned to the test results entry page and the defect has not been edited
         assertThat(testResultsEntryNewPage.isDefectDangerous(defect), is(false));
+    }
+
+    @Test(groups = {"BVT"}, dataProvider = "getDefectArray",
+            description = "Verifies that the new info in an edited defect is saved")
+    public void editDefectSuccessfully(Defect defect) throws IOException, URISyntaxException, InterruptedException {
+
+        //Given I have added a new defect as a tester
+        TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsEntryNewPage(tester,vehicle);
+
+        testResultsEntryNewPage
+                .clickAddDefectButton()
+                .navigateToDefectCategory(defect.getCategoryPath())
+                .navigateToAddDefectPage(defect)
+                .addComment(ORIGINAL_TEST_COMMENT)
+                .setLocationLateral(LOC_LATERAL_ORIGINAL_NEARSIDE)
+                .setLocationLongitudinal(LOC_LONG_ORIGINAL_FRONT)
+                .setLocationVertical(LOC_VERTICAL_ORIGINAL_UPPER)
+                .setIsDangerous()
+                .clickAddDefectButton()
+                .clickFinishAndReturnButton();
+        
+        //When I edit all editable fields for the defect
+        EditDefectPage editDefectPage = testResultsEntryNewPage.navigateToEditDefectPage(defect);
+        assertThat(editDefectPage.getComment(), is(ORIGINAL_TEST_COMMENT));
+        assertThat(editDefectPage.isDangerousChecked(), is(true));
+        assertThat(editDefectPage.getLocationLateral(), is(LOC_LATERAL_ORIGINAL_NEARSIDE));
+        assertThat(editDefectPage.getLocationLongitudinal(), is(LOC_LONG_ORIGINAL_FRONT));
+        assertThat(editDefectPage.getLocationVertical(), is(LOC_VERTICAL_ORIGINAL_UPPER));
+
+        editDefectPage
+                .addComment(NEW_COMMENT_ON_EDIT)
+                .unsetIsDangerous(defect)
+                .setLocationLateral(LOCATION_LATERAL_EDITED_CENTRAL)
+                .setLocationLongitudinal(LOC_LONG_EDITED_REAR)
+                .setLocationVertical(LOC_VERTICAL_EDITED_INNER);
+        editDefectPage.clickEditAndReturnToPage(TestResultsEntryNewPage.class);
+
+        //Then the new details entered on edit are persisted
+        editDefectPage = testResultsEntryNewPage.navigateToEditDefectPage(defect);
+        assertThat(editDefectPage.getComment(), is(NEW_COMMENT_ON_EDIT));
+        assertThat(editDefectPage.isDangerousChecked(), is(false));
+        assertThat(editDefectPage.getLocationLateral(), is(LOCATION_LATERAL_EDITED_CENTRAL));
+        assertThat(editDefectPage.getLocationLongitudinal(), is(LOC_LONG_EDITED_REAR));
+        assertThat(editDefectPage.getLocationVertical(), is(LOC_VERTICAL_EDITED_INNER));
     }
 }

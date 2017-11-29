@@ -15,7 +15,7 @@ class ReasonForRejection extends MotApi
         'locationLateral' => 'nearside',
         'locationLongitudinal' => 'front',
         'locationVertical' => 'upper',
-        'comment' => 'Description',
+        'comment' => 'original comment',
         'failureDangerous' => false,
     ];
 
@@ -80,7 +80,10 @@ class ReasonForRejection extends MotApi
             $rfrId = ReasonForRejectionModel::getGroupB()->getForClass4();
         }
 
+        $this->defaultRfrDetails['locationLateral'] = 'central';
         $this->defaultRfrDetails['locationLongitudinal'] = "rear";
+        $this->defaultRfrDetails['locationVertical'] = "inner";
+        $this->defaultRfrDetails['comment'] = "edited comment";
 
         $body = array_merge(
             [

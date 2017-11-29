@@ -330,7 +330,7 @@ class ReasonForRejectionContext implements Context
     }
 
     /**
-     * @When /^I edit the defect$/
+     * @When /^When I edit all editable fields for the defect$/
      */
     public function iEditTheDefect()
     {
@@ -348,17 +348,17 @@ class ReasonForRejectionContext implements Context
      */
     public function theEditedDefectIsUpdated()
     {
-        $expectedLongitudinalPosition = 'rear';
         $expectedMOT = $this->motTestData->getLast()->getMotTestNumber();
 
         $response = $this->reasonForRejectionData->getLastResponse();
         $requestBody = json_decode($response->getRequest()->getBody());
 
-        $actualPosition = $requestBody->locationLongitudinal;
-        $motURIString = $response->getRequest()->getUriAsSting();
-
-        PHPUnit::assertContains($expectedMOT, $motURIString);
-        PHPUnit::assertSame($expectedLongitudinalPosition, $actualPosition);
+        PHPUnit::assertContains($expectedMOT, $response->getRequest()->getUriAsSting());
+        PHPUnit::assertSame('rear', $requestBody->locationLongitudinal);
+        PHPUnit::assertSame('central', $requestBody->locationLateral);
+        PHPUnit::assertSame('inner', $requestBody->locationVertical);
+        PHPUnit::assertSame('edited comment', $requestBody->comment);
+        PHPUnit::assertSame(false, $requestBody->failureDangerous);
     }
 
     /**
