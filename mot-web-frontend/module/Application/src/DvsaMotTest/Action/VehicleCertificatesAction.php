@@ -13,6 +13,8 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\DuplicateCertificateSearchType;
 use DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto;
 use DvsaCommon\Dto\Vehicle\History\VehicleHistoryMapper;
+use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
@@ -153,6 +155,9 @@ class VehicleCertificatesAction implements AutoWireableInterface
         $vehicleCertificates = $this->getCertificatesFromApi($vehicle->getId());
 
         foreach ($vehicleCertificates as $item) {
+            if ($item->getStatus() === MotTestStatusName::ABANDONED) {
+                continue;
+            }
             $vehicleCertificateRow = new MotTestCertificateTableItem();
             $vehicleCertificateRow->setSiteName($item->getSiteName());
             $vehicleCertificateRow->setTestStatus($item->getDisplayStatus());
