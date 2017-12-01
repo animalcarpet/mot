@@ -57,7 +57,8 @@ class ReasonForRejectionElasticSearchQueryBuilder
                     "bool" => [
                         "must" => [
                             $this->createAudienceFilter($audience),
-                            $this->createDateFilter(),
+                            $this->createStartDateFilter(),
+                            $this->createEndDateFilter(),
                             $this->createVehicleClassesFilter($vehicleClassCode)
                         ]
                     ]
@@ -115,7 +116,25 @@ class ReasonForRejectionElasticSearchQueryBuilder
         ];
     }
 
-    private function createDateFilter(): array
+    private function createStartDateFilter(): array
+    {
+        $today = $this->rfrCurrentDateFaker->getCurrentDateTime()->format(DateTimeApiFormat::FORMAT_ISO_8601_DATE_ONLY);
+
+        return [
+            "bool" => [
+                "should" => [
+                    ["range" =>["startDate" => ["lte" => $today, "format" => "yyyy-MM-dd"]]],
+                    [
+                        "bool" => [
+                            "must_not" => ["exists" => ["field" => "startDate"]]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    private function createEndDateFilter(): array
     {
         $today = $this->rfrCurrentDateFaker->getCurrentDateTime()->format(DateTimeApiFormat::FORMAT_ISO_8601_DATE_ONLY);
 
@@ -123,17 +142,11 @@ class ReasonForRejectionElasticSearchQueryBuilder
             "bool" => [
                 "should" => [
                     ["range" =>["endDate" => ["gt" => $today, "format" => "yyyy-MM-dd"]]],
-                    ["range" =>["startDate" => ["lte" => $today, "format" => "yyyy-MM-dd"]]],
                     [
                         "bool" => [
                             "must_not" => ["exists" => ["field" => "endDate"]]
                         ]
                     ],
-                    [
-                        "bool" => [
-                            "must_not" => ["exists" => ["field" => "startDate"]]
-                        ]
-                    ]
                 ]
             ]
         ];
