@@ -1,6 +1,7 @@
 
 #Adjust start_date to suit your needs. May next year is being used for now.
 set @start_date = '2018-05-20';
+#set @start_date = current_date();
 set @app_user_id = 2;
 
 ALTER table reason_for_rejection
@@ -13762,16 +13763,6 @@ where rfr_language_content_map.language_type_id = 1
 and   rfr_language_content_map.rfr_id > 19999;
 
 
-# Re-instate Non-Component advisories just so that no-one forgets about them.
-# In case they are not covered in new EU manuals properly.
-update test_item_category
-set end_date = null
-where id = 10000;
-
-
-update reason_for_rejection
-set end_date = null
-where test_item_category_id = 10000;
 
 SET @welsh_prefix = 'Welsh: ';
 
@@ -13792,4 +13783,60 @@ FROM rfr_language_content_map
 WHERE rfr_id > 19999
 AND language_type_id = 1;
 
+
+# Re-instate Non-Component advisories just so that no-one forgets about them.
+# In case they are not covered in new EU manuals properly.
+update test_item_category
+set end_date = null
+where id = 10000;
+
+update reason_for_rejection
+set end_date = null
+where test_item_category_id = 10000;
+
+# Re-instate Item Not Tested Components used by VEs
+update test_item_category
+set end_date = null
+where id in (5800, 5801, 5803, 536, 537);
+
+# Add Item Not Tested RFRs used by VEs with correct manual reference for EU Directive
+
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`,`test_item_selector_name_cy`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`section_test_item_selector_id`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30050,536,'Items Not Tested > Emissions - Spark Ignition','Items Not Tested > Emissions - Spark Ignition','8.2.1.2 (d)',0,0,1,1,'0',0,0,1,5800,1,'2014-06-25 10:41:08','B',@start_date,NULL,2,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`,`test_item_selector_name_cy`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`section_test_item_selector_id`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30051,537,'Items Not Tested > Emissions - Compression Ignition','Items Not Tested > Emissions - Compression Ignition','8.2.2.2 (e)',0,0,1,1,'0',0,0,1,5800,1,'2014-06-25 10:41:08','B',@start_date,NULL,2,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`,`test_item_selector_name_cy`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`section_test_item_selector_id`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30052,5801,'Items Not Tested > Brake performance','Items Not Tested > Brake performance','TBC - VC1-2 ',0,0,1,0,'1',0,0,1,5800,1,'2014-06-25 10:41:08','V',@start_date,NULL,2,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`,`test_item_selector_name_cy`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`section_test_item_selector_id`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30053,5801,'Items Not Tested > Brake performance','Items Not Tested > Brake performance','1.2.1 (g)',0,0,1,0,'0',0,0,1,5800,1,'2014-06-25 10:41:08','V',@start_date,NULL,2,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`,`test_item_selector_name_cy`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`section_test_item_selector_id`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30054,5803,'Items Not Tested > Headlamp aim','Items Not Tested > Headlamp aim','TBC - VC1-2',0,0,1,0,'1',0,0,1,5800,1,'2014-06-25 10:41:08','V',@start_date,NULL,2,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`,`test_item_selector_name_cy`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`section_test_item_selector_id`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30055,5803,'Items Not Tested > Headlamp aim','Items Not Tested > Headlamp aim','4.1.2 (b)',0,0,1,0,'0',0,0,1,5800,1,'2014-06-25 10:41:08','V',@start_date,NULL,2,@app_user_id);
+
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30050,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30050,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30050,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30051,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30051,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30051,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30052,1,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30052,2,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30053,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30053,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30053,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30053,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30054,1,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30054,2,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30055,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30055,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30055,5,@app_user_id); 
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30055,7,@app_user_id);
+
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30050,1,'not tested','Emissions test could not be completed',NULL,'Items Not Tested > Emissions - Spark Ignition',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30050,2,'heb ei brofi',NULL,NULL,'',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30051,1,'not tested','Emissions test could not be completed',NULL,'Items Not Tested > Emissions - Compression Ignition',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30051,2,'heb ei brofi',NULL,NULL,'',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30052,1,'not tested','Any item not tested',NULL,'Items Not Tested > Brake performance',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30052,2,'heb ei brofi',NULL,NULL,'',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30053,1,'not tested','Brake performance test unable to be carried out.',NULL,'Items Not Tested > Brake performance',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30053,2,'heb ei brofi',NULL,NULL,'',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30054,1,'not tested','Any item not tested',NULL,'Items Not Tested > Headlamp aim',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30054,2,'heb ei brofi',NULL,NULL,'',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30055,1,'not tested','headlamp aim unable to be tested',NULL,'Items Not Tested > Headlamp aim',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`test_item_selector_name`,`created_by`) VALUES (30055,2,'heb ei brofi',NULL,NULL,'',@app_user_id);
 
