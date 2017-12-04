@@ -15,7 +15,7 @@
         "zendframework/zendpdf": "2.0.2",
         "zf-commons/zfc-twig": "^1.2.2",
         "noiselabs/zf-debug-utils": "^0.3.1",
-        "mot/api-client-php": "18.0.0",
+        "mot/api-client-php": "19.0.0",
         "soflomo/purifier": "~0.1.1",
         "dvsa/dvsa-document-module": "1.4.0",
         "slot-purchase/web-frontend": "3.9.5",
