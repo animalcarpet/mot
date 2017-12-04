@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Dvsa\Mot\Frontend\MotTestModule\Service;
 
 use DvsaCommon\Cache\CacheKeyGenerator;
+use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class RfrCacheKeyGenerator implements CacheKeyGenerator, AutoWireableInterface
@@ -11,6 +12,15 @@ class RfrCacheKeyGenerator implements CacheKeyGenerator, AutoWireableInterface
     const DEFAULT_DATE_FORMAT = 'Y-m-d';
     const IS_VE_MARKER = 've';
     const IS_TESTER_MARKER = 'tester';
+
+    private $stackPrefix;
+
+    public function __construct(MotConfig $config)
+    {
+        $this->stackPrefix = $config
+            ->withDefault("unspecified_stack")
+            ->get('cache', 'application', 'settings', 'memcached', 'stack_prefix');
+    }
 
     /**
      * @param int $vehicleClass
@@ -55,7 +65,9 @@ class RfrCacheKeyGenerator implements CacheKeyGenerator, AutoWireableInterface
             throw new \InvalidArgumentException('Invalid input arguments');
         }
 
-        return self::createKey(...$args);
+        $key = sprintf('%s_%s', $this->stackPrefix, self::createKey(...$args));
+
+        return $key;
     }
 
     /**
