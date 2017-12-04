@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8dd2680f9220abc92d7f336c8b57c3f",
+    "content-hash": "c1ac429df06954f65b31fd63a3f1836d",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -173,7 +173,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/cpms-client-1.25.5-p-7a4ced.tar",
                 "reference": "45ff33d2d5570cb1c7380a2a1e9d9cdf7ab0f949",
-                "shasum": "7a784ab924bd289b8e0bc4d043c81d429d125af4"
+                "shasum": "25783e002f3cc770cc66d18c5c53922e4b10c14b"
             },
             "require": {
                 "cpms/cpms-notifications": "4.1.2-p",
@@ -217,7 +217,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/cpms-cpms-notifications-4.1.2-p-40d857.tar",
                 "reference": "be38508db370b7e024057bcb97b1831c50b31e8c",
-                "shasum": "5026d7bd155d83006b4bc8c3cc77245263d5dc11"
+                "shasum": "4bc8d0bd2724a4de31824d390576782da9c92795"
             },
             "require": {
                 "cpms/cpms-queues": "1.10.0-p",
@@ -251,12 +251,6 @@
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:cpms/cpms-queues.git",
                 "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/cpms-cpms-queues-1.10.0-p-767e96.tar",
-                "reference": "b76e773ea11c848afb5ef36dfd16b328c9c1adf8",
-                "shasum": "67e92a638bdc03c07061442764ed6b9baa5c86e0"
             },
             "require": {
                 "aws/aws-sdk-php": "3.26.3",
@@ -297,7 +291,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/cpms-shared-reports-v1.22.5-p-2b012d.tar",
                 "reference": "24e195415055f1b294c87f80ce23d8834debedf3",
-                "shasum": "ad58cfe29e9342adf3c292c9d7288fb47b369b88"
+                "shasum": "eb5478cb3c2e566d3c5352ae6ac088b7a50885ac"
             },
             "require": {
                 "cpms/client": "1.25.5-p",
@@ -1228,7 +1222,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-doctrine-module-v1.2.0-424590.tar",
                 "reference": "d39298c571a09359c36842d8fddb73fd26e88aaf",
-                "shasum": "7a9d050fe612c516fc0e027efd814785e8e79f2d"
+                "shasum": "8ea1bf4ab70616af67cb8af290db0f9931705ef7"
             },
             "require": {
                 "doctrine/cache": "~1.6.0",
@@ -1264,7 +1258,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-document-module-1.4.0-4ad38f.tar",
                 "reference": "1ce351069b604786cecd0454c0d05748ed67165b",
-                "shasum": "212deaf7e8b8b39b7eb04f2e0adf150225527f52"
+                "shasum": "8073afa2bfd226f8df82c6678b51ca6c6ae124b8"
             },
             "require": {
                 "doctrine/doctrine-module": "^1.2.0",
@@ -1299,7 +1293,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-logger-v1.2.0-41fb55.tar",
                 "reference": "680f59a9a7828237f222a75cea68b981dcf486f6",
-                "shasum": "180b69444c706d429f492dfacda143f373312fb8"
+                "shasum": "04c3dfe094413dfc0dc4109e0e94ec1542b23f1c"
             },
             "require": {
                 "doctrine/doctrine-module": "^1.2.0",
@@ -1391,7 +1385,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-feature-toggle-v1.2.0-c4dffb.tar",
                 "reference": "4116d4f85dd4b8115f54dc8edc0a0aa829b74f37",
-                "shasum": "7cc8a26ba1b363261d10029dd5d472d2033350a1"
+                "shasum": "f0bdfa50d6a56674e153feb1c18a357424936a80"
             },
             "require": {
                 "php": ">=5.3.3",
@@ -1426,7 +1420,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/dvsa-scripts-v2.0.3-f93058.tar",
                 "reference": "936bd13932b4f121150ff78ee23b7438b46cb3a9",
-                "shasum": "25a17d448d49a90bd1f40ad28fc7bc074d34d096"
+                "shasum": "18954677b5079c185e020063fcd4743440a7c59d"
             },
             "type": "library",
             "description": "Shared facility for developer tools, shell scripts, jenkins scripts and anything infrastructure related",
@@ -1978,17 +1972,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "18.0.0",
+            "version": "19.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "1210bce12aa674933e052fe9fc575b732ddd5264"
+                "reference": "eeb3ae0995b9e2ad57ea73a40893d9a0e5128883"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-18.0.0-b2e5e1.tar",
-                "reference": "1210bce12aa674933e052fe9fc575b732ddd5264",
-                "shasum": "1650b5f2bc89429f33a205a560edd10818cd89dd"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-19.0.0-c4c2d2.tar",
+                "reference": "eeb3ae0995b9e2ad57ea73a40893d9a0e5128883",
+                "shasum": "f8564c661b26d4864781bb342237fef0c7fe0e24"
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.2",
@@ -2035,7 +2029,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "time": "2017-10-24T11:28:30+00:00"
+            "time": "2017-12-04T09:43:49+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -3692,7 +3686,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v5.0.2-f40b69.tar",
                 "reference": "79b08857697f841721b188d456aab0c0826185fc",
-                "shasum": "d2f1e5f8b259f115d322c12f58d054f98e25bfcb"
+                "shasum": "4a50778eff8ca77f82013677cb608ce0fed8edc3"
             },
             "require": {
                 "cpms/shared-reports": "1.22.5-p",
@@ -7222,7 +7216,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/zendframework-zendpdf-2.0.2-0d86fd.tar",
                 "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0",
-                "shasum": "a95ffc4ef12c3899edaed01e92e320220903d2cb"
+                "shasum": "674fec40e5290aa80f3448011bfb61aa8a0f661d"
             },
             "require": {
                 "php": ">=5.3.3",
