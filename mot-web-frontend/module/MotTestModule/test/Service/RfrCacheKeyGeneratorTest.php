@@ -2,8 +2,8 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\Service;
 
-
 use Dvsa\Mot\Frontend\MotTestModule\Service\RfrCacheKeyGenerator;
+use DvsaCommon\Configuration\MotConfig;
 
 class RfrCacheKeyGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,9 +12,23 @@ class RfrCacheKeyGeneratorTest extends \PHPUnit_Framework_TestCase
     /** @var RfrCacheKeyGenerator */
     private $sut;
 
+    private $stackIndex = 'blue';
+
     public function setUp()
     {
-        $this->sut = new RfrCacheKeyGenerator();
+        $config = [
+            'cache' => [
+                'application' => [
+                    'settings' => [
+                        'memcached' => [
+                            'stack_prefix' => $this->stackIndex
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $this->sut = new RfrCacheKeyGenerator(new MotConfig($config));
     }
 
     /**
@@ -25,7 +39,8 @@ class RfrCacheKeyGeneratorTest extends \PHPUnit_Framework_TestCase
         list($vehicleClass, $categoryId, $isVe, $date) = $args;
 
         $expected = sprintf(
-            "%s_%s_%s_%s",
+            "%s_%s_%s_%s_%s",
+            $this->stackIndex,
             $vehicleClass,
             $categoryId,
             true === $isVe ? RfrCacheKeyGenerator::IS_VE_MARKER : RfrCacheKeyGenerator::IS_TESTER_MARKER,
