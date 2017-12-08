@@ -111,7 +111,6 @@ class EventRepository extends AbstractMutableRepository
     {
         $qb = $this->getQueryBuilder($id, $type);
         $qb = $this->filterResults($qb, $dto, false);
-
         return $qb->getQuery()->getResult();
     }
 
@@ -146,8 +145,10 @@ class EventRepository extends AbstractMutableRepository
     private function filterResults(QueryBuilder $qb, EventFormDto $dto, $isCount)
     {
         if (!empty($dto->getSearch())) {
+
+            $searchEvent = '%'.trim($dto->getSearch()).'%';
             $qb->andWhere('et.description LIKE :SEARCH_EVENT OR e.shortDescription LIKE :SEARCH_EVENT')
-                ->setParameter('SEARCH_EVENT', trim($dto->getSearch()).'%');
+                ->setParameter('SEARCH_EVENT', $searchEvent);
         }
 
         if ($this->isDateRangeIsValid($dto)) {
@@ -156,7 +157,7 @@ class EventRepository extends AbstractMutableRepository
                 OR (e.eventDate BETWEEN :DATE_FROM AND :DATE_TO))'
             )
                 ->setParameter('DATE_FROM', $dto->getDateFrom()->getDate())
-                ->setParameter('DATE_TO', $dto->getDateTo()->getDate()->modify('+1 day'));
+                ->setParameter('DATE_TO', $dto->getDateTo()->getDate()->modify('+1 day')->modify("-1 second"));
         }
         if ($isCount === false) {
             $qb->orderBy(EventFormDto::$dbSortByColumns[$dto->getSortCol()], $dto->getSortDir());
