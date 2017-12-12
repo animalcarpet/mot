@@ -2,8 +2,10 @@
 
 namespace DvsaMotApiTest\Service\Calculator;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
 use DvsaEntities\Entity\ModelDetail;
@@ -11,7 +13,9 @@ use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntitiesTest\Entity\BrakeTestTypeFactory;
 use DvsaEntitiesTest\Entity\WeightSourceFactory;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
+use \PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Unit tests for BrakeTestResultClass3AndAboveCalculatorTest.
@@ -20,6 +24,29 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
 {
     const DATE_DEFAULT_FIRST_USED = '2008-01-01';
 
+    /** @var FeatureToggles|MockObject */
+    private $featureToggles;
+    /** @var BrakeTestResultClass3AndAboveCalculator */
+    private $brakeTestResultCalculator;
+
+    public function setUp()
+    {
+        $this->featureToggles = XMock::of(FeatureToggles::class);
+        $this->brakeTestResultCalculator = new BrakeTestResultClass3AndAboveCalculator($this->featureToggles);
+    }
+
+    /**
+     * @param bool $returnValue
+     */
+    private function withFeatureToggles($returnValue = false)
+    {
+        $this->featureToggles
+            ->expects($this->any())
+            ->method('isEnabled')
+            ->with(FeatureToggle::EU_ROADWORTHINESS)
+            ->willReturn($returnValue);
+    }
+
     /**
      * This is the data provided for the test.
      *
@@ -27,6 +54,7 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
      */
     public function testBrakeTestResults($testData)
     {
+        $this->withFeatureToggles(false);
         $testData = array_replace_recursive($this->coreDefaults(), $testData);
 
         $input = $testData['input'];
@@ -123,8 +151,7 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
                 ->setWeightIsUnladen($input['weight']['unladen']);
         }
 
-        $brakeTestResultCalculator = new BrakeTestResultClass3AndAboveCalculator();
-        $brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $vehicle);
+        $this->brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $vehicle);
 
         $serviceBrakeDataApplicableTypes = [
             BrakeTestTypeCode::ROLLER,

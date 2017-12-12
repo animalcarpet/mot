@@ -27,6 +27,8 @@ use DvsaEntities\Repository\WeightSourceRepository;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
+use DvsaMotApi\Mapper\ParkingBrakeClass3AndAboveRfrMapper;
+use DvsaMotApi\Service\Calculator\BrakeTestClass3AndAboveCalculationResult;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
 use DvsaMotApi\Service\Helper\BrakeTestResultsHelper;
@@ -41,20 +43,10 @@ use DvsaMotApi\Service\Validator\MotTestValidator;
  */
 class BrakeTestResultService extends AbstractService
 {
-    const RFR_ID_SERVICE_BRAKE_ROLLER_LOW_EFFICIENCY = '8357';
-    const RFR_ID_PARKING_BRAKE_ROLLER_LOW_EFFICIENCY = '8358';
     const RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE = '8343';
     const RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE = '8343';
-
-    const RFR_ID_SERVICE_BRAKE_PLATE_LOW_EFFICIENCY = '8371';
-    const RFR_ID_PARKING_BRAKE_PLATE_LOW_EFFICIENCY = '8372';
     const RFR_ID_SERVICE_BRAKE_PLATE_IMBALANCE = '8370';
     const RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE = '8370';
-
-    const RFR_ID_SERVICE_BRAKE_DECELEROMETER_LOW_EFFICIENCY = '8365';
-    const RFR_ID_PARKING_BRAKE_DECELEROMETER_LOW_EFFICIENCY = '8366';
-
-    const RFR_ID_PARKING_BRAKE_GRADIENT_LOW_EFFICIENCY = '4300';
 
     const RFR_ID_BRAKE_EFFICIENCY_ROLLER_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2 = '489';
     const RFR_ID_BRAKE_EFFICIENCY_ROLLER_ONE_BELOW_SECONDARY_MIN_CLASS_1_2 = '490';
@@ -78,6 +70,10 @@ class BrakeTestResultService extends AbstractService
 
     const MAX_NUMBER_AXLES = 3;
 
+    const PARKING_BRAKE_SINGLE_LINE_MAJOR_SEVERITY_THRESHOLD = '25';
+    const PARKING_BRAKE_DUAL_LINE_MAJOR_SEVERITY_THRESHOLD = '16';
+    const PARKING_BRAKE_DUAL_LINE_DANGEROUS_SEVERITY_THRESHOLD = '8';
+
     private $objectHydrator;
     private $brakeTestResultValidator;
     private $brakeTestConfigurationValidator;
@@ -90,17 +86,19 @@ class BrakeTestResultService extends AbstractService
     /** @var MotTestReasonForRejectionService */
     private $motTestReasonForRejectionService;
     private $performMotTestAssertion;
+    private $weightSourceRepository;
+    /** @var FeatureToggles */
+    private $featureToggles;
+    /** @var ParkingBrakeClass3AndAboveRfrMapper */
+    private $parkingBrakeMapper;
+    /** @var ServiceBrakeTestSpecialRfrGenerator  */
+    private $serviceBrakeRfrGenerator;
+
     private $brakesWithLockApplicable =
         [
             BrakeTestTypeCode::ROLLER,
             BrakeTestTypeCode::PLATE,
         ];
-
-    private $weightSourceRepository;
-    /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
 
     public function __construct(
         EntityManager $entityManager,
@@ -132,6 +130,8 @@ class BrakeTestResultService extends AbstractService
         $this->performMotTestAssertion = $performMotTestAssertion;
         $this->weightSourceRepository = $weightSourceRepository;
         $this->featureToggles = $featureToggles;
+        $this->serviceBrakeRfrGenerator = new ServiceBrakeTestSpecialRfrGenerator();
+        $this->parkingBrakeMapper = new ParkingBrakeClass3AndAboveRfrMapper($featureToggles);
     }
 
     public function createBrakeTestResult(MotTest $motTest, $brakeTestResultData)
@@ -241,7 +241,11 @@ class BrakeTestResultService extends AbstractService
         }
     }
 
-    private function assertMotActive($motTest)
+    /**
+     * @param MotTest $motTest
+     * @throws BadRequestException
+     */
+    private function assertMotActive(MotTest $motTest)
     {
         /* Only allow active MOT test brake test results to be validated */
         if ($motTest->getStatus() === MotTestStatusName::ABANDONED) {
@@ -273,7 +277,9 @@ class BrakeTestResultService extends AbstractService
         );
         $this->brakeTestResultValidator->validateBrakeTestResultClass3AndAbove($brakeTestResult, $vehicle);
 
-        $brakeTestResult = $this->brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $vehicle);
+        /** @var BrakeTestClass3AndAboveCalculationResult $calculationResult  */
+        $calculationResult = $this->brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $vehicle);
+        $brakeTestResult = $calculationResult->getBrakeTestResultClass3AndAbove();
 
         $brakeTestResult = $this->mapVehicleWeightSource($brakeTestResult, $vehicle);
 
@@ -284,15 +290,9 @@ class BrakeTestResultService extends AbstractService
         $serviceBrakeTestType = $brakeTestResult->getServiceBrake1TestType()->getCode();
         $parkingBrakeTestType = $brakeTestResult->getParkingBrakeTestType()->getCode();
 
-        if ($brakeTestResult->getServiceBrake1EfficiencyPass() === false
-            || $brakeTestResult->getServiceBrake2EfficiencyPass() === false
-        ) {
-            $summary->addReasonForRejection($this->getRfrServiceBrakeLowEfficiency($serviceBrakeTestType));
-        }
+        $this->generateServiceBrakeLowEfficiencyRfr($brakeTestResult, $summary, $serviceBrakeTestType, $calculationResult);
 
-        if ($brakeTestResult->getParkingBrakeEfficiencyPass() === false) {
-            $summary->addReasonForRejection($this->getRfrParkingBrakeLowEfficiency($parkingBrakeTestType));
-        }
+        $this->parkingBrakeMapper->generateParkingBrakeLowEfficiencyRfr($brakeTestResult, $summary, $parkingBrakeTestType, $calculationResult);
 
         $serviceBrake1Data = $brakeTestResult->getServiceBrake1Data();
         $serviceBrake2Data = $brakeTestResult->getServiceBrake2Data();
@@ -505,36 +505,6 @@ class BrakeTestResultService extends AbstractService
         return null;
     }
 
-    private function getRfrServiceBrakeLowEfficiency($testType)
-    {
-        switch ($testType) {
-            case BrakeTestTypeCode::ROLLER:
-                return self::RFR_ID_SERVICE_BRAKE_ROLLER_LOW_EFFICIENCY;
-            case BrakeTestTypeCode::PLATE:
-                return self::RFR_ID_SERVICE_BRAKE_PLATE_LOW_EFFICIENCY;
-            case BrakeTestTypeCode::DECELEROMETER:
-                return self::RFR_ID_SERVICE_BRAKE_DECELEROMETER_LOW_EFFICIENCY;
-        }
-
-        return null;
-    }
-
-    private function getRfrParkingBrakeLowEfficiency($testType)
-    {
-        switch ($testType) {
-            case BrakeTestTypeCode::ROLLER:
-                return self::RFR_ID_PARKING_BRAKE_ROLLER_LOW_EFFICIENCY;
-            case BrakeTestTypeCode::PLATE:
-                return self::RFR_ID_PARKING_BRAKE_PLATE_LOW_EFFICIENCY;
-            case BrakeTestTypeCode::DECELEROMETER:
-                return self::RFR_ID_PARKING_BRAKE_DECELEROMETER_LOW_EFFICIENCY;
-            case BrakeTestTypeCode::GRADIENT:
-                return self::RFR_ID_PARKING_BRAKE_GRADIENT_LOW_EFFICIENCY;
-        }
-
-        return null;
-    }
-
     private function getRfrServiceBrakeImbalanced($testType)
     {
         switch ($testType) {
@@ -589,5 +559,28 @@ class BrakeTestResultService extends AbstractService
         $brakeTestResult->setWeightType($weightSource);
 
         return $brakeTestResult;
+    }
+
+    /**
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
+     * @param BrakeTestResultSubmissionSummary $summary
+     * @param string $serviceBrakeTestTypeCode
+     * @param BrakeTestClass3AndAboveCalculationResult $calculationResult
+     */
+    private function generateServiceBrakeLowEfficiencyRfr(
+        BrakeTestResultClass3AndAbove $brakeTestResult,
+        BrakeTestResultSubmissionSummary $summary,
+        $serviceBrakeTestTypeCode,
+        BrakeTestClass3AndAboveCalculationResult $calculationResult
+    )
+    {
+        $isEnabledEuRoadworthiness = $this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS);
+        $this->serviceBrakeRfrGenerator->generateRfr(
+            $brakeTestResult,
+            $summary,
+            $serviceBrakeTestTypeCode,
+            $calculationResult,
+            $isEnabledEuRoadworthiness
+        );
     }
 }

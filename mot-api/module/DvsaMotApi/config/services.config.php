@@ -30,6 +30,7 @@ use DvsaMotApi\Factory\MotTestRepositoryFactory;
 use DvsaMotApi\Factory\MotTestTypeRepositoryFactory;
 use DvsaMotApi\Factory\ReplacementCertificateDraftRepositoryFactory;
 use DvsaMotApi\Factory\RfrRepositoryFactory;
+use DvsaMotApi\Factory\Service\BrakeTestResultClass3AndAboveCalculatorFactory;
 use DvsaMotApi\Factory\Service\BrakeTestResultServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateChangeServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateCreationServiceFactory;
@@ -79,6 +80,7 @@ use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Helper\RoleEventHelper;
 use DvsaMotApi\Helper\RoleNotificationHelper;
 use DvsaMotApi\Helper\TesterQualificationStatusChangeEventHelper;
+use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\DemoTestAssessmentService;
@@ -177,6 +179,7 @@ return [
         CertificateOdometerHistoryUpdater::class => CertificateOdometerHistoryUpdaterFactory::class,
         CertificateTypeRepository::class => CertificateTypeRepositoryFactory::class,
         CertificateReplacementRepository::class => CertificateReplacementRepositoryFactory::class,
-        SearchReasonForRejectionService::class => SearchReasonForRejectionServiceFactory::class
+        SearchReasonForRejectionService::class => SearchReasonForRejectionServiceFactory::class,
+        BrakeTestResultClass3AndAboveCalculator::class => BrakeTestResultClass3AndAboveCalculatorFactory::class,
     ],
 ];
