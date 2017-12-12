@@ -2,10 +2,15 @@
 
 namespace DvsaMotTest\Controller;
 
+use Application\Service\CatalogService;
+use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaCommon\Auth\Assertion\RefuseToTestAssertion;
 use DvsaCommon\Dto\Common\ReasonForRefusalDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
@@ -29,11 +34,52 @@ class RefuseToTestController extends AbstractDvsaMotTestController
     private $paramObfuscator;
 
     /**
-     * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
+     * @var \Dvsa\Mot\ApiClient\Service\VehicleService
      */
-    public function __construct(ParamObfuscator $paramObfuscator)
+    private $vehicleService;
+
+    /**
+     * @var MotFrontendAuthorisationServiceInterface
+     */
+    private $authorisationService;
+
+    /**
+     * @var CatalogService
+     */
+    private $catalogService;
+
+    /**
+     * @var MotFrontendIdentityInterface
+     */
+    private $identityProvider;
+
+    /**
+     * RefuseToTestController constructor.
+     * @param ParamObfuscator $paramObfuscator
+     * @param Client $restClient
+     * @param VehicleService $vehicleService
+     * @param MotFrontendAuthorisationServiceInterface $authorisationService
+     * @param CatalogService $catalogService
+     * @param \Zend\Session\Container $motSession
+     * @param MotFrontendIdentityProviderInterface $identityProvider
+     */
+    public function __construct(
+        ParamObfuscator $paramObfuscator,
+        Client $restClient,
+        VehicleService $vehicleService,
+        MotFrontendAuthorisationServiceInterface $authorisationService,
+        CatalogService $catalogService,
+        \Zend\Session\Container $motSession,
+        MotFrontendIdentityProviderInterface $identityProvider
+        )
     {
         $this->paramObfuscator = $paramObfuscator;
+        $this->restClient = $restClient;
+        $this->vehicleService = $vehicleService;
+        $this->authorisationService = $authorisationService;
+        $this->catalogService = $catalogService;
+        $this->motSession = $motSession;
+        $this->identityProvider = $identityProvider;
     }
 
     public function refuseToTestReasonAction()
@@ -62,7 +108,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
             $selectedReason = ArrayUtils::get($postData, 'refusal');
 
-            $currentVts = $this->getIdentity()->getCurrentVts();
+            $currentVts = $this->identityProvider->getIdentity()->getCurrentVts();
 
             $data = [
                 'vehicleId' => $vehicleId,
@@ -74,9 +120,9 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
             try {
                 $apiUrl = MotTestUrlBuilder::refusal();
-                $result = $this->getRestClient()->post($apiUrl, $data);
+                $result = $this->restClient->post($apiUrl, $data);
 
-                $this->getSession()->offsetSet('mot-test-refusal-'.$obfuscatedVehicleId, $result);
+                $this->motSession->offsetSet('mot-test-refusal-'.$obfuscatedVehicleId, $result);
 
                 $this->redirect()->toUrl(MotTestUrlBuilderWeb::refuseSummary($testTypeCode, $obfuscatedVehicleId));
             } catch (RestApplicationException $e) {
@@ -93,7 +139,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
         $testTypeCode = $this->params()->fromRoute('testTypeCode', MotTestTypeCode::NORMAL_TEST);
 
-        $result = $this->getSession()->offsetGet('mot-test-refusal-'.$obfuscatedVehicleId);
+        $result = $this->motSession->offsetGet('mot-test-refusal-'.$obfuscatedVehicleId);
 
         if (empty($result)) {
             return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
@@ -111,7 +157,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
     public function refuseToTestPrintAction()
     {
         $vehicleId = (string) $this->params()->fromRoute('id', 0);
-        $result = $this->getSession()->offsetGet('mot-test-refusal-'.$vehicleId);
+        $result = $this->motSession->offsetGet('mot-test-refusal-'.$vehicleId);
         $reportData = ArrayUtils::tryGet($result, 'data');
 
         if (empty($reportData)) {
@@ -120,7 +166,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
         try {
             $apiUrl = ReportUrlBuilder::printReport($reportData['documentId']);
-            $result = $this->getRestClient()->getPdf($apiUrl);
+            $result = $this->restClient->getPdf($apiUrl);
 
             $response = new Response();
             $response->setContent($result);
@@ -141,7 +187,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
      */
     private function getReasonsForRefusal()
     {
-        return $this->getCatalogService()->getReasonsForRefusal();
+        return $this->catalogService->getReasonsForRefusal();
     }
 
     private function assertRefuseToTest($vtsId)
@@ -154,7 +200,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
      */
     private function createRefuseToTestAssertion()
     {
-        $refuseToTestAssertion = new RefuseToTestAssertion($this->getAuthorizationService());
+        $refuseToTestAssertion = new RefuseToTestAssertion($this->authorisationService);
 
         return $refuseToTestAssertion;
     }
@@ -167,13 +213,10 @@ class RefuseToTestController extends AbstractDvsaMotTestController
      */
     private function getVehicle($vehicleId, $vehicleSource)
     {
-        /** @var VehicleService $vehicleService */
-        $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
-
         if ($vehicleSource === VehicleSearchSource::DVLA) {
-            return $vehicleService->getDvlaVehicleById($vehicleId);
+            return $this->vehicleService->getDvlaVehicleById($vehicleId);
         } else {
-            return $vehicleService->getDvsaVehicleById($vehicleId);
+            return $this->vehicleService->getDvsaVehicleById($vehicleId);
         }
     }
 

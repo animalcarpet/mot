@@ -2,7 +2,11 @@
 
 namespace DvsaMotTestTest\Controller;
 
+use Application\Service\CatalogService;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Core\Service\MotFrontendIdentityProviderInterface;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
 use DvsaClient\MapperFactory;
 use DvsaClient\Mapper\VehicleMapper;
@@ -12,7 +16,7 @@ use DvsaCommon\Obfuscate\ParamEncoder;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\DtoHydrator;
-use DvsaCommonTest\Bootstrap;
+use \DvsaCommon\HttpRestJson\Client;
 use DvsaCommonTest\TestUtils\XMock;
 use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -26,22 +30,40 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
     /** @var VehicleMapper|MockObj */
     private $mockVehicleMapper;
 
+    private $vehicleService;
+
+    private $restClient;
+
+    private $authorisationService;
+
+    private $catalogService;
+
+    private $session;
+
+    private $identityProvider;
+
+
     protected function setUp()
     {
-        $serviceManager = Bootstrap::getServiceManager();
-        $serviceManager->setAllowOverride(true);
 
-        $serviceManager->setService(
-            VehicleService::class,
-            new VehicleService('to be token')
+        $this->vehicleService = new VehicleService('to be token');
+        $this->restClient = XMock::of(Client::class);
+        $this->authorisationService = XMock::of(MotFrontendAuthorisationServiceInterface::class);
+        $this->catalogService = XMock::of(CatalogService::class);
+        $this->session = XMock::of(\Zend\Session\Container::class);
+        $this->identityProvider = XMock::of(MotFrontendIdentityProviderInterface::class);
+
+        $this->setController(
+            new RefuseToTestController(
+                $this->createParamObfuscator(),
+                $this->restClient,
+                $this->vehicleService,
+                $this->authorisationService,
+                $this->catalogService,
+                $this->session,
+                $this->identityProvider
+            )
         );
-
-        $this->setServiceManager($serviceManager);
-
-        $this->setController(new RefuseToTestController($this->createParamObfuscator()));
-
-        $mockMapperFactory = $this->getMapperFactoryMock();
-        $serviceManager->setService(MapperFactory::class, $mockMapperFactory);
 
         parent::setUp();
     }
@@ -80,7 +102,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
 
     public function testRefuseToTestSummaryActionWithDocumentInSessionForAuthenticatedRequest()
     {
-        $identity = $this->getCurrentIdentity();
+        $identity = new Identity();
         $identity->setCurrentVts($this->getVtsData());
 
         $result = [
@@ -93,16 +115,12 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         $vehicleId = 1;
         $obfuscatedVehicleId = $paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
 
-        $mockSession = $this->getMockBuilder(\stdClass::class)->disableOriginalConstructor()->setMethods(['offsetGet'])->getMock();
-        $mockSession->expects($this->once())
+        $this->session->expects($this->once())
             ->method('offsetGet')
             ->with('mot-test-refusal-'.$obfuscatedVehicleId)
             ->will($this->returnValue($result));
 
-        /** @var \Zend\ServiceManager\ServiceManager $sm */
-        $sm = $this->controller->getServiceLocator();
-        $sm->setAllowOverride(true);
-        $sm->setService('MotSession', $mockSession);
+
 
         $response = $this->getResponseForAction('refuseToTestSummary', ['id' => $obfuscatedVehicleId]);
 
@@ -121,7 +139,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
 
     public function testRefuseToTestPrintActionWithDocumentInSessionForAuthenticatedRequest()
     {
-        $identity = $this->getCurrentIdentity();
+        $identity = new Identity();
         $identity->setCurrentVts($this->getVtsData());
 
         $result = [
@@ -129,16 +147,10 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
                 'documentId' => 1,
             ],
         ];
-        $mockSession = $this->getMockBuilder(\stdClass::class)->disableOriginalConstructor()->setMethods(['offsetGet'])->getMock();
-        $mockSession->expects($this->once())
+        $this->session->expects($this->once())
             ->method('offsetGet')
             ->with('mot-test-refusal-1')
             ->will($this->returnValue($result));
-
-        /** @var \Zend\ServiceManager\ServiceManager $sm */
-        $sm = $this->controller->getServiceLocator();
-        $sm->setAllowOverride(true);
-        $sm->setService('MotSession', $mockSession);
 
         $response = $this->getResponseForAction('refuseToTestPrint', ['id' => '1']);
 
