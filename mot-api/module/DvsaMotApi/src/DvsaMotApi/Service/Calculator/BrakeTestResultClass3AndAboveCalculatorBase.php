@@ -5,7 +5,9 @@ namespace DvsaMotApi\Service\Calculator;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
+use DvsaEntities\Entity\BrakeTestType;
 use DvsaEntities\Entity\Vehicle;
+use DvsaFeature\FeatureToggles;
 
 /**
  * Class BrakeTestResultClass3AndAboveCalculatorBase.
@@ -20,6 +22,14 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
     const SERVICE_BRAKE_2 = 2;
     const IMBALANCE_MAXIMUM = 30;
 
+    /** @var FeatureToggles */
+    protected $featureToggles;
+
+    /**
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
+     * @param Vehicle $vehicle
+     * @return BrakeTestClass3AndAboveCalculationResult
+     */
     public function calculateBrakeTestResult(BrakeTestResultClass3AndAbove $brakeTestResult, Vehicle $vehicle)
     {
         $this->resetCalculatedFields($brakeTestResult);
@@ -79,49 +89,58 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
             }
         }
 
-        //service brake passes
+        //service brake passes - Todo: verify effect of this line
         $serviceBrake1EfficiencyPass = $brakeTestResult->getServiceBrake1EfficiencyPass();
-        if (!in_array(
-            $brakeTestResult->getServiceBrake1TestType()->getCode(),
-            [BrakeTestTypeCode::GRADIENT]
-        )
-        ) {
-            $serviceBrake1EfficiencyPass = $this->isPassingServiceBrakeEfficiency(
+
+        $serviceBrake1CalculationResult = null;
+        $serviceBrake2CalculationResult = null;
+
+        if (!$this->isGradientBrakeTestType($brakeTestResult->getServiceBrake1TestType())) {
+            /** @var ServiceBrakeCalculationResult $serviceBrake1CalculationResult */
+            $serviceBrake1CalculationResult = $this->createServiceBrakeCalculationResult(
                 $vehicle,
                 $brakeTestResult->getServiceBrake1TestType()->getCode(),
                 $brakeTestResult,
                 self::SERVICE_BRAKE_1
             );
+            $serviceBrake1EfficiencyPass = $serviceBrake1CalculationResult->isPassing();
         }
         $brakeTestResult->setServiceBrake1EfficiencyPass($serviceBrake1EfficiencyPass);
 
         if ($brakeTestResult->getServiceBrake2TestType() !== null) {
             $serviceBrake2EfficiencyPass = $brakeTestResult->getServiceBrake2EfficiencyPass();
-            if (!in_array(
-                $brakeTestResult->getServiceBrake2TestType()->getCode(),
-                [BrakeTestTypeCode::GRADIENT]
-            )
-            ) {
-                $serviceBrake2EfficiencyPass = $this->isPassingServiceBrakeEfficiency(
+            if (!$this->isGradientBrakeTestType($brakeTestResult->getServiceBrake2TestType()))
+            {
+            /** @var ServiceBrakeCalculationResult $serviceBrake2CalculationResult */
+            $serviceBrake2CalculationResult = $this->createServiceBrakeCalculationResult(
                     $vehicle,
                     $brakeTestResult->getServiceBrake2TestType()->getCode(),
                     $brakeTestResult,
                     self::SERVICE_BRAKE_2
                 );
+                $serviceBrake2EfficiencyPass = $serviceBrake2CalculationResult->isPassing();
             }
             $brakeTestResult->setServiceBrake2EfficiencyPass($serviceBrake2EfficiencyPass);
         }
-
+        $parkingBrakeCalculationResult = null;
         switch ($brakeTestResult->getParkingBrakeTestType()->getCode()) {
             case BrakeTestTypeCode::GRADIENT:
                 // efficiency pass is already set!
+                $failureSeverity = CalculationFailureSeverity::NONE;
+                if ($brakeTestResult->getParkingBrakeEfficiencyPass() === false) {
+                    $failureSeverity = CalculationFailureSeverity::MAJOR;
+                }
+                $parkingBrakeCalculationResult
+                    = new ParkingBrakeCalculationResult($brakeTestResult->getParkingBrakeEfficiencyPass(), $failureSeverity);
                 break;
             case BrakeTestTypeCode::PLATE:
             case BrakeTestTypeCode::ROLLER:
                 $brakeTestResult->setParkingBrakeEfficiency($this->calculateParkingBrakeEfficiency($brakeTestResult));
-                $brakeTestResult->setParkingBrakeEfficiencyPass(
-                    $this->isPassingParkingBrakeEfficiency($brakeTestResult, $vehicleClass)
-                );
+                /* @var  ParkingBrakeCalculationResult $parkingBrakeCalculationResult*/
+                $parkingBrakeCalculationResult = $this->createParkingBrakeCalculationResult($brakeTestResult);
+                $parkingBrakeEfficiencyPass = $parkingBrakeCalculationResult->isPassing();
+                $brakeTestResult->setParkingBrakeEfficiencyPass($parkingBrakeEfficiencyPass);
+
                 //check if parking brake imbalance applicable
                 if ($brakeTestResult->getServiceBrakeIsSingleLine()) {
                     $brakeTestResult->setParkingBrakeImbalance($this->calculateParkingBrakeImbalance($brakeTestResult));
@@ -139,14 +158,23 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
                 }
                 break;
             case BrakeTestTypeCode::DECELEROMETER:
-                $brakeTestResult->setParkingBrakeEfficiencyPass(
-                    $this->isPassingParkingBrakeEfficiency($brakeTestResult, $vehicleClass)
-                );
+                /* @var  ParkingBrakeCalculationResult $parkingBrakeCalculationResult*/
+                $parkingBrakeCalculationResult = $this->createParkingBrakeCalculationResult($brakeTestResult);
+                $parkingBrakeEfficiencyPass = $parkingBrakeCalculationResult->isPassing();
+                $brakeTestResult->setParkingBrakeEfficiencyPass($parkingBrakeEfficiencyPass);
         }
 
         $brakeTestResult->setGeneralPass($this->isPassing($brakeTestResult));
 
-        return $brakeTestResult;
+        $calculationResult = new BrakeTestClass3AndAboveCalculationResult(
+            $brakeTestResult,
+            $parkingBrakeCalculationResult,
+            $serviceBrake1CalculationResult,
+            $serviceBrake2CalculationResult
+            // todo: set imbalance result
+        );
+
+        return $calculationResult;
     }
 
     public function calculateServiceBrakePercentLocked(
@@ -377,16 +405,28 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
         }
     }
 
-    abstract protected function isPassingServiceBrakeEfficiency(
+    /**
+     * @param Vehicle $vehicle
+     * @param $serviceBrakeTest
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
+     * @param $serviceBrakeNumber
+     *
+     * @return ServiceBrakeCalculationResult
+     */
+    abstract public function createServiceBrakeCalculationResult(
         Vehicle $vehicle,
         $serviceBrakeTest,
         BrakeTestResultClass3AndAbove $brakeTestResult,
         $serviceBrakeNumber
     );
 
-    abstract protected function isPassingParkingBrakeEfficiency(
-        BrakeTestResultClass3AndAbove $brakeTestResult,
-        $vehicleClass
+    /**
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
+     *
+     * @return ParkingBrakeCalculationResult
+     */
+    abstract public function createParkingBrakeCalculationResult(
+        BrakeTestResultClass3AndAbove $brakeTestResult
     );
 
     abstract protected function isPassingParkingBrakeImbalance(
@@ -413,11 +453,11 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
         }
 
         return $serviceBrake1Pass !== false
-        && $serviceBrake2Pass !== false
-        && $brakeTestResult->getParkingBrakeEfficiencyPass() !== false
-        && $serviceBrake1ImbalancePass !== false
-        && $serviceBrake2ImbalancePass !== false
-        && $brakeTestResult->getParkingBrakeImbalancePass() !== false;
+            && $serviceBrake2Pass !== false
+            && $brakeTestResult->getParkingBrakeEfficiencyPass() !== false
+            && $serviceBrake1ImbalancePass !== false
+            && $serviceBrake2ImbalancePass !== false
+            && $brakeTestResult->getParkingBrakeImbalancePass() !== false;
     }
 
     protected function resetCalculatedFields(BrakeTestResultClass3AndAbove $brakeTestResult)
@@ -517,5 +557,10 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
         $nearsideLower = ($nearsideEff < $offsideEff);
 
         return ($offsideLower && $offsideLock) || ($nearsideLower && $nearsideLock);
+    }
+
+    private function isGradientBrakeTestType(BrakeTestType $brakeTestType)
+    {
+        return $brakeTestType->getCode() === BrakeTestTypeCode::GRADIENT;
     }
 }

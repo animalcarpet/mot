@@ -399,27 +399,27 @@ class BrakeTestResultClass3AndAboveViewModel
                 if ($this->brakeTestConfiguration->isSingleWheelInFront() === null
                     || $this->brakeTestConfiguration->isSingleWheelInFront() === false
                 ) {
-                    $sb2Data['effortNearsideAxle1'] = $this->serviceBrakeEffortNearsideAxle1;
-                    $sb2Data['effortOffsideAxle1'] = $this->serviceBrakeEffortOffsideAxle1;
+                    $sb2Data['effortNearsideAxle1'] = $this->serviceBrake2EffortNearsideAxle1;
+                    $sb2Data['effortOffsideAxle1'] = $this->serviceBrake2EffortOffsideAxle1;
                     if ($this->brakeTestConfiguration->locksApplicableToFirstServiceBrake()) {
-                        $sb2Data['lockNearsideAxle1'] = $this->getServiceBrakeLockNearsideAxle1();
-                        $sb2Data['lockOffsideAxle1'] = $this->getServiceBrakeLockOffsideAxle1();
+                        $sb2Data['lockNearsideAxle1'] = $this->getServiceBrake2LockNearsideAxle1();
+                        $sb2Data['lockOffsideAxle1'] = $this->getServiceBrake2LockOffsideAxle1();
                     }
                 }
                 if ($this->brakeTestConfiguration->isSingleWheelInFront() === null
                     || $this->brakeTestConfiguration->isSingleWheelInFront() === true
                 ) {
-                    $sb2Data['effortNearsideAxle2'] = $this->serviceBrakeEffortNearsideAxle2;
-                    $sb2Data['effortOffsideAxle2'] = $this->serviceBrakeEffortOffsideAxle2;
+                    $sb2Data['effortNearsideAxle2'] = $this->serviceBrake2EffortNearsideAxle2;
+                    $sb2Data['effortOffsideAxle2'] = $this->serviceBrake2EffortOffsideAxle2;
                     if ($this->brakeTestConfiguration->locksApplicableToFirstServiceBrake()) {
-                        $sb2Data['lockNearsideAxle2'] = $this->getServiceBrakeLockNearsideAxle2();
-                        $sb2Data['lockOffsideAxle2'] = $this->getServiceBrakeLockOffsideAxle2();
+                        $sb2Data['lockNearsideAxle2'] = $this->getServiceBrake2LockNearsideAxle2();
+                        $sb2Data['lockOffsideAxle2'] = $this->getServiceBrake2LockOffsideAxle2();
                     }
                 }
                 if ($this->brakeTestConfiguration->isSingleWheelInFront() === false) {
-                    $sb2Data['effortSingle'] = $this->serviceBrakeEffortSingle;
+                    $sb2Data['effortSingle'] = $this->serviceBrake2EffortSingle;
                     if ($this->brakeTestConfiguration->locksApplicableToFirstServiceBrake()) {
-                        $sb2Data['lockSingle'] = $this->getServiceBrakeLockSingle();
+                        $sb2Data['lockSingle'] = $this->getServiceBrake2LockSingle();
                     }
                 }
             } else {

@@ -2,11 +2,11 @@
 
 namespace DvsaMotApiTest\Service;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
-use DvsaCommon\Mapper\BrakeTestWeightSourceMapper;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -25,15 +25,28 @@ use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Entity\WeightSource;
-use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\WeightSourceRepository;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass12Test;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass3AndAboveTest;
 use DvsaEntitiesTest\Entity\BrakeTestTypeFactory;
 use DvsaFeature\FeatureToggles;
+use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
+use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
+use DvsaMotApi\Mapper\ParkingBrakeClass3AndAboveRfrMapper;
 use DvsaMotApi\Service\BrakeTestResultService;
+use DvsaMotApi\Service\Calculator\BrakeTestClass3AndAboveCalculationResult;
+use DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator;
+use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
+use DvsaMotApi\Service\Calculator\ParkingBrakeCalculationResult;
+use DvsaMotApi\Service\Calculator\ServiceBrakeCalculationResult;
+
+use DvsaMotApi\Service\Calculator\CalculationFailureSeverity;
+
 use DvsaMotApi\Service\Model\BrakeTestResultSubmissionSummary;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
+use DvsaMotApi\Service\ServiceBrakeTestSpecialRfrGenerator;
+use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
+use DvsaMotApi\Service\Validator\BrakeTestResultValidator;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -55,7 +68,6 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
     const MOCK_PERFORM_MOT_TEST_ASSERTION = 'mockPerformMotTestAssertion';
     const MOCK_WEIGHT_SOURCE_REPOSITORY = 'mockWeightSourceRepository';
     const MOCK_FEATURE_TOGGLES = "mockFeatureToggles";
-
     const TYPE_TEST_CLASS_1_2 = true;
     const TYPE_TEST_CLASS_ABOVE_3 = false;
 
@@ -100,9 +112,30 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $brakeTestResultService->createBrakeTestResult($motTest, $data);
     }
 
-    public function testCreateBrakeTestResultOk()
+    /**
+     * @dataProvider testCreateBrakeTestResultOkDP
+     *
+     * @param bool $euFeatureToggle
+     * @param int $serviceBrakeEfficiency
+     * @param bool $isServiceBrake1EfficiencyPassing
+     * @param string $serviceBrake1FailureSeverity
+     * @param bool $isParkingBrake1EfficiencyPassing
+     * @param string $parkingBrake1FailureSeverity
+     * @param bool $isImbalancePassing
+     * @param array $expectedRfrList
+     */
+    public function testCreateBrakeTestResultOk(
+        $euFeatureToggle,
+        $serviceBrakeEfficiency,
+        $isServiceBrake1EfficiencyPassing,
+        $serviceBrake1FailureSeverity,
+        $isParkingBrake1EfficiencyPassing,
+        $parkingBrake1FailureSeverity,
+        $isImbalancePassing,
+        $expectedRfrList
+    )
     {
-        $mocks = $this->getMocksForBrakeTestResultService();
+        $mocks = $this->getMocksForBrakeTestResultService($euFeatureToggle);
 
         $motTest = $this->getTestMotTest();
         $data = BrakeTestResultClass3AndAboveTest::getTestData();
@@ -111,14 +144,21 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $brakeTestResult
             ->setServiceBrake1TestType(BrakeTestTypeFactory::roller())
             ->setParkingBrakeTestType(BrakeTestTypeFactory::roller())
-            ->setServiceBrake1Efficiency(50)
-            ->setParkingBrakeEfficiencyPass(false)
-            ->setServiceBrake1EfficiencyPass(false)
-            ->getServiceBrake1Data()->setImbalancePass(false);
+            ->setServiceBrake1Efficiency($serviceBrakeEfficiency)
+            ->setParkingBrakeEfficiencyPass($isParkingBrake1EfficiencyPassing)
+            ->setServiceBrake1EfficiencyPass($isServiceBrake1EfficiencyPassing)
+            ->getServiceBrake1Data()->setImbalancePass($isImbalancePassing);
 
         $brakeTestResult->getServiceBrake1Data()->setImbalancePassForAxle(1, false);
         $brakeTestResult->getServiceBrake1Data()->setImbalancePassForAxle(2, true);
         $brakeTestResult->getServiceBrake1Data()->setImbalancePassForAxle(3, null);
+
+        $calculationResult = new BrakeTestClass3AndAboveCalculationResult(
+            $brakeTestResult,
+            new ParkingBrakeCalculationResult($isParkingBrake1EfficiencyPassing, $parkingBrake1FailureSeverity),
+            new ServiceBrakeCalculationResult($isServiceBrake1EfficiencyPassing, $serviceBrake1FailureSeverity),
+            null
+        );
 
         $this->setupMockForSingleCall(
             $mocks[self::MOCK_MAPPER_CLASS_ABOVE_3],
@@ -135,17 +175,53 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $this->setupMockForSingleCall(
             $mocks[self::MOCK_CALCULATOR_CLASS_ABOVE_3],
             'calculateBrakeTestResult',
-            $brakeTestResult,
+            $calculationResult,
             $brakeTestResultPrototype
         );
-
         $brakeTestResultService = $this->constructBrakeTestResultServiceWithMocks($mocks);
 
         $resultBrakeTestResult = $brakeTestResultService->createBrakeTestResult($motTest, $data);
 
         $this->assertInstanceOf(BrakeTestResultSubmissionSummary::class, $resultBrakeTestResult);
         $this->assertEquals($brakeTestResult, $resultBrakeTestResult->brakeTestResultClass3AndAbove);
-        $this->assertEquals($this->getRfrExpectedClass4Result(), $resultBrakeTestResult->reasonsForRejectionList);
+        $this->assertEquals($expectedRfrList, $resultBrakeTestResult->reasonsForRejectionList);
+    }
+
+    public function testCreateBrakeTestResultOkDP()
+    {
+        return [
+            [
+                // for feature toggle = false - there is no need for setting appropriate CalculationFailureSeverity - default to NONE
+                'euFeatureToggle' => false,
+                'serviceBrakeEfficiency' => 10,
+                'isServiceBrake1EfficiencyPassing' => false,
+                'serviceBrake1FailureSeverity' => CalculationFailureSeverity::NONE,
+                'isParkingBrake1EfficiencyPassing' => false,
+                'parkingBrake1FailureSeverity' => CalculationFailureSeverity::NONE,
+                'isImbalancePassing' => false,
+                'expectedRfrList' => $this->getRfrExpectedClass4Result_PreEu()
+            ],
+            [
+                'euFeatureToggle' => true,
+                'serviceBrakeEfficiency' => 10,
+                'isServiceBrake1EfficiencyPassing' => false,
+                'serviceBrake1FailureSeverity' => CalculationFailureSeverity::DANGEROUS,
+                'isParkingBrake1EfficiencyPassing' => false,
+                'parkingBrake1FailureSeverity' => CalculationFailureSeverity::DANGEROUS,
+                'isImbalancePassing' => false,
+                'expectedRfrList' => $this->getRfrExpectedClass4Result_PostEu_Dangerous()
+            ],
+            [
+                'euFeatureToggle' => true,
+                'serviceBrakeEfficiency' => 30,
+                'isServiceBrake1EfficiencyPassing' => false,
+                'serviceBrake1FailureSeverity' => CalculationFailureSeverity::MAJOR,
+                'isParkingBrake1EfficiencyPassing' => false,
+                'parkingBrake1FailureSeverity' => CalculationFailureSeverity::MAJOR,
+                'isImbalancePassing' => false,
+                'expectedRfrList' => $this->getRfrExpectedClass4Result_PostEu_Major()
+            ],
+        ];
     }
 
     public function testCreateBrakeTestResultClass1AndNoRfrs()
@@ -332,7 +408,8 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                     $mocks[self::MOCK_REASON_FOR_REJECTION],
                     $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION],
                     $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY],
-                    $mocks[self::MOCK_FEATURE_TOGGLES]
+                    $mocks[self::MOCK_FEATURE_TOGGLES],
+                    new ParkingBrakeClass3AndAboveRfrMapper($mocks[self::MOCK_FEATURE_TOGGLES])
                 ]
             )
             ->setMethods(['createBrakeTestResult'])
@@ -470,6 +547,13 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             (new WeightSource())->setCode($inputWeightSource)
         );
 
+        $calculationResult = new BrakeTestClass3AndAboveCalculationResult(
+            $brakeTestResult,
+            new ParkingBrakeCalculationResult(true, CalculationFailureSeverity::NONE),
+            new ServiceBrakeCalculationResult(true, CalculationFailureSeverity::NONE),
+            null
+        );
+
         $this->setupMockForSingleCall(
             $mocks[self::MOCK_MAPPER_CLASS_ABOVE_3],
             'mapToObject',
@@ -480,7 +564,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $this->setupMockForSingleCall(
             $mocks[self::MOCK_CALCULATOR_CLASS_ABOVE_3],
             'calculateBrakeTestResult',
-            $brakeTestResult,
+            $calculationResult,
             $brakeTestResultPrototype
         );
 
@@ -502,32 +586,27 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $this->assertEquals($outputWeightSource, $brakeTestResultInSummary->getWeightType()->getCode());
     }
 
-    public function testCreateBrakeTestResultVehicleWeightIsMappedOnlyWhenSourceIsOfficial()
-    {
-
-    }
-
-    private function getMocksForBrakeTestResultService()
+    private function getMocksForBrakeTestResultService($euRoadworthinessFT = false)
     {
         $mockBrakeTestResultValidator = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Service\Validator\BrakeTestResultValidator::class
+            BrakeTestResultValidator::class
         );
         $mockBrakeTestConfigurationValidator = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator::class
+            BrakeTestConfigurationValidator::class
         );
         $mockHydrator = $this->getMockHydrator();
         $mockEntityManager = $this->getMockEntityManager();
         $mockBrakeTestResultCalculator = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator::class
+            BrakeTestResultClass3AndAboveCalculator::class
         );
         $mockBrakeTestResultClass12Calculator = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator::class
+            BrakeTestResultClass1And2Calculator::class
         );
         $mockBrakeTestResultClass3AndAboveMapper = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper::class
+            BrakeTestResultClass3AndAboveMapper::class
         );
         $mockBrakeTestResultClass12Mapper = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Mapper\BrakeTestResultClass12Mapper::class
+            BrakeTestResultClass12Mapper::class
         );
 
         $mockTestValidator = $this->getMockWithDisabledConstructor(MotTestValidator::class);
@@ -541,9 +620,11 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $mockWeightSourceRepository = XMock::of(WeightSourceRepository::class);
 
         $mockFeatureToggles = XMock::of(FeatureToggles::class);
+
         $mockFeatureToggles->expects($this->any())
             ->method("isEnabled")
-            ->willReturn(true);
+            ->with(FeatureToggle::EU_ROADWORTHINESS)
+            ->willReturn($euRoadworthinessFT);
 
         return [
             self::MOCK_CALCULATOR_CLASS_ABOVE_3 => $mockBrakeTestResultCalculator,
@@ -558,27 +639,76 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             self::MOCK_REASON_FOR_REJECTION => $mockReasonForRejectionSrvc,
             self::MOCK_PERFORM_MOT_TEST_ASSERTION => $mockPerformMotTestAssertion,
             self::MOCK_WEIGHT_SOURCE_REPOSITORY => $mockWeightSourceRepository,
-            self::MOCK_FEATURE_TOGGLES => $mockFeatureToggles,
+            self::MOCK_FEATURE_TOGGLES => $mockFeatureToggles
         ];
     }
 
-    private function getRfrExpectedClass4Result()
+    private function getRfrExpectedClass4Result_PreEu()
     {
         return [
             [
-                'rfrId' => '8357',
+                'rfrId' => ServiceBrakeTestSpecialRfrGenerator::RFR_ID_SERVICE_BRAKE_ROLLER_LOW_EFFICIENCY,
                 'type' => 'FAIL',
                 'locationLongitudinal' => null,
                 'comment' => null,
             ],
             [
-                'rfrId' => '8358',
+                'rfrId' => ParkingBrakeClass3AndAboveRfrMapper::RFR_ID_PARKING_BRAKE_ROLLER_LOW_EFFICIENCY,
                 'type' => 'FAIL',
                 'locationLongitudinal' => null,
                 'comment' => null,
             ],
             [
-                'rfrId' => '8343',
+                'rfrId' => BrakeTestResultService::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
+                'type' => 'FAIL',
+                'locationLongitudinal' => 'front',
+                'comment' => null,
+            ],
+        ];
+    }
+
+    private function getRfrExpectedClass4Result_PostEu_Dangerous()
+    {
+        return [
+            [
+                'rfrId' => ServiceBrakeTestSpecialRfrGenerator::RFR_ID_SERVICE_BRAKE_ROLLER_LOW_EFFICIENCY_DANGEROUS_EU_DEFICIENCY,
+                'type' => 'FAIL',
+                'locationLongitudinal' => null,
+                'comment' => null,
+            ],
+            [
+                'rfrId' => ParkingBrakeClass3AndAboveRfrMapper::RFR_ID_PARKING_BRAKE_ROLLER_LOW_EFFICIENCY_DANGEROUS,
+                'type' => 'FAIL',
+                'locationLongitudinal' => null,
+                'comment' => null,
+            ],
+            [
+                'rfrId' => BrakeTestResultService::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
+                'type' => 'FAIL',
+                'locationLongitudinal' => 'front',
+                'comment' => null,
+            ],
+        ];
+    }
+
+
+    private function getRfrExpectedClass4Result_PostEu_Major()
+    {
+        return [
+            [
+                'rfrId' => ServiceBrakeTestSpecialRfrGenerator::RFR_ID_SERVICE_BRAKE_ROLLER_LOW_EFFICIENCY_MAJOR_EU_DEFICIENCY,
+                'type' => 'FAIL',
+                'locationLongitudinal' => null,
+                'comment' => null,
+            ],
+            [
+                'rfrId' => ParkingBrakeClass3AndAboveRfrMapper::RFR_ID_PARKING_BRAKE_ROLLER_LOW_EFFICIENCY_MAJOR,
+                'type' => 'FAIL',
+                'locationLongitudinal' => null,
+                'comment' => null,
+            ],
+            [
+                'rfrId' => BrakeTestResultService::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
                 'type' => 'FAIL',
                 'locationLongitudinal' => 'front',
                 'comment' => null,
@@ -614,7 +744,8 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             $mocks[self::MOCK_REASON_FOR_REJECTION],
             $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION],
             $mocks[self::MOCK_WEIGHT_SOURCE_REPOSITORY],
-            $mocks[self::MOCK_FEATURE_TOGGLES]
+            $mocks[self::MOCK_FEATURE_TOGGLES],
+            new ParkingBrakeClass3AndAboveRfrMapper($mocks[self::MOCK_FEATURE_TOGGLES])
         );
     }
 
