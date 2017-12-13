@@ -5,8 +5,10 @@ set @start_date = '2018-05-20';
 set @app_user_id = 2;
 
 ALTER table reason_for_rejection
-CHANGE COLUMN inspection_manual_reference inspection_manual_reference varchar(18)
-;
+CHANGE COLUMN inspection_manual_reference inspection_manual_reference varchar(18) ;
+
+ALTER table reason_for_rejection_hist
+CHANGE COLUMN inspection_manual_reference inspection_manual_reference varchar(18) ;
 
 #These deletes will only all work if none of these have been assigned to tests.
 #Included here to make script re-runnable.
@@ -24,16 +26,40 @@ order by id desc;
 DELETE FROM test_item_category_hist where id > 19999 order by id desc;
 
 -- Future end date Pre-EU Components so that EU Roadworthiness RFRs can be added and tested
-UPDATE `mot2`.test_item_category
+-- Exclude any Components that belong to Class 1 or 2.
+UPDATE test_item_category
 SET end_date = @start_date
 WHERE end_date is null
-AND id < 20000;
+AND id < 20000
+AND id NOT IN (SELECT test_item_category_id FROM test_item_category_vehicle_class_map
+           WHERE  vehicle_class_id in (1,2)) ;
+
+-- Belt and braces - in case the anonymised set has any already forward end-dated by accident 
+UPDATE test_item_category
+SET end_date = null
+WHERE end_date = '2018-05-20'
+AND id < 20000
+AND id IN (SELECT test_item_category_id FROM test_item_category_vehicle_class_map
+           WHERE  vehicle_class_id in (1,2)) ;
 
 -- Future end date RFRs so that EU Roadworthiness RFRs can be added and tested
-UPDATE `mot2`.reason_for_rejection
+-- Exclude any RFRs that belong to Class 1 or 2.
+UPDATE reason_for_rejection
 SET end_date = @start_date
 WHERE end_date is null
-AND id < 20000;
+AND id < 20000
+AND id NOT IN (SELECT rfr_id FROM rfr_vehicle_class_map
+           WHERE  vehicle_class_id in (1,2)) ;
+
+-- Belt and braces - in case the anonymised set has any already forward end-dated by accident 
+UPDATE reason_for_rejection
+SET end_date = null
+WHERE end_date = '2018-05-20'
+AND id < 20000
+AND id IN (SELECT rfr_id FROM rfr_vehicle_class_map
+           WHERE  vehicle_class_id in (1,2)) ;
+
+
 
 # New test EU test_item_category entries.
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20000,0,0,@start_date,@app_user_id);
@@ -110,7 +136,7 @@ INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_t
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20071,20063,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20072,20071,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20073,20071,20003,@start_date,@app_user_id);
-INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20074,20062,20003,@start_date,@app_user_id);
+INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20074,20003,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20075,20062,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20076,20075,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20077,20076,20003,@start_date,@app_user_id);
@@ -133,7 +159,6 @@ INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_t
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20094,20093,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20095,20093,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20096,20093,20003,@start_date,@app_user_id);
-INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20097,20083,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20098,20083,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20099,20098,20003,@start_date,@app_user_id);
 INSERT INTO `test_item_category` (`id`,`parent_test_item_category_id`,`section_test_item_category_id`,`start_date`,`created_by`) VALUES (20100,20098,20003,@start_date,@app_user_id);
@@ -570,7 +595,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20094,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20095,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20096,3,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20097,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20098,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20099,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20100,3,@app_user_id);
@@ -700,7 +724,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20231,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20232,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20233,3,@app_user_id);
-#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20234,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20235,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20236,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20237,3,@app_user_id);
@@ -826,7 +849,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20376,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20379,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20380,3,@app_user_id);
-#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20381,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20417,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20418,3,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20419,3,@app_user_id);
@@ -930,7 +952,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20094,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20095,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20096,4,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20097,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20098,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20099,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20100,4,@app_user_id);
@@ -1193,7 +1214,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20357,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20358,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20359,4,@app_user_id);
-#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20360,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20361,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20362,4,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20363,4,@app_user_id);
@@ -1365,7 +1385,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20094,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20095,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20096,5,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20097,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20098,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20099,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20100,5,@app_user_id);
@@ -1639,7 +1658,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20374,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20376,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20377,5,@app_user_id);
-#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20378,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20379,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20380,5,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20381,5,@app_user_id);
@@ -1793,7 +1811,6 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20094,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20095,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20096,7,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20097,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20098,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20099,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20100,7,@app_user_id);
@@ -2066,12 +2083,9 @@ INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`veh
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20374,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20376,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20377,7,@app_user_id);
-#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20378,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20379,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20380,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20381,7,@app_user_id);
-#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20382,7,@app_user_id);
-#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20383,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20384,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20385,7,@app_user_id);
 INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20386,7,@app_user_id);
@@ -2185,7 +2199,7 @@ INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`languag
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20071,1,'Plate brake tester',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20072,1,'Service brake performance','Service brake',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20073,1,'Service brake efficiency (Trikes, quads and pre-68 vehicles)','Service brake',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20074,1,'Service brake performance not tested','Service brake performance',@app_user_id);
+INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20074,1,'Brake performance not tested','Brake performance',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20075,1,'Service Brake Efficiency',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20076,1,'Rbt (sp)',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20077,1,'Service brake performance','Service brake:',@app_user_id);
@@ -2208,7 +2222,6 @@ INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`languag
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20094,1,'Parking brake performance','Parking brake',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20095,1,'Parking (secondary brake performance)','Parking (secondary brake)',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20096,1,'Parking brake efficiency (Trikes, quads and pre-68 vehicles)','Parking',@app_user_id);
-INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20097,1,'Parking brake performance not tested','Parking brake performance',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20098,1,'Parking brake efficiency sp)',NULL,@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20099,1,'Rbt (sp)','Parking brake',@app_user_id);
 INSERT INTO `ti_category_language_content_map` (`test_item_category_id`,`language_lookup_id`,`name`,`description`,`created_by`) VALUES (20100,1,'Decelerometer (sp)','Parking brake',@app_user_id);
@@ -2850,7 +2863,6 @@ INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_sele
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20309,20072,'tbc','tbc',0,'1.2.1 (d)',1,0,0,0,3,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20310,20065,'tbc','tbc',0,'1.2.1 (e)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20311,20072,'tbc','tbc',0,'1.2.1 (e)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20312,20074,'tbc','tbc',0,'1.2.1 (f)',1,0,0,0,3,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20313,20067,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20314,20070,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20315,20073,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
@@ -2880,7 +2892,6 @@ INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_sele
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20351,20090,'tbc','tbc',0,'1.4.1 (a) (i)',1,0,0,0,3,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20352,20090,'tbc','tbc',0,'1.4.1 (a) (i)',1,0,0,0,3,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20353,20094,'tbc','tbc',0,'1.4.1 (a) (i)',1,0,0,0,3,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20354,20097,'tbc','tbc',0,'1.4.1 (b)',1,0,0,0,3,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20355,20088,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20356,20092,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20357,20096,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,0,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
@@ -4773,7 +4784,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20309,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20310,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20311,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20312,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20313,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20314,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20315,3,@app_user_id);
@@ -4798,7 +4808,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20351,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20352,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20353,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20354,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20355,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20356,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20357,3,@app_user_id);
@@ -6374,7 +6383,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20309,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20310,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20311,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20312,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20313,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20314,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20315,4,@app_user_id);
@@ -6404,7 +6412,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20351,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20352,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20353,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20354,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20355,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20356,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20357,4,@app_user_id);
@@ -8256,7 +8263,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20309,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20310,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20311,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20312,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20313,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20314,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20315,5,@app_user_id);
@@ -8284,7 +8290,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20351,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20352,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20353,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20354,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20355,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20356,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20357,5,@app_user_id);
@@ -10119,7 +10124,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20309,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20310,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20311,7,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20312,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20313,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20314,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20315,7,@app_user_id);
@@ -10149,7 +10153,6 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20351,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20352,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20353,7,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20354,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20355,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20356,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20357,7,@app_user_id);
@@ -11932,7 +11935,6 @@ INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`insp
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20309,1,'lagging in operation','Abnormal lag in brake operation on a wheel',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20310,1,'excessively fluctuating','Excessive fluctuation in brake effort through each wheel revolution.','brake fluctuating, but not excessively',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20311,1,'excessively fluctuating','Excessive fluctuation in brake effort through each wheel revolution','brake fluctuating, but not excessively',@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20312,1,'not tested','Service brake performance unable to be tested',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20313,1,'efficiency below requirements','Service brake efficiency below minimum requirement','efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20314,1,'efficiency below requirements','Service brake efficiency below minimum requirement','efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20315,1,'efficiency below requirements','Service brake efficiency below minimum requirement','efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
@@ -11962,7 +11964,6 @@ INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`insp
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20351,1,'is causing the vehicle to swerve to the offside','Parking brake inoperative on one side, or in the case of testing on the road, the vehicle deviates excessively from a straight line',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20352,1,'is causing the vehicle to swerve to the nearside','Parking brake inoperative on one side, or in the case of testing on the road, the vehicle deviates excessively from a straight line',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20353,1,'brake inoperative on one side','Parking brake inoperative on one side',NULL,@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20354,1,'not tested','Parking brake performance unable to be tested',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20355,1,'brake efficiency below requirements','Parking brake efficiency below minimum requirement','efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20356,1,'brake efficiency below requirements','Parking brake efficiency below minimum requirement','efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20357,1,'brake efficiency below requirements','Parking brake efficiency below minimum requirement','efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
@@ -13559,89 +13560,78 @@ INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`insp
 
 
 -- Throw in a few dummy class 1 & 2 Components and RFRs
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20000,1,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20001,1,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20002,1,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20000,2,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20001,2,@app_user_id);
-INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20002,2,@app_user_id);
-
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20000,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20001,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20002,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20003,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20004,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20005,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20006,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20007,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20008,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20009,1,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20000,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20001,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20002,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20003,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20004,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20005,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20006,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20007,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20008,2,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20009,2,@app_user_id);
+#commented out as this version of the script attempts to keep all class 1 & 2 components and RFRs alive.
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20000,1,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20001,1,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20002,1,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20000,2,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20001,2,@app_user_id);
+#INSERT INTO `test_item_category_vehicle_class_map` (`test_item_category_id`,`vehicle_class_id`,`created_by`) VALUES (20002,2,@app_user_id);
+#
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20000,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20001,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20002,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20003,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20004,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20005,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20006,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20007,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20008,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20009,1,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20000,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20001,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20002,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20003,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20004,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20005,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20006,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20007,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20008,2,@app_user_id);
+#INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (20009,2,@app_user_id);
 
 ##################
 # SP RFRs
 ##################
 
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20295,20078,'tbc','tbc',0,'1.2.1 (b) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30002,20078,'tbc','tbc',0,'1.2.1 (b) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30001,20082,'tbc','tbc',0,'1.2.1 (b) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20298,20082,'tbc','tbc',0,'1.2.1 (b) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20301,20078,'tbc','tbc',0,'1.2.1 (b) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30004,20078,'tbc','tbc',0,'1.2.1 (b) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30002,20078,'tbc','tbc',0,'1.2.1 (b) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30003,20082,'tbc','tbc',0,'1.2.1 (b) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20304,20082,'tbc','tbc',0,'1.2.1 (b) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20316,20077,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30004,20078,'tbc','tbc',0,'1.2.1 (b) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30005,20081,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30006,20077,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30007,20079,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20319,20079,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30005,20081,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20321,20081,'tbc','tbc',0,'1.2.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20325,20077,'tbc','tbc',0,'1.2.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30008,20081,'tbc','tbc',0,'1.2.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30009,20077,'tbc','tbc',0,'1.2.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30010,20079,'tbc','tbc',0,'1.2.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20328,20079,'tbc','tbc',0,'1.2.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30008,20081,'tbc','tbc',0,'1.2.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20330,20081,'tbc','tbc',0,'1.2.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20358,20099,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30011,20101,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30012,20099,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30013,20100,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20361,20100,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20362,20101,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30011,20101,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,1,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30014,20102,'tbc','tbc',0,'1.4.2 (a) (i)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20368,20099,'tbc','tbc',0,'1.4.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30015,20101,'tbc','tbc',0,'1.4.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30016,20099,'tbc','tbc',0,'1.4.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
 INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30017,20100,'tbc','tbc',0,'1.4.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20371,20100,'tbc','tbc',0,'1.4.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-#INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (20372,20101,'tbc','tbc',0,'1.4.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
-INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30015,20101,'tbc','tbc',0,'1.4.2 (a) (ii)',1,0,0,0,3,1,0,1,0,NULL,'b',@start_date,NULL,1,@app_user_id);
 
 
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30001,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30001,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30001,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30001,7,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30002,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30003,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30003,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30003,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30003,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30004,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30006,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30006,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30006,5,@app_user_id);
@@ -13650,10 +13640,10 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30007,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30007,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30007,7,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30005,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30009,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30009,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30009,5,@app_user_id);
@@ -13662,10 +13652,10 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30010,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30010,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30010,7,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30008,7,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30012,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30012,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30012,5,@app_user_id);
@@ -13674,12 +13664,12 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30013,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30013,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30013,7,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30011,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30014,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30014,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,7,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30016,3,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30016,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30016,5,@app_user_id);
@@ -13688,45 +13678,56 @@ INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) V
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30017,4,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30017,5,@app_user_id);
 INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30017,7,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,3,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,4,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,5,@app_user_id);
-INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30015,7,@app_user_id);
 
 
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20295,1,'across an axle','Brakes imbalance across an axle such that the braking effort from any wheel is less than 70% of the maximum effort recorded from the other wheel on the same axle.','imbalance requirements only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30002,1,'across an axle','Brakes imbalance across an axle such that the braking effort from any wheel is less than 70% of the maximum effort recorded from the other wheel on the same axle.','imbalance requirements only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30001,1,'across an axle','Brakes imbalance across an axle such that the braking effort from any wheel is less than 70% of the maximum effort recorded from the other wheel on the same axle. ','imbalance requirements only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20298,1,'across an axle','Brakes imbalance across an axle such that the braking effort from any wheel is less than 70% of the maximum effort recorded from the other wheel on the same axle. ','imbalance requirements only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20301,1,'across an axle by more than 50%','Brakes imbalance across an axle such that the braking effort from any wheel is less than 50% of the maximum effort recorded from the other wheel on a steered axle',NULL,@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30004,1,'across an axle by more than 50%','Brakes imbalance across an axle such that the braking effort from any wheel is less than 50% of the maximum effort recorded from the other wheel on a steered axle',NULL,@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30002,1,'across an axle','Brakes imbalance across an axle such that the braking effort from any wheel is less than 70% of the maximum effort recorded from the other wheel on the same axle.','imbalance requirements only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30003,1,'more than 50% across an axle','Brakes imbalance across an axle such that the braking effort from any wheel is less than 50% of the maximum effort recorded from the other wheel on a steered axle',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20304,1,'more than 50% across an axle','Brakes imbalance across an axle such that the braking effort from any wheel is less than 50% of the maximum effort recorded from the other wheel on a steered axle',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20316,1,'efficiency below requirements','Service brake efficiency below minimum requirement','service brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30004,1,'across an axle by more than 50%','Brakes imbalance across an axle such that the braking effort from any wheel is less than 50% of the maximum effort recorded from the other wheel on a steered axle',NULL,@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30005,1,'efficiency below requirements','Service brake efficiency below minimum requirement','service brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30006,1,'efficiency below requirements','Service brake efficiency below minimum requirement','service brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30007,1,'efficiency below requirements','Service brake efficiency below minimum requirement','service brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20319,1,'efficiency below requirements','Service brake efficiency below minimum requirement','service brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30005,1,'efficiency below requirements','Service brake efficiency below minimum requirement','service brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20321,1,'efficiency below requirements','Service brake efficiency below minimum requirement','service brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20325,1,'efficiency less than 50% of the required value','Service brake efficiency less than 50% of the required value',NULL,@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30008,1,'efficiency less than 50% of the required value','Service brake efficiency less than 50% of the required value',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30009,1,'efficiency less than 50% of the required value','Service brake efficiency less than 50% of the required value',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30010,1,'efficiency less than 50% of the required value','Service brake efficiency less than 50% of the required value',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20328,1,'efficiency less than 50% of the required value','Service brake efficiency less than 50% of the required value',NULL,@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30008,1,'efficiency less than 50% of the required value','Service brake efficiency less than 50% of the required value',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20330,1,'efficiency less than 50% of the required value','Service brake efficiency less than 50% of the required value',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20358,1,'efficiency below requirements','Parking brake efficiency below minimum requirement','parking brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30011,1,'efficiency below requirements','Parking brake efficiency below minimum requirement','parking brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30012,1,'efficiency below requirements','Parking brake efficiency below minimum requirement','parking brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30013,1,'efficiency below requirements','Parking brake efficiency below minimum requirement','parking brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20361,1,'efficiency below requirements','Parking brake efficiency below minimum requirement','parking brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20362,1,'efficiency below requirements','Parking brake efficiency below minimum requirement','parking brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30011,1,'efficiency below requirements','Parking brake efficiency below minimum requirement','parking brake efficiency only just met. It would appear that the braking system requires adjustment or repair.',@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30014,1,'efficiency below requirements','when fully applied, the parking brake is incapable of holding the vehicle on a 16% gradient',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20368,1,'efficiency less than 50% of the required value','Parking brake efficiency less than 50% of the required value',NULL,@app_user_id);
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30015,1,'efficiency less than 50% of the required value','Parking brake efficiency less than 50% of the required value',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30016,1,'efficiency less than 50% of the required value','Parking brake efficiency less than 50% of the required value',NULL,@app_user_id);
 INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30017,1,'efficiency less than 50% of the required value','Parking brake efficiency less than 50% of the required value',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20371,1,'efficiency less than 50% of the required value','Parking brake efficiency less than 50% of the required value',NULL,@app_user_id);
-#INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (20372,1,'efficiency less than 50% of the required value','Parking brake efficiency less than 50% of the required value',NULL,@app_user_id);
-INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30015,1,'efficiency less than 50% of the required value','Parking brake efficiency less than 50% of the required value',NULL,@app_user_id);
+
+
+
+######################################
+# Brake Performance Not Tested RFRs
+######################################
+# Classes 3 - 7
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (30030,20074,'tbc','tbc',0,'1.2.1 (g)',1,0,0,0,3,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
+
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30030,3,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30030,4,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30030,5,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (30030,7,@app_user_id);
+
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (30030,1,'not tested','Brake performance unable to be tested',NULL,@app_user_id);
+
+# Classes 1 - 2
+# End date the current/origin brake performance not tested RFR
+UPDATE `reason_for_rejection`
+SET end_date = @start_date
+WHERE id = 10101;
+
+#Hang temporary new RFR off old component tree to allow development to use the new RFR ID.
+INSERT INTO `reason_for_rejection` (`id`,`test_item_category_id`,`test_item_selector_name`, `test_item_selector_name_cy`,`section_test_item_selector_id`,`inspection_manual_reference`,`minor_item`,`location_marker`,`qt_marker`,`note`,`manual`,`spec_proc`,`is_advisory`,`is_prs_fail`,`can_be_dangerous`,`date_first_used`,`audience`,`start_date`,`end_date`,`rfr_deficiency_category_id`,`created_by`) VALUES (40030,10151,'tbc','tbc',0,'TBC VC 1+2',1,0,0,0,1,0,0,1,0,NULL,'b',@start_date,NULL,2,@app_user_id);
+
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (40030,1,@app_user_id);
+INSERT INTO `rfr_vehicle_class_map` (`rfr_id`,`vehicle_class_id`,`created_by`) VALUES (40030,2,@app_user_id);
+
+INSERT INTO `rfr_language_content_map` (`rfr_id`,`language_type_id`,`name`,`inspection_manual_description`,`advisory_text`,`created_by`) VALUES (40030,1,'not tested','Brake performance unable to be tested',NULL,@app_user_id);
+
+
 
 #Perform some updates on 'self-documenting fields' which I do not belive the
 #Application displays, but are easiest populated in an automatic fachion like below.
@@ -13786,18 +13787,26 @@ AND language_type_id = 1;
 
 # Re-instate Non-Component advisories just so that no-one forgets about them.
 # In case they are not covered in new EU manuals properly.
-update test_item_category
-set end_date = null
-where id = 10000;
+UPDATE test_item_category
+SET end_date = null
+WHERE id = 10000;
 
-update reason_for_rejection
-set end_date = null
-where test_item_category_id = 10000;
+UPDATE reason_for_rejection
+SET end_date = null
+WHERE test_item_category_id = 10000;
 
 # Re-instate Item Not Tested Components used by VEs
-update test_item_category
-set end_date = null
-where id in (5800, 5801, 5803, 536, 537);
+UPDATE test_item_category
+SET end_date = null
+WHERE id in (5800, 5801, 5803, 536, 537);
+
+# Make sure the old Item Not Tested RFRs are ended.
+UPDATE reason_for_rejection
+SET end_date = @start_date
+WHERE test_item_category_id in (5800, 5801, 5803, 536, 537)
+AND rfr_deficiency_category_id = 0
+AND end_date is null;
+
 
 # Add Item Not Tested RFRs used by VEs with correct manual reference for EU Directive
 
