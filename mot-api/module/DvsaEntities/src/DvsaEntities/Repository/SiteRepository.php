@@ -430,10 +430,10 @@ class SiteRepository extends AbstractMutableRepository
     /**
      * Build the native SQL to search for a site.
      *
-     * @param $isCount
-     * @param $isFullTextSiteNameNumber
-     * @param $isFullTextSiteTownPostcode
-     * @param $isSiteVehicleClass
+     * @param bool $isCount
+     * @param bool $isFullTextSiteNameNumber
+     * @param bool $isFullTextSiteTownPostcode
+     * @param bool $isSiteVehicleClass
      *
      * @return string
      */
@@ -443,23 +443,35 @@ class SiteRepository extends AbstractMutableRepository
         $isFullTextSiteTownPostcode,
         $isSiteVehicleClass
     ) {
-        $select = ($isCount === true ? 'site.id'
-            : '
-            site.id,
-            site.id as siteId,
-            site.site_number,
-            site.name,
-            p.number as phone,
-            a.town,
-            a.postcode,
-            st.name as type,
-            site_status.name as status,
-            (SELECT GROUP_CONCAT(DISTINCT vc.code ORDER BY vc.code ASC SEPARATOR \',\')
-            FROM site
+        /* Select a single primary business phone number.
+            If primary number is not set, then select the latest business phone number */
+        $selectBusinessPhoneNumber =
+            '(SELECT p.number 
+             FROM phone p
+             JOIN phone_contact_type pct ON p.phone_contact_type_id = pct.id AND pct.code = \'BUS\'
+             WHERE p.contact_detail_id = cd.id
+             ORDER BY is_primary DESC
+             LIMIT 1) phone';
+
+        $select =
+            ($isCount === true ?
+                'site.id, ' . $selectBusinessPhoneNumber
+            :
+                'site.id,
+                site.id as siteId,
+                site.site_number,
+                site.name, '.
+                $selectBusinessPhoneNumber
+                .', a.town,
+                a.postcode,
+                st.name as type,
+                site_status.name as status,
+                (SELECT GROUP_CONCAT(DISTINCT vc.code ORDER BY vc.code ASC SEPARATOR \',\')
+                FROM site
                 LEFT JOIN auth_for_testing_mot_at_site site_auth ON (site.id = site_auth.site_id)
                 LEFT JOIN vehicle_class vc ON site_auth.vehicle_class_id = vc.id
-            WHERE site.id = siteId
-            LIMIT 1) AS roles'
+                WHERE site.id = siteId
+                LIMIT 1) AS roles'
         );
 
         $sql = "SELECT $select
@@ -468,8 +480,6 @@ class SiteRepository extends AbstractMutableRepository
                 LEFT JOIN contact_detail cd ON (scdm.contact_detail_id = cd.id)
                 LEFT JOIN address a ON (cd.address_id = a.id)
                 LEFT JOIN site_contact_type sct ON (scdm.site_contact_type_id = sct.id)
-                LEFT JOIN phone p ON (p.contact_detail_id = cd.id)
-                LEFT JOIN phone_contact_type pct ON (p.phone_contact_type_id = pct.id)
                 LEFT JOIN auth_for_testing_mot_at_site site_auth ON (site.id = site_auth.site_id)
                 LEFT JOIN site_status_lookup site_status ON site.site_status_id = site_status.id
                 LEFT JOIN vehicle_class vc ON site_auth.vehicle_class_id = vc.id
@@ -492,7 +502,7 @@ class SiteRepository extends AbstractMutableRepository
                 site.id,
                 site.site_number,
                 site.name,
-                p.number,
+                phone,
                 a.town,
                 a.postcode,
                 st.name,
