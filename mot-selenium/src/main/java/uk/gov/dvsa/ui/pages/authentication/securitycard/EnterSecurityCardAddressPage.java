@@ -42,7 +42,7 @@ public class EnterSecurityCardAddressPage extends Page {
     }
 
     public EnterSecurityCardAddressPage chooseCustomAddress() {
-        FormDataHelper.selectInputBox(customAddressRadioBox);
+        FormDataHelper.selectInputBoxIgnoreDisplayStatus(customAddressRadioBox);
         return this;
     }
 
@@ -72,12 +72,12 @@ public class EnterSecurityCardAddressPage extends Page {
     }
 
     public EnterSecurityCardAddressPage chooseVTSAddress() {
-        FormDataHelper.selectInputBox(firstVtsAddressRadioBox);
+        FormDataHelper.selectInputBoxIgnoreDisplayStatus(firstVtsAddressRadioBox);
         return this;
     }
 
     public EnterSecurityCardAddressPage chooseHomeAddress() {
-        FormDataHelper.selectInputBox(homeAddressRadioBox);
+        FormDataHelper.selectInputBoxIgnoreDisplayStatus(homeAddressRadioBox);
         return this;
     }
 

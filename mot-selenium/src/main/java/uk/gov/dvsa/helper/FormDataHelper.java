@@ -18,7 +18,15 @@ public class FormDataHelper {
     }
 
     public static void selectInputBox(WebElement webElement) {
-        if (webElement.isDisplayed() && !webElement.isSelected()) {
+
+        if (webElement.isDisplayed()) {
+            selectInputBoxIgnoreDisplayStatus(webElement);
+        }
+    }
+
+    public static void selectInputBoxIgnoreDisplayStatus(WebElement webElement) {
+
+        if (!webElement.isSelected()) {
             webElement.click();
         }
     }

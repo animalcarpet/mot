@@ -14,6 +14,8 @@ $tabIndex = $this->tabIndex;
 $inputModifier = isset($inputModifier) ? $inputModifier : '';
 $divModifier = isset($this->divModifier) ? $this->divModifier : '';
 $autoCompleteOff = isset($this->autoCompleteOff) ? $this->autoCompleteOff : false;
+$isNewGDS = isset($this->isNewGDS) ? $this->isNewGDS : false;
+$hasBoldLabel = isset($this->hasBoldLabel) ? $this->hasBoldLabel : false;
 
 $cssClass = implode(
     ' ', array_filter(
@@ -25,45 +27,96 @@ $cssClass = implode(
 );
 
 ?>
-<div class="form-group <?php echo $this->escapeHtmlAttr($cssClass); ?>" <?php echo $dataTarget ? sprintf('id="%s"', $dataTarget) : '' ?> >
-    <label for="<?php echo $this->escapeHtmlAttr($id); ?>"
-           class="form-label <?php echo $labelVisuallyHidden ? 'visuallyhidden' : ''; ?>">
+<?php
+    if($isNewGDS) :
+    // Use the new GDS style input
+?>
 
-        <?php if (!empty($label)) :
-            echo $this->escapeHtml($label);
-        endif; ?>
+    <div class="form-group <?php echo $this->escapeHtmlAttr($cssClass); ?> <?php if (!empty($errorMessage)){ echo ' form-group-error'; } ?>" <?php echo $dataTarget ? sprintf('id="%s"', $dataTarget) : '' ?>>
 
-        <?php if (!empty($help)): ?>
-            <span class="form-hint"><?php echo $this->escapeHtml($help); ?></span>
+        <label for="<?php echo $this->escapeHtmlAttr($id); ?>" class="form-label <?php echo $labelVisuallyHidden ? 'visuallyhidden' : ''; ?>">
+
+            <span class="<?php echo $hasBoldLabel ? ' form-label-bold bold-small' : '';  ?>">
+                <?php if (!empty($label)) :
+                    echo $this->escapeHtml($label);
+                endif; ?>
+            </span>
+
+            <?php if (!empty($errorMessage)): ?>
+                 <span class="error-message"><?php echo $this->escapeHtml($errorMessage); ?></span>
+            <?php endif; ?>
+
+        </label>
+
+        <?php echo $this->partial(
+                'partial/gds/form/control-text',
+                [
+                    'id' => $id,
+                    'name' => $name,
+                    'value' => $value,
+                    'inputModifier' => $inputModifier,
+                    'type' => $type,
+                    'maxLength' => isset($maxLength) ? $maxLength : '',
+                    'tabIndex' => $tabIndex,
+                    'autofocus' => $this->autofocus,
+                    'pattern' => $this->pattern,
+                    'patternErrorMsg' => $this->patternErrorMsg,
+                    'autoCompleteOff' => $this->autoCompleteOff,
+                ]
+            );
+        ?>
+
+        <?php if (!empty($info)): ?>
+            <?php echo $this->escapeHtml($info); ?>
         <?php endif; ?>
 
-        <?php if (!empty($errorMessage) && !$errorOutsideLabel): ?>
-            <span class="validation-message"><?php echo $this->escapeHtml($errorMessage); ?></span>
+    </div>
+
+<?php else: ?>
+
+    <div class="form-group <?php echo $this->escapeHtmlAttr($cssClass); ?>" <?php echo $dataTarget ? sprintf('id="%s"', $dataTarget) : '' ?> >
+
+        <label for="<?php echo $this->escapeHtmlAttr($id); ?>"
+               class="form-label <?php echo $labelVisuallyHidden ? 'visuallyhidden' : ''; ?>">
+
+            <?php if (!empty($label)) :
+                echo $this->escapeHtml($label);
+            endif; ?>
+
+            <?php if (!empty($help)): ?>
+                <span class="form-hint"><?php echo $this->escapeHtml($help); ?></span>
+            <?php endif; ?>
+
+            <?php if (!empty($errorMessage) && !$errorOutsideLabel): ?>
+                <span class="validation-message"><?php echo $this->escapeHtml($errorMessage); ?></span>
+            <?php endif; ?>
+        </label>
+
+        <?php if (!empty($errorMessage) && $errorOutsideLabel): ?>
+             <span class="validation-message"><?php echo $this->escapeHtml($errorMessage); ?></span>
+         <?php endif; ?>
+
+        <?php echo $this->partial(
+            'partial/gds/form/control-text',
+            [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value,
+                'inputModifier' => $inputModifier,
+                'type' => $type,
+                'maxLength' => isset($maxLength) ? $maxLength : '',
+                'tabIndex' => $tabIndex,
+                'autofocus' => $this->autofocus,
+                'pattern' => $this->pattern,
+                'patternErrorMsg' => $this->patternErrorMsg,
+                'autoCompleteOff' => $this->autoCompleteOff,
+            ]
+        ); ?>
+
+        <?php if (!empty($info)): ?>
+            <?php echo $this->escapeHtml($info); ?>
         <?php endif; ?>
-    </label>
+    </div>
 
-    <?php if (!empty($errorMessage) && $errorOutsideLabel): ?>
-         <span class="validation-message"><?php echo $this->escapeHtml($errorMessage); ?></span>
-     <?php endif; ?>
 
-    <?php echo $this->partial(
-        'partial/gds/form/control-text',
-        [
-            'id' => $id,
-            'name' => $name,
-            'value' => $value,
-            'inputModifier' => $inputModifier,
-            'type' => $type,
-            'maxLength' => isset($maxLength) ? $maxLength : '',
-            'tabIndex' => $tabIndex,
-            'autofocus' => $this->autofocus,
-            'pattern' => $this->pattern,
-            'patternErrorMsg' => $this->patternErrorMsg,
-            'autoCompleteOff' => $this->autoCompleteOff,
-        ]
-    ); ?>
-
-    <?php if (!empty($info)): ?>
-        <?php echo $this->escapeHtml($info); ?>
-    <?php endif; ?>
-</div>
+<?php endif; ?>
