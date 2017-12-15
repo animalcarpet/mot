@@ -9,27 +9,22 @@ $form = $viewModel->getForm();
 $addressIsCustom = ($form->getAddressRadios()->getValue() === SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE);
 $this->headTitle('Choose a delivery address');
 ?>
-<style>
-    .customAddressJavascriptDisplay {display: <?php echo $addressIsCustom ? 'block' : 'none'; ?>}
-</style>
-<noscript>
-    <style>
-        .customAddressJavascriptDisplay {display:block;}
-    </style>
-</noscript>
+
 <div class="grid-row">
     <div class="column-two-thirds">
         <?php if ($form->getAddressRadios()->getMessages()) : ?>
-            <div id="validationBox">
-                <div id="validationErrors" class="validation-summary">
+            <div class="error-summary " id="validationBox">
+                <h2 class="heading-medium error-summary-heading">There was a problem</h2>
+                <div id="validationErrors">
                     <ol><?php echo $form->getAddressRadios()->getMessages()[0]; ?></ol>
                 </div>
             </div>
         <?php endif; ?>
+
         <form method="post" action="<?php echo $this->url('security-card-order/address', ['userId' => $viewModel->getUserId()])?>">
             <?php echo $this->csrfToken(); ?>
             <p class="lede">Your security card will be sent to this address.</p>
-            <div class="form-group <?php echo ($form->getAddressRadios()->getMessages()) ? 'has-error' : '' ?>">
+            <div class="form-group <?php echo ($form->getAddressRadios()->getMessages()) ? 'form-group-error' : '' ?>">
 
                 <?php
                 echo $this->partial(
@@ -41,14 +36,15 @@ $this->headTitle('Choose a delivery address');
                 );
                 ?>
 
-                <div id="customAddressContainer"
-                     class="panel-indent inline customAddressJavascriptDisplay"
+                    <div id="customAddressContainer"
+                     class="panel-indent inline js-hidden"
                      aria-hidden="<?php echo $addressIsCustom ? 'false' : 'true' ?>">
                     <?php if ($form->isCustomAddressChosen()) : ?>
                         <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
                     <?php endif; ?>
 
                     <fieldset>
+
                         <?php
                         echo $this->partial(
                             'partial/gds/form/control', [
@@ -92,3 +88,12 @@ $this->headTitle('Choose a delivery address');
         </form>
     </div>
 </div>
+
+<?php $this->headScript()->appendFile('/assets/javascripts/govuk/show-hide-content.js'); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+ $(document).ready(function () {
+     var showHideContent = new GOVUK.ShowHideContent();
+     showHideContent.init();
+
+ });
+<?php $this->inlineScript()->captureEnd();

@@ -47,6 +47,7 @@ class SecurityCardAddressForm extends Form
         $this->add((new Text())
             ->setName(self::ADDRESS_LINE_1)
             ->setLabel('Address')
+            ->setAttribute('isNewGDS', true)
             ->setAttribute('id', self::ADDRESS_LINE_1)
             ->setAttribute('required', true)
             ->setAttribute('group', true)
@@ -56,6 +57,7 @@ class SecurityCardAddressForm extends Form
         $this->add((new Text())
             ->setName(self::ADDRESS_LINE_2)
             ->setAttribute('id', self::ADDRESS_LINE_2)
+            ->setAttribute('isNewGDS', true)
             ->setAttribute('required', false)
             ->setAttribute('group', true)
             ->setAttribute('divModifier', 'form-group')
@@ -64,6 +66,7 @@ class SecurityCardAddressForm extends Form
         $this->add((new Text())
             ->setName(self::ADDRESS_LINE_3)
             ->setAttribute('id', self::ADDRESS_LINE_3)
+            ->setAttribute('isNewGDS', true)
             ->setAttribute('required', false)
             ->setAttribute('group', true)
             ->setAttribute('divModifier', 'form-group')
@@ -73,6 +76,7 @@ class SecurityCardAddressForm extends Form
             ->setName(self::TOWN)
             ->setLabel('Town or City')
             ->setAttribute('id', self::TOWN)
+            ->setAttribute('isNewGDS', true)
             ->setAttribute('required', false)
             ->setAttribute('group', true)
             ->setAttribute('divModifier', 'form-group')
@@ -82,6 +86,7 @@ class SecurityCardAddressForm extends Form
             ->setName(self::POSTCODE)
             ->setLabel('Postcode')
             ->setAttribute('id', self::POSTCODE)
+            ->setAttribute('isNewGDS', true)
             ->setAttribute('required', true)
             ->setAttribute('group', true)
             ->setAttribute('divModifier', 'form-group')
@@ -228,6 +233,7 @@ class SecurityCardAddressForm extends Form
                 'name' => 'addressChoice',
                 'title' => $address['name'],
                 'id' => 'addressChoice'.$key,
+                'labelClass' => 'form-label-bold bold-small',
             ];
         }
 
@@ -237,6 +243,7 @@ class SecurityCardAddressForm extends Form
             'title' => 'Enter new address',
             'ariaContainer' => 'customAddressContainer',
             'id' => self::CUSTOM_ADDRESS_VALUE,
+            'labelClass' => 'form-label-bold bold-small',
         ));
 
         return $addresses;
