@@ -27,15 +27,19 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
 
     /** @var AnswerSecurityQuestionsAction $answerSecurityQuestionsAction */
     private $answerSecurityQuestionsAction;
+    /** @var PersonProfileUrlGenerator */
+    private $personProfileUrlGenerator;
 
     public function __construct(
         SecurityQuestionService $securityQuestionService,
         UserAdminSessionManager $userAdminSessionManager,
-        AnswerSecurityQuestionsAction $answerSecurityQuestionsAction
+        AnswerSecurityQuestionsAction $answerSecurityQuestionsAction,
+        PersonProfileUrlGenerator $personProfileUrlGenerator
     ) {
         parent::__construct($securityQuestionService, $userAdminSessionManager);
 
         $this->answerSecurityQuestionsAction = $answerSecurityQuestionsAction;
+        $this->personProfileUrlGenerator = $personProfileUrlGenerator;
     }
 
     /**
@@ -89,9 +93,6 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
      */
     private function createViewModel()
     {
-        /** @var PersonProfileUrlGenerator $personProfileUrlGenerator */
-        $personProfileUrlGenerator = $this->getServiceLocator()->get(PersonProfileUrlGenerator::class);
-
-        return new SecurityQuestionViewModel($this->service, $personProfileUrlGenerator);
+        return new SecurityQuestionViewModel($this->service, $this->personProfileUrlGenerator);
     }
 }

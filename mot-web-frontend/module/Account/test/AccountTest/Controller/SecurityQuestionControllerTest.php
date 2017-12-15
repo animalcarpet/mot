@@ -66,7 +66,8 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
             new SecurityQuestionController(
                 $this->securityQuestionService,
                 $this->userAdminSessionManager,
-                XMock::of(AnswerSecurityQuestionsAction::class)
+                XMock::of(AnswerSecurityQuestionsAction::class),
+                $personProfileUrlGenerator
             )
         );
 
