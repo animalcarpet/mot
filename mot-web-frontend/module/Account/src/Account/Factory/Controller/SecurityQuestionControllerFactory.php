@@ -5,6 +5,7 @@ namespace Account\Factory\Controller;
 use Account\Action\PasswordReset\AnswerSecurityQuestionsAction;
 use Account\Controller\SecurityQuestionController;
 use Account\Service\SecurityQuestionService;
+use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -24,10 +25,14 @@ class SecurityQuestionControllerFactory implements FactoryInterface
         /* @var UserAdminSessionManager */
         $userAdminSessionManager = $appServiceLocator->get(UserAdminSessionManager::class);
 
+        /** @var PersonProfileUrlGenerator */
+        $personProfileUrlGenerator = $appServiceLocator->get(PersonProfileUrlGenerator::class);
+
         $controller = new SecurityQuestionController(
             $service,
             $userAdminSessionManager,
-            $action
+            $action,
+            $personProfileUrlGenerator
         );
 
         return $controller;
