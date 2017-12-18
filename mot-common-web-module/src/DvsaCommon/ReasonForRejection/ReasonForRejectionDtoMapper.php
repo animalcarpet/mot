@@ -4,14 +4,13 @@ namespace DvsaCommon\ReasonForRejection;
 use DvsaCommon\Dto\ReasonForRejection\ReasonForRejectionDto;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\Utility\ArrayUtils;
-use DvsaCommon\Utility\TypeCheck;
 
 class ReasonForRejectionDtoMapper
 {
     public static function mapSingle(array $reasonForRejection): ReasonForRejectionDto
     {
-        $url = InspectionManualReferenceUrlBuilder::build(ArrayUtils::get($reasonForRejection, "inspectionManualReference"), ArrayUtils::get($reasonForRejection, "vehicleClassCode"));
         $isPreEuDirective = (ArrayUtils::get($reasonForRejection, "deficiencyCategoryCode") === RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+        $url = InspectionManualReferenceUrlBuilder::build(ArrayUtils::get($reasonForRejection, "inspectionManualReference"), ArrayUtils::get($reasonForRejection, "vehicleClassCode"), $isPreEuDirective);
 
         $dto = new ReasonForRejectionDto();
         $dto
