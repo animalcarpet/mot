@@ -128,11 +128,15 @@ run_each_release_db_update_script() {
             fi
 
             # Apply special named NOT-FOR-PRODUCTION scripts to anonymised data set
-            if [[ $DATASET == "anonymised" ]] && [[ $UPDATE == *"2017-10-12-BL-6239-EU-test_RFRs-NOT-FOR-PRODUCTION.sql" ]]
+            if [[ $DATASET == "anonymised" ]] 
             then
-                 echo "$(date) Running non-production schema or data update $UPDATE"
-                 mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $UPDATE 2> >(grep -v 'Using a password on the command line interface can be insecure')
-                 echo "$(date) Finished $UPDATE"
+                if [[ $UPDATE == *"2017-10-12-BL-6239-EU-test_RFRs-NOT-FOR-PRODUCTION.sql" ]] ||
+                   [[ $UPDATE == *"2017-12-14-BL-6808-alter-brake-testing-schema-NOT-FOR-PRODUCTION.sql" ]]
+                then
+                    echo "$(date) Running non-production schema or data update $UPDATE"
+                    mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $UPDATE 2> >(grep -v 'Using a password on the command line interface can be insecure')
+                    echo "$(date) Finished $UPDATE"
+                fi
             fi
 
         done
