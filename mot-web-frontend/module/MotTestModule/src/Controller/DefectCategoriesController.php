@@ -19,7 +19,9 @@ use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ComponentCategoryCollection;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Domain\MotTestType;
+use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
+use DvsaCommon\ReasonForRejection\InspectionManualReferenceUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
@@ -299,16 +301,11 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         foreach ($defects as $defect) {
             /* @var Defect $defect */
             // Generate inspection manual reference URL for each defect
-            $inspectionManualReference = trim($defect->getInspectionManualReference());
-            $vehicleClass = (intval($vehicleClassCode) > 2) ? 4 : 1;
 
-            if (strlen($inspectionManualReference)) {
-                $inspectionManualReferenceParts = explode('.', $inspectionManualReference);
-                if (count($inspectionManualReferenceParts) >= 2) {
-                    $defect->setInspectionManualReferenceUrl(sprintf('documents/manuals/m%ds0%s000%s01.htm',
-                        $vehicleClass, $inspectionManualReferenceParts[0], $inspectionManualReferenceParts[1]));
-                }
-            }
+            $isPreEuDirective = ($defect->getDeficiencyCategoryCode() === RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE);
+            $url = InspectionManualReferenceUrlBuilder::build($defect->getInspectionManualReference(), $vehicleClassCode, $isPreEuDirective);
+
+            $defect->setInspectionManualReferenceUrl($url);
         }
 
         return $defects;
