@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Utility\ArrayUtils;
@@ -15,6 +16,13 @@ use Zend\View\Model\ViewModel;
  */
 class ReportController extends AbstractAuthActionController
 {
+    private $authService;
+
+    public function __construct(MotFrontendAuthorisationServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
+
     /**
      * Choose whether to download the report as CSV or PDF.
      *
@@ -32,7 +40,7 @@ class ReportController extends AbstractAuthActionController
 
         $authorisedExaminerId = ArrayUtils::tryGet($routeParameters, 'id', 0);
 
-        $this->getAuthorisationService()->assertGrantedAtOrganisation(
+        $this->authService->assertGrantedAtOrganisation(
             PermissionAtOrganisation::AE_SLOTS_USAGE_READ,
             $authorisedExaminerId
         );
@@ -57,13 +65,5 @@ class ReportController extends AbstractAuthActionController
         }
 
         return $view;
-    }
-
-    /**
-     * @return MotAuthorisationServiceInterface
-     */
-    public function getAuthorisationService()
-    {
-        return $this->getServiceLocator()->get('AuthorisationService');
     }
 }
