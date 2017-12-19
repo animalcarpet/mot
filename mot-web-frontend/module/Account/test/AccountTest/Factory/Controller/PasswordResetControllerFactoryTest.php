@@ -4,6 +4,8 @@ namespace AccountTest\Factory\Controller;
 
 use Account\Controller\PasswordResetController;
 use Account\Factory\Controller\PasswordResetControllerFactory;
+use CoreTest\Service\StubMapperFactory;
+use DvsaClient\Mapper\AccountMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Obfuscate\Factory\ParamObfuscatorFactory;
 use DvsaCommon\Obfuscate\ParamObfuscator;
@@ -27,7 +29,7 @@ class PasswordResetControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $userAdminSessionManager = XMock::of(UserAdminSessionManager::class);
         $serviceManager->setService(UserAdminSessionManager::class, $userAdminSessionManager);
 
-        $mapperFactory = XMock::of(MapperFactory::class);
+        $mapperFactory = new StubMapperFactory([MapperFactory::ACCOUNT => XMock::of(AccountMapper::class)]);
         $serviceManager->setService(MapperFactory::class, $mapperFactory);
 
         $obfuscator = XMock::of(ParamObfuscator::class);

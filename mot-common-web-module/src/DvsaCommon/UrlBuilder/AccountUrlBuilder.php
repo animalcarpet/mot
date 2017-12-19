@@ -3,12 +3,13 @@
 namespace DvsaCommon\UrlBuilder;
 
 /**
- * Url Builder for api for the Account pages
+ * Url Builder for api for the Account pages.
  */
 class AccountUrlBuilder extends AbstractUrlBuilder
 {
     const RESET_PASSWORD = 'reset-password';
     const CHANGE_PASSWORD = 'account/password-update';
+    const CHANGE_FORGOTTEN_PASSWORD = 'account/password-change';
     const RESET_PASSWORD_TOKEN = '/:token';
     const VALIDATE_USERNAME = '/validate-username';
 
@@ -19,6 +20,7 @@ class AccountUrlBuilder extends AbstractUrlBuilder
                 self::VALIDATE_USERNAME => '',
             ],
             self::CHANGE_PASSWORD => '',
+            self::CHANGE_FORGOTTEN_PASSWORD => '',
         ];
 
     public function __construct()
@@ -44,10 +46,10 @@ class AccountUrlBuilder extends AbstractUrlBuilder
         return $url;
     }
 
-    public static function changePassword()
+    public static function changeForgottenPassword()
     {
         $url = self::of()
-            ->appendRoutesAndParams(self::CHANGE_PASSWORD);
+            ->appendRoutesAndParams(self::CHANGE_FORGOTTEN_PASSWORD);
 
         return $url;
     }
