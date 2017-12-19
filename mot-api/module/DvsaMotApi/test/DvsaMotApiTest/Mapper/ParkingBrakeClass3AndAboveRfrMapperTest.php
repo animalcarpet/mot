@@ -7,6 +7,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Mapper\ParkingBrakeClass3AndAboveRfrMapper;
+use DvsaMotApi\Service\Calculator\BrakeImbalanceResult;
 use DvsaMotApi\Service\Calculator\BrakeTestClass3AndAboveCalculationResult;
 use DvsaMotApi\Service\Calculator\CalculationFailureSeverity;
 use DvsaMotApi\Service\Calculator\ParkingBrakeCalculationResult;
@@ -57,11 +58,13 @@ class ParkingBrakeClass3AndAboveRfrMapperTest extends PHPUnit_Framework_TestCase
 
         $pbCalculationResult = new ParkingBrakeCalculationResult(true, $failureSeverity);
         $sbCalculationResult1 = new ServiceBrakeCalculationResult(true, CalculationFailureSeverity::NONE);
+        $brakeImbalanceResult = new BrakeImbalanceResult();
 
         $this->calculationResult = new BrakeTestClass3AndAboveCalculationResult(
             $this->brakeTestResult,
             $pbCalculationResult,
-            $sbCalculationResult1);
+            $sbCalculationResult1,
+            $brakeImbalanceResult);
 
         $parkingBrakeClass3AndAboveRfrMapper = new ParkingBrakeClass3AndAboveRfrMapper($this->featureToggles);
         $parkingBrakeClass3AndAboveRfrMapper->generateParkingBrakeLowEfficiencyRfr(

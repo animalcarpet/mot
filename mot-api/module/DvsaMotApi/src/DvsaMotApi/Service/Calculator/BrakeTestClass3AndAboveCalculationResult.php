@@ -27,10 +27,16 @@ class BrakeTestClass3AndAboveCalculationResult
      */
     private $brakeTestResultClass3AndAbove;
 
+    /**
+     * @var BrakeImbalanceResult
+     */
+    private $brakeImbalanceResult;
+
     public function __construct(
         BrakeTestResultClass3AndAbove $brakeTestResultClass3AndAbove,
         ParkingBrakeCalculationResult $pbCalculationResult,
         ServiceBrakeCalculationResult $sbCalculationResult1,
+        BrakeImbalanceResult $brakeImbalanceResult,
         ServiceBrakeCalculationResult $sbCalculationResult2 = null
     )
     {
@@ -38,6 +44,7 @@ class BrakeTestClass3AndAboveCalculationResult
         $this->serviceBrakeCalculationResult2 = $sbCalculationResult2;
         $this->parkingBrakeCalculationResult = $pbCalculationResult;
         $this->brakeTestResultClass3AndAbove = $brakeTestResultClass3AndAbove;
+        $this->brakeImbalanceResult = $brakeImbalanceResult;
     }
 
     /**
@@ -70,5 +77,13 @@ class BrakeTestClass3AndAboveCalculationResult
     public function getBrakeTestResultClass3AndAbove() : BrakeTestResultClass3AndAbove
     {
         return $this->brakeTestResultClass3AndAbove;
+    }
+
+    /**
+     * @return BrakeImbalanceResult
+     */
+    public function getBrakeImbalanceResult() : BrakeImbalanceResult
+    {
+        return $this->brakeImbalanceResult;
     }
 }

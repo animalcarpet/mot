@@ -2,6 +2,7 @@
 
 namespace DvsaMotApi\Service\Calculator;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
@@ -21,6 +22,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
     const SERVICE_BRAKE_1 = 1;
     const SERVICE_BRAKE_2 = 2;
     const IMBALANCE_MAXIMUM = 30;
+    const IMBALANCE_MAXIMUM_EFFORT_UPPER_THRESHOLD = 40;
 
     /** @var FeatureToggles */
     protected $featureToggles;
@@ -37,7 +39,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
         $vehicleClass = $vehicle->getVehicleClass()->getCode();
         $vehicleWeight = $brakeTestResult->getVehicleWeight();
         $serviceBrake1Data = $brakeTestResult->getServiceBrake1Data();
-
+        $brakeImbalanceResult = new BrakeImbalanceResult();
         //service brake calculations
         if ($serviceBrake1Data
             && $this->isTestTypeWithEffortCalculations(
@@ -56,7 +58,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
                 )
             );
 
-            $this->performImbalanceCalculations(
+            $brakeImbalanceResult = $this->performImbalanceCalculations(
                 $serviceBrake1Data,
                 $this->getWheelCount($brakeTestResult, $vehicle),
                 $brakeTestResult->getIsSingleInFront()
@@ -81,7 +83,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
                         $brakeTestResult->getIsSingleInFront()
                     )
                 );
-                $this->performImbalanceCalculations(
+                $brakeImbalanceResult = $this->performImbalanceCalculations(
                     $serviceBrake2Data,
                     $this->getWheelCount($brakeTestResult, $vehicle),
                     $brakeTestResult->getIsSingleInFront()
@@ -170,8 +172,8 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
             $brakeTestResult,
             $parkingBrakeCalculationResult,
             $serviceBrake1CalculationResult,
+            $brakeImbalanceResult,
             $serviceBrake2CalculationResult
-            // todo: set imbalance result
         );
 
         return $calculationResult;
@@ -257,6 +259,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
         $wheelCount,
         $isSingleInFront
     ) {
+        $brakeImbalanceResult = new BrakeImbalanceResult();
         $imbalancePassing = true;
         $shouldCalcImbalanceForAxle1 = !($wheelCount === self::WHEEL_COUNT_3 && $isSingleInFront === true);
         $shouldCalcImbalanceForAxle2 = !($wheelCount === self::WHEEL_COUNT_3 && $isSingleInFront === false);
@@ -264,49 +267,157 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
 
         if ($shouldCalcImbalanceForAxle1) {
             $serviceBrakeData->setImbalanceAxle1($this->calculateServiceBrakeImbalanceAxle1($serviceBrakeData));
-            $axle1ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle1() <= self::IMBALANCE_MAXIMUM;
-            $axle1ImbalanceOK = $axle1ImbalanceWithinLimits
-                || (!$axle1ImbalanceWithinLimits
-                    && $this->isWheelWithLowerEfficiencyLocked(
-                        $serviceBrakeData->getEffortOffsideAxle1(),
-                        $serviceBrakeData->getLockOffsideAxle1(),
-                        $serviceBrakeData->getEffortNearsideAxle1(),
-                        $serviceBrakeData->getLockNearsideAxle1()
-                    ));
-            $serviceBrakeData->setImbalancePassForAxle(1, $axle1ImbalanceOK);
-            $imbalancePassing = $imbalancePassing && $axle1ImbalanceOK;
-        }
 
+            if ($this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS))
+            {
+                $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::AXLE_1, $serviceBrakeData->getImbalanceAxle1());
+                $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::AXLE_1, $serviceBrakeData->getEffortOffsideAxle1(),
+                    $serviceBrakeData->getEffortNearsideAxle1());
+
+                $maxEffortGreaterThanFortyKilos =
+                    $brakeImbalanceResult->getAxleMaxEffort(BrakeImbalanceResult::AXLE_1) > self::IMBALANCE_MAXIMUM_EFFORT_UPPER_THRESHOLD;
+                $axle1ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle1() <= self::IMBALANCE_MAXIMUM;
+                $isImbalanceFailing = !$axle1ImbalanceWithinLimits
+                    && !$this->isWheelWithLowerEfficiencyLocked(
+                            $serviceBrakeData->getEffortOffsideAxle1(),
+                            $serviceBrakeData->getLockOffsideAxle1(),
+                            $serviceBrakeData->getEffortNearsideAxle1(),
+                            $serviceBrakeData->getLockNearsideAxle1())
+                     && $maxEffortGreaterThanFortyKilos;
+
+                $imbalancePassing = !$isImbalanceFailing;
+                $serviceBrakeData->setImbalancePassForAxle(1, $imbalancePassing);
+                $failureSeverity = $imbalancePassing ? CalculationFailureSeverity::NONE : CalculationFailureSeverity::MAJOR;
+
+                $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::AXLE_1, $failureSeverity);
+                $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::AXLE_1, $imbalancePassing);
+                $brakeImbalanceResult->setImbalanceOverallPass($imbalancePassing);
+            } else {
+                $axle1ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle1() <= self::IMBALANCE_MAXIMUM;
+                $axle1ImbalanceOK = $axle1ImbalanceWithinLimits
+                    || (!$axle1ImbalanceWithinLimits
+                        && $this->isWheelWithLowerEfficiencyLocked(
+                            $serviceBrakeData->getEffortOffsideAxle1(),
+                            $serviceBrakeData->getLockOffsideAxle1(),
+                            $serviceBrakeData->getEffortNearsideAxle1(),
+                            $serviceBrakeData->getLockNearsideAxle1()
+                        ));
+                $serviceBrakeData->setImbalancePassForAxle(1, $axle1ImbalanceOK);
+                $imbalancePassing = $imbalancePassing && $axle1ImbalanceOK;
+
+                $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::AXLE_1, $imbalancePassing);
+                $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::AXLE_1, $serviceBrakeData->getImbalanceAxle1());
+                $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::AXLE_1, $serviceBrakeData->getEffortOffsideAxle1(),
+                    $serviceBrakeData->getEffortNearsideAxle1());
+
+                $brakeImbalanceResult->setImbalanceOverallPass($imbalancePassing);
+                $failureSeverity = CalculationFailureSeverity::NONE;
+                $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::AXLE_1, $failureSeverity);
+            }
+        }
         if ($shouldCalcImbalanceForAxle2) {
             $serviceBrakeData->setImbalanceAxle2($this->calculateServiceBrakeImbalanceAxle2($serviceBrakeData));
-            $axle2ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle2() <= self::IMBALANCE_MAXIMUM;
-            $axle2ImbalanceOK = $axle2ImbalanceWithinLimits
-                || (!$axle2ImbalanceWithinLimits
-                    && $this->isWheelWithLowerEfficiencyLocked(
+
+            if ($this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS))
+            {
+                $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::AXLE_2, $serviceBrakeData->getImbalanceAxle2());
+                $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::AXLE_2, $serviceBrakeData->getEffortOffsideAxle2(),
+                    $serviceBrakeData->getEffortNearsideAxle2());
+
+                $maxEffortGreaterThanFortyKilos =
+                    $brakeImbalanceResult->getAxleMaxEffort(BrakeImbalanceResult::AXLE_2) > self::IMBALANCE_MAXIMUM_EFFORT_UPPER_THRESHOLD;
+                $axle2ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle2() <= self::IMBALANCE_MAXIMUM;
+                $isImbalanceFailing = !$axle2ImbalanceWithinLimits
+                    && !$this->isWheelWithLowerEfficiencyLocked(
                         $serviceBrakeData->getEffortOffsideAxle2(),
                         $serviceBrakeData->getLockOffsideAxle2(),
                         $serviceBrakeData->getEffortNearsideAxle2(),
-                        $serviceBrakeData->getLockNearsideAxle2()
-                    ));
-            $serviceBrakeData->setImbalancePassForAxle(2, $axle2ImbalanceOK);
-            $imbalancePassing = $imbalancePassing && $axle2ImbalanceOK;
-        }
+                        $serviceBrakeData->getLockNearsideAxle2())
+                    && $maxEffortGreaterThanFortyKilos;
 
+                $imbalancePassing = !$isImbalanceFailing;
+                $serviceBrakeData->setImbalancePassForAxle(2, $imbalancePassing);
+                $failureSeverity = $imbalancePassing ? CalculationFailureSeverity::NONE : CalculationFailureSeverity::MAJOR;
+
+                $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::AXLE_2, $failureSeverity);
+                $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::AXLE_2, $imbalancePassing);
+                $brakeImbalanceResult->setImbalanceOverallPass($imbalancePassing);
+            } else {
+                $axle2ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle2() <= self::IMBALANCE_MAXIMUM;
+                $axle2ImbalanceOK = $axle2ImbalanceWithinLimits
+                    || (!$axle2ImbalanceWithinLimits
+                        && $this->isWheelWithLowerEfficiencyLocked(
+                            $serviceBrakeData->getEffortOffsideAxle2(),
+                            $serviceBrakeData->getLockOffsideAxle2(),
+                            $serviceBrakeData->getEffortNearsideAxle2(),
+                            $serviceBrakeData->getLockNearsideAxle2()
+                        ));
+                $serviceBrakeData->setImbalancePassForAxle(2, $axle2ImbalanceOK);
+                $imbalancePassing = $imbalancePassing && $axle2ImbalanceOK;
+
+                $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::AXLE_2, $imbalancePassing);
+                $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::AXLE_2, $serviceBrakeData->getImbalanceAxle2());
+                $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::AXLE_2, $serviceBrakeData->getEffortOffsideAxle2(),
+                    $serviceBrakeData->getEffortNearsideAxle2());
+
+                $brakeImbalanceResult->setImbalanceOverallPass($imbalancePassing);
+                $failureSeverity = CalculationFailureSeverity::NONE;
+                $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::AXLE_2, $failureSeverity);
+            }
+        }
         if ($shouldCalcImbalanceForAxle3) {
             $serviceBrakeData->setImbalanceAxle3($this->calculateServiceBrakeImbalanceAxle3($serviceBrakeData));
-            $axle3ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle3() <= self::IMBALANCE_MAXIMUM;
-            $axle3ImbalanceOK = $axle3ImbalanceWithinLimits
-                || (!$axle3ImbalanceWithinLimits
-                    && $this->isWheelWithLowerEfficiencyLocked(
+
+            if ($this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS))
+            {
+                $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::AXLE_3, $serviceBrakeData->getImbalanceAxle3());
+                $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::AXLE_3, $serviceBrakeData->getEffortOffsideAxle3(),
+                    $serviceBrakeData->getEffortNearsideAxle3());
+
+                $maxEffortGreaterThanFortyKilos =
+                    $brakeImbalanceResult->getAxleMaxEffort(BrakeImbalanceResult::AXLE_3) > self::IMBALANCE_MAXIMUM_EFFORT_UPPER_THRESHOLD;
+                $axle3ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle3() <= self::IMBALANCE_MAXIMUM;
+                $isImbalanceFailing = !$axle3ImbalanceWithinLimits
+                    && !$this->isWheelWithLowerEfficiencyLocked(
                         $serviceBrakeData->getEffortOffsideAxle3(),
                         $serviceBrakeData->getLockOffsideAxle3(),
                         $serviceBrakeData->getEffortNearsideAxle3(),
-                        $serviceBrakeData->getLockNearsideAxle3()
-                    ));
-            $serviceBrakeData->setImbalancePassForAxle(3, $axle3ImbalanceOK);
-            $imbalancePassing = $imbalancePassing && $axle3ImbalanceOK;
+                        $serviceBrakeData->getLockNearsideAxle3())
+                    && $maxEffortGreaterThanFortyKilos;
+
+                $imbalancePassing = !$isImbalanceFailing;
+                $serviceBrakeData->setImbalancePassForAxle(3, $imbalancePassing);
+                $failureSeverity = $imbalancePassing ? CalculationFailureSeverity::NONE : CalculationFailureSeverity::MAJOR;
+
+                $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::AXLE_3, $failureSeverity);
+                $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::AXLE_3, $imbalancePassing);
+                $brakeImbalanceResult->setImbalanceOverallPass($imbalancePassing);
+            } else {
+                $axle3ImbalanceWithinLimits = $serviceBrakeData->getImbalanceAxle3() <= self::IMBALANCE_MAXIMUM;
+                $axle3ImbalanceOK = $axle3ImbalanceWithinLimits
+                    || (!$axle3ImbalanceWithinLimits
+                        && $this->isWheelWithLowerEfficiencyLocked(
+                            $serviceBrakeData->getEffortOffsideAxle3(),
+                            $serviceBrakeData->getLockOffsideAxle3(),
+                            $serviceBrakeData->getEffortNearsideAxle3(),
+                            $serviceBrakeData->getLockNearsideAxle3()
+                        ));
+                $serviceBrakeData->setImbalancePassForAxle(3, $axle3ImbalanceOK);
+                $imbalancePassing = $imbalancePassing && $axle3ImbalanceOK;
+
+                $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::AXLE_3, $imbalancePassing);
+                $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::AXLE_3, $serviceBrakeData->getImbalanceAxle3());
+                $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::AXLE_3, $serviceBrakeData->getEffortOffsideAxle3(),
+                    $serviceBrakeData->getEffortNearsideAxle3());
+
+                $brakeImbalanceResult->setImbalanceOverallPass($imbalancePassing);
+                $failureSeverity = CalculationFailureSeverity::NONE;
+                $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::AXLE_3, $failureSeverity);
+            }
         }
-        $serviceBrakeData->setImbalancePass($imbalancePassing);
+        $serviceBrakeData->setImbalancePass($brakeImbalanceResult->isImbalanceOverallPass());
+
+        return $brakeImbalanceResult;
     }
 
     protected function calculateServiceBrakeEfficiency(
