@@ -26,17 +26,22 @@ class AccountMapper extends DtoMapper
     }
 
     /**
-     * @param string $userId
-     * @param string $obfuscatedPassword
+     * @param string $token
+     * @param string $password
      *
-     * @return \DvsaCommon\Dto\AbstractDataTransferObject
+     * @return bool
      */
-    public function changePassword($userId, $obfuscatedPassword)
+    public function changeForgottenPassword($token, $password)
     {
-        $url = AccountUrlBuilder::changePassword();
-        $response = $this->client->post($url, ['userId' => $userId, 'password' => $obfuscatedPassword]);
+        $url = AccountUrlBuilder::changeForgottenPassword();
 
-        return DtoHydrator::jsonToDto($response['data']);
+        $response = $this->client->post($url, ['token' => $token, 'newPassword' => $password]);
+
+        if (array_key_exists('data', $response) && array_key_exists('success', $response['data'])) {
+            return $response['data']['success'];
+        }
+
+        return false;
     }
 
     /**

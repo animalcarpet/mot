@@ -7,10 +7,7 @@ use Account\Service\PasswordResetService;
 use Account\ViewModel\ChangePasswordFormModel;
 use Account\ViewModel\PasswordResetFormModel;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
-use DvsaClient\Entity\Person;
 use DvsaClient\Mapper\AccountMapper;
-use DvsaClient\Mapper\PersonMapper;
-use DvsaClient\MapperFactory;
 use DvsaCommon\Dto\Account\MessageDto;
 use DvsaCommon\Dto\Contact\ContactDto;
 use DvsaCommon\Dto\Contact\EmailDto;
@@ -34,9 +31,6 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
     const USER_NAME = 'username';
     const TOKEN = 'TOKEN_123456789';
     const PERSON_ID = 999999;
-
-    /** @var MapperFactory|MockObj $mockMapperFactory */
-    private $mockMapperFactory;
 
     /** @var UserAdminSessionManager|MockObj $mockSessionManager */
     private $mockSessionManager;
@@ -63,7 +57,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         $serviceManager->setAllowOverride(true);
         $this->setServiceManager($serviceManager);
 
-        $this->mockMapperFactory = $this->getMapperFactory();
+        $this->mockAccountMapper = XMock::of(AccountMapper::class);
         $this->mockSessionManager = XMock::of(UserAdminSessionManager::class);
         $this->mockPasswordResetSrv = XMock::of(PasswordResetService::class);
         $this->mockObfuscator = XMock::of(ParamObfuscator::class);
@@ -87,7 +81,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
             new PasswordResetController(
                 $this->mockPasswordResetSrv,
                 $this->mockSessionManager,
-                $this->mockMapperFactory,
+                $this->mockAccountMapper,
                 $this->config,
                 $this->mockObfuscator
             )
@@ -700,34 +694,5 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
         ];
-    }
-
-    private function getMapperFactory()
-    {
-        $mapperFactory = XMock::of(MapperFactory::class);
-
-        $this->mockAccountMapper = XMock::of(AccountMapper::class);
-
-        $map = [
-            [MapperFactory::ACCOUNT, $this->mockAccountMapper],
-            [MapperFactory::PERSON, $this->getPersonMapperMock()],
-        ];
-
-        $mapperFactory->expects($this->any())
-            ->method('__get')
-            ->will($this->returnValueMap($map));
-
-        return $mapperFactory;
-    }
-
-    private function getPersonMapperMock()
-    {
-        $person = new Person();
-        $person->setId(self::PERSON_ID);
-
-        $mapper = XMock::of(PersonMapper::class);
-        $this->mockMethod($mapper, 'getByIdentifier', null, $person, self::USER_NAME);
-
-        return $mapper;
     }
 }

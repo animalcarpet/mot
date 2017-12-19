@@ -13,7 +13,7 @@ use Account\ViewModel\PasswordResetFormModel;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\SecurityController;
-use DvsaClient\MapperFactory;
+use DvsaClient\Mapper\AccountMapper;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Account\MessageDto;
@@ -21,7 +21,6 @@ use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\Http\Request;
@@ -62,8 +61,8 @@ class PasswordResetController extends AbstractAuthActionController
     /** @var UserAdminSessionManager $userAdminSessionManager */
     protected $userAdminSessionManager;
 
-    /** @var MapperFactory $mapperFactory */
-    protected $mapperFactory;
+    /** @var AccountMapper $accountMapper */
+    protected $accountMapper;
 
     /** @var array $config */
     protected $config;
@@ -77,13 +76,13 @@ class PasswordResetController extends AbstractAuthActionController
     public function __construct(
         PasswordResetService $passwordResetService,
         UserAdminSessionManager $userAdminSessionManager,
-        MapperFactory $mapperFactory,
+        AccountMapper $accountMapper,
         $config,
         ParamObfuscator $obfuscator
     ) {
         $this->passwordResetService = $passwordResetService;
         $this->userAdminSessionManager = $userAdminSessionManager;
-        $this->mapperFactory = $mapperFactory;
+        $this->accountMapper = $accountMapper;
         $this->config = $config;
         $this->obfuscator = $obfuscator;
     }
@@ -145,7 +144,7 @@ class PasswordResetController extends AbstractAuthActionController
         if (!$this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::EMAIL_SENT)) {
             try {
                 /* @var MessageDto $apiResponse */
-                $apiResponse = $this->mapperFactory->Account->resetPassword(
+                $apiResponse = $this->accountMapper->resetPassword(
                     $this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY)
                 );
 
@@ -330,13 +329,7 @@ class PasswordResetController extends AbstractAuthActionController
 
                 if ($this->view->isValid()) {
                     try {
-                        $this->getRestClient()->post(
-                            'account/password-change',
-                            [
-                                'token' => $token,
-                                'newPassword' => $data['password'],
-                            ]
-                        );
+                        $this->accountMapper->changeForgottenPassword($token, $data['password']);
 
                         return $this->redirect()
                             ->toUrl(AccountUrlBuilderWeb::passwordChangedSuccessfullyConfirmation($token));
@@ -382,47 +375,6 @@ class PasswordResetController extends AbstractAuthActionController
         $this->setHeadTitle('Password changed');
 
         return $passwordChangedConfirmationViewModel;
-    }
-
-    public function updatePasswordAction()
-    {
-        $this->view = new ChangePasswordFormModel();
-        $this->layout()->setVariable('pageLede', self::TEXT_YOU_MUST_CHANGE_PWORD);
-
-        if (!$this->flashMessenger()->hasCurrentErrorMessages()) {
-            /** @var Request $request */
-            $request = $this->getRequest();
-
-            //  --  form    --
-            $this->view->setUsername($this->getIdentity()->getUsername());
-            $data = $request->getPost()->toArray();
-
-            if ($request->isPost()) {
-                $this->view->populateFromPost($request->getPost()->toArray());
-
-                if ($this->view->isValid()) {
-                    try {
-                        $this->getRestClient()->put(
-                            'account/password-update/'.$this->getIdentity()->getUserId(),
-                            [
-                                'password' => $this->obfuscator->obfuscate($data['password']),
-                            ]
-                        );
-
-                        /** @var \Zend\Authentication\AuthenticationService $authenticationService */
-                        $authenticationService = $this->getServiceLocator()->get('ZendAuthenticationService');
-                        $authenticationService->getIdentity()->setPasswordChangeRequired(false);
-
-                        return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
-                    } catch (ValidationException $e) {
-                        $passwordError = ArrayUtils::first($e->getErrors())['message'];
-                        $this->view->addError(ChangePasswordFormModel::FIELD_PASS, $passwordError);
-                    }
-                }
-            }
-        }
-
-        return $this->initViewModelInformation(self::PAGE_TITLE_PASSWORD_RESET, self::PAGE_SUBTITLE);
     }
 
     /**

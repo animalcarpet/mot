@@ -79,19 +79,22 @@ class AccountMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($dto, $actual);
     }
 
-    public function testChangePassword()
+    public function testChangeForgottenPasswordSuccess()
     {
-        $result = 'unit_Result';
-        $url = AccountUrlBuilder::changePassword();
+        $url = AccountUrlBuilder::changeForgottenPassword();
 
-        //  --  mock    --
-        $this->mockMethod($this->client, 'post', $this->once(), ['data' => $result], $url);
+        $this->mockMethod($this->client, 'post', $this->once(), ['data' => ['success' => true]], $url);
 
-        //  --  call    --
-        $actual = $this->mapper->changePassword(self::USER_ID, self::PASSWORD);
+        $this->assertTrue($this->mapper->changeForgottenPassword(self::TOKEN, self::PASSWORD));
+    }
 
-        //  --  check   --
-        $this->assertEquals($result, $actual);
+    public function testChangeForgottenPasswordBadData()
+    {
+        $url = AccountUrlBuilder::changeForgottenPassword();
+
+        $this->mockMethod($this->client, 'post', $this->once(), ['data' => []], $url);
+
+        $this->assertFalse($this->mapper->changeForgottenPassword(self::TOKEN, self::PASSWORD));
     }
 
     public function testGetPin()

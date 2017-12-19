@@ -18,10 +18,13 @@ class PasswordResetControllerFactory implements FactoryInterface
         /** @var ServiceManager $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
 
+        /** @var MapperFactory $mapperFactory */
+        $mapperFactory = $serviceLocator->get(MapperFactory::class);
+
         return new PasswordResetController(
             $serviceLocator->get(PasswordResetService::class),
             $serviceLocator->get(UserAdminSessionManager::class),
-            $serviceLocator->get(MapperFactory::class),
+            $mapperFactory->Account,
             $serviceLocator->get('config'),
             $serviceLocator->get(ParamObfuscatorFactory::class)
         );

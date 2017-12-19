@@ -220,17 +220,6 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'update-password' => [
-                        'type' => 'Segment',
-                        'options' => [
-                            'route' => '/update',
-                            'defaults' => [
-                                'controller' => PasswordResetControllerFactory::class,
-                                'action' => 'updatePassword',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'password-changed-confirmation' => [
                         'type' => 'Segment',
                         'options' => [
