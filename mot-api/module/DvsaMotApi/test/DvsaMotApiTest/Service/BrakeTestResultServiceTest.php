@@ -33,7 +33,9 @@ use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
 use DvsaMotApi\Mapper\ParkingBrakeClass3AndAboveRfrMapper;
+use DvsaMotApi\Mapper\ServiceBrakeImbalanceSpecialProcessingRfrMapper;
 use DvsaMotApi\Service\BrakeTestResultService;
+use DvsaMotApi\Service\Calculator\BrakeImbalanceResult;
 use DvsaMotApi\Service\Calculator\BrakeTestClass3AndAboveCalculationResult;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
@@ -153,11 +155,18 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $brakeTestResult->getServiceBrake1Data()->setImbalancePassForAxle(2, true);
         $brakeTestResult->getServiceBrake1Data()->setImbalancePassForAxle(3, null);
 
+        $brakeImbalanceResult = new BrakeImbalanceResult();
+        $brakeImbalanceResult->setIsAxlePassing(1,$brakeTestResult->getParkingBrakeImbalancePass());
+        $brakeImbalanceResult->setIsAxlePassing(2,$brakeTestResult->getParkingBrakeImbalancePass());
+        $brakeImbalanceResult->addAxleMaxEffort(1, $data['parkingBrakeEffortOffside'], $data['parkingBrakeEffortNearside']);
+        $brakeImbalanceResult->addAxleMaxEffort(2, $data['parkingBrakeEffortSecondaryOffside'], $data['parkingBrakeEffortSecondaryNearside']);
+        $brakeImbalanceResult->addAxleImbalanceSeverity(1,CalculationFailureSeverity::NONE);
+        $brakeImbalanceResult->addAxleImbalanceSeverity(2,CalculationFailureSeverity::MAJOR);
         $calculationResult = new BrakeTestClass3AndAboveCalculationResult(
             $brakeTestResult,
             new ParkingBrakeCalculationResult($isParkingBrake1EfficiencyPassing, $parkingBrake1FailureSeverity),
             new ServiceBrakeCalculationResult($isServiceBrake1EfficiencyPassing, $serviceBrake1FailureSeverity),
-            null
+            $brakeImbalanceResult
         );
 
         $this->setupMockForSingleCall(
@@ -551,7 +560,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             $brakeTestResult,
             new ParkingBrakeCalculationResult(true, CalculationFailureSeverity::NONE),
             new ServiceBrakeCalculationResult(true, CalculationFailureSeverity::NONE),
-            null
+            new BrakeImbalanceResult()
         );
 
         $this->setupMockForSingleCall(
@@ -659,10 +668,10 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                 'comment' => null,
             ],
             [
-                'rfrId' => BrakeTestResultService::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
+                'rfrId' => ServiceBrakeImbalanceSpecialProcessingRfrMapper::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
                 'type' => 'FAIL',
                 'locationLongitudinal' => 'front',
-                'comment' => null,
+                'comment' => 'Axle 1',
             ],
         ];
     }
@@ -683,10 +692,10 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                 'comment' => null,
             ],
             [
-                'rfrId' => BrakeTestResultService::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
+                'rfrId' => ServiceBrakeImbalanceSpecialProcessingRfrMapper::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
                 'type' => 'FAIL',
                 'locationLongitudinal' => 'front',
-                'comment' => null,
+                'comment' => 'Axle 1',
             ],
         ];
     }
@@ -708,10 +717,10 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                 'comment' => null,
             ],
             [
-                'rfrId' => BrakeTestResultService::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
+                'rfrId' => ServiceBrakeImbalanceSpecialProcessingRfrMapper::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE,
                 'type' => 'FAIL',
                 'locationLongitudinal' => 'front',
-                'comment' => null,
+                'comment' => 'Axle 1',
             ],
         ];
     }

@@ -28,6 +28,8 @@ use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
 use DvsaMotApi\Mapper\ParkingBrakeClass3AndAboveRfrMapper;
+use DvsaMotApi\Mapper\ServiceBrakeImbalanceSpecialProcessingRfrMapper;
+use DvsaMotApi\Service\Calculator\BrakeImbalanceResult;
 use DvsaMotApi\Service\Calculator\BrakeTestClass3AndAboveCalculationResult;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
@@ -43,9 +45,7 @@ use DvsaMotApi\Service\Validator\MotTestValidator;
  */
 class BrakeTestResultService extends AbstractService
 {
-    const RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE = '8343';
     const RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE = '8343';
-    const RFR_ID_SERVICE_BRAKE_PLATE_IMBALANCE = '8370';
     const RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE = '8370';
 
     const RFR_ID_BRAKE_EFFICIENCY_ROLLER_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2 = '489';
@@ -93,6 +93,8 @@ class BrakeTestResultService extends AbstractService
     private $parkingBrakeMapper;
     /** @var ServiceBrakeTestSpecialRfrGenerator  */
     private $serviceBrakeRfrGenerator;
+    /** @var ServiceBrakeImbalanceSpecialProcessingRfrMapper */
+    private $serviceBrakeImbalanceMapper;
 
     private $brakesWithLockApplicable =
         [
@@ -132,6 +134,7 @@ class BrakeTestResultService extends AbstractService
         $this->featureToggles = $featureToggles;
         $this->serviceBrakeRfrGenerator = new ServiceBrakeTestSpecialRfrGenerator();
         $this->parkingBrakeMapper = new ParkingBrakeClass3AndAboveRfrMapper($featureToggles);
+        $this->serviceBrakeImbalanceMapper = new ServiceBrakeImbalanceSpecialProcessingRfrMapper($featureToggles);
     }
 
     public function createBrakeTestResult(MotTest $motTest, $brakeTestResultData)
@@ -308,12 +311,13 @@ class BrakeTestResultService extends AbstractService
             }
 
             if ($isBrake1ImbalancePass === false || $isBrake2ImbalancePass === false) {
-                $rfr = $this->getRfrServiceBrakeImbalanced($serviceBrakeTestType);
+                $rfr = $this->serviceBrakeImbalanceMapper->generateServiceBrakeImbalanceRfr($serviceBrakeTestType,
+                    $calculationResult->getBrakeImbalanceResult()->getAxleImbalanceSeverity(BrakeImbalanceResult::getAxleFromAxleNumber($axleNumber)));
                 $type = ReasonForRejectionTypeName::FAIL;
                 $location = $axleNumber === 1 ?
                     MotTestReasonForRejection::LOCATION_LONGITUDINAL_FRONT
                     : MotTestReasonForRejection::LOCATION_LONGITUDINAL_REAR;
-                $comment = ($axleNumber > 1) ? "Axle $axleNumber" : null;
+                $comment = ($axleNumber >= 1) ? "Axle $axleNumber" : null;
 
                 $summary->addReasonForRejection($rfr, $type, $location, $comment);
             }
@@ -500,18 +504,6 @@ class BrakeTestResultService extends AbstractService
                 return self::RFR_ID_BRAKE_EFFICIENCY_DECELEROMETER_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2;
             case BrakeTestTypeCode::GRADIENT:
                 return self::RFR_ID_BRAKE_EFFICIENCY_GRADIENT_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2;
-        }
-
-        return null;
-    }
-
-    private function getRfrServiceBrakeImbalanced($testType)
-    {
-        switch ($testType) {
-            case BrakeTestTypeCode::ROLLER:
-                return self::RFR_ID_SERVICE_BRAKE_ROLLER_IMBALANCE;
-            case BrakeTestTypeCode::PLATE:
-                return self::RFR_ID_SERVICE_BRAKE_PLATE_IMBALANCE;
         }
 
         return null;
