@@ -2,7 +2,9 @@
 
 namespace Application\Controller;
 
+use Application\Service\LoggedInUserManager;
 use Core\Controller\AbstractAuthActionController;
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -20,20 +22,36 @@ class FormsController extends AbstractAuthActionController
 {
     const PHP_CONTENT_HEADER = 'Content-type: text/html; charset=UTF-8';
 
+    /** @var LoggedInUserManager $loggedInUserManager */
+    private $loggedInUserManager;
+
+    /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
+    private $authorisationService;
+
+    /** @var Client $client */
+    private $client;
+
+    public function __construct(
+        LoggedInUserManager $loggedInUserManager,
+        MotFrontendAuthorisationServiceInterface $authorisationService,
+        Client $client
+    ) {
+        $this->loggedInUserManager = $loggedInUserManager;
+        $this->authorisationService = $authorisationService;
+        $this->client = $client;
+    }
+
     public function indexAction()
     {
         // VM-4217: Role based solution done for this sprint. A permissions based solution
         // will need to be implemented when Rbca et al. is completely stable and ready.
-        $authService = $this->getServiceLocator()->get('AuthorisationService');
 
-        if ($authService->isTester()) {
-            $loggedInUserManager = $this->getServiceLocator()->get('LoggedInUserManager');
-            $tester = $loggedInUserManager->getTesterData();
-            $client = $this->getServiceLocator()->get(Client::class);
+        if ($this->authorisationService->isTester()) {
+            $tester = $this->loggedInUserManager->getTesterData();
             $authorisationsForTestingMot = (!is_null($tester['authorisationsForTestingMot'])) ? $tester['authorisationsForTestingMot'] : [];
 
             $url = (new UrlBuilder())->specialNoticeOverdue()->toString();
-            $overdueSpecialNotices = $client->get($url)['data'];
+            $overdueSpecialNotices = $this->client->get($url)['data'];
 
             $overdueSpecialNotices = new OverdueSpecialNoticeAssertion($overdueSpecialNotices, $authorisationsForTestingMot);
             $overdueSpecialNotices->assertPerformTest();
@@ -43,7 +61,7 @@ class FormsController extends AbstractAuthActionController
         $view = new ViewModel(
             [
                 'userDetails' => $userDetails,
-                'isVE' => $authService->hasRole(Role::VEHICLE_EXAMINER),
+                'isVE' => $this->authorisationService->hasRole(Role::VEHICLE_EXAMINER),
             ]
         );
 
@@ -98,7 +116,7 @@ class FormsController extends AbstractAuthActionController
                         ]
                     );
 
-                $result = $this->getRestClient()->getPdf($certificateUrl);
+                $result = $this->client->getPdf($certificateUrl);
             } catch (RestApplicationException $re) {
                 $this->addErrorMessages($re->getDisplayMessages());
                 throw $re;
