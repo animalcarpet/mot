@@ -149,7 +149,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $this->officialWeightSourceForVehicleSpec = $officialWeightSourceForVehicleSpec;
         $this->featureToggles = $featureToggles;
     }
-
+    
     public function indexAction()
     {
         /** @var \Zend\Http\Request $request */
@@ -222,12 +222,15 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         $noRegistrationString = $this->params()->fromRoute(self::ROUTE_PARAM_NO_REG);
         $this->noRegistration = ($noRegistrationString === '1');
-        $this->startTestChangeService->saveChange(StartTestChangeService::NO_REGISTRATION, [StartTestChangeService::NO_REGISTRATION => $noRegistrationString]);
-
         $this->vehicleSource = $this->params()->fromRoute(self::ROUTE_PARAM_SOURCE);
-        $this->startTestChangeService->saveChange(StartTestChangeService::SOURCE, [StartTestChangeService::SOURCE => $this->vehicleSource]);
 
-        $this->startTestChangeService->saveChange(StartTestChangeService::NORMAL_OR_RETEST, [StartTestChangeService::NORMAL_OR_RETEST => false]);
+        $params = [
+            StartTestChangeService::NO_REGISTRATION => [StartTestChangeService::NO_REGISTRATION => $noRegistrationString],
+            StartTestChangeService::SOURCE => [StartTestChangeService::SOURCE => $this->vehicleSource],
+            StartTestChangeService::NORMAL_OR_RETEST => [StartTestChangeService::NORMAL_OR_RETEST => false]
+        ];
+
+        $this->startTestChangeService->saveChanges($params);
 
         if ($this->method === MotTestTypeCode::NON_MOT_TEST) {
             $this->vtsId = null;
@@ -482,9 +485,10 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             );
 
             if ($viewModel->getMotTestClass() != self::UNKNOWN_TEST) {
+                $combinedAuthorisedClassesResult = $this->getCombinedAuthorisedClasses();
                 $viewModel->setIsPermittedToTest(
-                    $this->isAuthorisedToTestClass()
-                )->setIsPermittedToTestText($this->getCombinedAuthorisedClasses());
+                    $this->isAuthorisedToTestClass($combinedAuthorisedClassesResult)
+                )->setIsPermittedToTestText($combinedAuthorisedClassesResult);
             }
             $viewModel->setMotExpirationDate($viewData['checkExpiryResults']['expiryDate']);
         }
@@ -800,14 +804,18 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     /**
      * @return bool
      *
+     * @param string $combinedAuthorisedClassesForPersonAndVts (optional)
+     *
      * @throws \Exception
      */
-    private function isAuthorisedToTestClass()
+    private function isAuthorisedToTestClass($combinedAuthorisedClassesForPersonAndVts = null)
     {
         $isClassChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
         $vehicleClass = $isClassChangedInSession ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS] : $this->vehicleDetails->getVehicleClass()->getCode();
 
-        $combinedAuthorisedClassesForPersonAndVts = $this->getCombinedAuthorisedClasses();
+        if ($combinedAuthorisedClassesForPersonAndVts == null) {
+            $combinedAuthorisedClassesForPersonAndVts = $this->getCombinedAuthorisedClasses();
+        }
 
         if (!in_array($vehicleClass, $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_PERSON_APPROVED_CLASSES]) || !in_array($vehicleClass, $combinedAuthorisedClassesForPersonAndVts[AuthorisedClassesService::KEY_FOR_VTS_APPROVED_CLASSES])) {
             return false;

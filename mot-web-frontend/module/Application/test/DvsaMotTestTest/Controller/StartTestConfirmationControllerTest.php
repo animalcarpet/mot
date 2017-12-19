@@ -368,7 +368,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testCheckEligibilityForRetest(
         $action, $params, array $mock, $expect,
-        $identityProviderInvoked = 2, $authorisedClassesServiceInvoked = 2
+        $identityProviderInvoked = 1, $authorisedClassesServiceInvoked = 1
     ) {
         $this->identityProvider
             ->expects($this->exactly($identityProviderInvoked))
@@ -518,7 +518,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testAccess(
         $method, $action, $permissions, $mock, $expect,
-        $identityProviderInvoked = 2, $authorisedClassesServiceInvoked = 2
+        $identityProviderInvoked = 1, $authorisedClassesServiceInvoked = 1
     ) {
         $this->identityProvider
             ->expects($this->exactly($identityProviderInvoked))
@@ -1051,7 +1051,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     private function mockGetIdentity()
     {
         $this->identityProvider
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('getIdentity')
             ->willReturn(
                 (new Identity())
@@ -1063,7 +1063,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     private function mockGetCombinedAuthorisedClassesForPersonAndVts()
     {
         $this->authorisedClassesService
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('getCombinedAuthorisedClassesForPersonAndVts')
             ->with(1, 1)
             ->willReturn($this->mockAuthorisedClassesForPersonAndVts());
