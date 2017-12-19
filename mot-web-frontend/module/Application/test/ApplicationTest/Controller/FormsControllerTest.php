@@ -3,22 +3,48 @@
 namespace ApplicationTest\Controller;
 
 use Application\Controller\FormsController;
+use Application\Service\LoggedInUserManager;
+use Core\Service\LazyMotFrontendAuthorisationService;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\ReportUrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
-use Zend\Mvc\Router\RouteMatch;
+use DvsaCommonTest\TestUtils\XMock;
+use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
  * Class FormsControllerTest.
  */
 class FormsControllerTest extends AbstractFrontendControllerTestCase
 {
+
+    /** @var LoggedInUserManager|MockObj $loggedInUserManagerMock */
+    private $loggedInUserManagerMock;
+
+    /** @var LazyMotFrontendAuthorisationService|MockObj $authorisationService */
+    private $authorisationService;
+
+    /** @var Client|MockObj $client */
+    private $client;
+
+
     protected function setUp()
     {
         $this->setServiceManager(Bootstrap::getServiceManager());
-        $this->controller = new FormsController();
+
+        $this->loggedInUserManagerMock = XMock::of(LoggedInUserManager::class);
+
+        $this->authorisationService = XMock::of(LazyMotFrontendAuthorisationService::class);
+
+        $this->client = XMock::of(Client::class);
+
+        $this->controller = new FormsController(
+            $this->loggedInUserManagerMock,
+            $this->authorisationService,
+            $this->client
+            );
         $this->controller->setServiceLocator(Bootstrap::getServiceManager());
         parent::setUp();
 
@@ -161,9 +187,7 @@ class FormsControllerTest extends AbstractFrontendControllerTestCase
 
     protected function runFailContingencyTest($action, $name)
     {
-        $restMock = $this->getRestClientMockForServiceManager();
-
-        $this->mockMethod($restMock, 'getPdf', null, new \Exception('pdf failed'), $this->buildContingencyUrl($name));
+        $this->mockMethod($this->client, 'getPdf', null, new \Exception('pdf failed'), $this->buildContingencyUrl($name));
 
         $result = $this->getResultForAction($action);
 
@@ -177,9 +201,7 @@ class FormsControllerTest extends AbstractFrontendControllerTestCase
 
     protected function runFailContingencyTestRestException($action, $name)
     {
-        $restMock = $this->getRestClientMockForServiceManager();
-
-        $restMock->expects($this->once())
+        $this->client->expects($this->once())
             ->method('getPdf')
             ->with($this->buildContingencyUrl($name))
             ->willThrowException(new RestApplicationException(null, null, null, null));

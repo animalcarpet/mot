@@ -5,6 +5,7 @@ use Application\Controller\PrivacyPolicyController;
 use Application\Controller\ReportController;
 use Application\Factory\Controller\ReportControllerFactory;
 use Application\Controller\CookiesController;
+use Application\Factory\FormsControllerFactory;
 use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use DvsaMotEnforcement\Controller\MotTestController as EnforcementMotTestController;
 use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestSearchController;
@@ -34,7 +35,6 @@ use DvsaMotTest\Factory\Controller\BrakeTestResultsControllerFactory;
 
 return [
     'invokables' => [
-        FormsController::class => FormsController::class,
         CookiesController::class => CookiesController::class,
         PrivacyPolicyController::class => PrivacyPolicyController::class,
         LocationSelectController::class => LocationSelectController::class,
@@ -54,6 +54,7 @@ return [
         ReplacementCertificateController::class => ReplacementCertificateControllerFactory::class,
         CertificatePrintingController::class => CertificatePrintingControllerFactory::class,
         ReplacementCertificateController::class => ReplacementCertificateControllerFactory::class,
+        FormsController::class => FormsControllerFactory::class,
         MotTestController::class => MotTestControllerFactory::class,
         ReportController::class => ReportControllerFactory::class,
     ],
