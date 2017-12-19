@@ -44,7 +44,6 @@ use DvsaCommon\Validation\ValidationException;
 use DvsaCommon\Validation\ValidationResult;
 use DvsaCommonApi\Service\Exception\UnauthenticatedException;
 use DvsaMotTest\Dto\MotPrintModelDto;
-use DvsaMotTest\Form\Validator\CancelMotTestValidator;
 use DvsaMotTest\InputFilter\CancelMotTestInputFilter;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
@@ -323,7 +322,7 @@ class MotTestController extends AbstractDvsaMotTestController
     private function generateParamsForSearchBy($vrm, $vin)
     {
         if ($vrm === null and $vin === null) {
-            return null;
+            return;
         } elseif ($vin === null) {
             return [
                 DuplicateCertificateSearchType::SEARCH_TYPE_VRM => $vrm,
@@ -423,7 +422,7 @@ class MotTestController extends AbstractDvsaMotTestController
         /** @var DvsaVehicle $vehicleData */
         $vehicleData = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
 
-        /** @var DvsaVehicleViewModel $dvsaVehicleViewModel */
+        /** @var DvsaVehicleViewModel $vehicle */
         $vehicle = new DvsaVehicleViewModel($vehicleData);
 
         /** @var string $testType */
@@ -718,7 +717,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $motDetails = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
         if (is_null($motDetails)) {
-            throw new NotFoundException('', '', [], 404, "MOT details not found");
+            throw new NotFoundException('', '', [], 404, 'MOT details not found');
         }
 
         /** @var string $vehicleRegistration */
@@ -759,7 +758,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $motDetails = $this->tryGetMotTestOrAddErrorMessages();
 
         if (is_null($motDetails)) {
-            throw new NotFoundException('', '', [], 404, "MOT details not found");
+            throw new NotFoundException('', '', [], 404, 'MOT details not found');
         }
 
         /** @var string $vehicleRegistration */

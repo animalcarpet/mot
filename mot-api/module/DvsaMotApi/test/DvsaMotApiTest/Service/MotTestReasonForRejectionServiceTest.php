@@ -29,7 +29,6 @@ use DvsaEntities\Repository\RfrRepository;
 use DvsaMotApi\Service\Helper\BrakeTestResultsHelper;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApi\Service\Validator\MotTestValidator;
-
 use DvsaMotApiTest\Service\AbstractMotTestServiceTest;
 use DvsaMotApiTest\Service\InMemoryRepositories\InMemoryReasonForRejectionTypeRepository;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -251,7 +250,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         return [
             [RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, ReasonForRejectionTypeName::FAIL, ReasonForRejectionTypeName::FAIL],
             [RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE, ReasonForRejectionTypeName::ADVISORY, ReasonForRejectionTypeName::ADVISORY],
-            [RfrDeficiencyCategoryCode::MINOR, ReasonForRejectionTypeName::FAIL, ReasonForRejectionTypeName::ADVISORY],
+            [RfrDeficiencyCategoryCode::MINOR, ReasonForRejectionTypeName::MINOR, ReasonForRejectionTypeName::MINOR],
             [RfrDeficiencyCategoryCode::DANGEROUS, ReasonForRejectionTypeName::FAIL, ReasonForRejectionTypeName::FAIL],
             [RfrDeficiencyCategoryCode::MAJOR, ReasonForRejectionTypeName::FAIL, ReasonForRejectionTypeName::FAIL],
         ];
@@ -339,7 +338,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
                 [
                     'rfrId' => $testDefectId,
                     'failureDangerous' => true,
-                    'type' => ReasonForRejectionTypeName::FAIL
+                    'type' => ReasonForRejectionTypeName::FAIL,
                 ]
             );
     }
@@ -578,7 +577,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         $this->entityManager->expects($this->once())
             ->method('persist')
             ->with($motTestReasonForRejection);
-        
+
         $this->createService();
         $this->motTestReasonForRejectionService
             ->editReasonForRejection(
@@ -685,7 +684,8 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             );
     }
 
-    private function setUpRfrRepositoryMock($testDefectId, $rfrDeficiencyCategoryCode) {
+    private function setUpRfrRepositoryMock($testDefectId, $rfrDeficiencyCategoryCode)
+    {
         $reasonForRejection = new ReasonForRejection();
         $rfrDeficiencyCategory = new RfrDeficiencyCategory();
         $rfrDeficiencyCategory->setCode($rfrDeficiencyCategoryCode);
@@ -715,6 +715,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         $motTestType->setCode(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
         $motTest->setMotTestType($motTestType);
         $motTest->setId($id);
+
         return $motTest;
     }
 
@@ -724,6 +725,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         $motTestType = new MotTestType();
         $motTestType->setCode(MotTestTypeCode::NORMAL_TEST);
         $motTest->setMotTestType($motTestType);
+
         return $motTest;
     }
 
@@ -757,5 +759,4 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             $this->brakeTestResultsHelper
         );
     }
-
 }

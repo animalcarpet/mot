@@ -34,6 +34,7 @@ class EditDefectController extends AbstractDvsaMotTestController
     const DEFECT_TYPE_ADVISORY = 'advisory';
     const DEFECT_TYPE_PRS = 'prs';
     const DEFECT_TYPE_FAILURE = 'failure';
+    const DEFECT_TYPE_MINOR = 'minor';
 
     /**
      * @var DefectsJourneyContextProvider
@@ -151,7 +152,7 @@ class EditDefectController extends AbstractDvsaMotTestController
             'errorMessages' => $errorMessages,
             'identifiedDefect' => $identifiedDefect,
             'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
-            'isPreEuDirective' => $isPreEuDirective
+            'isPreEuDirective' => $isPreEuDirective,
         ]);
     }
 
@@ -188,6 +189,9 @@ class EditDefectController extends AbstractDvsaMotTestController
                 break;
             case self::DEFECT_TYPE_FAILURE:
                 $title = 'Edit failure';
+                break;
+            case self::DEFECT_TYPE_MINOR:
+                $title = 'Edit minor';
                 break;
             default:
                 throw new DefectTypeNotFoundException();

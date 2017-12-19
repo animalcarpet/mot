@@ -81,16 +81,16 @@ class MotTestReasonForRejectionService
     /**
      * MotTestReasonForRejectionService constructor.
      *
-     * @param EntityManager $entityManager
-     * @param AuthorisationServiceInterface $authService
-     * @param MotTestValidator $motTestValidator
-     * @param ApiPerformMotTestAssertion $performMotTestAssertion
-     * @param MotTestRepository $motTestRepository
-     * @param RfrRepository $rfrRepository
-     * @param MotTestReasonForRejectionRepository $motTestReasonForRejectionRepository
+     * @param EntityManager                               $entityManager
+     * @param AuthorisationServiceInterface               $authService
+     * @param MotTestValidator                            $motTestValidator
+     * @param ApiPerformMotTestAssertion                  $performMotTestAssertion
+     * @param MotTestRepository                           $motTestRepository
+     * @param RfrRepository                               $rfrRepository
+     * @param MotTestReasonForRejectionRepository         $motTestReasonForRejectionRepository
      * @param MotTestReasonForRejectionLocationRepository $motTestReasonForRejectionLocationRepository
-     * @param ReasonForRejectionTypeRepositoryInterface $reasonForRejectionTypeRepository
-     * @param BrakeTestResultsHelper $brakeTestResultsHelper
+     * @param ReasonForRejectionTypeRepositoryInterface   $reasonForRejectionTypeRepository
+     * @param BrakeTestResultsHelper                      $brakeTestResultsHelper
      */
     public function __construct(
         EntityManager $entityManager,
@@ -137,7 +137,9 @@ class MotTestReasonForRejectionService
     /**
      * @param MotTest $motTest
      * @param $data
+     *
      * @return MotTestReasonForRejection
+     *
      * @throws BadRequestException
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
@@ -295,12 +297,13 @@ class MotTestReasonForRejectionService
             return $reasonForRejection;
         }
 
-        return null;
+        return;
     }
 
     /**
-     * @param string $typeName
+     * @param string             $typeName
      * @param ReasonForRejection $reasonForRejection
+     *
      * @return ReasonForRejectionType
      */
     private function getRfrType(string $typeName, $reasonForRejection) : ReasonForRejectionType
@@ -309,7 +312,7 @@ class MotTestReasonForRejectionService
         if ($reasonForRejection !== null
             && $typeName == ReasonForRejectionTypeName::FAIL
             && $reasonForRejection->getRfrDeficiencyCategory()->getCode() == RfrDeficiencyCategoryCode::MINOR) {
-            $rfrTypeToFind = ReasonForRejectionTypeName::ADVISORY;
+            $rfrTypeToFind = ReasonForRejectionTypeName::MINOR;
         }
 
         return $this->reasonForRejectionTypeRepository
@@ -500,7 +503,6 @@ class MotTestReasonForRejectionService
     {
         // Added null check until null check is resolved in createRfrFromData
         if ($motTestRfr->getReasonForRejection() !== null) {
-
             $reasonForRejection = $this->rfrRepository->get(
                 $motTestRfr->getReasonForRejection()->getRfrId()
             );
@@ -577,7 +579,7 @@ class MotTestReasonForRejectionService
             return false;
         }
 
-        return (in_array($motTestRfrId, ReasonForRejectionConstants::BRAKE_PERFORMANCE_NOT_TESTED_RFR_IDS));
+        return in_array($motTestRfrId, ReasonForRejectionConstants::BRAKE_PERFORMANCE_NOT_TESTED_RFR_IDS);
     }
 
     /**

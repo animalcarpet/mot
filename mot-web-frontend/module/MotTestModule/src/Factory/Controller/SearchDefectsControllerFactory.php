@@ -9,6 +9,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Factory\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SearchReasonForRejectionService;
+use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -26,7 +27,11 @@ class SearchDefectsControllerFactory implements FactoryInterface
     {
         /** @var ServiceLocatorInterface $mainServiceManager */
         $mainServiceManager = $serviceLocator->getServiceLocator();
+        /** @var SearchReasonForRejectionService $searchReasonForRejectionService */
+        $searchReasonForRejectionService = $mainServiceManager->get(SearchReasonForRejectionService::class);
+        /** @var FeatureToggles $featureToggles */
+        $featureToggles = $mainServiceManager->get('Feature\FeatureToggles');
 
-        return new SearchDefectsController($mainServiceManager->get(SearchReasonForRejectionService::class));
+        return new SearchDefectsController($searchReasonForRejectionService, $featureToggles);
     }
 }

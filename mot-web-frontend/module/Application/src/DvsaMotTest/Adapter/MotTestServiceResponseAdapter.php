@@ -48,7 +48,7 @@ class MotTestServiceResponseAdapter
         }
         $result = new \stdClass();
 
-        foreach (['FAIL', 'PRS', 'ADVISORY'] as $type) {
+        foreach (['FAIL', 'PRS', 'ADVISORY', 'MINOR'] as $type) {
             $defects = isset($reasonsForRejection->$type) ? $reasonsForRejection->$type : [];
             $result->$type = $this->removeRepairedDefectsByType($defects);
         }

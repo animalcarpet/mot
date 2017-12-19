@@ -16,6 +16,7 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTestTest\TestHelper\Fixture;
 use Zend\View\Model\ViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
@@ -56,6 +57,11 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
      */
     private $rfrCacheMock;
 
+    /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
+
     protected function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
@@ -65,6 +71,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
         $this->authorisationServiceMock = XMock::of(MotAuthorisationServiceInterface::class);
         $this->defectsContentBreadcrumbsBuilderMock = XMock::of(DefectsContentBreadcrumbsBuilder::class);
         $this->rfrCacheMock = XMock::of(RfrCache::class);
+        $this->featureToggles = XMock::of(FeatureToggles::class);
 
         $this->serviceManager->setAllowOverride(true);
 
@@ -83,12 +90,18 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
             $this->rfrCacheMock
         );
 
+        $this->serviceManager->setService(
+            FeatureToggles::class,
+            $this->featureToggles
+        );
+
         $this->setServiceManager($this->serviceManager);
         $this->setController(
             new DefectCategoriesController(
                 $this->authorisationServiceMock,
                 $this->defectsContentBreadcrumbsBuilderMock,
-                $this->rfrCacheMock
+                $this->rfrCacheMock,
+                $this->featureToggles
             )
         );
 

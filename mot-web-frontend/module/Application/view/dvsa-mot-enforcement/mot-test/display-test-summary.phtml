@@ -36,6 +36,7 @@ $reasonsForRejection = $responseAdapter->getReasonsForRejectionExcludingRepaired
 $fails = $reasonsForRejection->FAIL;
 $prses = $reasonsForRejection->PRS;
 $advisories = $reasonsForRejection->ADVISORY;
+$minors = $reasonsForRejection->MINOR;
 
 $testStatus = $motTest->getStatus();
 $isTestPass = ($testStatus == MotTestStatusName::PASSED);
@@ -212,6 +213,16 @@ echo $this->partial(
         'items' => $fails,
     ]
 );
+
+if ($this->isFeatureEnabled(\DvsaCommon\Constants\FeatureToggle::EU_ROADWORTHINESS)) {
+    echo $this->partial(
+        'partials/mot-test-summary/rfr-block', [
+            'id' => 'minors',
+            'title' => 'Minors',
+            'items' => $minors,
+        ]
+    );
+}
 
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [

@@ -14,12 +14,13 @@ use Dvsa\Mot\ApiClient\Resource\Item\VehicleClass;
 use Dvsa\Mot\Frontend\MotTestModule\Service\ReasonForRejectionPaginator;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SearchReasonForRejectionService;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
-use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
@@ -42,9 +43,16 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
     private $reasonForRejectionService;
 
-    public function __construct(SearchReasonForRejectionService $reasonForRejectionService)
+    /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
+
+    public function __construct(SearchReasonForRejectionService $reasonForRejectionService,
+                                FeatureToggles $featureToggles)
     {
         $this->reasonForRejectionService = $reasonForRejectionService;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -104,13 +112,14 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
             $this->gtmDataLayer([
                 'search-results' => $paginator->getTotalItemCount(),
-                'search-keyword' => $searchTerm
+                'search-keyword' => $searchTerm,
             ]);
         }
 
         $hasResults = !is_null($paginator);
         $isRetest = $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST;
 
+        $euRoadWorthinessEnabled = $this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS);
 
         return $this->createViewModel('defects/search.twig', [
             'motTestNumber' => $motTestNumber,
@@ -123,6 +132,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
             'page' => $page,
             'paginator' => $paginator,
             'isRetest' => $isRetest,
+            'isEuRoadWorthinessEnabled' => $euRoadWorthinessEnabled,
         ]);
     }
 
