@@ -19,6 +19,7 @@ $reasonsForRejection = $responseAdapter->getReasonsForRejectionExcludingRepaired
 $fails = $reasonsForRejection->FAIL;
 $prses = $reasonsForRejection->PRS;
 $advisories = $reasonsForRejection->ADVISORY;
+$minors = $reasonsForRejection->MINOR;
 
 $pendingStatus = null;
 
@@ -139,6 +140,16 @@ echo $this->partial(
         'items' => $prses,
     ]
 );
+
+if ($this->isFeatureEnabled(\DvsaCommon\Constants\FeatureToggle::EU_ROADWORTHINESS)) {
+    echo $this->partial(
+        'partials/mot-test-summary/rfr-block', [
+            'id' => 'minors',
+            'title' => 'Minors',
+            'items' => $minors,
+        ]
+    );
+}
 
 echo $this->partial(
     'partials/mot-test-summary/rfr-block', [

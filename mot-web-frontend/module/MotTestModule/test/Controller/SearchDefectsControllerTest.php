@@ -21,6 +21,7 @@ use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\ReasonForRejection\ReasonForRejectionResponseDto;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTestTest\TestHelper\Fixture;
 
 class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
@@ -50,12 +51,14 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
 
         $searchReasonForRejectionService = XMock::of(SearchReasonForRejectionService::class);
         $searchReasonForRejectionService
-            ->method("search")
+            ->method('search')
             ->willReturn(new ReasonForRejectionPaginator($dto));
+
+        $featureToggles = XMock::of(FeatureToggles::class);
 
         $this->setServiceManager($this->serviceManager);
         $this->setController(
-            new SearchDefectsController($searchReasonForRejectionService)
+            new SearchDefectsController($searchReasonForRejectionService, $featureToggles)
         );
 
         $dataLayerPlugin = new DataLayerPlugin(new DataLayer());

@@ -26,12 +26,19 @@
     <div class="defect-summary__total">
         <h2 class="defect-summary__total-heading">Defects</h2>
         <ul>
-            <li><span class="badge--alert js-numberOfFailures">{{ identifiedDefects.numberOfUnrepairedFailures }}</span> Failures</li>
-            <li><span class="badge--info">{{ identifiedDefects.numberOfPrs }}</span> PRS</li>
-            <li><span class="badge--warn js-numberOfAdvisories">{{ identifiedDefects.numberOfUnrepairedAdvisories }}</span> Advisories</li>
+            {% if isEuRoadWorthinessEnabled %}
+                <li style="width: 24%"><span class="badge--alert js-numberOfFailures">{{ identifiedDefects.numberOfUnrepairedFailures }}</span> Failures</li>
+                <li style="width: 24%"><span class="badge--warn">{{ identifiedDefects.numberOfUnrepairedMinors }}</span> Minors</li>
+                <li style="width: 24%"><span class="badge--info">{{ identifiedDefects.numberOfPrs }}</span> PRS</li>
+                <li style="width: 24%"><span class="badge js-numberOfAdvisories">{{ identifiedDefects.numberOfUnrepairedAdvisories }}</span> Advisories</li>
+            {% else %}
+                <li><span class="badge--alert js-numberOfFailures">{{ identifiedDefects.numberOfUnrepairedFailures }}</span> Failures</li>
+                <li><span class="badge--info">{{ identifiedDefects.numberOfPrs }}</span> PRS</li>
+                <li><span class="badge--warn js-numberOfAdvisories">{{ identifiedDefects.numberOfUnrepairedAdvisories }}</span> Advisories</li>
+            {% endif %}
         </ul>
         {# "Show/Hide defects button only appears when there are defects to be shown. #}
-        {% if identifiedDefects.hasFailuresPrsOrAdvisories %}
+        {% if identifiedDefects.hasFailuresPrsOrAdvisoriesOrMinors %}
             <span class="defect-summary__toggle">
             <a href="#" data-action="showHideToggle" data-open-text="Hide defects" data-target="rfrList" id="toggleRFRList" class="toggle-switch">Show defects</a>
         </span>
@@ -79,6 +86,15 @@
                                         {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
                                             'defectId' : defect.defectId, 'type' : 'prs'}) }}" class="button--info">
                             PRS
+                        </a>
+                    </li>
+                {% endif %}
+                {% if defect.canDisplayMinorButton %}
+                    <li>
+                        <a href="{{ url('mot-test-defects/categories/category/add-defect',
+                        {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
+                            'defectId' : defect.defectId, 'type' : 'minor'}) }}" class="button--warn">
+                            Minor
                         </a>
                     </li>
                 {% endif %}

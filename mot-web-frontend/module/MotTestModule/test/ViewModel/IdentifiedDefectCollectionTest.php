@@ -21,9 +21,9 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
      * @param bool   $hasPrs
      * @param bool   $hasAdvisories
      */
-    public function testCreation($reasonsForRejection, $hasFailures, $hasPrs, $hasAdvisories)
+    public function testCreation($reasonsForRejection, $hasFailures, $hasPrs, $hasAdvisories, $hasMinors)
     {
-        $rfrs = $this->getTestData($hasFailures, $hasPrs, $hasAdvisories);
+        $rfrs = $this->getTestData($hasFailures, $hasPrs, $hasAdvisories, $hasMinors);
         $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
 
         $testMotTestData->reasonsForRejection = $rfrs;
@@ -140,10 +140,47 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                 $loopIndex += 1;
             }
         }
+
+        $loopIndex = 0;
+        if ($hasMinors) {
+            foreach ($reasonsForRejection->MINOR as $minor) {
+                $this->assertEquals(
+                    $minor->locationLateral,
+                    $testCollection->getMinors()[$loopIndex]->getLateralLocation()
+                );
+
+                $this->assertEquals(
+                    $minor->locationLongitudinal,
+                    $testCollection->getMinors()[$loopIndex]->getLongitudinalLocation()
+                );
+
+                $this->assertEquals(
+                    $minor->locationVertical,
+                    $testCollection->getMinors()[$loopIndex]->getVerticalLocation()
+                );
+
+                $this->assertEquals(
+                    $minor->comment,
+                    $testCollection->getMinors()[$loopIndex]->getUserComment()
+                );
+
+                $this->assertEquals(
+                    $minor->failureDangerous,
+                    $testCollection->getMinors()[$loopIndex]->isDangerous()
+                );
+
+                $this->assertEquals(
+                    $minor->testItemSelectorDescription.' '.$minor->failureText,
+                    $testCollection->getMinors()[$loopIndex]->getName()
+                );
+                $loopIndex += 1;
+            }
+        }
         $this->assertEquals((int) $hasFailures, $testCollection->getNumberOfFailures());
         $this->assertEquals((int) $hasPrs, $testCollection->getNumberOfPrs());
         $this->assertEquals((int) $hasAdvisories, $testCollection->getNumberOfAdvisories());
-        $this->assertEquals($hasFailures || $hasPrs || $hasAdvisories, $testCollection->hasFailuresPrsOrAdvisories());
+        $this->assertEquals((int) $hasMinors, $testCollection->getNumberOfMinors());
+        $this->assertEquals($hasFailures || $hasPrs || $hasAdvisories, $testCollection->hasFailuresPrsOrAdvisoriesOrMinors());
     }
 
     /**
@@ -152,7 +189,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
     public function testGetDefectByIdThrowsExceptionOnNonExistentDefect()
     {
         $this->setExpectedException(IdentifiedDefectNotFoundException::class);
-        $rfrs = $this->getTestData(true, false, false);
+        $rfrs = $this->getTestData(true, false, false, false);
         $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
 
         $testMotTestData->reasonsForRejection = $rfrs;
@@ -169,11 +206,12 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
     public function creationDataProvider()
     {
         return [
-            'All keys present' => [$this->getTestData(true, true, true), true, true, true],
-            'Missing ADVISORY key' => [$this->getTestData(true, true, false), true, true, false],
-            'Missing PRS Key' => [$this->getTestData(true, false, true), true, false, true],
-            'Missing FAIL key' => [$this->getTestData(false, true, true), false, true, true],
-            'Missing all keys' => [$this->getTestData(false, false, false), false, false, false],
+            'All keys present' => [$this->getTestData(true, true, true, true), true, true, true, true],
+            'Missing ADVISORY key' => [$this->getTestData(true, true, false, true), true, true, false, true],
+            'Missing PRS Key' => [$this->getTestData(true, false, true, true), true, false, true, true],
+            'Missing FAIL key' => [$this->getTestData(false, true, true, true), false, true, true, true],
+            'Missing MINOR key' => [$this->getTestData(true, true, true, false), true, true, true, false],
+            'Missing all keys' => [$this->getTestData(false, false, false, false), false, false, false, false],
         ];
     }
 
@@ -217,7 +255,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    private function getTestData($withFailures, $withPrs, $withAdvisories)
+    private function getTestData($withFailures, $withPrs, $withAdvisories, $withMinors)
     {
         $testData = [];
 
@@ -245,7 +283,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'inspectionManualReference' => '6.1.B.2',
                     'markedAsRepaired' => false,
                     'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
-                    'preEuDirective' => true
+                    'preEuDirective' => true,
                 ],
             ];
         }
@@ -274,7 +312,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'inspectionManualReference' => '6.1.B.2',
                     'markedAsRepaired' => false,
                     'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
-                    'preEuDirective' => true
+                    'preEuDirective' => true,
                 ],
             ];
         }
@@ -303,7 +341,36 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'inspectionManualReference' => '6.1.B.2',
                     'markedAsRepaired' => false,
                     'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
-                    'preEuDirective' => true
+                    'preEuDirective' => true,
+                ],
+            ];
+        }
+
+        if ($withMinors) {
+            $testData['MINOR'] = [
+                0 => [
+                    'type' => 'MINOR',
+                    'locationLateral' => null,
+                    'locationLongitudinal' => null,
+                    'locationVertical' => null,
+                    'comment' => null,
+                    'failureDangerous' => false,
+                    'generated' => false,
+                    'customDescription' => null,
+                    'onOriginalTest' => false,
+                    'id' => 2,
+                    'rfrId' => 9999,
+                    'name' => 'Body condition',
+                    'nameCy' => '',
+                    'testItemSelectorDescription' => 'Body',
+                    'failureText' => 'Minor test',
+                    'testItemSelectorDescriptionCy' => null,
+                    'failureTextCy' => 'mae\'r siasi wedi\'i drwsio\'n annigonol sy\'n effeithio\'n ddifrifol ar ei gryfder o fewn 30cm i fowntinau\'r corff',
+                    'testItemSelectorId' => 5696,
+                    'inspectionManualReference' => '6.1.B.2',
+                    'markedAsRepaired' => false,
+                    'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::MINOR,
+                    'preEuDirective' => false,
                 ],
             ];
         }
@@ -343,7 +410,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                 'inspectionManualReference' => '6.1.B.2',
                 'markedAsRepaired' => false,
                 'deficiencyCategoryCode' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE,
-                'preEuDirective' => true
+                'preEuDirective' => true,
             ];
         }
 

@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
-use DvsaEntities\Entity\RfrDeficiencyCategory;
 
 class DefectTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,7 +56,7 @@ class DefectTest extends \PHPUnit_Framework_TestCase
         $isMinor = $deficiencyCategory === RfrDeficiencyCategoryCode::MINOR;
         $this->assertEquals($isMinor, $defect->isMinorDefect());
 
-        $this->assertEquals($isPrs || $isFailure, $defect->canDisplayFailureButton());
+        $this->assertEquals($isFailure, $defect->canDisplayFailureButton());
         $this->assertEquals($isPrs && !$isMinor, $defect->canDisplayPrsButton());
         $this->assertEquals($isAdvisory, $defect->canDisplayAdvisoryButton());
     }
@@ -65,40 +64,40 @@ class DefectTest extends \PHPUnit_Framework_TestCase
     public function testCreationDP()
     {
         return [
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MINOR],
+            ['isAdvisory' => true, 'isPrs' => true, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
+            ['isAdvisory' => true, 'isPrs' => true, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::DANGEROUS],
+            ['isAdvisory' => true, 'isPrs' => true, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MAJOR],
+            ['isAdvisory' => true, 'isPrs' => true, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MINOR],
 
-            ["isAdvisory" => false, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
-            ["isAdvisory" => false, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
-            ["isAdvisory" => false, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
-            ["isAdvisory" => false, "isPrs" => true, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MINOR],
+            ['isAdvisory' => false, 'isPrs' => true, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
+            ['isAdvisory' => false, 'isPrs' => true, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::DANGEROUS],
+            ['isAdvisory' => false, 'isPrs' => true, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MAJOR],
+            ['isAdvisory' => false, 'isPrs' => true, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MINOR],
 
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MINOR],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::DANGEROUS],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MAJOR],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MINOR],
 
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
-            ["isAdvisory" => false, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::MINOR],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::DANGEROUS],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MAJOR],
+            ['isAdvisory' => false, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MINOR],
 
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => true, "deficiencyCategory" => RfrDeficiencyCategoryCode::MINOR],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::DANGEROUS],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => true, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MAJOR],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MINOR],
 
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
-            ["isAdvisory" => true, "isPrs" => false, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::MINOR],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::DANGEROUS],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MAJOR],
+            ['isAdvisory' => true, 'isPrs' => false, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MINOR],
 
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
-            ["isAdvisory" => true, "isPrs" => true, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::MINOR]
+            //["isAdvisory" => true, "isPrs" => true, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::PRE_EU_DIRECTIVE],
+            //["isAdvisory" => true, "isPrs" => true, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::DANGEROUS],
+            //["isAdvisory" => true, "isPrs" => true, "isFailure" => false, "deficiencyCategory" => RfrDeficiencyCategoryCode::MAJOR],
+            ['isAdvisory' => true, 'isPrs' => true, 'isFailure' => false, 'deficiencyCategory' => RfrDeficiencyCategoryCode::MINOR],
         ];
     }
 }

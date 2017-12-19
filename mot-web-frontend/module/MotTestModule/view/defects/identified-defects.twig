@@ -110,6 +110,41 @@
     </ol>
 {% endif %}
 
+{% if identifiedDefects.minors is not empty %}
+    <h3 class="defect-summary__heading">
+        <span class="badge--warn">{{ identifiedDefects.getNumberOfUnrepairedMinors }}</span>
+        <span class="defect-summary__heading-type">Minors</span>
+    </h3>
+    <ol>
+        {% for minor in identifiedDefects.minors %}
+            <li class="defect {% if minor.isMarkedAsRepaired %}has-success defect--is-selected{% endif %}">
+
+                <div>
+                    <h4 class="defect__title">{{ minor.name }}</h4>
+                    <p class="defect__meta">{{ minor.userComment }}</p>
+                    <h4 class="visuallyhidden">Position</h4>
+                    <ul class="defect__positions">
+                        {% if minor.hasLocation %}
+                            <li>Lateral: <span class="defect__property-list-value">{{ minor.lateralLocation|default('n/a') }}</span></li>
+                            <li>Longitudinal: <span class="defect__property-list-value">{{ minor.longitudinalLocation|default('n/a') }}</span></li>
+                            <li>Vertical: <span class="defect__property-list-value">{{ minor.verticalLocation|default('n/a') }}</span></li>
+                        {% else %}
+                            <li>Location not recorded</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <h5 class="visuallyhidden">Actions</h5>
+                <ul class="defect__edit">
+                    {% if minor.isRemovable %}
+                        <li> <a href="{{ defectJourneyUrl().toEditDefect(minor.id) }}" class="">Edit</a></li>
+                        <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(minor.id) }}" class="">Remove</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}
+
 {% if identifiedDefects.advisories is not empty %}
 <h3 class="defect-summary__heading">
     <span class="badge--warn js-numberOfAdvisories">{{ identifiedDefects.numberOfUnrepairedAdvisories }}</span>

@@ -19,6 +19,7 @@ class IdentifiedDefect
     const FAILURE = 'failure';
     const PRS = 'PRS';
     const ADVISORY = 'advisory';
+    const MINOR = 'minor';
 
     /**
      * Failure, PRS or advisory.
@@ -108,7 +109,7 @@ class IdentifiedDefect
     private $markedAsRepaired;
 
     /**
-     * @var String
+     * @var string
      */
     private $deficiencyCategoryCode;
 
@@ -132,7 +133,7 @@ class IdentifiedDefect
      * @param bool   $onOriginalTest
      * @param bool   $generated
      * @param bool   $markedAsRepaired
-     * @param String $deficiencyCategoryCode
+     * @param string $deficiencyCategoryCode
      * @param bool   $isPreEuDirective
      */
     public function __construct(
@@ -173,6 +174,14 @@ class IdentifiedDefect
     public function isManualAdvisory()
     {
         return !$this->defectId && self::ADVISORY === $this->defectType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMinor()
+    {
+        return !$this->defectId && self::MINOR === $this->defectType;
     }
 
     /**
@@ -320,7 +329,7 @@ class IdentifiedDefect
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getDeficiencyCategoryCode()
     {
@@ -328,7 +337,7 @@ class IdentifiedDefect
     }
 
     /**
-     * @param String $deficiencyCategoryCode
+     * @param string $deficiencyCategoryCode
      */
     public function setDeficiencyCategoryCode($deficiencyCategoryCode)
     {
@@ -336,7 +345,7 @@ class IdentifiedDefect
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPreEuDirective()
     {
@@ -344,7 +353,7 @@ class IdentifiedDefect
     }
 
     /**
-     * @param boolean $preEuDirective
+     * @param bool $preEuDirective
      */
     public function setPreEuDirective($preEuDirective)
     {

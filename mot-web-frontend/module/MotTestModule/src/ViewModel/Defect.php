@@ -9,14 +9,13 @@ namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 use DvsaCommon\Dto\MotTesting\DefectDto;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
-use DvsaEntities\Entity\RfrDeficiencyCategory;
 
 class Defect
 {
-    const FAILURE_LABEL_TEXT = "Failure";
-    const DANGEROUS_LABEL_TEXT = "Dangerous";
-    const MAJOR_LABEL_TEXT = "Major";
-    const MINOR_LABEL_TEXT = "Minor";
+    const FAILURE_LABEL_TEXT = 'Failure';
+    const DANGEROUS_LABEL_TEXT = 'Dangerous';
+    const MAJOR_LABEL_TEXT = 'Major';
+    const MINOR_LABEL_TEXT = 'Minor';
     /**
      * @var int
      */
@@ -63,7 +62,7 @@ class Defect
     private $failure;
 
     /**
-     * @var String
+     * @var string
      */
     private $deficiencyCategoryCode;
 
@@ -89,7 +88,7 @@ class Defect
      * @param bool   $isAdvisory
      * @param bool   $isPrs
      * @param bool   $isFailure
-     * @param String $deficiencyCategoryCode
+     * @param string $deficiencyCategoryCode
      * @param bool   $isPreEuDirective
      */
     public function __construct(
@@ -233,7 +232,7 @@ class Defect
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getDeficiencyCategoryCode()
     {
@@ -241,7 +240,7 @@ class Defect
     }
 
     /**
-     * @param String $deficiencyCategoryCode
+     * @param string $deficiencyCategoryCode
      */
     public function setDeficiencyCategoryCode($deficiencyCategoryCode)
     {
@@ -265,7 +264,7 @@ class Defect
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPreEuDirective()
     {
@@ -273,7 +272,7 @@ class Defect
     }
 
     /**
-     * @param boolean $preEuDirective
+     * @param bool $preEuDirective
      */
     public function setPreEuDirective($preEuDirective)
     {
@@ -281,7 +280,7 @@ class Defect
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getLabelForRfr()
     {
@@ -308,6 +307,14 @@ class Defect
     /**
      * @return bool
      */
+    public function canDisplayMinorButton()
+    {
+        return $this->isMinorDefect();
+    }
+
+    /**
+     * @return bool
+     */
     public function canDisplayPrsButton()
     {
         return $this->isPrs() && !$this->isMinorDefect();
@@ -318,7 +325,7 @@ class Defect
      */
     public function canDisplayFailureButton()
     {
-        return $this->isPrs() || $this->isFailure();
+        return ($this->isPrs() || $this->isFailure()) && !$this->isMinorDefect();
     }
 
     /**

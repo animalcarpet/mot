@@ -17,12 +17,14 @@ use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ComponentCategoryCollection;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Enum\RfrDeficiencyCategoryCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\ReasonForRejection\InspectionManualReferenceUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\Http\Response;
@@ -54,19 +56,26 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     private $rfrCache;
 
     /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
+
+    /**
      * DefectCategoriesController constructor.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param DefectsContentBreadcrumbsBuilder $breadcrumbsBuilder
-     * @param RfrCache $rfrCache
+     * @param RfrCache                         $rfrCache
      */
     public function __construct(MotAuthorisationServiceInterface $authorisationService,
                                 DefectsContentBreadcrumbsBuilder $breadcrumbsBuilder,
-                                RfrCache $rfrCache)
+                                RfrCache $rfrCache,
+                                FeatureToggles $featureToggles)
     {
         $this->authorisationService = $authorisationService;
         $this->breadcrumbsBuilder = $breadcrumbsBuilder;
         $this->rfrCache = $rfrCache;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -149,6 +158,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
 
+        $euRoadWorthinessEnabled = $this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS);
+
         return $this->createViewModel('defects/categories.twig', [
             'motTest' => $motTest,
             'vehicle' => $vehicle,
@@ -158,6 +169,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
             'defectCategories' => $defectCategories,
             'browseColumns' => $defectCategories->getColumnCountForHtml(),
             'isRetest' => $isRetest,
+            'isEuRoadWorthinessEnabled' => $euRoadWorthinessEnabled,
         ]);
     }
 
@@ -210,6 +222,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $dvsaVehicleViewModel = new DvsaVehicleViewModel($vehicle);
         $vehicleMakeAndModel = $dvsaVehicleViewModel->getMakeAndModel();
 
+        $euRoadWorthinessEnabled = $this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS);
+
         return $this->createViewModel('defects/defects-for-category.twig', [
             'motTest' => $motTest,
             'categoryId' => $categoryId,
@@ -221,6 +235,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
             'contentBreadcrumbs' => $contentBreadcrumbs,
             'isRetest' => $isRetest,
             'identifiedDefects' => $identifiedDefects,
+            'isEuRoadWorthinessEnabled' => $euRoadWorthinessEnabled,
         ]);
     }
 
@@ -263,9 +278,9 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     {
         $isVe = $this->authorisationService->hasRole(Role::VEHICLE_EXAMINER);
 
-        $dataFromApi  = null;
+        $dataFromApi = null;
 
-        if($this->rfrCache->isEnabled()) {
+        if ($this->rfrCache->isEnabled()) {
             $dataFromApi = $this->rfrCache->getItem($vehicleClass, $categoryId, $isVe, null);
         }
 
@@ -277,7 +292,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
                 )
             );
 
-            if($this->rfrCache->isEnabled()) {
+            if ($this->rfrCache->isEnabled()) {
                 $this->rfrCache->setItem($vehicleClass, $categoryId, $isVe, null, $dataFromApi);
             }
         }

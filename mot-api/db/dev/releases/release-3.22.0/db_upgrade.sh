@@ -9,6 +9,7 @@ MYSQL_ADMIN_PASSWORD=${2-"password"}
 MYSQL_HOST=${3-"mysql"}
 
 # Add files here in intended run order for release.
+upgrade_files+=('2017-12-07-BL-6762-minor-defect-should-not-be-added-as-advisory.sql');
 upgrade_files+=('2017-12-13-BL-6307-remove-porsche-from-smmt_make_map-STORY.sql');
 
 # Necessary for first deployment.
