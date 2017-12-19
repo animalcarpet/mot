@@ -186,6 +186,41 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('G', $this->buildService()->getChangedValue(StartTestChangeService::CHANGE_COLOUR)['colour']['secondaryColour']);
     }
 
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Change values 'fakeChange' are not allowed changes.
+     */
+    public function testSaveChanges_notAnAllowedChange_shouldThrowException()
+    {
+        $this->buildService()->saveChanges(['fakeChange' => ['fakeChange' => false]]);
+    }
+
+    public function testSaveChanges_correctAllowedChange_shouldSaveTheChange()
+    {
+        $this->startTestSessionService
+            ->expects($this->any())
+            ->method('load')
+            ->with(StartTestSessionService::UNIQUE_KEY)
+            ->willReturn($this->mockLoadedValues());
+        $this->startTestSessionService
+            ->expects($this->once())
+            ->method('save')
+            ->with(StartTestSessionService::UNIQUE_KEY, $this->mockLoadedValues());
+
+        $changes = [
+            StartTestChangeService::CHANGE_COLOUR => [StartTestChangeService::CHANGE_COLOUR => [
+                'primaryColour' => 'K',
+                'secondaryColour' => 'G',
+            ]],
+            StartTestChangeService::CHANGE_CLASS =>  '4'
+        ];
+
+        $this->buildService()->saveChanges($changes);
+        $this->assertSame('K', $this->buildService()->getChangedValue(StartTestChangeService::CHANGE_COLOUR)['colour']['primaryColour']);
+        $this->assertSame('G', $this->buildService()->getChangedValue(StartTestChangeService::CHANGE_COLOUR)['colour']['secondaryColour']);
+        $this->assertSame('4', $this->buildService()->getChangedValue(StartTestChangeService::CHANGE_CLASS));
+    }
+
     public function testLoadStepsInToSession_shouldOnlyContainAllowedChanges()
     {
         $this->startTestSessionService

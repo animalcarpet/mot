@@ -128,6 +128,27 @@ class StartTestChangeService
         $this->startTestSessionService->save(StartTestSessionService::UNIQUE_KEY, $sessionStore);
     }
 
+    /**
+     * @param array $changeData
+     *
+     * @throws \Exception
+     */
+    public function saveChanges(array $changeData)
+    {
+        $disallowedChangeValues = array_diff(array_keys($changeData), $this->getVehicleChanges());
+        if (count($disallowedChangeValues) > 0) {
+            throw new \Exception("Change values '". implode(",", $disallowedChangeValues) ."' are not allowed changes.");
+        }
+
+        $sessionStore = $this->startTestSessionService->load(StartTestSessionService::UNIQUE_KEY);
+        $changeStore = $sessionStore[StartTestSessionService::USER_DATA];
+
+        $changed = array_merge($changeStore, $changeData);
+
+        $sessionStore[StartTestSessionService::USER_DATA] = $changed;
+        $this->startTestSessionService->save(StartTestSessionService::UNIQUE_KEY, $sessionStore);
+    }
+
     public function loadAllowedChangesIntoSession()
     {
         $this->startTestSessionService->clear();
