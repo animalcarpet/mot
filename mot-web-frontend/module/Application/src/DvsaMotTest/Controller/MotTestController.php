@@ -67,7 +67,7 @@ class MotTestController extends AbstractDvsaMotTestController
     const ROUTE_MOT_TEST = 'mot-test';
     const ROUTE_MOT_TEST_SHORT_SUMMARY = 'mot-test/short-summary';
 
-    const ERROR_NO_SITE_FOR_NON_MOT_TEST = 'Uh oh, no site for non-mot test';
+    const ERROR_NO_SITE_FOR_NON_MOT_TEST = 'No site for non-mot test';
 
     /** @var MotAuthorisationServiceInterface $authorisationService */
     private $authorisationService;
