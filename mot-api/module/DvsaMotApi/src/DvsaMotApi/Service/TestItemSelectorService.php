@@ -12,7 +12,6 @@ use DvsaCommon\Constants\MotConfig\ElasticsearchConfigKeys;
 use DvsaCommon\Constants\MotConfig\MotConfigKeys;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\ReasonForRejection\SearchReasonForRejectionInterface;
-use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
@@ -384,6 +383,7 @@ class TestItemSelectorService
         $testerSpecificRfrs = [
             ReasonForRejectionConstants::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
             ReasonForRejectionConstants::CLASS_12_HEADLAMP_AIM_NOT_TESTED_RFR_ID,
+            ReasonForRejectionConstants::CLASS_3457_BRAKE_PERFORMANCE_NOT_TESTED_POST_EU_RFR_ID,
             ReasonForRejectionConstants::CLASS_3457_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
             ReasonForRejectionConstants::CLASS_3457_EMISSIONS_NOT_TESTED_RFR_ID,
             ReasonForRejectionConstants::CLASS_3457_HEADLAMP_AIM_NOT_TESTED_RFR_ID,

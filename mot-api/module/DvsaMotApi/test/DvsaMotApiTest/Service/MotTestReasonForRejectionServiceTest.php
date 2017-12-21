@@ -366,6 +366,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             ->createReasonForRejectionMarkedAsRepairedRecord(new MotTestReasonForRejection());
     }
 
+
     public function testUndoMarkReasonForRejectionAsRepairedUsingBrakeTestPerformanceNotTestedCallsClearBrakeTestResults()
     {
         $data = [
