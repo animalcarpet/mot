@@ -145,18 +145,73 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
 
                 //check if parking brake imbalance applicable
                 if ($brakeTestResult->getServiceBrakeIsSingleLine()) {
-                    $brakeTestResult->setParkingBrakeImbalance($this->calculateParkingBrakeImbalance($brakeTestResult));
-                    //check if parking brake secondary axle is applicable in this case
-                    if ($brakeTestResult->getParkingBrakeEffortSecondaryNearside() !== null
-                        || $brakeTestResult->getParkingBrakeEffortSecondaryOffside() !== null
-                    ) {
-                        $brakeTestResult->setParkingBrakeSecondaryImbalance(
-                            $this->calculateParkingBrakeSecondaryImbalance($brakeTestResult)
+                    if ($this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS))
+                    {
+                        $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::PRIMARY_AXLE,
+                            $this->calculateParkingBrakeImbalance($brakeTestResult));
+                        $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::PRIMARY_AXLE,
+                            $brakeTestResult->getParkingBrakeEffortNearside(),
+                            $brakeTestResult->getParkingBrakeEffortOffside());
+
+                        $brakeTestResult->setParkingBrakeImbalance($this->calculateParkingBrakeImbalance($brakeTestResult));
+
+                        $maxEffortGreaterThanFortyKilos =
+                            $brakeImbalanceResult->getAxleMaxEffort(BrakeImbalanceResult::PRIMARY_AXLE) > self::IMBALANCE_MAXIMUM_EFFORT_UPPER_THRESHOLD;
+                        $primaryAxleImbalanceWithinLimits = $brakeImbalanceResult->getAxleImbalanceValue(BrakeImbalanceResult::PRIMARY_AXLE) <= self::IMBALANCE_MAXIMUM;
+
+                        $isImbalanceFailing = $this->calculatePostEuSingleLineParkingBrakeImbalancePass($primaryAxleImbalanceWithinLimits, $brakeTestResult, $maxEffortGreaterThanFortyKilos);
+
+                        $imbalancePassing = !$isImbalanceFailing;
+                        $failureSeverity = $imbalancePassing ? CalculationFailureSeverity::NONE : CalculationFailureSeverity::MAJOR;
+
+                        $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::PRIMARY_AXLE, $imbalancePassing);
+                        $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::PRIMARY_AXLE, $failureSeverity);
+                        $brakeImbalanceResult->setParkingBrakeImbalanceOverallPass($imbalancePassing);
+
+                        $brakeTestResult->setParkingBrakeImbalancePass($brakeImbalanceResult->isParkingBrakeImbalanceOverallPass());
+
+                        //check if parking brake secondary axle is applicable in this case
+                        if ($brakeTestResult->getParkingBrakeEffortSecondaryNearside() !== null
+                            || $brakeTestResult->getParkingBrakeEffortSecondaryOffside() !== null
+                        ) {
+                            $brakeImbalanceResult->addAxleImbalanceValue(BrakeImbalanceResult::SECONDARY_AXLE,
+                                $this->calculateParkingBrakeSecondaryImbalance($brakeTestResult));
+                            $brakeImbalanceResult->addAxleMaxEffort(BrakeImbalanceResult::SECONDARY_AXLE,
+                                $brakeTestResult->getParkingBrakeEffortSecondaryNearside(),
+                                $brakeTestResult->getParkingBrakeEffortSecondaryOffside());
+
+                            $brakeTestResult->setParkingBrakeSecondaryImbalance($this->calculateParkingBrakeSecondaryImbalance($brakeTestResult));
+
+                            $maxEffortGreaterThanFortyKilos =
+                                $brakeImbalanceResult->getAxleMaxEffort(BrakeImbalanceResult::SECONDARY_AXLE) > self::IMBALANCE_MAXIMUM_EFFORT_UPPER_THRESHOLD;
+                            $secondaryAxleImbalanceWithinLimits = $brakeImbalanceResult->getAxleImbalanceValue(BrakeImbalanceResult::SECONDARY_AXLE) <= self::IMBALANCE_MAXIMUM;
+
+                            $isImbalanceFailing = $this->calculatePostEuSingleLineSecondaryParkingBrakeImbalancePass($secondaryAxleImbalanceWithinLimits, $brakeTestResult, $maxEffortGreaterThanFortyKilos);
+
+                            $imbalancePassing = !$isImbalanceFailing;
+                            $failureSeverity = $imbalancePassing ? CalculationFailureSeverity::NONE : CalculationFailureSeverity::MAJOR;
+
+                            $brakeImbalanceResult->setIsAxlePassing(BrakeImbalanceResult::SECONDARY_AXLE, $imbalancePassing);
+                            $brakeImbalanceResult->addAxleImbalanceSeverity(BrakeImbalanceResult::SECONDARY_AXLE, $failureSeverity);
+                            $brakeImbalanceResult->setParkingBrakeImbalanceOverallPass($imbalancePassing);
+
+                            $brakeTestResult->setParkingBrakeImbalancePass($brakeImbalanceResult->isParkingBrakeImbalanceOverallPass());
+                        }
+                    }
+                    else {
+                        $brakeTestResult->setParkingBrakeImbalance($this->calculateParkingBrakeImbalance($brakeTestResult));
+                        //check if parking brake secondary axle is applicable in this case
+                        if ($brakeTestResult->getParkingBrakeEffortSecondaryNearside() !== null
+                            || $brakeTestResult->getParkingBrakeEffortSecondaryOffside() !== null
+                        ) {
+                            $brakeTestResult->setParkingBrakeSecondaryImbalance(
+                                $this->calculateParkingBrakeSecondaryImbalance($brakeTestResult)
+                            );
+                        }
+                        $brakeTestResult->setParkingBrakeImbalancePass(
+                            $this->isPassingParkingBrakeImbalance($brakeTestResult, $vehicleClass)
                         );
                     }
-                    $brakeTestResult->setParkingBrakeImbalancePass(
-                        $this->isPassingParkingBrakeImbalance($brakeTestResult, $vehicleClass)
-                    );
                 }
                 break;
             case BrakeTestTypeCode::DECELEROMETER:
@@ -673,5 +728,47 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
     private function isGradientBrakeTestType(BrakeTestType $brakeTestType)
     {
         return $brakeTestType->getCode() === BrakeTestTypeCode::GRADIENT;
+    }
+
+    /**
+     * @param $primaryAxleImbalanceWithinLimits
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
+     * @param $maxEffortGreaterThanFortyKilos
+     * @return bool
+     */
+    protected function calculatePostEuSingleLineParkingBrakeImbalancePass(
+        $primaryAxleImbalanceWithinLimits,
+        BrakeTestResultClass3AndAbove $brakeTestResult,
+        $maxEffortGreaterThanFortyKilos
+    )
+    {
+        return !$primaryAxleImbalanceWithinLimits
+            && !$this->isWheelWithLowerEfficiencyLocked(
+                $brakeTestResult->getParkingBrakeEffortOffside(),
+                $brakeTestResult->getParkingBrakeLockOffside(),
+                $brakeTestResult->getParkingBrakeEffortNearside(),
+                $brakeTestResult->getParkingBrakeLockNearside())
+            && $maxEffortGreaterThanFortyKilos;
+    }
+
+    /**
+     * @param $secondaryAxleImbalanceWithinLimits
+     * @param BrakeTestResultClass3AndAbove $brakeTestResult
+     * @param $maxEffortGreaterThanFortyKilos
+     * @return bool
+     */
+    protected function calculatePostEuSingleLineSecondaryParkingBrakeImbalancePass(
+        $secondaryAxleImbalanceWithinLimits,
+        BrakeTestResultClass3AndAbove $brakeTestResult,
+        $maxEffortGreaterThanFortyKilos
+    )
+    {
+        return !$secondaryAxleImbalanceWithinLimits
+            && !$this->isWheelWithLowerEfficiencyLocked(
+                $brakeTestResult->getParkingBrakeEffortSecondaryOffside(),
+                $brakeTestResult->getParkingBrakeLockSecondaryOffside(),
+                $brakeTestResult->getParkingBrakeEffortSecondaryNearside(),
+                $brakeTestResult->getParkingBrakeLockSecondaryNearside())
+            && $maxEffortGreaterThanFortyKilos;
     }
 }

@@ -17,6 +17,10 @@ class BrakeImbalanceResult
     const AXLE_1 = 'axle1';
     const AXLE_2 = 'axle2';
     const AXLE_3 = 'axle3';
+    const PRIMARY_AXLE = 'primaryAxle';
+    const SECONDARY_AXLE = 'secondaryAxle';
+    const PRIMARY_AXLE_COMMENT = 'Primary Axle';
+    const SECONDARY_AXLE_COMMENT = 'Secondary Axle';
 
     /** @var bool */
     private $isPassing;
@@ -32,29 +36,42 @@ class BrakeImbalanceResult
 
     /** @var  bool */
     private $imbalancePass;
+
+    /** @var bool */
+    private $parkingBrakeImbalancePass;
+
     public function __construct()
     {
         $this->maxEffort = array(
             "axle1" => 0,
             "axle2" => 0,
-            "axle3" => 0
+            "axle3" => 0,
+            "primaryAxle" => 0,
+            "secondaryAxle" => 0
         );
         $this->imbalanceValues = array(
             "axle1" => 0,
             "axle2" => 0,
-            "axle3" => 0
+            "axle3" => 0,
+            "primaryAxle" => 0,
+            "secondaryAxle" => 0
         );
         $this->imbalanceSeverities = array(
             "axle1" => CalculationFailureSeverity::NONE,
             "axle2" => CalculationFailureSeverity::NONE,
-            "axle3" => CalculationFailureSeverity::NONE
+            "axle3" => CalculationFailureSeverity::NONE,
+            "primaryAxle" => CalculationFailureSeverity::NONE,
+            "secondaryAxle" => CalculationFailureSeverity::NONE
         );
         $this->isPassing = array(
             "axle1" => true,
             "axle2" => true,
-            "axle3" => true
+            "axle3" => true,
+            "primaryAxle" => true,
+            "secondaryAxle" => true
         );
         $this->imbalancePass = true;
+        $this->parkingBrakeImbalancePass = true;
     }
 
 
@@ -157,5 +174,23 @@ class BrakeImbalanceResult
         }
 
         throw new InvalidArgumentException('Invalid axle number provided => [' . $axle . ']');
+    }
+
+    /** @param $isPassing */
+    public function setParkingBrakeImbalanceOverallPass($isPassing)
+    {
+        if ($this->parkingBrakeImbalancePass === false)
+        {
+            return;
+        }
+        $this->parkingBrakeImbalancePass = $isPassing;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isParkingBrakeImbalanceOverallPass() : bool
+    {
+        return $this->parkingBrakeImbalancePass;
     }
  }
