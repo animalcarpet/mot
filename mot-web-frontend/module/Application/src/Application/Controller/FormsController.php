@@ -6,6 +6,8 @@ use Application\Service\LoggedInUserManager;
 use Core\Controller\AbstractAuthActionController;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Constants\JasperContingencyCertificateName;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\ReportUrlBuilder;
@@ -77,17 +79,23 @@ class FormsController extends AbstractAuthActionController
 
     public function contingencyPassCertificateAction()
     {
-        return $this->fetchReport('CT20');
+       if ($this->isFeatureEnabled(FeatureToggle::EU_ROADWORTHINESS)) {
+           return $this->fetchReport(JasperContingencyCertificateName::EU_CT20);
+       }
+        return $this->fetchReport(JasperContingencyCertificateName::CT20);
     }
 
     public function contingencyFailCertificateAction()
     {
-        return $this->fetchReport('CT30');
+        if ($this->isFeatureEnabled(FeatureToggle::EU_ROADWORTHINESS)) {
+            return $this->fetchReport(JasperContingencyCertificateName::EU_CT30);
+        }
+        return $this->fetchReport(JasperContingencyCertificateName::CT30);
     }
 
     public function contingencyAdvisoryCertificateAction()
     {
-        return $this->fetchReport('CT32');
+        return $this->fetchReport(JasperContingencyCertificateName::CT32);
     }
 
     protected function fetchReport($name)
