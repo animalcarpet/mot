@@ -3,6 +3,7 @@
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Auth\AbstractMotAuthorisationService;
+use DvsaCommon\Constants\JasperContingencyCertificateName;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -40,8 +41,6 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
     const ISSUER_INFO_ENG = '%s certificate issued by %s on %s';
     const ISSUER_INFO_WEL = '%s wedi ei gyhoeddi gan %s ar %s';
     const ISSUER_DVSA_INFO_WEL = 'Anfonwyd %s gan %s ar %s';
-
-    private static $validNames = ['CT20', 'CT30', 'CT32'];
 
     /** @var MotTestService */
     private $motTestService;
@@ -100,7 +99,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         $testStation = $this->params()->fromQuery('testStation', null);
         $inspAuthority = $this->params()->fromQuery('inspAuthority', null);
 
-        if (is_null($certificate) || !in_array($certificate, self::$validNames)
+        if (is_null($certificate) || !in_array($certificate, JasperContingencyCertificateName::getAll())
             || is_null($testStation)
             || is_null($inspAuthority)
         ) {

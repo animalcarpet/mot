@@ -1,7 +1,10 @@
 <?php
 
+use DvsaCommon\Constants\JasperContingencyCertificateName;
 use DvsaCommon\Validator\UsernameValidator;
+use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\Person;
+use DvsaMotApi\Controller\CertificatePrintingController;
 use DvsaMotApi\Controller\ContingencyTestController;
 use DvsaMotApi\Controller\DemoTestAssessmentController;
 use DvsaMotApi\Controller\IdentityDataController;
@@ -47,7 +50,7 @@ return [
                         'dupmode' => 'dup',
                     ],
                     'defaults' => [
-                        'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
+                        'controller' => CertificatePrintingController::class,
                         'action' => 'print',
                     ],
                 ],
@@ -57,7 +60,7 @@ return [
                 'options' => [
                     'route' => '/pdf-certificate-print',
                     'defaults' => [
-                        'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
+                        'controller' => CertificatePrintingController::class,
                         'action' => 'getAmazonPdf',
                     ],
                 ],
@@ -70,7 +73,7 @@ return [
                         'docId' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
+                        'controller' => CertificatePrintingController::class,
                         'action' => 'printByDocId',
                     ],
                 ],
@@ -80,10 +83,10 @@ return [
                 'options' => [
                     'route' => '/contingency-print/:name',
                     'constraints' => [
-                        'name' => '(CT20|CT30|CT32)',
+                        'name' => ArrayUtils::joinNonEmpty('|', JasperContingencyCertificateName::getAll())
                     ],
                     'defaults' => [
-                        'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
+                        'controller' => CertificatePrintingController::class,
                         'action' => 'printContingency',
                     ],
                 ],
