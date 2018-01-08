@@ -13,6 +13,7 @@ use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaFeature\FeatureToggles;
+use DvsaMotApi\Service\Calculator\BrakeImbalanceResult;
 use DvsaMotApi\Service\Calculator\BrakeTestClass3AndAboveCalculationResult;
 use DvsaMotApi\Service\Calculator\CalculationFailureSeverity;
 use DvsaMotApi\Service\Model\BrakeTestResultSubmissionSummary;
@@ -33,6 +34,12 @@ class ParkingBrakeClass3AndAboveRfrMapper
 
     const RFR_ID_PARKING_BRAKE_GRADIENT_LOW_EFFICIENCY = '4300';
     const RFR_ID_PARKING_BRAKE_GRADIENT_LOW_EFFICIENCY_MAJOR = '30014';
+
+    const RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE = '8343';
+    const RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE = '8370';
+    const RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE_MAJOR = '30018';
+    const RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE_MAJOR = '30019';
+
 
     /** @var FeatureToggles */
     private $featureToggles;
@@ -62,6 +69,20 @@ class ParkingBrakeClass3AndAboveRfrMapper
     }
 
     /**
+     * @param $parkingBrakeTestType
+     * @return string
+     */
+    public function generateParkingBrakeImbalanceRfr($parkingBrakeTestType)
+    {
+        if ($this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS))
+        {
+            return $this->getRfrParkingBrakeImbalancePostEU($parkingBrakeTestType);
+        } else {
+            return $this->getRfrParkingBrakeImbalancePreEU($parkingBrakeTestType);
+        }
+    }
+
+    /**
      * @param BrakeTestResultClass3AndAbove $brakeTestResult
      * @param BrakeTestResultSubmissionSummary $summary
      * @param $parkingBrakeTestTypeCode
@@ -83,7 +104,6 @@ class ParkingBrakeClass3AndAboveRfrMapper
     {
         if ($this->featureToggles->isEnabled(FeatureToggle::EU_ROADWORTHINESS)) {
             return $this->getRfrParkingBrakeLowEfficiencyPostEuRoadworthiness($brakeTestTypeCode, $failureSeverity);
-
         } else {
             return $this->getRfrParkingBrakeLowEfficiencyPreEu($brakeTestTypeCode);
         }
@@ -177,5 +197,37 @@ class ParkingBrakeClass3AndAboveRfrMapper
         if ($brakeTestResult->getParkingBrakeEfficiencyPass() === false) {
             $summary->addReasonForRejection($this->getRfrParkingBrakeLowEfficiency($parkingBrakeTestTypeCode));
         }
+    }
+
+    /**
+     * @param $parkingBrakeTestType
+     * @return string
+     */
+    public function getRfrParkingBrakeImbalancePostEU($parkingBrakeTestType)
+    {
+            switch ($parkingBrakeTestType) {
+                case  BrakeTestTypeCode::PLATE:
+                    return self::RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE_MAJOR;
+                case BrakeTestTypeCode::ROLLER:
+                    return self::RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE_MAJOR;
+            }
+
+        throw new \InvalidArgumentException('Unknown brake test type code ' . $parkingBrakeTestType);
+    }
+
+    /**
+     * @param $parkingBrakeTestType
+     * @return string
+     */
+    public function getRfrParkingBrakeImbalancePreEU($parkingBrakeTestType)
+    {
+        switch ($parkingBrakeTestType) {
+            case BrakeTestTypeCode::PLATE:
+                return self::RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE;
+            case BrakeTestTypeCode::ROLLER:
+                return self::RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE;
+        }
+
+        throw new \InvalidArgumentException('Unknown brake test type code ' . $parkingBrakeTestType);
     }
 }

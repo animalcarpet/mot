@@ -45,8 +45,6 @@ use DvsaMotApi\Service\Validator\MotTestValidator;
  */
 class BrakeTestResultService extends AbstractService
 {
-    const RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE = '8343';
-    const RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE = '8370';
 
     const RFR_ID_BRAKE_EFFICIENCY_ROLLER_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2 = '489';
     const RFR_ID_BRAKE_EFFICIENCY_ROLLER_ONE_BELOW_SECONDARY_MIN_CLASS_1_2 = '490';
@@ -324,7 +322,10 @@ class BrakeTestResultService extends AbstractService
         }
 
         if ($brakeTestResult->getParkingBrakeImbalancePass() === false) {
-            $summary->addReasonForRejection($this->getRfrParkingBrakeImbalanced($parkingBrakeTestType));
+            $rfr = $this->parkingBrakeMapper->generateParkingBrakeImbalanceRfr($parkingBrakeTestType);
+            $type = ReasonForRejectionTypeName::FAIL;
+
+            $summary->addReasonForRejection($rfr, $type);
         }
 
         $brakeTestResult->setMotTest($motTest);
@@ -504,18 +505,6 @@ class BrakeTestResultService extends AbstractService
                 return self::RFR_ID_BRAKE_EFFICIENCY_DECELEROMETER_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2;
             case BrakeTestTypeCode::GRADIENT:
                 return self::RFR_ID_BRAKE_EFFICIENCY_GRADIENT_BOTH_BELOW_PRIMARY_MIN_CLASS_1_2;
-        }
-
-        return null;
-    }
-
-    private function getRfrParkingBrakeImbalanced($testType)
-    {
-        switch ($testType) {
-            case BrakeTestTypeCode::ROLLER:
-                return self::RFR_ID_PARKING_BRAKE_ROLLER_IMBALANCE;
-            case BrakeTestTypeCode::PLATE:
-                return self::RFR_ID_PARKING_BRAKE_PLATE_IMBALANCE;
         }
 
         return null;
