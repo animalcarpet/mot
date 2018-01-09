@@ -290,6 +290,7 @@ class OfficialWeightSourceForVehicleTest extends \PHPUnit_Framework_TestCase
         $data->make = new \StdClass();
         $data->model = new \StdClass();
         $data->weight = $weight;
+        $data->euClassification = null;
 
         $class = new \StdClass();
         $class->code = $vehicleClassCode;

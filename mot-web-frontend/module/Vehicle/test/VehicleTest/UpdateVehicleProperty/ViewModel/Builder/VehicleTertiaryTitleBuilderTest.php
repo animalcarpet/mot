@@ -60,6 +60,7 @@ class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
                 'code' => 'W',
                 'name' => 'Not Stated',
             ],
+            'euClassification' => 'N',
         ]));
     }
 }

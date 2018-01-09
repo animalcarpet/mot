@@ -24,6 +24,7 @@ public class VehicleFactory {
                 RandomStringUtils.randomAlphabetic(17),
                 VehicleClass.four,
                 "888",
+                "O",
                 false
         );
     }
@@ -38,6 +39,7 @@ public class VehicleFactory {
                 " ",
                 VehicleClass.four,
                 "888",
+                "O",
                 false
         );
     }

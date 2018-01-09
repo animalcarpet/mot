@@ -257,6 +257,7 @@ class UpdateMakeStepTest extends \PHPUnit_Framework_TestCase
         $std->colour = $colour;
         $std->colourSecondary = $secondaryColour;
         $std->weightSource = $weightSource;
+        $std->euClassification = 'P';
 
         return new DvsaVehicle($std);
     }

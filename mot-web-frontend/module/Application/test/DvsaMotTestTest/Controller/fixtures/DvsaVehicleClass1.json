@@ -38,6 +38,7 @@
   "manufactureDate" : "2015-12-18",
   "isNewAtFirstReg" : false,
   "isIncognito" : false,
+  "euClassification" : "P",
   "weight" : 0,
   "weightSource" : {
     "code" : "U",

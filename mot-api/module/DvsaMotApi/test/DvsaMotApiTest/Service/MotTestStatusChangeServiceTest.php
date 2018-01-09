@@ -1191,6 +1191,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
             'firstUsedDate' => '2004-01-04',
             'manufactureDate' => '2004-01-02',
             'isNewAtFirstReg' => true,
+            'euClassification' => 'N',
             'weight' => 12467,
             'weightSource' => [
                 'code' => 'U',

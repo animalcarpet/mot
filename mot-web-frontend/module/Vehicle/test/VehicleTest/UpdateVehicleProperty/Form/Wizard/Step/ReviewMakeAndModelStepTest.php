@@ -199,6 +199,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
         $std->colour = $colour;
         $std->colourSecondary = $secondaryColour;
         $std->weightSource = $weightSource;
+        $std->euClassification = 'O';
 
         return new DvsaVehicle($std);
     }

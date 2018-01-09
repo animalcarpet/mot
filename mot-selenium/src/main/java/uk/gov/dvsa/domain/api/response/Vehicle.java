@@ -19,6 +19,7 @@ public class Vehicle {
     private FuelType fuelType;
     private String id;
     private String isNewAtFirstReg;
+    private String euClassification;
     private Make make;
     private String manufactureDate;
     private Model model;
@@ -269,6 +270,15 @@ public class Vehicle {
         return this;
     }
 
+    public String getEuClassification() {
+        return euClassification;
+    }
+
+    public Vehicle setEuClassification(String euClassification) {
+        this.euClassification = euClassification;
+        return this;
+    }
+
     public static Vehicle createVehicle(String colour,
                                      String countryOfRegistrationId,
                                      String cylinderCapacity,
@@ -283,6 +293,7 @@ public class Vehicle {
                                      String vin,
                                      VehicleClass vehicleClass,
                                      String weight,
+                                     String euClassification,
                                      boolean isIncognito
     ) {
 
@@ -303,6 +314,7 @@ public class Vehicle {
                 .setVin(vin)
                 .setVehicleClass(vehicleClass)
                 .setWeight(weight)
+                .setEuClassification(euClassification)
                 .setIsIncognito(isIncognito);
 
         return vehicle;
@@ -330,6 +342,7 @@ public class Vehicle {
                 ", bodyType='" + bodyType + '\'' +
                 ", weight='" + weight + '\'' +
                 ", weightSource='" + weightSource.toString() + '\'' +
+                ", euClassification='" + euClassification + '\'' +
                 '}';
     }
 }

@@ -259,6 +259,7 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
             'firstUsedDate' => '2004-01-04',
             'manufactureDate' => '2004-01-02',
             'isNewAtFirstReg' => true,
+            'euClassification' => 'L',
             'weight' => 12467,
             'weightSource' => [
                 'code' => 'U',
