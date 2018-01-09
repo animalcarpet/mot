@@ -180,6 +180,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
             'firstUsedDate' => '2004-01-04',
             'manufactureDate' => '2004-01-02',
             'isNewAtFirstReg' => true,
+            'euClassification' => 'P',
             'weight' => 12467,
             'weightSource' => [
                 'code' => 'U',

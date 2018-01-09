@@ -753,6 +753,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
                     'firstUsedDate' => '2001-03-02',
                     'manufactureDate' => '2001-03-02',
                     'isNewAtFirstReg' => false,
+                    'euClassification' => 'O',
                     'weight' => null,
                     'weightSource' => [
                         'code' => 'U',

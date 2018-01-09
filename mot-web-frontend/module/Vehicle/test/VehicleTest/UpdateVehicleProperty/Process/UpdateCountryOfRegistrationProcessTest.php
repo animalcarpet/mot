@@ -429,6 +429,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $std->colour = $colour;
         $std->colourSecondary = $secondaryColour;
         $std->weightSource = $weightSource;
+        $std->euClassification = 'N';
 
         return new DvsaVehicle($std);
     }

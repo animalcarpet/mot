@@ -202,6 +202,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             'manufactureDate' => '2004-01-02',
             'isNewAtFirstReg' => false,
             'isIncognito' => true,
+            'euClassification' => 'O',
             'weight' => 12467,
             'weightSource' => [
                 'code' => 'U',
